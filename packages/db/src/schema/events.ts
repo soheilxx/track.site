@@ -1,0 +1,50 @@
+import { boolean, char, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
+/**
+ * Event store reference implementation (PostgreSQL). The physical table is range-partitioned
+ * by month on `server_ts` and created by the hand-written migration `0001_rls_partitions.sql`
+ * (drizzle-kit does not manage partitioned tables). This definition is used for query building only.
+ */
+export const events = pgTable("events", {
+  eventId: text("event_id").notNull(),
+  sourceEventId: text("source_event_id").notNull(),
+  organizationId: uuid("organization_id").notNull(),
+  siteId: uuid("site_id").notNull(),
+  siteTrackingId: char("site_tracking_id", { length: 6 }).notNull(),
+  environmentId: uuid("environment_id").notNull(),
+  name: text("name").notNull(),
+  isStandard: boolean("is_standard").notNull(),
+  category: text("category").notNull(),
+  clientTs: timestamp("client_ts", { withTimezone: true }),
+  serverTs: timestamp("server_ts", { withTimezone: true }).notNull(),
+  anonymousId: text("anonymous_id"),
+  sessionId: text("session_id"),
+  userId: text("user_id"),
+  url: text("url"),
+  host: text("host"),
+  path: text("path"),
+  referrer: text("referrer"),
+  title: text("title"),
+  utm: jsonb("utm").$type<Record<string, string> | null>(),
+  clickIds: jsonb("click_ids").$type<Record<string, { value: string; source: string; captured_at: string; expires_at: string }> | null>(),
+  vendorIds: jsonb("vendor_ids").$type<Record<string, string> | null>(),
+  consent: jsonb("consent").$type<Record<string, unknown>>().notNull(),
+  consentSnapshotId: uuid("consent_snapshot_id"),
+  props: jsonb("props").$type<Record<string, unknown> | null>(),
+  commerce: jsonb("commerce").$type<Record<string, unknown> | null>(),
+  userData: jsonb("user_data").$type<Record<string, string | null> | null>(),
+  ipTruncated: text("ip_truncated"),
+  uaFamily: text("ua_family"),
+  locale: text("locale"),
+  source: text("source").notNull(),
+  sourceVerified: boolean("source_verified").notNull(),
+  sdkVersion: text("sdk_version").notNull(),
+  configVersion: integer("config_version"),
+  schemaVersion: text("schema_version").notNull(),
+  provenance: jsonb("provenance").$type<Record<string, unknown>>().notNull(),
+  processingState: text("processing_state").notNull(),
+  dropReason: text("drop_reason"),
+  isBillable: boolean("is_billable").notNull(),
+  isBot: boolean("is_bot").notNull(),
+  deliveries: jsonb("deliveries").$type<Record<string, { status: string; at: string; attempts: number }> | null>(),
+});
