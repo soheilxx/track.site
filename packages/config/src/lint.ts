@@ -40,7 +40,7 @@ export const REQUIRED_BROWSER_IDS: Record<ConnectorType, string[]> = {
   quora: ["pixel_id"],
   yahoo: ["pixel_id"],
   tradedesk: ["advertiser_id", "pixel_id"],
-  gmp: ["advertiser_id"],
+  gmp: ["floodlight_configuration_id"],
   adroll: ["advertiser_id", "pixel_id"],
   criteo: ["account_id"],
   affiliate: [],

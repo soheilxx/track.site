@@ -18,7 +18,7 @@ export const CLICK_ID_PARAMS = {
   sccid: "snapchat",
   twclid: "x",
   tblci: "taboola",
-  obclid: "outbrain",
+  ob_click_id: "outbrain",
   dicbo: "outbrain",
   maas: "amazon",
   spclid: "spotify",

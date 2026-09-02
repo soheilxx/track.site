@@ -6,7 +6,7 @@ import type { ConnectorType } from "@track-site/policy";
  * Versioned connector interface. Every vendor adapter implements it; the worker, the AI tools
  * and the dashboard only talk to this contract. API versions are pinned in `versions.ts`.
  */
-export type CredentialKind = "access_token" | "api_secret" | "oauth_refresh_token" | "oauth_access_token" | "webhook_secret" | "signing_secret";
+export type CredentialKind = "access_token" | "api_secret" | "oauth_refresh_token" | "oauth_access_token" | "oauth_token_secret" | "client_id" | "client_secret" | "webhook_secret" | "signing_secret";
 
 export interface CredentialRequirement {
   kind: CredentialKind;
@@ -41,6 +41,8 @@ export interface ConnectorMeta {
   /** vendor event names the browser + server paths share for deduplication */
   dedupField: string | null;
   transfer: { recipient: string; region: string; basis: string };
+  /** vendor-side prerequisite shown in the wizard (beta programs, pilot enrolment, partner tokens) */
+  accessNote?: string | null;
 }
 
 export interface ConnectorContext {

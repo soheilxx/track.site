@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { Hono, type Context } from "hono";
 import { serve, type ServerType } from "@hono/node-server";
 
@@ -22,6 +23,10 @@ export interface MockVendorOptions {
   ga4Secret?: string;
   googleAdsToken?: string;
   microsoftToken?: string;
+  xToken?: string;
+  yahooClientSecret?: string;
+  cm360Token?: string;
+  adrollToken?: string;
   pinterestToken?: string;
   snapchatToken?: string;
   /** force behaviour for the next N requests: status code to return */
@@ -191,6 +196,121 @@ export function createMockVendorApp(options: MockVendorOptions = {}) {
   };
   app.post("/snapchat/v3/:pixel/events", snap);
   app.post("/snapchat/v3/:pixel/events/validate", snap);
+
+  // X Ads Conversion API (OAuth 1.0a): POST /{version}/measurement/conversions/{pixel}; GET /{version}/accounts for validation
+  const xAuthOk = (c: Context) => {
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("OAuth ")) return false;
+    const token = /oauth_token="([^"]+)"/.exec(auth)?.[1] ?? "";
+    return /oauth_signature="[^"]+"/.test(auth) && (!options.xToken || token === options.xToken);
+  };
+  app.get("/x/:version/accounts", (c) => (xAuthOk(c) ? c.json({ data: [{ id: "18ce54d4x5t", name: "Mock account" }] }) : c.json({ errors: [{ code: "UNAUTHORIZED_ACCESS", message: "This request is not properly authenticated" }] }, 401)));
+  app.post("/x/:version/measurement/conversions/:pixel", async (c) => {
+    const body = (await c.req.json()) as { conversions?: unknown[] };
+    record("x", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ errors: [{ code: "SERVICE_UNAVAILABLE", message: "forced" }] }, f as 500);
+    if (!xAuthOk(c)) return c.json({ errors: [{ code: "UNAUTHORIZED_ACCESS", message: "This request is not properly authenticated" }] }, 401);
+    if (!body.conversions?.length) return c.json({ errors: [{ code: "MISSING_PARAMETER", message: "conversions required" }] }, 400);
+    return c.json({ data: { conversions_processed: body.conversions.length, debug_id: "mock-debug" }, request: { params: {} } });
+  });
+
+  // Taboola bulk S2S: POST /{account}/log/3/bulk-s2s-action -> 204 (no auth)
+  app.post("/taboola/:account/log/3/bulk-s2s-action", async (c) => {
+    const body = (await c.req.json()) as { actions?: unknown[] };
+    record("taboola", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    if (!Array.isArray(body.actions)) return c.body("actions required", 400);
+    return c.body(null, 204);
+  });
+
+  // Outbrain unifiedPixel postback: GET with query parameters (no auth)
+  app.get("/outbrain/unifiedPixel", (c) => {
+    record("outbrain", c.req.path, c.req.raw.headers, { query: c.req.query() });
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    if (!c.req.query("ob_click_id") || !c.req.query("name")) return c.body("missing parameters", 400);
+    return c.body("ok", 200);
+  });
+
+  // Yahoo ID B2B token + DataX events
+  app.post("/yahoo/zts/v1/oauth2/token", async (c) => {
+    const form = new URLSearchParams(await c.req.text());
+    const assertion = form.get("client_assertion") ?? "";
+    const [h, cl, sig] = assertion.split(".");
+    record("yahoo", c.req.path, c.req.raw.headers, { grant_type: form.get("grant_type"), realm: form.get("realm") });
+    if (!h || !cl || !sig || form.get("grant_type") !== "client_credentials") return c.json({ error: "invalid_request" }, 400);
+    if (options.yahooClientSecret) {
+      const expected = createHmac("sha256", options.yahooClientSecret).update(`${h}.${cl}`).digest("base64").replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+      if (expected !== sig) return c.json({ error: "invalid_client", error_description: "signature mismatch" }, 401);
+    }
+    return c.json({ access_token: "yahoo-access-token-mock", token_type: "Bearer", expires_in: 3600 });
+  });
+  app.post("/yahoo/v1/events/:pixel", async (c) => {
+    const body = (await c.req.json()) as Array<{ eventName?: string; userData?: Record<string, unknown>; clickData?: Record<string, unknown> }>;
+    record("yahoo", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ error: "forced" }, f as 500);
+    if ((c.req.header("authorization") ?? "") !== "Bearer yahoo-access-token-mock") return c.json({ error: "invalid_token" }, 401);
+    if (!Array.isArray(body) || !body.length) return c.json({ error: "events required" }, 400);
+    const bad = body.filter((e) => !e.eventName || (!Object.keys(e.userData ?? {}).length && !Object.keys(e.clickData ?? {}).length)).length;
+    return c.json(bad ? { success: "PARTIAL", message: `{MISSING_IDENTIFIER=${bad}}` } : { success: "COMPLETE" });
+  });
+
+  // Campaign Manager 360 conversions.batchinsert + floodlightConfigurations read
+  app.get("/cm360/dfareporting/:version/userprofiles/:profile/floodlightConfigurations/:id", (c) => {
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.cm360Token && auth !== `Bearer ${options.cm360Token}`)) return c.json({ error: { code: 401, message: "Invalid Credentials", status: "UNAUTHENTICATED" } }, 401);
+    return c.json({ kind: "dfareporting#floodlightConfiguration", id: c.req.param("id"), advertiserId: "555" });
+  });
+  app.post("/cm360/dfareporting/:version/userprofiles/:profile/conversions/batchinsert", async (c) => {
+    const body = (await c.req.json()) as { conversions?: Array<{ gclid?: string; dclid?: string; matchId?: string; userIdentifiers?: unknown[]; floodlightActivityId?: string }> };
+    record("cm360", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ error: { code: f, message: "forced", status: "UNAVAILABLE" } }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.cm360Token && auth !== `Bearer ${options.cm360Token}`)) return c.json({ error: { code: 401, message: "Invalid Credentials", status: "UNAUTHENTICATED" } }, 401);
+    if (!body.conversions?.length) return c.json({ error: { code: 400, message: "conversions required", status: "INVALID_ARGUMENT" } }, 400);
+    const status = body.conversions.map((conv) => ({ kind: "dfareporting#conversionStatus", conversion: conv, errors: conv.gclid || conv.dclid || conv.matchId || conv.userIdentifiers ? [] : [{ kind: "dfareporting#conversionError", code: "INVALID_ARGUMENT", message: "Missing user identifier" }] }));
+    return c.json({ kind: "dfareporting#conversionsBatchInsertResponse", hasFailures: status.some((s) => s.errors.length), status });
+  });
+
+  // AdRoll S2S: POST /api?advertisable=EID[&dry_run=true] with Token auth
+  app.post("/adroll/api", async (c) => {
+    const body = (await c.req.json()) as Array<{ identifiers?: Record<string, unknown> }>;
+    record("adroll", c.req.path + "?" + new URLSearchParams(c.req.query()).toString(), c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ error: "forced" }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Token ") || (options.adrollToken && auth !== `Token ${options.adrollToken}`)) return c.json({ error: "unauthorized" }, 401);
+    if (!c.req.query("advertisable")) return c.json({ error: "advertisable required" }, 400);
+    if (!Array.isArray(body) || !body.length) return c.json({ error: "events required" }, 400);
+    return c.json({ accepted: body.length, dry_run: c.req.query("dry_run") === "true" });
+  });
+
+  // Spotify Ad Analytics server-side pixel (GET image endpoint)
+  app.get("/spotify/img", (c) => {
+    record("spotify", c.req.path, c.req.raw.headers, { query: c.req.query() });
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    if (!c.req.query("key") || !c.req.query("a")) return c.body("missing", 400);
+    return c.body("GIF89a", 200, { "content-type": "image/gif" });
+  });
+
+  // Criteo OneTag S2S: POST /m/event?version=s2s_v0 -> always 200 with { errors, warnings }
+  app.post("/criteo/m/event", async (c) => {
+    const body = (await c.req.json()) as { account?: string; id?: Record<string, unknown>; events?: Array<{ event?: string }> };
+    record("criteo", c.req.path + "?version=" + (c.req.query("version") ?? ""), c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    const errors: string[] = [];
+    if (!body.account) errors.push("AccountMissing");
+    const id = body.id ?? {};
+    if (!(id.email || (id.mapping_key && id.mapped_user_id) || id.idfa || id.gaid)) errors.push("UserIdentifierMissing");
+    if (!body.events?.length) errors.push("EventsMissing");
+    return c.json({ errors, warnings: [] });
+  });
 
   // Generic webhook receiver
   app.post("/webhook", async (c) => {

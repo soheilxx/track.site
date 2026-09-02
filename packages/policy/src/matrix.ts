@@ -80,7 +80,7 @@ export const DESTINATION_CLICK_IDS: Record<ConnectorType, string[]> = {
   snapchat: ["sccid"],
   x: ["twclid"],
   taboola: ["tblci"],
-  outbrain: ["obclid", "dicbo"],
+  outbrain: ["ob_click_id", "dicbo"],
   amazon: ["maas"],
   spotify: ["spclid"],
   quora: ["qclid"],
