@@ -1,7 +1,9 @@
 import { CircuitBreaker, backoffDelay, newUlid, sha256Hex, silentLogger } from "@track-site/core";
 import type { DeliveryMessage } from "@track-site/events";
 import { clickIdsForDestination, evaluateDispatch, type ConnectorType } from "@track-site/policy";
-import { getConnector, isRetryable, type ConnectorContext, type DispatchResult } from "@track-site/connectors";
+import { AccessTokenCache, getConnector, isRetryable, OAUTH_PROVIDERS, refreshAccessToken, type ConnectorContext, type DispatchResult } from "@track-site/connectors";
+
+const tokenCache = new AccessTokenCache();
 import type { QueueMessage } from "@track-site/queue";
 import type { WorkerContext } from "../context.ts";
 
@@ -77,6 +79,33 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
     allowPrivateNetwork: ctx.env.VENDOR_ALLOW_PRIVATE,
     logger: ctx.logger ?? silentLogger(),
     now: ctx.now,
+    platform: {
+      google_ads_developer_token: ctx.env.GOOGLE_ADS_DEVELOPER_TOKEN ?? null,
+      x_consumer_key: ctx.env.X_CONSUMER_KEY ?? null,
+      x_consumer_secret: ctx.env.X_CONSUMER_SECRET ?? null,
+      amazon_ads_client_id: ctx.env.AMAZON_ADS_CLIENT_ID ?? null,
+    },
+    oauth: {
+      accessToken: async (provider) => {
+        const key = `${msg.integration_id}:${provider}`;
+        const cached = tokenCache.get(key);
+        if (cached) return cached;
+        const def = OAUTH_PROVIDERS[provider];
+        if (!def) return null;
+        const env = ctx.env as unknown as Record<string, string | undefined>;
+        const clientId = env[def.clientIdEnv];
+        const clientSecret = env[def.clientSecretEnv];
+        const refresh = await connectorCtx.getCredential("oauth_refresh_token");
+        if (!clientId || !clientSecret || !refresh) return null;
+        const res = await refreshAccessToken(def, refresh, clientId, clientSecret, ctx.fetch, ctx.env.VENDOR_MOCK_BASE_URL ? `${ctx.env.VENDOR_MOCK_BASE_URL}/oauth/${provider}/token` : def.tokenUrl);
+        if (!res.accessToken) {
+          connectorCtx.logger.warn({ integrationId: msg.integration_id, provider, error: res.error }, "oauth refresh failed");
+          return null;
+        }
+        tokenCache.set(key, res.accessToken, res.expiresAt ?? Date.now() + 3_000_000);
+        return res.accessToken;
+      },
+    },
   };
   const clickIds = clickIdsForDestination(event, dest.type as ConnectorType, ctx.now());
   const payload = connector.mapEvent({ event, clickIds, dedupId: event.source_event_id }, { event: mapping.event, vendorEvent: mapping.vendor_event, enabled: mapping.enabled, fieldMap: (mapping.field_map as Record<string, unknown> | null) ?? null }, connectorCtx);

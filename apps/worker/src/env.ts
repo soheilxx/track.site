@@ -22,6 +22,15 @@ export const workerEnvSchema = baseEnvSchema.extend({
   MAX_DELIVERY_ATTEMPTS: envInt(8, 1, 20),
   VENDOR_ALLOW_PRIVATE: envBool(false),
   VENDOR_MOCK_BASE_URL: envString(),
+  GOOGLE_ADS_DEVELOPER_TOKEN: envString(),
+  GOOGLE_OAUTH_CLIENT_ID: envString(),
+  GOOGLE_OAUTH_CLIENT_SECRET: envString(),
+  X_CONSUMER_KEY: envString(),
+  X_CONSUMER_SECRET: envString(),
+  AMAZON_ADS_CLIENT_ID: envString(),
+  AMAZON_ADS_CLIENT_SECRET: envString(),
+  LINKEDIN_CLIENT_ID: envString(),
+  LINKEDIN_CLIENT_SECRET: envString(),
   CONFIG_CACHE_TTL_MS: envInt(15_000, 1_000, 300_000),
 });
 export type WorkerEnv = z.infer<typeof workerEnvSchema>;

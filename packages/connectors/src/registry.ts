@@ -1,6 +1,8 @@
 import type { ConnectorType } from "@track-site/policy";
 import type { Connector, ConnectorMeta } from "./connector.ts";
 import { AdRollConnector } from "./vendors/adroll.ts";
+import { AffiliateConnector } from "./vendors/affiliate.ts";
+import { AmazonConnector } from "./vendors/amazon.ts";
 import { CriteoConnector } from "./vendors/criteo.ts";
 import { Ga4Connector } from "./vendors/ga4.ts";
 import { GmpConnector } from "./vendors/gmp.ts";
@@ -10,11 +12,13 @@ import { MetaConnector } from "./vendors/meta.ts";
 import { MicrosoftConnector } from "./vendors/microsoft.ts";
 import { OutbrainConnector } from "./vendors/outbrain.ts";
 import { PinterestConnector } from "./vendors/pinterest.ts";
+import { QuoraConnector } from "./vendors/quora.ts";
 import { RedditConnector } from "./vendors/reddit.ts";
 import { SnapchatConnector } from "./vendors/snapchat.ts";
 import { SpotifyConnector } from "./vendors/spotify.ts";
 import { TaboolaConnector } from "./vendors/taboola.ts";
 import { TikTokConnector } from "./vendors/tiktok.ts";
+import { TradeDeskConnector } from "./vendors/tradedesk.ts";
 import { XConnector } from "./vendors/x.ts";
 import { YahooConnector } from "./vendors/yahoo.ts";
 import { WebhookConnector } from "./webhook.ts";
@@ -43,6 +47,10 @@ registerConnector(new GmpConnector());
 registerConnector(new AdRollConnector());
 registerConnector(new SpotifyConnector());
 registerConnector(new CriteoConnector());
+registerConnector(new QuoraConnector());
+registerConnector(new TradeDeskConnector());
+registerConnector(new AmazonConnector());
+registerConnector(new AffiliateConnector());
 
 export function getConnector(type: ConnectorType): Connector | null {
   return registry.get(type) ?? null;

@@ -4,3 +4,7 @@ export * from "./ssrf.ts";
 export * from "./versions.ts";
 export * from "./webhook.ts";
 export * from "./registry.ts";
+export * from "./oauth1.ts";
+export * from "./oauth2.ts";
+export * from "./matrix.ts";
+export { AFFILIATE_PRESETS, type AffiliatePreset } from "./vendors/affiliate-presets.ts";

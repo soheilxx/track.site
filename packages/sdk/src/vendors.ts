@@ -1,5 +1,6 @@
 import { consentModeFlags, has } from "./consent.ts";
 import type { ConsentState, DestinationView, OutgoingEvent } from "./types.ts";
+import { activateExtra, mirrorExtra } from "./vendors-extra.ts";
 
 /**
  * Built-in browser tag templates. No customer JavaScript is ever executed: each template is a
@@ -184,7 +185,7 @@ export function activateVendor(w: W, d: DestinationView, consent: ConsentState):
         break;
       }
       default:
-        return false;
+        if (!activateExtra(w, d, consent)) return false;
     }
     loaded.add(d.id);
     return true;
@@ -313,6 +314,7 @@ export function mirrorEvent(w: W, d: DestinationView, e: OutgoingEvent, consent:
         break;
       }
       default:
+        mirrorExtra(w, d, e, mapping?.vendor_event);
         break;
     }
   } catch {

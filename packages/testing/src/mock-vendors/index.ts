@@ -27,6 +27,8 @@ export interface MockVendorOptions {
   yahooClientSecret?: string;
   cm360Token?: string;
   adrollToken?: string;
+  quoraToken?: string;
+  amazonToken?: string;
   pinterestToken?: string;
   snapchatToken?: string;
   /** force behaviour for the next N requests: status code to return */
@@ -310,6 +312,54 @@ export function createMockVendorApp(options: MockVendorOptions = {}) {
     if (!(id.email || (id.mapping_key && id.mapped_user_id) || id.idfa || id.gaid)) errors.push("UserIdentifierMissing");
     if (!body.events?.length) errors.push("EventsMissing");
     return c.json({ errors, warnings: [] });
+  });
+
+  // Quora Conversion API: POST /_/ad/conversion with Bearer token
+  app.post("/quora/_/ad/conversion", async (c) => {
+    const body = (await c.req.json()) as { account_id?: string; conversion?: Record<string, unknown>; user?: Record<string, unknown> };
+    record("quora", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ error: "forced" }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.quoraToken && auth !== `Bearer ${options.quoraToken}`)) return c.json({ error: "Invalid token" }, 401);
+    if (!body.account_id || !body.conversion?.event_name) return c.json({ error: "account_id and conversion.event_name required" }, 400);
+    return c.json({ success: true });
+  });
+
+  // The Trade Desk real-time conversions: POST /track/realtimeconversion (no auth; unknown tags -> 402)
+  app.post("/tradedesk/track/realtimeconversion", async (c) => {
+    const body = (await c.req.json()) as { data?: Array<{ adv?: string; upixel_id?: string; tracker_id?: string }> };
+    record("tradedesk", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    if (!body.data?.length) return c.body("data required", 400);
+    if (body.data.some((d) => !d.adv || (!d.upixel_id && !d.tracker_id))) return c.body("unknown pixel", 402);
+    return c.body("ok", 200);
+  });
+
+  // Amazon Ads Events API: POST /{region}/events/v1 with LwA bearer + client id headers
+  app.post("/amazon/:region/events/v1", async (c) => {
+    const body = (await c.req.json()) as { events?: Array<{ matchKeys?: unknown[]; eventDescription?: Record<string, unknown> }> };
+    record("amazon", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ message: "forced" }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.amazonToken && auth !== `Bearer ${options.amazonToken}`)) return c.json({ message: "Unauthorized" }, 401);
+    if (!c.req.header("amazon-advertising-api-clientid")) return c.json({ message: "Missing client id" }, 403);
+    if (!body.events?.length) return c.json({ message: "events required" }, 400);
+    const error = body.events.flatMap((ev, index) => (ev.matchKeys?.length ? [] : [{ index, httpStatusCode: 400, subErrors: [{ errorCode: "MATCH_KEYS_MISSING", errorMessage: "matchKeys required" }] }]));
+    return c.json({ success: body.events.map((_, index) => ({ index })).filter((s) => !error.some((e) => e.index === s.index)), error });
+  });
+
+  // Affiliate postbacks: generic receivers per preset (GET query or POST form/json), records everything
+  app.all("/affiliate/:preset", async (c) => {
+    const ct = c.req.header("content-type") ?? "";
+    const body = c.req.method === "GET" ? { query: c.req.query() } : ct.includes("json") ? await c.req.json().catch(() => null) : Object.fromEntries(new URLSearchParams(await c.req.text()));
+    record("affiliate", c.req.path + (c.req.method === "GET" ? "?" + new URLSearchParams(c.req.query()).toString() : ""), c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.body("forced", f as 500);
+    if (c.req.param("preset") === "impact" && !(c.req.header("authorization") ?? "").startsWith("Basic ")) return c.json({ Status: "Unauthorized" }, 401);
+    return c.req.param("preset") === "impact" ? c.json({ Status: "Queued", QueuedUri: "/Advertisers/IRabc/Conversions/1" }) : c.body("ok", 200);
   });
 
   // Generic webhook receiver

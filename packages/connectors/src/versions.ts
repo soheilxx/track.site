@@ -28,11 +28,11 @@ export const API_VERSIONS = {
   x: { version: env("X_ADS_API_VERSION", "12"), verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://docs.x.com/x-ads-api/measurement/web-conversions", envVar: "X_ADS_API_VERSION" },
   taboola: { version: "log/3", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://developers.taboola.com/pixel/docs/bulk-submit-s2s-conversions", envVar: null },
   outbrain: { version: "unifiedPixel", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://www.outbrain.com/help/advertisers/server2server-integrations/", envVar: null },
-  amazon: { version: "v1", verifiedAt: "pending", sunsetWatch: null, docsUrl: "https://advertising.amazon.com/API/docs/en-us/amazon-attribution-prod-3p/conversions-api", envVar: null },
+  amazon: { version: "events-v1", verifiedAt: "2026-09-03 (secondary: Commanders Act / MetaRouter references; portal renders client-side)", sunsetWatch: null, docsUrl: "https://advertising.amazon.com/API/docs/en-us/guides/events/overview", envVar: null },
   spotify: { version: "pixel-v1", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://help.adanalytics.spotify.com/server-side-gtm-ssgtm-integration-1", envVar: null },
-  quora: { version: "v1", verifiedAt: "pending", sunsetWatch: null, docsUrl: "https://quoraadsupport.zendesk.com/hc/en-us/articles/4406385106068-Quora-Conversion-API", envVar: null },
+  quora: { version: "v1", verifiedAt: "2026-09-03 (help center + Commanders Act reference; OpenAPI requires Quora Ads login)", sunsetWatch: null, docsUrl: "https://www.quora.com/ads/conversion_api_doc", envVar: "QUORA_CAPI_ENDPOINT" },
   yahoo: { version: "v1", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://help.yahooinc.com/dsp-api/docs/standard-yahoo-conversion-api", envVar: null },
-  tradedesk: { version: "v1", verifiedAt: "pending", sunsetWatch: null, docsUrl: "https://partner.thetradedesk.com/v1/portal/data/doc/DataConversionEventsApi", envVar: null },
+  tradedesk: { version: "realtimeconversion", verifiedAt: "2026-09-03 (secondary: Tealium / Adobe / RudderStack references; partner portal requires login)", sunsetWatch: null, docsUrl: "https://partner.thetradedesk.com/v3/portal/data/doc/DataConversionEventsApi", envVar: null },
   gmp: { version: env("CM360_API_VERSION", "v5"), verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://developers.google.com/doubleclick-advertisers/rest/v5/conversions/batchinsert", envVar: "CM360_API_VERSION" },
   adroll: { version: "s2s-beta", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://apidocs.nextroll.com/server-to-server-api/reference.html", envVar: null },
   criteo: { version: "s2s_v1.0.0", verifiedAt: "2026-09-03", sunsetWatch: null, docsUrl: "https://guides.criteotilt.com/onetag/s2s/", envVar: null },
@@ -47,5 +47,5 @@ export function sunsetWarning(pin: ApiVersionPin, now: Date = new Date(), daysAh
 }
 
 export function unverifiedPins(): string[] {
-  return Object.entries(API_VERSIONS).filter(([, p]) => p.verifiedAt === "pending").map(([k]) => k);
+  return Object.entries(API_VERSIONS).filter(([, p]) => (p.verifiedAt as string) === "pending" || (p.verifiedAt as string).includes("(")).map(([k]) => k);
 }
