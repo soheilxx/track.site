@@ -1,0 +1,37 @@
+{
+  "name": "@track-site/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "cli": "tsx src/cli.ts",
+    "build": "tsup",
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run -c vitest.config.ts",
+    "test:integration": "vitest run -c vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@track-site/analytics": "workspace:*",
+    "@track-site/config": "workspace:*",
+    "@track-site/connectors": "workspace:*",
+    "@track-site/core": "workspace:*",
+    "@track-site/db": "workspace:*",
+    "@track-site/events": "workspace:*",
+    "@track-site/policy": "workspace:*",
+    "@track-site/queue": "workspace:*",
+    "pg": "^8.23.0",
+    "zod": "^4.5.4",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.13",
+    "vitest": "^4.1.11",
+    "drizzle-orm": "^0.45.2"
+  }
+}
