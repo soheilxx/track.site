@@ -1,0 +1,32 @@
+{
+  "name": "@track-site/testing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./mock-vendors": "./src/mock-vendors/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "mock:vendors": "tsx src/mock-vendors/serve.ts",
+    "load:collector": "tsx src/load/collector.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.1",
+    "@track-site/core": "workspace:*",
+    "autocannon": "^8.0.0",
+    "hono": "^4.13.5",
+    "pg": "^8.23.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.13",
+    "@types/autocannon": "^7.12.7"
+  }
+}

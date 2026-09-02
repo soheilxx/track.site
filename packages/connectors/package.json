@@ -1,0 +1,30 @@
+{
+  "name": "@track-site/connectors",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run -c vitest.config.ts",
+    "test:contract": "vitest run -c vitest.contract.config.ts"
+  },
+  "dependencies": {
+    "@track-site/core": "workspace:*",
+    "@track-site/events": "workspace:*",
+    "@track-site/policy": "workspace:*",
+    "zod": "^4.5.4",
+    "undici": "^7.0.0",
+    "@track-site/config": "workspace:*"
+  },
+  "devDependencies": {
+    "@track-site/testing": "workspace:*",
+    "@types/node": "^24.0.0",
+    "vitest": "^4.1.11"
+  }
+}
