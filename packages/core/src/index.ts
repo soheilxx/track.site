@@ -10,3 +10,5 @@ export * from "./ids/index.ts";
 export * from "./crypto/index.ts";
 export * from "./url/index.ts";
 export * from "./pii/index.ts";
+export * from "./domain-verify.ts";
+export * from "./site-inspect.ts";

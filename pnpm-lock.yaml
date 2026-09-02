@@ -305,6 +305,9 @@ importers:
 
   packages/ai:
     dependencies:
+      '@track-site/analytics':
+        specifier: workspace:*
+        version: link:../analytics
       '@track-site/config':
         specifier: workspace:*
         version: link:../config
@@ -323,9 +326,18 @@ importers:
       '@track-site/policy':
         specifier: workspace:*
         version: link:../policy
+      '@track-site/queue':
+        specifier: workspace:*
+        version: link:../queue
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@types/pg@8.23.1)(kysely@0.29.5)(pg@8.23.0)
       openai:
         specifier: ^7.9.0
         version: 7.9.0(@aws-sdk/credential-provider-node@3.972.82)(@smithy/signature-v4@5.7.3)(undici@8.10.1)(zod@4.5.4)
+      pg:
+        specifier: ^8.23.0
+        version: 8.23.0
       zod:
         specifier: ^4.5.4
         version: 4.5.4
@@ -333,6 +345,9 @@ importers:
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
+      '@types/pg':
+        specifier: ^8.23.1
+        version: 8.23.1
       tsx:
         specifier: ^4.23.13
         version: 4.23.13

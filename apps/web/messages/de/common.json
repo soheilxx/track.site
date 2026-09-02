@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "defaultTitle": "track.site – AI-first Tag Manager und Server-Side Event Router",
+    "defaultDescription": "Ein Snippet, ein KI-Assistent für die Einrichtung und ein consent-basierter Server-Side Event Router. First-Party-Events, deduplizierte Conversions und transparente Zustellung an jede Werbe- und Analyseplattform."
+  },
+  "nav": {
+    "features": "Funktionen",
+    "integrations": "Integrationen",
+    "howItWorks": "So funktioniert es",
+    "pricing": "Preise",
+    "docs": "Doku",
+    "blog": "Blog",
+    "login": "Anmelden",
+    "signup": "Kostenlos starten",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "language": "Sprache"
+  },
+  "footer": {
+    "tagline": "AI-first Tag Manager, consent-basierter Server-Side Event Router und First-Party Event Layer.",
+    "region": "EU-Datenregion als Standard. Auftragsverarbeiter nach Art. 28 DSGVO.",
+    "rights": "Alle Rechte vorbehalten.",
+    "legalNote": "Rechtsseiten sind allgemeine Informationen, keine Rechtsberatung.",
+    "columns": { "product": "Produkt", "integrations": "Integrationen", "trust": "Vertrauen", "company": "Unternehmen" },
+    "links": {
+      "features": "Funktionen",
+      "howItWorks": "So funktioniert es",
+      "integrations": "Alle Integrationen",
+      "pricing": "Preise",
+      "docs": "Dokumentation",
+      "meta": "Meta Pixel + CAPI",
+      "ga4": "Google Analytics 4",
+      "googleAds": "Google Ads",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware 6",
+      "security": "Sicherheit",
+      "privacy": "Datenschutz",
+      "dataProcessing": "Auftragsverarbeitung (AVV)",
+      "subprocessors": "Subunternehmer",
+      "terms": "AGB",
+      "imprint": "Impressum",
+      "blog": "Blog",
+      "contact": "Kontakt",
+      "demo": "Demo buchen",
+      "support": "Support",
+      "status": "Status"
+    }
+  },
+  "home": {
+    "eyebrow": "AI-first Tag Manager",
+    "title": "Ein Snippet. Jede Plattform. Consent eingebaut.",
+    "subtitle": "Ein asynchrones Script einfügen, dem Assistenten erklären, was die Website tut, und verifizierte First-Party-Events serverseitig an Meta, Google, TikTok, LinkedIn und 15 weitere Ziele senden – dedupliziert und consent-geprüft.",
+    "cta": "Mit deiner Domain starten",
+    "ctaSecondary": "So funktioniert es",
+    "domainPlaceholder": "deinshop.de",
+    "domainLabel": "Deine Website",
+    "domainHelp": "Wir legen die Site an, vergeben eine öffentliche sechsstellige Tracking-ID und führen dich im Chat durch den Rest.",
+    "trust": {
+      "eu": "EU-Datenregion",
+      "consent": "Strikte Opt-in-Consent-Engine",
+      "signed": "Signierte, versionierte Konfigurationen",
+      "noCode": "Kein Custom HTML oder JavaScript"
+    },
+    "problemTitle": "Tag Manager wurden für Experten gebaut. Deiner sollte keinen brauchen.",
+    "problemText": "Client-seitige Pixel verlieren Events, serverseitige Setups brauchen Entwickler und Consent ist meist ein Banner statt einer technischen Regel. track.site macht daraus eine geführte Einrichtung mit einem Event Router, der Datenschutz durchsetzt, bevor etwas gespeichert oder gesendet wird.",
+    "steps": {
+      "title": "So funktioniert es",
+      "items": [
+        { "title": "Ein Snippet einbauen", "text": "Den asynchronen Tracker mit der sechsstelligen Site-ID einfügen. Keine Layoutverschiebung, kein Einfluss auf den Checkout, fail-safe bei Problemen." },
+        { "title": "Wenige Fragen beantworten", "text": "Der Assistent erkennt die Plattform, schlägt einen Messplan vor und verbindet Ziele mit validierten Eingaben und sicheren Credential-Karten." },
+        { "title": "Testen, prüfen, veröffentlichen", "text": "Jede Änderung ist eine signierte Konfigurationsversion mit lesbarem Diff. Veröffentlicht wird erst nach deiner Bestätigung. Rollback mit einem Klick." },
+        { "title": "Events beobachten", "text": "Live Event Debugger, Zustellstatus je Ziel, Deduplizierung und ein Tracking Health Score, der sagt, was als Nächstes zu tun ist." }
+      ]
+    },
+    "features": {
+      "title": "Gebaut als Daten-, Consent- und Routing-Layer – nicht als weiterer Script-Container",
+      "items": [
+        { "title": "First-Party Event Layer", "text": "Kanonische Events mit Lineage vom Browser bis zum Ziel. Unbekanntes bleibt unbekannt; nichts wird erfunden." },
+        { "title": "Consent als Policy Engine", "text": "Strikte EU-Defaults, Consent Mode v2, TCF, GPP, GPC und die gängigen CMPs. Serverseitig wird fehlender Consent nie umgangen." },
+        { "title": "Server-Side Router", "text": "Durable Queue, Isolation je Ziel, Retries mit Backoff, Dead-Letter-Replay und idempotente Conversions." },
+        { "title": "KI-Einrichtungsassistent", "text": "Streng typisierte Tools, Entwürfe, Diffs und explizite Freigabe. Das Modell berührt die Event-Pipeline nie." },
+        { "title": "Commerce-taugliche Deduplizierung", "text": "Gleiche Event-ID in Browser und Server, Bestellnummer als Source of Truth, keine Doppelconversions bei Replay." },
+        { "title": "Transparente Diagnose", "text": "Payload-Vorschau mit maskierten Secrets, Drop-Gründe, Zustellfehler und Data-Quality-Inbox." }
+      ]
+    },
+    "integrations": {
+      "title": "Ziele im ersten Release enthalten",
+      "text": "Browser-Tag plus serverseitige API für jede Plattform, die eine anbietet – mit gemeinsamen Event-IDs für die Deduplizierung.",
+      "all": "Alle Integrationen"
+    },
+    "security": {
+      "title": "Datenschutz wird technisch erzwungen",
+      "items": [
+        "Row-Level Security isoliert jeden Mandanten in der Datenbank",
+        "Envelope-verschlüsselte Zugangsdaten; Secrets gelangen nie in Chat, Logs oder das Modell",
+        "Signierte, unveränderliche Config-Bundles, im Browser verifiziert",
+        "Kein Fingerprinting, keine Consent-Umgehung, keine synthetischen Conversions"
+      ]
+    },
+    "finalCta": {
+      "title": "Bereit für verifizierte Events in Minuten?",
+      "text": "Site anlegen, Snippet einfügen und den Assistenten den Rest erledigen lassen.",
+      "cta": "Site anlegen"
+    }
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "text": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "home": "Zur Startseite"
+  },
+  "error": {
+    "title": "Etwas ist schiefgelaufen",
+    "text": "Der Fehler wurde aufgezeichnet. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen"
+  }
+}

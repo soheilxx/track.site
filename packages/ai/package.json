@@ -1,0 +1,37 @@
+{
+  "name": "@track-site/ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run -c vitest.config.ts",
+    "eval": "tsx src/evals/run.ts"
+  },
+  "dependencies": {
+    "@track-site/config": "workspace:*",
+    "@track-site/connectors": "workspace:*",
+    "@track-site/core": "workspace:*",
+    "@track-site/db": "workspace:*",
+    "@track-site/events": "workspace:*",
+    "@track-site/policy": "workspace:*",
+    "openai": "^7.9.0",
+    "zod": "^4.5.4",
+    "@track-site/queue": "workspace:*",
+    "@track-site/analytics": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.13",
+    "vitest": "^4.1.11",
+    "@types/pg": "^8.23.1"
+  }
+}

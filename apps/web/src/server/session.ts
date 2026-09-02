@@ -1,0 +1,96 @@
+import "server-only";
+import { eq, and } from "drizzle-orm";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { AppError, assertCan, isOrgRole, newUlid, type OrgRole, type Permission, type PlatformRole, type TenantContext, type UserActor } from "@track-site/core";
+import { member, organization, withTenant, type Tx } from "@track-site/db";
+import { auth } from "./auth";
+import { db } from "./db";
+
+export interface SessionUser {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  platformRole: PlatformRole;
+  locale: string;
+  twoFactorEnabled: boolean;
+}
+
+export interface OrgContext {
+  user: SessionUser;
+  organization: { id: string; name: string; slug: string };
+  role: OrgRole;
+  tenant: TenantContext;
+}
+
+export async function getSession(): Promise<{ user: SessionUser; activeOrganizationId: string | null } | null> {
+  const s = await auth().api.getSession({ headers: await headers() });
+  if (!s) return null;
+  const u = s.user as unknown as SessionUser & { platformRole?: string };
+  return {
+    user: {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      emailVerified: u.emailVerified,
+      platformRole: (u.platformRole as PlatformRole) ?? "NONE",
+      locale: u.locale ?? "en",
+      twoFactorEnabled: Boolean(u.twoFactorEnabled),
+    },
+    activeOrganizationId: (s.session as unknown as { activeOrganizationId?: string | null } | null)?.activeOrganizationId ?? null,
+  };
+}
+
+export async function requireUser(): Promise<SessionUser> {
+  const s = await getSession();
+  if (!s) redirect("/login");
+  return s.user;
+}
+
+/** Resolves the active organization + role; falls back to the user's first membership. */
+export async function getOrgContext(): Promise<OrgContext | null> {
+  const s = await getSession();
+  if (!s) return null;
+  const memberships = await db()
+    .select({ orgId: member.organizationId, role: member.role, name: organization.name, slug: organization.slug })
+    .from(member)
+    .innerJoin(organization, eq(organization.id, member.organizationId))
+    .where(eq(member.userId, s.user.id));
+  const chosen = memberships.find((m) => m.orgId === s.activeOrganizationId) ?? memberships[0];
+  if (!chosen) return null;
+  const role: OrgRole = isOrgRole(chosen.role) ? chosen.role : "READ_ONLY";
+  const actor: UserActor = { kind: "user", userId: s.user.id, role, platformRole: s.user.platformRole };
+  return {
+    user: s.user,
+    organization: { id: chosen.orgId, name: chosen.name, slug: chosen.slug },
+    role,
+    tenant: { organizationId: chosen.orgId, actor, requestId: newUlid() },
+  };
+}
+
+export async function requireOrgContext(permission?: Permission): Promise<OrgContext> {
+  const ctx = await getOrgContext();
+  if (!ctx) {
+    const s = await getSession();
+    redirect(s ? "/app/onboarding/organization" : "/login");
+  }
+  if (permission) {
+    try {
+      assertCan(ctx.role, permission);
+    } catch {
+      throw new AppError("FORBIDDEN", `Missing permission ${permission}`);
+    }
+  }
+  return ctx;
+}
+
+/** Tenant-scoped transaction for the current request (RLS enforced). */
+export async function withOrg<T>(ctx: OrgContext, fn: (tx: Tx) => Promise<T>): Promise<T> {
+  return withTenant(db(), ctx.organization.id, fn);
+}
+
+export async function isMemberOf(userId: string, organizationId: string): Promise<boolean> {
+  const rows = await db().select({ id: member.id }).from(member).where(and(eq(member.userId, userId), eq(member.organizationId, organizationId))).limit(1);
+  return rows.length > 0;
+}

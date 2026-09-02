@@ -1,0 +1,93 @@
+@import "@track-site/ui/styles/tokens.css";
+@source "../../../../packages/ui/src";
+@source "../";
+
+@layer utilities {
+  .prose-ts {
+    color: var(--color-ink-2);
+    line-height: 1.7;
+  }
+  .prose-ts h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .prose-ts h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .prose-ts p,
+  .prose-ts ul,
+  .prose-ts ol,
+  .prose-ts table,
+  .prose-ts pre,
+  .prose-ts blockquote {
+    margin-bottom: 1rem;
+  }
+  .prose-ts ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+  }
+  .prose-ts ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+  .prose-ts a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-ts code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--color-surface-2);
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+  }
+  .prose-ts pre {
+    overflow-x: auto;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-control);
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .prose-ts pre code {
+    background: transparent;
+    padding: 0;
+  }
+  .prose-ts table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose-ts th,
+  .prose-ts td {
+    border: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-ts th {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+  }
+  .prose-ts blockquote {
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+    color: var(--color-ink-2);
+  }
+  .prose-ts hr {
+    border-color: var(--color-line);
+    margin: 2rem 0;
+  }
+}
