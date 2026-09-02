@@ -1,0 +1,38 @@
+{
+  "name": "@track-site/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./logger": "./src/logger.ts",
+    "./crypto": "./src/crypto/index.ts",
+    "./ids": "./src/ids/index.ts",
+    "./rbac": "./src/rbac.ts",
+    "./result": "./src/result.ts",
+    "./url": "./src/url/index.ts",
+    "./pii": "./src/pii/index.ts",
+    "./ratelimit": "./src/ratelimit.ts"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "keys:generate": "tsx src/cli/keys-generate.ts",
+    "keys:rotate": "tsx src/cli/keys-rotate.ts"
+  },
+  "dependencies": {
+    "pino": "^10.3.1",
+    "ulid": "^3.0.2",
+    "zod": "^4.5.4",
+    "@aws-sdk/client-kms": "^3.1125.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.13",
+    "vitest": "^4.1.11"
+  }
+}
