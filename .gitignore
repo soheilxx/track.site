@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+.turbo/
+coverage/
+playwright-report/
+test-results/
+apps/web/public/cdn/
+
+# environment – never commit secrets
+.env
+.env.*
+!.env.example
+!.env.test.example
+
+# local infra
+pgdata/
+.localstack/
+minio-data/
+*.pem
+!**/fixtures/**/*.pem
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+npm-debug.log*
+pnpm-debug.log*
+.local/
+packages/testing/load-results/

@@ -1,0 +1,19 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "integrations/*"
+verifyDepsBeforeRun: false
+allowBuilds:
+  esbuild: true
+  sharp: true
+  "@tailwindcss/oxide": true
+  unrs-resolver: true
+  "@swc/core": true
+  "@parcel/watcher": true
+minimumReleaseAgeExclude:
+  - "@aws-sdk/client-kms"
+  - "@aws-sdk/client-sqs"
+  - framer-motion
+  - motion-dom
+  - motion
+  - openai

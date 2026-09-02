@@ -1,0 +1,42 @@
+{
+  "name": "track-site",
+  "private": true,
+  "version": "0.1.0",
+  "description": "track.site – AI-first tag manager, consent-aware server-side event router and first-party event layer",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "test:contract": "turbo run test:contract",
+    "test:e2e": "turbo run test:e2e",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "pnpm --filter @track-site/db generate",
+    "db:migrate": "pnpm --filter @track-site/db migrate",
+    "db:check": "pnpm --filter @track-site/db migrate:check",
+    "db:seed": "pnpm --filter @track-site/db seed",
+    "sdk:budget": "pnpm --filter @track-site/sdk budget",
+    "seo:check": "pnpm --filter @track-site/web seo:check",
+    "load:collector": "pnpm --filter @track-site/testing load:collector",
+    "clean": "turbo run clean && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.10.12",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.69.0"
+  }
+}
