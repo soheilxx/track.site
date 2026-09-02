@@ -27,7 +27,7 @@ export const REQUIRED_BROWSER_IDS: Record<ConnectorType, string[]> = {
   google_ads: ["conversion_id"],
   ga4: ["measurement_id"],
   tiktok: ["pixel_id"],
-  microsoft: ["tag_id"],
+  microsoft: ["uet_tag_id"],
   linkedin: ["partner_id"],
   reddit: ["pixel_id"],
   pinterest: ["tag_id"],

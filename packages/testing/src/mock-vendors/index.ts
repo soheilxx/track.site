@@ -21,6 +21,9 @@ export interface MockVendorOptions {
   linkedinToken?: string;
   ga4Secret?: string;
   googleAdsToken?: string;
+  microsoftToken?: string;
+  pinterestToken?: string;
+  snapchatToken?: string;
   /** force behaviour for the next N requests: status code to return */
   failNext?: { status: number; remaining: number } | null;
 }
@@ -56,12 +59,18 @@ export function createMockVendorApp(options: MockVendorOptions = {}) {
   });
 
   // Meta Conversions API: POST /{version}/{pixel_id}/events with access_token in body
+  app.get("/meta/:version/:pixel", (c) => {
+    const token = c.req.query("access_token");
+    if (!token || (options.metaToken && token !== options.metaToken)) return c.json({ error: { message: "Invalid OAuth access token.", type: "OAuthException", code: 190 } }, 401);
+    return c.json({ id: c.req.param("pixel"), name: "Mock dataset" });
+  });
   app.post("/meta/:version/:pixel/events", async (c) => {
     const body = (await c.req.json()) as { access_token?: string; data?: unknown[]; test_event_code?: string };
     record("meta", c.req.path, c.req.raw.headers, body);
     const f = forced();
     if (f) return c.json({ error: { message: "forced", type: "OAuthException", code: f } }, f as 500);
-    if (!body.access_token || (options.metaToken && body.access_token !== options.metaToken)) return c.json({ error: { message: "Invalid OAuth access token.", type: "OAuthException", code: 190 } }, 401);
+    const token = body.access_token ?? c.req.query("access_token");
+    if (!token || (options.metaToken && token !== options.metaToken)) return c.json({ error: { message: "Invalid OAuth access token.", type: "OAuthException", code: 190 } }, 401);
     if (!Array.isArray(body.data) || body.data.length === 0) return c.json({ error: { message: "(#100) Param data is required", type: "OAuthException", code: 100 } }, 400);
     return c.json({ events_received: body.data.length, messages: [], fbtrace_id: "mock" });
   });
@@ -128,11 +137,60 @@ export function createMockVendorApp(options: MockVendorOptions = {}) {
     record("google_ads", c.req.path, c.req.raw.headers, body);
     const f = forced();
     if (f) return c.json({ error: { code: f, message: "forced" } }, f as 500);
-    if (!c.req.header("authorization")?.startsWith("Bearer ")) return c.json({ error: { code: 401, message: "UNAUTHENTICATED" } }, 401);
+    const gauth = c.req.header("authorization") ?? "";
+    if (!gauth.startsWith("Bearer ") || (options.googleAdsToken && gauth !== `Bearer ${options.googleAdsToken}`)) return c.json({ error: { code: 401, message: "Request had invalid authentication credentials.", status: "UNAUTHENTICATED" } }, 401);
     if (!c.req.header("developer-token")) return c.json({ error: { code: 403, message: "DEVELOPER_TOKEN_MISSING" } }, 403);
     if (!Array.isArray(body.conversions) || !body.conversions.length) return c.json({ error: { code: 400, message: "conversions required" } }, 400);
     return c.json({ results: body.conversions.map(() => ({ conversionAction: "customers/1/conversionActions/1", conversionDateTime: new Date().toISOString() })), partialFailureError: null });
   });
+
+  // LinkedIn conversion rules lookup (credential validation)
+  app.get("/linkedin/rest/conversions", (c) => {
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.linkedinToken && auth !== `Bearer ${options.linkedinToken}`)) return c.json({ message: "Unauthorized", serviceErrorCode: 65600 }, 401);
+    return c.json({ elements: [{ id: 104012, name: "Purchase (CAPI)", conversionMethod: "CONVERSIONS_API", enabled: true, type: "PURCHASE" }] });
+  });
+
+  // Microsoft UET Conversions API: POST /v1/{tagId}/events with Bearer token
+  app.post("/microsoft/v1/:tag/events", async (c) => {
+    const body = (await c.req.json()) as { data?: Array<{ eventType?: string; eventTime?: number }>; continueOnValidationError?: boolean };
+    record("microsoft", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ error: { code: "Internal", message: "forced" } }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.microsoftToken && auth !== `Bearer ${options.microsoftToken}`)) return c.json({ error: { code: "Unauthorized", message: "You are not authorized to access this resource." } }, 401);
+    const details = (body.data ?? []).flatMap((ev, index) => (ev.eventType === "pageLoad" || ev.eventType === "custom" ? [] : [{ index, propertyName: `data[${index}].eventType`, errorMessage: "eventType must be one of the following: pageLoad, custom.", errorCode: "InvalidEnumValue", isWarning: false }]));
+    if (!body.data?.length || (details.length && !body.continueOnValidationError) || details.length === body.data.length) return c.json({ error: { code: "ValidationError", message: "One or multiple parameters did not pass validation checks, see details.", details: details.length ? details : [{ index: 0, propertyName: "data", errorMessage: "data must not be empty", errorCode: "Empty", isWarning: false }] } }, 400);
+    return c.json({ eventsReceived: body.data.length - details.length, ...(details.length ? { error: { code: "ValidationError", message: "partial", details } } : {}) });
+  });
+
+  // Pinterest Conversions API v5: POST /v5/ad_accounts/{id}/events[?test=true]
+  app.post("/pinterest/v5/ad_accounts/:account/events", async (c) => {
+    const body = (await c.req.json()) as { data?: Array<{ event_name?: string; user_data?: Record<string, unknown> }> };
+    record("pinterest", c.req.path + (c.req.query("test") ? "?test=true" : ""), c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ code: f, message: "forced" }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.pinterestToken && auth !== `Bearer ${options.pinterestToken}`)) return c.json({ code: 2, message: "Authentication failed." }, 401);
+    if (!body.data?.length) return c.json({ code: 1, message: "data required" }, 400);
+    const events = body.data.map((ev) => (ev.user_data && Object.keys(ev.user_data).length ? { status: "processed", error_message: null, warning_message: null } : { status: "failed", error_message: "user_data must contain at least one identifier", warning_message: null }));
+    return c.json({ num_events_received: body.data.length, num_events_processed: events.filter((e) => e.status === "processed").length, events });
+  });
+
+  // Snapchat Conversions API v3: POST /v3/{pixel}/events and /validate with Bearer token
+  const snap = async (c: Context) => {
+    const body = (await c.req.json()) as { data?: Array<{ event_name?: string; user_data?: Record<string, unknown> }> };
+    record("snapchat", c.req.path, c.req.raw.headers, body);
+    const f = forced();
+    if (f) return c.json({ status: "FAILED", reason: "forced" }, f as 500);
+    const auth = c.req.header("authorization") ?? "";
+    if (!auth.startsWith("Bearer ") || (options.snapchatToken && auth !== `Bearer ${options.snapchatToken}`)) return c.json({ status: "FAILED", reason: "Unauthorized" }, 401);
+    if (!body.data?.length) return c.json({ status: "FAILED", reason: "data required" }, 400);
+    const error_records = body.data.flatMap((ev, index) => (ev.user_data && Object.keys(ev.user_data).length ? [] : [{ index, reason: "user_data required" }]));
+    return c.json({ status: error_records.length === body.data.length ? "FAILED" : "SUCCESS", reason: error_records.length ? "partial" : "OK", error_records });
+  };
+  app.post("/snapchat/v3/:pixel/events", snap);
+  app.post("/snapchat/v3/:pixel/events/validate", snap);
 
   // Generic webhook receiver
   app.post("/webhook", async (c) => {

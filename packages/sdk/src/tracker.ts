@@ -179,17 +179,32 @@ export class Tracker {
     };
     if (Object.keys(props).length) event.props = sanitizeProps(props);
     if (commerce) event.commerce = commerce;
+    const vendorIds: Record<string, string> = {};
+    if (analytics) {
+      const ga = readCookie("_ga");
+      const m = ga ? ga.match(/^GA\d+\.\d+\.(\d+\.\d+)$/) : null;
+      if (m?.[1]) vendorIds.ga_client_id = m[1];
+    }
     if (marketing && b.consent.click_ids.capture) {
       if (Object.keys(scrubbed.clickIds).length) event.click_ids = scrubbed.clickIds;
-      const vendorIds: Record<string, string> = {};
       const fbp = readCookie("_fbp");
       const fbc = readCookie("_fbc");
       const ttp = readCookie("_ttp");
+      const scid = readCookie("_scid");
+      const uet = readCookie("_uetsid");
+      const epik = readCookie("_epik");
+      const rdt = readCookie("_rdt_uuid");
+      const liFat = readCookie("li_fat_id");
       if (fbp) vendorIds.fbp = fbp;
       if (fbc) vendorIds.fbc = fbc;
       if (ttp) vendorIds.ttp = ttp;
-      if (Object.keys(vendorIds).length) event.vendor_ids = vendorIds;
+      if (scid) vendorIds.scid = scid;
+      if (uet) vendorIds.uetsid = uet;
+      if (epik) vendorIds.epik = epik;
+      if (rdt) vendorIds.rdt_uuid = rdt;
+      if (liFat) vendorIds.li_fat_id = liFat;
     }
+    if (Object.keys(vendorIds).length) event.vendor_ids = vendorIds;
     this.transport.enqueue(event);
     const w = window as unknown as Window & Record<string, unknown>;
     for (const d of b.destinations) {

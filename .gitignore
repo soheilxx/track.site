@@ -36,3 +36,7 @@ npm-debug.log*
 pnpm-debug.log*
 .local/
 packages/testing/load-results/
+next-env.d.ts
+
+# local agent settings
+.claude/

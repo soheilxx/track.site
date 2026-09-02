@@ -58,6 +58,10 @@ export interface ConnectorContext {
   allowPrivateNetwork?: boolean;
   logger: AppLogger;
   now: () => Date;
+  /** short-lived OAuth access tokens minted by the platform from stored refresh tokens (never exposed to tenants) */
+  oauth?: { accessToken(provider: string): Promise<string | null> } | null;
+  /** platform-level (not tenant) secrets such as partner developer tokens */
+  platform?: Record<string, string | null | undefined>;
 }
 
 export interface DispatchEvent {
@@ -123,9 +127,13 @@ export interface HealthResult {
   sunsetWatch: string | null;
 }
 
+export type BrowserTemplate =
+  | "meta_pixel" | "tiktok_pixel" | "reddit_pixel" | "linkedin_insight" | "gtag" | "google_ads_tag" | "microsoft_uet" | "pinterest_tag" | "snap_pixel"
+  | "x_pixel" | "taboola_pixel" | "outbrain_pixel" | "amazon_tag" | "spotify_pixel" | "quora_pixel" | "yahoo_dot" | "ttd_pixel" | "gmp_floodlight" | "adroll_pixel" | "criteo_onetag";
+
 export interface BrowserTagConfig {
   /** built-in SDK loader template id (no custom JS) */
-  template: "meta_pixel" | "tiktok_pixel" | "reddit_pixel" | "linkedin_insight" | "gtag";
+  template: BrowserTemplate;
   ids: Record<string, string>;
   consentPurpose: "analytics" | "marketing";
 }
