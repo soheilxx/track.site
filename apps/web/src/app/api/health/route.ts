@@ -38,7 +38,10 @@ async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: strin
         const json = (await res.json()) as { data?: Array<{ name: string; status: string }> };
         const match = (json.data ?? []).find((d) => d.name.toLowerCase() === domain);
         status = match ? match.status : "domain_missing";
-      } else status = `http_${res.status}`;
+      } else {
+        const body = (await res.json().catch(() => null)) as { name?: string; message?: string } | null;
+        status = `http_${res.status}${body?.name ? `:${body.name}` : ""}${body?.message ? ` ${body.message.slice(0, 80)}` : ""}`;
+      }
     } catch {
       status = "unreachable";
     }

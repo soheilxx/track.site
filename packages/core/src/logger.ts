@@ -40,13 +40,18 @@ let root: Logger | undefined;
 
 export function createLogger(name: string, options: LoggerOptions = {}): Logger {
   if (!root) {
-    root = pino({
-      level: process.env.LOG_LEVEL ?? "info",
-      redact: { paths: REDACT_PATHS, censor: "[redacted]" },
-      base: { service: process.env.OTEL_SERVICE_NAME ?? "track-site" },
-      timestamp: pino.stdTimeFunctions.isoTime,
-      ...options,
-    });
+    // serverless runtimes (Vercel, Lambda) freeze the process right after the response: write synchronously so nothing is lost
+    const serverless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+    root = pino(
+      {
+        level: process.env.LOG_LEVEL ?? "info",
+        redact: { paths: REDACT_PATHS, censor: "[redacted]" },
+        base: { service: process.env.OTEL_SERVICE_NAME ?? "track-site" },
+        timestamp: pino.stdTimeFunctions.isoTime,
+        ...options,
+      },
+      serverless ? pino.destination({ fd: 1, sync: true }) : undefined,
+    );
   }
   return root.child({ module: name });
 }
