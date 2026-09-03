@@ -2,7 +2,7 @@
 // Starts/stops an embedded PostgreSQL 18 for local development without Docker.
 // Usage: node scripts/local-postgres.mjs start|stop|status  (data dir: .local/pgdata, port 54330)
 import { spawn, execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync, rmSync , readdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -15,11 +15,47 @@ const port = process.env.LOCAL_PG_PORT ?? "54330";
 const password = "localdev";
 
 function binDir() {
-  const pkg = `@embedded-postgres/${process.platform}-${process.arch}`;
+  // the platform package is named win32-x64 in older releases and windows-x64 from 18.4
+  const names = process.platform === "win32" ? [`@embedded-postgres/win32-${process.arch}`, `@embedded-postgres/windows-${process.arch}`] : [`@embedded-postgres/${process.platform}-${process.arch}`];
+  // pnpm links only embedded-postgres at the root; its platform package is resolvable from that package's directory
+  let fromPkg = require;
   try {
-    return path.join(path.dirname(require.resolve(`${pkg}/package.json`)), "native", "bin");
+    fromPkg = createRequire(require.resolve("embedded-postgres/package.json"));
   } catch {
-    console.error(`Missing ${pkg}. Install once: pnpm add -D -w embedded-postgres@18`);
+    /* fall back to the root resolver */
+  }
+  for (const pkg of names) {
+    try {
+      return path.join(path.dirname(fromPkg.resolve(`${pkg}/package.json`)), "native", "bin");
+    } catch {
+      /* try the next name */
+    }
+  }
+  // last resort: pnpm's virtual store (works even when neither package exposes package.json via exports)
+  const store = path.join(root, "node_modules", ".pnpm");
+  if (existsSync(store)) {
+    for (const dir of readdirSync(store)) {
+      if (!dir.startsWith("@embedded-postgres+")) continue;
+      const inner = path.join(store, dir, "node_modules", "@embedded-postgres");
+      for (const name of existsSync(inner) ? readdirSync(inner) : []) {
+        const bin = path.join(inner, name, "native", "bin");
+        if (existsSync(path.join(bin, process.platform === "win32" ? "postgres.exe" : "postgres"))) {
+          const hydrate = path.join(inner, name, "scripts", "hydrate-symlinks.js");
+          if (existsSync(hydrate) && !existsSync(path.join(inner, name, "native", ".hydrated"))) {
+            try {
+              execFileSync(process.execPath, [hydrate], { cwd: path.join(inner, name), stdio: "ignore" });
+              writeFileSync(path.join(inner, name, "native", ".hydrated"), "");
+            } catch {
+              /* symlink hydration is optional on Windows */
+            }
+          }
+          return bin;
+        }
+      }
+    }
+  }
+  {
+    console.error(`Missing ${names.join(" or ")}. Install once: pnpm add -D -w embedded-postgres@18.4.0-beta.17`);
     process.exit(1);
   }
 }

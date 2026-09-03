@@ -10,6 +10,7 @@ allowBuilds:
   unrs-resolver: true
   "@swc/core": true
   "@parcel/watcher": true
+  '@embedded-postgres/windows-x64': set this to true or false
 minimumReleaseAgeExclude:
   - "@aws-sdk/client-kms"
   - "@aws-sdk/client-sqs"
