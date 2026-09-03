@@ -1,7 +1,7 @@
 import "server-only";
 import { plans } from "@track-site/db";
 import { db, logger } from "./db";
-import { priceIdFor, stripe } from "./billing";
+import { resolvePrice, stripe } from "./billing";
 
 export interface PublicPlan {
   id: string;
@@ -31,15 +31,14 @@ export async function publicPlans(): Promise<PublicPlan[]> {
   const value: PublicPlan[] = [];
   for (const p of rows.filter((r) => r.isPublic)) {
     const load = async (interval: "monthly" | "yearly") => {
-      const id = priceIdFor(p, interval);
-      if (!id || !client) return null;
-      try {
-        const price = await client.prices.retrieve(id);
-        return price.unit_amount != null ? { amount: price.unit_amount / 100, currency: price.currency.toUpperCase() } : null;
-      } catch (e) {
-        logger.warn({ plan: p.id, interval, err: e instanceof Error ? e.message : String(e) }, "stripe price lookup failed");
+      const name = p.stripePriceEnv[interval];
+      if (!name || !client) return null;
+      const { price, error } = await resolvePrice(name, interval);
+      if (!price) {
+        if (error !== "missing") logger.warn({ plan: p.id, interval, error }, "stripe price lookup failed");
         return null;
       }
+      return price.unit_amount != null ? { amount: price.unit_amount / 100, currency: price.currency.toUpperCase() } : null;
     };
     value.push({ id: p.id, name: p.name, limits: p.limits, features: p.features, contactSales: p.contactSales, monthly: await load("monthly"), yearly: await load("yearly") });
   }

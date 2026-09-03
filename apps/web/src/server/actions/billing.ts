@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { plans, recordAudit, subscriptions } from "@track-site/db";
 import { env } from "@/env";
-import { priceIdFor, stripe } from "@/server/billing";
+import { resolvePrice, stripe } from "@/server/billing";
 import { db } from "@/server/db";
 import { requireOrgContext, withOrg } from "@/server/session";
 import type { ActionState } from "./organization";
@@ -21,7 +21,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
   if (!client) return { ok: false, error: "stripe_not_configured" };
   const plan = (await db().select().from(plans).where(eq(plans.id, parsed.data.planId)).limit(1))[0];
   if (!plan || !plan.isPublic || plan.contactSales) return { ok: false, error: "generic" };
-  const price = priceIdFor(plan, parsed.data.interval);
+  const price = (await resolvePrice(plan.stripePriceEnv[parsed.data.interval], parsed.data.interval)).price?.id ?? null;
   if (!price) return { ok: false, error: "stripe_not_configured" };
   const existing = (await db().select().from(subscriptions).where(eq(subscriptions.organizationId, ctx.organization.id)).limit(1))[0];
   const app = env().HOST_APP.replace(/\/$/, "");

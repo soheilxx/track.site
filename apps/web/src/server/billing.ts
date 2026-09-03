@@ -18,6 +18,50 @@ export function priceIdFor(plan: { stripePriceEnv: { monthly: string | null; yea
   return (env() as unknown as Record<string, string | undefined>)[name] ?? null;
 }
 
+type PriceInterval = "monthly" | "yearly";
+export type ResolvedPrice = { price: Stripe.Price | null; error: string | null };
+const priceCache = new Map<string, { at: number; value: ResolvedPrice }>();
+
+/** Stripe errors carry type/code/status; the message may name a price or product id (not a secret). */
+export function stripeErrorText(err: unknown): string {
+  const s = err as { type?: string; code?: string; statusCode?: number; message?: string };
+  return `${s.type ?? "error"}${s.code ? `:${s.code}` : ""}${s.statusCode ? ` http_${s.statusCode}` : ""} ${(s.message ?? "").slice(0, 120)}`.trim();
+}
+
+/**
+ * Resolves a `STRIPE_PRICE_*` value to a Stripe price. The value is a price id (`price_…`) or a product id
+ * (`prod_…`: the product's single active recurring price with the slot's interval is used). Cached 10 minutes.
+ * Errors come back as text, never thrown, so pages and health show an honest state.
+ */
+export async function resolvePrice(envName: string | null, interval: PriceInterval): Promise<ResolvedPrice> {
+  if (!envName) return { price: null, error: "no_price_slot" };
+  const value = (env() as unknown as Record<string, string | undefined>)[envName];
+  if (!value) return { price: null, error: "missing" };
+  const client = stripe();
+  if (!client) return { price: null, error: "stripe_not_configured" };
+  const key = `${value}:${interval}`;
+  const hit = priceCache.get(key);
+  if (hit && Date.now() - hit.at < 10 * 60_000) return hit.value;
+  const opts = { timeout: 8_000, maxNetworkRetries: 0 };
+  let resolved: ResolvedPrice;
+  try {
+    if (value.startsWith("price_")) {
+      resolved = { price: await client.prices.retrieve(value, undefined, opts), error: null };
+    } else if (value.startsWith("prod_")) {
+      const want = interval === "monthly" ? "month" : "year";
+      const list = await client.prices.list({ product: value, active: true, type: "recurring", limit: 100 }, opts);
+      const matches = list.data.filter((p) => p.recurring?.interval === want && (p.recurring.interval_count ?? 1) === 1);
+      resolved = matches.length === 1 ? { price: matches[0]!, error: null } : { price: null, error: matches.length ? `ambiguous_product_prices:${matches.length}` : `no_active_${interval}_price_on_product` };
+    } else {
+      resolved = { price: null, error: "unrecognised_id" };
+    }
+  } catch (err) {
+    resolved = { price: null, error: stripeErrorText(err) };
+  }
+  priceCache.set(key, { at: Date.now(), value: resolved });
+  return resolved;
+}
+
 export function periodKey(d = new Date()): string {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }

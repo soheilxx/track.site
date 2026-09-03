@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createOpenAI, verifyModelAvailability, type ModelAvailability } from "@track-site/ai";
 import { env, publicEnv } from "@/env";
-import { stripe } from "@/server/billing";
+import { resolvePrice, stripe } from "@/server/billing";
 import { pool } from "@/server/db";
 
 export const dynamic = "force-dynamic";
@@ -60,27 +60,21 @@ type BillingPrices = { ok: string[]; missing: string[]; failed: Array<{ env: str
 let billingCache: { at: number; value: { billing: string; billingPrices: BillingPrices | null } } | null = null;
 
 async function billingStatus(): Promise<{ billing: string; billingPrices: BillingPrices | null }> {
-  const client = stripe();
-  if (!client || !publicEnv().stripeEnabled) return { billing: "not_configured", billingPrices: null };
+  if (!stripe() || !publicEnv().stripeEnabled) return { billing: "not_configured", billingPrices: null };
   if (!billingCache || Date.now() - billingCache.at > 10 * 60_000) {
-    const e = env() as unknown as Record<string, string | undefined>;
     const value: BillingPrices = { ok: [], missing: [], failed: [] };
     for (const name of PRICE_ENV) {
-      const id = e[name];
-      if (!id) {
-        value.missing.push(name);
+      const interval = name.endsWith("_YEARLY") ? "yearly" : "monthly";
+      const { price, error } = await resolvePrice(name, interval);
+      if (!price) {
+        if (error === "missing") value.missing.push(name);
+        else value.failed.push({ env: name, error: error ?? "unknown" });
         continue;
       }
-      try {
-        const price = await client.prices.retrieve(id, undefined, { timeout: 8_000, maxNetworkRetries: 0 });
-        const problem = !price.active ? "price_inactive" : price.type !== "recurring" ? "not_recurring" : price.unit_amount == null ? "no_unit_amount" : price.tax_behavior === "unspecified" ? "tax_behavior_unspecified" : null;
-        if (problem) value.failed.push({ env: name, error: problem });
-        else value.ok.push(name);
-      } catch (err) {
-        // Stripe errors carry type/code/status; the message may name the price id (not a secret)
-        const s = err as { type?: string; code?: string; statusCode?: number; message?: string };
-        value.failed.push({ env: name, error: `${s.type ?? "error"}${s.code ? `:${s.code}` : ""}${s.statusCode ? ` http_${s.statusCode}` : ""} ${(s.message ?? "").slice(0, 120)}`.trim() });
-      }
+      const want = interval === "monthly" ? "month" : "year";
+      const problem = !price.active ? "price_inactive" : price.type !== "recurring" ? "not_recurring" : price.recurring?.interval !== want ? `interval_${price.recurring?.interval ?? "none"}_expected_${want}` : price.unit_amount == null ? "no_unit_amount" : price.tax_behavior === "unspecified" ? "tax_behavior_unspecified" : null;
+      if (problem) value.failed.push({ env: name, error: problem });
+      else value.ok.push(name);
     }
     const billing = value.failed.length ? "prices_failing" : value.ok.length ? "ok" : "no_prices";
     billingCache = { at: Date.now(), value: { billing, billingPrices: value } };
