@@ -103,3 +103,10 @@ fly deploy --config infra/fly/worker.fly.toml --dockerfile infra/docker/worker.D
 ```
 
 Both services use the same database and the same `MASTER_KEY`/`CONFIG_SIGNING_*` values as the web app (the worker signs nothing, but decrypts credentials; the collector verifies nothing, but serves signed bundles). After the first deploy: `ingest.track.site` → CNAME to the collector app, `HOST_INGEST`/`NEXT_PUBLIC_HOST_INGEST` in Vercel to `https://ingest.track.site`, then redeploy the web app so the CSP and snippets pick it up. The worker health endpoint listens on `WORKER_PORT` (default 3199) and reports loop and queue state.
+
+### Data plane on Fly.io (2026-09-03)
+
+- Apps `track-site-collector` (https://track-site-collector.fly.dev, shared IPv4 66.241.124.201, IPv6 2a09:8280:1::182:cb36:0) and `track-site-worker` (1 machine + 1 standby), both in `fra`, personal org, images built remotely from `infra/docker/*.Dockerfile` (self-contained ESM bundles with a `require` shim, no code splitting).
+- Secrets set from the Vercel production environment: database, master key, hosts, drivers; `RATE_LIMIT_SALT` generated per app. No vendor platform credentials on the worker yet (OAuth apps pending).
+- Interim ingest host: `HOST_INGEST` / `NEXT_PUBLIC_HOST_INGEST` on Vercel and the Fly secrets point at `https://track-site-collector.fly.dev` until `ingest.track.site` resolves. Certificate for `ingest.track.site` is requested (`fly certs check ingest.track.site`); DNS needed: `A ingest.track.site → 66.241.124.201`, `AAAA ingest.track.site → 2a09:8280:1::182:cb36:0`. After DNS: set the three `HOST_INGEST` values to `https://ingest.track.site` (`fly secrets set`, Vercel env) and redeploy the web app.
+- Tracker is served by the web app at `https://www.track.site/cdn/v1/tracker.js` (SDK built during the Vercel build with the production signing public key); `cdn.track.site` is not needed for now.
