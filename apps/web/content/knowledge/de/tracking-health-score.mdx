@@ -1,0 +1,62 @@
+---
+title: "Der Tracking Health Score erklärt: sechs Komponenten, ihre Gewichte und was sie bewegt"
+description: "Wie Track den Health Score von 0 bis 100 aus Consent-Abdeckung, Abdeckung kritischer Events, Schemaqualität, Duplikatrate, Zustellerfolg und Liveness berechnet — mit den exakten Gewichten, wie „noch keine Daten“ bewertet wird und was du zuerst reparierst, wenn die Zahl fällt."
+excerpt: "Eine einzelne Zahl ist nur nützlich, wenn man sie zerlegen kann. Der Health Score ist eine gewichtete Summe aus sechs messbaren Komponenten, jede mit einer verständlichen Detailzeile. Das ist die Formel und das Playbook je Komponente."
+category: "product"
+translationGroupId: "tracking-health-score"
+slug: "tracking-health-score"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+tags: ["health-score", "monitoring", "datenqualität", "alarme"]
+author: "track-site-editorial"
+publishedAt: "2026-08-18"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Health-Score-Anzeige mit sechs gewichteten Komponenten"
+sources: []
+legalNotice: false
+---
+
+## Die Formel
+
+Der Score ist ein gewichteter Durchschnitt aus sechs Komponenten, jede mit 0 bis 100 bewertet:
+
+| Komponente | Gewicht | Quelle | Bewertung |
+| --- | --- | --- | --- |
+| Consent | 0,20 | Anteil angenommener Events mit explizitem Consent-Signal | Anteil × 100; 50, solange keine Events vorliegen |
+| Abdeckung | 0,25 | geplante kritische Events, die im Zeitfenster mindestens ein Event erzeugt haben | gesehen ÷ geplant × 100 |
+| Schema | 0,15 | Anteil der Events ohne Schema- oder PII-Befunde | Anteil × 100; 50, solange keine Events vorliegen |
+| Dedup | 0,10 | Anteil Duplikate unter den empfangenen Events | 100 − Duplikatanteil × 400 (25 % Duplikate ergeben also 0) |
+| Zustellung | 0,20 | Anteil erfolgreicher Zustellungen abzüglich einer Zugangsdaten-Strafe | Erfolg × 100 − (ungesund ÷ Integrationen gesamt) × 50 |
+| Liveness | 0,10 | Minuten seit dem letzten angenommenen Browser-Event | 100 unter 60 min, 70 unter 24 h, 20 darüber, 0 wenn nie |
+
+`score = Σ(Komponente × Gewicht) ÷ Σ(Gewicht)`, gerundet und auf 0–100 begrenzt. Dieselbe Funktion speist Dashboard, die Lesewerkzeuge des Assistenten und die Alarmierung, sodass die Zahl im Dashboard dieselbe ist, über die der Assistent spricht.
+
+## Warum „noch keine Daten“ 50 ergibt, nicht 0
+
+Eine Site, die vor einer Stunde angelegt wurde, hat keine Consent-Abdeckung, keine Schemabefunde und keine Zustellungen. Das mit null zu bewerten ließe jede neue Site kaputt aussehen; es als perfekt zu bewerten würde später echte Probleme verbergen. Die neutrale 50 hält den Gesamtwert aussagekräftig, während die Detailzeile „Noch keine Events“ sagt, damit niemand sie für eine Messung hält. Liveness ist die Ausnahme: Nie ein Browser-Event empfangen zu haben ergibt 0, weil genau *das* zuerst zu beheben ist.
+
+## Was jede Komponente bewegt
+
+**Consent (0,20).** Events ohne expliziten Consent-Eintrag bedeuten meist, dass die CMP-Integration auf manchen Seiten fehlt oder das SDK lädt, bevor die CMP antwortet. Prüfe die Consent-Seite auf Seiten mit niedriger Signalabdeckung.
+
+**Abdeckung (0,25).** Der Tracking-Plan listet kritische Events (`purchase`, `generate_lead`, `sign_up` …). Ein kritisches Event ohne Vorkommen im Fenster ist entweder kaputt oder fälschlich als kritisch markiert. Die Detailzeile nennt die fehlenden.
+
+**Schema (0,15).** Befunde stammen aus dem Eventschema (unbekannte Properties, falsche Typen) und dem PII-Scanner (E-Mails in URLs, Telefonnummern in Properties). Die Datenqualitätsseite gruppiert Befunde nach Feld, sodass ein einzelner fehlerhafter Formular-Handler eine Korrektur ist, nicht hundert.
+
+**Dedup (0,10).** Duplikate über wenigen Prozent bedeuten, dass dieselbe Event-ID zweimal gesendet wird — typischerweise ein Tag, das bei `DOMContentLoaded` und beim Routenwechsel feuert, oder ein Webhook-Replay ohne Bestellnummer. Die steile Strafe ist Absicht: Duplikate blähen jede nachgelagerte Zahl auf.
+
+**Zustellung (0,20).** Fehlgeschlagene Zustellungen werden nach Destination und Fehlerklasse gruppiert. Die Zugangsdaten-Strafe macht einen abgelaufenen Token auch bei wenig Traffic sichtbar; das erneute Verbinden des Kontos entfernt sie sofort.
+
+**Liveness (0,10).** Eine Site, die einen Tag lang keine Browser-Events sendet, hat meist ihr Snippet bei einem Deployment verloren. Der Kill-Switch erzeugt das ebenfalls, absichtlich, und die Detailzeile sagt es.
+
+## Befunde
+
+Schemabefunde und fehlgeschlagene Zustellungen werden als Einträge auf der Datenqualitätsseite erfasst, mit der Zahl offener und kritischer Einträge neben dem Score. Ein Eintrag kann mit Begründung als erledigt oder ignoriert markiert werden; die Änderung wird auditiert. Das Health-Tool des Assistenten liest dieselben Komponenten und Einträge, wenn du ihn bittest, einen Einbruch zu erklären; es rät nicht.
+
+## Was der Score nicht ist
+
+Er ist keine Vanity-Metrik und nicht über Sites mit unterschiedlichen Tracking-Plänen vergleichbar. Eine Landingpage-Site mit zwei kritischen Events und ein Shop mit zwölf werden an ihren eigenen Plänen gemessen. Nutze ihn, um Veränderung zu bemerken, und dann die Komponenten, um die Ursache zu finden.

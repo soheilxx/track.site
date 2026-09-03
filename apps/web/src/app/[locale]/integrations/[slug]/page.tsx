@@ -8,7 +8,7 @@ import { Faq, FinalCta, PageHero, Section, Steps, faqJsonLd } from "@/components
 import { routing } from "@/i18n/routing";
 import { INTEGRATIONS, integrationBySlug } from "@/lib/integrations-catalog";
 import { pick } from "@/lib/marketing-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export function generateStaticParams() {
@@ -20,7 +20,7 @@ const COPY = {
     eyebrow: "Integration",
     integrations: "Integrations",
     modes: "Delivery modes",
-    browser: "Browser tag — loaded by the track.site snippet after consent, no vendor code on your site.",
+    browser: "Browser tag — loaded by the Track snippet after consent, no vendor code on your site.",
     server: "Server API — delivered by the worker with retries, health checks and a redacted payload preview per attempt.",
     offline: "Offline / CRM conversions — server events flagged as offline reach this platform with the vendor's offline action source.",
     hybrid: "Hybrid — both paths share the same event id; the vendor deduplicates on",
@@ -48,7 +48,7 @@ const COPY = {
     eyebrow: "Integration",
     integrations: "Integrationen",
     modes: "Zustellmodi",
-    browser: "Browser-Tag — vom track.site-Snippet nach Consent geladen, kein Anbieter-Code auf deiner Site.",
+    browser: "Browser-Tag — vom Track-Snippet nach Consent geladen, kein Anbieter-Code auf deiner Site.",
     server: "Server-API — vom Worker zugestellt, mit Retries, Health-Checks und geschwärzter Payload-Vorschau pro Versuch.",
     offline: "Offline-/CRM-Conversions — als offline markierte Server-Events erreichen diese Plattform mit der Offline-Action-Source des Anbieters.",
     hybrid: "Hybrid — beide Wege teilen dieselbe Event-ID; der Anbieter dedupliziert über",
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const i = integrationBySlug(slug);
   if (!i) return {};
-  return { title: seoTitle(i.name), description: seoDescription(i.summary[locale === "de" ? "de" : "en"]), alternates: alternatesFor(`/integrations/${slug}`, locale) };
+  return pageMetadata({ locale, path: `/integrations/${slug}`, title: seoTitle(i.name), description: seoDescription(i.summary[locale === "de" ? "de" : "en"]) });
 }
 
 export default async function IntegrationPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -90,7 +90,7 @@ export default async function IntegrationPage({ params }: { params: Promise<{ lo
   const lang = locale === "de" ? "de" : "en";
   return (
     <>
-      <JsonLd data={[breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.integrations, path: "/integrations" }, { name: i.name, path: `/integrations/${slug}` }], locale), faqJsonLd(c.faq), { "@context": "https://schema.org", "@type": "SoftwareApplication", name: `track.site × ${i.name}`, applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" } }]} />
+      <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.integrations, path: "/integrations" }, { name: i.name, path: `/integrations/${slug}` }], locale), faqJsonLd(c.faq), { "@context": "https://schema.org", "@type": "SoftwareApplication", name: `${BRAND_NAME} × ${i.name}`, applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" } }]} />
       <PageHero eyebrow={c.eyebrow} title={i.name} text={i.summary[lang]}>
         <div className="mt-6 flex flex-wrap gap-2">
           {i.browser ? <Badge tone="neutral">Browser</Badge> : null}

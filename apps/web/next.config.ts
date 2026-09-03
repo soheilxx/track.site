@@ -2,6 +2,7 @@ import { config as loadDotenv } from "dotenv";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import path from "node:path";
+import { KNOWLEDGE_LEGACY_REDIRECTS, LEGACY_UNPREFIXED_PATHS } from "./src/lib/routes";
 
 // The monorepo keeps one .env at the root; Next.js only reads the app directory by default.
 loadDotenv({ path: path.resolve(process.cwd(), "../../.env"), quiet: true });
@@ -16,6 +17,14 @@ const origins = (u: string) => {
     return new URL(u).origin;
   } catch {
     return "";
+  }
+};
+const hostnameOf = (u: string | undefined) => {
+  if (!u) return null;
+  try {
+    return new URL(u).hostname.toLowerCase();
+  } catch {
+    return null;
   }
 };
 
@@ -46,10 +55,41 @@ const securityHeaders = [
   ...(isProd ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }] : []),
 ];
 
+/**
+ * The unprefixed English marketing URLs redirect permanently to `/en/...`. next.config redirects run
+ * before the proxy, so they must not fire on the dedicated dashboard/API/CDN hosts (which the proxy
+ * rewrites to /app, /api, /cdn); locally every host is the same and the list applies unconditionally.
+ */
+const marketingHost = hostnameOf(process.env.HOST_MARKETING);
+const dedicatedHosts = [process.env.HOST_APP, process.env.HOST_API, process.env.HOST_CDN]
+  .map(hostnameOf)
+  .filter((h): h is string => Boolean(h) && h !== marketingHost);
+const notOnDedicatedHost = dedicatedHosts.map((h) => ({ type: "host" as const, value: h.replace(/\./g, "\\.") }));
+
 const nextConfig: NextConfig = {
-  // the locale proxy skips file-like paths, so the unprefixed English feed maps to its locale route here
-  async rewrites() {
-    return [{ source: "/blog/feed.xml", destination: "/en/blog/feed.xml" }];
+  experimental: {
+    // No shared root layout (marketing `[locale]` and dashboard `/app` render their own `<html>`),
+    // so the 404 for unmatched non-localized paths is `src/app/global-not-found.tsx`.
+    globalNotFound: true,
+  },
+  async redirects() {
+    const marketingOnly = notOnDedicatedHost.length ? { missing: notOnDedicatedHost } : {};
+    return [
+      // Blog → Tracking Knowledge (supplement §6): direct 301s for old article, index and feed URLs,
+      // prefixed and unprefixed, so no request is answered with a chain through `/en/blog/...`.
+      ...KNOWLEDGE_LEGACY_REDIRECTS.map((r) => ({
+        source: r.source,
+        destination: r.destination,
+        permanent: true,
+        ...(r.unprefixed ? marketingOnly : {}),
+      })),
+      ...LEGACY_UNPREFIXED_PATHS.map((source) => ({
+        source,
+        destination: `/en${source === "/" ? "" : source}`,
+        permanent: true,
+        ...marketingOnly,
+      })),
+    ];
   },
   reactStrictMode: true,
   poweredByHeader: false,
@@ -63,6 +103,7 @@ const nextConfig: NextConfig = {
     "@track-site/connectors",
     "@track-site/ai",
     "@track-site/analytics",
+    "@track-site/catalog",
     "@track-site/queue",
     "@track-site/sdk",
   ],

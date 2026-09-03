@@ -1,0 +1,65 @@
+---
+title: "Shopware 6 tracking done properly: an app with signed webhooks, the paid transaction as the purchase, and the storefront snippet"
+description: "How the Track Shopware app registers itself, which order events map to purchase and refund, how the shopware-shop-signature is verified, why the paid transaction state beats the placed order, and where the snippet goes in the theme."
+excerpt: "Shopware 6's app system gives you signed webhooks without shipping PHP into the shop. The Track app subscribes to the paid and refunded transaction states, the collector verifies every delivery, and the storefront snippet covers the browser side. Here is the whole path."
+category: "integrations"
+translationGroupId: "shopware-6-tracking"
+slug: "shopware-6-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopware"]
+contentType: "tutorial"
+level: "intermediate"
+tags: ["shopware", "app-system", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-06"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Shopware app registration and webhook flow to the collector"
+sources:
+  - title: "Shopware — App base guide"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/app-base-guide.html"
+  - title: "Shopware — Webhooks for apps"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/webhooks.html"
+legalNotice: false
+---
+
+## Why an app and not a plugin
+
+A Shopware plugin is PHP that runs inside the shop; an app is a manifest that tells Shopware which URLs to call. For order tracking the app is enough: Shopware sends signed webhooks for the events you subscribe to, and nothing from Track executes in the shop. `integrations/shopware/manifest.xml` is that manifest.
+
+## Registration
+
+On `app:install` Shopware calls the app's registration URL with `shop-id`, `shop-url` and a timestamp, signed in the `shopware-app-signature` header with the app secret from the manifest. The collector verifies the signature, answers with a proof (HMAC-SHA256 over shop id, shop url and app name) and a shop secret, and Shopware confirms by posting API credentials to the confirmation URL. Track deliberately discards those credentials: the integration only receives webhooks and never calls the shop's API. The same secret you stored in the connection serves as app secret and shop secret, so every later webhook is verified with `shopware-shop-signature`, the hex HMAC-SHA256 of the raw body.
+
+## Which events become which
+
+| Shopware event | Track event |
+| --- | --- |
+| `state_enter.order_transaction.state.paid` | `purchase` |
+| `state_enter.order_transaction.state.refunded` | `refund` (order total) |
+| `checkout.order.placed` | `purchase` only when the connection is set to count placed orders |
+
+The default counts the **paid transaction**, not the placed order. For prepayment and invoice shops an order can sit unpaid for days or never be paid; counting it at placement inflates revenue and teaches ad platforms the wrong thing. Shops where placement is the meaningful moment (payment on delivery, B2B invoicing) switch the connection to *placed*.
+
+The purchase carries the order id, the order number as transaction id, total and net amounts (tax as their difference), shipping, currency, product line items keyed by product number, and the order customer's e-mail, name and billing city, postcode and country as raw matching data the router hashes. Promotion and shipping line items are not products and are skipped.
+
+## Currency
+
+The `paid` and `refunded` events carry the order with its currency association in current Shopware versions. If a version omits it, the connection's fallback currency applies; without either, the event is stored without currency and the destination monitor reports the missing field instead of guessing.
+
+## The storefront snippet
+
+Add the standard snippet to your theme's `base.html.twig` in the `base_head` block. It covers the storefront and the checkout finish page, which Shopware renders itself, so the browser purchase — with the visitor's consent record and click ids — exists alongside the webhook. Pairing by order id then lets the verified server purchase inherit that consent; without a browser purchase the server record stays operational and reaches no advertising destination.
+
+## Setup
+
+1. Site → Shop connection → Shopware 6: shop domain, fallback currency, purchase moment; store a secret (32 random characters); copy the registration URL.
+2. Put the manifest into `custom/apps/TrackSite/manifest.xml`, replace tracking id, path token and secret, run `bin/console app:install --activate TrackSite`.
+3. Mark a test order's transaction as paid. The connection reports the registration and the first webhook; the debugger shows the shopware purchase.
+
+## Limits
+
+- A second partial refund on the same order is deduplicated by order id; the first is recorded.
+- Apps cannot inject storefront scripts by themselves; the snippet is a theme change, documented in the README.
+- Orders edited in the admin after payment do not resend the paid event; value corrections happen in your own reporting, not at the vendors.

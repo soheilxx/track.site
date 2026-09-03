@@ -40,7 +40,7 @@ export const LEGAL: Record<Locale, Record<"security" | "privacy" | "data-process
   en: {
     security: {
       title: "Security",
-      intro: "How track.site protects customer data: architecture, controls and the guarantees you can verify in the product.",
+      intro: "How Track protects customer data: architecture, controls and the guarantees you can verify in the product.",
       updated: "2026-09-03",
       sections: [
         { title: "Tenant isolation", paragraphs: ["Every tenant table carries the organization id and PostgreSQL row-level security is enforced for the application role. The worker role bypasses RLS only for the partitioned event store and audit trail, never for tenant configuration."] },
@@ -80,10 +80,10 @@ export const LEGAL: Record<Locale, Record<"security" | "privacy" | "data-process
     },
     terms: {
       title: "Terms of service",
-      intro: "The terms under which the operator provides track.site to business customers.",
+      intro: "The terms under which the operator provides Track to business customers.",
       updated: "2026-09-03",
       sections: [
-        { title: "Service", paragraphs: ["track.site is a tag manager, consent-aware server-side event router and analytics layer offered as a subscription. Features and limits are described on the pricing page and in the plan the customer selected."] },
+        { title: "Service", paragraphs: ["Track is a tag manager, consent-aware server-side event router and analytics layer offered as a subscription. Features and limits are described on the pricing page and in the plan the customer selected."] },
         { title: "Customer obligations", paragraphs: ["Customers are responsible for a lawful consent implementation on their properties, for the accuracy of destination configuration and for keeping vendor credentials current. Customers must not send special categories of personal data or use the service for fingerprinting or consent circumvention."] },
         { title: "Fees", paragraphs: ["Fees are billed by Stripe per plan and interval. Usage above the plan limit triggers warnings and a grace period before hard limits apply. Prices are shown on the pricing page as configured in Stripe."] },
         { title: "Availability and support", paragraphs: ["The operator targets high availability of the data plane and publishes incidents on the status page. Support is provided by e-mail; enterprise plans include an SLA."] },
@@ -96,7 +96,7 @@ export const LEGAL: Record<Locale, Record<"security" | "privacy" | "data-process
   de: {
     security: {
       title: "Sicherheit",
-      intro: "Wie track.site Kundendaten schützt: Architektur, Kontrollen und die Garantien, die du im Produkt nachprüfen kannst.",
+      intro: "Wie Track Kundendaten schützt: Architektur, Kontrollen und die Garantien, die du im Produkt nachprüfen kannst.",
       updated: "2026-09-03",
       sections: [
         { title: "Mandantentrennung", paragraphs: ["Jede Mandantentabelle trägt die Organisations-ID, und PostgreSQL Row-Level Security wird für die Anwendungsrolle erzwungen. Die Worker-Rolle umgeht RLS nur für den partitionierten Event-Store und den Audit-Trail, nie für Mandantenkonfiguration."] },
@@ -136,10 +136,10 @@ export const LEGAL: Record<Locale, Record<"security" | "privacy" | "data-process
     },
     terms: {
       title: "Nutzungsbedingungen",
-      intro: "Die Bedingungen, zu denen der Betreiber track.site Geschäftskunden bereitstellt.",
+      intro: "Die Bedingungen, zu denen der Betreiber Track Geschäftskunden bereitstellt.",
       updated: "2026-09-03",
       sections: [
-        { title: "Leistung", paragraphs: ["track.site ist ein Tag-Manager, consent-konformer serverseitiger Event-Router und Analytics-Layer im Abonnement. Funktionen und Limits sind auf der Preisseite und im gewählten Tarif beschrieben."] },
+        { title: "Leistung", paragraphs: ["Track ist ein Tag-Manager, consent-konformer serverseitiger Event-Router und Analytics-Layer im Abonnement. Funktionen und Limits sind auf der Preisseite und im gewählten Tarif beschrieben."] },
         { title: "Pflichten des Kunden", paragraphs: ["Kunden sind für eine rechtmäßige Consent-Implementierung auf ihren Properties, die Richtigkeit der Destinationskonfiguration und aktuelle Anbieter-Zugangsdaten verantwortlich. Besondere Kategorien personenbezogener Daten dürfen nicht gesendet werden; Fingerprinting oder Consent-Umgehung sind untersagt."] },
         { title: "Entgelte", paragraphs: ["Entgelte werden über Stripe pro Tarif und Intervall abgerechnet. Nutzung über dem Tariflimit löst Warnungen und eine Frist aus, bevor harte Limits greifen. Preise werden auf der Preisseite so angezeigt, wie sie in Stripe konfiguriert sind."] },
         { title: "Verfügbarkeit und Support", paragraphs: ["Der Betreiber strebt eine hohe Verfügbarkeit der Datenebene an und veröffentlicht Vorfälle auf der Statusseite. Support erfolgt per E-Mail; Enterprise-Tarife enthalten ein SLA."] },

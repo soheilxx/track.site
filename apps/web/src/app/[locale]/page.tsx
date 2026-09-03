@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, CheckCircle2, Lock, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
-import { Button, Card, Container } from "@track-site/ui";
+import { Card, Container, buttonVariants, cn } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { DomainStartForm } from "@/components/marketing/domain-start-form";
 import { IntegrationLogoGrid } from "@/components/marketing/integration-grid";
 import { Link } from "@/i18n/navigation";
-import { alternatesFor, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { organizationJsonLd, pageMetadata, websiteJsonLd } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  // the home page carries the brand itself: no " · track.site" template suffix, one complete sentence within snippet length
-  return { title: { absolute: seoTitle(t("defaultTitle"), 70) }, description: seoDescription(t("defaultDescription")), alternates: alternatesFor("/", locale) };
+  // the home page carries the brand itself: no " · Track" template suffix, one complete sentence within snippet length
+  return pageMetadata({ locale, path: "/", title: { absolute: seoTitle(t("defaultTitle"), 70) }, description: seoDescription(t("defaultDescription")) });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -26,7 +26,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const icons = [Waypoints, ShieldCheck, Sparkles, CheckCircle2, Lock, ArrowRight];
   return (
     <>
-      <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd(locale)]} />
       <section className="relative overflow-hidden">
         <div className="dot-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" aria-hidden="true" />
         <Container className="relative grid gap-10 py-16 md:grid-cols-[1.1fr_1fr] md:items-center md:py-24">
@@ -146,10 +146,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <Card className="p-6">
             <h3 className="font-display text-2xl font-semibold text-ink">{t("finalCta.title")}</h3>
             <p className="mt-2 text-ink-2">{t("finalCta.text")}</p>
-            <Link href="/signup" className="mt-6 inline-block">
-              <Button size="lg">
-                {t("finalCta.cta")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
+            <Link href="/signup" className={cn(buttonVariants({ size: "lg" }), "mt-6")}>
+              {t("finalCta.cta")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </Card>
         </Container>

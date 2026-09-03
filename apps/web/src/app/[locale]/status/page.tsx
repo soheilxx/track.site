@@ -3,20 +3,20 @@ import { setRequestLocale } from "next-intl/server";
 import { Badge, Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { pool } from "@/server/db";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export const dynamic = "force-dynamic";
 
 const COPY = {
-  en: { title: "System status", intro: "Live health of the track.site components, checked on every page load. Incident history is published here when one occurs.", component: "Component", state: "State", checked: "Checked", ok: "operational", degraded: "degraded", down: "unavailable", db: "Control plane database", queue: "Event queue backlog", worker: "Delivery worker (last delivery attempt)", collector: "Collector (ingest)", none: "no data yet", incidents: "Incidents", noIncidents: "No incidents recorded.", note: "Status is derived from the same database and queue the product uses; there is no separate status service to disagree with." },
-  de: { title: "Systemstatus", intro: "Live-Zustand der track.site-Komponenten, bei jedem Seitenaufruf geprüft. Vorfälle werden hier veröffentlicht, wenn sie auftreten.", component: "Komponente", state: "Zustand", checked: "Geprüft", ok: "betriebsbereit", degraded: "eingeschränkt", down: "nicht verfügbar", db: "Control-Plane-Datenbank", queue: "Event-Queue-Rückstand", worker: "Zustell-Worker (letzter Zustellversuch)", collector: "Collector (Ingest)", none: "noch keine Daten", incidents: "Vorfälle", noIncidents: "Keine Vorfälle verzeichnet.", note: "Der Status wird aus derselben Datenbank und Queue abgeleitet, die das Produkt nutzt; es gibt keinen separaten Statusdienst, der abweichen könnte." },
+  en: { title: "System status", intro: "Live health of the Track components, checked on every page load. Incident history is published here when one occurs.", component: "Component", state: "State", checked: "Checked", ok: "operational", degraded: "degraded", down: "unavailable", db: "Control plane database", queue: "Event queue backlog", worker: "Delivery worker (last delivery attempt)", collector: "Collector (ingest)", none: "no data yet", incidents: "Incidents", noIncidents: "No incidents recorded.", note: "Status is derived from the same database and queue the product uses; there is no separate status service to disagree with." },
+  de: { title: "Systemstatus", intro: "Live-Zustand der Track-Komponenten, bei jedem Seitenaufruf geprüft. Vorfälle werden hier veröffentlicht, wenn sie auftreten.", component: "Komponente", state: "Zustand", checked: "Geprüft", ok: "betriebsbereit", degraded: "eingeschränkt", down: "nicht verfügbar", db: "Control-Plane-Datenbank", queue: "Event-Queue-Rückstand", worker: "Zustell-Worker (letzter Zustellversuch)", collector: "Collector (Ingest)", none: "noch keine Daten", incidents: "Vorfälle", noIncidents: "Keine Vorfälle verzeichnet.", note: "Der Status wird aus derselben Datenbank und Queue abgeleitet, die das Produkt nutzt; es gibt keinen separaten Statusdienst, der abweichen könnte." },
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = locale === "de" ? COPY.de : COPY.en;
-  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/status", locale) };
+  return pageMetadata({ locale, path: "/status", title: seoTitle(c.title), description: seoDescription(c.intro) });
 }
 
 async function probe(): Promise<{ db: "ok" | "down"; backlog: number | null; lastAttempt: Date | null; lastEvent: Date | null }> {
@@ -47,7 +47,7 @@ export default async function StatusPage({ params }: { params: Promise<{ locale:
   ] as const;
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.title, path: "/status" }], locale)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/status" }], locale)} />
       <Container className="max-w-3xl py-14 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{c.title}</h1>
         <p className="mt-4 text-lg text-ink-2">{c.intro}</p>

@@ -1,0 +1,84 @@
+---
+title: "TikTok Events API 2.0: pixel plus server events with ttclid, _ttp and a shared event_id"
+description: "Setting up TikTok Pixel and the Events API together — access token, pixel code, the /event/track/ payload, matching keys, deduplication and test event codes."
+excerpt: "TikTok's Events API 2.0 receives web events at /open_api/v1.3/event/track/. This guide explains the payload, which identifiers raise match rates, how the pixel and server deduplicate and how to test without touching reporting."
+category: "integrations"
+translationGroupId: "tiktok-events-api-setup"
+slug: "tiktok-events-api-setup"
+topic: "pixel-platform-integrations"
+platforms: ["tiktok"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+tags: ["tiktok", "events-api", "ttclid", "deduplication"]
+author: "track-site-editorial"
+publishedAt: "2026-08-31"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "TikTok Events API request with user and properties objects"
+sources:
+  - title: "TikTok Ads — Standard events and parameters"
+    url: "https://ads.tiktok.com/help/article/standard-events-parameters"
+  - title: "TikTok Ads — Get started with Events API"
+    url: "https://ads.tiktok.com/help/article/getting-started-events-api"
+legalNotice: false
+---
+
+## What you need from TikTok Ads Manager
+
+- The **pixel code** (Events Manager → Web events → your pixel). It is public and doubles as the `event_source_id` for the API.
+- An **Events API access token** (pixel → Settings → Generate access token). It is a secret and belongs in the vault, never in a tag.
+- Optionally a **test event code** from the Test events tab.
+
+## The request
+
+`POST https://business-api.tiktok.com/open_api/v1.3/event/track/` with the header `Access-Token: <token>` and a body like:
+
+```json
+{
+  "event_source": "web",
+  "event_source_id": "CABCDEFGHIJKLMNOPQRS",
+  "data": [{
+    "event": "CompletePayment",
+    "event_time": 1767225600,
+    "event_id": "01J9EXAMPLESOURCEEVENTID00",
+    "user": { "ttclid": "…", "ttp": "…", "email": "<sha256>", "phone": "<sha256>", "external_id": "<sha256>" },
+    "page": { "url": "https://shop.example/thank-you", "referrer": "https://shop.example/checkout" },
+    "properties": { "value": 129.9, "currency": "EUR", "content_type": "product", "contents": [{ "content_id": "SKU-1", "quantity": 1, "price": 99.9 }], "order_id": "A1001" }
+  }]
+}
+```
+
+A `code: 0` in the response means accepted. `event_time` is Unix seconds; `event_source` can also be `offline` or `crm` for non-web sources with the matching event set id.
+
+## Event names
+
+TikTok's standard web events are PascalCase: `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `CompletePayment`, `PlaceAnOrder`, `CompleteRegistration`, `SubmitForm`, `Contact`, `Subscribe`, `StartTrial`, `Download`, `Search`, `Schedule`, `ClickButton`. Track maps the canonical events to these by default (`purchase → CompletePayment`, `generate_lead → SubmitForm`, `book_appointment → Schedule`) and lets you override per destination.
+
+## Matching keys, in order of impact
+
+1. `ttclid` — the click id TikTok appends to landing pages. Capture it after marketing consent, store it first-party and send it with every server event in the attribution window.
+2. `ttp` — the value of the `_ttp` cookie the pixel sets. It identifies the browser to TikTok without personal data.
+3. `email` and `phone` — SHA-256 hashed after normalisation (lowercase e-mail, E.164 phone).
+4. `external_id` — your own user id, hashed.
+
+Sending `ttclid` and `ttp` from the browser path and hashed e-mail from the order system is the combination that maximises match rate.
+
+## Deduplication between pixel and API
+
+TikTok deduplicates on `event_id` when the same event name arrives from both the pixel (`ttq.track('CompletePayment', {...}, { event_id })`) and the API within the dedup window. Generate one id per action and pass it to both; Track's SDK does this automatically for every mirrored event.
+
+## Testing safely
+
+Put the test event code from Events Manager into the destination settings. While the destination is in test mode, every request carries `test_event_code`; events appear under Test events and are excluded from reporting. The wizard sends a flagged purchase and shows TikTok's response, including the `request_id` you can quote to TikTok support.
+
+## Response codes worth knowing
+
+- `40001` — access token invalid or missing → rotate the token
+- `40002` / `40000` — parameter errors → check event names, timestamps and hashing
+- `40100` — rate limited → retried with backoff
+- HTTP 5xx — temporary → retried, circuit breaker if persistent
+
+## Limits
+
+Up to 1,000 events per request, timestamps within the last seven days, and the pixel code must belong to the advertiser account that issued the token. Offline events use the offline event set id as `event_source_id` and `event_source: "offline"`.

@@ -6,7 +6,7 @@ import { FinalCta, PageHero, Section } from "@/components/marketing/page-shell";
 import { Link } from "@/i18n/navigation";
 import { INTEGRATIONS } from "@/lib/integrations-catalog";
 import { pick } from "@/lib/marketing-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
@@ -17,7 +17,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: seoTitle(c.eyebrow), description: seoDescription(c.text), alternates: alternatesFor("/integrations", locale) };
+  return pageMetadata({ locale, path: "/integrations", title: seoTitle(c.eyebrow), description: seoDescription(c.text) });
 }
 
 export default async function IntegrationsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,7 +28,7 @@ export default async function IntegrationsPage({ params }: { params: Promise<{ l
   const groups = [1, 2, 3, "commerce"] as const;
   return (
     <>
-      <JsonLd data={[breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.eyebrow, path: "/integrations" }], locale), { "@context": "https://schema.org", "@type": "ItemList", itemListElement: INTEGRATIONS.map((i, n) => ({ "@type": "ListItem", position: n + 1, name: i.name })) }]} />
+      <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.eyebrow, path: "/integrations" }], locale), { "@context": "https://schema.org", "@type": "ItemList", itemListElement: INTEGRATIONS.map((i, n) => ({ "@type": "ListItem", position: n + 1, name: i.name })) }]} />
       <PageHero eyebrow={c.eyebrow} title={c.title} text={c.text} />
       {groups.map((g) => (
         <Section key={String(g)} title={c.groups[g]} tone={g === 2 || g === "commerce" ? "muted" : "default"}>

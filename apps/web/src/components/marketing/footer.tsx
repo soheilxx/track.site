@@ -6,7 +6,7 @@ const COLUMNS = [
   { key: "product", links: [["/features", "features"], ["/how-it-works", "howItWorks"], ["/integrations", "integrations"], ["/pricing", "pricing"], ["/docs", "docs"]] },
   { key: "integrations", links: [["/integrations/meta", "meta"], ["/integrations/google-analytics", "ga4"], ["/integrations/google-ads", "googleAds"], ["/integrations/shopify", "shopify"], ["/integrations/woocommerce", "woocommerce"], ["/integrations/shopware", "shopware"]] },
   { key: "trust", links: [["/security", "security"], ["/privacy", "privacy"], ["/data-processing", "dataProcessing"], ["/subprocessors", "subprocessors"], ["/terms", "terms"], ["/imprint", "imprint"]] },
-  { key: "company", links: [["/blog", "blog"], ["/contact", "contact"], ["/demo", "demo"], ["/support", "support"], ["/status", "status"]] },
+  { key: "company", links: [["/tracking-knowledge", "trackingKnowledge"], ["/contact", "contact"], ["/demo", "demo"], ["/support", "support"], ["/status", "status"]] },
 ] as const;
 
 export function MarketingFooter() {
@@ -37,7 +37,7 @@ export function MarketingFooter() {
       </Container>
       <div className="border-t border-line">
         <Container className="flex flex-col gap-2 py-4 text-xs text-ink-3 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} track.site. {t("rights")}</p>
+          <p>© {year} Track. {t("rights")}</p>
           <p>{t("legalNote")}</p>
         </Container>
       </div>

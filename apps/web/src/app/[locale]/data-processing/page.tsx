@@ -3,13 +3,13 @@ import { setRequestLocale } from "next-intl/server";
 import { LegalPage } from "@/components/marketing/legal-page";
 import { LEGAL } from "@/lib/legal-copy";
 import { pick } from "@/lib/marketing-copy";
-import { alternatesFor } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const d = pick(locale, LEGAL)["data-processing"];
-  return { title: seoTitle(d.title), description: seoDescription(d.intro), alternates: alternatesFor("/data-processing", locale) };
+  return pageMetadata({ locale, path: "/data-processing", title: seoTitle(d.title), description: seoDescription(d.intro) });
 }
 
 export default async function DataProcessingPage({ params }: { params: Promise<{ locale: string }> }) {

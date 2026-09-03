@@ -1,0 +1,72 @@
+---
+title: "The kill switch and the incident playbook: stopping tracking in seconds, at the right scope, with a paper trail"
+description: "Four scopes of stopping — a destination, a site, an organisation, the whole platform — what each one does to the browser SDK, the collector and the worker queue, how fast it takes effect, and the playbook for the incidents that call for it."
+excerpt: "Every tracking setup eventually needs to stop, fast: a wrong mapping sends order values to the wrong account, a legal question needs answering before the next event, a vendor has an outage. The kill switch exists for those moments. This is what each scope does and when to use which."
+category: "product"
+translationGroupId: "kill-switch-incident-playbook"
+slug: "kill-switch-incident-playbook"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+tags: ["kill-switch", "incident", "operations", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-11"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Kill switch scopes from destination to platform"
+sources: []
+legalNotice: false
+---
+
+## Four scopes
+
+| Scope | Where | Effect |
+| --- | --- | --- |
+| Destination | destination page, or the assistant's pause tool | the worker stops delivering to that destination; browser template for it is removed on the next config fetch; events are still collected and stored |
+| Site | site settings | the collector answers `site_paused` and drops incoming events; the manifest's `kill_switch` flag turns on, so the SDK disables itself on the next page view |
+| Organisation | organisation settings | same as site, for every site of the organisation |
+| Platform | operator environment flag | the collector answers 503 with reason `kill_switch` for every request; used only for a platform-wide incident |
+
+Turning any of them on writes an audit entry with the actor and a distinct action (`site.kill_switch_on`, `org.kill_switch_on`) so the history separates emergency stops from ordinary edits.
+
+## How fast
+
+- **Worker**: immediately for new deliveries; in-flight batches complete or fail on their own.
+- **Collector**: immediately, because site status is read per request from a short-lived cache.
+- **Browser**: on the next page view. The SDK fetches the small manifest fresh on every load and stops before initialising any vendor template when the flag is set; already-loaded pages keep their current state until navigation.
+
+What the kill switch does **not** do: delete already-stored events, recall deliveries that already succeeded, or change vendor-side data. Those are separate actions with their own procedures.
+
+## The playbook
+
+### Wrong data is being sent to a vendor
+
+Symptoms: values in the wrong currency, test orders in production, the wrong pixel id. Steps:
+
+1. Pause the **destination** (not the site). Collection continues, so nothing is lost while you investigate.
+2. Open the destination monitor and the event debugger; find the first bad delivery and the config version that introduced it.
+3. Roll back to the previous version, or fix the mapping and publish.
+4. Un-pause. Deliveries that queued while paused are sent with the corrected config.
+5. In the vendor UI, exclude or delete the affected conversions if the platform allows it; note the request id in the incident record.
+
+### A legal or consent question needs answering before the next event
+
+Steps: turn on the **site** kill switch; nothing new is collected, the SDK disables itself; the audit entry timestamps the stop. Investigate with the consent page and the debugger. Resume by turning the switch off; the SDK re-enables on the next page view. If the question concerns already-collected data, use the DSAR and retention tools, not the kill switch.
+
+### A vendor is down
+
+Do nothing. The worker classifies 5xx responses as temporary, retries with backoff and opens the circuit breaker for that destination; queued events are delivered when the vendor recovers, within each API's timestamp window. Pausing the destination would only delay recovery. Watch the destination's health and the dead-letter count.
+
+### Credentials leaked
+
+Steps: rotate the credential in the vault (the old one is invalidated on the vendor side by you, then replaced in Track); pausing the destination in between avoids a burst of auth failures. The audit log shows who read or rotated the credential; the value itself was never logged.
+
+### Compromised team account
+
+Steps: remove the member (sessions are revoked), turn on the **organisation** kill switch if you cannot rule out published changes, review the version history for the account's publishes, roll back as needed, then resume.
+
+## Rehearse it
+
+The kill switch is only fast if the people on call know where it is. Put the site settings link and this playbook in the on-call notes, and practise a pause-and-resume on a staging site once a quarter; the audit log makes the drill verifiable.

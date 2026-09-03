@@ -1,0 +1,92 @@
+---
+title: "Google-Ads-Conversions vom Server: Click Conversions, Enhanced Conversions und die Consent-Felder"
+description: "Wie du Click Conversions mit gclid oder gehashten Kennungen an die Google Ads API lädst, was conversionDateTime und die Consent-Felder enthalten müssen und wie validateOnly Tests aus dem Reporting heraushält."
+excerpt: "Die Google Ads API nimmt serverseitige Conversions über uploadClickConversions an. Dieser Leitfaden behandelt die Pflichtfelder, Enhanced Conversions for Leads mit gehashter E-Mail und Telefonnummer, Consent-Flags und einen sicheren Test-Workflow."
+category: "integrations"
+translationGroupId: "google-ads-enhanced-conversions"
+slug: "google-ads-enhanced-conversions"
+topic: "pixel-platform-integrations"
+platforms: ["google-ads"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
+author: "track-site-editorial"
+publishedAt: "2026-09-01"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Google-Ads-Click-Conversion-Upload mit gclid und gehashter E-Mail"
+sources:
+  - title: "Google Ads API — Upload click conversions"
+    url: "https://developers.google.com/google-ads/api/docs/conversions/upload-clicks"
+  - title: "Google Ads API — Release Notes und Versionen"
+    url: "https://developers.google.com/google-ads/api/docs/release-notes"
+legalNotice: false
+---
+
+## Zwei Wege, eine Conversion-Aktion
+
+Google Ads misst Conversions auf zwei Arten:
+
+1. **Google-Tag im Browser** — `gtag('event', 'conversion', { send_to: 'AW-XXXX/label', value, currency, transaction_id })`, optional mit Enhanced Conversions (`user_data` mit E-Mail, Telefon, Adresse, vom Tag gehasht).
+2. **Conversion-Uploads über die Google Ads API** — `ConversionUploadService.UploadClickConversions`, von deinem Server gesendet.
+
+Beide beziehen sich auf dieselbe *Conversion-Aktion*. Der API-Weg ermöglicht Offline-Verkäufe, CRM-qualifizierte Leads und Erstattungskorrekturen — und er überlebt blockierte Browser-Anfragen.
+
+## Der Upload-Request
+
+`POST https://googleads.googleapis.com/v25/customers/{customerId}:uploadClickConversions` mit den Headern `Authorization: Bearer <OAuth2>`, `developer-token` und — beim Zugriff über ein Verwaltungskonto — `login-customer-id`.
+
+Jede `ClickConversion` braucht:
+
+- `conversionAction` — den Ressourcennamen `customers/{cid}/conversionActions/{id}`
+- `conversionDateTime` — `yyyy-mm-dd hh:mm:ss+|-hh:mm`, mit explizitem Zeitzonen-Offset
+- mindestens einen Attributionsschlüssel: `gclid`, `gbraid`, `wbraid` **oder** `userIdentifiers` (Enhanced Conversions for Leads)
+- optional `conversionValue` mit `currencyCode` sowie `orderId` zur Deduplizierung
+- `consent` mit `adUserData` und `adPersonalization` auf `GRANTED` oder `DENIED`
+
+Setze `partialFailure: true` — die API meldet Fehler dann pro Zeile statt den Batch abzulehnen — und nutze `validateOnly: true` für Tests. Ein Validate-only-Upload belegt Zugangsdaten, Developer-Token und Kontozugriff, ohne etwas zu erfassen.
+
+## Enhanced Conversions: was gehasht wird
+
+Für `userIdentifiers` erwartet Google SHA-256 normalisierter Werte:
+
+- E-Mail: getrimmt, Kleinschreibung; bei gmail.com- und googlemail.com-Adressen Punkte und `+`-Suffixe vor dem Hashing entfernen
+- Telefon: E.164 (`+` und Ländervorwahl) vor dem Hashing
+- Vorname, Nachname, Straße: Kleinschreibung, getrimmt, dann gehasht
+- Stadt, Bundesland, Postleitzahl, Ländercode: Klartext
+
+Jedes Kennungsobjekt trägt zudem `userIdentifierSource: FIRST_PARTY`. Eine Zeile darf mehrere Kennungen kombinieren; Google matcht über jede davon.
+
+## Zeitregeln, die stille Ausfälle verursachen
+
+- Die Conversion-Zeit muss **nach** dem Klick und innerhalb des Click-through-Fensters der Conversion-Aktion liegen. Ein Kauf mit Zeitstempel vor dem Klick liefert `CONVERSION_PRECEDES_CLICK`.
+- Klicks, die nur wenige Stunden alt sind, sind eventuell noch nicht zuordenbar (`TOO_RECENT_CLICK`). Später erneut zu versuchen ist korrekt; Track behandelt diese Fälle als wiederholbar.
+- Zeitzonen-Offsets sind Pflicht. `2026-09-03 10:15:00` ohne `+02:00` wird abgelehnt.
+
+## Consent-Felder sind in der Praxis nicht optional
+
+Seit Consent Mode v2 werden Uploads ohne `consent.adUserData` für EWR-Traffic markiert. Leite die Flags aus den mit dem Event erfassten Consent-Zwecken ab: Marketing → `adUserData: GRANTED`; Marketing + Personalisierung → `adPersonalization: GRANTED`; alles andere → `DENIED`. Niemals auf „granted“ voreinstellen, nur weil das Feld existiert.
+
+## Deduplizierung mit dem Browser-Tag
+
+Nutze dieselbe `transaction_id` im Google-Tag und `orderId` im Upload. Google dedupliziert Conversions mit gleicher Bestellnummer für dieselbe Conversion-Aktion, sodass ein Kauf, den Tag und Server sehen, einmal zählt. Für Leads ohne Bestellung halte Browser und Server auf **verschiedenen** Conversion-Aktionen (etwa „Lead (Tag)“ und „Qualifizierter Lead (CRM)“), statt sie zu deduplizieren.
+
+## Ein Test-Workflow, der das Reporting nicht verschmutzt
+
+1. Google-Konto per OAuth verbinden und validieren: Track sendet einen Validate-only-Upload und meldet, ob Developer-Token und Kunden-ID akzeptiert werden.
+2. `purchase` auf die ID der Conversion-Aktion mappen.
+3. Im Assistenten einen Testevent senden. Solange die Destination im Testmodus ist, nutzt jeder Upload `validateOnly: true`; die Antwort bestätigt die Payload-Struktur.
+4. Testmodus ausschalten, einen echten Kauf mit frischer gclid senden und am nächsten Tag Conversions → Diagnose in Google Ads prüfen.
+
+## Häufige Fehler, entschlüsselt
+
+| Fehler | Bedeutung | Behebung |
+| --- | --- | --- |
+| `UNAUTHENTICATED` | OAuth-Token ungültig | Google-Konto neu verbinden |
+| `PERMISSION_DENIED` / `USER_PERMISSION_DENIED` | kein Zugriff auf die Kunden-ID | `login-customer-id` und Kontozugriff prüfen |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | Token erlaubt nur Testkonten | Basiszugang beantragen |
+| `CLICK_NOT_FOUND` | gclid unbekannt | Klick zu alt, aus einem anderen Konto oder fehlerhaft |
+| `INVALID_CONVERSION_ACTION_TYPE` | Aktion ist kein Upload-Typ | Conversion-Aktion mit Quelle „Upload aus Klicks“ anlegen |
+
+Jeder dieser Fehler erscheint mit seinem Code im Event-Debugger neben der geschwärzten Payload, die ihn ausgelöst hat.

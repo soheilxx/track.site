@@ -1,0 +1,70 @@
+---
+title: "Personenbezogene Daten in Tracking-Payloads: wo sie hineinsickern, was der Scanner findet und was ein Event blockiert"
+description: "Die üblichen Wege, auf denen E-Mails, Telefonnummern, Kartennummern und Tokens in Tracking-Events landen — URLs, Seitentitel, Formularfelder, Suchbegriffe — und wie der PII-Scanner von Track schwärzt, meldet und bei Karten und Geheimnissen blockiert, bevor etwas gespeichert oder weitergeleitet wird."
+excerpt: "Niemand schickt absichtlich eine Kreditkartennummer an ein Analytics-Tool. Es passiert über einen URL-Parameter, einen Seitentitel oder ein Formularfeld namens „Kommentar“. Der Scanner läuft bei jedem Event vor der Speicherung und vor dem Routing; das sucht er und das tut er bei einem Fund."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+tags: ["pii", "datenqualität", "schwärzung", "sicherheit"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Eventfelder, die vor der Speicherung auf personenbezogene Daten gescannt werden"
+sources:
+  - title: "DSGVO Artikel 25 — Datenschutz durch Technikgestaltung und durch datenschutzfreundliche Voreinstellungen"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Wo personenbezogene Daten hineinsickern
+
+- **URLs.** Passwort-Reset-Links, Abmeldelinks und Buchungsbestätigungen tragen E-Mail-Adressen und Tokens im Query-String. Ein Seitenaufruf erfasst die URL.
+- **Seitentitel.** „Bestellung #1234 für anna.mueller@example.com“ als `<title>` wird zum Eventtitel.
+- **Referrer.** Die URL der vorherigen Seite, mit allem oben Genannten.
+- **Formular- und Suchfelder.** Eine Site-Suche nach einer Telefonnummer oder ein „Nachricht“-Feld, das in Event-Properties gespiegelt wird.
+- **Verschachtelte Objekte.** Ein ganzes Formularobjekt in `props`, weil es bequem war.
+- **Artikelnamen.** Personalisierte Produkte („Tasse für Anna“) in Commerce-Items.
+
+## Wonach der Scanner sucht
+
+Der Scanner läuft nach der Normalisierung und vor der Policy-Engine, über `title`, `url`, `referrer`, jeden String in `props`, verschachtelte Objekte in `props` und Commerce-Artikelnamen. Sechs Arten:
+
+| Art | Beispiele | Aktion |
+| --- | --- | --- |
+| email | jede RFC-förmige Adresse | geschwärzt, gemeldet |
+| phone | internationale und nationale Formate mit 7+ Ziffern | geschwärzt, gemeldet |
+| card | 13–19-stellige Folgen, die die Luhn-Prüfung bestehen | geschwärzt, **Event blockiert** |
+| iban | Ländercode + Prüfziffern + BBAN | geschwärzt, **Event blockiert** |
+| secret | API-Keys und Tokens mit bekannten Präfixen, lange Strings hoher Entropie in schlüsselartigen Feldern | geschwärzt, **Event blockiert** |
+| jwt | drei base64url-Segmente, durch Punkte getrennt | geschwärzt, **Event blockiert** |
+
+„Geschwärzt“ heißt, der Treffer wird vor der Speicherung an Ort und Stelle durch eine Markierung ersetzt. Verschachtelte Objekte mit einem Fund werden vollständig durch `[redacted:nested]` ersetzt, weil teilweise Schwärzung strukturierter Daten unzuverlässig ist. „Blockiert“ heißt, das Event wird weder gespeichert noch geroutet; ein Datenqualitätsbefund hält Feld und Art fest, nie den Wert.
+
+## Warum Karten und Geheimnisse blockieren, E-Mails aber nicht
+
+Eine E-Mail in einem Seitentitel ist ein Datenqualitätsproblem mit rechtlicher Dimension; sie zu schwärzen und dir zu sagen, woher sie kam, löst beides. Eine Kartennummer oder ein Bearer-Token in einem Event ist ein Vorfall: Selbst ein geschwärztes Event mit seinem Kontext zu speichern hinterließe eine Spur, die sagt „das ist hier, zu dieser Zeit, in dieser Sitzung passiert“, und es irgendwohin weiterzuleiten kommt nicht in Frage. Blockieren ist die konservative Wahl, und der Befund sagt dir, welche Seite oder welches Formular zu korrigieren ist.
+
+## Gehashte Kennungen sind etwas anderes
+
+Gehashte E-Mail und Telefonnummer in `user_data` sind *beabsichtigte* Kennungen als Match-Keys für Werbung, über den `identify`-Aufruf des SDK oder eine Server-Quelle geliefert, gehasht bevor sie Browser oder Shop verlassen, und über den Zweck Marketing gesteuert. Der Scanner markiert sie nicht; die Policy-Engine entscheidet je Destination, ob sie weitergeleitet werden dürfen.
+
+## Die Befundschleife
+
+Jeder Befund wird zu einem Eintrag auf der Datenqualitätsseite, gruppiert nach Feld und Art mit Anzahl sowie erstem und letztem Auftreten. Typische Korrekturen:
+
+- URL-Parameter: Tokens serverseitig vor dem Rendern entfernen oder den Parameter in die Scrub-Liste der Site aufnehmen, damit das SDK ihn vor dem Senden entfernt.
+- Titel: auf Konto- und Bestätigungsseiten generische Titel rendern.
+- Formulare: nur freigegebene Felder an `props` senden; nie das ganze Formularobjekt.
+- Suche: die Tatsache einer Suche und die Trefferzahl senden, nicht den Suchbegriff, außer er ist Produktvokabular.
+
+Ein Befund kann mit Begründung als erledigt oder ignoriert markiert werden; Ignorieren wird auditiert.
+
+## Verifikation
+
+Die Schema-Komponente des Health Scores ist der Anteil der Events ohne Befunde. Nach dem Schließen eines Lecks erholt sich die Komponente innerhalb des Fensters; der Zeitstempel des letzten Auftretens bewegt sich nicht mehr. Der Event-Debugger zeigt das geschwärzte Event, damit du bestätigen kannst, dass die Markierung dort sitzt, wo du sie erwartest.

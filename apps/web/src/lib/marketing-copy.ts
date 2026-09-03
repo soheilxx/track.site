@@ -37,7 +37,7 @@ export const FEATURES: Record<Locale, FeatureCopy[]> = {
       slug: "server-side-tracking",
       title: "Server-side event router",
       short: "One event, every platform: browser and server delivery with shared deduplication.",
-      intro: "track.site receives events from the browser SDK, your server, shop platforms and affiliate networks, normalizes them into one schema, applies consent, and routes them to 22 destination types with retries, circuit breakers, a dead-letter queue and replay.",
+      intro: "Track receives events from the browser SDK, your server, shop platforms and affiliate networks, normalizes them into one schema, applies consent, and routes them to 22 destination types with retries, circuit breakers, a dead-letter queue and replay.",
       sections: [
         { title: "Hybrid by default", text: "Every destination can run browser tag, server API or both. Both paths share one event id, so Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn and the others deduplicate reliably." },
         { title: "Durable and observable", text: "A durable queue with idempotent messages, per-destination retries with jittered backoff, circuit breakers on failing vendors, dead-letter storage and one-click replay. Every attempt is recorded with a redacted payload preview." },
@@ -123,7 +123,7 @@ export const FEATURES: Record<Locale, FeatureCopy[]> = {
       slug: "server-side-tracking",
       title: "Serverseitiger Event-Router",
       short: "Ein Event, jede Plattform: Browser- und Server-Zustellung mit gemeinsamer Deduplizierung.",
-      intro: "track.site empfängt Events aus dem Browser-SDK, deinem Server, Shopsystemen und Affiliate-Netzwerken, normalisiert sie in ein Schema, wendet Consent an und leitet sie mit Retries, Circuit Breakern, Dead-Letter-Queue und Replay an 22 Destinationstypen weiter.",
+      intro: "Track empfängt Events aus dem Browser-SDK, deinem Server, Shopsystemen und Affiliate-Netzwerken, normalisiert sie in ein Schema, wendet Consent an und leitet sie mit Retries, Circuit Breakern, Dead-Letter-Queue und Replay an 22 Destinationstypen weiter.",
       sections: [
         { title: "Hybrid als Standard", text: "Jede Destination kann per Browser-Tag, Server-API oder beidem laufen. Beide Wege teilen eine Event-ID, sodass Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn und die anderen zuverlässig deduplizieren." },
         { title: "Dauerhaft und beobachtbar", text: "Dauerhafte Queue mit idempotenten Nachrichten, Retries pro Destination mit Jitter-Backoff, Circuit Breaker bei ausfallenden Anbietern, Dead-Letter-Speicher und Replay per Klick. Jeder Versuch wird mit geschwärzter Payload-Vorschau protokolliert." },
@@ -192,7 +192,7 @@ export const FEATURES: Record<Locale, FeatureCopy[]> = {
 
 export const HOW_IT_WORKS: Record<Locale, { title: string; intro: string; steps: Array<{ title: string; text: string }>; architecture: Array<{ title: string; text: string }>; faq: Array<{ q: string; a: string }> }> = {
   en: {
-    title: "How track.site works",
+    title: "How Track works",
     intro: "From a domain to consent-compliant server-side delivery in one guided session — with a signed, versioned configuration you can roll back at any time.",
     steps: [
       { title: "Create a site", text: "Sign up, name your organization, enter the domain. You get a public six-character tracking ID and a one-line snippet." },
@@ -213,7 +213,7 @@ export const HOW_IT_WORKS: Record<Locale, { title: string; intro: string; steps:
     ],
   },
   de: {
-    title: "So funktioniert track.site",
+    title: "So funktioniert Track",
     intro: "Von der Domain zur consent-konformen serverseitigen Zustellung in einer geführten Sitzung — mit signierter, versionierter Konfiguration, die du jederzeit zurückrollen kannst.",
     steps: [
       { title: "Site anlegen", text: "Registrieren, Organisation benennen, Domain eingeben. Du erhältst eine öffentliche sechsstellige Tracking-ID und ein einzeiliges Snippet." },

@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { Link } from "@/i18n/navigation";
 import { FORM_COPY, pick } from "@/lib/marketing-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
@@ -16,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/support", locale) };
+  return pageMetadata({ locale, path: "/support", title: seoTitle(c.title), description: seoDescription(c.intro) });
 }
 
 export default async function SupportPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -25,7 +25,7 @@ export default async function SupportPage({ params }: { params: Promise<{ locale
   const c = pick(locale, COPY);
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.title, path: "/support" }], locale)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/support" }], locale)} />
       <Container className="max-w-2xl py-14 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{c.title}</h1>
         <p className="mt-4 text-lg text-ink-2">{c.intro}</p>

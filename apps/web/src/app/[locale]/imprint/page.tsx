@@ -4,7 +4,7 @@ import { Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { OperatorBlock } from "@/components/marketing/legal-page";
 import { operatorFromEnv } from "@/lib/legal-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
@@ -15,7 +15,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = locale === "de" ? COPY.de : COPY.en;
-  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/imprint", locale), robots: { index: true, follow: false } };
+  return pageMetadata({ locale, path: "/imprint", title: seoTitle(c.title), description: seoDescription(c.intro), robots: { index: true, follow: false } });
 }
 
 export default async function ImprintPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -24,7 +24,7 @@ export default async function ImprintPage({ params }: { params: Promise<{ locale
   const c = locale === "de" ? COPY.de : COPY.en;
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.title, path: "/imprint" }], locale)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/imprint" }], locale)} />
       <Container className="max-w-3xl py-14 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{c.title}</h1>
         <p className="mt-4 text-lg text-ink-2">{c.intro}</p>

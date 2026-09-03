@@ -1,0 +1,70 @@
+---
+title: "First-Party-Tracking-Domains: Verifikation, was ITP weiterhin begrenzt und was eine eigene Domain nicht löst"
+description: "Warum Collector und SDK über eine Subdomain deiner eigenen Site erreichbar sein sollten, wie Domain-Verifikation und CNAME-Prüfung funktionieren, welche Browser-Grenzen für skriptgeschriebene Cookies weiterhin gelten und was in die Content Security Policy gehört."
+excerpt: "Den Tracker über t.deinedomain.de statt über einen Anbieter-Host auszuliefern hält eingewilligte Requests von Blocklisten und aus Drittanbieter-Cookie-Beschränkungen heraus. Hier sind das Setup, die Grenzen, die Safari weiterhin durchsetzt, und die ehrliche Liste dessen, was eine eigene Domain nicht ändert."
+category: "guides"
+translationGroupId: "first-party-tracking-domains"
+slug: "first-party-tracking-domains"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "advanced"
+tags: ["first-party", "cname", "itp", "cookies"]
+author: "track-site-editorial"
+publishedAt: "2026-08-24"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "DNS-Eintrag, der eine Tracking-Subdomain auf den Collector zeigt"
+sources:
+  - title: "WebKit — CNAME Cloaking and Bounce Tracking Defense"
+    url: "https://webkit.org/blog/11338/cname-cloaking-and-bounce-tracking-defense/"
+  - title: "MDN — Set-Cookie"
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"
+legalNotice: false
+---
+
+## Was eine First-Party-Domain ändert
+
+Requests an `t.shop.example` sind Same-Site mit `shop.example`. Daraus folgt dreierlei:
+
+1. **Blocklisten greifen nicht.** Die meisten Content-Blocker matchen Hostnamen; eine Subdomain deiner eigenen Site steht nicht darauf. Das ist keine Umgehung einer Nutzerentscheidung — die Consent-Entscheidung steuert weiterhin jeden Zweck — es beseitigt das kollaterale Blockieren eingewilligter First-Party-Requests.
+2. **Third-Party-Cookie-Beschränkungen gelten nicht.** Browser, die Drittanbieter-Cookies partitionieren oder blockieren, lassen Same-Site-Speicher in Ruhe.
+3. **Deine Sicherheitsrichtlinie bleibt eng.** Ein zusätzlicher Host in `script-src` und `connect-src`, keine Wildcard-Anbieterdomains für den Collector-Weg.
+
+## Das Setup
+
+- Füge die Domain in den Site-Einstellungen hinzu. Track stellt einen **Verifikations-Token** aus; weise die Kontrolle per DNS-TXT-Eintrag, Datei auf der Domain oder Meta-Tag nach. Die Domain wird erst aktiv, wenn die Verifikation gelingt, sodass niemand eine fremde Domain auf deine Site zeigen lassen kann.
+- Lege `t.shop.example` als **CNAME** auf den in den Einstellungen angezeigten Collector-Host an. Die Domain-Seite hält fest, wann die CNAME-Prüfung zuletzt bestanden wurde.
+- **TLS** für den Tracking-Host wird von der Plattform-Edge terminiert, sobald der CNAME auflöst.
+- Aktualisiere deine **Content Security Policy**: `script-src` und `connect-src` brauchen den Tracking-Host. `unsafe-inline` ist nicht nötig, weil der Loader ein externes Skript ist.
+- Der **SDK-Loader** wird dann über den Tracking-Host zusammen mit der signierten Konfiguration der Site ausgeliefert.
+
+## Was das SDK speichert und was ITP weiterhin begrenzt
+
+Track schreibt drei Dinge im Browser, jedes erst nach dem passenden Consent:
+
+| Schlüssel | Zweck | Geschrieben bei | Laufzeit |
+| --- | --- | --- | --- |
+| `_ts_id` (Cookie, im localStorage gespiegelt) | anonyme Besucher-ID | Analytics- oder Marketing-Consent | bis zu 13 Monate oder die Aufbewahrung der Site |
+| `_ts_sid` (Session Storage) | Sitzungs-ID | Analytics- oder Marketing-Consent | 30 Minuten rollierend |
+| `_ts_cid` (localStorage) | Click-IDs der Landing-URL | Marketing-Consent | Click-ID-TTL, standardmäßig 90 Tage |
+
+Click-IDs der Landing-URL werden im localStorage unter `_ts_cid` gehalten, nur mit Marketing-Consent und nur für die Click-ID-TTL der Site (standardmäßig 90 Tage); sie werden an jedes spätere Event des Besuchs gehängt und beim Widerruf des Marketing-Consents gelöscht.
+
+Beide Kennungen werden per JavaScript geschrieben. Safaris Intelligent Tracking Prevention begrenzt **skriptgeschriebene** Cookies und Speicher auf 7 Tage (24 Stunden, wenn die Landing-URL einen bekannten Tracking-Parameter trug), und eine First-Party-Domain hebt diese Grenze nicht auf. Der Collector setzt keine Cookies über HTTP-Antworten, sodass ein wiederkehrender Safari-Besucher nach mehr als einer Woche eine neue anonyme ID erhält. Firefox und Brave wenden vergleichbare Heuristiken an; Chrome behält First-Party-Speicher für die volle Laufzeit.
+
+Die ehrliche Zusammenfassung: Die eigene Domain schützt die **Zustellung der Requests**; sie verlängert nicht die **Lebensdauer der Kennungen** auf Safari.
+
+## Was eine First-Party-Domain nicht löst
+
+- Sie stellt keine verweigerten Zwecke wieder her. Ohne Marketing-Consent wird keine Click-ID erfasst und keine Werbe-Destination erhält Events — unabhängig von der Domain.
+- Sie macht Anbieter-Pixel nicht zu First-Party. `fbevents.js` lädt weiterhin von Meta und setzt `_fbp`; nur der Collector-Weg gehört dir.
+- Sie versteckt nichts vor dem Besucher. Tracking-Host, SDK-Quelle und Collector-Endpunkte sind in den Entwicklertools sichtbar, und die Datenschutzseite listet sie.
+
+## Checkliste
+
+- [ ] Domain verifiziert (TXT, Datei oder Meta-Tag) und CNAME-Prüfung bestanden
+- [ ] CSP für `script-src` und `connect-src` aktualisiert
+- [ ] Snippet referenziert den Tracking-Host, nicht den Plattform-Standard
+- [ ] Datenqualitätsseite zeigt Browser-Events vom neuen Host

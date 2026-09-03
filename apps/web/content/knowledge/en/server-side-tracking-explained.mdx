@@ -1,0 +1,98 @@
+---
+title: "Server-side tracking explained: what actually changes when events leave the browser"
+description: "A plain-language walkthrough of server-side tracking: what it is, what it does not fix, how consent still applies and how deduplication with the browser tag works."
+excerpt: "Server-side tracking moves the delivery of events from the visitor's browser to your own server-side router. This guide explains what changes, what stays the same and where the common misunderstandings are."
+category: "guides"
+translationGroupId: "server-side-tracking-explained"
+slug: "server-side-tracking-explained"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "beginner"
+tags: ["server-side", "fundamentals", "consent", "deduplication"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Diagram of events flowing from the browser and server through a router to advertising platforms"
+sources:
+  - title: "Meta — Conversions API: using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Google Analytics — Measurement Protocol reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+legalNotice: true
+---
+
+## The one-sentence version
+
+Server-side tracking means your website still records what a visitor does, but the *delivery* of that information to advertising and analytics platforms happens from a server you control instead of from a script running in the visitor's browser.
+
+That single change has consequences for reliability, data quality and privacy — some of them good, some of them frequently overstated. This article separates the two.
+
+## What moves, what stays
+
+| Stays in the browser | Moves to the server |
+| --- | --- |
+| Observing clicks, page views, form submissions | Formatting events for each vendor |
+| Reading the consent state from your CMP | Applying the consent policy a second time |
+| Capturing click ids (`gclid`, `fbclid`, `ttclid`, …) after marketing consent | Retrying failed deliveries, circuit breaking, dead-letter handling |
+| Loading vendor tags you still want (hybrid mode) | Hashing and normalising matching data |
+| | Deduplicating with the order id |
+
+The browser still needs a small script — in Track it is one snippet under 30 KB gzip — because somebody has to observe behaviour and read consent. What you remove is the pile of vendor scripts and the pile of vendor-specific network requests.
+
+## Why teams do it
+
+**Reliability.** Ad blockers, tracking prevention and flaky mobile networks drop a share of browser requests. A server request from your router to Meta's Conversions API or Google's Measurement Protocol does not depend on the visitor's device staying on the page.
+
+**Authoritative conversions.** The browser sees a "thank you" page; your server sees the order. Sending purchases from the order system (Shopify webhook, WooCommerce hook, CRM export) gives the platforms the transaction that actually happened, including refunds later.
+
+**Control.** Every payload passes through code you own. You can strip fields, block personal data, enforce that inferred consent is never exported, and log a redacted copy of what was sent.
+
+## Why it does not fix consent
+
+The most common misunderstanding: "the data goes through my server, so consent rules don't apply". They apply exactly as before. The legal question is *whether* you may process and share the visitor's data for a purpose, not *which machine* sends it.
+
+A correct implementation therefore evaluates consent twice:
+
+1. In the browser, before anything is stored or any vendor tag loads.
+2. On the server, before any delivery, using the consent snapshot that travelled with the event.
+
+Events without the required purpose must be dropped, not parked and replayed after consent is granted later. Replaying pre-consent behaviour is the thing regulators explicitly object to.
+
+## Deduplication: the part everybody gets wrong at first
+
+If you run the browser pixel *and* the server API for the same platform (hybrid mode), the platform receives two events per action. Vendors deduplicate on an event id that both paths must share:
+
+- Meta: `event_id` in the Conversions API equals `eventID` in the pixel call
+- TikTok: `event_id` in the Events API equals the pixel's `event_id`
+- Pinterest and Snapchat: `event_id` / `client_dedup_id`
+- Microsoft: the same `eventId` on the UET tag and the Conversions API
+- LinkedIn: `eventId`
+
+The practical rule: generate one id per event at the source and pass it through everything. Purchases additionally carry the order id (`transaction_id` in GA4, `orderId` in Google Ads, `ordinal` in Campaign Manager), so even if the browser event was lost, the vendor can still merge on the order.
+
+## A minimal architecture that holds up
+
+1. **Collector** — accepts browser batches and server batches, validates origins and source keys, applies rate limits and hands each batch to a durable queue *before* it answers with 202.
+2. **Worker** — normalises into one schema, scans for personal data, evaluates the consent policy, stores the event, deduplicates conversions by order id, fans out one delivery message per destination.
+3. **Delivery** — maps to the vendor payload, validates it, sends, classifies the response (auth, rate-limited, invalid payload, temporary), retries with backoff or parks in a dead-letter queue.
+4. **Debugger** — shows every event with its consent snapshot, routing decision and the redacted vendor payload.
+
+If any of these is missing you will eventually be unable to answer the question "why did this purchase not show up in platform X?" — which is the question that decides whether the project is trusted.
+
+## Checklist before you switch a destination to server-side
+
+- [ ] Consent is evaluated in the browser and on the server, with no replay after the fact
+- [ ] One event id per action shared by browser and server paths
+- [ ] Order id on every purchase and refund
+- [ ] Matching data (e-mail, phone) normalised and SHA-256 hashed before it leaves your systems
+- [ ] Click ids captured only after marketing consent and forwarded only to the platform they belong to
+- [ ] A test event that reaches the vendor's test-events view
+- [ ] Retries, a dead-letter queue and a way to replay
+- [ ] Retention windows for events, click ids and delivery logs
+
+## What to expect after the switch
+
+Teams usually see conversion counts rise by a noticeable share once server delivery is added — that is the previously lost browser traffic, not new customers. Expect the platforms to report *event match quality* metrics; those improve with hashed e-mail and phone from the order system. And expect a few weeks in which the browser and server paths run side by side while you compare numbers in the debugger.

@@ -1,0 +1,72 @@
+---
+title: "Kill-Switch und Incident-Playbook: Tracking in Sekunden stoppen, im richtigen Umfang, mit Nachweis"
+description: "Vier Stopp-Ebenen — eine Destination, eine Site, eine Organisation, die ganze Plattform — was jede mit dem Browser-SDK, dem Collector und der Worker-Warteschlange macht, wie schnell sie wirkt, und das Playbook für die Vorfälle, die sie erfordern."
+excerpt: "Jedes Tracking-Setup muss irgendwann schnell stoppen: Ein falsches Mapping schickt Bestellwerte ins falsche Konto, eine Rechtsfrage muss vor dem nächsten Event geklärt werden, ein Anbieter hat einen Ausfall. Dafür gibt es den Kill-Switch. Das tut jede Ebene und wann du welche nutzt."
+category: "product"
+translationGroupId: "kill-switch-incident-playbook"
+slug: "kill-switch-incident-playbook"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+tags: ["kill-switch", "incident", "betrieb", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-11"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Kill-Switch-Ebenen von der Destination bis zur Plattform"
+sources: []
+legalNotice: false
+---
+
+## Vier Ebenen
+
+| Ebene | Wo | Wirkung |
+| --- | --- | --- |
+| Destination | Destination-Seite oder das Pausier-Tool des Assistenten | der Worker stellt nicht mehr an diese Destination zu; ihr Browser-Template wird beim nächsten Konfigurationsabruf entfernt; Events werden weiterhin erfasst und gespeichert |
+| Site | Site-Einstellungen | der Collector antwortet mit `site_paused` und verwirft eingehende Events; das `kill_switch`-Flag im Manifest wird gesetzt, sodass sich das SDK beim nächsten Seitenaufruf selbst deaktiviert |
+| Organisation | Organisationseinstellungen | wie Site, für jede Site der Organisation |
+| Plattform | Umgebungsflag des Betreibers | der Collector antwortet auf jede Anfrage mit 503 und Grund `kill_switch`; nur für einen plattformweiten Vorfall |
+
+Das Einschalten jeder Ebene schreibt einen Audit-Eintrag mit Akteur und eigener Aktion (`site.kill_switch_on`, `org.kill_switch_on`), damit die Historie Notstopps von gewöhnlichen Änderungen trennt.
+
+## Wie schnell
+
+- **Worker**: sofort für neue Zustellungen; laufende Batches werden abgeschlossen oder scheitern von selbst.
+- **Collector**: sofort, weil der Site-Status je Request aus einem kurzlebigen Cache gelesen wird.
+- **Browser**: beim nächsten Seitenaufruf. Das SDK holt das kleine Manifest bei jedem Laden frisch und stoppt vor der Initialisierung jedes Anbieter-Templates, wenn das Flag gesetzt ist; bereits geladene Seiten behalten ihren Zustand bis zur Navigation.
+
+Was der Kill-Switch **nicht** tut: bereits gespeicherte Events löschen, bereits erfolgreiche Zustellungen zurückrufen oder Daten auf Anbieterseite ändern. Das sind separate Aktionen mit eigenen Abläufen.
+
+## Das Playbook
+
+### Falsche Daten gehen an einen Anbieter
+
+Symptome: Werte in der falschen Währung, Testbestellungen in der Produktion, die falsche Pixel-ID. Schritte:
+
+1. Die **Destination** pausieren (nicht die Site). Die Erfassung läuft weiter, nichts geht während der Untersuchung verloren.
+2. Destination-Monitor und Event-Debugger öffnen; die erste fehlerhafte Zustellung und die Konfigurationsversion finden, die sie eingeführt hat.
+3. Auf die vorherige Version zurückrollen oder das Mapping korrigieren und veröffentlichen.
+4. Pause aufheben. Während der Pause aufgelaufene Zustellungen werden mit der korrigierten Konfiguration gesendet.
+5. In der Anbieter-Oberfläche die betroffenen Conversions ausschließen oder löschen, sofern die Plattform es erlaubt; die Request-ID im Vorfallsprotokoll notieren.
+
+### Eine Rechts- oder Consent-Frage muss vor dem nächsten Event geklärt werden
+
+Schritte: den **Site**-Kill-Switch einschalten; nichts Neues wird erfasst, das SDK deaktiviert sich; der Audit-Eintrag zeitstempelt den Stopp. Mit Consent-Seite und Debugger untersuchen. Fortsetzen durch Ausschalten; das SDK aktiviert sich beim nächsten Seitenaufruf wieder. Betrifft die Frage bereits erfasste Daten, sind DSAR- und Aufbewahrungswerkzeuge das Mittel, nicht der Kill-Switch.
+
+### Ein Anbieter ist ausgefallen
+
+Nichts tun. Der Worker klassifiziert 5xx-Antworten als temporär, wiederholt mit Backoff und öffnet den Circuit Breaker für diese Destination; aufgelaufene Events werden zugestellt, wenn der Anbieter sich erholt, innerhalb des Zeitstempelfensters jeder API. Die Destination zu pausieren würde die Erholung nur verzögern. Beobachte die Gesundheit der Destination und die Dead-Letter-Zahl.
+
+### Zugangsdaten sind geleakt
+
+Schritte: die Zugangsdaten im Tresor rotieren (die alten werden von dir auf Anbieterseite ungültig gemacht, dann in Track ersetzt); die Destination zwischendurch zu pausieren vermeidet einen Schwall von Auth-Fehlern. Das Audit-Log zeigt, wer die Zugangsdaten gelesen oder rotiert hat; der Wert selbst wurde nie protokolliert.
+
+### Kompromittiertes Teamkonto
+
+Schritte: das Mitglied entfernen (Sitzungen werden widerrufen), den **Organisations**-Kill-Switch einschalten, wenn veröffentlichte Änderungen nicht ausgeschlossen werden können, die Versionshistorie auf Veröffentlichungen des Kontos prüfen, bei Bedarf zurückrollen, dann fortsetzen.
+
+## Übe es
+
+Der Kill-Switch ist nur schnell, wenn die Bereitschaft weiß, wo er ist. Lege den Link zu den Site-Einstellungen und dieses Playbook in die Bereitschaftsnotizen und übe einmal im Quartal ein Pausieren und Fortsetzen auf einer Staging-Site; das Audit-Log macht die Übung überprüfbar.

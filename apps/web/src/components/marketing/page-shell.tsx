@@ -1,9 +1,13 @@
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
-import { Button, Card, Container } from "@track-site/ui";
+import { Card, Container, buttonVariants } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 
-/** Shared building blocks for marketing pages: hero, sections, feature cards, CTA. */
+/**
+ * Shared building blocks for marketing pages: hero, sections, feature cards, CTA. Links are
+ * locale-neutral (next-intl's Link adds the prefix); CTAs are button-styled links, never a button
+ * nested inside a link.
+ */
 export function PageHero({ eyebrow, title, text, cta, children }: { eyebrow?: string; title: string; text: string; cta?: { label: string; href: string }; children?: ReactNode }) {
   return (
     <section className="border-b border-line">
@@ -13,10 +17,8 @@ export function PageHero({ eyebrow, title, text, cta, children }: { eyebrow?: st
         <p className="mt-5 max-w-2xl text-lg text-ink-2">{text}</p>
         {cta ? (
           <div className="mt-8">
-            <Link href={cta.href}>
-              <Button size="lg">
-                {cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
+            <Link href={cta.href} className={buttonVariants({ size: "lg" })}>
+              {cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         ) : null}
@@ -90,8 +92,8 @@ export function FinalCta({ title, text, primary, secondary }: { title: string; t
         <h2 className="font-display text-3xl font-semibold tracking-tight">{title}</h2>
         <p className="mt-3 max-w-2xl text-white/80">{text}</p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={primary.href}>
-            <Button size="lg">{primary.label}</Button>
+          <Link href={primary.href} className={buttonVariants({ size: "lg" })}>
+            {primary.label}
           </Link>
           {secondary ? (
             <Link href={secondary.href} className="inline-flex items-center gap-1 self-center text-sm font-medium text-white/90 hover:underline">

@@ -4,7 +4,7 @@ import { Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { Link } from "@/i18n/navigation";
 import { pick } from "@/lib/marketing-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 interface Guide {
@@ -18,7 +18,7 @@ interface Guide {
 const COPY: Record<"en" | "de", { title: string; intro: string; guides: Guide[]; toc: string }> = {
   en: {
     title: "Documentation",
-    intro: "Everything needed to install track.site, send server events, integrate consent and configure destinations. The dashboard assistant links here for each step.",
+    intro: "Everything needed to install Track, send server events, integrate consent and configure destinations. The dashboard assistant links here for each step.",
     toc: "On this page",
     guides: [
       { id: "install", title: "Install the snippet", text: "Add the asynchronous script to every page, ideally in the head. It loads the signed configuration for your tracking ID, respects consent and never blocks rendering. Replace TRACKING_ID with the six-character ID from your dashboard.", code: `<script async src="https://cdn.track.site/v1/tracker.js" data-site="TRACKING_ID"></script>` },
@@ -33,7 +33,7 @@ const COPY: Record<"en" | "de", { title: string; intro: string; guides: Guide[];
   },
   de: {
     title: "Dokumentation",
-    intro: "Alles, was du brauchst, um track.site zu installieren, Server-Events zu senden, Consent zu integrieren und Destinationen zu konfigurieren. Der Dashboard-Assistent verlinkt bei jedem Schritt hierher.",
+    intro: "Alles, was du brauchst, um Track zu installieren, Server-Events zu senden, Consent zu integrieren und Destinationen zu konfigurieren. Der Dashboard-Assistent verlinkt bei jedem Schritt hierher.",
     toc: "Auf dieser Seite",
     guides: [
       { id: "install", title: "Snippet installieren", text: "Füge das asynchrone Script auf jeder Seite ein, idealerweise im Head. Es lädt die signierte Konfiguration für deine Tracking-ID, respektiert Consent und blockiert nie das Rendering. Ersetze TRACKING_ID durch die sechsstellige ID aus deinem Dashboard.", code: `<script async src="https://cdn.track.site/v1/tracker.js" data-site="TRACKING_ID"></script>` },
@@ -51,7 +51,7 @@ const COPY: Record<"en" | "de", { title: string; intro: string; guides: Guide[];
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/docs", locale) };
+  return pageMetadata({ locale, path: "/docs", title: seoTitle(c.title), description: seoDescription(c.intro) });
 }
 
 export default async function DocsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -60,7 +60,7 @@ export default async function DocsPage({ params }: { params: Promise<{ locale: s
   const c = pick(locale, COPY);
   return (
     <>
-      <JsonLd data={[breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.title, path: "/docs" }], locale), { "@context": "https://schema.org", "@type": "TechArticle", headline: c.title, description: c.intro, inLanguage: locale }]} />
+      <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/docs" }], locale), { "@context": "https://schema.org", "@type": "TechArticle", headline: c.title, description: c.intro, inLanguage: locale }]} />
       <Container className="grid gap-10 py-14 md:grid-cols-[220px_1fr] md:py-20">
         <nav aria-label={c.toc} className="md:sticky md:top-24 md:self-start">
           <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">{c.toc}</p>

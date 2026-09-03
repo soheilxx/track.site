@@ -1,0 +1,79 @@
+---
+title: "Migration von Google Tag Manager: ein Plan, der mit der Inventur beginnt und keine Conversion verliert"
+description: "Eine schrittweise Migration von GTM-Web-Containern zu Track — Container-Export und geprüfte Inventur, Übersetzung von Tags, Triggern und Variablen in einen Tracking-Plan, Parallelbetrieb mit Deduplizierung, Umschaltung je Destination und was absichtlich kein Gegenstück hat."
+excerpt: "Ein GTM-Container sammelt über Jahre Tags, die niemand zu löschen wagt. Die Migration ist der Moment, sie zu inventarisieren, die zu behalten, die in einen Tracking-Plan passen, und den Rest stillzulegen — ohne einen einzigen Tag fehlender Conversions. Hier ist der Plan."
+category: "guides"
+translationGroupId: "migrating-from-gtm"
+slug: "migrating-from-gtm"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "beginner"
+tags: ["gtm", "migration", "tag-manager", "tracking-plan"]
+author: "track-site-editorial"
+publishedAt: "2026-08-16"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Migrationspfad von einem GTM-Container zu einem Tracking-Plan"
+sources:
+  - title: "Google Tag Manager-Hilfe — Container exportieren und importieren"
+    url: "https://support.google.com/tagmanager/answer/6106997"
+legalNotice: false
+---
+
+## Schritt 1: Export und Inventur
+
+Exportiere den Container (Verwaltung → Container exportieren). Das JSON listet jedes Tag, jeden Trigger, jede Variable und jeden Ordner. Baue daraus die Inventur — eine Tabelle genügt — mit einer Zeile pro Tag: Anbieter, Tag-Typ, Trigger, gelesene Variablen und eine Klassifikation:
+
+- **Erkanntes Anbieter-Tag** (GA4, Google Ads, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Reddit, X, Taboola, Outbrain, Criteo, Affiliate-Pixel) mit passendem Destination-Template.
+- **Data-Layer-Push**, nach Eventname gruppiert, mit den Variablen, die jedes Tag liest.
+- **Custom-HTML-Tag**, klassifiziert als Anbieter-Snippet mit bekanntem Gegenstück, First-Party-Helfer (Scrolltiefe, Formular-Listener) oder unbekannt.
+- **Pausierte Tags und Tags ohne aktuelle Auslösungen** (GTMs Tag-Metadaten zeigen, wann ein Tag zuletzt gefeuert hat), als Stilllegungskandidaten markiert.
+
+Die Inventur ist die Wahrheitsquelle der Migration. Nichts wird daraus automatisch erzeugt; du prüfst jede Zeile und entscheidest.
+
+## Schritt 2: Übersetzung in einen Tracking-Plan
+
+GTM denkt in Tags und Triggern; Track denkt in **Events** und **Destinationen**. Die Übersetzung:
+
+| GTM-Konzept | Track-Konzept |
+| --- | --- |
+| `dataLayer.push({event: 'purchase', ecommerce: {...}})` | `tsq.push(['track', 'purchase', {...}])` mit dem kanonischen Commerce-Schema |
+| Trigger „Benutzerdefiniertes Ereignis gleich purchase“ | das Event selbst; Destinationen abonnieren über den Eventnamen |
+| Trigger „Klick — Alle Elemente“ mit CSS-Filter | eine deklarative Klickregel (Selektor, Eventname, erlaubte Properties) |
+| Data-Layer-Variable | eine Property im Eventschema, typisiert und validiert |
+| Lookup-Tabelle | eine Mapping-Tabelle in der Destination, versioniert und diffbar |
+| Consent-Initialisierungs-Tag | die CMP-Integration; Consent wird gelesen, nie gesetzt |
+| GA4-Konfiguration + Event-Tags | eine GA4-Destination mit Event-Mappings, Browser und Server |
+| Google-Ads-Conversion-Tag je Aktion | eine Google-Ads-Destination mit einem Mapping je Conversion-Aktion |
+
+Der Plan listet jedes Event mit seinen Properties, seinem Consent-Zweck und den Destinationen, die es speist. Kritische Events werden markiert, damit der Health Score sie überwacht.
+
+## Schritt 3: Parallelbetrieb mit Deduplizierung
+
+Schalte GTM nicht am ersten Tag ab. Installiere das Track-SDK daneben. Das SDK beobachtet GA4-förmige Data-Layer-Pushes, ohne etwas auszuführen, sodass ein Container, der bereits `purchase` mit einem `ecommerce`-Objekt pusht, beide Systeme aus demselben Push speist.
+
+Aktiviere je Destination in Track zunächst **nur serverseitig**, während das GTM-Browser-Tag weiter feuert:
+
+- Bei Google Ads und GA4 tragen Käufe auf beiden Wegen dieselbe Transaktions-ID, und der Anbieter dedupliziert darüber.
+- Bei Plattformen, die über die Event-ID deduplizieren (Meta, TikTok, Microsoft, Pinterest, Snapchat, Reddit), lass den Server-Weg zuerst im Testmodus laufen, vergleiche die Zahlen in der Testansicht des Anbieters und schalte dann direkt um — betreibe nicht beide live mit unterschiedlichen IDs.
+
+Der Destination-Monitor zeigt die Annahme je Destination; stimmt sie mit den Zahlen des GTM-Tags überein, ist das Browser-Tag überflüssig.
+
+## Schritt 4: Umschaltung je Destination
+
+Je Destination in dieser Reihenfolge: Track auf hybrid stellen (eigenes Browser-Template plus Server), GTM-Tag pausieren, die Eventzahl des Anbieters zwei Tage beobachten, dann das GTM-Tag löschen. Analytics-Destinationen zuerst, Werbe-Destinationen eine nach der anderen, Affiliate-Netzwerke zuletzt, weil ihre Postbacks einen für das Cookie-Fenster aufgewärmten Click-ID-Speicher brauchen.
+
+## Schritt 5: Container stilllegen
+
+Wenn jedes Tag pausiert ist und die Anbieterzahlen übereinstimmen, entferne das GTM-Snippet. Behalte den exportierten Container in der Migrationsakte; das Audit-Log zeigt, wer was wann umgeschaltet hat.
+
+## Was absichtlich kein Gegenstück hat
+
+- **Custom-HTML- und Custom-JavaScript-Tags.** Track führt keinen von der Site geschriebenen Code aus. Anbieter-Snippets werden zu deklarativen Templates; First-Party-Helfer zu deklarativen Regeln; alles andere ist eine bewusst zu treffende Entscheidung, meist die Logik dorthin zu verschieben, wo sie hingehört — in den Code der Site.
+- **Consent-Überschreibungen.** Kein Tag kann so eingestellt werden, dass es unabhängig vom Consent feuert.
+- **Tag-Sequenzierung und Auslöseprioritäten.** Events werden per Policy geroutet, nicht um die Wette geschickt.
+- **Regex-basiertes Auslesen der Seite** in Variablen. Properties kommen aus dem Data Layer oder deklarativen Regeln, nicht aus DOM-Text.
+
+Markiere jeden dieser Fälle in deiner Inventur, damit du vor dem Start weißt, wie viel des Containers echtes Tracking ist und wie viel angesammeltes Gerüst.

@@ -1,0 +1,69 @@
+---
+title: "WooCommerce tracking with signed order webhooks: browser events, the purchase data layer and server-side truth"
+description: "How the Track WooCommerce plugin installs the snippet, pushes a GA4-shaped purchase on the thank-you page and manages native WooCommerce webhooks signed with HMAC-SHA256 — and how orders, statuses and refunds map to canonical events."
+excerpt: "WooCommerce already has signed webhooks and a REST order format. The plugin is small on purpose: snippet, thank-you-page data layer and two managed webhooks. Here is what each part does and how the order status becomes a purchase."
+category: "integrations"
+translationGroupId: "woocommerce-server-side-tracking"
+slug: "woocommerce-server-side-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["woocommerce"]
+contentType: "tutorial"
+level: "intermediate"
+tags: ["woocommerce", "wordpress", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-07"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "WooCommerce order status flow mapped to purchase and refund events"
+sources:
+  - title: "WooCommerce — Webhooks"
+    url: "https://woocommerce.com/document/webhooks/"
+  - title: "WooCommerce REST API — Orders"
+    url: "https://woocommerce.github.io/woocommerce-rest-api-docs/#orders"
+legalNotice: false
+---
+
+## What the plugin does
+
+`integrations/woocommerce/track-site` is a single-file WordPress plugin (PHP 8.1+, WooCommerce 8+, compatible with high-performance order storage). It has three responsibilities and no others:
+
+1. **Snippet.** Prints the async Track loader with your tracking id in `wp_head`; custom SDK and collector hosts only when you set them.
+2. **Purchase data layer.** On the thank-you page it pushes a GA4-shaped `purchase` into `window.dataLayer` — transaction id and order id, value, currency, tax, shipping, coupon codes and line items — guarded by an order meta flag so a page reload does not push twice. The SDK observes the push through a `data_layer` trigger with key `purchase`; this is the browser path that carries the visitor's consent and click ids.
+3. **Managed webhooks.** On saving the settings it creates or updates two native WooCommerce webhooks, `order.created` and `order.updated`, with REST v3 payloads, pointing at your connection's webhook URL and signed with the secret you enter. Deactivating the plugin deletes them again.
+
+Payment details never travel: WooCommerce's order representation contains billing and shipping data, totals and items, not card numbers. If you prefer not to install a plugin, the same two webhooks can be created by hand under WooCommerce → Settings → Advanced → Webhooks with the same secret.
+
+## Verification
+
+WooCommerce signs every delivery with `X-WC-Webhook-Signature`, the base64 HMAC-SHA256 of the raw body under the webhook secret. The collector recomputes it and compares in constant time. When a webhook is created, WooCommerce first sends a form-encoded ping (`webhook_id=…`); the collector verifies its signature and answers *pong* without creating an event, and the connection records the ping as its first topic.
+
+## From order status to events
+
+WooCommerce fires `order.updated` on every change, so the mapping keys on status:
+
+| Order status | Event |
+| --- | --- |
+| `processing`, `completed` | `purchase` (once; the event id is deterministic per order) |
+| `refunded`, or any status with entries in `refunds[]` | one `refund` per refund entry, absolute amount |
+| `pending`, `on-hold`, `cancelled`, `failed` | ignored |
+
+The purchase carries the paid timestamp (`date_paid_gmt`) rather than the creation time, the gateway transaction id, currency, totals, tax, shipping, discount and the first coupon code, line items keyed by variation id (or product id), and the billing e-mail, phone, name, city, postcode and country as raw matching data the router hashes. The customer id becomes `external_id`.
+
+## Pairing with the browser purchase
+
+The webhook has no consent information. When it arrives, the router looks for a browser purchase with the same order id and lets the server event inherit its consent record, anonymous id, click ids and hashed identifiers. Both events are routed; vendors receive `purchase:<order id>` on both paths and count once. Without a browser purchase the server record is operational only and never reaches advertising destinations.
+
+Because the plugin's data layer push and the webhook use the same order id, the pairing is automatic; nothing has to be configured on the shop side beyond the two settings.
+
+## Setup
+
+1. Site → Shop connection → WooCommerce: shop domain, save; copy the webhook URL; choose a secret and store it in the connection.
+2. Install and activate the plugin, open Settings → Track, enter tracking id, webhook URL and the same secret, save. The page lists the two managed webhooks.
+3. Place a test order and set it to *processing*. The debugger shows the browser purchase from the data layer and the verified woocommerce purchase with the same order id.
+
+## Known limits, stated plainly
+
+- Manual status changes in the admin trigger `order.updated` like any other change; the deterministic event id prevents a second purchase.
+- A second partial refund on the same order is deduplicated by order id in the conversion table; the first refund is recorded, later ones are visible in WooCommerce only.
+- Subscriptions plugins that create renewal orders produce new order ids and therefore new purchases; map renewals to a separate conversion action if you do not want them in acquisition metrics.

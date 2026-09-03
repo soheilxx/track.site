@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { FeatureGrid, FinalCta, PageHero, Section } from "@/components/marketing/page-shell";
 import { FEATURES, pick } from "@/lib/marketing-copy";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
@@ -14,7 +14,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: seoTitle(c.eyebrow), description: seoDescription(c.text), alternates: alternatesFor("/features", locale) };
+  return pageMetadata({ locale, path: "/features", title: seoTitle(c.eyebrow), description: seoDescription(c.text) });
 }
 
 export default async function FeaturesPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -24,7 +24,7 @@ export default async function FeaturesPage({ params }: { params: Promise<{ local
   const features = pick(locale, FEATURES);
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: c.eyebrow, path: "/features" }], locale)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.eyebrow, path: "/features" }], locale)} />
       <PageHero eyebrow={c.eyebrow} title={c.title} text={c.text} />
       <Section>
         <FeatureGrid items={features.map((f) => ({ title: f.title, text: f.short, href: `/features/${f.slug}` }))} columns={3} />

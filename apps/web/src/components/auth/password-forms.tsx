@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, Button, FieldError, Input, Label } from "@track-site/ui";
@@ -11,6 +11,7 @@ import { forgotSchema, resetSchema } from "@/lib/validation/auth";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth");
+  const locale = useLocale();
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<{ email: string }>({ resolver: zodResolver(forgotSchema), defaultValues: { email: "" } });
@@ -21,7 +22,8 @@ export function ForgotPasswordForm() {
       className="space-y-4"
       onSubmit={form.handleSubmit(async ({ email }) => {
         setError(null);
-        const res = await authClient.requestPasswordReset({ email, redirectTo: "/reset-password" });
+        // the e-mailed link opens the reset page in the language the request was made in
+        const res = await authClient.requestPasswordReset({ email, redirectTo: `/${locale}/reset-password` });
         if (res.error && res.error.status === 429) setError(t("errors.rateLimited"));
         else setSent(true); // never reveal whether the address exists
       })}

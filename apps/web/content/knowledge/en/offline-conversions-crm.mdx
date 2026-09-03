@@ -1,0 +1,74 @@
+---
+title: "Offline conversions from your CRM: uploads with the original timestamp, hashed identifiers and honest values"
+description: "How to feed CRM outcomes — qualified leads, closed deals, in-store purchases — back to Google Ads, Meta, LinkedIn, TikTok and Microsoft through Track's import source, which identifiers each platform needs and which timing rules apply."
+excerpt: "The most valuable conversions often happen days after the click and outside the browser. Importing them properly means keeping the original time, matching on the right identifier and never inventing a value. This is the workflow and the per-platform rules."
+category: "guides"
+translationGroupId: "offline-conversions-crm"
+slug: "offline-conversions-crm"
+topic: "attribution-analytics"
+platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+tags: ["offline-conversions", "crm", "import", "attribution"]
+author: "track-site-editorial"
+publishedAt: "2026-08-23"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "CSV import of CRM conversions mapped to canonical events"
+sources:
+  - title: "Google Ads Help — About offline conversion imports"
+    url: "https://support.google.com/google-ads/answer/2998031"
+  - title: "Meta for Developers — Conversions API for offline events"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/app-events-offline-events"
+legalNotice: false
+---
+
+## The workflow
+
+1. **Export** from the CRM: one row per outcome with the outcome time, the identifiers you have (e-mail, phone, click id if stored on the lead, order id) and the value.
+2. **Send** the rows to the server event endpoint with a source key created for the CRM. Each row becomes a canonical event (`qualified_lead`, `purchase`, `refund`, `subscribe`) with `props.offline: true`, the original timestamp and the consent state your system recorded for that person. A small script or the CRM's outbound webhook can do this; the endpoint accepts batches and answers with the number accepted or a validation error that names the field.
+3. **Normalise and hash before sending**: e-mails lowercased and trimmed, phones converted to E.164, then SHA-256. Rows that arrive with plain identifiers fail validation; nothing is hashed on your behalf.
+4. **Route** exactly as browser events: the policy engine applies the consent state carried by the event, per destination. An event without consent information carries only the necessary purpose and reaches no advertising destination.
+5. **Deliver** through the same connectors, with the offline variants of each API.
+
+The event debugger shows every imported event with its source, and the destination monitor shows the delivery status per destination.
+
+## Per platform
+
+| Platform | Mechanism | Required identifier | Time rules |
+| --- | --- | --- | --- |
+| Google Ads | click conversion upload | `gclid`/`gbraid`/`wbraid` **or** hashed e-mail/phone (Enhanced Conversions for Leads) | after the click, inside the window; not older than the action's click-through window |
+| Meta | Conversions API with `action_source: physical_store` or `system_generated` | hashed e-mail/phone, `external_id`; `fbc` if stored | within 62 days |
+| LinkedIn | Conversions API | hashed e-mail or `li_fat_id` | within 90 days |
+| TikTok | Events API with `event_source: offline` and an offline event set id | hashed e-mail/phone | within 7 days for web, longer for offline sets |
+| Microsoft | Conversions API | `msclkid` or hashed e-mail/phone | inside the goal's window |
+| Affiliate networks | postback with the stored click id | network click id | per programme |
+
+The timestamp you upload must be the time the outcome **happened**, not the time you exported it. Uploading yesterday's deals with today's timestamp shifts attribution and can put conversions outside the click window.
+
+## Store the click id on the lead
+
+Matching by click id is more reliable than by hashed e-mail. Copy the click-id parameters from the landing URL (`gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid`) into hidden form fields when marketing consent is granted, and store them on the lead in the CRM. Later, when the lead closes, the export carries the click id and the upload matches deterministically.
+
+## Values: model them or leave them empty
+
+A qualified lead has no order value. Options that stay honest:
+
+- Leave the value empty; count-based optimisation still works.
+- Use a **documented expected value** per lead stage (for example, average deal size × close rate), set in the destination mapping as a constant and visible in the audit log.
+- Upload the **actual** deal value when the deal closes, as a separate conversion.
+
+What Track will not do is invent a value: unmapped values stay `null`, and a mapping that references a missing property fails validation instead of substituting a default.
+
+## Deduplication with browser events
+
+Do not send the CRM's "form submitted" row as the same event the browser already sent; you would double count unless the event id travels with the lead. Send **downstream** outcomes (`qualified_lead`, `purchase`) as their own events, mapped to separate conversion actions or rules. For purchases that the browser also saw, keep the order id on both so platforms that dedupe on order id merge them.
+
+## Checklist
+
+- [ ] Export contains outcome time in ISO 8601 with a time zone
+- [ ] Identifiers normalised before hashing; already-hashed columns marked as hashed
+- [ ] Click ids stored on the lead at form submission
+- [ ] Values either real, documented constants or empty
+- [ ] Batch responses reviewed: rejected rows fixed, delivery per destination confirmed in the destination monitor

@@ -1,0 +1,75 @@
+---
+title: "Die 23 Standard-Events: eine Taxonomie, die sauber auf jede Werbeplattform passt"
+description: "Der kanonische Eventkatalog von Track — Engagement-, Auth-, Lead-, Commerce- und Subscription-Events — mit den Properties, die jedes trägt, den standardmäßig nötigen Consent-Zwecken und der Übersetzung zu Meta, Google, TikTok, LinkedIn und den übrigen."
+excerpt: "An eigenen Eventnamen sterben Tracking-Pläne. Ein kleines, festes Vokabular mit typisierten Properties macht Mappings vorhersehbar, Validierung möglich und die Anbieter-Übersetzung automatisch. Das sind die 23 Events und die Regeln drumherum."
+category: "guides"
+translationGroupId: "event-taxonomy-standard-events"
+slug: "event-taxonomy-standard-events"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "beginner"
+tags: ["events", "taxonomie", "tracking-plan", "schema"]
+author: "track-site-editorial"
+publishedAt: "2026-08-14"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Standard-Eventkatalog nach Kategorie gruppiert"
+sources:
+  - title: "Google Analytics — Empfohlene Ereignisse"
+    url: "https://support.google.com/analytics/answer/9267735"
+  - title: "Meta — Standard-Events"
+    url: "https://developers.facebook.com/docs/meta-pixel/reference"
+legalNotice: false
+---
+
+## Der Katalog
+
+| Kategorie | Events | Standard-Zwecke |
+| --- | --- | --- |
+| engagement | `page_view`, `view_content`, `search`, `download` | analytics |
+| auth | `sign_up`, `login` | analytics |
+| lead | `generate_lead`, `contact`, `book_appointment` | analytics, marketing |
+| commerce | `view_item_list`, `select_item`, `view_item`, `add_to_wishlist`, `add_to_cart`, `remove_from_cart`, `view_cart`, `begin_checkout`, `add_shipping_info`, `add_payment_info`, `purchase`, `refund` | analytics, marketing |
+| subscription | `subscribe`, `start_trial` | analytics, marketing |
+
+Die Namen folgen dem Vokabular der empfohlenen GA4-Ereignisse, wo es eines gibt, weil es die am weitesten verbreitete Data-Layer-Form ist und das SDK GA4-artige `dataLayer`-Pushes direkt beobachten kann. Die Kategorien bestimmen die Standard-Consent-Zwecke: Commerce-, Lead- und Subscription-Events sind Conversion-Signale, die Werbeplattformen wollen, und brauchen daher den Zweck Marketing, um eine Werbe-Destination zu erreichen; Engagement- und Auth-Events sind standardmäßig Analytics.
+
+## Properties
+
+Jedes Event trägt den Umschlag: Event-ID, Zeitstempel, URL (mit entfernten Click-IDs), Referrer, Titel, Consent-Eintrag, Quelle und — wenn der Consent es erlaubt — anonyme ID, Sitzungs-ID, Nutzer-ID und gehashte Kennungen.
+
+Commerce-Events ergänzen einen typisierten `commerce`-Block: `currency`, `value`, `transaction_id`, `coupon`, `shipping`, `tax` und `items[]` mit `item_id`, `item_name`, `price`, `quantity`, `item_category`, `item_brand`, `item_variant`. `refund` trägt die ursprüngliche `transaction_id` und einen negativen oder Teilwert.
+
+Lead- und Subscription-Events nutzen einen kleinen Property-Satz: `lead_type`, `form_id`, `plan`, `interval`, `trial_days`, `value`, wo ein dokumentierter Wert existiert.
+
+Alles Weitere gehört in `props`, das gegen das Schema der Site validiert wird: Unbekannte Schlüssel werden als Befunde gemeldet, Freitext wird auf personenbezogene Daten gescannt, und verschachtelte Objekte werden geschwärzt statt weitergeleitet.
+
+## Eigene Events
+
+Eigene Namen sind erlaubt, wenn sie `^[a-z][a-z0-9_]{2,39}$` entsprechen, nicht mit einem Standardnamen kollidieren und im Tracking-Plan deklariert sind. Nicht deklarierte eigene Events werden angenommen, gezählt und als Schemabefunde gemeldet, damit der Plan bewusst aktualisiert werden kann; an Werbe-Destinationen werden sie erst zugestellt, wenn sie gemappt sind.
+
+## Übersetzung zu Anbietern
+
+Weil das Vokabular fest ist, bringt jeder Connector ein Standard-Mapping mit:
+
+| Kanonisch | Meta | Google Ads | GA4 | TikTok | LinkedIn | Pinterest | Snapchat |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `view_item` | ViewContent | — | view_item | ViewContent | — | page_visit | VIEW_CONTENT |
+| `add_to_cart` | AddToCart | — | add_to_cart | AddToCart | — | add_to_cart | ADD_CART |
+| `begin_checkout` | InitiateCheckout | — | begin_checkout | InitiateCheckout | — | — | START_CHECKOUT |
+| `purchase` | Purchase | Conversion-Aktion | purchase | CompletePayment | Conversion-Regel | checkout | PURCHASE |
+| `generate_lead` | Lead | Conversion-Aktion | generate_lead | SubmitForm | Conversion-Regel | lead | SIGN_UP |
+| `sign_up` | CompleteRegistration | Conversion-Aktion | sign_up | CompleteRegistration | Conversion-Regel | signup | SIGN_UP |
+| `subscribe` | Subscribe | Conversion-Aktion | — | Subscribe | Conversion-Regel | — | SUBSCRIBE |
+| `start_trial` | StartTrial | Conversion-Aktion | — | StartTrial | Conversion-Regel | — | START_TRIAL |
+
+Ein Strich bedeutet, dass der Anbieter kein Standard-Gegenstück hat; du kannst auf ein eigenes Anbieter-Event mappen oder die Zeile deaktiviert lassen. Jeder Standard ist je Destination editierbar, und jede Änderung ist versioniert und erscheint im Veröffentlichungs-Diff.
+
+## Regeln, die den Plan ehrlich halten
+
+- Ein Event pro Nutzeraktion. `purchase` feuert einmal pro Bestellung, aus der Quelle, die für diese Site maßgeblich ist (Browser, Shop-Webhook oder Server), mit derselben Event-ID oder Bestellnummer auf jedem Weg.
+- Werte kommen aus dem Quellsystem. Es gibt keinen Standardwert; ein nicht gemappter Wert ist `null`, und ein Anbieter, der einen verlangt, lehnt die Zeile sichtbar ab.
+- Erstattungen sind Events, keine Änderungen. Ein `refund` referenziert die ursprüngliche Transaktion; der ursprüngliche `purchase` wird nie umgeschrieben.
+- Namen sind in Kleinbuchstaben mit Unterstrichen. Die Anbieter-Schreibweise (`CompletePayment`, `PURCHASE`) ist Sache des Connectors.

@@ -1,0 +1,92 @@
+---
+title: "Google Ads conversions from the server: click conversions, Enhanced Conversions and the consent fields"
+description: "How to upload click conversions to the Google Ads API with gclid or hashed identifiers, what the conversionDateTime and consent fields must contain, and how validateOnly keeps tests out of reporting."
+excerpt: "The Google Ads API accepts server-side conversions through uploadClickConversions. This guide covers the required fields, Enhanced Conversions for Leads with hashed e-mail and phone, consent flags and a safe test workflow."
+category: "integrations"
+translationGroupId: "google-ads-enhanced-conversions"
+slug: "google-ads-enhanced-conversions"
+topic: "pixel-platform-integrations"
+platforms: ["google-ads"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
+author: "track-site-editorial"
+publishedAt: "2026-09-01"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Google Ads click conversion upload with gclid and hashed e-mail"
+sources:
+  - title: "Google Ads API — Upload click conversions"
+    url: "https://developers.google.com/google-ads/api/docs/conversions/upload-clicks"
+  - title: "Google Ads API — Release notes and versions"
+    url: "https://developers.google.com/google-ads/api/docs/release-notes"
+legalNotice: false
+---
+
+## Two paths, one conversion action
+
+Google Ads measures conversions two ways:
+
+1. **Google tag in the browser** — `gtag('event', 'conversion', { send_to: 'AW-XXXX/label', value, currency, transaction_id })`, optionally with Enhanced Conversions (`user_data` with e-mail, phone, address hashed by the tag).
+2. **Conversion uploads through the Google Ads API** — `ConversionUploadService.UploadClickConversions`, sent from your server.
+
+Both refer to the same *conversion action*. The API path is what makes offline sales, CRM-qualified leads and refund corrections possible, and it is the path that survives blocked browser requests.
+
+## The upload request
+
+`POST https://googleads.googleapis.com/v25/customers/{customerId}:uploadClickConversions` with headers `Authorization: Bearer <OAuth2>`, `developer-token` and, when you access the account through a manager account, `login-customer-id`.
+
+Each `ClickConversion` needs:
+
+- `conversionAction` — the resource name `customers/{cid}/conversionActions/{id}`
+- `conversionDateTime` — `yyyy-mm-dd hh:mm:ss+|-hh:mm`, with an explicit time zone offset
+- at least one attribution key: `gclid`, `gbraid`, `wbraid` **or** `userIdentifiers` (Enhanced Conversions for Leads)
+- optional `conversionValue` with `currencyCode`, and `orderId` for deduplication
+- `consent` with `adUserData` and `adPersonalization` set to `GRANTED` or `DENIED`
+
+Set `partialFailure: true` — the API then reports failures per row instead of rejecting the batch — and use `validateOnly: true` for tests. A validate-only upload proves credentials, developer token and customer access without recording anything.
+
+## Enhanced Conversions: what to hash
+
+For `userIdentifiers`, Google expects SHA-256 of normalised values:
+
+- e-mail: trimmed, lowercase; for gmail.com and googlemail.com addresses remove dots and `+` suffixes before hashing
+- phone: E.164 (`+` and country code) before hashing
+- first name, last name, street: lowercase, trimmed, then hashed
+- city, state, postal code, country code: plain text
+
+Each identifier object also carries `userIdentifierSource: FIRST_PARTY`. A row may combine several identifiers; Google matches on any of them.
+
+## Timing rules that cause silent misses
+
+- The conversion time must be **after** the click and inside the conversion action's click-through window. Uploading a purchase with a timestamp before the click returns `CONVERSION_PRECEDES_CLICK`.
+- Clicks younger than a few hours may not be matchable yet (`TOO_RECENT_CLICK`). Retrying later is correct behaviour; Track treats these as retryable.
+- Time zone offsets are mandatory. `2026-09-03 10:15:00` without `+02:00` is rejected.
+
+## Consent fields are not optional in practice
+
+Since Consent Mode v2, uploads without `consent.adUserData` for EEA traffic are flagged. Derive the flags from the consent purposes recorded with the event: marketing → `adUserData: GRANTED`; marketing + personalization → `adPersonalization: GRANTED`; anything else → `DENIED`. Never default to granted because the field exists.
+
+## Deduplicating with the browser tag
+
+Use the same `transaction_id` in the Google tag and `orderId` in the upload. Google deduplicates conversions with the same order id for the same conversion action, so a purchase seen by both the tag and the server counts once. For leads without an order, keep browser and server on **different** conversion actions (for example "Lead (tag)" and "Qualified lead (CRM)") rather than trying to dedupe them.
+
+## A test workflow that does not pollute reporting
+
+1. Connect the Google account through OAuth and validate: Track sends a validate-only upload and reports whether the developer token and customer id are accepted.
+2. Map `purchase` to the conversion action id.
+3. Send a test event in the wizard. While the destination is in test mode every upload uses `validateOnly: true`; the response confirms the payload shape.
+4. Switch off test mode, send one real purchase with a fresh gclid, and check Conversions → Diagnostics in Google Ads the next day.
+
+## Common errors, decoded
+
+| Error | Meaning | Fix |
+| --- | --- | --- |
+| `UNAUTHENTICATED` | OAuth token invalid | reconnect the Google account |
+| `PERMISSION_DENIED` / `USER_PERMISSION_DENIED` | no access to the customer id | check `login-customer-id` and account access |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | token only allows test accounts | apply for basic access |
+| `CLICK_NOT_FOUND` | gclid unknown | click is too old, from another account, or malformed |
+| `INVALID_CONVERSION_ACTION_TYPE` | action is not an upload type | create a conversion action with source "Upload from clicks" |
+
+Every one of these appears with its code in the event debugger next to the redacted payload that produced it.

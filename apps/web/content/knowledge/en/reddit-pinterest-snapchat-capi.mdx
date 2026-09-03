@@ -1,0 +1,66 @@
+---
+title: "Reddit, Pinterest and Snapchat conversion APIs side by side: click ids, test modes and event names"
+description: "A compact comparison of the Reddit Conversions API, Pinterest Conversions API and Snapchat Conversions API — endpoints, auth, click ids (rdt_cid, epik, ScCid), event names, dedup fields and test switches."
+excerpt: "The three 'second wave' social platforms all offer a server-side conversions API modelled on Meta's. They differ in click id, event vocabulary and how you test without polluting reports. Here is the side-by-side."
+category: "integrations"
+translationGroupId: "reddit-pinterest-snapchat-capi"
+slug: "reddit-pinterest-snapchat-capi"
+topic: "pixel-platform-integrations"
+platforms: ["reddit", "pinterest", "snapchat"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+tags: ["reddit", "pinterest", "snapchat", "conversions-api"]
+author: "track-site-editorial"
+publishedAt: "2026-08-26"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Comparison table of Reddit, Pinterest and Snapchat conversion APIs"
+sources:
+  - title: "Reddit Ads — Conversions API"
+    url: "https://ads-api.reddit.com/docs/v3/"
+  - title: "Pinterest API — Conversions"
+    url: "https://developers.pinterest.com/docs/api/v5/events-create"
+  - title: "Snap — Conversions API"
+    url: "https://developers.snap.com/api/marketing-api/Conversions-API/GettingStarted"
+legalNotice: false
+---
+
+## The shape they share
+
+All three accept a JSON array of events, each with an event name, a timestamp, an event id for deduplication, a `user`/`user_data` block with hashed e-mail and phone plus the platform's click id, and a custom data block with value, currency, order id and contents. All three want SHA-256 hashes of lowercase e-mails and E.164 phone numbers. All three have a browser pixel that sets a first-party cookie and accepts the same event id, and all three attribute best when the click id captured on the landing page travels with the server event.
+
+## Side by side
+
+| | Reddit | Pinterest | Snapchat |
+| --- | --- | --- | --- |
+| Endpoint | `ads-api.reddit.com/api/v3/pixels/{pixel_id}/conversion_events` | `api.pinterest.com/v5/ad_accounts/{ad_account_id}/events` | `tr.snapchat.com/v3/{pixel_id}/events` |
+| Auth | Bearer token (Reddit Ads OAuth or Conversions token) | Bearer token with `ads:write` (conversion access token) | Bearer token (CAPI token from Ads Manager) |
+| Click id URL param | `rdt_cid` | `epik` | `ScCid` |
+| Click id field | `click_id` | `user_data.click_id` | `user_data.sc_click_id` |
+| Browser cookie | `_rdt_uuid` | `_epik` | `_scid` → `user_data.sc_cookie1` |
+| Purchase event name | `Purchase` | `checkout` | `PURCHASE` |
+| Lead event name | `Lead` | `lead` | `SIGN_UP` |
+| Dedup field | `event_metadata.conversion_id` | `event_id` | `event_id` (pixel: `client_dedup_id`) |
+| Timestamp | RFC 3339 `event_at` | Unix seconds `event_time` | Unix ms `event_time` |
+| Test switch | `test_mode: true` in body | `?test=true` query param | `/validate` endpoint instead of `/events` |
+| Batch limit | 1,000 | 1,000 | 2,000 |
+
+## Reddit
+
+Reddit's event vocabulary is short: `PageVisit`, `ViewContent`, `Search`, `AddToCart`, `AddToWishlist`, `Purchase`, `Lead`, `SignUp`, `Custom`. Values go into `event_metadata.value_decimal` with `currency`, and `item_count`. The `test_mode` flag records the event in the Test tab of Events Manager without counting it, which makes the wizard's test event safe. A `conversion_id` in the metadata deduplicates against the pixel's `rdt('track', 'Purchase', { conversionId })`.
+
+## Pinterest
+
+Pinterest uses lowercase event names (`checkout`, `add_to_cart`, `lead`, `signup`, `page_visit`, `view_category`, `search`, `watch_video`, `custom`) and `action_source: web|app_android|app_ios|offline`. `user_data.em` and `ph` are arrays of hashes; `external_id` too. The `?test=true` query parameter validates and returns per-event results without writing to reporting. Pinterest is the platform where a missing `epik` hurts most, because the pixel cookie is often blocked; capture `epik` on landing.
+
+## Snapchat
+
+Snapchat's v3 API mirrors Meta's field names most closely (`action_source`, `user_data`, `custom_data`) and uses uppercase event names: `PURCHASE`, `SAVE`, `START_CHECKOUT`, `ADD_CART`, `VIEW_CONTENT`, `ADD_BILLING`, `SIGN_UP`, `SEARCH`, `PAGE_VIEW`, `SUBSCRIBE`, `AD_CLICK`, `AD_VIEW`, `COMPLETE_TUTORIAL`, `LEVEL_COMPLETE`, `INVITE`, `LOGIN`, `SHARE`, `RESERVE`, `ACHIEVEMENT_UNLOCKED`, `SPENT_CREDITS`, `RATE`, `START_TRIAL`, `LIST_VIEW`, `APP_INSTALL`, `APP_OPEN`, `CUSTOM_EVENT_1..5`. The `/validate` endpoint returns the same validation errors as the live endpoint but records nothing, so test mode swaps the path rather than adding a flag. Send `sc_click_id` from the `ScCid` parameter and `sc_cookie1` from the `_scid` cookie when marketing consent exists.
+
+## Common mistakes
+
+- Sending the click id from the wrong parameter name (`ScCid` is case-sensitive; Pinterest's is `epik`, not `pin_click_id`).
+- Hashing already-hashed values a second time when the CRM exports hashes.
+- Using the same pixel token across ad accounts — each token is scoped to one pixel or account.
+- Leaving test mode on in production: Track shows a persistent banner on any destination still in test mode.

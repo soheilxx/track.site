@@ -1,0 +1,70 @@
+---
+title: "Personal data in tracking payloads: where it leaks in, what the scanner catches and what blocks an event"
+description: "The common ways e-mails, phone numbers, card numbers and tokens end up in tracking events — URLs, page titles, form fields, search terms — and how Track's PII scanner redacts, reports and, for cards and secrets, blocks before anything is stored or forwarded."
+excerpt: "Nobody sends a credit card number to an analytics tool on purpose. It happens through a URL parameter, a page title or a form field named 'comment'. The scanner runs on every event before storage and before routing; this is what it looks for and what it does when it finds something."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+tags: ["pii", "data-quality", "redaction", "security"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Event fields scanned for personal data before storage"
+sources:
+  - title: "GDPR Article 25 — Data protection by design and by default"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Where personal data leaks in
+
+- **URLs.** Password-reset links, unsubscribe links and booking confirmations put e-mail addresses and tokens into query strings. A page view records the URL.
+- **Page titles.** "Order #1234 for anna.mueller@example.com" as a `<title>` becomes the event title.
+- **Referrers.** The previous page's URL, with everything above.
+- **Form and search fields.** A site search for a phone number, or a "message" field mirrored into event properties.
+- **Nested objects.** A whole form object pushed into `props` because it was convenient.
+- **Item names.** Personalised products ("Mug for Anna") in commerce items.
+
+## What the scanner looks for
+
+The scanner runs after normalisation and before the policy engine, on `title`, `url`, `referrer`, every string in `props`, nested objects in `props` and commerce item names. Six kinds:
+
+| Kind | Examples | Action |
+| --- | --- | --- |
+| email | any RFC-shaped address | redacted, reported |
+| phone | international and national formats with 7+ digits | redacted, reported |
+| card | 13–19 digit sequences that pass the Luhn check | redacted, **event blocked** |
+| iban | country code + check digits + BBAN | redacted, **event blocked** |
+| secret | API keys and tokens with known prefixes, long high-entropy strings in key-like fields | redacted, **event blocked** |
+| jwt | three base64url segments separated by dots | redacted, **event blocked** |
+
+"Redacted" means the match is replaced in place by a marker before storage. Nested objects that contain a finding are replaced entirely by `[redacted:nested]`, because partial redaction of structured data is unreliable. "Blocked" means the event is not stored and not routed; a data-quality issue records the field and the kind, never the value.
+
+## Why cards and secrets block but e-mails do not
+
+An e-mail in a page title is a data-quality problem with a legal dimension; redacting it and telling you where it came from fixes both. A card number or a bearer token in an event is an incident: storing even a redacted event with its surrounding context would leave a trail that says "this happened here at this time to this session", and forwarding it anywhere is out of the question. Blocking is the conservative choice, and the finding tells you which page or form to fix.
+
+## Hashed identifiers are different
+
+Hashed e-mail and phone in `user_data` are *intentional* identifiers for advertising match keys, supplied through the SDK's `identify` call or a server source, hashed before they leave the browser or the shop, and gated by the marketing purpose. The scanner does not flag them; the policy engine decides per destination whether they may be forwarded.
+
+## The findings loop
+
+Every finding becomes an issue on the data quality page, grouped by field and kind with a count and first/last seen. Typical fixes:
+
+- URL parameters: strip tokens on the server before rendering, or add the parameter to the site's scrub list so the SDK removes it before sending.
+- Titles: render generic titles on account and confirmation pages.
+- Forms: send only whitelisted fields to `props`; never the whole form object.
+- Search: send the fact that a search happened and the result count, not the query, unless the query is product vocabulary.
+
+An issue can be marked resolved or ignored with a reason; ignoring is audited.
+
+## Verification
+
+The schema component of the health score is the share of events without findings. After fixing a leak, the component recovers within the window; the issue's last-seen timestamp stops moving. The event debugger shows the redacted event so you can confirm the marker is where you expect.

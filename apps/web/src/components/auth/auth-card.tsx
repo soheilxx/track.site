@@ -1,11 +1,13 @@
+import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { Brand, Card, Container } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 
 export function AuthCard({ title, subtitle, children, footer }: { title: string; subtitle?: string; children: ReactNode; footer?: ReactNode }) {
+  const t = useTranslations("nav");
   return (
     <Container className="flex min-h-[70vh] flex-col items-center justify-center py-12">
-      <Link href="/" className="mb-6" aria-label="track.site home">
+      <Link href="/" className="mb-6" aria-label={t("brandHome")}>
         <Brand size={36} />
       </Link>
       <Card className="w-full max-w-md p-6 sm:p-8">

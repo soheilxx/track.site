@@ -7,7 +7,7 @@ import { Faq, FeatureGrid, FinalCta, PageHero, Section, faqJsonLd } from "@/comp
 import { routing } from "@/i18n/routing";
 import { FEATURES, pick } from "@/lib/marketing-copy";
 import { FEATURE_PAGES } from "@/lib/routes";
-import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export function generateStaticParams() {
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const f = pick(locale, FEATURES).find((x) => x.slug === slug);
   if (!f) return {};
-  return { title: seoTitle(f.title), description: seoDescription(f.short), alternates: alternatesFor(`/features/${slug}`, locale) };
+  return pageMetadata({ locale, path: `/features/${slug}`, title: seoTitle(f.title), description: seoDescription(f.short) });
 }
 
 const LABELS = { en: { features: "Features", more: "More features", faq: "Questions", cta: "Try it on your domain", ctaText: "Create a site, install one snippet and let the assistant configure the first destination in minutes.", start: "Start free", pricing: "See pricing" }, de: { features: "Funktionen", more: "Weitere Funktionen", faq: "Fragen", cta: "Auf deiner Domain ausprobieren", ctaText: "Site anlegen, ein Snippet installieren und den Assistenten in Minuten die erste Destination einrichten lassen.", start: "Kostenlos starten", pricing: "Preise ansehen" } };
@@ -32,7 +32,7 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
   const l = pick(locale, LABELS);
   return (
     <>
-      <JsonLd data={[breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: l.features, path: "/features" }, { name: f.title, path: `/features/${slug}` }], locale), faqJsonLd(f.faq)]} />
+      <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: l.features, path: "/features" }, { name: f.title, path: `/features/${slug}` }], locale), faqJsonLd(f.faq)]} />
       <PageHero eyebrow={l.features} title={f.title} text={f.intro} />
       <Section>
         <div className="grid gap-4 md:grid-cols-3">

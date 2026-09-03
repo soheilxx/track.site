@@ -1,14 +1,14 @@
 import { Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import type { LegalDoc, Operator } from "@/lib/legal-copy";
-import { absoluteUrl, breadcrumbJsonLd } from "@/lib/seo";
+import { BRAND_NAME, absoluteUrl, breadcrumbJsonLd } from "@/lib/seo";
 
 /** Renders a legal / trust document with an operator block; missing operator data is stated, never invented. */
 export function LegalPage({ doc, path, locale, operator, extra }: { doc: LegalDoc; path: string; locale: string; operator?: Operator; extra?: React.ReactNode }) {
   const de = locale === "de";
   return (
     <>
-      <JsonLd data={[breadcrumbJsonLd([{ name: "track.site", path: "/" }, { name: doc.title, path }], locale), { "@context": "https://schema.org", "@type": "WebPage", name: doc.title, url: absoluteUrl(path, locale), dateModified: doc.updated, inLanguage: locale }]} />
+      <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: doc.title, path }], locale), { "@context": "https://schema.org", "@type": "WebPage", name: doc.title, url: absoluteUrl(path, locale), dateModified: doc.updated, inLanguage: locale }]} />
       <Container className="max-w-3xl py-14 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{doc.title}</h1>
         <p className="mt-4 text-lg text-ink-2">{doc.intro}</p>
