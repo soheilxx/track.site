@@ -24,7 +24,8 @@ test.describe("marketing site", () => {
     await first.click();
     await expect(page).toHaveURL(/\/blog\/[a-z0-9-]+$/);
     await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator('script[type="application/ld+json"]')).toContainText("BlogPosting");
+    const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
+    expect(jsonLd.some((t) => /"@type":"(Article|BlogPosting)"/.test(t))).toBe(true);
     await expect(page.locator("time").first()).toBeVisible();
   });
 

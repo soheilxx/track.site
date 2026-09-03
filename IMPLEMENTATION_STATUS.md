@@ -41,6 +41,7 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Vendor accounts for production sends | live vendor verification | first real test events per destination (docs/09 §7) |
 | DNS for `track.site`, `app.`, `api.`, `cdn.`, `ingest.` | production hosts | configure DNS + TLS |
 | EU infrastructure (DB, SQS, S3, KMS, ClickHouse) | production data plane | provision via `infra/terraform` |
+| GitHub push protection flags the fake Stripe-key fixtures (`sk_live_51H8…`) in two earlier commits (`43e5edd`, `27c7e68`) of the never-pushed feature branch | pushing `feat/ai-tag-manager-platform` | either allow the two findings as test data via the bypass links GitHub prints on push, or approve a local history rewrite of the unpushed branch (fixtures are already shortened in HEAD) |
 
 ## Next executable step
 

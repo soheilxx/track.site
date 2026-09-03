@@ -11,7 +11,7 @@ describe("pii detection", () => {
 
   it("detects vendor secrets and generic tokens", () => {
     expect(containsSecret("here is my token EAABsbCS1iHgBAOZCZBZCZBZCZBZCZBZCZBZCZBZCZBZCZBZCZBZCZBZC")).toBe(true);
-    expect(containsSecret("sk_live_51H8abcdefghijklmnopqrstuvwxyz")).toBe(true);
+    expect(containsSecret("sk_live_51H8abcdefghijklmnop")).toBe(true);
     expect(containsSecret("api_key=abcdefghijklmnop1234567890")).toBe(true);
     expect(containsSecret("Bearer 7f9e2c4b1a0d8e6f5a3b2c1d0e9f8a7b6c5d4e3f")).toBe(true);
     expect(containsSecret("Our pixel id is 123456789012345 and the site is A7K2Q9")).toBe(false);

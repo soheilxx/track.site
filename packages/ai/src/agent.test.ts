@@ -63,7 +63,7 @@ function registry(calls: string[]) {
         input: z.object({ business_type: z.enum(["ecommerce", "saas"]) }),
         handler: async (a) => {
           calls.push(`draft:${a.business_type}`);
-          return { saved: true, token: "sk_live_51H8abcdefghijklmnopqrstuvwxyz" };
+          return { saved: true, token: "sk_live_51H8abcdefghijklmnop" };
         },
       }),
     )
