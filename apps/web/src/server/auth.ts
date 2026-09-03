@@ -8,8 +8,17 @@ import { ORG_ROLES, PERMISSIONS, ROLE_PERMISSIONS, type OrgRole } from "@track-s
 import { schema } from "@track-site/db";
 import { createAccessControl } from "better-auth/plugins/access";
 import { env } from "../env";
-import { db } from "./db";
+import { db, logger } from "./db";
 import { sendMail } from "./mail";
+
+/** Transactional mails must not fail silently: a transport error is logged (without addresses) and surfaced to the caller. */
+async function mustSend(mail: Parameters<typeof sendMail>[0]): Promise<void> {
+  const result = await sendMail(mail);
+  if (!result.ok) {
+    logger.error({ transport: result.transport, error: result.error, subject: mail.subject }, "transactional mail failed");
+    throw new Error(`mail transport ${result.transport} failed: ${result.error}`);
+  }
+}
 
 /** Access-control statements derived from the shared permission matrix (resource.action). */
 function buildStatements(): Record<string, string[]> {
@@ -67,7 +76,7 @@ function createAuth() {
       requireEmailVerification: true,
       autoSignIn: false,
       sendResetPassword: async ({ user, url }) => {
-        await sendMail({ to: user.email, subject: "Reset your track.site password", text: `Reset your password: ${url}\n\nIf you did not request this, ignore this e-mail.` });
+        await mustSend({ to: user.email, subject: "Reset your track.site password", text: `Reset your password: ${url}\n\nIf you did not request this, ignore this e-mail.` });
       },
     },
     emailVerification: {
@@ -75,7 +84,7 @@ function createAuth() {
       autoSignInAfterVerification: true,
       expiresIn: 60 * 60 * 24,
       sendVerificationEmail: async ({ user, url }) => {
-        await sendMail({ to: user.email, subject: "Verify your e-mail for track.site", text: `Welcome to track.site. Confirm your e-mail address: ${url}` });
+        await mustSend({ to: user.email, subject: "Verify your e-mail for track.site", text: `Welcome to track.site. Confirm your e-mail address: ${url}` });
       },
     },
     plugins: [
@@ -88,7 +97,7 @@ function createAuth() {
         membershipLimit: 100,
         invitationExpiresIn: 60 * 60 * 24 * 7,
         sendInvitationEmail: async ({ email, organization: org, inviter, id }) => {
-          await sendMail({ to: email, subject: `${inviter.user.name} invited you to ${org.name} on track.site`, text: `Accept the invitation: ${baseURL}/accept-invitation/${id}` });
+          await mustSend({ to: email, subject: `${inviter.user.name} invited you to ${org.name} on track.site`, text: `Accept the invitation: ${baseURL}/accept-invitation/${id}` });
         },
       }),
       twoFactor({ issuer: "track.site" }),

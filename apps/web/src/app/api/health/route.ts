@@ -20,6 +20,33 @@ async function aiStatus(): Promise<{ ai: string; aiModels: { available: string[]
   return { ai, aiModels: { available: v.available, missing: v.missing }, aiCheckedAt: v.checkedAt };
 }
 
+/** Resend domain status for the MAIL_FROM domain, checked at most every 10 minutes per instance (read-only). */
+let mailCache: { at: number; value: { domain: string | null; status: string } } | null = null;
+
+async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: string | null; status: string } | null }> {
+  const e = env();
+  if (e.SMTP_URL) return { mail: "smtp", mailDomain: null };
+  if (!e.RESEND_API_KEY) return { mail: "file", mailDomain: null };
+  if (!mailCache || Date.now() - mailCache.at > 10 * 60_000) {
+    const from = e.MAIL_FROM ?? "";
+    const domain = from.match(/@([A-Za-z0-9.-]+)/)?.[1]?.toLowerCase() ?? null;
+    let status = "unknown";
+    try {
+      const res = await fetch("https://api.resend.com/domains", { headers: { authorization: `Bearer ${e.RESEND_API_KEY}` }, signal: AbortSignal.timeout(8_000) });
+      if (res.status === 401 || res.status === 403) status = "invalid_key";
+      else if (res.ok) {
+        const json = (await res.json()) as { data?: Array<{ name: string; status: string }> };
+        const match = (json.data ?? []).find((d) => d.name.toLowerCase() === domain);
+        status = match ? match.status : "domain_missing";
+      } else status = `http_${res.status}`;
+    } catch {
+      status = "unreachable";
+    }
+    mailCache = { at: Date.now(), value: { domain, status } };
+  }
+  return { mail: "resend", mailDomain: mailCache.value };
+}
+
 export async function GET() {
   let dbOk: boolean;
   let migrations: number | null = null;
@@ -41,7 +68,7 @@ export async function GET() {
       appEnv: p.appEnv,
       ...ai,
       billing: p.stripeEnabled ? "configured" : "not_configured",
-      mail: e.SMTP_URL ? "smtp" : e.RESEND_API_KEY ? "resend" : "file",
+      ...(await mailStatus()),
       ts: new Date().toISOString(),
     },
     { status: dbOk ? 200 : 503, headers: { "cache-control": "no-store" } },
