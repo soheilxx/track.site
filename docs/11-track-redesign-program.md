@@ -76,7 +76,7 @@ Source: the owner's supplement prompt "Track Redesign, Pricing, Tracking Knowled
 | # | Phase | Scope | Status |
 | --- | --- | --- | --- |
 | 0 | Analysis | this document | done 2026-09-03 |
-| 1 | Foundations | tariff catalogue + plan migration; six-locale routing infrastructure (`always` prefix, redirects, `lang`, hreflang, sitemap index) with `en/de` live; brand "Track" + new mark; Blog → Tracking Knowledge routes, redirects, OG images, JSON-LD | in progress |
+| 1 | Foundations | tariff catalogue + plan migration; six-locale routing infrastructure (`always` prefix, redirects, `lang`, hreflang, sitemap index) with `en/de` live; brand "Track" + new mark (done 2026-09-04: route glyph + wordmark in `packages/ui/src/brand.tsx`, assets `apps/web/public/brand/{logo,logo-dark,mark,mark-dark}.svg` + `icon-{192,512}.png`, `src/app/{icon.svg,apple-icon.png,manifest.ts}`, visible strings in messages/pages/legal/e-mails/AI assistant rebranded, guard test `apps/web/src/lib/brand-guard.test.ts`); Blog → Tracking Knowledge routes, redirects, OG images, JSON-LD | in progress |
 | 2 | Marketing redesign | design system, header/footer/nav, home with interactive demo, features, how-it-works, integrations, pricing, auth shell, legal pages | pending |
 | 3 | Tracking Knowledge | hub, search/filters, article template, covers, feedback, related, print | pending |
 | 4 | Localization ×6 | UI catalogs, marketing/legal copy, 30 articles in fr/es/it/nl, parity report, enable locales | pending |

@@ -46,7 +46,7 @@ function createAuth() {
   const e = env();
   const baseURL = e.HOST_MARKETING;
   return betterAuth({
-    appName: "track.site",
+    appName: "Track",
     baseURL,
     basePath: "/api/auth",
     secret: e.AUTH_SECRET ?? undefined,
@@ -76,7 +76,7 @@ function createAuth() {
       requireEmailVerification: true,
       autoSignIn: false,
       sendResetPassword: async ({ user, url }) => {
-        await mustSend({ to: user.email, subject: "Reset your track.site password", text: `Reset your password: ${url}\n\nIf you did not request this, ignore this e-mail.` });
+        await mustSend({ to: user.email, subject: "Reset your Track password", text: `Reset your password: ${url}\n\nIf you did not request this, ignore this e-mail.` });
       },
     },
     emailVerification: {
@@ -84,7 +84,7 @@ function createAuth() {
       autoSignInAfterVerification: true,
       expiresIn: 60 * 60 * 24,
       sendVerificationEmail: async ({ user, url }) => {
-        await mustSend({ to: user.email, subject: "Verify your e-mail for track.site", text: `Welcome to track.site. Confirm your e-mail address: ${url}` });
+        await mustSend({ to: user.email, subject: "Verify your e-mail for Track", text: `Welcome to Track. Confirm your e-mail address: ${url}` });
       },
     },
     plugins: [
@@ -97,11 +97,11 @@ function createAuth() {
         membershipLimit: 100,
         invitationExpiresIn: 60 * 60 * 24 * 7,
         sendInvitationEmail: async ({ email, organization: org, inviter, id }) => {
-          await mustSend({ to: email, subject: `${inviter.user.name} invited you to ${org.name} on track.site`, text: `Accept the invitation: ${baseURL}/accept-invitation/${id}` });
+          await mustSend({ to: email, subject: `${inviter.user.name} invited you to ${org.name} on Track`, text: `Accept the invitation: ${baseURL}/accept-invitation/${id}` });
         },
       }),
-      twoFactor({ issuer: "track.site" }),
-      passkey({ rpID: safeHost(baseURL), rpName: "track.site", origin: baseURL }),
+      twoFactor({ issuer: "Track" }),
+      passkey({ rpID: safeHost(baseURL), rpName: "Track", origin: baseURL }),
       nextCookies(),
     ],
   });

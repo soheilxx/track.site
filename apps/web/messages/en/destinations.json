@@ -99,7 +99,7 @@
       "vendorDefault": "vendor default",
       "enabled": "Enabled",
       "dedupText": "Browser and server events share the event id. This destination deduplicates on \"{field}\"; purchases additionally carry the order id.",
-      "snippetText": "The browser tag is loaded by the track.site snippet after consent — no additional code on your site. Check that the snippet is installed.",
+      "snippetText": "The browser tag is loaded by the Track snippet after consent — no additional code on your site. Check that the snippet is installed.",
       "checkSnippet": "Check installation",
       "testText": "Sends a flagged test event through the real pipeline in test mode and waits for this destination's delivery result.",
       "testEvent": "Event",

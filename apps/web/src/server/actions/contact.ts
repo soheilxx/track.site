@@ -52,7 +52,7 @@ export async function submitContactAction(_prev: ContactState, formData: FormDat
   }
   const inbox = env().CONTACT_INBOX_EMAIL;
   if (inbox) {
-    const result = await sendMail({ to: inbox, subject: `[track.site ${parsed.data.kind}] ${parsed.data.name}${parsed.data.company ? ` (${parsed.data.company})` : ""}`, text: `${message}\n\nFrom: ${parsed.data.name} <${parsed.data.email}>\nLocale: ${parsed.data.locale}\nRequest: ${id}`, replyTo: parsed.data.email }).catch((err: unknown) => ({ ok: false, error: err instanceof Error ? err.message : String(err) }) as { ok: false; error: string });
+    const result = await sendMail({ to: inbox, subject: `[Track ${parsed.data.kind}] ${parsed.data.name}${parsed.data.company ? ` (${parsed.data.company})` : ""}`, text: `${message}\n\nFrom: ${parsed.data.name} <${parsed.data.email}>\nLocale: ${parsed.data.locale}\nRequest: ${id}`, replyTo: parsed.data.email }).catch((err: unknown) => ({ ok: false, error: err instanceof Error ? err.message : String(err) }) as { ok: false; error: string });
     await db()
       .update(contactRequests)
       .set(result.ok ? { deliveredAt: new Date() } : { deliveryError: String(("error" in result && result.error) || "send failed").slice(0, 300) })

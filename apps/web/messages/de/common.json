@@ -1,20 +1,22 @@
 {
   "meta": {
-    "defaultTitle": "track.site – AI-first Tag Manager und Server-Side Event Router",
+    "defaultTitle": "Track – AI-first Tag Manager und Server-Side Event Router",
     "defaultDescription": "Ein Snippet, ein KI-Assistent für die Einrichtung und ein consent-basierter Server-Side Event Router. First-Party-Events, deduplizierte Conversions und transparente Zustellung an jede Werbe- und Analyseplattform."
   },
   "nav": {
+    "brandHome": "Track – Startseite",
     "features": "Funktionen",
     "integrations": "Integrationen",
     "howItWorks": "So funktioniert es",
     "pricing": "Preise",
     "docs": "Doku",
-    "blog": "Blog",
+    "trackingKnowledge": "Tracking Knowledge",
     "login": "Anmelden",
     "signup": "Kostenlos starten",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "skipToContent": "Zum Inhalt springen"
   },
   "footer": {
     "tagline": "AI-first Tag Manager, consent-basierter Server-Side Event Router und First-Party Event Layer.",
@@ -40,7 +42,7 @@
       "subprocessors": "Subunternehmer",
       "terms": "AGB",
       "imprint": "Impressum",
-      "blog": "Blog",
+      "trackingKnowledge": "Tracking Knowledge",
       "contact": "Kontakt",
       "demo": "Demo buchen",
       "support": "Support",
@@ -63,7 +65,7 @@
       "noCode": "Kein Custom HTML oder JavaScript"
     },
     "problemTitle": "Tag Manager wurden für Experten gebaut. Deiner sollte keinen brauchen.",
-    "problemText": "Client-seitige Pixel verlieren Events, serverseitige Setups brauchen Entwickler und Consent ist meist ein Banner statt einer technischen Regel. track.site macht daraus eine geführte Einrichtung mit einem Event Router, der Datenschutz durchsetzt, bevor etwas gespeichert oder gesendet wird.",
+    "problemText": "Client-seitige Pixel verlieren Events, serverseitige Setups brauchen Entwickler und Consent ist meist ein Banner statt einer technischen Regel. Track macht daraus eine geführte Einrichtung mit einem Event Router, der Datenschutz durchsetzt, bevor etwas gespeichert oder gesendet wird.",
     "steps": {
       "title": "So funktioniert es",
       "items": [

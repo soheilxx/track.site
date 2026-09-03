@@ -236,7 +236,8 @@
       "errors": {
         "generic": "Something went wrong.",
         "stripe_not_configured": "Stripe is not configured.",
-        "no_customer": "No Stripe customer yet — choose a plan first."
+        "no_customer": "No Stripe customer yet — choose a plan first.",
+        "price_mismatch": "The Stripe price differs from the published list price. Checkout was stopped so you are never charged a different amount."
       }
     },
     "quality": {
@@ -275,7 +276,7 @@
         "signups": "Sign-ups"
       },
       "howTitle": "How audiences reach ad platforms",
-      "how1": "track.site never uploads audience lists. Each platform receives only the individual server conversions with hashed matching data that the visitor consented to.",
+      "how1": "Track never uploads audience lists. Each platform receives only the individual server conversions with hashed matching data that the visitor consented to.",
       "how2": "Use the platform's own audience builder on those conversions (e.g. Meta custom audiences from CAPI events, Google Ads conversion-based audiences).",
       "how3": "Withdrawn consent stops future sends immediately and can be enforced retroactively through a data subject request."
     },
@@ -349,7 +350,7 @@
       "secret": "Webhook signing secret",
       "secretHelp": {
         "shopify": "The signing secret Shopify shows below the webhook list in Settings → Notifications → Webhooks.",
-        "woocommerce": "The secret you set on the WooCommerce webhook (or in the track.site plugin settings).",
+        "woocommerce": "The secret you set on the WooCommerce webhook (or in the Track plugin settings).",
         "shopware": "The app secret from manifest.xml (at least 32 random characters)."
       },
       "secretSet": "Secret stored.",
@@ -367,11 +368,11 @@
         "shopify": {
           "1": "In Shopify admin open Settings → Notifications → Webhooks and add orders/paid and refunds/create in JSON format, pointing at the webhook URL above.",
           "2": "Copy the signing secret shown under the webhook list into the secret field.",
-          "3": "Install the track.site web pixel extension (integrations/shopify/web-pixel) with this tracking id so checkout events arrive with the customer's consent state.",
+          "3": "Install the Track web pixel extension (integrations/shopify/web-pixel) with this tracking id so checkout events arrive with the customer's consent state.",
           "4": "Place a test order: the destination monitor shows a purchase with source shopify and source_verified."
         },
         "woocommerce": {
-          "1": "Install the track.site plugin (integrations/woocommerce/track-site) and enter the tracking id, this webhook URL and a secret of your choice; the plugin creates the order webhooks for you.",
+          "1": "Install the Track plugin (integrations/woocommerce/track-site) and enter the tracking id, this webhook URL and a secret of your choice; the plugin creates the order webhooks for you.",
           "2": "Store the same secret here.",
           "3": "Without the plugin: create the webhooks under WooCommerce → Settings → Advanced → Webhooks (topics order.created and order.updated, API v3) with the same secret and add the snippet to your theme.",
           "4": "Place a test order and set it to processing: the destination monitor shows a purchase with source woocommerce."
@@ -379,7 +380,7 @@
         "shopware": {
           "1": "Store a secret here (at least 32 random characters) and copy the registration URL.",
           "2": "Put integrations/shopware/manifest.xml into custom/apps/TrackSite/ with tracking id, path token and the secret, then run bin/console app:install --activate TrackSite.",
-          "3": "Add the track.site snippet to your theme's base template for the browser path.",
+          "3": "Add the Track snippet to your theme's base template for the browser path.",
           "4": "Mark a test order as paid: the destination monitor shows a purchase with source shopware."
         }
       },

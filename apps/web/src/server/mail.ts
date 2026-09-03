@@ -27,7 +27,7 @@ export const MAIL_OUTBOX_DIR = path.resolve(process.cwd(), ".local", "mail");
 
 export async function sendMail(mail: Mail): Promise<MailResult> {
   const e = env();
-  const from = e.MAIL_FROM ?? "track.site <no-reply@track.site>";
+  const from = e.MAIL_FROM ?? "Track <no-reply@track.site>";
   try {
     if (e.SMTP_URL) {
       const nodemailer = await import("nodemailer");

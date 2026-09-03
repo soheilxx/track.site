@@ -99,7 +99,7 @@
       "vendorDefault": "Anbieter-Standard",
       "enabled": "Aktiv",
       "dedupText": "Browser- und Server-Events teilen die Event-ID. Diese Destination dedupliziert über „{field}“; Käufe tragen zusätzlich die Bestellnummer.",
-      "snippetText": "Der Browser-Tag wird vom track.site-Snippet nach Consent geladen — kein zusätzlicher Code auf deiner Site. Prüfe, ob das Snippet installiert ist.",
+      "snippetText": "Der Browser-Tag wird vom Track-Snippet nach Consent geladen — kein zusätzlicher Code auf deiner Site. Prüfe, ob das Snippet installiert ist.",
       "checkSnippet": "Installation prüfen",
       "testText": "Sendet einen markierten Testevent im Testmodus durch die echte Pipeline und wartet auf das Zustellergebnis dieser Destination.",
       "testEvent": "Event",

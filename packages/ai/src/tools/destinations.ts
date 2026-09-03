@@ -371,7 +371,7 @@ export const sendDestinationTestEvent = defineTool({
       ua_family: "chrome",
       is_bot_hint: false,
       origin_host: site.primaryDomain,
-      events: [{ id, name, ts: now.getTime(), props: { test: true, source: "destination_wizard", destination: integration.id }, ...(commerce ? { commerce } : {}), page: { url: `https://${site.primaryDomain ?? "example.test"}/track-site-test`, referrer: null, title: "track.site test event" }, ids: { anonymous_id: `test-${ctx.userId.slice(0, 8)}`, session_id: `test-${id.slice(0, 8)}` }, consent: { granted: ["necessary", "analytics", "marketing"], source: "api", policy_version: "test", ts: now.getTime(), region: "DE", gpc: false }, sdk: { name: "browser" as const, version: "test", config_version: null, schema_version: "1.0.0" } }],
+      events: [{ id, name, ts: now.getTime(), props: { test: true, source: "destination_wizard", destination: integration.id }, ...(commerce ? { commerce } : {}), page: { url: `https://${site.primaryDomain ?? "example.test"}/track-site-test`, referrer: null, title: "Track test event" }, ids: { anonymous_id: `test-${ctx.userId.slice(0, 8)}`, session_id: `test-${id.slice(0, 8)}` }, consent: { granted: ["necessary", "analytics", "marketing"], source: "api", policy_version: "test", ts: now.getTime(), region: "DE", gpc: false }, sdk: { name: "browser" as const, version: "test", config_version: null, schema_version: "1.0.0" } }],
     };
     await ctx.queue.enqueue(QUEUES.ingest, [{ id: message.message_id, body: message, partitionKey: message.site.partition_key }]);
     const store = new PgEventStore(poolOf(ctx));

@@ -1,20 +1,22 @@
 {
   "meta": {
-    "defaultTitle": "track.site – AI-first tag manager and server-side event router",
+    "defaultTitle": "Track – AI-first tag manager and server-side event router",
     "defaultDescription": "One snippet, an AI setup assistant and a consent-aware server-side event router. First-party events, deduplicated conversions and transparent delivery to every ad and analytics platform."
   },
   "nav": {
+    "brandHome": "Track – home",
     "features": "Features",
     "integrations": "Integrations",
     "howItWorks": "How it works",
     "pricing": "Pricing",
     "docs": "Docs",
-    "blog": "Blog",
+    "trackingKnowledge": "Tracking Knowledge",
     "login": "Log in",
     "signup": "Start free",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "language": "Language"
+    "language": "Language",
+    "skipToContent": "Skip to content"
   },
   "footer": {
     "tagline": "AI-first tag manager, consent-aware server-side event router and first-party event layer.",
@@ -40,7 +42,7 @@
       "subprocessors": "Subprocessors",
       "terms": "Terms",
       "imprint": "Imprint",
-      "blog": "Blog",
+      "trackingKnowledge": "Tracking Knowledge",
       "contact": "Contact",
       "demo": "Book a demo",
       "support": "Support",
@@ -63,7 +65,7 @@
       "noCode": "No custom HTML or JavaScript"
     },
     "problemTitle": "Tag managers were built for experts. Yours should not require one.",
-    "problemText": "Client-side pixels lose events, server-side setups need engineers, and consent is usually a banner rather than a technical rule. track.site turns all of it into one guided setup with an event router that enforces privacy before anything is stored or sent.",
+    "problemText": "Client-side pixels lose events, server-side setups need engineers, and consent is usually a banner rather than a technical rule. Track turns all of it into one guided setup with an event router that enforces privacy before anything is stored or sent.",
     "steps": {
       "title": "How it works",
       "items": [

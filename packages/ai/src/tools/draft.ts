@@ -403,7 +403,7 @@ export const CMP_PROVIDERS = ["none", "api", "usercentrics", "cookiebot", "onetr
 
 export const setConsentPolicyDraft = defineTool({
   name: "set_consent_policy_draft",
-  description: 'Records the consent mechanism, markets and consent mode in the draft. cmp_provider: usercentrics / cookiebot / onetrust = that CMP\'s built-in adapter; tcf = any IAB TCF 2.x CMP (consentmanager, Didomi, Sourcepoint ...); gpp = IAB GPP; api = the site passes consent through the track.site consent API itself; other = a CMP without built-in adapter (give cmp_name, e.g. Borlabs Cookie, Complianz, Iubenda; consent must then be passed through the consent API); none = no consent mechanism yet. Never weakens defaults without an explicit user decision; advanced consent mode requires a documented legal review note.',
+  description: 'Records the consent mechanism, markets and consent mode in the draft. cmp_provider: usercentrics / cookiebot / onetrust = that CMP\'s built-in adapter; tcf = any IAB TCF 2.x CMP (consentmanager, Didomi, Sourcepoint ...); gpp = IAB GPP; api = the site passes consent through the Track consent API itself; other = a CMP without built-in adapter (give cmp_name, e.g. Borlabs Cookie, Complianz, Iubenda; consent must then be passed through the consent API); none = no consent mechanism yet. Never weakens defaults without an explicit user decision; advanced consent mode requires a documented legal review note.',
   kind: "draft",
   permission: "consent.manage",
   input: z.object({
@@ -574,7 +574,7 @@ export const runTestEvent = defineTool({
           ts: now.getTime(),
           props: { test: true, source: "assistant" },
           ...(commerce ? { commerce } : {}),
-          page: { url: `https://${site.primaryDomain ?? "example.test"}/track-site-test`, referrer: null, title: "track.site test event" },
+          page: { url: `https://${site.primaryDomain ?? "example.test"}/track-site-test`, referrer: null, title: "Track test event" },
           ids: { anonymous_id: `test-${ctx.userId.slice(0, 8)}`, session_id: `test-${id.slice(0, 8)}` },
           consent: { granted: args.with_consent ? ["necessary", "analytics", "marketing"] : ["necessary"], source: args.with_consent ? "api" : "default", policy_version: "test", ts: now.getTime(), region: "DE", gpc: false },
           sdk: { name: "browser" as const, version: "test", config_version: null, schema_version: "1.0.0" },

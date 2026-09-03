@@ -50,7 +50,7 @@ The LLM never sits in the ingestion, consent, dedup, billing or destination hot 
 
 | Host | Serves | Local |
 | --- | --- | --- |
-| `track.site` | marketing, docs, blog, auth entry | `http://localhost:3000` |
+| `track.site` | marketing, docs, Tracking Knowledge, auth entry | `http://localhost:3000` |
 | `app.track.site` | dashboard + AI setup | `http://localhost:3000/app` |
 | `api.track.site` | control/server API | `http://localhost:3000/api` |
 | `cdn.track.site` | `v1/tracker.js`, config manifests | `http://localhost:3000/cdn` |

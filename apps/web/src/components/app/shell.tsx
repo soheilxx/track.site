@@ -44,7 +44,7 @@ export function AppShell({ user, organization, locale, children }: { user: { nam
   return (
     <div lang={locale} className="flex min-h-screen">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-line bg-surface p-4 lg:flex">
-        <Link href="/app" className="mb-6 px-2" aria-label="track.site">
+        <Link href="/app" className="mb-6 px-2">
           <Brand size={32} textClassName="text-lg" />
         </Link>
         {organization ? (
@@ -58,7 +58,7 @@ export function AppShell({ user, organization, locale, children }: { user: { nam
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-surface/90 px-4 backdrop-blur lg:hidden">
-          <Link href="/app" aria-label="track.site">
+          <Link href="/app">
             <Brand size={28} textClassName="text-base" />
           </Link>
           <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2" aria-expanded={open} aria-controls="app-nav" aria-label={open ? t("closeMenu") : t("openMenu")} onClick={() => setOpen((v) => !v)}>

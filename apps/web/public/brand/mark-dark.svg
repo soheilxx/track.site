@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Track">
+  <title>Track</title>
+  <rect width="64" height="64" rx="16" fill="#f7f7f5"/>
+  <g transform="translate(12 12) scale(1.25)" fill="none" stroke="#1f4fe0" stroke-width="3.2" stroke-linecap="round">
+    <path d="M7 9.5H25"/>
+    <path d="M16 9.5V23"/>
+  </g>
+  <g transform="translate(12 12) scale(1.25)" fill="#1f4fe0">
+    <circle cx="7" cy="9.5" r="3.4"/>
+    <circle cx="25" cy="9.5" r="3.4"/>
+    <circle cx="16" cy="23" r="3.4"/>
+  </g>
+</svg>
