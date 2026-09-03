@@ -4,7 +4,7 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 
 | Area | State | Evidence | Test command | Note |
 | --- | --- | --- | --- | --- |
-| Target repo audit + docs 00-09 + ADRs 0001-0008 | DONE | `docs/` | - | target `soheilxx/track.site`, branch `feat/ai-tag-manager-platform` |
+| Target repo audit + docs 00-10 + ADRs 0001-0008 | DONE | `docs/` | - | target `soheilxx/track.site`, branch `feat/ai-tag-manager-platform` pushed 2026-09-03 (`7c77a49`), CI runs on push |
 | Monorepo foundation (pnpm 11, turbo, TS 5.9, eslint flat, prettier) | DONE | root configs | `pnpm lint && pnpm typecheck` | apps/web lint pins React version for eslint-plugin-react |
 | packages/core (env, logger, ids, crypto, PII, URL scrub, RBAC, result) | DONE | `packages/core` | `pnpm --filter @track-site/core test` | 32 tests |
 | packages/db schema + migrations 0000-0003 + RLS + partitions | DONE | `packages/db` | `pnpm test:integration` | 0002 credential kinds, 0003 `shop_connections` (RLS tenant isolation) |
@@ -41,7 +41,6 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Vendor accounts for production sends | live vendor verification | first real test events per destination (docs/09 §7) |
 | DNS for `track.site`, `app.`, `api.`, `cdn.`, `ingest.` | production hosts | configure DNS + TLS |
 | EU infrastructure (DB, SQS, S3, KMS, ClickHouse) | production data plane | provision via `infra/terraform` |
-| GitHub push protection flags the fake Stripe-key fixtures (`sk_live_51H8…`) in two earlier commits (`43e5edd`, `27c7e68`) of the never-pushed feature branch | pushing `feat/ai-tag-manager-platform` | either allow the two findings as test data via the bypass links GitHub prints on push, or approve a local history rewrite of the unpushed branch (fixtures are already shortened in HEAD) |
 
 ## Next executable step
 
