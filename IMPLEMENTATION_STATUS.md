@@ -4,7 +4,7 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 
 | Area | State | Evidence | Test command | Note |
 | --- | --- | --- | --- | --- |
-| Target repo audit + docs 00-10 + ADRs 0001-0008 | DONE | `docs/` | - | target `soheilxx/track.site`, branch `feat/ai-tag-manager-platform` pushed 2026-09-03 (`7c77a49`), CI runs on push |
+| Target repo audit + docs 00-10 + ADRs 0001-0008 | DONE | `docs/` | - | target `soheilxx/track.site`, branch `feat/ai-tag-manager-platform` pushed 2026-09-03, `main` created from it the same day (Vercel production branch), CI runs on push |
 | Monorepo foundation (pnpm 11, turbo, TS 5.9, eslint flat, prettier) | DONE | root configs | `pnpm lint && pnpm typecheck` | apps/web lint pins React version for eslint-plugin-react |
 | packages/core (env, logger, ids, crypto, PII, URL scrub, RBAC, result) | DONE | `packages/core` | `pnpm --filter @track-site/core test` | 32 tests |
 | packages/db schema + migrations 0000-0003 + RLS + partitions | DONE | `packages/db` | `pnpm test:integration` | 0002 credential kinds, 0003 `shop_connections` (RLS tenant isolation) |

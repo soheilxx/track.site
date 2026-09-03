@@ -77,7 +77,7 @@ Without `DATABASE_URL` the marketing site works and every dashboard/auth route f
 - Vercel project `modernice/track-site` (ID `prj_w3HvPvF8Q8d9FRZgNXD4r8u4Ig1W`), Git-connected to `soheilxx/track.site`, Root Directory `apps/web`, Node 22.x, functions in `fra1`. Domains: `www.track.site` (canonical), `track.site` (308 → www), `track-site-tau.vercel.app`.
 - Environment variables set for Production and Preview: generated `AUTH_SECRET`, `MASTER_KEY` (+`MASTER_KEY_ID=vercel-v1`), `APPROVAL_TOKEN_SECRET`, Ed25519 `CONFIG_SIGNING_*` (`cfg-vercel-v1`), `HOST_*` (marketing/app on `https://www.track.site`, ingest/cdn on the planned `ingest.`/`cdn.track.site`), drivers (`pg`/`local`), AI model names, `APP_ENV`.
 - Not set yet: `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (EU Postgres), mail, `OPENAI_API_KEY`, `STRIPE_*`, `LEGAL_*`, vendor OAuth apps. Without the database the marketing site is live and every dashboard/auth route answers as signed-out; `/api/health` reports `db:false`.
-- Production branch is `main` (does not exist yet); pushes to `feat/*` build previews. Production deployments are triggered manually until `main` exists:
+- Production branch is `main` (created 2026-09-03 from the feature branch); every push to `main` deploys production, pushes to `feat/*` build previews. Manual production deployment stays available:
 
 ```bash
 # from the repository root (linked to modernice/track-site)
