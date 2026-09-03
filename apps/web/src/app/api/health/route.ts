@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createOpenAI, verifyModelAvailability, type ModelAvailability } from "@track-site/ai";
 import { env, publicEnv } from "@/env";
+import { stripe } from "@/server/billing";
 import { pool } from "@/server/db";
 
 export const dynamic = "force-dynamic";
@@ -53,6 +54,40 @@ async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: strin
   return { mail: "resend", mailDomain: mailCache.value };
 }
 
+/** Stripe price configuration is verified at most every 10 minutes per instance (Prices: read only). */
+const PRICE_ENV = ["STRIPE_PRICE_STARTER_MONTHLY", "STRIPE_PRICE_STARTER_YEARLY", "STRIPE_PRICE_GROWTH_MONTHLY", "STRIPE_PRICE_GROWTH_YEARLY", "STRIPE_PRICE_SCALE_MONTHLY", "STRIPE_PRICE_SCALE_YEARLY"] as const;
+type BillingPrices = { ok: string[]; missing: string[]; failed: Array<{ env: string; error: string }> };
+let billingCache: { at: number; value: { billing: string; billingPrices: BillingPrices | null } } | null = null;
+
+async function billingStatus(): Promise<{ billing: string; billingPrices: BillingPrices | null }> {
+  const client = stripe();
+  if (!client || !publicEnv().stripeEnabled) return { billing: "not_configured", billingPrices: null };
+  if (!billingCache || Date.now() - billingCache.at > 10 * 60_000) {
+    const e = env() as unknown as Record<string, string | undefined>;
+    const value: BillingPrices = { ok: [], missing: [], failed: [] };
+    for (const name of PRICE_ENV) {
+      const id = e[name];
+      if (!id) {
+        value.missing.push(name);
+        continue;
+      }
+      try {
+        const price = await client.prices.retrieve(id, undefined, { timeout: 8_000, maxNetworkRetries: 0 });
+        const problem = !price.active ? "price_inactive" : price.type !== "recurring" ? "not_recurring" : price.unit_amount == null ? "no_unit_amount" : price.tax_behavior === "unspecified" ? "tax_behavior_unspecified" : null;
+        if (problem) value.failed.push({ env: name, error: problem });
+        else value.ok.push(name);
+      } catch (err) {
+        // Stripe errors carry type/code/status; the message may name the price id (not a secret)
+        const s = err as { type?: string; code?: string; statusCode?: number; message?: string };
+        value.failed.push({ env: name, error: `${s.type ?? "error"}${s.code ? `:${s.code}` : ""}${s.statusCode ? ` http_${s.statusCode}` : ""} ${(s.message ?? "").slice(0, 120)}`.trim() });
+      }
+    }
+    const billing = value.failed.length ? "prices_failing" : value.ok.length ? "ok" : "no_prices";
+    billingCache = { at: Date.now(), value: { billing, billingPrices: value } };
+  }
+  return billingCache.value;
+}
+
 export async function GET() {
   let dbOk: boolean;
   let migrations: number | null = null;
@@ -72,7 +107,7 @@ export async function GET() {
       migrations,
       appEnv: p.appEnv,
       ...ai,
-      billing: p.stripeEnabled ? "configured" : "not_configured",
+      ...(await billingStatus()),
       ...(await mailStatus()),
       ts: new Date().toISOString(),
     },

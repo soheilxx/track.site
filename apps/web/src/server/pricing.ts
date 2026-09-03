@@ -36,7 +36,8 @@ export async function publicPlans(): Promise<PublicPlan[]> {
       try {
         const price = await client.prices.retrieve(id);
         return price.unit_amount != null ? { amount: price.unit_amount / 100, currency: price.currency.toUpperCase() } : null;
-      } catch {
+      } catch (e) {
+        logger.warn({ plan: p.id, interval, err: e instanceof Error ? e.message : String(e) }, "stripe price lookup failed");
         return null;
       }
     };
