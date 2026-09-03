@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { useState } from "react";
 import { Alert, Button } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
@@ -31,9 +32,9 @@ export function AcceptInvitation({ invitationId, signedIn }: { invitationId: str
     return (
       <div className="space-y-4">
         <Alert tone="ok">{t("invitation.accepted")}</Alert>
-        <a href="/app" className="text-sm font-medium text-primary hover:underline">
+        <NextLink href="/app" className="text-sm font-medium text-primary hover:underline">
           track.site
-        </a>
+        </NextLink>
       </div>
     );
   }

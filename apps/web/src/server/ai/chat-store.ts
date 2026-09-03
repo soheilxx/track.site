@@ -99,11 +99,10 @@ export async function storePendingApproval(organizationId: string, sessionId: st
 }
 
 export async function takePendingApproval(organizationId: string, sessionId: string, approvalId: string): Promise<(PendingApproval & { token: string }) | null> {
-  let found: (PendingApproval & { token: string }) | null = null;
   const rows = await withTenant(db(), organizationId, (tx) => tx.select({ summary: chatSessions.summary }).from(chatSessions).where(eq(chatSessions.id, sessionId)).limit(1));
   const pending = ((rows[0]?.summary?.pending_approvals as Record<string, Record<string, unknown>>) ?? {})[approvalId];
   if (!pending) return null;
-  found = { id: approvalId, action: String(pending.action), targetType: String(pending.targetType), targetId: String(pending.targetId), summary: (pending.summary as Record<string, unknown>) ?? {}, expiresAt: String(pending.expiresAt), token: await decrypt(sessionId, String(pending.token)) };
+  const found: PendingApproval & { token: string } = { id: approvalId, action: String(pending.action), targetType: String(pending.targetType), targetId: String(pending.targetId), summary: (pending.summary as Record<string, unknown>) ?? {}, expiresAt: String(pending.expiresAt), token: await decrypt(sessionId, String(pending.token)) };
   await updateSummary(organizationId, sessionId, (s) => {
     const p = { ...((s.pending_approvals as Record<string, unknown>) ?? {}) };
     delete p[approvalId];

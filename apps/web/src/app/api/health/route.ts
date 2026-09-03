@@ -5,7 +5,7 @@ import { pool } from "@/server/db";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  let dbOk = false;
+  let dbOk: boolean;
   let migrations: number | null = null;
   try {
     const res = await pool().query<{ n: string }>(`SELECT count(*)::text AS n FROM drizzle.__drizzle_migrations`);

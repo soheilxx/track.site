@@ -105,8 +105,15 @@ export function DestinationWizard(props: WizardProps) {
   }, [siteId, integration.id]);
 
   useEffect(() => {
-    if (step === "monitor") void refreshStatus();
-  }, [step, refreshStatus, toggleState]);
+    if (step !== "monitor") return;
+    let cancelled = false;
+    void callTool<Record<string, unknown>>(siteId, "get_destination_status", { integration_id: integration.id }).then((r) => {
+      if (!cancelled && r.ok && r.data) setStatus(r.data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [step, siteId, integration.id, toggleState]);
 
   const missingIds = useMemo(() => connector.requiredPublicIds.filter((p) => !/\?\$$/.test(p.pattern) && !publicConfig[p.key]).map((p) => p.key), [connector.requiredPublicIds, publicConfig]);
 
@@ -415,7 +422,7 @@ export function DestinationWizard(props: WizardProps) {
               {props.offline ? (
                 <pre className="overflow-auto rounded-xl bg-surface-2 p-3 text-xs">{`curl -X POST https://api.track.site/v1/s \\
   -H "Authorization: Bearer tsk_..." -H "Content-Type: application/json" \\
-  -d '{"events":[{"name":"purchase","ts":${Date.now()},"props":{"offline":true},"commerce":{"order_id":"CRM-1001","currency":"EUR","value":249.0},"user":{"email":"customer@example.com"},"consent":{"granted":["necessary","marketing"],"source":"crm"}}]}'`}</pre>
+  -d '{"events":[{"name":"purchase","ts":1767225600000,"props":{"offline":true},"commerce":{"order_id":"CRM-1001","currency":"EUR","value":249.0},"user":{"email":"customer@example.com"},"consent":{"granted":["necessary","marketing"],"source":"crm"}}]}'`}</pre>
               ) : null}
             </>
           ) : null}

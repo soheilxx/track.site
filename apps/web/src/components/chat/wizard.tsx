@@ -42,8 +42,10 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
   }, [siteId]);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    void callTool<SetupStateView>(siteId, "get_setup_state").then((r) => {
+      if (r.ok && r.data) setState(r.data);
+    });
+  }, [siteId]);
 
   const run = async (tool: string, args: Record<string, unknown>, okText: string) => {
     setBusy(true);

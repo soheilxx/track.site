@@ -39,7 +39,7 @@ export async function createOrganizationAction(_prev: ActionState, formData: For
     createOrganization: (args: { body: { name: string; slug: string }; headers: Headers }) => Promise<{ id: string } | null>;
     setActiveOrganization: (args: { body: { organizationId: string }; headers: Headers }) => Promise<unknown>;
   };
-  let org: { id: string } | null = null;
+  let org: { id: string } | null;
   try {
     org = await api.createOrganization({ body: { name: parsed.data.name, slug: slugify(parsed.data.name) }, headers: h });
   } catch {
