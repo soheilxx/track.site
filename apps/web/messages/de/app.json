@@ -43,7 +43,12 @@
       "siteName": "Name der Site",
       "siteDomain": "Primäre Domain",
       "siteSubmit": "Site anlegen und Einrichtung starten",
-      "errors": { "orgName": "Bitte einen Namen mit 2 bis 80 Zeichen eingeben.", "domain": "Bitte eine gültige Domain wie shop.example.com eingeben.", "limit": "Dein Plan erlaubt keine weiteren Sites. Upgrade für eine weitere Site.", "generic": "Das hat nicht geklappt. Bitte erneut versuchen." }
+      "errors": {
+        "orgName": "Bitte einen Namen mit 2 bis 80 Zeichen eingeben.",
+        "domain": "Bitte eine gültige Domain wie shop.example.com eingeben.",
+        "limit": "Dein Plan erlaubt keine weiteren Sites. Upgrade für eine weitere Site.",
+        "generic": "Das hat nicht geklappt. Bitte erneut versuchen."
+      }
     },
     "site": {
       "trackingId": "Tracking-ID",
@@ -92,6 +97,43 @@
       "name": "Name",
       "delete": "Löschen",
       "confirmDelete": "Zur Bestätigung den Namen eingeben"
+    },
+    "debugger": {
+      "title": "Event-Debugger",
+      "intro": "Jedes Event mit seiner Herkunft: Quelle, Consent-Snapshot, Verarbeitungsstatus, Click-IDs und der Zustellversuch pro Destination (geschwärzte Payloads).",
+      "noSites": "Erst eine Site anlegen",
+      "site": "Site",
+      "event": "Event",
+      "state": "Status",
+      "source": "Quelle",
+      "any": "alle",
+      "filter": "Filtern",
+      "recent": "Letzte Events ({n})",
+      "empty": "Keine passenden Events. Sende einen Testevent aus einem Destination-Assistenten oder installiere das Snippet.",
+      "time": "Zeit",
+      "deliveries": "Zustellungen",
+      "lineage": "Herkunft",
+      "selectEvent": "Wähle ein Event, um Consent, Routing und Anbieter-Payloads zu sehen.",
+      "attempts": "Zustellversuche",
+      "noAttempts": "Keine Zustellversuche für dieses Event."
+    },
+    "events": {
+      "title": "Events",
+      "intro": "Angenommene und verworfene Events pro Tag der letzten 7 Tage.",
+      "noSites": "Erst eine Site anlegen",
+      "site": "Site",
+      "show": "Anzeigen",
+      "accepted": "Angenommen",
+      "dropped": "Verworfen",
+      "last7": "letzte 7 Tage",
+      "lastBrowser": "Letztes Browser-Event",
+      "lastServer": "Letztes Server-Event",
+      "never": "nie",
+      "byEvent": "Nach Event",
+      "empty": "Keine Events in den letzten 7 Tagen.",
+      "install": "Snippet installieren",
+      "event": "Event",
+      "sources": "Quellen"
     }
   }
 }

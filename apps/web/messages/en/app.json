@@ -43,7 +43,12 @@
       "siteName": "Site name",
       "siteDomain": "Primary domain",
       "siteSubmit": "Create site and start setup",
-      "errors": { "orgName": "Enter a name with 2 to 80 characters.", "domain": "Enter a valid domain such as shop.example.com.", "limit": "Your plan does not allow more sites. Upgrade to add another one.", "generic": "That did not work. Please try again." }
+      "errors": {
+        "orgName": "Enter a name with 2 to 80 characters.",
+        "domain": "Enter a valid domain such as shop.example.com.",
+        "limit": "Your plan does not allow more sites. Upgrade to add another one.",
+        "generic": "That did not work. Please try again."
+      }
     },
     "site": {
       "trackingId": "Tracking ID",
@@ -92,6 +97,43 @@
       "name": "Name",
       "delete": "Delete",
       "confirmDelete": "Type the name to confirm"
+    },
+    "debugger": {
+      "title": "Event debugger",
+      "intro": "Every event with its lineage: source, consent snapshot, processing state, click ids and the delivery attempt per destination (redacted payloads).",
+      "noSites": "Create a site first",
+      "site": "Site",
+      "event": "Event",
+      "state": "State",
+      "source": "Source",
+      "any": "any",
+      "filter": "Filter",
+      "recent": "Recent events ({n})",
+      "empty": "No events match. Send a test event from a destination wizard or install the snippet.",
+      "time": "Time",
+      "deliveries": "Deliveries",
+      "lineage": "Lineage",
+      "selectEvent": "Select an event to see consent, routing and vendor payloads.",
+      "attempts": "Delivery attempts",
+      "noAttempts": "No delivery attempts for this event."
+    },
+    "events": {
+      "title": "Events",
+      "intro": "Accepted and dropped events per day for the last 7 days.",
+      "noSites": "Create a site first",
+      "site": "Site",
+      "show": "Show",
+      "accepted": "Accepted",
+      "dropped": "Dropped",
+      "last7": "last 7 days",
+      "lastBrowser": "Last browser event",
+      "lastServer": "Last server event",
+      "never": "never",
+      "byEvent": "By event",
+      "empty": "No events in the last 7 days.",
+      "install": "Install the snippet",
+      "event": "Event",
+      "sources": "Sources"
     }
   }
 }
