@@ -15,6 +15,7 @@ import { loadSetupState, saveSetupState } from "../setup-store.ts";
 import { applyStepUpdate, goToStep, skipStep } from "../state-machine.ts";
 import { setupStepSchema } from "../ui-schema.ts";
 import { defineTool } from "./registry.ts";
+import { normalizeCurrency, normalizeMarkets } from "./normalize.ts";
 
 
 function poolOf(ctx: AgentContext) {
@@ -58,25 +59,27 @@ export const skipSetupStep = defineTool({
 
 export const setBusinessProfileDraft = defineTool({
   name: "set_business_profile_draft",
-  description: "Records the confirmed business type, platform, markets and currency on the site and advances the setup. Only call after the user confirmed the values.",
+  description: "Records the confirmed business type, platform, markets and currency on the site and advances the setup. Markets are ISO 3166-1 alpha-2 codes (DE, AT, CH; country names are accepted and normalised), currency is an ISO 4217 code (EUR). Only call after the user confirmed the values.",
   kind: "draft",
   permission: "sites.update",
   input: z.object({
     business_type: z.enum(["ecommerce", "lead_generation", "saas", "content", "other"]).nullable(),
     platform: z.enum(["shopify", "woocommerce", "shopware", "wordpress", "headless", "custom", "unknown"]).nullable(),
-    markets: z.array(z.string().length(2)).max(20).nullable(),
-    currency: z.string().length(3).nullable(),
+    markets: z.array(z.string().min(2).max(56)).max(20).nullable(),
+    currency: z.string().min(3).max(24).nullable(),
     confidence: z.number().min(0).max(1).nullable(),
     evidence: z.string().max(300).nullable(),
   }),
   handler: async (args, ctx) => {
+    const markets = normalizeMarkets(args.markets);
+    const currency = normalizeCurrency(args.currency);
     await withTenant(ctx.db, ctx.organizationId, async (tx) => {
       await tx
         .update(sites)
         .set({
           ...(args.business_type ? { businessType: args.business_type } : {}),
           ...(args.platform ? { platform: args.platform, platformEvidence: { confidence: args.confidence ?? 0, signals: args.evidence ? [args.evidence] : [] } } : {}),
-          ...(args.currency ? { currency: args.currency.toUpperCase() } : {}),
+          ...(currency ? { currency } : {}),
         })
         .where(eq(sites.id, ctx.siteId));
       await recordAudit(tx, { organizationId: ctx.organizationId, actor: actorOf(ctx), action: "site.profile", targetType: "site", targetId: ctx.siteId, diff: args, requestId: ctx.requestId });
@@ -90,7 +93,7 @@ export const setBusinessProfileDraft = defineTool({
       state.context.platform = args.platform;
       state = applyStepUpdate(state, "platform", { fields: { platform: args.platform }, evidence: { source: "user", detail: args.evidence ?? "confirmed in chat" }, confidence: args.confidence ?? 1 });
     }
-    if (args.markets) state.context.markets = args.markets.map((m) => m.toUpperCase());
+    if (markets) state.context.markets = markets;
     await saveSetupState(ctx.db, ctx.organizationId, ctx.siteId, state);
     return { current_step: state.currentStep, business_type: state.context.businessType, platform: state.context.platform, markets: state.context.markets };
   },
@@ -246,7 +249,7 @@ export const setConsentPolicyDraft = defineTool({
   description: "Records the consent mechanism (CMP or API), markets and consent mode in the draft. Never weakens defaults without an explicit user decision; advanced consent mode requires a documented legal review note.",
   kind: "draft",
   permission: "consent.manage",
-  input: z.object({ cmp_provider: z.enum(["none", "api", "usercentrics", "cookiebot", "onetrust", "tcf", "gpp"]), consent_mode: z.enum(["basic", "advanced"]).nullable(), legal_review_note: z.string().max(500).nullable(), markets: z.array(z.string().length(2)).max(20).nullable() }),
+  input: z.object({ cmp_provider: z.enum(["none", "api", "usercentrics", "cookiebot", "onetrust", "tcf", "gpp"]), consent_mode: z.enum(["basic", "advanced"]).nullable(), legal_review_note: z.string().max(500).nullable(), markets: z.array(z.string().min(2).max(56)).max(20).nullable() }),
   handler: async (args, ctx) => {
     if (args.consent_mode === "advanced" && !args.legal_review_note) throw new AppError("POLICY_BLOCKED", "advanced consent mode requires a legal review note from the customer");
     const draft = await draftFor(ctx);
@@ -262,7 +265,8 @@ export const setConsentPolicyDraft = defineTool({
     });
     let state = await loadSetupState(ctx.db, ctx.organizationId, ctx.siteId, ctx.locale);
     state.context.cmp = args.cmp_provider;
-    if (args.markets) state.context.markets = args.markets.map((m) => m.toUpperCase());
+    const consentMarkets = normalizeMarkets(args.markets);
+    if (consentMarkets) state.context.markets = consentMarkets;
     state = applyStepUpdate(state, "consent", { fields: { cmp: args.cmp_provider, policy_version: "draft" }, evidence: { source: "user", detail: `cmp ${args.cmp_provider}` } });
     await saveSetupState(ctx.db, ctx.organizationId, ctx.siteId, state);
     return { cmp: args.cmp_provider, consent_mode: args.consent_mode ?? "basic", lint_warnings: lint.warnings.map((w) => w.message), current_step: state.currentStep };

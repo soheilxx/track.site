@@ -60,3 +60,10 @@ Keys are read only server-side through `loadEnv()`. They never reach the browser
 | `AUTH_SECRET`, `APPROVAL_TOKEN_SECRET` | Secrets Manager | rotate with session invalidation window |
 | Stripe keys / webhook secret | Vercel env | Stripe dashboard rotation |
 | Vendor OAuth client secrets | Secrets Manager | vendor console |
+
+## Robustness of the tool contract (2026-09-03, first live run)
+
+- Strict JSON schemas drop `minLength`/`maxLength`/`minimum`/`maximum`/`minItems`/`maxItems`/`pattern`/`format`; `strictJsonSchema()` now appends their meaning to the property description so the model sees them.
+- Argument validation failures return the Zod issues in the tool error message (`VALIDATION_ERROR — path: message …`) so the model can correct and retry; previously it only saw "Invalid tool arguments".
+- `set_business_profile_draft` / `set_consent_policy_draft` accept country and currency names and normalise them to ISO codes (`tools/normalize.ts`); unmapped values are rejected with an actionable message.
+- The final answer is assembled from the streamed response's output items when the SDK convenience `output_text` is absent; array maxima of the UI schema (6 cards, 4 quick actions) and `progress_percent` are clamped instead of rejecting the answer; schema issues are logged and, outside production, shown in the error message.

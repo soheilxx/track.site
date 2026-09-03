@@ -44,7 +44,10 @@ export function defineTool<I extends z.ZodObject<z.ZodRawShape>, O>(def: ToolDef
     },
     run: async (args, ctx) => {
       const parsed = def.input.safeParse(args);
-      if (!parsed.success) return toErrResult(new AppError("VALIDATION_ERROR", "Invalid tool arguments"));
+      if (!parsed.success) {
+        const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`).join("; ").slice(0, 500);
+        return toErrResult(new AppError("VALIDATION_ERROR", `Invalid tool arguments — ${issues}. Fix the arguments and call the tool again.`));
+      }
       if (!can(ctx.role as OrgRole, def.permission)) return toErrResult(new AppError("FORBIDDEN", `Missing permission ${def.permission}`));
       try {
         const data = await def.handler(parsed.data, ctx);

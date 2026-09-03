@@ -178,22 +178,26 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
       emit({ type: "error", code: "POLICY_BLOCKED", message: "The assistant declined this request.", retryable: false });
       return { ui: null, usage, model, toolCalls, error: { code: "POLICY_BLOCKED", message: "refusal" } };
     }
-    const text = response.output_text ?? "";
+    const text = outputTextOf(response);
     let parsed: unknown;
     try {
       parsed = JSON.parse(text);
     } catch {
       parsed = null;
     }
-    const ui = assistantUiResponseSchema.safeParse(parsed);
+    const ui = assistantUiResponseSchema.safeParse(clampUiAnswer(parsed));
     if (!ui.success) {
+      const issues = ui.error.issues.slice(0, 8).map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`);
+      ctx.logger.warn({ model, outputLength: text.length, status: response.status, issues }, "assistant answer failed the UI schema");
       if (!incompleteRetried) {
         incompleteRetried = true;
-        items.push({ role: "user", content: "Your previous answer did not match the required JSON schema. Answer again strictly following the schema." });
+        items.push({ role: "user", content: `Your previous answer did not match the required JSON schema (${issues.join("; ")}). Answer again strictly following the schema.` });
         continue;
       }
-      emit({ type: "error", code: "PROVIDER_ERROR", message: "The assistant returned an invalid answer.", retryable: true });
-      return { ui: null, usage, model, toolCalls, error: { code: "PROVIDER_ERROR", message: "schema validation failed" } };
+      // outside production the schema issues are shown so that setup problems are diagnosable without log access
+      const detail = process.env.APP_ENV === "production" ? "" : ` (${issues.join("; ").slice(0, 240)})`;
+      emit({ type: "error", code: "PROVIDER_ERROR", message: `The assistant returned an invalid answer.${detail}`, retryable: true });
+      return { ui: null, usage, model, toolCalls, error: { code: "PROVIDER_ERROR", message: `schema validation failed: ${issues.join("; ")}`.slice(0, 300) } };
     }
     emit({ type: "ui.final", ui: ui.data, usage, model });
     return { ui: ui.data, usage, model, toolCalls, error: null };
@@ -234,4 +238,28 @@ async function streamResponse(client: OpenAI, params: OpenAI.Responses.ResponseC
   }
   if (!final) throw Object.assign(new Error("stream ended without a final response"), { status: 500 });
   return final;
+}
+
+/** Limits the model cannot see in the strict JSON schema are applied leniently instead of rejecting the whole answer. */
+function clampUiAnswer(parsed: unknown): unknown {
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return parsed;
+  const o = { ...(parsed as Record<string, unknown>) };
+  if (Array.isArray(o.cards) && o.cards.length > 6) o.cards = o.cards.slice(0, 6);
+  if (Array.isArray(o.quick_actions) && o.quick_actions.length > 4) o.quick_actions = o.quick_actions.slice(0, 4);
+  if (typeof o.progress_percent === "number") o.progress_percent = Math.max(0, Math.min(100, Math.round(o.progress_percent)));
+  return o;
+}
+
+/** Streamed responses do not always carry the SDK convenience getter, so the message text is assembled from the output items. */
+function outputTextOf(response: OpenAI.Responses.Response): string {
+  const direct = (response as { output_text?: unknown }).output_text;
+  if (typeof direct === "string" && direct.length > 0) return direct;
+  const parts: string[] = [];
+  for (const item of response.output ?? []) {
+    if ((item as { type?: string }).type !== "message") continue;
+    for (const c of ((item as { content?: Array<{ type?: string; text?: string }> }).content ?? [])) {
+      if (c.type === "output_text" && typeof c.text === "string") parts.push(c.text);
+    }
+  }
+  return parts.join("");
 }

@@ -77,6 +77,23 @@ export function strictJsonSchema(schema: Record<string, unknown>): Record<string
     const obj = { ...(node as Record<string, unknown>) };
     delete obj.$schema;
     delete obj.default;
+    // the strict subset drops these keywords; the model still has to know them, so they move into the description
+    const hints: string[] = [];
+    if (typeof obj.minLength === "number" && obj.minLength === obj.maxLength) hints.push(`exactly ${obj.minLength} characters`);
+    else {
+      if (typeof obj.minLength === "number") hints.push(`at least ${obj.minLength} characters`);
+      if (typeof obj.maxLength === "number") hints.push(`at most ${obj.maxLength} characters`);
+    }
+    if (typeof obj.minimum === "number" && typeof obj.maximum === "number") hints.push(`between ${obj.minimum} and ${obj.maximum}`);
+    else {
+      if (typeof obj.minimum === "number") hints.push(`minimum ${obj.minimum}`);
+      if (typeof obj.maximum === "number") hints.push(`maximum ${obj.maximum}`);
+    }
+    if (typeof obj.minItems === "number") hints.push(`at least ${obj.minItems} items`);
+    if (typeof obj.maxItems === "number") hints.push(`at most ${obj.maxItems} items`);
+    if (typeof obj.pattern === "string") hints.push(`matching ${obj.pattern}`);
+    if (typeof obj.format === "string") hints.push(`format ${obj.format}`);
+    if (hints.length) obj.description = [typeof obj.description === "string" ? obj.description : "", `(${hints.join(", ")})`].filter(Boolean).join(" ");
     delete obj.minLength;
     delete obj.maxLength;
     delete obj.minimum;

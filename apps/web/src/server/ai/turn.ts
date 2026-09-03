@@ -71,6 +71,6 @@ export async function runChatTurn(ctx: OrgContext, siteId: string, userMessage: 
     },
   });
   if (result.ui) await appendMessage(ctx.organization.id, session.id, { role: "assistant", content: result.ui.message, ui: result.ui, tokenUsage: result.usage });
-  else await appendMessage(ctx.organization.id, session.id, { role: "system", content: `assistant error: ${result.error?.code ?? "unknown"}` });
+  else await appendMessage(ctx.organization.id, session.id, { role: "system", content: `assistant error: ${result.error?.code ?? "unknown"}${result.error?.message ? ` — ${result.error.message.slice(0, 300)}` : ""}` });
   return { ui: result.ui, error: result.error?.message ?? null };
 }
