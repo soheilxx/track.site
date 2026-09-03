@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { FORM_COPY, pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { title: "Book a demo", intro: "Thirty minutes with an engineer: we set up a destination on your real site, send a test event and walk through consent, deduplication and the debugger.", agenda: ["Your stack: platform, CMP, current tags and pain points", "Live setup of one destination with the assistant", "Consent policy, click ids and offline conversions for your case", "Pricing, migration plan and data processing agreement"], placeholder: "Which platforms and shop system do you use, and what should we show?" },
@@ -15,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/demo", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/demo", locale) };
 }
 
 export default async function DemoPage({ params }: { params: Promise<{ locale: string }> }) {

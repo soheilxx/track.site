@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  track.site app for Shopware 6 (app system, no plugin code in the shop).
+  Replace TRACKING_ID and PATH_TOKEN with the values shown on the site's "Shop connection" page, and
+  APP_SECRET with the secret you stored there. The same secret signs the registration handshake and every
+  webhook (`shopware-shop-signature`). The app only needs read access to orders; it never calls the shop API.
+-->
+<manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/Framework/App/Manifest/Schema/manifest-3.0.xsd">
+    <meta>
+        <name>TrackSite</name>
+        <label>track.site</label>
+        <label lang="de-DE">track.site</label>
+        <description>Sends verified order and refund events to track.site (server-side truth for purchases).</description>
+        <description lang="de-DE">Sendet verifizierte Bestell- und Erstattungsereignisse an track.site (serverseitige Wahrheit für Käufe).</description>
+        <author>track.site</author>
+        <copyright>(c) track.site</copyright>
+        <version>1.0.0</version>
+        <license>MIT</license>
+        <privacy>https://track.site/en/privacy</privacy>
+    </meta>
+    <setup>
+        <registrationUrl>https://ingest.track.site/v1/shop/shopware/TRACKING_ID/PATH_TOKEN/register</registrationUrl>
+        <secret>APP_SECRET</secret>
+    </setup>
+    <permissions>
+        <read>order</read>
+        <read>order_line_item</read>
+        <read>order_customer</read>
+        <read>order_address</read>
+        <read>order_transaction</read>
+        <read>currency</read>
+    </permissions>
+    <webhooks>
+        <webhook name="tracksiteOrderPaid" url="https://ingest.track.site/v1/shop/shopware/TRACKING_ID/PATH_TOKEN" event="state_enter.order_transaction.state.paid"/>
+        <webhook name="tracksiteOrderRefunded" url="https://ingest.track.site/v1/shop/shopware/TRACKING_ID/PATH_TOKEN" event="state_enter.order_transaction.state.refunded"/>
+        <webhook name="tracksiteOrderPlaced" url="https://ingest.track.site/v1/shop/shopware/TRACKING_ID/PATH_TOKEN" event="checkout.order.placed"/>
+    </webhooks>
+</manifest>

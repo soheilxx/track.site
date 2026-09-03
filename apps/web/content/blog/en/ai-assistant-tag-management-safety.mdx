@@ -1,0 +1,62 @@
+---
+title: "An AI assistant that cannot break your tracking: typed tools, approvals and the control-plane boundary"
+description: "How track.site's setup assistant is built so that it can plan and configure but never execute code, invent data or bypass consent — the tool contract, server-side validation, approval tokens, the audit trail and what the model never sees."
+excerpt: "Letting a language model touch production tracking sounds reckless until you draw the boundary correctly: the model proposes, typed tools validate, humans approve, and every step is written down. This is the architecture and the list of things the assistant is structurally unable to do."
+category: "product"
+tags: ["ai", "assistant", "safety", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-15"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Control-plane boundary between the assistant and the event pipeline"
+sources:
+  - title: "OpenAI — Function calling and structured outputs"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+legalNotice: false
+---
+
+## The boundary
+
+The assistant lives entirely in the **control plane**: it reads configuration and aggregated metrics and proposes configuration changes. It has no path into the **data plane** — the collector, the router and the worker never call a model, and no event payload is ever sent to one. Whether the assistant is enabled or not, events flow identically.
+
+## Tools, not text
+
+The model does not write configuration. It calls **typed tools** with JSON arguments validated against a schema on the server:
+
+- Read-only, always available: workspace and setup state, integration list, destination status, recent event health, consent state, event schema, delivery errors, version comparison.
+- Drafting: create an integration draft, upsert an event mapping draft, set destination settings or the consent policy in the draft, validate the draft, prepare a publish.
+- Guarded: publishing or rolling back a version, pausing or activating a destination, disconnecting an integration and rotating a credential require an **approval token** the user issues in the UI for that specific action.
+- Credentials: the secure-credential tool opens a form for the *user* to enter a secret; the model receives only "credential stored".
+
+Every tool checks the caller's role (a viewer cannot draft, an editor cannot publish), validates arguments, and refuses anything outside the wizard's current step. The model can call the mapping tool a hundred times; each call is the same validation the UI form runs, so the result is the same as if a person had clicked.
+
+## Approvals
+
+Nothing goes live without an approval. A prepared publish produces a **diff** — the same diff the version history shows — and the user grants an approval token in the UI, bound to that diff, the user and a short expiry. The token is consumed once; if the draft changed after it was issued, it is invalid. The model cannot generate, guess or reuse approval tokens because they never appear in its context — it can only pass on the one the user just granted.
+
+## What the model never sees
+
+- **Secrets.** Credentials are entered by the user into a vault form and referenced by id. The model sees kinds ("access token present"), never values.
+- **Raw events or personal data.** It reads aggregates: counts, rates, health components, schema findings by field name. The event debugger is a UI for humans.
+- **Other tenants.** Tool context is bound to the organisation of the session; there is no cross-tenant read.
+- **The vendor APIs.** Test events are sent by the worker on request; the model reads the classified result.
+
+## What the assistant is structurally unable to do
+
+- Execute code on your site: there is no custom-code tag type to create.
+- Grant consent or route around it: consent is data the policy engine reads, not a setting the tools expose.
+- Invent values, identities or conversions: tools accept only fields the schema defines, and unknown stays `null`.
+- Publish: only a human with the publish permission can consume an approval token.
+- Change billing, delete data or alter retention: those actions have no tool.
+
+## Models, keys and data location
+
+The assistant uses the OpenAI Responses API with structured outputs and server-defined tools. Model names are configured server-side and never appear in browser code. Keys are separated per environment, stored outside the repository, and scoped to the minimum permissions (listing models and creating responses). Organisations can disable the assistant entirely in settings; the toggle is audited.
+
+## The audit trail
+
+Every tool call is written to the audit log with the actor (user id plus "via assistant"), the arguments as validated, the result, and the request id. A published change made through the assistant is indistinguishable in the history from one made by hand — because, at the point it goes live, it was.
+
+## Why this is still useful
+
+The value of the assistant is not autonomy; it is that a 19-step destination setup with vendor-specific quirks becomes a conversation that ends in a reviewed diff. The model does the reading of documentation and the drafting; the guardrails make sure the result is exactly what you would have configured yourself, faster.

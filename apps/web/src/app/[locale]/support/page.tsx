@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { Link } from "@/i18n/navigation";
 import { FORM_COPY, pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { title: "Support", intro: "Customers reach engineering support here. Include your site's tracking ID (six characters, shown in the dashboard) so we can look at the right events — never paste access tokens.", docs: "Check the documentation first", status: "System status", placeholder: "Tracking ID, destination, what you expected and what happened." },
@@ -15,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/support", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/support", locale) };
 }
 
 export default async function SupportPage({ params }: { params: Promise<{ locale: string }> }) {

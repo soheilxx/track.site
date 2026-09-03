@@ -1,0 +1,82 @@
+---
+title: "Meta Conversions API in practice: event_id, hashed matching data and test event codes"
+description: "How to run Meta Pixel and the Conversions API side by side without double counting — with the exact fields, hashing rules and the test-event workflow from Meta's documentation."
+excerpt: "Meta counts a browser event and a server event as one only when both carry the same event_id and event_name. This guide walks through the payload, the hashing rules for user_data and how to verify deliveries with a test event code."
+category: "integrations"
+tags: ["meta", "conversions-api", "deduplication", "hashing"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Meta Conversions API payload with event_id highlighted"
+sources:
+  - title: "Meta — Conversions API: Using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Meta — Customer information parameters (hashing)"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/customer-information-parameters"
+legalNotice: false
+---
+
+## The endpoint in one line
+
+`POST https://graph.facebook.com/{version}/{pixel_id}/events` with a system-user access token and a JSON body containing a `data` array of events. track.site pins the Graph API version centrally (v25.0 at the time of writing) and records when the endpoint was last verified against Meta's documentation.
+
+## The fields that matter
+
+Each event object carries:
+
+- `event_name` — `Purchase`, `Lead`, `AddToCart`, `InitiateCheckout`, `CompleteRegistration`, `Subscribe`, `StartTrial`, `Contact`, `Schedule`, `Search`, `ViewContent`, `PageView` or a custom name
+- `event_time` — Unix seconds, at most seven days old
+- `event_id` — your deduplication key
+- `event_source_url` — the page URL
+- `action_source` — `website` for web events
+- `user_data` — matching data (see below)
+- `custom_data` — `value`, `currency`, `content_ids`, `contents`, `order_id`, `num_items`
+
+Optional but valuable in testing: `test_event_code` at the top level of the body. Events sent with a test code appear in Events Manager → Test events and are not counted in reporting.
+
+## Deduplication: same event_id, same event_name
+
+Meta merges a pixel event and a server event when both share `event_id` **and** `event_name`, arriving within a window of the same order of magnitude as the event itself (Meta documents 48 hours). Two consequences:
+
+1. Generate the id **once**, at the moment the action happens, and hand it to both the pixel call (`fbq('track', 'Purchase', {...}, { eventID: id })`) and the server payload.
+2. Keep event names identical on both paths. A browser `Purchase` and a server `purchase` are two events.
+
+track.site does this by construction: the SDK generates a source event id, mirrors the pixel call with that id, and the worker sends the same id in `event_id`.
+
+## user_data: what to hash and how
+
+Meta requires SHA-256 hashing for personal identifiers after normalisation:
+
+| Field | Normalisation before hashing |
+| --- | --- |
+| `em` | trim, lowercase |
+| `ph` | digits only, including country code, no leading zeros or plus |
+| `fn`, `ln` | lowercase, trimmed, letters only |
+| `ct` | lowercase, no spaces or punctuation |
+| `zp` | lowercase, first five digits for US |
+| `country` | two-letter ISO code, lowercase |
+| `external_id` | any stable id, hashed |
+
+Not hashed: `client_ip_address`, `client_user_agent`, `fbc`, `fbp`. The `fbc` value is built from the `fbclid` URL parameter as `fb.1.{timestamp}.{fbclid}`; `fbp` is the `_fbp` cookie set by the pixel. Both are captured by the track.site SDK only after marketing consent and forwarded only to Meta.
+
+## What "event match quality" rewards
+
+Meta scores each event by how many matching keys it received. The ones with the largest effect are hashed e-mail, hashed phone, `fbp`/`fbc` and `external_id`. Server events from an order system typically carry e-mail and phone; browser events carry `fbp` and `fbc`. Sending both paths with the same `event_id` therefore gives Meta the union — the practical reason hybrid mode outperforms either path alone.
+
+## The test workflow
+
+1. In Events Manager, open the dataset → **Test events** and copy the code (for example `TEST12345`).
+2. Store it in the destination's settings; track.site attaches it only while the destination is in test mode.
+3. Send a test purchase from the wizard. The worker delivers it and shows Meta's response (`events_received: 1` and an `fbtrace_id`).
+4. Confirm the event in the Test events tab with the expected parameters and matching keys.
+5. Switch off test mode; from now on events count.
+
+## Error classes you will see
+
+- **190 / OAuthException** — token invalid or expired: rotate the system-user token
+- **100 with subcode 2804** — invalid parameter: usually a malformed hash or a missing `action_source`
+- **4 / 17 / 32 / 613** — rate limits: track.site backs off with jitter and retries
+- **5xx** — temporary: retried; the circuit breaker pauses the destination if it persists
+
+Every attempt, including the redacted payload preview, is visible in the event debugger — which is where you start when a purchase is missing.

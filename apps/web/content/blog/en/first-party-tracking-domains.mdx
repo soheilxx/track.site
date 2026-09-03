@@ -1,0 +1,63 @@
+---
+title: "First-party tracking domains: verification, what ITP still caps, and what a custom domain does not fix"
+description: "Why the collector and SDK should be reached through a subdomain of your own site, how domain verification and the CNAME check work, which browser limits still apply to script-written cookies, and what to add to your Content Security Policy."
+excerpt: "Serving the tracker through t.yourdomain.com instead of a vendor host keeps consented requests off blocklists and out of third-party cookie restrictions. Here is the setup, the limits Safari still enforces, and the honest list of what a custom domain does not change."
+category: "guides"
+tags: ["first-party", "cname", "itp", "cookies"]
+author: "track-site-editorial"
+publishedAt: "2026-08-24"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "DNS record pointing a tracking subdomain to the collector"
+sources:
+  - title: "WebKit — CNAME cloaking and bounce tracking defense"
+    url: "https://webkit.org/blog/11338/cname-cloaking-and-bounce-tracking-defense/"
+  - title: "MDN — Set-Cookie"
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"
+legalNotice: false
+---
+
+## What a first-party domain changes
+
+Requests to `t.shop.example` are same-site with `shop.example`. Three things follow:
+
+1. **Blocklists do not match.** Most content blockers match hostnames; a subdomain of your own site is not on them. This is not evasion of a user choice — the consent decision still gates every purpose — it removes collateral blocking of consented, first-party requests.
+2. **Third-party cookie restrictions do not apply.** Browsers that partition or block third-party cookies leave same-site storage alone.
+3. **Your security policy stays tight.** One extra host in `script-src` and `connect-src`, no wildcard vendor domains for the collector path.
+
+## The setup
+
+- Add the domain in the site settings. track.site issues a **verification token**; prove control with a DNS TXT record, a file on the domain or a meta tag. The domain becomes active only after verification succeeds, so nobody can point a domain they do not control at your site.
+- Create `t.shop.example` as a **CNAME** to the collector host shown in the settings. The domain page records when the CNAME check last passed.
+- **TLS** for the tracking host is terminated by the platform edge once the CNAME resolves.
+- Update your **Content Security Policy**: `script-src` and `connect-src` need the tracking host. No `unsafe-inline` is required because the loader is an external script.
+- The **SDK loader** is then served through the tracking host together with the site's signed configuration.
+
+## What the SDK stores, and what ITP still caps
+
+track.site writes three things in the browser, each only after the matching consent:
+
+| Key | Purpose | Written when | Lifetime |
+| --- | --- | --- | --- |
+| `_ts_id` (cookie, mirrored in localStorage) | anonymous visitor id | analytics or marketing consent | up to 13 months, or the site's retention |
+| `_ts_sid` (session storage) | session id | analytics or marketing consent | 30 minutes rolling |
+| `_ts_cid` (localStorage) | click ids from the landing URL | marketing consent | click-id TTL, 90 days by default |
+
+Click ids from the landing URL are kept in localStorage under `_ts_cid`, only with marketing consent and only for the site's click-id TTL (90 days by default); they are attached to every later event of the visit and cleared when marketing consent is withdrawn.
+
+Both identifiers are written by JavaScript. Safari's Intelligent Tracking Prevention caps **script-written** cookies and storage at 7 days (24 hours when the landing URL carried a known tracking parameter), and a first-party domain does not lift that cap. The collector does not set cookies through HTTP responses, so a returning Safari visitor after more than a week is a new anonymous id. Firefox and Brave apply comparable heuristics; Chrome keeps first-party storage for its full expiry.
+
+The honest summary: the custom domain protects **request delivery**; it does not extend **identifier lifetime** on Safari.
+
+## What a first-party domain does not fix
+
+- It does not restore consent-denied purposes. Without marketing consent no click id is captured and no advertising destination receives events, regardless of domain.
+- It does not make vendor pixels first-party. `fbevents.js` still loads from Meta and sets `_fbp`; only the collector path is yours.
+- It does not hide anything from the visitor. The tracking host, the SDK source and the collector endpoints are visible in developer tools, and the privacy page lists them.
+
+## Checklist
+
+- [ ] Domain verified (TXT, file or meta tag) and CNAME check passed
+- [ ] CSP updated for `script-src` and `connect-src`
+- [ ] Snippet references the tracking host, not the platform default
+- [ ] Data quality page shows browser events arriving from the new host

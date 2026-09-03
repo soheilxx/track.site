@@ -1,0 +1,66 @@
+---
+title: "Betroffenenanfragen in Tracking-Daten bearbeiten: Export, Löschung, Einschränkung — und der Nachweis"
+description: "Wie Auskunfts- und Löschanfragen auf Eventdaten, Click-IDs, Consent-Einträge und Zustellprotokolle wirken; wie track.site die betroffene Person über E-Mail, Nutzer-ID oder anonyme ID identifiziert; was der Export enthält; und was ein Löschjob absichtlich zurücklässt."
+excerpt: "Tracking-Daten sind personenbezogene Daten. Kommt eine Anfrage, musst du jeden Datensatz der Person finden, herausgeben oder fristgerecht entfernen und den Nachweis behalten — ohne eine Kopie des Gelöschten aufzubewahren. Das ist der Workflow, Schritt für Schritt."
+category: "privacy"
+tags: ["dsar", "dsgvo", "löschung", "export"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Lebenszyklus einer Betroffenenanfrage vom Eingang bis zum Abschlussbericht"
+sources:
+  - title: "DSGVO Artikel 15 — Auskunftsrecht"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "DSGVO Artikel 17 — Recht auf Löschung"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Welche Tracking-Datensätze eine Person betreffen
+
+Mehr, als die meisten Teams annehmen:
+
+- **Events** — jeder Seitenaufruf, Klick und jede Conversion, geschlüsselt über anonyme ID, Sitzungs-ID und nach dem Login Nutzer-ID; mit gehashten Kennungen (`em`, `ph`), wenn der Consent sie erlaubte.
+- **Click-IDs** — `gclid`, `fbc` und Verwandte, First-Party für die Attribution gespeichert.
+- **Consent-Einträge** — erteilte Zwecke, Hash des TC-Strings, Zeitstempel; sie sind personenbezogene Daten *und* dein Nachweis rechtmäßiger Verarbeitung.
+- **Zustellversuche** — was an welchen Anbieter ging, mit geschwärzter Payload-Vorschau.
+- **Conversion-Datensätze** und importierte CRM-Ergebnisse.
+- **Kopien auf Anbieterseite** — was Meta, Google und die anderen erhalten haben; die Löschung dort ist eine separate Anfrage an jeden Anbieter.
+
+## Die betroffene Person identifizieren
+
+Eine Anfrage kommt meist mit einer E-Mail-Adresse. track.site hasht sie (Kleinschreibung, getrimmt, SHA-256) und sucht Events über den `em`-Hash; es akzeptiert auch eine Nutzer-ID aus deinem System oder eine anonyme ID, die die Person auf der Datenschutzseite ablesen kann. Es sucht nie über die Klartext-E-Mail, weil Klartext-E-Mails nicht gespeichert werden.
+
+Gibt es keinen Treffer, sagt der Bericht das — „keine Datensätze für die angegebenen Kennungen gefunden“ ist ein legitimes und häufiges Ergebnis bei Besuchern, die nie in Kennungen eingewilligt haben.
+
+## Anfragearten
+
+| Art | Was track.site tut |
+| --- | --- |
+| Export / Portabilität | erstellt je Site einen JSON-Bericht: Events (Name, Zeit, URL, Consent, Commerce-Daten, Click-IDs, Quelle), Conversion-Datensätze; im Privacy Center herunterladbar |
+| Löschung | löscht Events, Conversion-Datensätze und Click-IDs der Person auf jeder Site der Organisation; schreibt je Speicher einen Löschjob-Eintrag mit Zählwerten |
+| Einschränkung / Widerspruch | wird erfasst; über die Consent-Policy durchgesetzt (künftige Events der Kennungen werden verworfen) und über die Aufbewahrung |
+| Berichtigung | wird erfasst; Tracking-Daten werden nicht Feld für Feld berichtigt — der korrekte Wert kommt beim nächsten Event aus dem Quellsystem |
+
+Jede Art erzeugt einen **Audit-Eintrag** (wer hat wann bearbeitet, welche Sites) und einen **Abschlussbericht**, der mit der Anfrage gespeichert wird. Der Bericht enthält Zählwerte, nicht den gelöschten Inhalt.
+
+## Die Frist
+
+Anfragen tragen ein Fälligkeitsdatum 30 Tage nach Eingang; das Privacy Center listet offene Anfragen mit ihren Fälligkeiten. Verlängerungen sind eine Entscheidung des Betreibers, kein Standard.
+
+## Was die Löschung absichtlich zurücklässt
+
+- Den **Audit-Log**-Eintrag, dass eine Löschung stattfand, mit Zählwerten und Anfrage-ID — nicht die Kennungen.
+- Bereits berechnete **aggregierte Statistiken** (tägliche Eventzahlen, Health Scores), die keine personenbezogenen Daten sind.
+- **Consent-Einträge** für die Aufbewahrungsdauer, die zum Nachweis rechtmäßiger Verarbeitung nötig ist, mit entfernten Kennungen, sobald der Eintrag dafür nicht mehr gebraucht wird.
+- **Daten auf Anbieterseite.** Der Bericht listet jede Destination, an die Events der Person zugestellt wurden, damit der Betreiber die entsprechenden Löschanfragen bei den Anbietern stellen kann; track.site gibt nicht vor, Daten zu löschen, die es nicht kontrolliert.
+
+## Aufbewahrung macht die meisten Anfragen kleiner
+
+Kurze Aufbewahrungsfenster für Click-IDs, Zustellversuche und Rohdatenarchive bedeuten, dass ein Großteil der Daten einer Person bereits abgelaufen ist, wenn eine Anfrage eintrifft. Die Seite der Aufbewahrungsrichtlinie zeigt die konfigurierten Fenster je Datenart, und der Exportbericht nennt, welche Fenster galten.
+
+## Wie Besucher dich erreichen
+
+Die öffentliche Datenschutzseite nennt den Kanal für Anfragen — das Kontaktformular oder die Adresse aus dem Impressum. Der Betreiber erfasst die Anfrage im Privacy Center mit den Kennungen, die der Besucher angegeben hat; von dort folgt sie der oben beschriebenen Warteschlange und dem Audit-Trail.
+

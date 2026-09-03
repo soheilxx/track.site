@@ -1,0 +1,75 @@
+---
+title: "Click-IDs und Attributionsfenster: welche Parameter erfassen, wie lange behalten und wo speichern"
+description: "Eine Referenz der Werbe-Click-IDs (gclid, gbraid, wbraid, dclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id, Affiliate-IDs), wie Consent ihre Erfassung steuert, wie sich Attributionsfenster je Plattform unterscheiden und wie First-Party-Speicherung ablaufen sollte."
+excerpt: "Jede Werbeplattform stempelt eine Click-ID auf die Landingpage-URL. Sie richtig zu erfassen macht den Unterschied zwischen einer zugeordneten Server-Conversion und einer anonymen. Diese Referenz listet die Parameter, die Consent-Regeln und die Aufbewahrung, die zum Fenster jeder Plattform passt."
+category: "guides"
+tags: ["click-ids", "attribution", "gclid", "consent"]
+author: "track-site-editorial"
+publishedAt: "2026-08-25"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Tabelle der Werbe-Click-ID-Parameter und ihrer Plattformen"
+sources:
+  - title: "Google Ads-Hilfe — Automatisches Tagging"
+    url: "https://support.google.com/google-ads/answer/3095550"
+  - title: "Meta for Developers — fbc- und fbp-Parameter"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc"
+legalNotice: false
+---
+
+## Die Parameterliste
+
+| Parameter | Plattform | Server-Feld, das er speist | Hinweise |
+| --- | --- | --- | --- |
+| `gclid` | Google Ads (Suche, Shopping, Display) | `gclid` in Click-Conversion-Uploads | bei iOS-App-Kampagnen durch `gbraid`/`wbraid` ersetzt |
+| `gbraid`, `wbraid` | Google Ads (iOS-Datenschutzvarianten) | gleicher Upload, alternative Felder | schließen sich mit gclid gegenseitig aus |
+| `dclid` | Campaign Manager 360 / DV360 | `dclid` in Floodlight-Offline-Conversions | |
+| `msclkid` | Microsoft Advertising | `userData.msclkid` | |
+| `fbclid` | Meta | `user_data.fbc` als `fb.1.<timestamp>.<fbclid>` | das Pixel schreibt denselben Wert in `_fbc` |
+| `ttclid` | TikTok | `user.ttclid` | |
+| `li_fat_id` | LinkedIn | `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` | wird auch vom Insight Tag gesetzt |
+| `rdt_cid` | Reddit | `click_id` | |
+| `epik` | Pinterest | `user_data.click_id` | |
+| `ScCid` | Snapchat | `user_data.sc_click_id` | Groß-/Kleinschreibung relevant |
+| `twclid` | X | `twclid` | |
+| `tblci` | Taboola | `click-id` in der S2S-Action | Pflicht; ohne Click-ID keine Conversion |
+| `ob_click_id` (`dicbo`) | Outbrain | `ob_click_id` | |
+| `irclickid` | Impact | `ClickId` im Postback | |
+| `cjevent` | CJ | `CJEVENT` | |
+| `awc` | Awin | `cks` | |
+| `tduid` | Tradedoubler | `tduid` | |
+| `clickref` / `pclickid` | Partnerize, generisch | preset-spezifisch | |
+| `ranMID`/`ranSiteID` | Rakuten | preset-spezifisch | |
+
+Das track.site-SDK erkennt sie alle und hält jede unter ihrem eigenen Namen am Event fest, sodass der Connector einer Plattform genau die ID findet, die er braucht.
+
+## Consent steuert die Erfassung
+
+Eine Click-ID verknüpft die Sitzung einer Person mit einem Werbeklick; sie ist ein personenbezogenes Datum und dient einem Werbezweck. Das SDK erfasst Click-IDs deshalb nur, wenn der Zweck Marketing erteilt ist. Kommt der Consent nach dem Landen (der Besucher klickt auf der zweiten Seite „Akzeptieren“), werden die IDs der Landing-URL für die Events nach der Consent-Entscheidung erfasst — nie davor.
+
+Bei reinem Analytics-Consent werden die IDs aus der URL entfernt, bevor sie an den Collector geht, sodass sie auch nicht in Seitenaufrufdaten gelangen.
+
+## Attributionsfenster unterscheiden sich
+
+Plattformen zählen eine Conversion nur, wenn sie innerhalb ihres Fensters nach dem Klick stattfindet. Typische Voreinstellungen, alle in der Plattform-Oberfläche konfigurierbar:
+
+- Google Ads: 30-Tage-Klickfenster je Conversion-Aktion (1 bis 90 Tage)
+- Meta: 7 Tage Klick, 1 Tag View
+- Microsoft: 30 Tage Klick (1 bis 90 Tage)
+- TikTok: 7 Tage Klick, 1 Tag View
+- LinkedIn: 30 Tage Klick, 7 Tage View; API-Uploads werden 90 Tage lang akzeptiert
+- Pinterest: 30 Tage Klick, 30 Tage Engagement, 1 Tag View
+- Snapchat: 28 Tage Swipe-up, 1 Tag View
+- Affiliate-Netzwerke: meist 30 Tage, je Programm festgelegt
+
+Eine Conversion außerhalb des Fensters hochzuladen ist auf API-Ebene kein Fehler; sie wird schlicht nicht attribuiert. Das Event zählt weiterhin in deinem eigenen Reporting.
+
+## Speicherung und Ablauf
+
+Auf der Landingpage erfasste Click-IDs werden First-Party im Browser unter `_ts_cid` (localStorage) gehalten — nur solange der Zweck Marketing erteilt ist und für die Click-ID-TTL der Site, standardmäßig 90 Tage, eine vernünftige Obergrenze angesichts der längsten Fenster oben. Jedes spätere Event des Besuchs trägt sie, eine neuere ID derselben Plattform ersetzt die ältere, und der Widerruf des Marketing-Consents leert den Speicher sofort. Safaris 7-Tage-Grenze für skriptgeschriebenen Speicher gilt auch hier.
+
+Serverseitige Events derselben Bestellung erhalten sie, wenn der Router einen verifizierten Shop-Kauf mit dem Browser-Kauf verknüpft, der dieselbe Bestellnummer trägt. Im Event-Speicher werden Click-IDs nach dem Click-ID-Aufbewahrungsfenster entfernt, und der DSAR-Löschprozess entfernt sie zusammen mit den übrigen Daten des Besuchers.
+
+## URL-Hygiene auf der Landingpage
+
+Click-IDs auf der Landing-URL sind nützlich; Click-IDs in deinen Analytics-Berichten sind Rauschen und ein Datenschutzrisiko. Der Collector entfernt jede bekannte Click-ID aus `page_location` und `referrer` vor der Speicherung und vor der Zustellung an Analytics-Destinationen, behält sie aber als separate Felder für die Werbe-Connectoren, die sie brauchen.

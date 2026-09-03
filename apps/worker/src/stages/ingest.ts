@@ -55,6 +55,11 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
       // unknown custom event: accept but flag for the data-quality inbox (handled by aggregates)
       event.provenance.name = { ...event.provenance.name!, source: `${event.source}:unplanned` };
     }
+    if (msg.kind === "server_batch" && (event.name === "purchase" || event.name === "refund") && event.commerce?.order_id && !event.consent.granted.some((p) => p !== "necessary")) {
+      // server-side order without a consent record: inherit the consent and identity the browser recorded for the same order
+      const browser = await ctx.eventStore.findConversionEvent(event.site_id, event.commerce.order_id, "purchase", "browser", new Date(serverTs.getTime() - 30 * 86_400_000));
+      if (browser) event = adoptBrowserContext(event, browser, serverTs);
+    }
     const pii = scanEventForPii(event);
     if (pii.blocked) {
       drop("pii_blocked");
@@ -107,18 +112,39 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
     await client2.query("BEGIN");
     await client2.query("SET LOCAL ROLE tracksite_worker");
     for (const e of stored) {
-      // conversions: order id is the source of truth for purchase/refund dedup across browser + server
+      // conversions: the order id is the source of truth for purchase/refund dedup across browser + server paths
       if ((e.name === "purchase" || e.name === "refund") && e.commerce?.order_id) {
-        const conv = await client2.query(
-          `INSERT INTO conversion_records (organization_id, site_id, event_id, kind, order_id, value, currency, source, source_verified, occurred_at)
-           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT (site_id, kind, order_id) WHERE order_id IS NOT NULL DO NOTHING RETURNING id`,
-          [e.organization_id, e.site_id, e.event_id, e.name, e.commerce.order_id, e.commerce.value ?? null, e.commerce.currency ?? null, e.source, e.source_verified, e.server_ts],
-        );
-        if (conv.rowCount === 0) {
+        const prior = (
+          await client2.query<{ event_id: string; source: string; source_verified: boolean }>(`SELECT event_id, source, source_verified FROM conversion_records WHERE site_id = $1 AND kind = $2 AND order_id = $3 LIMIT 1`, [
+            e.site_id,
+            e.name,
+            e.commerce.order_id,
+          ])
+        ).rows[0];
+        if (!prior) {
+          await client2.query(
+            `INSERT INTO conversion_records (organization_id, site_id, event_id, kind, order_id, value, currency, source, source_verified, occurred_at)
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT (site_id, kind, order_id) WHERE order_id IS NOT NULL DO NOTHING`,
+            [e.organization_id, e.site_id, e.event_id, e.name, e.commerce.order_id, e.commerce.value ?? null, e.commerce.currency ?? null, e.source, e.source_verified, e.server_ts],
+          );
+        } else if ((prior.source === "browser") === (e.source === "browser")) {
+          // the same path reported the order again: duplicate
           await ctx.eventStore.updateState(e.site_id, e.event_id, "deduplicated", "duplicate_conversion");
           stats.duplicates++;
           stats.dropped.duplicate_conversion = (stats.dropped.duplicate_conversion ?? 0) + 1;
           continue;
+        } else if (e.source_verified && !prior.source_verified) {
+          // a verified server/shop record supersedes the browser observation; both events are routed and
+          // vendors deduplicate on the shared order-derived event id
+          await client2.query(`UPDATE conversion_records SET event_id = $4, source = $5, source_verified = true, value = $6, currency = $7 WHERE site_id = $1 AND kind = $2 AND order_id = $3`, [
+            e.site_id,
+            e.name,
+            e.commerce.order_id,
+            e.event_id,
+            e.source,
+            e.commerce.value ?? null,
+            e.commerce.currency ?? null,
+          ]);
         }
       }
       if (e.is_billable) {
@@ -255,4 +281,23 @@ async function recordAggregates(ctx: WorkerContext, msg: IngestMessage, stats: I
   } finally {
     client.release();
   }
+}
+
+/** A server-side order inherits the consent record and identifiers the browser captured for the same order id. */
+export function adoptBrowserContext(event: CanonicalEvent, browser: CanonicalEvent, at: Date): CanonicalEvent {
+  const provenance = {
+    ...event.provenance,
+    consent: { data_class: "DERIVED" as const, source: "browser:order_join", at: at.toISOString(), algorithm: "order_id_join", algorithm_version: "1", inputs: ["commerce.order_id"], model: null, confidence: null, expires_at: null, human_confirmed_at: null },
+  };
+  return {
+    ...event,
+    consent: { ...browser.consent },
+    anonymous_id: event.anonymous_id ?? browser.anonymous_id,
+    session_id: event.session_id ?? browser.session_id,
+    user_id: event.user_id ?? browser.user_id,
+    click_ids: event.click_ids ?? browser.click_ids,
+    vendor_ids: event.vendor_ids ?? browser.vendor_ids,
+    user_data: event.user_data ?? browser.user_data,
+    provenance,
+  };
 }

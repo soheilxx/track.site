@@ -1,0 +1,75 @@
+---
+title: "Click ids and attribution windows: which parameters to capture, how long to keep them and where to store them"
+description: "A reference of advertising click ids (gclid, gbraid, wbraid, dclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id, affiliate ids), how consent gates their capture, how attribution windows differ per platform and how first-party storage should expire."
+excerpt: "Every ad platform stamps a click id on the landing page URL. Capturing it properly is the difference between a matched server conversion and an anonymous one. This reference lists the parameters, the consent rules and the retention that fits each platform's window."
+category: "guides"
+tags: ["click-ids", "attribution", "gclid", "consent"]
+author: "track-site-editorial"
+publishedAt: "2026-08-25"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Table of advertising click id parameters and their platforms"
+sources:
+  - title: "Google Ads Help — About auto-tagging"
+    url: "https://support.google.com/google-ads/answer/3095550"
+  - title: "Meta for Developers — fbc and fbp parameters"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc"
+legalNotice: false
+---
+
+## The parameter list
+
+| Parameter | Platform | Server field it feeds | Notes |
+| --- | --- | --- | --- |
+| `gclid` | Google Ads (search, shopping, display) | `gclid` in click conversion uploads | replaced by `gbraid`/`wbraid` on iOS app campaigns |
+| `gbraid`, `wbraid` | Google Ads (iOS privacy variants) | same upload, alternative fields | mutually exclusive with gclid |
+| `dclid` | Campaign Manager 360 / DV360 | `dclid` in Floodlight offline conversions | |
+| `msclkid` | Microsoft Advertising | `userData.msclkid` | |
+| `fbclid` | Meta | `user_data.fbc` as `fb.1.<timestamp>.<fbclid>` | the pixel writes the same value into `_fbc` |
+| `ttclid` | TikTok | `user.ttclid` | |
+| `li_fat_id` | LinkedIn | `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` | also set by the Insight Tag |
+| `rdt_cid` | Reddit | `click_id` | |
+| `epik` | Pinterest | `user_data.click_id` | |
+| `ScCid` | Snapchat | `user_data.sc_click_id` | case-sensitive |
+| `twclid` | X | `twclid` | |
+| `tblci` | Taboola | `click-id` in the S2S action | required; no click id, no conversion |
+| `ob_click_id` (`dicbo`) | Outbrain | `ob_click_id` | |
+| `irclickid` | Impact | `ClickId` in the postback | |
+| `cjevent` | CJ | `CJEVENT` | |
+| `awc` | Awin | `cks` | |
+| `tduid` | Tradedoubler | `tduid` | |
+| `clickref` / `pclickid` | Partnerize, generic | preset-specific | |
+| `ranMID`/`ranSiteID` | Rakuten | preset-specific | |
+
+track.site's SDK recognises all of these and records each under its own name on the event, so the connector for a platform finds exactly the id it needs.
+
+## Consent gates capture
+
+A click id links a person's session to an advertising click; it is personal data and it serves an advertising purpose. The SDK therefore captures click ids only when the marketing purpose is granted. If consent arrives after landing (the visitor clicks "accept" on the second page), the ids from the landing URL are captured for the events that follow the consent decision — never before it.
+
+For analytics-only consent the ids are stripped from the URL before it is sent to the collector, so they do not leak into page-view data either.
+
+## Attribution windows differ
+
+Platforms count a conversion only if it happens within their window after the click. Typical defaults, all configurable in the platform UI:
+
+- Google Ads: 30-day click window per conversion action (1 to 90 days)
+- Meta: 7-day click, 1-day view
+- Microsoft: 30-day click (1 to 90 days)
+- TikTok: 7-day click, 1-day view
+- LinkedIn: 30-day click, 7-day view; API uploads accepted for 90 days
+- Pinterest: 30-day click, 30-day engagement, 1-day view
+- Snapchat: 28-day swipe-up, 1-day view
+- Affiliate networks: usually 30 days, set per programme
+
+Uploading a conversion outside the window is not an error at the API level; it is simply not attributed. The event still counts in your own reporting.
+
+## Storage and expiry
+
+Click ids captured on the landing page are kept first-party in the browser under `_ts_cid` (localStorage), only while the marketing purpose is granted, for the site's click-id TTL — 90 days by default, a sensible ceiling given the longest windows above. Every later event of the visit carries them, a newer id for the same platform replaces the older one, and withdrawing marketing consent clears the store immediately. Safari's 7-day cap on script-written storage applies to this store as well.
+
+Server-side events for the same order receive them when the router pairs a verified shop purchase with the browser purchase that carries the same order id. On the event store, click ids are removed after the click-id retention window, and the DSAR deletion flow removes them together with the visitor's other data.
+
+## Landing URL hygiene
+
+Click ids on the landing URL are useful; click ids in your analytics reports are noise and a privacy exposure. The collector scrubs every known click id from `page_location` and `referrer` before storage and before delivery to analytics destinations, while keeping them as separate fields for the advertising connectors that need them.

@@ -1,0 +1,27 @@
+api_version = "2025-07"
+
+[[extensions]]
+name = "track.site pixel"
+handle = "track-site-pixel"
+type = "web_pixel_extension"
+runtime_context = "strict"
+
+  [extensions.customer_privacy]
+  analytics = true
+  marketing = true
+  preferences = false
+  sale_of_data = "enabled"
+
+  [extensions.settings]
+  type = "object"
+
+    [extensions.settings.fields.trackingId]
+    name = "Tracking ID"
+    description = "The track.site tracking id of this shop's site"
+    type = "single_line_text_field"
+    validations = [{ name = "min", value = "6" }, { name = "max", value = "6" }]
+
+    [extensions.settings.fields.ingestUrl]
+    name = "Collector URL"
+    description = "Optional: first-party collector host, e.g. https://t.your-shop.com"
+    type = "single_line_text_field"

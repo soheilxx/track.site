@@ -1,0 +1,74 @@
+---
+title: "Consent Mode v2 without the guesswork: purposes, signals and what a server-side router must do"
+description: "Which consent signals Google expects, how to derive them from consent purposes instead of vendor lists, why 'advanced' mode needs a legal decision, and how the server side has to mirror the browser."
+excerpt: "Consent Mode v2 adds ad_user_data and ad_personalization to the signals Google reads. This guide maps them to consent purposes, explains basic versus advanced mode and shows how a server-side router keeps the two paths consistent."
+category: "consent"
+tags: ["consent-mode", "google", "purposes", "cmp"]
+author: "track-site-editorial"
+publishedAt: "2026-09-02"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Consent purposes mapped to Google consent mode signals"
+sources:
+  - title: "Google — Consent mode overview"
+    url: "https://developers.google.com/tag-platform/security/guides/consent"
+  - title: "IAB Europe — TCF v2.2 technical specification"
+    url: "https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework"
+legalNotice: true
+---
+
+## What Consent Mode actually is
+
+Consent Mode is a set of flags that Google tags read to decide how they behave: `analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization` (the last two were added in v2), plus `functionality_storage`, `personalization_storage` and `security_storage`. Each is `granted` or `denied`. The flags are set with `gtag('consent', 'default', {...})` before any tag loads and updated with `gtag('consent', 'update', {...})` when the visitor decides.
+
+It is not a consent management platform and it does not make a banner compliant. It is the interface between your consent decision and Google's tags.
+
+## Map purposes, not vendors
+
+Most implementations go wrong by wiring a vendor list to the flags. A cleaner model — the one track.site uses — derives the flags from consent purposes:
+
+| Purpose | analytics_storage | ad_storage | ad_user_data | ad_personalization |
+| --- | --- | --- | --- | --- |
+| necessary only | denied | denied | denied | denied |
+| + analytics | granted | denied | denied | denied |
+| + marketing | granted* | granted | granted | denied |
+| + marketing + personalization | granted* | granted | granted | granted |
+
+\* only if analytics is also granted.
+
+`ad_user_data` covers sending user data to Google for advertising — the flag that gates Enhanced Conversions and user-provided data. `ad_personalization` covers personalised advertising and remarketing. Splitting them lets a visitor accept measurement without accepting personalisation, which is the distinction regulators care about.
+
+## Basic versus advanced
+
+**Basic** mode: nothing from Google loads until the relevant flag is granted. No cookieless pings, no modelling input. Simple to explain, easy to defend.
+
+**Advanced** mode: Google tags load immediately and send cookieless pings while consent is denied, so Google can model conversions later. Whether those pings are acceptable is a legal assessment of your situation, not a technical setting. track.site therefore keeps basic mode as the default and only enables advanced mode when a legal review note is stored with the consent policy — the assistant cannot switch it silently.
+
+## The server side must mirror the browser
+
+Server-side delivery makes the same decision a second time, and it must reach the same conclusion. Concretely:
+
+- The event carries the consent snapshot (purposes granted, source, policy version, region, GPC flag) from the moment it was recorded.
+- Google Ads click conversion uploads include `consent: { adUserData, adPersonalization }` derived from that snapshot.
+- GA4 Measurement Protocol requests carry `consent.ad_user_data` and `consent.ad_personalization`, and `non_personalized_ads` when marketing is not granted.
+- No event is queued for later delivery "once consent arrives". Pre-consent behaviour is dropped.
+
+If the browser says denied and the server says granted, one of them is lying — usually because the server reads a session-level flag that changed after the event. Snapshotting per event removes that class of error.
+
+## Global Privacy Control and TCF
+
+GPC is a browser signal (`navigator.globalPrivacyControl`) that some jurisdictions treat as an opt-out. A safe rule: when GPC is set, treat marketing and personalization as denied regardless of the banner, unless a deliberate policy says otherwise for a region.
+
+Under TCF 2.2, purposes 1 (storage), 7 (measure ad performance), 8 (measure content performance) and the vendor consents map onto the four flags; the TC string is stored with the consent snapshot as evidence. A CMP adapter reads `__tcfapi` events so the tracker updates without custom code.
+
+## Test it like a regulator would
+
+1. Load the site with a fresh profile. Check that no Google request fires before the banner decision (basic mode).
+2. Decline everything. Confirm nothing is stored beyond the consent record itself and that the server received nothing for analytics or marketing.
+3. Accept analytics only. Confirm GA4 events flow with `ad_user_data: DENIED`.
+4. Accept everything, then withdraw. Confirm the next event is dropped and no replay happens.
+5. Read the consent snapshot in the event debugger for a sample event — this is the artefact you will need if anyone asks.
+
+## Where the assistant helps
+
+The setup assistant records the CMP, proposes the purpose mapping and writes the consent policy version. What it will not do is weaken a default: advanced mode, opt-out regions or marketing without consent require an explicit human decision with a note, and that decision is audited.

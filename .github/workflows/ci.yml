@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+  TURBO_TELEMETRY_DISABLED: "1"
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  static:
+    name: Lint, typecheck, unit and contract tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Source boundary (nothing from urlshorter beyond neutral patterns)
+        run: node scripts/check-source-boundary.mjs
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - name: Connector contract tests (mock vendors)
+        run: pnpm --filter @track-site/connectors test:contract
+        env:
+          VENDOR_ALLOW_PRIVATE: "true"
+      - name: SDK size budget (≤ 30 KB gzip)
+        run: pnpm --filter @track-site/sdk build && pnpm --filter @track-site/sdk budget
+      - name: Integration matrix is in sync with the connectors
+        run: pnpm --filter @track-site/connectors matrix -- --check
+
+  integration:
+    name: Database-backed integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: localdev
+          POSTGRES_DB: tracksite
+        ports: ["54330:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://postgres:localdev@127.0.0.1:54330/tracksite
+      TEST_DATABASE_URL: postgresql://postgres:localdev@127.0.0.1:54330/tracksite_test
+      MASTER_KEY: BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU=
+      MASTER_KEY_ID: ci-v1
+      VENDOR_ALLOW_PRIVATE: "true"
+      ALLOW_LOCALHOST_ORIGINS: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Migrate
+        run: pnpm db:migrate
+      - name: Integration tests (RLS, event store, queue, collector, worker pipeline, web)
+        run: pnpm test:integration
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [static]
+    env:
+      SKIP_ENV_VALIDATION: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build

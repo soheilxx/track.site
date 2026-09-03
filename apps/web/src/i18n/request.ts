@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { getSession } from "@/server/session";
 import { getRequestConfig } from "next-intl/server";
 import { isLocale, routing, type AppLocale } from "./routing";
 
@@ -25,8 +26,11 @@ export async function loadMessages(locale: AppLocale): Promise<Record<string, un
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
   if (!isLocale(locale)) {
+    // dashboard routes: the signed-in user's preference wins, then the NEXT_LOCALE cookie, then English
+    const session = await getSession().catch(() => null);
+    const userLocale = session?.user.locale;
     const cookieLocale = (await cookies()).get("NEXT_LOCALE")?.value;
-    locale = isLocale(cookieLocale) ? cookieLocale : routing.defaultLocale;
+    locale = isLocale(userLocale) ? userLocale : isLocale(cookieLocale) ? cookieLocale : routing.defaultLocale;
   }
   return { locale, messages: await loadMessages(locale as AppLocale), timeZone: "Europe/Berlin" };
 });

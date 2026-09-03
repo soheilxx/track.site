@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { FORM_COPY, pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 
 const COPY = {
@@ -15,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/contact", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/contact", locale) };
 }
 
 export default async function ContactPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ topic?: string }> }) {

@@ -17,6 +17,9 @@ const siteId = process.env.LOAD_SITE_ID ?? "A7K2Q9";
 const connections = Number(process.env.LOAD_CONNECTIONS ?? 50);
 const duration = Number(process.env.LOAD_DURATION_S ?? 30);
 const batch = Number(process.env.LOAD_BATCH ?? 5);
+/** Model many visitors: rotate a synthetic client IP per request (the collector reads x-forwarded-for behind the edge). */
+const spreadIps = (process.env.LOAD_SPREAD_IPS ?? "true") !== "false";
+const syntheticIp = () => `10.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${1 + Math.floor(Math.random() * 254)}`;
 
 function body(): string {
   const now = Date.now();
@@ -43,8 +46,13 @@ const result = await autocannon({
   method: "POST",
   headers: { "content-type": "text/plain", origin: "https://shop.example.com", "user-agent": "Mozilla/5.0 (load-test) Chrome/128" },
   setupClient: (client) => {
+    const headers = () => ({ "content-type": "text/plain", origin: "https://shop.example.com", "user-agent": "Mozilla/5.0 (load-test) Chrome/128", ...(spreadIps ? { "x-forwarded-for": syntheticIp() } : {}) });
+    client.setHeaders(headers());
     client.setBody(body());
-    client.on("response", () => client.setBody(body()));
+    client.on("response", () => {
+      client.setHeaders(headers());
+      client.setBody(body());
+    });
   },
 });
 

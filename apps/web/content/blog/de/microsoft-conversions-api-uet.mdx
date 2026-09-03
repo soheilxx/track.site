@@ -1,0 +1,74 @@
+---
+title: "Microsoft Advertising Conversions API: UET-Tag plus Server-Events mit msclkid"
+description: "Wie die Microsoft Advertising Conversions API neben dem UET-Tag funktioniert — der Events-Endpunkt je Tag-ID, eventId-Deduplizierung, msclkid und gehashte Kennungen, Batch-Limits und zeilenweise Fehlerbehandlung."
+excerpt: "Microsofts Conversions API (CAPI) nimmt Server-Events je UET-Tag-ID mit einem OAuth-Bearer-Token an. Dieser Leitfaden erklärt die Payload, wie gegen das UET-JavaScript-Tag dedupliziert wird und welche Fehler was bedeuten."
+category: "integrations"
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Microsoft-Conversions-API-Request an den UET-Events-Endpunkt"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) Integration Guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## Die Bausteine
+
+- Ein **UET-Tag** (Tools → UET-Tags). Seine numerische ID ist öffentlich und steht im JavaScript-Snippet.
+- Ein **Conversion-Ziel** vom Typ „Ereignis“ oder „Ziel-URL“, das an dieses Tag gebunden ist; Server-Events werden über Eventname, Kategorie, Label und Wert genauso gegen Ziele gematcht wie Tag-Events.
+- Ein **OAuth-2.0-Access-Token** für die Microsoft Advertising API (Scope `msads.manage`), ausgestellt für das Konto, dem das Tag gehört. track.site holt und erneuert ihn über die Microsoft-OAuth-Verbindung und bewahrt ihn im Tresor auf.
+
+## Der Request
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` mit `Authorization: Bearer <token>` und einem JSON-Array von Events:
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/danke",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Produkt", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` sind Millisekunden seit Epoch. `eventType` ist `custom` für Conversion-Events und `pageLoad` für Seitenaufrufe. Mit `continueOnValidationError: true` nimmt der Endpunkt die gültigen Zeilen an und meldet die ungültigen mit ihrem Index; track.site markiert diese Zeilen als ungültige Payload und wiederholt sie nicht, während HTTP 5xx und 429 mit Backoff wiederholt werden.
+
+Bis zu 1.000 Events passen in einen Request.
+
+## Deduplizierung mit dem UET-Tag
+
+Feuert auch das UET-JavaScript-Tag das Event, müssen beide Wege dieselbe `eventId` und denselben Eventnamen teilen. Im Browser gibst du die ID in den Event-Parametern mit (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`); der Server sendet denselben Wert in `eventId`. Microsoft zählt die Conversion dann einmal. Das track.site-SDK erzeugt eine ID pro Aktion und reicht sie gleichermaßen an das UET-Template und den Collector.
+
+## Kennungen
+
+- `msclkid` — die Click-ID, die Microsoft an Landingpage-URLs anhängt. Nach Marketing-Consent erfassen und First-Party speichern; ohne sie lassen sich Server-Events nur über gehashte Kennungen zuordnen.
+- `em` und `ph` — SHA-256-Hashes der normalisierten E-Mail und Telefonnummer.
+- `anid` — die Microsoft-Werbe-ID für App-Traffic.
+- `clientUserAgent` und `clientIpAddress` — für Web-Events empfohlen und im Collector verfügbar, wenn die Policy das Weiterleiten der IP erlaubt.
+
+## Testen
+
+Die API kennt kein Test-Flag. Ein aus dem Assistenten gesendetes Testevent ist ein echtes Event auf der konfigurierten Tag-ID; gib der Staging-Umgebung deshalb eine eigene UET-Tag-ID und behalte die Produktions-Tag-ID für die Produktion — der Assistent zeigt Microsofts zeilenweise Antwort in beiden Fällen. Verlässt die Destination den Testmodus, erhält die Tag-ID der Produktionsumgebung die Events.
+
+## Fehler
+
+| Antwort | Bedeutung | Behandlung |
+| --- | --- | --- |
+| 401 | Token abgelaufen oder falscher Tenant | wird automatisch erneuert; neu verbinden, wenn die Erneuerung scheitert |
+| 403 | Konto hat keinen Zugriff auf die Tag-ID | Tag-Eigentümerschaft prüfen |
+| 400 mit Zeilendetails | ungültige Feldwerte | Zeile als ungültig markiert; Mapping korrigieren |
+| 429 | Rate-Limit | Wiederholung mit Backoff |
+| 5xx | Fehler auf Microsoft-Seite | Wiederholung; Circuit Breaker bei Andauern |
+
+Jeder Versuch, auch die von Microsoft abgelehnten Zeilen, ist im Destination-Monitor mit geschwärzter Payload-Vorschau sichtbar.

@@ -7,11 +7,12 @@ import { DomainStartForm } from "@/components/marketing/domain-start-form";
 import { IntegrationLogoGrid } from "@/components/marketing/integration-grid";
 import { Link } from "@/i18n/navigation";
 import { alternatesFor, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  return { title: t("defaultTitle"), description: t("defaultDescription"), alternates: alternatesFor("/", locale) };
+  return { title: seoTitle(t("defaultTitle")), description: seoDescription(t("defaultDescription")), alternates: alternatesFor("/", locale) };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

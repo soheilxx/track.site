@@ -1,0 +1,66 @@
+---
+title: "Handling a data subject request in tracking data: export, delete, restrict, and proving it"
+description: "How access and deletion requests apply to event data, click ids, consent records and delivery logs; how track.site identifies the subject from an e-mail, user id or anonymous id; what the export contains; and what a deletion job leaves behind on purpose."
+excerpt: "Tracking data is personal data. When a request arrives you need to find every record of the person, hand it over or remove it within the deadline, and keep proof that you did — without keeping a copy of what you deleted. This is the workflow, step by step."
+category: "privacy"
+tags: ["dsar", "gdpr", "deletion", "export"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Data subject request lifecycle from intake to completion report"
+sources:
+  - title: "GDPR Article 15 — Right of access"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "GDPR Article 17 — Right to erasure"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Which tracking records are about a person
+
+More than most teams assume:
+
+- **Events** — every page view, click and conversion, keyed by anonymous id, session id and, once logged in, user id; with hashed identifiers (`em`, `ph`) when consent allowed them.
+- **Click ids** — `gclid`, `fbc` and friends stored first-party for attribution.
+- **Consent records** — the purposes granted, the TC string hash, timestamps; these are personal data *and* your proof of lawful processing.
+- **Delivery attempts** — what was sent to which vendor, with the redacted payload preview.
+- **Conversion records** and imported CRM outcomes.
+- **Vendor-side copies** — what Meta, Google and the others received; deletion there is a separate request to each vendor.
+
+## Identifying the subject
+
+A request usually arrives with an e-mail address. track.site hashes it (lowercase, trimmed, SHA-256) and searches events by the `em` hash; it also accepts a user id from your system or an anonymous id the person can read from the privacy page. It never searches by plain e-mail, because plain e-mails are not stored.
+
+If nothing matches, the report says so — "no records found for the supplied identifiers" is a legitimate and common outcome for visitors who never consented to identifiers.
+
+## Request kinds
+
+| Kind | What track.site does |
+| --- | --- |
+| export / portability | builds a JSON report per site: events (name, time, URL, consent, commerce data, click ids, source), conversion records; downloadable from the privacy centre |
+| delete | deletes the subject's events, conversion records and click ids on every site of the organisation; writes a deletion job entry per store with counts |
+| restrict / object | recorded; enforced by the consent policy (future events for the identifiers are dropped) and by retention |
+| rectify | recorded; tracking data is not rectified field by field — the correct value comes from the source system on the next event |
+
+Every kind produces an **audit entry** (who processed it, when, which sites) and a **completion report** stored with the request. The report contains counts, not the deleted content.
+
+## The deadline
+
+Requests carry a due date of 30 days from intake; the privacy centre lists open requests with their due dates. Extensions are a decision for the operator, not a default.
+
+## What deletion intentionally leaves
+
+- The **audit log** entry saying a deletion happened, with counts and the request id — not the identifiers.
+- **Aggregated statistics** already computed (daily event counts, health scores), which are not personal data.
+- **Consent records** for the retention period required to demonstrate lawful processing, with the identifiers removed where the record is no longer needed for that purpose.
+- **Vendor-side data**. The report lists every destination the subject's events were delivered to, so the operator can file the corresponding vendor deletion requests; track.site does not pretend to delete data it does not control.
+
+## Retention makes most requests smaller
+
+Short retention windows for click ids, delivery attempts and raw archives mean much of a subject's data has already expired when a request arrives. The retention policy page shows the configured windows per data kind, and the export report states which windows applied.
+
+## How visitors reach you
+
+The public privacy page names the channel for requests — the contact form or the address in the imprint. The operator enters the request in the privacy centre with the identifiers the visitor supplied; from there it follows the queue and the audit trail described above.
+

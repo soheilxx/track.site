@@ -78,3 +78,15 @@ One `source_event_id` per event is generated in the browser (or server) and trav
 - Vendor-side end-to-end runs with real accounts are not possible from this environment (no vendor credentials); all deliveries were verified against the documented request/response contracts through the mock vendors.
 - TikTok, Reddit, Amazon, Quora and The Trade Desk should be re-checked against the vendor portals with a logged-in account before the first production sends (the wizard flags this in the destination step).
 - The SDK loaders for group 2/3 vendors were written from the official base snippets; a browser smoke test per vendor with a real tag id is part of the launch checklist.
+
+## 8. Commerce sources (added 2026-09-03)
+
+Verified server-side order sources complement the 22 destinations; details in `docs/10-commerce-integrations.md`.
+
+| Source | Mechanism | Signature | Events | Package |
+| --- | --- | --- | --- | --- |
+| Shopify | order webhooks (`orders/paid`, `orders/create` when paid, `refunds/create`) + web pixel extension | `X-Shopify-Hmac-Sha256` (base64 HMAC-SHA256) + shop domain check | purchase, refund | `integrations/shopify` |
+| WooCommerce | native webhooks `order.created`/`order.updated` (REST v3) managed by the plugin, or created by hand | `X-WC-Webhook-Signature` (base64 HMAC-SHA256) | purchase (processing/completed), refund per `refunds[]` entry | `integrations/woocommerce/track-site` |
+| Shopware 6 | app manifest with registration handshake and webhooks | `shopware-app-signature` / `shopware-shop-signature` (hex HMAC-SHA256) | purchase (transaction paid; placed optional), refund (transaction refunded) | `integrations/shopware` |
+
+Pairing: a shop purchase inherits consent, identity and click ids from the browser purchase with the same order id (30-day window); without one it stays an operational record and never reaches advertising destinations. Vendors deduplicate on `purchase:<order id>` across pixel, server and shop paths.

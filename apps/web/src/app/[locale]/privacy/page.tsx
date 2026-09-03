@@ -4,11 +4,12 @@ import { LegalPage } from "@/components/marketing/legal-page";
 import { LEGAL, operatorFromEnv } from "@/lib/legal-copy";
 import { pick } from "@/lib/marketing-copy";
 import { alternatesFor } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const d = pick(locale, LEGAL).privacy;
-  return { title: d.title, description: d.intro, alternates: alternatesFor("/privacy", locale) };
+  return { title: seoTitle(d.title), description: seoDescription(d.intro), alternates: alternatesFor("/privacy", locale) };
 }
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {

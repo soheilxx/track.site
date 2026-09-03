@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { INTEGRATIONS } from "@/lib/integrations-catalog";
 import { pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { eyebrow: "Integrations", title: "Every destination with browser tag, server API and shared deduplication", text: "Twenty-two destination types, thirteen affiliate network presets and three shop platforms — each fully implemented, documented and tested against the vendor contract. No “coming soon”.", groups: { 1: "Core advertising platforms", 2: "Reach and discovery", 3: "Programmatic, retargeting and affiliate", commerce: "Shop platforms" }, browser: "Browser", server: "Server", offline: "Offline", cta: "Connect your first platform", ctaText: "The wizard walks through identifiers, credentials, mapping and a verified test event in 19 steps.", start: "Start free", how: "How it works" },
@@ -16,7 +17,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.eyebrow, description: c.text, alternates: alternatesFor("/integrations", locale) };
+  return { title: seoTitle(c.eyebrow), description: seoDescription(c.text), alternates: alternatesFor("/integrations", locale) };
 }
 
 export default async function IntegrationsPage({ params }: { params: Promise<{ locale: string }> }) {

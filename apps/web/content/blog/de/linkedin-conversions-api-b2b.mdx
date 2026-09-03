@@ -1,0 +1,76 @@
+---
+title: "LinkedIn Conversions API für B2B: Conversion-Regeln, li_fat_id und gehashte E-Mail"
+description: "B2B-Conversions an LinkedIns Conversions API senden — der conversionEvents-Endpunkt, der LinkedIn-Version-Header, Conversion-Regel-URNs, Nutzerkennungen, eventId-Deduplizierung mit dem Insight Tag und das 90-Tage-Fenster."
+excerpt: "LinkedIns Conversions API ordnet Server-Events über li_fat_id oder gehashte E-Mail Kampagnen zu und braucht je Event eine Conversion-Regel. Dieser Leitfaden behandelt den Request, die Versionierung, Dedup mit dem Insight Tag und den Umgang mit verzögerten CRM-Qualifizierungen."
+category: "integrations"
+tags: ["linkedin", "conversions-api", "b2b", "li_fat_id"]
+author: "track-site-editorial"
+publishedAt: "2026-08-27"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "LinkedIn-Conversions-API-Request mit Conversion-Regel-URN"
+sources:
+  - title: "LinkedIn Marketing API — Conversions API"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api"
+  - title: "LinkedIn Marketing API — Versioning"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/versioning"
+legalNotice: false
+---
+
+## Was LinkedIn von dir braucht
+
+1. Eine **Conversion-Regel** im Campaign Manager (Analysieren → Conversion-Tracking) mit Quelle „Conversions API“. Jede Regel hat eine numerische ID; die API referenziert sie als `urn:lla:llaPartnerConversion:{id}`.
+2. Einen **OAuth-2.0-Token** mit den Scopes `r_ads` und `rw_conversions`, ausgestellt für einen Nutzer mit Zugriff auf das Werbekonto. track.site verbindet das Konto über LinkedIn-OAuth und erneuert den Token automatisch.
+3. Das **Insight Tag** im Browser, wenn du hybrid tracken willst — es setzt die First-Party-Kennung `li_fat_id`, die das Server-Matching präzise macht.
+
+## Der Request
+
+`POST https://api.linkedin.com/rest/conversionEvents` mit den Headern `Authorization: Bearer <token>`, `LinkedIn-Version: 202608`, `X-Restli-Protocol-Version: 2.0.0` und `Content-Type: application/json`:
+
+```json
+{
+  "conversion": "urn:lla:llaPartnerConversion:123456",
+  "conversionHappenedAt": 1767225600000,
+  "conversionValue": { "currencyCode": "EUR", "amount": "1200.00" },
+  "eventId": "01J9EXAMPLESOURCEEVENTID00",
+  "user": {
+    "userIds": [
+      { "idType": "SHA256_EMAIL", "idValue": "<sha256>" },
+      { "idType": "LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID", "idValue": "<li_fat_id>" }
+    ],
+    "userInfo": { "firstName": "…", "lastName": "…", "companyName": "…", "title": "…", "countryCode": "DE" }
+  }
+}
+```
+
+Ein `201 Created` bestätigt die Annahme. Die Batch-Erstellung nutzt denselben Pfad mit dem Header `X-RestLi-Method: BATCH_CREATE` und einem `elements`-Array; LinkedIn antwortet je Element.
+
+Die Versionierung ist monatlich. Der Header `LinkedIn-Version` benennt eine Version, die etwa ein Jahr gültig bleibt; track.site pinnt sie in seiner Versionsregistry und warnt vor dem Sunset-Datum.
+
+## Kennungen und was wirklich matcht
+
+- `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` — der Wert `li_fat_id`, den das Insight Tag speichert (auch als `li_fat_id` an Landingpage-URLs angehängt). Höchste Match-Qualität; Erfassung setzt Marketing-Consent voraus.
+- `SHA256_EMAIL` — die normalisierte, kleingeschriebene geschäftliche E-Mail, gehasht. B2B-Leads liefern sie in der Regel; sie funktioniert ohne das Tag.
+- `userInfo` — Name, Firma, Titel, Land im Klartext. LinkedIn nutzt sie als ergänzende Matching-Signale; sende nur die, die deine Policy erlaubt.
+
+Für Lead-Events ist kein `conversionValue` nötig, ein modellierter Wert hilft aber der Kampagnenoptimierung.
+
+## Deduplizierung mit dem Insight Tag
+
+Wird eine Regel sowohl vom Insight Tag (`window.lintrk('track', { conversion_id: 123456 })`) als auch von der API getrackt, gib auf beiden Wegen dieselbe `eventId` mit; LinkedIn dedupliziert identische IDs für dieselbe Regel. In der Praxis trennen die meisten B2B-Teams Browser- und Server-Regeln: „Formular gesendet (Tag)“ feuert sofort, „Qualifizierter Lead (CRM)“ kommt Tage später vom Server mit einer anderen Regel — nichts muss dedupliziert werden.
+
+## Das 90-Tage-Fenster und verzögerte Qualifizierungen
+
+`conversionHappenedAt` muss in den letzten 90 Tagen liegen. Genau das macht CRM-getriebene Conversions praktikabel: Wird ein Lead drei Wochen nach dem Klick zur Opportunity, lade ihn mit der *ursprünglichen* Conversion-Zeit und der E-Mail hoch, und LinkedIn attribuiert ihn auf die Anzeigeninteraktion zurück.
+
+## Fehler
+
+| Status | Bedeutung |
+| --- | --- |
+| 401 | Token ungültig oder abgelaufen → automatische Erneuerung, neu verbinden, wenn sie scheitert |
+| 403 | kein Scope `rw_conversions` oder kein Zugriff auf das Werbekonto |
+| 404 | Conversion-Regel-ID unbekannt oder gehört zu einem anderen Konto |
+| 422 | Payload-Semantik (falsche URN, Zeitstempel außerhalb des Fensters, nicht unterstützter ID-Typ) |
+| 429 | Rate-Limit → Wiederholung mit Backoff |
+
+Der Assistent validiert die Verbindung, indem er die Conversion-Regeln auflistet, die der Token sehen kann — eine unbekannte Regel-ID fällt so vor dem ersten Event auf.

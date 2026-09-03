@@ -1,4 +1,5 @@
 @import "@track-site/ui/styles/tokens.css";
+@plugin "@tailwindcss/typography";
 @source "../../../../packages/ui/src";
 @source "../";
 

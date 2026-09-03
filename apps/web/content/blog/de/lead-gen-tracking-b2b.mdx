@@ -1,0 +1,68 @@
+---
+title: "Lead-Tracking für B2B: vom Formularversand bis zum gewonnenen Deal ohne Doppelzählung"
+description: "Ein Tracking-Design für B2B-Sites — generate_lead-, contact- und book_appointment-Events, versteckte Click-ID-Felder, gehashte geschäftliche E-Mails, Uploads qualifizierter Leads aus dem CRM und separate Conversion-Aktionen je Stufe — mit den Consent-Regeln für jeden Schritt."
+excerpt: "B2B-Conversions sind selten, wertvoll und langsam. Der Browser sieht ein Formular; das CRM sieht den Deal Wochen später. Beides zu tracken, ohne Zahlen aufzublähen, heißt Stufen trennen, Click-IDs ins CRM tragen und Ergebnisse mit ihrer Originalzeit hochladen. Das ist das Design."
+category: "guides"
+tags: ["b2b", "lead-generation", "crm", "linkedin", "google-ads"]
+author: "track-site-editorial"
+publishedAt: "2026-08-10"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "B2B-Lead-Funnel vom Formularversand bis zum gewonnenen Deal mit Tracking-Berührungspunkten"
+sources:
+  - title: "Google Ads-Hilfe — Erweiterte Conversions für Leads"
+    url: "https://support.google.com/google-ads/answer/11347292"
+legalNotice: false
+---
+
+## Die Stufen und das Event für jede
+
+| Stufe | Wo sie stattfindet | Kanonisches Event | Gesendet von |
+| --- | --- | --- | --- |
+| Formular gesendet | Browser | `generate_lead` (`lead_type`, `form_id`) | SDK, hybrid mit Anbieter-Pixeln |
+| Demo gebucht | Buchungstool | `book_appointment` | SDK bei Bestätigung oder Webhook |
+| Kontaktanfrage | Browser | `contact` | SDK |
+| Marketing-qualifiziert | Marketing-Automation | `qualified_lead` (eigenes Event, deklariert) | Server-Quelle |
+| Sales-qualifiziert / Opportunity | CRM | `qualified_lead` mit `stage` | Server-Quelle |
+| Gewonnen | CRM | `purchase` mit `value`, `transaction_id` | Server-Quelle |
+
+Jede Stufe ist ein eigenes Event und in den Werbeplattformen eine eigene Conversion-Aktion oder Regel. Genau das verhindert Doppelzählung: Nichts wird zweimal unter demselben Namen aus zwei Quellen gesendet.
+
+## Schritt 1: das Formular
+
+- `generate_lead` bei **erfolgreichem** Versand auslösen, nicht beim Klick auf den Button. Bei AJAX-Formularen im Erfolgs-Callback; bei Weiterleitungen auf der Danke-Seite mit Schutz gegen Neuladen.
+- `form_id` und `lead_type` (`demo`, `whitepaper`, `contact`) mitgeben, keinen Freitext.
+- `identify` mit der geschäftlichen E-Mail **nach** Marketing-Consent aufrufen. Das SDK hasht sie, bevor sie den Browser verlässt, und hängt sie als `em` für die Plattformen an, die über gehashte E-Mail matchen (Meta, LinkedIn, Google Enhanced Conversions for Leads, Microsoft, TikTok).
+
+## Schritt 2: Click-IDs ins CRM tragen
+
+Kopiere die Click-ID-Parameter der Landing-URL — `gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid` — bei erteiltem Marketing-Consent in versteckte Formularfelder und speichere sie am Lead zusammen mit der Landingpage und dem Consent-Stand beim Versand. Wochen später sind sie es, die einen Upload deterministisch matchen lassen, statt sich allein auf E-Mail-Hashing zu verlassen.
+
+## Schritt 3: qualifizierte Leads aus dem CRM
+
+Erreicht ein Lead eine Stufe, auf die sich optimieren lohnt, sendet das CRM ein Server-Event: `qualified_lead` mit der Stufe, den ursprünglichen Click-IDs, der gehashten E-Mail und dem **Zeitstempel der Stufe**. Jede Plattform erhält es auf ihrer eigenen Conversion-Aktion:
+
+- Google Ads: `uploadClickConversions` mit `gclid` oder gehashter E-Mail, Conversion-Aktion „Qualifizierter Lead (CRM)“.
+- LinkedIn: Conversions API mit `SHA256_EMAIL` oder `li_fat_id`, Regel „Qualifizierter Lead“, innerhalb von 90 Tagen.
+- Meta: Conversions API `Lead` mit `action_source: system_generated`, auf einer separaten Custom Conversion, damit das Pixel-`Lead` getrennt bleibt.
+- Microsoft: CAPI mit `msclkid` oder gehashter E-Mail, Ziel „Qualifizierter Lead“.
+
+## Schritt 4: gewonnen als `purchase`
+
+Der Dealwert ist jetzt real. Sende `purchase` mit `value`, `currency` und der CRM-Opportunity-ID als `transaction_id`, vom Server, mit dem Abschlussdatum als Eventzeit. Plattformen mit wertbasiertem Bidding erhalten die tatsächliche Zahl; die anderen zählen die Conversion trotzdem.
+
+## Consent über die Stufen hinweg
+
+- Das **Formular** und sein `generate_lead` brauchen Marketing-Consent für Werbe-Destinationen; reiner Analytics-Consent erfasst das Event weiterhin für dein eigenes Reporting.
+- **Click-IDs** werden nur mit Marketing-Consent erfasst. Ohne ihn können die CRM-Uploads nur gehashte E-Mail nutzen, und nur wenn die Person beim Versand in diese Nutzung eingewilligt hat — halte den Consent-Stand am Lead fest.
+- **CRM-Uploads** tragen den von dir beim Versand erfassten Consent-Stand; die Policy-Engine routet entsprechend, und ein Upload ohne Consent-Information erreicht keine Werbe-Destination. Ein Lead, der Marketing am Formular abgelehnt hat, wird später nicht an Werbeplattformen hochgeladen, so wertvoll er auch ist.
+
+## Werte, ohne sie zu erfinden
+
+Für `qualified_lead` entweder keinen Wert senden oder einen **dokumentierten** Erwartungswert je Stufe, als Konstante im Destination-Mapping konfiguriert. Für `purchase` den echten Dealwert senden. Nie einen Wert in `generate_lead` nachtragen; die Plattformen optimieren auf das, was du sendest, und eine erfundene Zahl optimiert auf Fiktion.
+
+## Was du wöchentlich anschaust
+
+- Health-Score-Abdeckung: `generate_lead` auf jeder Formular-ID im Plan gesehen.
+- Destination-Monitor: Upload-Annahme je Plattform; `CLICK_NOT_FOUND`- und Außerhalb-des-Fensters-Fehler deuten auf fehlende Click-IDs oder späte Uploads.
+- Consent-Seite: Anteil der Leads mit Marketing-Consent — die Obergrenze dessen, was Werbeplattformen je sehen können.

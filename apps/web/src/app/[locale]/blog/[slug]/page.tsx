@@ -11,6 +11,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { AUTHORS, getPost, listPosts, relatedPosts } from "@/lib/blog";
 import { absoluteUrl, alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export async function generateStaticParams() {
   const params: Array<{ locale: string; slug: string }> = [];
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const post = await getPost(locale, slug);
   if (!post || post.status === "draft") return {};
-  return { title: post.title, description: post.description, alternates: alternatesFor(`/blog/${slug}`, locale), openGraph: { type: "article", publishedTime: post.publishedAt, modifiedTime: post.updatedAt ?? undefined, authors: [AUTHORS[post.author]?.name ?? post.author] } };
+  return { title: seoTitle(post.title), description: seoDescription(post.description), alternates: alternatesFor(`/blog/${slug}`, locale), openGraph: { type: "article", publishedTime: post.publishedAt, modifiedTime: post.updatedAt ?? undefined, authors: [AUTHORS[post.author]?.name ?? post.author] } };
 }
 
 const LABELS = { en: { blog: "Blog", updated: "Updated", reviewed: "Reviewed", minutes: "min read", sources: "Sources", related: "Related articles", legal: "This article provides general information, not legal advice. Consult your data protection counsel for your specific situation.", by: "By" }, de: { blog: "Blog", updated: "Aktualisiert", reviewed: "Geprüft", minutes: "Min. Lesezeit", sources: "Quellen", related: "Verwandte Artikel", legal: "Dieser Artikel bietet allgemeine Informationen, keine Rechtsberatung. Wende dich für deinen konkreten Fall an deine Datenschutzberatung.", by: "Von" } };

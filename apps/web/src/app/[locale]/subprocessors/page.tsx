@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { INTEGRATIONS } from "@/lib/integrations-catalog";
 import { SUBPROCESSORS } from "@/lib/legal-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { title: "Subprocessors", intro: "Third parties that process customer data on behalf of the operator, and the advertising vendors that receive events only when a customer configures them as a destination.", name: "Provider", purpose: "Purpose", region: "Region", basis: "Transfer basis", vendors: "Destination vendors (customer-selected)", vendorsText: "Each destination shows its data recipient, region and transfer basis in the setup wizard. Data reaches a vendor only for destinations you enable, only with the consent purpose the destination requires.", updated: "Last updated 2026-09-03. Customers are notified 30 days before changes." },
@@ -14,7 +15,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = locale === "de" ? COPY.de : COPY.en;
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/subprocessors", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/subprocessors", locale) };
 }
 
 export default async function SubprocessorsPage({ params }: { params: Promise<{ locale: string }> }) {

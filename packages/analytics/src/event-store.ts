@@ -54,6 +54,8 @@ export interface EventStore {
   markDelivery(siteId: string, eventId: string, mark: DeliveryMark): Promise<void>;
   updateState(siteId: string, eventId: string, state: string, dropReason: string | null): Promise<void>;
   lastEventAt(siteId: string, source?: "browser" | "server"): Promise<Date | null>;
+  /** Latest purchase/refund of the given path (browser or any server source) for an order id, for browser <-> server pairing. */
+  findConversionEvent(siteId: string, orderId: string, name: "purchase" | "refund", source: "browser" | "server", since: Date): Promise<CanonicalEvent | null>;
   deleteSubject(siteId: string, subject: SubjectRef): Promise<number>;
   deleteOlderThan(siteId: string | null, before: Date): Promise<number>;
   close(): Promise<void>;

@@ -1,3 +1,4 @@
+import { vendorDedupId } from "@track-site/events";
 import { CircuitBreaker, backoffDelay, newUlid, sha256Hex, silentLogger } from "@track-site/core";
 import type { DeliveryMessage } from "@track-site/events";
 import { clickIdsForDestination, evaluateDispatch, type ConnectorType } from "@track-site/policy";
@@ -108,7 +109,7 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
     },
   };
   const clickIds = clickIdsForDestination(event, dest.type as ConnectorType, ctx.now());
-  const payload = connector.mapEvent({ event, clickIds, dedupId: event.source_event_id }, { event: mapping.event, vendorEvent: mapping.vendor_event, enabled: mapping.enabled, fieldMap: (mapping.field_map as Record<string, unknown> | null) ?? null }, connectorCtx);
+  const payload = connector.mapEvent({ event, clickIds, dedupId: vendorDedupId(event) }, { event: mapping.event, vendorEvent: mapping.vendor_event, enabled: mapping.enabled, fieldMap: (mapping.field_map as Record<string, unknown> | null) ?? null }, connectorCtx);
   if (!payload) {
     await ctx.queue.ack(message);
     return "skipped";

@@ -4,13 +4,14 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { Faq, FeatureGrid, FinalCta, PageHero, Section, Steps, faqJsonLd } from "@/components/marketing/page-shell";
 import { HOW_IT_WORKS, pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const LABELS = { en: { eyebrow: "How it works", arch: "Architecture", archText: "A control plane for people and the assistant, a data plane for events. They share nothing but the signed configuration.", faq: "Questions", cta: "Ready when you are", ctaText: "The first destination is usually live within a quarter of an hour.", start: "Start free", docs: "Read the docs" }, de: { eyebrow: "So funktioniert es", arch: "Architektur", archText: "Eine Control Plane für Menschen und den Assistenten, eine Data Plane für Events. Sie teilen nichts außer der signierten Konfiguration.", faq: "Fragen", cta: "Bereit, wenn du es bist", ctaText: "Die erste Destination ist meist innerhalb einer Viertelstunde live.", start: "Kostenlos starten", docs: "Dokumentation lesen" } };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, HOW_IT_WORKS);
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/how-it-works", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/how-it-works", locale) };
 }
 
 export default async function HowItWorksPage({ params }: { params: Promise<{ locale: string }> }) {

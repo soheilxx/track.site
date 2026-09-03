@@ -1,0 +1,74 @@
+---
+title: "Microsoft Advertising Conversions API: UET tag plus server events with msclkid"
+description: "How the Microsoft Advertising Conversions API works alongside the UET tag — the events endpoint per tag id, eventId deduplication, msclkid and hashed identifiers, batch limits and per-row error handling."
+excerpt: "Microsoft's Conversions API (CAPI) accepts server events per UET tag id with an OAuth bearer token. This guide explains the payload, how it deduplicates against the UET JavaScript tag and which errors mean what."
+category: "integrations"
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Microsoft Conversions API request to the UET events endpoint"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) integration guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## The pieces
+
+- A **UET tag** (Tools → UET tags). Its numeric id is public and appears in the JavaScript snippet.
+- A **conversion goal** of type "Event" or "Destination URL" tied to that tag; server events are matched against goals by event name, category, label and value the same way tag events are.
+- An **OAuth 2.0 access token** for the Microsoft Advertising API (scope `msads.manage`) issued to the account that owns the tag. track.site obtains and refreshes it through the Microsoft OAuth connection and keeps it in the vault.
+
+## The request
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` with `Authorization: Bearer <token>` and a JSON array of events:
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/thank-you",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Product", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` is milliseconds since epoch. `eventType` is `custom` for conversion events and `pageLoad` for page views. With `continueOnValidationError: true` the endpoint accepts the valid rows and reports the invalid ones with their index; track.site marks those rows as invalid payload and does not retry them, while HTTP 5xx and 429 responses are retried with backoff.
+
+Up to 1,000 events fit in one request.
+
+## Deduplication with the UET tag
+
+When the UET JavaScript tag also fires the event, both paths must share the same `eventId` and event name. In the browser, pass the id in the event parameters (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`); the server sends the same value in `eventId`. Microsoft then counts the conversion once. track.site's SDK generates one id per action and passes it to the UET template and the collector alike.
+
+## Identifiers
+
+- `msclkid` — the click id Microsoft appends to landing page URLs. Capture it after marketing consent and store it first-party; without it, server events can only be matched through hashed identifiers.
+- `em` and `ph` — SHA-256 hashes of the normalised e-mail and phone number.
+- `anid` — the Microsoft advertising id for app traffic.
+- `clientUserAgent` and `clientIpAddress` — recommended for web events and available from the collector when policy allows the IP to be forwarded.
+
+## Testing
+
+The API has no test flag. A test event sent from the wizard is a real event on the tag id you configured, so give the staging environment its own UET tag id and keep the production tag id for production; the wizard shows Microsoft's per-row response either way. When the destination leaves test mode, the production environment's tag id receives the events.
+
+## Errors
+
+| Response | Meaning | Handling |
+| --- | --- | --- |
+| 401 | token expired or wrong tenant | refreshed automatically; reconnect if refresh fails |
+| 403 | account has no access to the tag id | check tag ownership |
+| 400 with row details | invalid field values | row marked invalid; fix mapping |
+| 429 | rate limited | retried with backoff |
+| 5xx | Microsoft-side error | retried; circuit breaker if persistent |
+
+Every attempt, including the rows Microsoft rejected, is visible in the destination monitor with the redacted payload preview.

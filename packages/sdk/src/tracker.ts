@@ -1,10 +1,10 @@
 import { loadConfig, type LoadedConfig } from "./config.ts";
 import { ConsentManager, has, readGpc } from "./consent.ts";
-import { IdentityStore, readCookie } from "./storage.ts";
+import { ClickIdStore, IdentityStore, readCookie } from "./storage.ts";
 import { Transport } from "./transport.ts";
 import type { BundleView, ConsentState, OutgoingEvent, Purpose, TrackerOptions } from "./types.ts";
 import { activateVendor, consentModeDefault, consentModeUpdate, mirrorEvent, resetVendors } from "./vendors.ts";
-import { hostMatches, pathMatches, scrubUrl, ulid } from "./util.ts";
+import { hostMatches, pathMatches, scrubUrl, ulid, vendorMirrorId } from "./util.ts";
 
 export const SCHEMA_VERSION = "1.0.0";
 const NAME_RE = /^[a-zA-Z][a-zA-Z0-9_]{1,63}$/;
@@ -16,6 +16,7 @@ const NAME_RE = /^[a-zA-Z][a-zA-Z0-9_]{1,63}$/;
  */
 export class Tracker {
   private config: LoadedConfig | null = null;
+  private readonly clicks = new ClickIdStore();
   private consent: ConsentManager | null = null;
   private ids: IdentityStore | null = null;
   private transport: Transport | null = null;
@@ -118,6 +119,7 @@ export class Tracker {
     this.safe(() => {
       this.userId = null;
       this.ids?.clear();
+      this.clicks.clear();
       this.transport?.clear();
     });
   }
@@ -142,7 +144,10 @@ export class Tracker {
       this.ids?.clear();
       this.transport?.clear();
     }
-    if (lost("marketing")) resetVendors();
+    if (lost("marketing")) {
+      this.clicks.clear();
+      resetVendors();
+    }
     if (b.consent.consent_mode.enabled) consentModeUpdate(w, next);
     for (const d of b.destinations) activateVendor(w, d, next);
     this.log("consent", next.granted);
@@ -186,7 +191,8 @@ export class Tracker {
       if (m?.[1]) vendorIds.ga_client_id = m[1];
     }
     if (marketing && b.consent.click_ids.capture) {
-      if (Object.keys(scrubbed.clickIds).length) event.click_ids = scrubbed.clickIds;
+      const clickIds = this.clicks.merge(scrubbed.clickIds, (b.consent.click_ids.ttl_days || 90) * 86_400_000);
+      if (Object.keys(clickIds).length) event.click_ids = clickIds;
       const fbp = readCookie("_fbp");
       const fbc = readCookie("_fbc");
       const ttp = readCookie("_ttp");
@@ -207,9 +213,11 @@ export class Tracker {
     if (Object.keys(vendorIds).length) event.vendor_ids = vendorIds;
     this.transport.enqueue(event);
     const w = window as unknown as Window & Record<string, unknown>;
+    // purchases and refunds mirror with the order-derived id so browser, server and shop paths deduplicate at the vendor
+    const mirrored: OutgoingEvent = { ...event, id: vendorMirrorId(name, (event.commerce as { order_id?: unknown } | undefined)?.order_id, event.id) };
     for (const d of b.destinations) {
       if (d.mode === "server") continue;
-      if (activateVendor(w, d, consent)) mirrorEvent(w, d, event, consent);
+      if (activateVendor(w, d, consent)) mirrorEvent(w, d, mirrored, consent);
     }
     this.log("event", { name, id: event.id });
   }

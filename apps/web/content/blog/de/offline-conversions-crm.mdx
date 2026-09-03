@@ -1,0 +1,67 @@
+---
+title: "Offline-Conversions aus dem CRM: Uploads mit Originalzeitstempel, gehashten Kennungen und ehrlichen Werten"
+description: "Wie du CRM-Ergebnisse — qualifizierte Leads, abgeschlossene Deals, Ladenkäufe — über die Import-Quelle von track.site an Google Ads, Meta, LinkedIn, TikTok und Microsoft zurückspielst, welche Kennungen jede Plattform braucht und welche Zeitregeln gelten."
+excerpt: "Die wertvollsten Conversions passieren oft Tage nach dem Klick und außerhalb des Browsers. Sie richtig zu importieren heißt: Originalzeit behalten, über die richtige Kennung matchen und nie einen Wert erfinden. Das ist der Workflow mit den Regeln je Plattform."
+category: "guides"
+tags: ["offline-conversions", "crm", "import", "attribution"]
+author: "track-site-editorial"
+publishedAt: "2026-08-23"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "CSV-Import von CRM-Conversions, auf kanonische Events gemappt"
+sources:
+  - title: "Google Ads-Hilfe — Offline-Conversion-Importe"
+    url: "https://support.google.com/google-ads/answer/2998031"
+  - title: "Meta for Developers — Conversions API für Offline-Events"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/app-events-offline-events"
+legalNotice: false
+---
+
+## Der Workflow
+
+1. **Export** aus dem CRM: eine Zeile pro Ergebnis mit Ergebniszeit, den vorhandenen Kennungen (E-Mail, Telefon, Click-ID falls am Lead gespeichert, Bestellnummer) und dem Wert.
+2. **Senden** der Zeilen an den Server-Event-Endpunkt mit einem für das CRM angelegten Source-Key. Jede Zeile wird zu einem kanonischen Event (`qualified_lead`, `purchase`, `refund`, `subscribe`) mit `props.offline: true`, dem Originalzeitstempel und dem Consent-Stand, den dein System für diese Person erfasst hat. Ein kleines Skript oder der ausgehende Webhook des CRM erledigt das; der Endpunkt nimmt Batches an und antwortet mit der Zahl angenommener Events oder einem Validierungsfehler, der das Feld benennt.
+3. **Vor dem Senden normalisieren und hashen**: E-Mails kleingeschrieben und getrimmt, Telefonnummern in E.164, dann SHA-256. Zeilen mit Klartext-Kennungen scheitern an der Validierung; nichts wird stellvertretend gehasht.
+4. **Routen** genau wie Browser-Events: Die Policy-Engine wendet den vom Event getragenen Consent-Stand je Destination an. Ein Event ohne Consent-Information trägt nur den Zweck „notwendig“ und erreicht keine Werbe-Destination.
+5. **Zustellen** über dieselben Connectoren, mit den Offline-Varianten jeder API.
+
+Der Event-Debugger zeigt jedes importierte Event mit seiner Quelle, und der Destination-Monitor zeigt den Zustellstatus je Destination.
+
+## Je Plattform
+
+| Plattform | Mechanismus | Benötigte Kennung | Zeitregeln |
+| --- | --- | --- | --- |
+| Google Ads | Click-Conversion-Upload | `gclid`/`gbraid`/`wbraid` **oder** gehashte E-Mail/Telefon (Enhanced Conversions for Leads) | nach dem Klick, innerhalb des Fensters; nicht älter als das Click-through-Fenster der Aktion |
+| Meta | Conversions API mit `action_source: physical_store` oder `system_generated` | gehashte E-Mail/Telefon, `external_id`; `fbc` falls gespeichert | innerhalb von 62 Tagen |
+| LinkedIn | Conversions API | gehashte E-Mail oder `li_fat_id` | innerhalb von 90 Tagen |
+| TikTok | Events API mit `event_source: offline` und der ID eines Offline-Event-Sets | gehashte E-Mail/Telefon | 7 Tage für Web, länger für Offline-Sets |
+| Microsoft | Conversions API | `msclkid` oder gehashte E-Mail/Telefon | innerhalb des Zielfensters |
+| Affiliate-Netzwerke | Postback mit gespeicherter Click-ID | Netzwerk-Click-ID | je Programm |
+
+Der hochgeladene Zeitstempel muss die Zeit sein, zu der das Ergebnis **eingetreten** ist, nicht die Exportzeit. Die Deals von gestern mit dem Zeitstempel von heute hochzuladen verschiebt die Attribution und kann Conversions aus dem Klickfenster schieben.
+
+## Speichere die Click-ID am Lead
+
+Matching über die Click-ID ist zuverlässiger als über gehashte E-Mail. Kopiere die Click-ID-Parameter der Landing-URL (`gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid`) bei erteiltem Marketing-Consent in versteckte Formularfelder und speichere sie am Lead im CRM. Wird der Lead später abgeschlossen, trägt der Export die Click-ID und der Upload matcht deterministisch.
+
+## Werte: modellieren oder leer lassen
+
+Ein qualifizierter Lead hat keinen Bestellwert. Optionen, die ehrlich bleiben:
+
+- Den Wert leer lassen; zählbasierte Optimierung funktioniert weiterhin.
+- Einen **dokumentierten Erwartungswert** je Lead-Stufe nutzen (etwa durchschnittliche Dealgröße × Abschlussquote), als Konstante im Destination-Mapping gesetzt und im Audit-Log sichtbar.
+- Den **tatsächlichen** Dealwert beim Abschluss hochladen, als separate Conversion.
+
+Was track.site nicht tut: Werte erfinden. Nicht gemappte Werte bleiben `null`, und ein Mapping, das eine fehlende Property referenziert, scheitert an der Validierung, statt einen Standard einzusetzen.
+
+## Deduplizierung mit Browser-Events
+
+Sende die CRM-Zeile „Formular gesendet“ nicht als dasselbe Event, das der Browser schon geschickt hat; du würdest doppelt zählen, außer die Event-ID reist mit dem Lead. Sende **nachgelagerte** Ergebnisse (`qualified_lead`, `purchase`) als eigene Events, gemappt auf separate Conversion-Aktionen oder Regeln. Bei Käufen, die auch der Browser gesehen hat, behalte die Bestellnummer auf beiden, damit Plattformen, die über die Bestellnummer deduplizieren, sie zusammenführen.
+
+## Checkliste
+
+- [ ] Export enthält die Ergebniszeit in ISO 8601 mit Zeitzone
+- [ ] Kennungen vor dem Hashing normalisiert; bereits gehashte Spalten als gehasht markiert
+- [ ] Click-IDs beim Formularversand am Lead gespeichert
+- [ ] Werte entweder echt, dokumentierte Konstanten oder leer
+- [ ] Batch-Antworten geprüft: abgelehnte Zeilen korrigiert, Zustellung je Destination im Destination-Monitor bestätigt

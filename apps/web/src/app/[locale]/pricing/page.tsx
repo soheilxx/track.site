@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
 import { publicPlans } from "@/server/pricing";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export const dynamic = "force-dynamic";
 
@@ -75,7 +76,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.eyebrow, description: c.text, alternates: alternatesFor("/pricing", locale) };
+  return { title: seoTitle(c.eyebrow), description: seoDescription(c.text), alternates: alternatesFor("/pricing", locale) };
 }
 
 function money(v: { amount: number; currency: string }, locale: string): string {

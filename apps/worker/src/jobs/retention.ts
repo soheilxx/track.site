@@ -34,13 +34,21 @@ export async function runRetention(ctx: WorkerContext): Promise<Record<string, n
       await client.query(`UPDATE events SET click_ids = NULL, vendor_ids = NULL WHERE site_id = $1 AND server_ts < $2 AND (click_ids IS NOT NULL OR vendor_ids IS NOT NULL)`, [s.id, clickBefore]);
     }
     result.events = events;
+    // org-scoped kinds honour the organisation override (site overrides do not apply to org-level tables)
+    const orgs = await client.query<{ id: string }>(`SELECT id FROM organizations`);
     const del = async (kind: string, sql: string) => {
-      const r = await client.query(sql, [DEFAULT_DAYS[kind]]);
-      result[kind] = r.rowCount ?? 0;
+      let n = 0;
+      for (const o of orgs.rows) {
+        const r = await client.query(sql, [o.id, daysFor(o.id, "", kind)]);
+        n += r.rowCount ?? 0;
+      }
+      result[kind] = n;
     };
-    await del("delivery_attempts", `DELETE FROM delivery_attempts WHERE started_at < now() - ($1::int * interval '1 day')`);
-    await del("audit_log", `DELETE FROM audit_log WHERE created_at < now() - ($1::int * interval '1 day')`);
-    await del("chat_transcripts", `DELETE FROM chat_messages WHERE created_at < now() - ($1::int * interval '1 day')`);
+    await del("delivery_attempts", `DELETE FROM delivery_attempts WHERE organization_id = $1 AND started_at < now() - ($2::int * interval '1 day')`);
+    await del("audit_log", `DELETE FROM audit_log WHERE organization_id = $1 AND created_at < now() - ($2::int * interval '1 day')`);
+    await del("chat_transcripts", `DELETE FROM chat_messages WHERE organization_id = $1 AND created_at < now() - ($2::int * interval '1 day')`);
+    // audit rows without an organisation (platform-level) fall back to the default window
+    await client.query(`DELETE FROM audit_log WHERE organization_id IS NULL AND created_at < now() - ($1::int * interval '1 day')`, [DEFAULT_DAYS.audit_log]);
     await client.query(`DELETE FROM event_dedup WHERE created_at < now() - interval '35 days'`);
     await client.query(`DELETE FROM nonces WHERE expires_at < now()`);
     await client.query(`DELETE FROM attribution_touchpoints WHERE expires_at < now()`);

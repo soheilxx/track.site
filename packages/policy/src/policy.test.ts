@@ -143,3 +143,21 @@ describe("consent mode + snapshots", () => {
     expect(a).toBe(b);
   });
 });
+
+describe("verified shop records", () => {
+  it("persists a verified shop purchase without browser consent as an operational record with identifiers stripped", () => {
+    const strict = { ...DEFAULT_SITE_POLICY, operationalEvents: [] };
+    const d = evaluatePersistence(event({ name: "purchase", category: "commerce", source: "shopify", source_verified: true, consent: consent(["necessary"], "server") }), strict);
+    expect(d.allow).toBe(true);
+    if (d.allow) expect(d.strippedFields).toEqual(expect.arrayContaining(["anonymous_id", "click_ids"]));
+  });
+  it("still drops an unverified server purchase without consent", () => {
+    const strict = { ...DEFAULT_SITE_POLICY, operationalEvents: [] };
+    const d = evaluatePersistence(event({ name: "purchase", category: "commerce", source: "server", source_verified: false, consent: consent(["necessary"], "server") }), strict);
+    expect(d.allow).toBe(false);
+  });
+  it("does not route a verified shop purchase to advertising destinations without marketing consent", () => {
+    const d = evaluateDispatch(event({ name: "purchase", category: "commerce", source: "shopify", source_verified: true, consent: consent(["necessary"], "server") }), { connectorType: "meta", status: "connected" });
+    expect(d.allow).toBe(false);
+  });
+});

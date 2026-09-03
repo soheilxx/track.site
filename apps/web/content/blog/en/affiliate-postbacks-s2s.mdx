@@ -1,0 +1,62 @@
+---
+title: "Affiliate server-to-server postbacks: one engine, fourteen networks, and what each one signs"
+description: "How affiliate S2S postbacks work end to end — capturing the network click id, storing it first-party, firing the postback on the verified purchase, handling reversals — with the specifics of Awin, CJ, Impact, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, Adcell, Belboon, TUNE and Everflow."
+excerpt: "Every affiliate network wants the same thing in a slightly different envelope: the click id it issued, the order reference, the amount and the currency, sent from your server when the sale is real. This guide explains the common engine and the per-network differences."
+category: "integrations"
+tags: ["affiliate", "postback", "s2s", "awin", "cj", "impact"]
+author: "track-site-editorial"
+publishedAt: "2026-08-22"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Affiliate postback flow from click id capture to server postback"
+sources:
+  - title: "Awin — Server to server tracking"
+    url: "https://wiki.awin.com/index.php/Advertiser_Tracking_Guide/Server_to_Server_Tracking"
+  - title: "Impact — Conversions API"
+    url: "https://integrations.impact.com/impact-brand/reference/conversions"
+legalNotice: false
+---
+
+## The common engine
+
+1. **Capture.** The visitor lands with the network's click parameter (`awc`, `cjevent`, `irclickid`, `tduid`, `clickref` …). With marketing consent the SDK stores it first-party under the network's name, for the programme's cookie window (usually 30 days).
+2. **Confirm.** The purchase is confirmed by a trusted source — a verified shop webhook, the order system, or a browser purchase that the policy marks as trusted enough for the network.
+3. **Postback.** The worker renders the network's postback template with the click id, order reference, amount, currency, optional voucher code and item breakdown, signs it where required, and sends it from the server.
+4. **Reconcile.** Reversals (refunds, cancellations) fire the network's reversal or adjustment call with the same order reference.
+
+Because the click id is stored first-party and the postback leaves from the server, blocked pixels and expired third-party cookies do not lose commissions — and the network only ever receives real, confirmed orders.
+
+## Per-network specifics
+
+| Network | Method | Click id | Auth / signature | Reversal |
+| --- | --- | --- | --- | --- |
+| Awin | GET `sread.php` | `awc` → `cks` | none; `testmode` flag | via Awin API / manual validation |
+| CJ | GET `emjcd.com/u` | `cjevent` | `SIGNATURE` (enterprise key) | corrections via API |
+| Impact | POST `Conversions` | `irclickid` → `ClickId` | Basic (account SID + auth token) | Conversion modifications |
+| TradeTracker | GET `ts.tradetracker.net/?tt=…` | `ttref`/`tt` | campaign id + product id | pending status |
+| Tradedoubler | GET `tbs.tradedoubler.com/report` | `tduid` | `checksum=v04` + md5(secret + order + value) | orderNumber adjustment |
+| Partnerize | GET/POST tracking endpoint | `clickref` | campaign id; API key for updates | conversion update API |
+| Rakuten | GET/XML | `ranMID`/`ranSiteID` | token | corrections feed |
+| Webgains | GET `track.webgains.com/transact` | `wgcampaignid`/`clickref` | program id | via API |
+| Digistore24 | inbound IPN | vendor side | `sha_sign` (SHA-512 over sorted fields + passphrase) | IPN `refund`/`chargeback` events |
+| Adcell | GET `t.adcell.com/t/track` | `bid` | pid/eventid | status update |
+| Belboon | GET tracking pixel | `bbcid` | tracking key | via network |
+| TUNE | GET `aff_sale` | `transaction_id` | `offer_id`/`goal_id`; optional security token | adjustment |
+| Everflow | GET `sdk/conversion` | `transaction_id` | `nid` + optional `security_token` | adjustment endpoint |
+| Custom | GET/POST template | your choice | none / basic / bearer / query | template |
+
+These presets are declarative templates in track.site; the wizard shows the rendered URL or body with placeholders before you activate anything, and the parameter names above come from each network's current advertiser documentation, linked in the destination's help text.
+
+## Inbound: when the network calls you
+
+Some platforms report the sale to you instead (Digistore24's IPN, or a network's postback to your own endpoint). track.site exposes an inbound URL per site and preset. It verifies the request — Digistore24's `sha_sign`, a shared secret token for generic presets — and turns it into a verified `purchase` or `refund` event that flows through the same router. Unverified requests are rejected and counted in the destination's health.
+
+## Preventing duplicate commissions
+
+- One postback per order reference: the ingest stage marks a second purchase with the same order id as a duplicate conversion, and each delivery is keyed on the event id, so a replayed webhook does not fire twice.
+- Networks apply their own duplicate protection on the order reference; a second postback with the same reference is ignored or flagged.
+- Voucher codes belong on the postback (`vc`, `coupon`, `promo_code` depending on network) so the network can apply code-based attribution rules rather than paying two publishers.
+
+## Testing
+
+Most networks provide a test mode flag (Awin `testmode=1`, Impact test accounts, TUNE test offers). In track.site's test mode the preset's test parameter is set automatically where one exists; where none exists, the wizard sends to the network and shows the response, and you validate the transaction in the network UI before switching the destination live.

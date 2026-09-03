@@ -88,6 +88,17 @@ export class ClickHouseEventStore implements EventStore {
     });
   }
 
+  async findConversionEvent(siteId: string, orderId: string, name: "purchase" | "refund", source: "browser" | "server", since: Date): Promise<CanonicalEvent | null> {
+    const cond = source === "browser" ? "source = 'browser'" : "source <> 'browser'";
+    const rs = await this.client.query({
+      query: `SELECT * FROM ${this.table} FINAL WHERE site_id = {site:String} AND name = {name:String} AND JSONExtractString(commerce, 'order_id') = {order:String} AND server_ts >= {since:DateTime64(3)} AND ${cond} ORDER BY server_ts DESC LIMIT 1`,
+      query_params: { site: siteId, name, order: orderId, since: since.toISOString() },
+      format: "JSONEachRow",
+    });
+    const rows = (await rs.json()) as CanonicalEvent[];
+    return rows[0] ?? null;
+  }
+
   async lastEventAt(siteId: string, source?: "browser" | "server"): Promise<Date | null> {
     const cond = source === "browser" ? "AND source = 'browser'" : source === "server" ? "AND source <> 'browser'" : "";
     const rs = await this.client.query({

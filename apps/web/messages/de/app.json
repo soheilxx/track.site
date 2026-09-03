@@ -79,7 +79,8 @@
       "lastServerEvent": "Letztes Server-Event",
       "never": "nie",
       "openSetup": "KI-Setup öffnen",
-      "openDebugger": "Event Debugger öffnen"
+      "openDebugger": "Event Debugger öffnen",
+      "openShop": "Shop-Verbindung"
     },
     "common": {
       "save": "Speichern",
@@ -311,6 +312,80 @@
       "errors": {
         "generic": "Etwas ist schiefgelaufen.",
         "email": "Bitte eine gültige E-Mail-Adresse eingeben."
+      }
+    },
+    "shop": {
+      "title": "Shop-Verbindung",
+      "intro": "Verbinde deine Shop-Plattform, damit Käufe und Erstattungen aus verifizierten serverseitigen Bestell-Webhooks kommen. Der Browser-Kauf bleibt optional: Wenn er existiert, erbt das Server-Event über die Bestellnummer dessen Consent-Eintrag und Click-IDs.",
+      "backToSite": "Zurück zur Site",
+      "pairingNote": "Für Shop-Webhooks wird nie Consent angenommen. Ein Server-Kauf erreicht Werbe-Destinationen nur, wenn der Browser einen Kauf mit derselben Bestellnummer unter Marketing-Consent erfasst hat; sonst wird er als operativer Datensatz gespeichert und nur an Destinationen weitergeleitet, die keinen Consent benötigen.",
+      "platform": {
+        "shopify": "Shopify",
+        "woocommerce": "WooCommerce",
+        "shopware": "Shopware 6"
+      },
+      "status": {
+        "none": "Nicht verbunden",
+        "pending": "Wartet auf ersten Webhook",
+        "connected": "Verbunden",
+        "paused": "Pausiert"
+      },
+      "domain": "Shop-Domain",
+      "domainHelp": {
+        "shopify": "dein-shop.myshopify.com",
+        "woocommerce": "shop.example.de",
+        "shopware": "shop.example.de"
+      },
+      "currency": "Fallback-Währung",
+      "purchaseOn": "Kauf zählen, wenn",
+      "purchaseOnPaid": "die Transaktion bezahlt ist (empfohlen)",
+      "purchaseOnPlaced": "die Bestellung aufgegeben wird",
+      "save": "Verbindung speichern",
+      "saved": "Verbindung gespeichert.",
+      "createFirst": "Speichere die Shop-Domain, um die Webhook-URL für diese Plattform zu erhalten.",
+      "webhookUrl": "Webhook-URL",
+      "webhookHelp": "Eindeutig für diese Site und Plattform. Behandle sie wie ein Geheimnis; Requests werden zusätzlich mit dem Signatur-Secret verifiziert.",
+      "registrationUrl": "Registrierungs-URL für das App-Manifest",
+      "secret": "Webhook-Signatur-Secret",
+      "secretHelp": {
+        "shopify": "Das Signatur-Secret, das Shopify unter der Webhook-Liste in Einstellungen → Benachrichtigungen → Webhooks anzeigt.",
+        "woocommerce": "Das Secret, das du am WooCommerce-Webhook (oder in den Einstellungen des track.site-Plugins) gesetzt hast.",
+        "shopware": "Das App-Secret aus der manifest.xml (mindestens 32 zufällige Zeichen)."
+      },
+      "secretSet": "Secret gespeichert.",
+      "secretMissing": "Noch kein Secret gespeichert; Webhooks werden abgelehnt, bis eines gesetzt ist.",
+      "storeSecret": "Secret speichern",
+      "secretSaved": "Secret im Tresor gespeichert. Es wird nicht erneut angezeigt.",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "delete": "Verbindung entfernen",
+      "lastEvent": "Letzter verifizierter Webhook",
+      "never": "noch keiner",
+      "lastError": "Letzter Fehler",
+      "topics": "Empfangene Topics",
+      "steps": {
+        "shopify": {
+          "1": "Im Shopify-Admin unter Einstellungen → Benachrichtigungen → Webhooks die Ereignisse orders/paid und refunds/create im JSON-Format auf die obige Webhook-URL anlegen.",
+          "2": "Das unter der Webhook-Liste angezeigte Signatur-Secret in das Secret-Feld kopieren.",
+          "3": "Die track.site-Web-Pixel-Extension (integrations/shopify/web-pixel) mit dieser Tracking-ID installieren, damit Checkout-Events mit dem Consent-Stand des Kunden ankommen.",
+          "4": "Eine Testbestellung aufgeben: Der Destination-Monitor zeigt einen Kauf mit Quelle shopify und source_verified."
+        },
+        "woocommerce": {
+          "1": "Das track.site-Plugin (integrations/woocommerce/track-site) installieren und Tracking-ID, diese Webhook-URL und ein selbst gewähltes Secret eintragen; das Plugin legt die Bestell-Webhooks für dich an.",
+          "2": "Dasselbe Secret hier speichern.",
+          "3": "Ohne Plugin: Die Webhooks unter WooCommerce → Einstellungen → Erweitert → Webhooks anlegen (Topics order.created und order.updated, API v3) mit demselben Secret und das Snippet ins Theme einfügen.",
+          "4": "Eine Testbestellung aufgeben und auf „in Bearbeitung“ setzen: Der Destination-Monitor zeigt einen Kauf mit Quelle woocommerce."
+        },
+        "shopware": {
+          "1": "Hier ein Secret speichern (mindestens 32 zufällige Zeichen) und die Registrierungs-URL kopieren.",
+          "2": "integrations/shopware/manifest.xml nach custom/apps/TrackSite/ legen, Tracking-ID, Pfad-Token und Secret eintragen, dann bin/console app:install --activate TrackSite ausführen.",
+          "3": "Das track.site-Snippet für den Browser-Weg in das Basis-Template des Themes einfügen.",
+          "4": "Eine Testbestellung als bezahlt markieren: Der Destination-Monitor zeigt einen Kauf mit Quelle shopware."
+        }
+      },
+      "errors": {
+        "vault": "Der Secret-Tresor ist für diese Umgebung nicht konfiguriert (KMS-Einstellungen).",
+        "generic": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
       }
     }
   }

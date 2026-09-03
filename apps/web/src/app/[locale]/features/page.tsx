@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { FeatureGrid, FinalCta, PageHero, Section } from "@/components/marketing/page-shell";
 import { FEATURES, pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { eyebrow: "Features", title: "Everything a modern tag manager should have done years ago", text: "AI-guided setup, a consent-aware server-side router for 22 destination types, an event debugger with lineage and a health score that tells you what to fix.", cta: "Start with your domain", ctaText: "Free to start. Signed configuration, EU data plane, no code on your site beyond one snippet.", secondary: "See how it works" },
@@ -13,7 +14,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.eyebrow, description: c.text, alternates: alternatesFor("/features", locale) };
+  return { title: seoTitle(c.eyebrow), description: seoDescription(c.text), alternates: alternatesFor("/features", locale) };
 }
 
 export default async function FeaturesPage({ params }: { params: Promise<{ locale: string }> }) {

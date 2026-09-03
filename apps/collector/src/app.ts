@@ -19,6 +19,7 @@ import { configRoutes } from "./config-routes.ts";
 import type { CollectorEnv } from "./env.ts";
 import type { ResolvedSite, SiteResolver } from "./site-cache.ts";
 import { registerAffiliateInbound } from "./affiliate-inbound.ts";
+import { registerShopInbound } from "./shop-inbound.ts";
 
 export interface CollectorDeps {
   env: CollectorEnv;
@@ -227,6 +228,7 @@ export function createCollectorApp(deps: CollectorDeps): Hono {
   });
 
   registerAffiliateInbound(app, deps, now);
+  registerShopInbound(app, deps, now);
 
   app.notFound((c) => c.json({ ok: false, reason: "not_found" }, 404));
   app.onError((err, c) => {

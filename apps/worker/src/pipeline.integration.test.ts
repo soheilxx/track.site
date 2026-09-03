@@ -192,6 +192,40 @@ describe("vertical slice: ingest -> store -> route -> deliver", () => {
     expect(received.at(-1)?.body.type).toBe("order.completed");
   });
 
+  it("pairs a verified shop purchase with the browser purchase for the same order: consent and click ids inherited, record upgraded", async () => {
+    const browserPurchase = { ...pageView(["necessary", "analytics", "marketing"]), name: "purchase", page: { url: "https://shop.pipe.test/thank-you?gclid=CLICK123" }, commerce: { order_id: "ORD-PAIR", value: 80, currency: "EUR" } };
+    const s1 = await processIngestMessage(ctx, browserMessage([browserPurchase]));
+    expect(s1.accepted).toBe(1);
+    const shop: IngestMessage = {
+      kind: "server_batch",
+      message_id: newUlid(),
+      received_at: new Date().toISOString(),
+      site: { organization_id: orgId, site_id: siteId, tracking_id: "PL1PE2", environment_id: envId, partition_key: `${orgId}:${siteId}` },
+      source_key_id: null,
+      ip_truncated: null,
+      ua_family: "shop-shopify",
+      events: [{ name: "purchase", commerce: { order_id: "ORD-PAIR", value: 80, currency: "EUR" }, user_data: { email: "pair@example.com" }, source: "shopify", source_verified: true }],
+    };
+    const s2 = await processIngestMessage(ctx, shop);
+    expect(s2.accepted).toBe(1);
+    expect(s2.dropped.duplicate_conversion).toBeUndefined();
+    const events = (await ctx.eventStore.query({ siteId, name: "purchase", limit: 20 })).filter((e) => e.commerce?.order_id === "ORD-PAIR");
+    expect(events).toHaveLength(2);
+    const server = events.find((e) => e.source === "shopify");
+    expect(server?.consent.granted).toContain("marketing");
+    expect(server?.click_ids?.gclid?.value).toBe("CLICK123");
+    expect(server?.anonymous_id).toBe("anon-1");
+    expect(server?.user_data?.em).toHaveLength(64);
+    expect(server?.provenance.consent?.source).toBe("browser:order_join");
+    expect(events.every((e) => e.processing_state === "routed")).toBe(true);
+    const conv = await t.pool.query(`SELECT event_id, source, source_verified FROM conversion_records WHERE site_id = $1 AND order_id = 'ORD-PAIR'`, [siteId]);
+    expect(conv.rows).toHaveLength(1);
+    expect(conv.rows[0]).toMatchObject({ event_id: server!.event_id, source: "shopify", source_verified: true });
+    // a second shop delivery of the same order is a duplicate, a browser replay too
+    const s3 = await processIngestMessage(ctx, { ...shop, message_id: newUlid(), events: [{ ...shop.events[0]! }] });
+    expect(s3.dropped.duplicate_conversion).toBe(1);
+  });
+
   it("retries temporary vendor failures with backoff and dead-letters after the limit", async () => {
     failNext = 10;
     await processIngestMessage(ctx, browserMessage([pageView(["necessary", "analytics"])]));

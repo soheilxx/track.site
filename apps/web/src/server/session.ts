@@ -1,3 +1,4 @@
+import { cache } from "react";
 import "server-only";
 import { eq, and } from "drizzle-orm";
 import { headers } from "next/headers";
@@ -24,7 +25,8 @@ export interface OrgContext {
   tenant: TenantContext;
 }
 
-export async function getSession(): Promise<{ user: SessionUser; activeOrganizationId: string | null } | null> {
+/** Session lookup, deduplicated per request so layouts, pages and the i18n request config share one call. */
+export const getSession = cache(async (): Promise<{ user: SessionUser; activeOrganizationId: string | null } | null> => {
   const s = await auth().api.getSession({ headers: await headers() });
   if (!s) return null;
   const u = s.user as unknown as SessionUser & { platformRole?: string };
@@ -40,7 +42,7 @@ export async function getSession(): Promise<{ user: SessionUser; activeOrganizat
     },
     activeOrganizationId: (s.session as unknown as { activeOrganizationId?: string | null } | null)?.activeOrganizationId ?? null,
   };
-}
+});
 
 export async function requireUser(): Promise<SessionUser> {
   const s = await getSession();

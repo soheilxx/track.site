@@ -7,11 +7,11 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Target repo audit + docs 00-09 + ADRs 0001-0008 | DONE | `docs/` | - | target `soheilxx/track.site`, branch `feat/ai-tag-manager-platform` |
 | Monorepo foundation (pnpm 11, turbo, TS 5.9, eslint flat, prettier) | DONE | root configs | `pnpm lint && pnpm typecheck` | apps/web lint pins React version for eslint-plugin-react |
 | packages/core (env, logger, ids, crypto, PII, URL scrub, RBAC, result) | DONE | `packages/core` | `pnpm --filter @track-site/core test` | 32 tests |
-| packages/db schema + migrations 0000-0002 + RLS + partitions | DONE | `packages/db` | `pnpm test:integration` | migration 0002 adds credential kinds (OAuth 1.0a secret, client id/secret) |
+| packages/db schema + migrations 0000-0003 + RLS + partitions | DONE | `packages/db` | `pnpm test:integration` | 0002 credential kinds, 0003 `shop_connections` (RLS tenant isolation) |
 | Auth (better-auth, orgs, roles, invites, MFA, passkeys) | DONE | `apps/web/src/server/auth.ts` | browser walkthrough | signup → verification mail → org → site verified in browser |
 | Site + 6-char tracking id + domain verification | DONE | `packages/core/src/ids`, `packages/db/src/repositories/sites.ts` | `pnpm --filter @track-site/core test` | site TI8R42 created in browser |
-| SDK tracker.js + consent gate + signed config + vendor loaders (22 templates) | DONE | `packages/sdk` | `pnpm --filter @track-site/sdk test && pnpm --filter @track-site/sdk budget` | 12 KB gzip of 30 KB budget |
-| Collector + PgQueue + worker pipeline + event store + DLQ/replay | DONE | `apps/collector`, `apps/worker`, `packages/queue`, `packages/analytics` | `pnpm --filter @track-site/collector test`, worker pipeline integration test | inbound affiliate postbacks (Digistore24 IPN) added |
+| SDK tracker.js + consent gate + signed config + vendor loaders (22 templates) + first-party click-id store | DONE | `packages/sdk` | `pnpm --filter @track-site/sdk test && pnpm --filter @track-site/sdk budget` | 36.7 KB raw / ~12 KB gzip of 30 KB budget; `_ts_cid` under marketing consent with bundle TTL; purchases mirror with `purchase:<order id>` |
+| Collector + PgQueue + worker pipeline + event store + DLQ/replay | DONE | `apps/collector`, `apps/worker`, `packages/queue`, `packages/analytics` | `pnpm --filter @track-site/collector test`, `pnpm --filter @track-site/worker test:integration` | inbound affiliate postbacks (Digistore24 IPN); browser↔server order pairing (consent/click-id inheritance, verified record supersedes); shared vendor dedup id `vendorDedupId`; retention job honours org overrides |
 | Config bundles (draft → lint → publish → rollback, Ed25519 signed) | DONE | `packages/config`, `packages/db/src/repositories/config.ts` | `pnpm --filter @track-site/config test` | version 1 published from the wizard in browser |
 | Consent policy engine + Consent Mode v2 + click-id policy | DONE | `packages/policy` | `pnpm --filter @track-site/policy test` | 22 destination types in the matrix |
 | AI setup (Responses API, typed tools, structured UI, approvals, DLP) | DONE | `packages/ai`, `apps/web/src/app/api/ai/*` | `pnpm --filter @track-site/ai test` | needs `OPENAI_API_KEY`; rule-based wizard is the fallback |
@@ -20,13 +20,13 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Connectors — Group 2 (X, Taboola, Outbrain, Amazon, Spotify, Quora) | DONE | same | same | Amazon/Quora bodies verified through secondary references (see docs/09) |
 | Connectors — Group 3 (Yahoo, Trade Desk, GMP/Floodlight, AdRoll, Criteo, affiliate S2S with 13 presets) | DONE | same, `affiliate-presets.ts` | same | AdRoll beta + TTD tag prerequisites shown in the wizard |
 | Integration matrix (auto-checked) + handover | DONE | `docs/integrations-matrix.md`, `docs/09-integrations-handover.md` | `pnpm --filter @track-site/connectors test` | regenerate with `pnpm --filter @track-site/connectors matrix` |
-| Event debugger + lineage UI | PARTIAL | destination monitor step, `get_destination_status`, `show_delivery_errors` | - | dedicated `/app/debugger` page with lineage view still to build |
-| Dashboard pages events / data quality / consent center / audiences / team / settings | NEXT | nav entries exist | - | |
-| Commerce integrations shopify/woocommerce/shopware | NEXT | server event schema accepts the sources | - | |
-| Marketing frontend, SEO, blog (30 topics x en/de) | PARTIAL | home, header/footer, JSON-LD, sitemap, robots | `pnpm seo:check` | feature/pricing/integration/blog pages pending |
-| Stripe billing + entitlements + usage ledger | PARTIAL | plans, subscriptions, usage ledger tables + entitlement checks | - | checkout/portal/webhooks pending |
-| Privacy center, DSAR, retention | PARTIAL | retention jobs, `deleteSubject` in event store, DSAR tables | - | UI + export pending |
-| CI gates | NEXT | `.github/workflows/ci.yml` | - | |
+| Event debugger + lineage UI | DONE | `apps/web/src/app/app/debugger/page.tsx`, destination monitor, `get_destination_status`, `show_delivery_errors` | browser walkthrough | redacted payload preview, consent record and policy decision per destination |
+| Dashboard pages events / data quality / consent center / audiences / team / settings / billing | DONE | `apps/web/src/app/app/*` | browser walkthrough | data quality issues with resolve/ignore, consent center with DSAR + retention, team invites/roles |
+| Commerce integrations Shopify / WooCommerce / Shopware 6 | DONE | `apps/collector/src/shop-inbound.ts`, `packages/db/src/repositories/commerce.ts`, `apps/web/src/app/app/sites/[siteId]/shop`, `integrations/*`, `docs/10-commerce-integrations.md` | `pnpm --filter @track-site/collector test`, `pnpm --filter @track-site/policy test`, `pnpm --filter @track-site/worker test:integration` | signed webhooks verified (HMAC), Shopify web pixel, WooCommerce plugin with managed webhooks, Shopware app manifest + registration handshake; local E2E: signed `orders/paid` → verified purchase + conversion record + connection `connected` |
+| Marketing frontend, SEO, blog (30 topics x en/de) | DONE | `apps/web/src/app/[locale]/*`, `apps/web/content/blog/{en,de}` (30 + 30 posts), `apps/web/scripts/seo-check.ts` | `pnpm seo:check` (against a running web server) | typed copy per locale, legal identity from `LEGAL_*` env, prices only from Stripe, MDX blog with front matter, sources and review dates |
+| Stripe billing + entitlements + usage ledger | DONE | `apps/web/src/server/billing.ts`, `pricing.ts`, `apps/web/src/app/api/stripe/webhook/route.ts`, `/app/billing` | browser walkthrough (test mode) | honest empty state without `STRIPE_*`; prices come from Stripe only; signed webhooks update subscriptions/entitlements |
+| Privacy center, DSAR, retention | DONE | `/app/consent`, `apps/web/src/server/actions/privacy.ts`, `apps/web/src/app/api/privacy/dsar/[id]/route.ts`, `apps/worker/src/jobs/retention.ts` | browser walkthrough | export/delete/restrict/rectify with audit + completion report; retention overrides per org (site overrides for events/click ids) |
+| CI gates | NEXT | `.github/workflows/ci.yml` | - | lint, typecheck, unit, contract, integration (Postgres service), SDK budget, source-boundary check |
 | Load test baseline | NEXT | `docs/performance-baseline.md` | `pnpm load:collector` | |
 
 ## External blockers (owner action)
@@ -42,4 +42,4 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 
 ## Next executable step
 
-Build the event debugger page (`/app/debugger`) on top of `get_destination_status` / event store queries, then the remaining dashboard pages, commerce integrations, marketing pages + blog, Stripe, privacy center, CI workflow and the load-test baseline.
+Add the CI workflow (`.github/workflows/ci.yml`), run `pnpm load:collector` and record `docs/performance-baseline.md`, verify `pnpm build`, write the root README, push `feat/ai-tag-manager-platform` and produce the final verifiable report (docs/09 §7 + docs/10).

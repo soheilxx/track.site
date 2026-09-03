@@ -63,6 +63,49 @@ export class IdentityStore {
   }
 }
 
+const CLICK_KEY = "_ts_cid";
+
+/**
+ * First-party click-id store (localStorage, marketing consent only). Ids captured on the landing URL are
+ * attached to every later event of the visit until the configured TTL; withdrawal clears them.
+ */
+export class ClickIdStore {
+  private memory: Record<string, { v: string; t: number }> = {};
+
+  private load(): Record<string, { v: string; t: number }> {
+    const raw = safeGet(localStorage, CLICK_KEY);
+    if (!raw) return this.memory;
+    try {
+      const parsed = JSON.parse(raw) as Record<string, { v: string; t: number }>;
+      return parsed && typeof parsed === "object" ? parsed : this.memory;
+    } catch {
+      return this.memory;
+    }
+  }
+
+  /** Merges freshly seen ids (newest wins), drops expired ones, persists and returns the current set. */
+  merge(fresh: Record<string, string>, ttlMs: number, now = Date.now()): Record<string, string> {
+    const all = this.load();
+    for (const [k, v] of Object.entries(fresh)) if (v) all[k] = { v, t: now };
+    const kept: Record<string, { v: string; t: number }> = {};
+    const out: Record<string, string> = {};
+    for (const [k, e] of Object.entries(all)) {
+      if (!e || typeof e.v !== "string" || typeof e.t !== "number" || now - e.t > ttlMs) continue;
+      kept[k] = e;
+      out[k] = e.v;
+    }
+    this.memory = kept;
+    if (Object.keys(kept).length) safeSet(localStorage, CLICK_KEY, JSON.stringify(kept));
+    else safeRemove(localStorage, CLICK_KEY);
+    return out;
+  }
+
+  clear(): void {
+    this.memory = {};
+    safeRemove(localStorage, CLICK_KEY);
+  }
+}
+
 export function readCookie(name: string): string | null {
   try {
     const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));

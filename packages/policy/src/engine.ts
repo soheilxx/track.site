@@ -58,11 +58,21 @@ export function eventPurpose(event: Pick<CanonicalEvent, "name" | "category">, p
   return "analytics";
 }
 
+const SHOP_SOURCES = new Set(["shopify", "woocommerce", "shopware"]);
+/**
+ * Verified order records from a connected shop are the merchant's own contractual data: they are stored as
+ * operational records even without a browser consent record. Identifiers and click ids still require their
+ * purposes, and dispatch to advertising destinations still requires marketing consent.
+ */
+export function isVerifiedShopRecord(event: Pick<CanonicalEvent, "source" | "source_verified" | "category">): boolean {
+  return event.source_verified === true && SHOP_SOURCES.has(event.source) && event.category === "commerce";
+}
+
 /** Persistence gate (worker, before the event store). */
 export function evaluatePersistence(event: CanonicalEvent, policy: SitePolicy = DEFAULT_SITE_POLICY): PolicyDecision {
   const consent = applyGpc(event.consent);
   const region = regionPolicyFor(consent, policy);
-  const required = eventPurpose(event, policy);
+  const required = isVerifiedShopRecord(event) ? "necessary" : eventPurpose(event, policy);
   const granted = consent.granted;
   const stripped: string[] = [];
 

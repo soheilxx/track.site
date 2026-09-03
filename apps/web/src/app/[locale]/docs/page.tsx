@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { Link } from "@/i18n/navigation";
 import { pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 interface Guide {
   id: string;
@@ -50,7 +51,7 @@ const COPY: Record<"en" | "de", { title: string; intro: string; guides: Guide[];
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/docs", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/docs", locale) };
 }
 
 export default async function DocsPage({ params }: { params: Promise<{ locale: string }> }) {

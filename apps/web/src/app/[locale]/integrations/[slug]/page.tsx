@@ -9,6 +9,7 @@ import { routing } from "@/i18n/routing";
 import { INTEGRATIONS, integrationBySlug } from "@/lib/integrations-catalog";
 import { pick } from "@/lib/marketing-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => INTEGRATIONS.map((i) => ({ locale, slug: i.slug })));
@@ -77,7 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const i = integrationBySlug(slug);
   if (!i) return {};
-  return { title: i.name, description: i.summary[locale === "de" ? "de" : "en"], alternates: alternatesFor(`/integrations/${slug}`, locale) };
+  return { title: seoTitle(i.name), description: seoDescription(i.summary[locale === "de" ? "de" : "en"]), alternates: alternatesFor(`/integrations/${slug}`, locale) };
 }
 
 export default async function IntegrationPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { OperatorBlock } from "@/components/marketing/legal-page";
 import { operatorFromEnv } from "@/lib/legal-copy";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { title: "Imprint", intro: "Legal information about the operator of track.site pursuant to § 5 DDG and § 18 MStV.", dispute: "The European Commission provides a platform for online dispute resolution (https://ec.europa.eu/consumers/odr). The operator is neither obliged nor willing to participate in dispute resolution proceedings before a consumer arbitration board.", liability: "Despite careful control we assume no liability for the content of external links; the operators of the linked pages are solely responsible for their content." },
@@ -14,7 +15,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = locale === "de" ? COPY.de : COPY.en;
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/imprint", locale), robots: { index: true, follow: false } };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/imprint", locale), robots: { index: true, follow: false } };
 }
 
 export default async function ImprintPage({ params }: { params: Promise<{ locale: string }> }) {

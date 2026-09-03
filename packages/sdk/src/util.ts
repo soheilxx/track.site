@@ -119,3 +119,10 @@ export function pathMatches(pattern: string | null, path: string): boolean {
 function escapeRe(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+/** Vendor dedup id: purchases/refunds use `<name>:<order id>` so every path (pixel, server, shop webhook) shares one id. */
+export function vendorMirrorId(name: string, orderId: unknown, fallback: string): string {
+  if ((name === "purchase" || name === "refund") && typeof orderId === "string" && orderId) return `${name}:${orderId}`.slice(0, 128);
+  if ((name === "purchase" || name === "refund") && typeof orderId === "number") return `${name}:${orderId}`;
+  return fallback;
+}

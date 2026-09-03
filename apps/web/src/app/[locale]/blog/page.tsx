@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { listCategories, listPosts } from "@/lib/blog";
 import { pick } from "@/lib/marketing-copy";
 import { absoluteUrl, alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 const COPY = {
   en: { title: "Blog", intro: "Practical guides on server-side tracking, consent, deduplication, attribution and the individual advertising platforms — written by the team that builds the connectors.", all: "All topics", minutes: "{n} min read", rss: "RSS feed", empty: "No articles published yet." },
@@ -15,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = pick(locale, COPY);
-  return { title: c.title, description: c.intro, alternates: { ...alternatesFor("/blog", locale), types: { "application/rss+xml": absoluteUrl("/blog/feed.xml", locale) } } };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: { ...alternatesFor("/blog", locale), types: { "application/rss+xml": absoluteUrl("/blog/feed.xml", locale) } } };
 }
 
 export default async function BlogIndex({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ category?: string }> }) {

@@ -1,0 +1,70 @@
+---
+title: "Deduplizierung, die der Realität standhält: Event-IDs, Bestellnummern und worauf jede Plattform wirklich schlüsselt"
+description: "Eine Tabelle der Deduplizierungsschlüssel je Plattform — Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Pinterest, Snapchat, Reddit, X, CM360 — und die Zwei-Schlüssel-Strategie, die hybrides Tracking ehrlich hält."
+excerpt: "Hybrides Tracking sendet dieselbe Aktion aus dem Browser und vom Server. Ob die Plattform sie einmal zählt, hängt vom Schlüssel ab, über den sie dedupliziert. Hier sind die Referenztabelle und die Strategie dahinter."
+category: "guides"
+tags: ["deduplizierung", "event-id", "bestellnummer", "hybrid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-29"
+reviewedAt: "2026-09-03"
+status: "published"
+coverAlt: "Tabelle der Deduplizierungsschlüssel je Werbeplattform"
+sources:
+  - title: "Meta — Conversions API: Deduplizierung"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events"
+  - title: "Microsoft Advertising — Conversions API (CAPI)"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+legalNotice: false
+---
+
+## Warum zwei Schlüssel
+
+Eine **Event-ID** identifiziert eine Aktion, wie deine Systeme sie beobachtet haben. Eine **Bestellnummer** identifiziert eine Geschäftstransaktion. Beide versagen auf unterschiedliche Weise:
+
+- Event-IDs entstehen pro Beobachtung. Wenn Browser und Server denselben Kauf unabhängig voneinander beobachten, teilen sie nur dann eine ID, wenn du sie bewusst zwischen ihnen weiterreichst.
+- Bestellnummern gibt es für Käufe und Erstattungen, nicht für Seitenaufrufe, Leads oder Registrierungen.
+
+Ein robustes Setup nutzt beides: eine an der Quelle erzeugte Event-ID, die jedem Weg mitgegeben wird, plus die Bestellnummer auf jedem Commerce-Event. Plattformen, die über die Event-ID deduplizieren, führen die Beobachtung zusammen; Plattformen, die über die Bestellnummer deduplizieren, führen die Transaktion zusammen; eine Plattform, die beides unterstützt, bekommt doppelte Absicherung.
+
+## Die Referenztabelle
+
+| Plattform | Browser-Feld | Server-Feld | Zusammenführung über | Hinweise |
+| --- | --- | --- | --- | --- |
+| Meta | `eventID` (Pixel-Option) | `event_id` | Event-ID + Eventname, ~48 h | `order_id` in `custom_data` ist informativ |
+| Google Ads | `transaction_id` (gtag) | `orderId` (Upload) | Bestellnummer je Conversion-Aktion | Leads: separate Conversion-Aktionen |
+| GA4 | `transaction_id` | `transaction_id` | Transaktions-ID für `purchase` | andere Events werden nicht dedupliziert |
+| TikTok | `event_id` (ttq-Option) | `event_id` | Event-ID + Eventname | `order_id` in properties |
+| Microsoft | `event_id` (UET-Push) | `eventId` | Event-ID + Eventname | dieselbe UET-Tag-ID auf beiden Wegen |
+| LinkedIn | `event_id` (lintrk) | `eventId` | Event-ID | je Conversion-Regel |
+| Pinterest | `event_id` (pintrk) | `event_id` | Event-ID | `order_id` in custom_data |
+| Snapchat | `client_dedup_id` | `event_id` | passendes Paar | innerhalb des Dedup-Fensters |
+| Reddit | `conversionId` (rdt) | `conversion_id` | Conversion-ID | |
+| X | `conversion_id` (twq) | `conversion_id` | Conversion-ID | je Event-ID (tw-…) |
+| Campaign Manager 360 | `ordinal` / `u1` | `ordinal` | Ordinal + Aktivität + Nutzer | Zeitstempel innerhalb von 28 Tagen |
+| Affiliate-Netzwerke | — | Bestellreferenz | Bestellreferenz | Duplikatschutz auf Netzwerkseite |
+
+## Die ID erzeugen
+
+Erzeuge die ID, **bevor** irgendetwas gesendet wird — dort, wo die Aktion zuerst bekannt ist. Im Browser ist das der Moment, in dem `tsq.push(["track", ...])` läuft; track.site vergibt eine ULID und nutzt sie gleichermaßen für den Anbieter-Pixel-Aufruf und den Collector-Request. Bei Server-Quellen sollte das Quellsystem die ID erzeugen — oder bei Käufen die Bestellnummer übergeben, damit der Router daraus eine deterministische Event-ID ableiten kann.
+
+Eine deterministische ID für Käufe (`hash(site, "purchase", order_id)`) hat eine angenehme Eigenschaft: Ein wiederholter Webhook von Shopify oder ein doppelter CRM-Export erzeugt dieselbe ID, und die Dedup-Sperre des Workers verwirft sie vor der Zustellung.
+
+## Zeitfenster
+
+Anbieter führen nur innerhalb eines Fensters zusammen — Meta dokumentiert rund 48 Stunden, andere ähnlich. Trifft dein Server-Event Tage später ein (ein CRM-Batch), wird es nicht mit dem Browser-Event zusammengeführt, sondern zusätzlich gezählt. Entscheide pro Eventtyp:
+
+- Käufe und andere sofortige Conversions: hybrid mit gemeinsamer ID, beide innerhalb von Minuten.
+- Verzögerte Qualifizierungen (ein Lead wird eine Woche später zur Opportunity): ein **anderes** Anbieter-Event bzw. eine andere Conversion-Aktion, kein Duplikat des Browser-Events.
+
+## Erstattungen
+
+Erstattungen sind eigene Events. GA4 hat ein `refund`-Event mit `transaction_id`; Google Ads nutzt Conversion-Anpassungen (Rücknahme/Neubewertung) über die Bestellnummer; Meta kennt kein Erstattungsevent, akzeptiert aber negative Werte in Custom Conversions; die meisten Affiliate-Netzwerke akzeptieren einen Storno-Postback. track.site erzeugt `refund` mit negativem Wert und der ursprünglichen Bestellnummer und überlässt jedem Connector, was der Anbieter unterstützt.
+
+## Verifikation über den Debugger
+
+1. Im Testmodus mit geöffnetem Browser etwas kaufen.
+2. Im Event-Debugger den Browser-Kauf und den Server-Kauf finden — gleiche Event-ID, gleiche Bestellnummer.
+3. Den Destination-Monitor öffnen: ein Zustellversuch pro Weg, beide angenommen.
+4. In der Anbieter-Oberfläche (Events Manager, Test-Events, DebugView) eine Conversion bestätigen, nicht zwei.
+
+Zeigt Schritt 4 zwei, ist die ID auf einem der Wege nicht mitgereist. Die geschwärzte Payload-Vorschau im Debugger zeigt, auf welchem.

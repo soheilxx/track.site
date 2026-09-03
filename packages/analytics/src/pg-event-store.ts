@@ -160,6 +160,15 @@ export class PgEventStore implements EventStore {
     await this.worker((c) => c.query(`UPDATE events SET processing_state = $3, drop_reason = $4 WHERE site_id = $1 AND event_id = $2`, [siteId, eventId, state, dropReason]));
   }
 
+  async findConversionEvent(siteId: string, orderId: string, name: "purchase" | "refund", source: "browser" | "server", since: Date): Promise<CanonicalEvent | null> {
+    const clause = source === "browser" ? "source = 'browser'" : "source <> 'browser'";
+    const res = await this.worker((c) =>
+      c.query(`SELECT * FROM events WHERE site_id = $1 AND name = $2 AND commerce->>'order_id' = $3 AND server_ts >= $4 AND ${clause} ORDER BY server_ts DESC LIMIT 1`, [siteId, name, orderId, since]),
+    );
+    const row = res.rows[0];
+    return row ? rowToEvent(row) : null;
+  }
+
   async lastEventAt(siteId: string, source?: "browser" | "server"): Promise<Date | null> {
     const params: unknown[] = [siteId];
     let clause = "";

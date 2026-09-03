@@ -4,6 +4,7 @@ import { Badge, Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { pool } from "@/server/db";
 import { alternatesFor, breadcrumbJsonLd } from "@/lib/seo";
+import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const c = locale === "de" ? COPY.de : COPY.en;
-  return { title: c.title, description: c.intro, alternates: alternatesFor("/status", locale) };
+  return { title: seoTitle(c.title), description: seoDescription(c.intro), alternates: alternatesFor("/status", locale) };
 }
 
 async function probe(): Promise<{ db: "ok" | "down"; backlog: number | null; lastAttempt: Date | null; lastEvent: Date | null }> {
