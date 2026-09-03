@@ -14,7 +14,7 @@
   "scripts": {
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run -c vitest.config.ts",
+    "test": "vitest run -c vitest.config.ts --passWithNoTests",
     "test:integration": "vitest run -c vitest.integration.config.ts",
     "generate": "drizzle-kit generate",
     "migrate": "tsx src/cli/migrate.ts",

@@ -1,8 +1,9 @@
 /**
  * Search-snippet helpers. Page copy stays long and descriptive; the <title> and meta description
  * derived from it are cut at a sentence, colon or word boundary so search results show clean text.
+ * Titles leave room for the " · track.site" template suffix (57 + 13 ≤ 70).
  */
-export function seoTitle(text: string, max = 65): string {
+export function seoTitle(text: string, max = 57): string {
   const t = text.trim();
   if (t.length <= max) return t;
   const colon = t.indexOf(": ");

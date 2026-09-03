@@ -90,15 +90,25 @@ async function checkRobotsAndSitemap() {
   if (!feed || feed.status !== 200) fail(`${base}/blog/feed.xml`, "missing RSS feed");
 }
 
-const started = Date.now();
-const jobs: Array<Promise<void>> = [];
-for (const locale of LOCALES) {
-  for (const p of STATIC) jobs.push(checkPage(`${prefix(locale)}${p}` || "/", { jsonLd: JSON_LD_REQUIRED.has(p), article: false }));
-  for (const slug of INTEGRATIONS) jobs.push(checkPage(`${prefix(locale)}/integrations/${slug}`, { jsonLd: false, article: false }));
-  for (const slug of blogSlugs(locale)) jobs.push(checkPage(`${prefix(locale)}/blog/${slug}`, { jsonLd: true, article: true }));
+/** Limited concurrency: a dev server compiles routes on demand and must not be flooded; production tolerates more. */
+const concurrency = Number(process.env.SEO_CONCURRENCY ?? 4);
+async function runAll(tasks: Array<() => Promise<void>>): Promise<void> {
+  let next = 0;
+  const workers = Array.from({ length: Math.max(1, concurrency) }, async () => {
+    while (next < tasks.length) await tasks[next++]!();
+  });
+  await Promise.all(workers);
 }
-jobs.push(checkRobotsAndSitemap());
-await Promise.all(jobs);
+
+const started = Date.now();
+const jobs: Array<() => Promise<void>> = [];
+for (const locale of LOCALES) {
+  for (const p of STATIC) jobs.push(() => checkPage(`${prefix(locale)}${p}` || "/", { jsonLd: JSON_LD_REQUIRED.has(p), article: false }));
+  for (const slug of INTEGRATIONS) jobs.push(() => checkPage(`${prefix(locale)}/integrations/${slug}`, { jsonLd: false, article: false }));
+  for (const slug of blogSlugs(locale)) jobs.push(() => checkPage(`${prefix(locale)}/blog/${slug}`, { jsonLd: true, article: true }));
+}
+jobs.push(() => checkRobotsAndSitemap());
+await runAll(jobs);
 
 const pages = LOCALES.length * (STATIC.length + INTEGRATIONS.length) + blogSlugs("en").length + blogSlugs("de").length;
 if (findings.length) {

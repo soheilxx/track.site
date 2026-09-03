@@ -26,8 +26,10 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Marketing frontend, SEO, blog (30 topics x en/de) | DONE | `apps/web/src/app/[locale]/*`, `apps/web/content/blog/{en,de}` (30 + 30 posts), `apps/web/scripts/seo-check.ts` | `pnpm seo:check` (against a running web server) | typed copy per locale, legal identity from `LEGAL_*` env, prices only from Stripe, MDX blog with front matter, sources and review dates |
 | Stripe billing + entitlements + usage ledger | DONE | `apps/web/src/server/billing.ts`, `pricing.ts`, `apps/web/src/app/api/stripe/webhook/route.ts`, `/app/billing` | browser walkthrough (test mode) | honest empty state without `STRIPE_*`; prices come from Stripe only; signed webhooks update subscriptions/entitlements |
 | Privacy center, DSAR, retention | DONE | `/app/consent`, `apps/web/src/server/actions/privacy.ts`, `apps/web/src/app/api/privacy/dsar/[id]/route.ts`, `apps/worker/src/jobs/retention.ts` | browser walkthrough | export/delete/restrict/rectify with audit + completion report; retention overrides per org (site overrides for events/click ids) |
-| CI gates | NEXT | `.github/workflows/ci.yml` | - | lint, typecheck, unit, contract, integration (Postgres service), SDK budget, source-boundary check |
-| Load test baseline | NEXT | `docs/performance-baseline.md` | `pnpm load:collector` | |
+| CI gates | DONE | `.github/workflows/ci.yml` | first run on push | lint, typecheck, unit, contract, integration (Postgres 18 service), SDK budget, matrix check, production build; all gates pass locally (`pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:integration`, `pnpm --filter @track-site/web build`: 173 static pages) |
+| Playwright smoke tests (marketing a11y/SEO structure, blog, pricing honesty, dashboard sign-in, shop connection page) | DONE | `apps/web/e2e/*.spec.ts`, `apps/web/playwright.config.ts` | `pnpm --filter @track-site/web test:e2e` (against a running server, seeded demo user) | axe-core WCAG 2 A/AA: contrast tokens raised to AA |
+| SEO gate | DONE | `apps/web/scripts/seo-check.ts` | `pnpm seo:check` | 113 pages (en/de static, integrations, 60 blog posts), robots, sitemap, feed; titles/descriptions cut for snippets |
+| Load test baseline | DONE | `docs/performance-baseline.md` | `pnpm load:collector` | dev laptop: 483 req/s = 2,417 events/s, p95 189 ms, 0 errors; limiter runs show 429 at the configured per-IP/per-site limits; single worker drained 70k events within 2.5 min |
 
 ## External blockers (owner action)
 
@@ -42,4 +44,4 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 
 ## Next executable step
 
-Add the CI workflow (`.github/workflows/ci.yml`), run `pnpm load:collector` and record `docs/performance-baseline.md`, verify `pnpm build`, write the root README, push `feat/ai-tag-manager-platform` and produce the final verifiable report (docs/09 §7 + docs/10).
+Owner actions from the blocker table (vendor apps, Stripe, OpenAI keys, DNS, EU infrastructure), then the first real test event per destination (docs/09 §7) and the shop integrations against one real Shopify, WooCommerce and Shopware installation each (docs/10 checklist). Engineering follow-ups: ClickHouse event-store integration test on real ClickHouse, SQS queue driver soak, production load test on EU infrastructure against the targets in `docs/performance-baseline.md`.

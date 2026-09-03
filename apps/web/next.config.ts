@@ -47,6 +47,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // the locale proxy skips file-like paths, so the unprefixed English feed maps to its locale route here
+  async rewrites() {
+    return [{ source: "/blog/feed.xml", destination: "/en/blog/feed.xml" }];
+  },
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: [
