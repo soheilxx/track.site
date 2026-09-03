@@ -68,15 +68,15 @@ export const STEP_TOOLS: Record<SetupStep, string[]> = {
   platform: ["inspect_site", "detect_site_stack", "set_business_profile_draft", "create_integration_draft"],
   installation: ["verify_snippet_installation", "verify_domain", "create_integration_draft"],
   consent: ["explain_consent_state", "set_consent_policy_draft"],
-  destinations: ["create_integration_draft", "save_public_pixel_id_draft", "request_secure_credential_input", "upsert_event_mapping_draft", "activate_or_pause_destination", "rotate_credential", "disconnect_integration"],
+  destinations: ["create_integration_draft", "save_public_pixel_id_draft", "request_secure_credential_input", "upsert_event_mapping_draft", "set_destination_settings_draft", "validate_integration_credentials", "get_destination_status", "send_destination_test_event", "activate_or_pause_destination", "rotate_credential", "disconnect_integration"],
   event_plan: ["propose_event_plan", "create_trigger_draft", "upsert_event_mapping_draft"],
-  test: ["run_test_event", "run_diagnostics", "validate_draft", "verify_snippet_installation"],
+  test: ["run_test_event", "send_destination_test_event", "get_destination_status", "run_diagnostics", "validate_draft", "verify_snippet_installation"],
   review: ["validate_draft", "prepare_publish", "compare_config_versions"],
   publish: ["prepare_publish", "publish_config_version", "rollback_config_version"],
-  health: ["run_diagnostics", "analyze_recent_event_health", "show_delivery_errors", "rollback_config_version", "activate_or_pause_destination"],
+  health: ["run_diagnostics", "analyze_recent_event_health", "show_delivery_errors", "get_destination_status", "validate_integration_credentials", "rollback_config_version", "activate_or_pause_destination"],
 };
 
-export const READ_ONLY_TOOLS = ["get_workspace_state", "get_setup_state", "inspect_site", "detect_site_stack", "list_integrations", "inspect_event_schema", "analyze_recent_event_health", "show_delivery_errors", "explain_consent_state"];
+export const READ_ONLY_TOOLS = ["get_workspace_state", "get_setup_state", "inspect_site", "detect_site_stack", "list_integrations", "get_destination_status", "inspect_event_schema", "analyze_recent_event_health", "show_delivery_errors", "explain_consent_state"];
 export const CONFIRM_TOOLS = ["publish_config_version", "rollback_config_version", "activate_or_pause_destination", "rotate_credential", "disconnect_integration", "send_live_conversion", "delete_or_export_data"];
 
 export function progressPercent(state: SetupState): number {

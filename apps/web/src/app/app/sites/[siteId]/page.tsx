@@ -39,6 +39,11 @@ export default async function SitePage({ params }: { params: Promise<{ siteId: s
           <Link href={`/app/sites/${site.id}/setup`}>
             <Button size="sm">{t("openSetup")}</Button>
           </Link>
+          <Link href={`/app/sites/${site.id}/destinations`}>
+            <Button size="sm" variant="secondary">
+              Destinations
+            </Button>
+          </Link>
           <Link href={`/app/debugger?site=${site.id}`}>
             <Button size="sm" variant="secondary">
               {t("openDebugger")}

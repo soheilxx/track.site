@@ -274,7 +274,7 @@ export const requestSecureCredentialInput = defineTool({
   description: "Asks the UI to show the secure credential card or OAuth button for a destination. The secret never passes through the chat. Returns the credentials already stored (references only).",
   kind: "draft",
   permission: "credentials.write",
-  input: z.object({ integration_id: z.string().uuid(), credential_kind: z.enum(["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "webhook_secret", "signing_secret"]) }),
+  input: z.object({ integration_id: z.string().uuid(), credential_kind: z.enum(["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "oauth_token_secret", "client_id", "client_secret", "webhook_secret", "signing_secret"]) }),
   handler: async (args, ctx) => {
     const integration = await withTenant(ctx.db, ctx.organizationId, async (tx) => (await tx.select().from(integrations).where(and(eq(integrations.id, args.integration_id), eq(integrations.siteId, ctx.siteId))).limit(1))[0] ?? null);
     if (!integration) throw new AppError("NOT_FOUND", "integration not found");

@@ -75,7 +75,7 @@ export const integrations = pgTable(
   (t) => [index("integrations_org_idx").on(t.organizationId), index("integrations_site_idx").on(t.siteId), uniqueIndex("integrations_org_id_uq").on(t.organizationId, t.id)],
 );
 
-export const credentialKindEnum = pgEnum("credential_kind", ["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "webhook_secret", "signing_secret"]);
+export const credentialKindEnum = pgEnum("credential_kind", ["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "oauth_token_secret", "client_id", "client_secret", "webhook_secret", "signing_secret"]);
 export const credentialStatusEnum = pgEnum("credential_status", ["active", "rotated", "revoked", "expired"]);
 
 /** Envelope-encrypted secrets. The model only ever sees id, kind, status, scope and last4. */

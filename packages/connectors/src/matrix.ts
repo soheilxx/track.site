@@ -29,7 +29,7 @@ export interface MatrixRow {
 }
 
 const OFFLINE: Partial<Record<ConnectorType, boolean>> = { google_ads: true, gmp: true, microsoft: true, meta: true, pinterest: true, snapchat: true, tiktok: true, amazon: true, yahoo: true, linkedin: true };
-const TEST_EVENTS: Partial<Record<ConnectorType, string>> = {
+export const TEST_EVENT_HINTS: Partial<Record<ConnectorType, string>> = {
   meta: "test_event_code (Events Manager → Test events)",
   ga4: "/debug/mp/collect validation + DebugView",
   google_ads: "validateOnly upload",
@@ -66,7 +66,7 @@ export function buildIntegrationMatrix(): MatrixRow[] {
       server: c.meta.supportsServer,
       hybrid: c.meta.supportsBrowser && c.meta.supportsServer,
       offline: Boolean(OFFLINE[type]),
-      testEvents: TEST_EVENTS[type] ?? "",
+      testEvents: TEST_EVENT_HINTS[type] ?? "",
       dedup: c.meta.dedupField ?? "n/a",
       clickIds: [...(DESTINATION_CLICK_IDS[type] ?? [])],
       publicIds: c.meta.requiredPublicIds.map((p) => p.key),

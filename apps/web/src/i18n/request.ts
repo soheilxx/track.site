@@ -7,7 +7,7 @@ import { isLocale, routing, type AppLocale } from "./routing";
  * have no locale segment; they use the NEXT_LOCALE cookie (set from the user's preference) or English.
  * Messages are split per domain (common, auth, app, marketing) and merged here.
  */
-const NAMESPACES = ["common", "auth", "app", "chat", "marketing"] as const;
+const NAMESPACES = ["common", "auth", "app", "chat", "destinations", "marketing"] as const;
 
 export async function loadMessages(locale: AppLocale): Promise<Record<string, unknown>> {
   const parts = await Promise.all(

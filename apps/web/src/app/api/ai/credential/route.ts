@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 const bodySchema = z.object({
   siteId: z.string().uuid(),
   integrationId: z.string().uuid(),
-  kind: z.enum(["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "webhook_secret", "signing_secret"]),
+  kind: z.enum(["access_token", "api_secret", "oauth_refresh_token", "oauth_access_token", "oauth_token_secret", "client_id", "client_secret", "webhook_secret", "signing_secret"]),
   value: z.string().min(8).max(4_096),
   label: z.string().max(80).optional(),
 });

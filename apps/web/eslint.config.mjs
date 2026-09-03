@@ -7,4 +7,7 @@ export default [
   {
     ignores: [".next/**", "public/cdn/**", "next-env.d.ts"],
   },
+  {
+    settings: { react: { version: "19.2.8" } },
+  },
 ];
