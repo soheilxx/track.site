@@ -12,17 +12,21 @@ import {
   type AppLogger,
   type RateLimiter,
 } from "@track-site/core";
+import type { SecretVault } from "@track-site/core";
 import { incomingBrowserBatchSchema, incomingServerBatchSchema, truncateIp, uaFamily, type IngestMessage } from "@track-site/events";
 import { QUEUES, partitionKeyFor, type Queue } from "@track-site/queue";
 import { configRoutes } from "./config-routes.ts";
 import type { CollectorEnv } from "./env.ts";
 import type { ResolvedSite, SiteResolver } from "./site-cache.ts";
+import { registerAffiliateInbound } from "./affiliate-inbound.ts";
 
 export interface CollectorDeps {
   env: CollectorEnv;
   queue: Queue;
   sites: SiteResolver;
   pool: Pool | null;
+  /** decrypts inbound-postback secrets (Digistore24 IPN passphrase, shared tokens) */
+  vault?: SecretVault | null;
   logger: AppLogger;
   rateLimiter?: RateLimiter;
   now?: () => Date;
@@ -221,6 +225,8 @@ export function createCollectorApp(deps: CollectorDeps): Hono {
     }
     return c.json({ ok: true, accepted: parsed.data.events.length, id: message.message_id }, 202);
   });
+
+  registerAffiliateInbound(app, deps, now);
 
   app.notFound((c) => c.json({ ok: false, reason: "not_found" }, 404));
   app.onError((err, c) => {

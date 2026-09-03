@@ -14,6 +14,12 @@ export const collectorEnvSchema = baseEnvSchema.extend({
   RATE_LIMIT_SALT: envString("local-salt"),
   ALLOW_LOCALHOST_ORIGINS: envBool(true),
   SITE_CACHE_TTL_MS: envInt(30_000, 1_000, 600_000),
+  KMS_DRIVER: envEnum(["local", "aws"], "local"),
+  MASTER_KEY: envString(),
+  MASTER_KEY_ID: envString("local-v1"),
+  LEGACY_MASTER_KEY: envString(),
+  LEGACY_MASTER_KEY_ID: envString(),
+  AWS_KMS_KEY_ID: envString(),
 });
 export type CollectorEnv = z.infer<typeof collectorEnvSchema>;
 
