@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { startMockVendorServer } from "@track-site/testing";
-import { AffiliateConnector } from "./affiliate.ts";
-import { AFFILIATE_PRESETS } from "./affiliate-presets.ts";
+import { AffiliateConnector, affiliateMeta } from "./affiliate.ts";
+import { AFFILIATE_PRESETS, affiliateCredentialRequirements, isSecretField } from "./affiliate-presets.ts";
 import { AmazonConnector } from "./amazon.ts";
 import { dispatchFor, leadEvent, purchaseEvent, testContext } from "./fixtures.ts";
 import { QuoraConnector } from "./quora.ts";
@@ -104,6 +104,49 @@ describe("Affiliate postback connector", () => {
       expect(preset.events).toContain("purchase");
     }
     expect(Object.keys(AFFILIATE_PRESETS)).toEqual(expect.arrayContaining(["awin", "cj", "impact", "tradetracker", "tradedoubler", "partnerize", "rakuten", "webgains", "digistore24", "adcell", "belboon", "tune", "everflow", "custom"]));
+  });
+
+  it("declares every preset secret as a vault credential requirement and lists the union in the connector meta", () => {
+    const kinds = (list: Array<{ kind: string }>) => list.map((r) => r.kind);
+    for (const preset of Object.values(AFFILIATE_PRESETS)) {
+      const reqs = affiliateCredentialRequirements(preset);
+      expect(new Set(kinds(reqs)).size, `${preset.id}: one vault slot per kind`).toBe(reqs.length);
+      for (const field of preset.config.filter(isSecretField)) expect(reqs.find((r) => r.kind === field.credential), `${preset.id}.${field.key}`).toMatchObject({ label: `${preset.name}: ${field.label}`, optional: field.optional === true, secret: true, oauth: null });
+      if (preset.auth.type === "basic") expect(reqs).toContainEqual(expect.objectContaining({ kind: preset.auth.passwordCredential, optional: false }));
+      for (const r of reqs) expect(kinds(affiliateMeta.requiredCredentials), `${preset.id}.${r.kind} must be storable through the credential route`).toContain(r.kind);
+    }
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.awin!)).toEqual([expect.objectContaining({ kind: "webhook_secret", optional: true })]);
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.cj!)).toEqual([expect.objectContaining({ kind: "access_token", optional: false, label: "CJ Affiliate: Personal access token (SIGNATURE)" }), expect.objectContaining({ kind: "webhook_secret", optional: true })]);
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.tradedoubler!)).toEqual([expect.objectContaining({ kind: "signing_secret", optional: false, label: "Tradedoubler: Checksum secret code" }), expect.objectContaining({ kind: "webhook_secret", optional: true })]);
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.impact!)).toEqual([expect.objectContaining({ kind: "api_secret", optional: false, label: "impact.com: AuthToken (Basic auth password)" }), expect.objectContaining({ kind: "webhook_secret", optional: true })]);
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.tune!)).toEqual([expect.objectContaining({ kind: "api_secret", optional: true }), expect.objectContaining({ kind: "webhook_secret", optional: true })]);
+    expect(affiliateCredentialRequirements(AFFILIATE_PRESETS.digistore24!)).toEqual([expect.objectContaining({ kind: "signing_secret", optional: true, label: "Digistore24: IPN passphrase (inbound postbacks)" })]);
+
+    expect(kinds(affiliateMeta.requiredCredentials)).toEqual(["access_token", "api_secret", "signing_secret", "webhook_secret"]);
+    for (const r of affiliateMeta.requiredCredentials) {
+      expect(r.optional, r.kind).toBe(true);
+      expect(r.oauth, r.kind).toBeNull();
+      expect(r.help, r.kind).toContain("Depends on the selected network preset");
+    }
+    expect(affiliateMeta.requiredCredentials.find((r) => r.kind === "access_token")?.help).toContain("required by CJ Affiliate");
+    expect(affiliateMeta.requiredCredentials.find((r) => r.kind === "api_secret")?.help).toMatch(/required by impact\.com; optional for TUNE \(HasOffers\), Everflow/);
+    expect(affiliateMeta.requiredCredentials.find((r) => r.kind === "signing_secret")?.help).toMatch(/required by Tradedoubler; optional for Digistore24/);
+    expect(affiliateMeta.requiredCredentials.find((r) => r.kind === "webhook_secret")?.help).toMatch(/optional for 13 presets incl\. Awin, CJ Affiliate, impact\.com/);
+  });
+
+  it("names the missing credential kind and label instead of a generic secret error", async () => {
+    const cj = ctx({ preset: "cj", enterprise_id: "1234567", action_id: "402340" });
+    expect(await connector.validateCredentials(cj)).toMatchObject({ ok: false, status: "not_connected", detail: expect.stringContaining("Missing credential: access_token (CJ Affiliate: Personal access token (SIGNATURE))") });
+    expect(await connector.validateCredentials(ctx({ preset: "tradedoubler", organization_id: "12345", event_id: "23456" }))).toMatchObject({ status: "not_connected", detail: expect.stringContaining("signing_secret (Tradedoubler: Checksum secret code)") });
+    expect(await connector.validateCredentials(ctx({ preset: "impact", account_sid: "IRabc123def", campaign_id: "12345", action_tracker_id: "23456" }))).toMatchObject({ status: "not_connected", detail: expect.stringContaining("api_secret (impact.com: AuthToken (Basic auth password))") });
+    expect((await connector.validateCredentials(cj)).detail).not.toMatch(/webhook_secret/); // inbound-only secrets never block
+    expect((await connector.validateCredentials(ctx({ preset: "tune", network_domain: "network.go2cloud.org" }))).ok).toBe(true); // optional token
+    expect((await connector.validateCredentials(ctx({ preset: "digistore24" }))).ok).toBe(true);
+    expect((await connector.validateCredentials(ctx({ preset: "cj", enterprise_id: "1234567", action_id: "402340" }, { access_token: "pat-0123456789" }))).ok).toBe(true);
+    const p = connector.mapEvent(dispatchFor(purchaseEvent(), { cjevent: "cj-click" }), mapping("purchase"), cj)!;
+    expect(JSON.stringify(p.preview)).not.toContain("pat-0123456789");
+    const [r] = await connector.dispatchBatch(cj, [p]);
+    expect(r).toMatchObject({ ok: false, errorClass: "credential_expired", errorCode: "missing_access_token" });
   });
 
   it("renders Awin GET postbacks with the awc click id and test mode", async () => {

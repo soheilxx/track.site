@@ -28,7 +28,8 @@ export interface WizardProps {
     dedupField: string | null;
     accessNote: string | null;
     requiredPublicIds: Array<{ key: string; label: string; pattern: string; example: string; help: string }>;
-    requiredCredentials: Array<{ kind: string; label: string; help: string; oauth: string | null }>;
+    /** `optional` entries (network features that are off by default, inbound-only secrets) never gate the credentials step */
+    requiredCredentials: Array<{ kind: string; label: string; help: string; oauth: string | null; optional?: boolean }>;
     transfer: { recipient: string; region: string; basis: string };
   };
   purpose: string;
@@ -66,7 +67,7 @@ export function DestinationWizard(props: WizardProps) {
   const [step, setStep] = useState<StepId>(() => {
     if (integration.status === "connected" && props.draft?.enabled) return "monitor";
     if (connector.requiredPublicIds.some((p) => !/\?\$$/.test(p.pattern) && !integration.publicConfig[p.key])) return "ids";
-    if (connector.requiredCredentials.length && !props.credentials.some((c) => c.status === "active")) return "credentials";
+    if (connector.requiredCredentials.some((c) => !c.optional) && !props.credentials.some((c) => c.status === "active")) return "credentials";
     return "destination";
   });
   const [busy, setBusy] = useState(false);

@@ -1,4 +1,5 @@
 import { AppError } from "@track-site/core";
+import { LEGACY_NAME_MAP, STANDARD_EVENT_NAMES, getStandardEvent, isValidCustomEventName } from "@track-site/events";
 
 /**
  * Tolerant normalisation for values the model tends to phrase in natural language. Tool schemas stay
@@ -71,6 +72,38 @@ export function normalizeMarkets(values: readonly string[] | null | undefined): 
   }
   if (unknown.length) throw new AppError("VALIDATION_ERROR", `markets must be ISO 3166-1 alpha-2 codes such as DE, AT, CH; could not map: ${unknown.join(", ")}`);
   return out;
+}
+
+/** Mirrors the reserved prefixes enforced by `isValidCustomEventName` in @track-site/events (documentation for the model). */
+export const RESERVED_EVENT_PREFIXES = ["track_", "ts_", "internal_", "system_", "google_", "gtm_", "ga_", "fb_", "meta_"];
+
+/** One sentence the model can act on; used in field descriptions and validation errors. */
+export const EVENT_NAME_RULE = `canonical lower snake_case matching ^[a-z][a-z0-9_]{1,63}$ and not starting with ${RESERVED_EVENT_PREFIXES.join("/")}; standard events: ${STANDARD_EVENT_NAMES.join(", ")}. Vendor spellings (AddToCart, Lead, PageView) and names with spaces are normalised automatically.`;
+
+const compactKey = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+const COMPACT_LOOKUP = new Map<string, string>([
+  ...STANDARD_EVENT_NAMES.map((n): [string, string] => [compactKey(n), n]),
+  ...Object.entries(LEGACY_NAME_MAP).map(([k, v]): [string, string] => [compactKey(k), v]),
+]);
+
+/**
+ * Maps vendor, camelCase or spaced event names to the canonical snake_case name shared by
+ * create_trigger_draft, run_test_event, upsert_event_mapping_draft and propose_event_plan.
+ * Standard events win over custom names; anything that cannot be mapped throws a VALIDATION_ERROR
+ * that states the rule and the standard vocabulary.
+ */
+export function normalizeEventName(raw: string): { name: string; isStandard: boolean } {
+  const trimmed = raw.trim();
+  const snake = trimmed
+    .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+    .replace(/[\s\-.]+/g, "_")
+    .toLowerCase()
+    .replace(/_+/g, "_")
+    .replace(/^_|_$/g, "");
+  const candidate = LEGACY_NAME_MAP[trimmed] ?? COMPACT_LOOKUP.get(compactKey(trimmed)) ?? snake;
+  if (candidate && getStandardEvent(candidate)) return { name: candidate, isStandard: true };
+  if (candidate && isValidCustomEventName(candidate)) return { name: candidate, isStandard: false };
+  throw new AppError("VALIDATION_ERROR", `event name "${trimmed.slice(0, 40)}" is not valid: event names are ${EVENT_NAME_RULE}`);
 }
 
 /** Maps currency names or codes to ISO 4217; throws a VALIDATION_ERROR the model can act on. */

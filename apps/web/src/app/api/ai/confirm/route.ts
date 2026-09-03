@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { buildToolRegistry } from "@track-site/ai";
+import { buildToolRegistry, redactToolOutput } from "@track-site/ai";
 import { getOrgContext } from "@/server/session";
 import { appendMessage, getOrCreateChatSession, recordToolRun, takePendingApproval } from "@/server/ai/chat-store";
 import { buildAgentContext, siteBelongsToOrg } from "@/server/ai/context";
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   const args = pending.action === "publish_config_version" ? { draft_id: pending.targetId, approval_token: pending.token } : { approval_token: pending.token, ...(pending.summary.args as Record<string, unknown> | undefined) };
   const started = Date.now();
   const result = await tool.run(args, agentCtx);
-  await recordToolRun(ctx.organization.id, session.id, { callId: `confirm_${parsed.data.approvalId}`, name: pending.action, args: { ...args, approval_token: "[approval]" }, result: { ok: result.ok, code: result.code, data: result.ok ? result.data : null }, durationMs: Date.now() - started });
+  await recordToolRun(ctx.organization.id, session.id, { callId: `confirm_${parsed.data.approvalId}`, name: pending.action, args: { ...args, approval_token: "[approval]" }, result: { ok: result.ok, code: result.code, data: result.ok ? redactToolOutput(result.data) : null }, durationMs: Date.now() - started });
   await appendMessage(ctx.organization.id, session.id, { role: "system", content: result.ok ? `${pending.action} confirmed and executed` : `${pending.action} failed: ${result.code}` });
   return NextResponse.json(result, { status: result.ok ? 200 : 409 });
 }

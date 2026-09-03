@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import type { Pool } from "pg";
 import { z } from "zod";
 import { AppError, fetchTextLimited, inspectHtml, normalizeDomainInput } from "@track-site/core";
@@ -53,18 +53,41 @@ export const getSetupState = defineTool({
   },
 });
 
+/**
+ * Resolves the requested page to a path on the site's own host: null/empty = home page, "checkout" =
+ * "/checkout", a full URL is accepted only when it points at the site's host (its path is used);
+ * anything on another host is rejected instead of silently falling back to the home page.
+ */
+export function resolveInspectPath(input: string | null | undefined, host: string): string {
+  const raw = input?.trim() ?? "";
+  if (!raw) return "/";
+  if (/^(https?:)?\/\//i.test(raw)) {
+    let url: URL;
+    try {
+      url = new URL(raw.startsWith("//") ? `https:${raw}` : raw);
+    } catch {
+      throw new AppError("VALIDATION_ERROR", `path "${raw.slice(0, 80)}" is not a valid URL or path; use a path on ${host} such as /checkout`);
+    }
+    const target = normalizeDomainInput(url.hostname);
+    if (target !== host) throw new AppError("VALIDATION_ERROR", `path must be on the site's primary domain ${host}; ${url.hostname} is a different host`);
+    return `${url.pathname}${url.search}`;
+  }
+  if (/[\s<>"']/.test(raw)) throw new AppError("VALIDATION_ERROR", `path "${raw.slice(0, 80)}" contains characters that are not allowed; use a path such as /checkout`);
+  return raw.startsWith("/") ? raw : `/${raw}`;
+}
+
 export const inspectSite = defineTool({
   name: "inspect_site",
-  description: "Fetches the public home page of the site's primary domain and returns technology signals (platform, CMP, existing tags, data layer). Signals are evidence; the user must confirm.",
+  description: "Fetches a public page of the site's primary domain (the home page by default) and returns technology signals (platform, CMP, existing tags, data layer). Signals are evidence; the user must confirm.",
   kind: "read",
   permission: "sites.read",
-  input: z.object({ path: z.string().max(200).nullable() }),
+  input: z.object({ path: z.string().max(200).nullable().describe("path on the site's primary domain starting with '/', e.g. /checkout; null = home page. Other hosts are rejected") }),
   handler: async (args, ctx) => {
     const site = await withTenant(ctx.db, ctx.organizationId, (tx) => getSite(tx, ctx.organizationId, ctx.siteId));
     if (!site?.primaryDomain) throw new AppError("INVALID_STATE", "the site has no primary domain yet");
     const host = normalizeDomainInput(site.primaryDomain);
     if (!host) throw new AppError("VALIDATION_ERROR", "invalid primary domain");
-    const path = args.path && args.path.startsWith("/") ? args.path : "/";
+    const path = resolveInspectPath(args.path, host);
     const url = `https://${host}${path}`;
     try {
       await validateDestinationUrl(url, { allowPrivateNetwork: ctx.allowPrivateNetwork });
@@ -161,21 +184,28 @@ export const analyzeRecentEventHealth = defineTool({
   },
 });
 
+/** Delivery statuses that count as failures for show_delivery_errors (pending and success are excluded in SQL). */
+export const FAILED_DELIVERY_STATUSES = ["retry", "failed", "dead", "skipped"] as const;
+
 export const showDeliveryErrors = defineTool({
   name: "show_delivery_errors",
-  description: "Recent failed or skipped deliveries per destination with error class, code and redacted message (no payloads, no secrets).",
+  description: "Most recent failed, retrying, dead or skipped deliveries (newest first) with error class, code and redacted message; successes are excluded before the limit is applied (no payloads, no secrets).",
   kind: "read",
   permission: "events.read",
-  input: z.object({ integration_id: z.string().uuid().nullable(), limit: z.number().int().min(1).max(50).nullable() }),
+  input: z.object({
+    integration_id: z.string().uuid().nullable().describe("integration id (UUID) from the integrations list in the context block or list_integrations; null = all destinations of the site"),
+    limit: z.number().int().min(1).max(50).nullable().describe("maximum number of failed attempts to return; null = 20"),
+  }),
   handler: async (args, ctx) =>
     withTenant(ctx.db, ctx.organizationId, async (tx) => {
-      const rows = await tx
+      const limit = args.limit ?? 20;
+      const failures = await tx
         .select({ id: deliveryAttempts.id, integrationId: deliveryAttempts.integrationId, connector: deliveryAttempts.connectorType, event: deliveryAttempts.eventName, status: deliveryAttempts.status, errorClass: deliveryAttempts.errorClass, code: deliveryAttempts.errorCode, message: deliveryAttempts.errorMessage, http: deliveryAttempts.httpStatus, at: deliveryAttempts.startedAt })
         .from(deliveryAttempts)
-        .where(and(eq(deliveryAttempts.siteId, ctx.siteId), ...(args.integration_id ? [eq(deliveryAttempts.integrationId, args.integration_id)] : [])))
+        .where(and(eq(deliveryAttempts.siteId, ctx.siteId), inArray(deliveryAttempts.status, [...FAILED_DELIVERY_STATUSES]), ...(args.integration_id ? [eq(deliveryAttempts.integrationId, args.integration_id)] : [])))
         .orderBy(desc(deliveryAttempts.startedAt))
-        .limit(args.limit ?? 20);
-      return rows.filter((r) => r.status !== "success");
+        .limit(limit);
+      return { integration_id: args.integration_id, limit, count: failures.length, failures, note: failures.length ? null : `no failed, retrying, dead or skipped delivery attempts recorded${args.integration_id ? " for this destination" : ""}` };
     }),
 });
 

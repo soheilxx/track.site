@@ -3,7 +3,7 @@ import { DESTINATION_TRANSFER } from "@track-site/policy";
 import type { BrowserTagConfig, Connector, ConnectorContext, ConnectorMeta, CredentialValidation, DispatchEvent, DispatchResult, EventMapping, ErrorClass, HealthResult, ValidationResult, VendorPayload } from "../connector.ts";
 import { classifyHttpStatus, excerpt, vendorRequest } from "../http.ts";
 import { API_VERSIONS } from "../versions.ts";
-import { AFFILIATE_PRESETS, type AffiliatePreset } from "./affiliate-presets.ts";
+import { AFFILIATE_PRESETS, affiliateCredentialRequirements, isSecretField, type AffiliateCredentialRequirement, type AffiliatePreset } from "./affiliate-presets.ts";
 import { contents, failed, missingCredential, mockOrReal, numItems, orderId, prop, succeeded } from "./shared.ts";
 
 /**
@@ -20,7 +20,11 @@ export const affiliateMeta: ConnectorMeta = {
   sunsetWatch: null,
   docsUrl: API_VERSIONS.affiliate.docsUrl,
   requiredPublicIds: [{ key: "preset", label: "Network", pattern: `^(${Object.keys(AFFILIATE_PRESETS).join("|")})$`, example: "awin", help: "Awin, CJ, impact.com, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, ADCELL, belboon, TUNE, Everflow or a custom postback URL." }],
-  requiredCredentials: [],
+  /**
+   * union of the vault credentials any preset can store, all `optional` here because the exact set depends on
+   * `publicConfig.preset`; `affiliateCredentialRequirements(presetFor(ctx))` yields the per-preset list
+   */
+  requiredCredentials: affiliateCredentialRequirements(null),
   supportsBrowser: false,
   supportsServer: true,
   dedupField: "order_id",
@@ -169,24 +173,31 @@ export class AffiliateConnector implements Connector {
     return { ok: errors.length === 0, errors };
   }
 
-  private async secrets(ctx: ConnectorContext, preset: AffiliatePreset): Promise<Record<string, string> | null> {
-    const out: Record<string, string> = {};
-    for (const cfg of preset.config.filter((c) => c.secret)) {
-      const v = await ctx.getCredential(cfg.key === "checksum_secret" ? "signing_secret" : cfg.key === "signature" ? "access_token" : "api_secret");
-      if (v) out[cfg.key] = v;
-      else if (!cfg.pattern.includes("{0,")) return null;
+  /**
+   * Resolves the preset's vault credentials by the kinds declared in `affiliateCredentialRequirements`. `missing` lists
+   * the required requirements that are not stored (kinds and labels only, never values); optional ones are skipped.
+   */
+  private async secrets(ctx: ConnectorContext, preset: AffiliatePreset): Promise<{ values: Record<string, string>; missing: AffiliateCredentialRequirement[] }> {
+    const values: Record<string, string> = {};
+    const missing: AffiliateCredentialRequirement[] = [];
+    const requirements = affiliateCredentialRequirements(preset);
+    const requirementFor = (kind: AffiliateCredentialRequirement["kind"]): AffiliateCredentialRequirement => requirements.find((r) => r.kind === kind) ?? { kind, label: `${preset.name}: ${kind}`, help: "", secret: true, oauth: null, optional: false };
+    for (const cfg of preset.config.filter(isSecretField)) {
+      const v = await ctx.getCredential(cfg.credential);
+      if (v) values[cfg.key] = v;
+      else if (!cfg.optional) missing.push(requirementFor(cfg.credential));
     }
     if (preset.auth.type === "basic") {
       const pw = await ctx.getCredential(preset.auth.passwordCredential);
-      if (!pw) return null;
-      out.__basic_password = pw;
+      if (pw) values.__basic_password = pw;
+      else missing.push(requirementFor(preset.auth.passwordCredential));
     }
     if (preset.auth.type === "bearer" || preset.auth.type === "query") {
       const t = await ctx.getCredential(preset.auth.credential);
-      if (!t) return null;
-      out.__token = t;
+      if (t) values.__token = t;
+      else missing.push(requirementFor(preset.auth.credential));
     }
-    return out;
+    return { values, missing };
   }
 
   async dispatchBatch(ctx: ConnectorContext, payloads: VendorPayload[]): Promise<DispatchResult[]> {
@@ -198,9 +209,9 @@ export class AffiliateConnector implements Connector {
         results.push(failed(p.eventId, "permanent", "unknown_preset", `unknown affiliate preset ${b.preset}`));
         continue;
       }
-      const secrets = await this.secrets(ctx, preset);
-      if (!secrets) {
-        results.push(missingCredential(p.eventId, "affiliate_secret"));
+      const { values: secrets, missing } = await this.secrets(ctx, preset);
+      if (missing.length) {
+        results.push(missingCredential(p.eventId, missing.map((m) => m.kind).join("+")));
         continue;
       }
       const values: Values = { ...b.values };
@@ -239,8 +250,10 @@ export class AffiliateConnector implements Connector {
     if (!preset) return { ok: false, status: "invalid", detail: "Select an affiliate network preset", apiVersion: this.meta.apiVersion, checkedAt };
     const missing = preset.config.filter((c) => !c.secret && !c.pattern.includes("?$") && !ctx.publicConfig[c.key]).map((c) => c.label);
     if (missing.length) return { ok: false, status: "invalid", detail: `Missing: ${missing.join(", ")}`, apiVersion: this.meta.apiVersion, checkedAt };
-    const secrets = await this.secrets(ctx, preset);
-    if (!secrets) return { ok: false, status: "not_connected", detail: "Network secret (token / checksum) missing", apiVersion: this.meta.apiVersion, checkedAt };
+    const { missing: missingSecrets } = await this.secrets(ctx, preset);
+    if (missingSecrets.length) {
+      return { ok: false, status: "not_connected", detail: `Missing credential${missingSecrets.length > 1 ? "s" : ""}: ${missingSecrets.map((m) => `${m.kind} (${m.label})`).join(", ")} — store it through the secure credential card, never in chat`, apiVersion: this.meta.apiVersion, checkedAt };
+    }
     return { ok: true, status: preset.verified === "network" ? "unknown" : "valid", detail: preset.verified === "network" ? `${preset.name}: template follows the network's advertiser documentation (confirm parameters with your network contact); postbacks are attributable only with the ${preset.clickIdParams[0]} click id` : `${preset.name}: template verified ${preset.verified}; attribution requires the ${preset.clickIdParams[0]} click id`, apiVersion: this.meta.apiVersion, checkedAt };
   }
 

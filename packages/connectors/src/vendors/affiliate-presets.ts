@@ -5,7 +5,40 @@
  * `verified: "network"` follow the network's advertiser documentation which is only available after login — the
  * wizard shows the template for confirmation with the network contact and every parameter can be edited per site.
  */
+import type { CredentialKind, CredentialRequirement } from "../connector.ts";
+
 export type AffiliateMethod = "GET" | "POST_FORM" | "POST_JSON";
+
+/** vault credential kinds an affiliate destination can store; every secret field names the kind it is read from */
+export type AffiliateCredentialKind = Extract<CredentialKind, "access_token" | "api_secret" | "signing_secret" | "webhook_secret">;
+
+export interface AffiliatePublicField {
+  key: string;
+  label: string;
+  pattern: string;
+  example: string;
+  /** entered in the wizard or chat and stored in publicConfig */
+  secret?: false;
+}
+
+export interface AffiliateSecretField {
+  key: string;
+  label: string;
+  pattern: string;
+  example: string;
+  /** stored in the vault through the secure credential card, never in publicConfig or chat */
+  secret: true;
+  /** vault credential kind the connector reads the value from (`ctx.getCredential(credential)`) */
+  credential: AffiliateCredentialKind;
+  /** the postback is delivered without the value (a network feature that is off by default) */
+  optional?: boolean;
+}
+
+export type AffiliateConfigField = AffiliatePublicField | AffiliateSecretField;
+
+export function isSecretField(field: AffiliateConfigField): field is AffiliateSecretField {
+  return field.secret === true;
+}
 
 export interface AffiliatePreset {
   id: string;
@@ -17,11 +50,11 @@ export interface AffiliatePreset {
   params: Record<string, string>;
   /** JSON body template for POST_JSON presets (rendered recursively) */
   json?: Record<string, unknown>;
-  auth: { type: "none" } | { type: "basic"; userField: string; passwordCredential: "api_secret" } | { type: "bearer"; credential: "access_token" } | { type: "query"; param: string; credential: "access_token" };
+  auth: { type: "none" } | { type: "basic"; userField: string; passwordCredential: "api_secret"; passwordLabel: string } | { type: "bearer"; credential: "access_token" } | { type: "query"; param: string; credential: "access_token" };
   /** which captured click id feeds `{click_id}` */
   clickIdParams: string[];
-  /** site-level config keys the preset needs (entered in the wizard) */
-  config: Array<{ key: string; label: string; pattern: string; example: string; secret?: boolean }>;
+  /** site-level config keys the preset needs (public ids in the wizard / chat, secrets through the secure credential card) */
+  config: AffiliateConfigField[];
   /** canonical events the preset sends; others are skipped unless mapped explicitly */
   events: string[];
   signature?: "tradedoubler" | null;
@@ -62,7 +95,7 @@ export const AFFILIATE_PRESETS: Record<string, AffiliatePreset> = {
     config: [
       { key: "enterprise_id", label: "Enterprise ID (CID)", pattern: "^[0-9]{4,10}$", example: "1234567" },
       { key: "action_id", label: "Action ID (TYPE)", pattern: "^[0-9]{4,10}$", example: "402340" },
-      { key: "signature", label: "Personal access token (SIGNATURE)", pattern: "^.{10,}$", example: "", secret: true },
+      { key: "signature", label: "Personal access token (SIGNATURE)", pattern: "^.{10,}$", example: "", secret: true, credential: "access_token" },
     ],
     events: ["purchase", "generate_lead", "sign_up"],
     requiresClickId: true,
@@ -76,7 +109,7 @@ export const AFFILIATE_PRESETS: Record<string, AffiliatePreset> = {
     method: "POST_FORM",
     url: "https://api.impact.com/Advertisers/{account_sid}/Conversions",
     params: { CampaignId: "{campaign_id}", ActionTrackerId: "{action_tracker_id}", EventDate: "{timestamp_iso}", OrderId: "{order_id}", ClickId: "{click_id}", CurrencyCode: "{currency}", Amount: "{value}", OrderPromoCode: "{voucher}", CustomerEmail: "{email_sha256}", CustomerStatus: "{customer_status}" },
-    auth: { type: "basic", userField: "account_sid", passwordCredential: "api_secret" },
+    auth: { type: "basic", userField: "account_sid", passwordCredential: "api_secret", passwordLabel: "AuthToken (Basic auth password)" },
     clickIdParams: ["irclickid"],
     config: [
       { key: "account_sid", label: "Account SID", pattern: "^IR[A-Za-z0-9]{10,40}$", example: "IRabc123" },
@@ -118,7 +151,7 @@ export const AFFILIATE_PRESETS: Record<string, AffiliatePreset> = {
     config: [
       { key: "organization_id", label: "Organization ID", pattern: "^[0-9]{3,10}$", example: "12345" },
       { key: "event_id", label: "Event ID", pattern: "^[0-9]{3,10}$", example: "23456" },
-      { key: "checksum_secret", label: "Checksum secret code", pattern: "^.{4,}$", example: "", secret: true },
+      { key: "checksum_secret", label: "Checksum secret code", pattern: "^.{4,}$", example: "", secret: true, credential: "signing_secret" },
     ],
     events: ["purchase", "generate_lead", "sign_up"],
     signature: "tradedoubler",
@@ -232,7 +265,7 @@ export const AFFILIATE_PRESETS: Record<string, AffiliatePreset> = {
     config: [
       { key: "network_domain", label: "Network tracking domain", pattern: "^[a-z0-9.-]+\\.[a-z]{2,}$", example: "network.go2cloud.org" },
       { key: "goal_id", label: "Goal ID (optional)", pattern: "^([0-9]{1,10})?$", example: "" },
-      { key: "security_token", label: "Security token (optional)", pattern: "^.{0,64}$", example: "", secret: true },
+      { key: "security_token", label: "Security token (optional)", pattern: "^.{0,64}$", example: "", secret: true, credential: "api_secret", optional: true },
     ],
     events: ["purchase", "generate_lead", "sign_up", "start_trial"],
     requiresClickId: true,
@@ -251,7 +284,7 @@ export const AFFILIATE_PRESETS: Record<string, AffiliatePreset> = {
     config: [
       { key: "network_domain", label: "Network tracking domain", pattern: "^[a-z0-9.-]+\\.[a-z]{2,}$", example: "www.eftrackall.com" },
       { key: "network_id", label: "Network ID (nid)", pattern: "^[0-9]{1,10}$", example: "1" },
-      { key: "security_token", label: "Verification token (optional)", pattern: "^.{0,64}$", example: "", secret: true },
+      { key: "security_token", label: "Verification token (optional)", pattern: "^.{0,64}$", example: "", secret: true, credential: "api_secret", optional: true },
     ],
     events: ["purchase", "generate_lead", "sign_up", "start_trial"],
     requiresClickId: true,
@@ -306,3 +339,71 @@ export const AFFILIATE_PLACEHOLDERS = [
   "basket_f",
   "signature",
 ] as const;
+
+export interface AffiliateCredentialRequirement extends CredentialRequirement {
+  kind: AffiliateCredentialKind;
+  optional: boolean;
+}
+
+const INBOUND_ROUTE = "/v1/affiliate/in/{trackingId}/{preset}";
+
+const KIND_LABELS: Record<AffiliateCredentialKind, string> = {
+  access_token: "Network personal access token",
+  api_secret: "Network API secret / security token",
+  signing_secret: "Checksum secret / IPN passphrase",
+  webhook_secret: "Inbound postback token",
+};
+
+/**
+ * Credential requirements of one preset, or — with `null` — the union every preset can store, all marked
+ * `optional` because which ones apply depends on `publicConfig.preset`. Outbound secrets come from the preset's
+ * secret config fields and auth block; inbound postbacks (`/v1/affiliate/in/:trackingId/:preset`, apps/collector)
+ * authenticate with the Digistore24 IPN passphrase (`signing_secret`) or a shared token (`webhook_secret`) and are
+ * optional for every preset. The connector, the credential route, the wizard and the assistant tools read this list.
+ */
+export function affiliateCredentialRequirements(preset: AffiliatePreset | null): AffiliateCredentialRequirement[] {
+  if (!preset) return unionRequirements();
+  const out: AffiliateCredentialRequirement[] = [];
+  for (const field of preset.config.filter(isSecretField)) {
+    out.push({
+      kind: field.credential,
+      label: `${preset.name}: ${field.label}`,
+      help: field.optional ? `Optional: the ${preset.name} postback is delivered without it. ${preset.notes}` : `Required by ${preset.name} for every postback. ${preset.notes}`,
+      secret: true,
+      oauth: null,
+      optional: field.optional === true,
+    });
+  }
+  if (preset.auth.type === "basic") {
+    out.push({ kind: preset.auth.passwordCredential, label: `${preset.name}: ${preset.auth.passwordLabel}`, help: `Basic authentication password; the user name is the public id \`${preset.auth.userField}\`.`, secret: true, oauth: null, optional: false });
+  }
+  if (preset.auth.type === "bearer" || preset.auth.type === "query") {
+    out.push({ kind: preset.auth.credential, label: `${preset.name}: API token`, help: preset.auth.type === "bearer" ? "Sent as the Authorization: Bearer header." : `Sent as the \`${preset.auth.param}\` query parameter.`, secret: true, oauth: null, optional: false });
+  }
+  const inboundUrl = INBOUND_ROUTE.replace("{preset}", preset.id);
+  if (preset.id === "digistore24") {
+    out.push({ kind: "signing_secret", label: `${preset.name}: IPN passphrase (inbound postbacks)`, help: `Only for postbacks ${preset.name} pushes to ${inboundUrl}: the passphrase configured in Digistore24 → S2S Postback, used to verify sha_sign.`, secret: true, oauth: null, optional: true });
+  } else {
+    out.push({ kind: "webhook_secret", label: `${preset.name}: inbound postback token`, help: `Only when ${preset.name} pushes conversions to ${inboundUrl}: shared token sent as the \`token\` query parameter or the \`x-tracksite-token\` header.`, secret: true, oauth: null, optional: true });
+  }
+  return out;
+}
+
+function unionRequirements(): AffiliateCredentialRequirement[] {
+  const byKind = new Map<AffiliateCredentialKind, { required: string[]; optional: string[] }>();
+  for (const preset of Object.values(AFFILIATE_PRESETS)) {
+    for (const r of affiliateCredentialRequirements(preset)) {
+      const entry = byKind.get(r.kind) ?? { required: [], optional: [] };
+      (r.optional ? entry.optional : entry.required).push(preset.name);
+      byKind.set(r.kind, entry);
+    }
+  }
+  const list = (names: string[]) => (names.length > 5 ? `${names.length} presets incl. ${names.slice(0, 3).join(", ")}` : names.join(", "));
+  return (Object.keys(KIND_LABELS) as AffiliateCredentialKind[])
+    .filter((kind) => byKind.has(kind))
+    .map((kind) => {
+      const { required, optional } = byKind.get(kind) ?? { required: [], optional: [] };
+      const parts = [required.length ? `required by ${list(required)}` : null, optional.length ? `optional for ${list(optional)}` : null].filter((p): p is string => p !== null);
+      return { kind, label: KIND_LABELS[kind], help: `Depends on the selected network preset: ${parts.join("; ")}. Other presets do not use it — select the preset first and store only the credentials listed for it.`, secret: true, oauth: null, optional: true };
+    });
+}

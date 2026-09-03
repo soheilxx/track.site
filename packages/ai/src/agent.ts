@@ -46,7 +46,10 @@ export interface TurnInput {
   maxOutputTokens?: number;
   safetyIdentifier: string;
   promptCacheKey: string;
-  /** hook for persisting tool runs (audit) */
+  /**
+   * hook for persisting tool runs (audit). `result.data` is the unredacted handler output so the app can keep
+   * approval tokens and ids for the UI confirmation; consumers must redact it before persisting or showing it.
+   */
   onToolRun?: (run: { callId: string; name: string; args: Record<string, unknown>; result: { ok: boolean; code: string; data: unknown }; durationMs: number }) => Promise<void>;
 }
 
@@ -147,18 +150,22 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
         const started = Date.now();
         emit({ type: "tool.started", callId: call.call_id, name: call.name, args: redactDeep(args) });
         let result: { ok: boolean; code: string; message: string; data: unknown; retryable: boolean; version: number };
+        let handlerData: unknown = null;
         if (!tool || !input.toolNames.includes(call.name)) {
           result = { ok: false, code: "FORBIDDEN", message: "tool not available in this step", data: null, retryable: false, version: 1 };
         } else if (CONFIRM_TOOLS.includes(call.name) && !("approval_token" in args && typeof args.approval_token === "string" && args.approval_token.length > 0)) {
           result = { ok: false, code: "CONFIRMATION_REQUIRED", message: "this action needs an explicit user confirmation through the approval component", data: null, retryable: false, version: 1 };
         } else {
           const r = await tool.run(args, ctx);
-          result = { ok: r.ok, code: r.code, message: r.message, data: r.ok ? redactToolOutput(r.data) : null, retryable: r.retryable, version: r.version };
+          // the model only ever sees the redacted copy (data and message alike: error texts can echo vendor
+          // responses); the raw handler output goes to onToolRun (approval tokens for the UI)
+          handlerData = r.ok ? r.data : null;
+          result = { ok: r.ok, code: r.code, message: redactToolOutput(r.message), data: r.ok ? redactToolOutput(r.data) : null, retryable: r.retryable, version: r.version };
           if (r.ok && tool.kind !== "read") wroteSomething = true;
         }
         const durationMs = Date.now() - started;
         emit({ type: "tool.completed", callId: call.call_id, name: call.name, ok: result.ok, code: result.code, summary: summarize(result.data ?? result.message), durationMs });
-        await input.onToolRun?.({ callId: call.call_id, name: call.name, args: redactDeep(args), result: { ok: result.ok, code: result.code, data: result.data }, durationMs });
+        await input.onToolRun?.({ callId: call.call_id, name: call.name, args: redactDeep(args), result: { ok: result.ok, code: result.code, data: handlerData }, durationMs });
         items.push({ type: "function_call", call_id: call.call_id, name: call.name, arguments: call.arguments });
         items.push({ type: "function_call_output", call_id: call.call_id, output: JSON.stringify(result).slice(0, 20_000) });
       }

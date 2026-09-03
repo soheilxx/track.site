@@ -85,3 +85,21 @@ npx vercel@latest deploy --prod --scope modernice
 ```
 
 - Collector and worker are not on Vercel (long-running processes, EU containers per topology); until they run, `ingest.track.site` and `cdn.track.site` do not resolve and browser snippets cannot send.
+
+## Container images (collector, worker)
+
+`infra/docker/collector.Dockerfile` and `infra/docker/worker.Dockerfile` build from the repository root (multi-stage: pnpm 11 install of the app's workspace subset, `tsup` bundle of all `@track-site/*` packages into `dist/main.js`, `pnpm deploy --prod` for a pruned runtime `node_modules`, non-root user, health check). CI builds both images on every push (`docker-images` job) without publishing them; publish to your registry from the same Dockerfiles.
+
+Fly.io (Frankfurt) configurations are in `infra/fly/`:
+
+```bash
+fly launch --no-deploy --config infra/fly/collector.fly.toml --name track-site-collector --region fra
+fly secrets set -a track-site-collector DATABASE_URL=… MASTER_KEY=… MASTER_KEY_ID=… CONFIG_SIGNING_PUBLIC_KEY=… CONFIG_SIGNING_KEY_ID=…
+fly deploy --config infra/fly/collector.fly.toml --dockerfile infra/docker/collector.Dockerfile
+
+fly launch --no-deploy --config infra/fly/worker.fly.toml --name track-site-worker --region fra
+fly secrets set -a track-site-worker DATABASE_URL=… MASTER_KEY=… MASTER_KEY_ID=… CONFIG_SIGNING_PRIVATE_KEY=… CONFIG_SIGNING_PUBLIC_KEY=… CONFIG_SIGNING_KEY_ID=… <vendor platform credentials from .env.example>
+fly deploy --config infra/fly/worker.fly.toml --dockerfile infra/docker/worker.Dockerfile
+```
+
+Both services use the same database and the same `MASTER_KEY`/`CONFIG_SIGNING_*` values as the web app (the worker signs nothing, but decrypts credentials; the collector verifies nothing, but serves signed bundles). After the first deploy: `ingest.track.site` → CNAME to the collector app, `HOST_INGEST`/`NEXT_PUBLIC_HOST_INGEST` in Vercel to `https://ingest.track.site`, then redeploy the web app so the CSP and snippets pick it up. The worker health endpoint listens on `WORKER_PORT` (default 3199) and reports loop and queue state.

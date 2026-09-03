@@ -1,7 +1,7 @@
 import "server-only";
 import { eq, and } from "drizzle-orm";
 import { PgEventStore } from "@track-site/analytics";
-import { DEVELOPER_INSTRUCTIONS, TOOL_SET_VERSION, allowedToolNames, buildToolRegistry, contextBlock, interceptUserMessage, loadSetupState, runAgentTurn, type AgentEvent, type AssistantUiResponse } from "@track-site/ai";
+import { DEVELOPER_INSTRUCTIONS, TOOL_SET_VERSION, allowedToolNames, buildToolRegistry, contextBlock, interceptUserMessage, loadSetupState, redactToolOutput, runAgentTurn, type AgentEvent, type AssistantUiResponse } from "@track-site/ai";
 import { activeVersion, configDrafts, getSite, integrations, withTenant } from "@track-site/db";
 import { env } from "@/env";
 import { db, pool } from "@/server/db";
@@ -60,7 +60,8 @@ export async function runChatTurn(ctx: OrgContext, siteId: string, userMessage: 
     promptCacheKey: `${ctx.organization.id}:${TOOL_SET_VERSION}`,
     emit,
     onToolRun: async (run) => {
-      await recordToolRun(ctx.organization.id, session.id, run);
+      // the run carries the unredacted handler output (needed for the approval token below); the audit row only ever stores the redacted copy
+      await recordToolRun(ctx.organization.id, session.id, { ...run, result: { ...run.result, data: redactToolOutput(run.result.data) } });
       const data = run.result.data as { approval?: { token: string; expires_at: string }; draft_id?: string; changes?: unknown; recipients?: unknown; ui?: Record<string, unknown> } | null;
       if (run.name === "prepare_publish" && run.result.ok && data?.approval && data.draft_id) {
         const approvalId = run.callId;

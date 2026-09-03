@@ -7,4 +7,5 @@ export * from "./registry.ts";
 export * from "./oauth1.ts";
 export * from "./oauth2.ts";
 export * from "./matrix.ts";
-export { AFFILIATE_PRESETS, type AffiliatePreset } from "./vendors/affiliate-presets.ts";
+export { AFFILIATE_PRESETS, affiliateCredentialRequirements, isSecretField, type AffiliatePreset, type AffiliateCredentialRequirement } from "./vendors/affiliate-presets.ts";
+export { credentialRequirementsFor, missingCredentialKinds } from "./credential-requirements.ts";

@@ -94,3 +94,26 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+
+  docker-images:
+    name: Container images build (collector, worker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [static]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build collector image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/collector.Dockerfile
+          push: false
+          tags: track-site-collector:ci
+      - name: Build worker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/worker.Dockerfile
+          push: false
+          tags: track-site-worker:ci

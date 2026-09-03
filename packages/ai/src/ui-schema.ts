@@ -31,7 +31,14 @@ export const inputComponentSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("none") }),
   z.object({ type: z.literal("text"), field: z.string(), label: z.string(), placeholder: z.string().nullable(), pattern: z.string().nullable(), help: z.string().nullable() }),
   z.object({ type: z.literal("url"), field: z.string(), label: z.string(), placeholder: z.string().nullable() }),
-  z.object({ type: z.literal("pixel_id"), field: z.string(), label: z.string(), connector_type: z.string(), pattern: z.string(), example: z.string() }),
+  z.object({
+    type: z.literal("pixel_id"),
+    field: z.string(),
+    label: z.string(),
+    connector_type: z.string(),
+    pattern: z.string().nullable().describe("regex copied verbatim from required_public_ids of create_integration_draft / get_destination_status; null when you do not have it (the UI then skips the format check and the server validates)"),
+    example: z.string().nullable().describe("example value copied verbatim from required_public_ids; null when you do not have it"),
+  }),
   z.object({ type: z.literal("yes_no"), field: z.string(), label: z.string() }),
   z.object({ type: z.literal("confirm"), action: z.string(), label: z.string(), approval_id: z.string() }),
   z.object({ type: z.literal("oauth"), provider: z.string(), integration_id: z.string(), label: z.string() }),
@@ -66,47 +73,66 @@ export function assistantUiJsonSchema(): Record<string, unknown> {
   return strictJsonSchema(z.toJSONSchema(assistantUiResponseSchema, { target: "draft-2020-12", unrepresentable: "any" }) as Record<string, unknown>);
 }
 
+/** Validation keywords the strict subset drops; their meaning is moved into the description instead. */
+const HINTED_KEYWORDS = ["minLength", "maxLength", "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf", "minItems", "maxItems", "uniqueItems", "minProperties", "maxProperties", "pattern", "format"] as const;
+
+/** Keywords that have no strict-mode equivalent at all (open maps); a schema using them must be redesigned. */
+const UNREPRESENTABLE_KEYWORDS = ["propertyNames", "patternProperties"] as const;
+
+function unrepresentable(path: string, keyword: string): Error {
+  return new Error(`strictJsonSchema: "${keyword}" at ${path || "(root)"} cannot be expressed in OpenAI strict mode; use explicit z.object / z.array shapes instead of z.record, z.map or loose objects`);
+}
+
+function hintsOf(obj: Record<string, unknown>): string[] {
+  const hints: string[] = [];
+  if (typeof obj.minLength === "number" && obj.minLength === obj.maxLength) hints.push(`exactly ${obj.minLength} characters`);
+  else {
+    if (typeof obj.minLength === "number") hints.push(`at least ${obj.minLength} characters`);
+    if (typeof obj.maxLength === "number") hints.push(`at most ${obj.maxLength} characters`);
+  }
+  if (typeof obj.minimum === "number" && typeof obj.maximum === "number") hints.push(`between ${obj.minimum} and ${obj.maximum}`);
+  else {
+    if (typeof obj.minimum === "number") hints.push(`minimum ${obj.minimum}`);
+    if (typeof obj.maximum === "number") hints.push(`maximum ${obj.maximum}`);
+  }
+  if (typeof obj.exclusiveMinimum === "number") hints.push(`greater than ${obj.exclusiveMinimum}`);
+  if (typeof obj.exclusiveMaximum === "number") hints.push(`less than ${obj.exclusiveMaximum}`);
+  if (typeof obj.multipleOf === "number") hints.push(`multiple of ${obj.multipleOf}`);
+  if (typeof obj.minItems === "number") hints.push(`at least ${obj.minItems} items`);
+  if (typeof obj.maxItems === "number") hints.push(`at most ${obj.maxItems} items`);
+  if (obj.uniqueItems === true) hints.push("unique items");
+  if (typeof obj.minProperties === "number") hints.push(`at least ${obj.minProperties} properties`);
+  if (typeof obj.maxProperties === "number") hints.push(`at most ${obj.maxProperties} properties`);
+  if (typeof obj.pattern === "string") hints.push(`matching ${obj.pattern}`);
+  if (typeof obj.format === "string") hints.push(`format ${obj.format}`);
+  return hints;
+}
+
 /**
  * Turns a generated JSON Schema into the OpenAI strict subset: every object lists all properties
- * as required, forbids additional properties, and optional fields become nullable.
+ * as required, forbids additional properties, and optional fields become nullable. Validation
+ * keywords the subset drops are moved into the description so the model still knows them.
+ *
+ * Open maps (z.record, z.map, patternProperties) have no strict representation at all, so they
+ * throw here — which happens inside defineTool at module load, i.e. in typecheck/test runs, never
+ * as a 400 from the provider at runtime.
  */
 export function strictJsonSchema(schema: Record<string, unknown>): Record<string, unknown> {
-  const visit = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(visit);
+  const visit = (node: unknown, path: string): unknown => {
+    if (Array.isArray(node)) return node.map((n, i) => visit(n, `${path}[${i}]`));
     if (!node || typeof node !== "object") return node;
     const obj = { ...(node as Record<string, unknown>) };
     delete obj.$schema;
     delete obj.default;
-    // the strict subset drops these keywords; the model still has to know them, so they move into the description
-    const hints: string[] = [];
-    if (typeof obj.minLength === "number" && obj.minLength === obj.maxLength) hints.push(`exactly ${obj.minLength} characters`);
-    else {
-      if (typeof obj.minLength === "number") hints.push(`at least ${obj.minLength} characters`);
-      if (typeof obj.maxLength === "number") hints.push(`at most ${obj.maxLength} characters`);
-    }
-    if (typeof obj.minimum === "number" && typeof obj.maximum === "number") hints.push(`between ${obj.minimum} and ${obj.maximum}`);
-    else {
-      if (typeof obj.minimum === "number") hints.push(`minimum ${obj.minimum}`);
-      if (typeof obj.maximum === "number") hints.push(`maximum ${obj.maximum}`);
-    }
-    if (typeof obj.minItems === "number") hints.push(`at least ${obj.minItems} items`);
-    if (typeof obj.maxItems === "number") hints.push(`at most ${obj.maxItems} items`);
-    if (typeof obj.pattern === "string") hints.push(`matching ${obj.pattern}`);
-    if (typeof obj.format === "string") hints.push(`format ${obj.format}`);
+    for (const keyword of UNREPRESENTABLE_KEYWORDS) if (keyword in obj) throw unrepresentable(path, keyword);
+    const hints = hintsOf(obj);
     if (hints.length) obj.description = [typeof obj.description === "string" ? obj.description : "", `(${hints.join(", ")})`].filter(Boolean).join(" ");
-    delete obj.minLength;
-    delete obj.maxLength;
-    delete obj.minimum;
-    delete obj.maximum;
-    delete obj.minItems;
-    delete obj.maxItems;
-    delete obj.pattern;
-    delete obj.format;
+    for (const keyword of HINTED_KEYWORDS) delete obj[keyword];
     if (obj.type === "object" && obj.properties && typeof obj.properties === "object") {
-      const props = obj.properties as Record<string, unknown>;
+      const props = { ...(obj.properties as Record<string, unknown>) };
       const required = new Set((obj.required as string[] | undefined) ?? []);
       for (const key of Object.keys(props)) {
-        let p = visit(props[key]) as Record<string, unknown>;
+        let p = visit(props[key], `${path}.${key}`) as Record<string, unknown>;
         if (!required.has(key)) {
           p = makeNullable(p);
         }
@@ -114,27 +140,38 @@ export function strictJsonSchema(schema: Record<string, unknown>): Record<string
       }
       obj.properties = props;
       obj.required = Object.keys(props);
+      // a closed object is what strict mode demands; Zod strips unknown keys on re-validation anyway
       obj.additionalProperties = false;
     }
+    // anything left here is a record-style map (additionalProperties as a schema without a property list)
+    if ("additionalProperties" in obj && obj.additionalProperties !== false) throw unrepresentable(path, "additionalProperties");
     for (const key of ["items", "anyOf", "oneOf", "allOf"]) {
-      if (key in obj) obj[key] = visit(obj[key]);
+      if (key in obj) obj[key] = visit(obj[key], `${path}.${key}`);
     }
     if ("oneOf" in obj) {
       obj.anyOf = obj.oneOf;
       delete obj.oneOf;
     }
     if (obj.$defs && typeof obj.$defs === "object") {
-      const defs = obj.$defs as Record<string, unknown>;
-      for (const k of Object.keys(defs)) defs[k] = visit(defs[k]);
+      const defs = { ...(obj.$defs as Record<string, unknown>) };
+      for (const k of Object.keys(defs)) defs[k] = visit(defs[k], `${path}.$defs.${k}`);
+      obj.$defs = defs;
     }
     return obj;
   };
-  return visit(schema) as Record<string, unknown>;
+  return visit(schema, "") as Record<string, unknown>;
 }
 
+/**
+ * Adds `null` to a property schema. A bare type array is not enough when the node also carries
+ * `enum` or `const`: those keywords are validated on their own, so `null` has to be listed in the
+ * enum, and a `const` node is wrapped in an anyOf instead (a const can only hold one value).
+ */
 function makeNullable(p: Record<string, unknown>): Record<string, unknown> {
-  if (Array.isArray(p.type)) return p.type.includes("null") ? p : { ...p, type: [...p.type, "null"] };
-  if (typeof p.type === "string") return p.type === "null" ? p : { ...p, type: [p.type, "null"] };
-  if (Array.isArray(p.anyOf)) return { ...p, anyOf: [...p.anyOf, { type: "null" }] };
+  if ("const" in p) return { anyOf: [p, { type: "null" }] };
+  const withEnum = (node: Record<string, unknown>): Record<string, unknown> => (Array.isArray(node.enum) && !node.enum.includes(null) ? { ...node, enum: [...node.enum, null] } : node);
+  if (Array.isArray(p.type)) return p.type.includes("null") ? withEnum(p) : withEnum({ ...p, type: [...p.type, "null"] });
+  if (typeof p.type === "string") return p.type === "null" ? p : withEnum({ ...p, type: [p.type, "null"] });
+  if (Array.isArray(p.anyOf)) return p.anyOf.some((v) => (v as Record<string, unknown>).type === "null") ? p : { ...p, anyOf: [...p.anyOf, { type: "null" }] };
   return { anyOf: [p, { type: "null" }] };
 }

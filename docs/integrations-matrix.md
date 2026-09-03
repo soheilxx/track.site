@@ -1,6 +1,6 @@
 # Integration matrix
 
-Generated from the connector registry on 2026-09-02. Regenerate with `pnpm --filter @track-site/connectors matrix`; `matrix.test.ts` fails when a connector type is missing, unverified or lacks a delivery path.
+Generated from the connector registry on 2026-09-03. Regenerate with `pnpm --filter @track-site/connectors matrix`; `matrix.test.ts` fails when a connector type is missing, unverified or lacks a delivery path.
 
 | Destination | Type | Browser | Server | Hybrid | Offline | Dedup key | Click IDs | Public IDs | Credentials | API version | Verified | Test events | Module |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -25,7 +25,7 @@ Generated from the connector registry on 2026-09-02. Regenerate with `pnpm --fil
 | Google Marketing Platform (CM360 / DV360 / SA360 Floodlight) | `gmp` | ✅ | ✅ | ✅ | ✅ | `ordinal` | `gclid`, `dclid`, `gbraid`, `wbraid` | `floodlight_configuration_id`, `profile_id` | oauth_refresh_token (OAuth google) | v5 | 2026-09-03 | Floodlight configuration read + batchinsert status[] | [gmp.ts](../packages/connectors/src/vendors/gmp.ts) |
 | AdRoll (pixel + S2S Event API, beta) | `adroll` | ✅ | ✅ | ✅ | — | `event_attributes.order_id` | `adroll_clid` | `advertiser_id`, `pixel_id` | access_token | s2s-beta | 2026-09-03 | dry_run=true | [adroll.ts](../packages/connectors/src/vendors/adroll.ts) |
 | Criteo (OneTag + server-side events) | `criteo` | ✅ | ✅ | ✅ | — | `id` | `crto_clid` | `account_id` | none | s2s_v1.0.0 | 2026-09-03 | errors[] in the always-200 response | [criteo.ts](../packages/connectors/src/vendors/criteo.ts) |
-| Affiliate networks (server-to-server postbacks) | `affiliate` | — | ✅ | — | — | `order_id` | `aff_click_id`, `aff_sub_id`, `awc`, `cjevent`, `irclickid`, `tduid`, `ttl`, `utm_term` | `preset` | none | postback-v1 | 2026-09-03 | network test modes (Awin testmode, Impact queued response) | [affiliate.ts](../packages/connectors/src/vendors/affiliate.ts) |
+| Affiliate networks (server-to-server postbacks) | `affiliate` | — | ✅ | — | — | `order_id` | `aff_click_id`, `aff_sub_id`, `awc`, `cjevent`, `irclickid`, `tduid`, `ttl`, `utm_term` | `preset` | access_token (optional), api_secret (optional), signing_secret (optional), webhook_secret (optional) | postback-v1 | 2026-09-03 | network test modes (Awin testmode, Impact queued response) | [affiliate.ts](../packages/connectors/src/vendors/affiliate.ts) |
 
 ## Vendor prerequisites
 

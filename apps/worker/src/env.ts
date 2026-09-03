@@ -17,6 +17,8 @@ export const workerEnvSchema = baseEnvSchema.extend({
   KMS_DRIVER: envEnum(["local", "aws"], "local"),
   AWS_KMS_KEY_ID: envString(),
   WORKER_CONCURRENCY: envInt(4, 1, 64),
+  /** local health endpoint for orchestrators (no business traffic) */
+  WORKER_PORT: envInt(3199, 1, 65535),
   WORKER_POLL_MS: envInt(500, 50, 10_000),
   WORKER_BATCH_SIZE: envInt(10, 1, 50),
   MAX_DELIVERY_ATTEMPTS: envInt(8, 1, 20),

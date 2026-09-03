@@ -7,11 +7,18 @@ import type { AgentContext } from "../context.ts";
 import { loadSetupState, saveSetupState } from "../setup-store.ts";
 import { applyStepUpdate } from "../state-machine.ts";
 import { defineTool } from "./registry.ts";
+import { credentialRequirementsFor, getConnector } from "@track-site/connectors";
 
 /**
  * Confirmation-gated tools. Every one requires a valid, unconsumed approval token issued for
  * exactly this action/target/tenant/actor/diff by the UI confirmation. The chat text never counts.
+ * The token is injected by the server-side approval route (/api/ai/confirm) when the user clicks
+ * the approval card; the model never receives a usable token and a fabricated one fails verification.
  */
+const approvalTokenSchema = z.string().min(10).describe("supplied only by the UI approval route after the user clicks confirm; never type, copy or invent one — any value you supply is rejected");
+
+const CONFIRM_NOTE = "Do not call this tool yourself: the approval token exists only on the server and is injected by the UI approval route when the user clicks the approval card; anything you supply is rejected. After preparing the change, answer with status=needs_input and requires_confirmation=true and wait for the user.";
+
 function actorOf(ctx: AgentContext) {
   return { kind: "agent" as const, onBehalfOfUserId: ctx.userId, role: ctx.role as "OWNER", chatSessionId: ctx.chatSessionId };
 }
@@ -28,10 +35,10 @@ async function consumeApproval(ctx: AgentContext, token: string, expected: { act
 
 export const publishConfigVersion = defineTool({
   name: "publish_config_version",
-  description: "Publishes the reviewed draft as a signed, immutable configuration version. Requires the approval token from prepare_publish confirmed by the user in the UI.",
+  description: `Publishes the reviewed draft as a signed, immutable configuration version. The approval card is produced by prepare_publish. ${CONFIRM_NOTE}`,
   kind: "confirm",
   permission: "config.publish",
-  input: z.object({ draft_id: z.string().uuid(), approval_token: z.string().min(10) }),
+  input: z.object({ draft_id: z.string().uuid(), approval_token: approvalTokenSchema }),
   handler: async (args, ctx) => {
     if (!ctx.signingKeys) throw new AppError("NOT_CONNECTED", "config signing key not configured");
     const draft = await withTenant(ctx.db, ctx.organizationId, (tx) => getOrCreateDraft(tx, { organizationId: ctx.organizationId, siteId: ctx.siteId, environmentId: ctx.environmentId, createdBy: ctx.userId }));
@@ -49,10 +56,10 @@ export const publishConfigVersion = defineTool({
 
 export const rollbackConfigVersion = defineTool({
   name: "rollback_config_version",
-  description: "Activates a previously published version again (one-click rollback). Requires a UI-confirmed approval token issued for this target version.",
+  description: `Activates a previously published version again (one-click rollback). ${CONFIRM_NOTE}`,
   kind: "confirm",
   permission: "config.rollback",
-  input: z.object({ target_version: z.number().int().nonnegative(), approval_token: z.string().min(10) }),
+  input: z.object({ target_version: z.number().int().nonnegative(), approval_token: approvalTokenSchema }),
   handler: async (args, ctx) => {
     const target = await withTenant(ctx.db, ctx.organizationId, async (tx) => (await tx.select().from(configVersions).where(and(eq(configVersions.environmentId, ctx.environmentId), eq(configVersions.version, args.target_version))).limit(1))[0] ?? null);
     if (!target) throw new AppError("NOT_FOUND", "version not found");
@@ -64,10 +71,10 @@ export const rollbackConfigVersion = defineTool({
 
 export const activateOrPauseDestination = defineTool({
   name: "activate_or_pause_destination",
-  description: "Activates (connected) or pauses a destination. Pausing stops all deliveries immediately. Requires a UI-confirmed approval token.",
+  description: `Activates (connected) or pauses a destination. Pausing stops all deliveries immediately. ${CONFIRM_NOTE}`,
   kind: "confirm",
   permission: "integrations.manage",
-  input: z.object({ integration_id: z.string().uuid(), action: z.enum(["activate", "pause"]), approval_token: z.string().min(10) }),
+  input: z.object({ integration_id: z.string().uuid(), action: z.enum(["activate", "pause"]), approval_token: approvalTokenSchema }),
   handler: async (args, ctx) => {
     const approvalId = await consumeApproval(ctx, args.approval_token, { action: "activate_or_pause_destination", targetType: "integration", targetId: args.integration_id, diffHash: diffHashOf({ action: args.action }) });
     const row = await withTenant(ctx.db, ctx.organizationId, async (tx) => {
@@ -75,8 +82,8 @@ export const activateOrPauseDestination = defineTool({
         const refs = await listCredentialRefs(tx, args.integration_id);
         const integ = (await tx.select().from(integrations).where(eq(integrations.id, args.integration_id)).limit(1))[0];
         if (!integ) throw new AppError("NOT_FOUND", "integration not found");
-        const needsCredential = integ.connectorType !== "ga4" || true;
-        if (needsCredential && !refs.some((r) => r.status === "active") && integ.connectorType !== "webhook") throw new AppError("NOT_CONNECTED", "store the credentials first");
+        const required = credentialRequirementsFor(getConnector(integ.connectorType), integ.publicConfig as Record<string, unknown>).filter((c) => !c.optional);
+        if (required.some((c) => !refs.some((r) => r.kind === c.kind && r.status === "active"))) throw new AppError("NOT_CONNECTED", `store the credentials first (${required.map((c) => c.kind).join(", ")})`);
       }
       const updated = await setIntegrationStatus(tx, { siteId: ctx.siteId, integrationId: args.integration_id, status: args.action === "activate" ? "connected" : "paused", actor: actorOf(ctx) });
       if (!updated) throw new AppError("NOT_FOUND", "integration not found");
@@ -94,10 +101,10 @@ export const activateOrPauseDestination = defineTool({
 
 export const rotateCredential = defineTool({
   name: "rotate_credential",
-  description: "Revokes the active credential of a destination so a new one can be stored through the secure card. Requires a UI-confirmed approval token.",
+  description: `Revokes the active credential of a destination so a new one can be stored through the secure card. ${CONFIRM_NOTE}`,
   kind: "confirm",
   permission: "credentials.rotate",
-  input: z.object({ credential_id: z.string().uuid(), approval_token: z.string().min(10) }),
+  input: z.object({ credential_id: z.string().uuid(), approval_token: approvalTokenSchema }),
   handler: async (args, ctx) => {
     await consumeApproval(ctx, args.approval_token, { action: "rotate_credential", targetType: "credential", targetId: args.credential_id, diffHash: diffHashOf({ rotate: true }) });
     const ok = await withTenant(ctx.db, ctx.organizationId, (tx) => revokeCredential(tx, { organizationId: ctx.organizationId, credentialId: args.credential_id, actor: actorOf(ctx) }));
@@ -108,10 +115,10 @@ export const rotateCredential = defineTool({
 
 export const disconnectIntegration = defineTool({
   name: "disconnect_integration",
-  description: "Disconnects a destination: revokes its credentials, pauses delivery and removes it from the draft. Requires a UI-confirmed approval token.",
+  description: `Disconnects a destination: revokes its credentials, pauses delivery and removes it from the draft. ${CONFIRM_NOTE}`,
   kind: "confirm",
   permission: "integrations.manage",
-  input: z.object({ integration_id: z.string().uuid(), approval_token: z.string().min(10) }),
+  input: z.object({ integration_id: z.string().uuid(), approval_token: approvalTokenSchema }),
   handler: async (args, ctx) => {
     await consumeApproval(ctx, args.approval_token, { action: "disconnect_integration", targetType: "integration", targetId: args.integration_id, diffHash: diffHashOf({ disconnect: true }) });
     await withTenant(ctx.db, ctx.organizationId, async (tx) => {

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { containsSecret, silentLogger } from "@track-site/core";
-import { getConnector } from "@track-site/connectors";
+import { credentialRequirementsFor, getConnector } from "@track-site/connectors";
 import { getIntegration, listCredentialRefs, setIntegrationStatus, storeCredential, withTenant } from "@track-site/db";
 import { db, vault } from "@/server/db";
 import { env } from "@/env";
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   const integration = await withTenant(db(), ctx.organization.id, (tx) => getIntegration(tx, parsed.data.siteId, parsed.data.integrationId));
   if (!integration) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
   const connector = getConnector(integration.connectorType);
-  const requirement = connector?.meta.requiredCredentials.find((c) => c.kind === parsed.data.kind);
+  const requirement = credentialRequirementsFor(connector, integration.publicConfig as Record<string, unknown>).find((c) => c.kind === parsed.data.kind);
   if (!requirement) return NextResponse.json({ ok: false, code: "VALIDATION_ERROR", message: "This connector does not accept that credential kind." }, { status: 400 });
   void containsSecret;
 

@@ -1,0 +1,24 @@
+# Fly.io app for the worker (EU, Frankfurt). No public port; scale by queue lag.
+#   fly launch --no-deploy --config infra/fly/worker.fly.toml --name track-site-worker --region fra
+#   fly secrets set -a track-site-worker DATABASE_URL=... MASTER_KEY=... MASTER_KEY_ID=... CONFIG_SIGNING_PRIVATE_KEY=... (see .env.example)
+#   fly deploy --config infra/fly/worker.fly.toml --dockerfile infra/docker/worker.Dockerfile
+app = "track-site-worker"
+primary_region = "fra"
+
+[build]
+  dockerfile = "../docker/worker.Dockerfile"
+
+[env]
+  APP_ENV = "production"
+  NODE_ENV = "production"
+  DATA_REGION = "eu"
+  QUEUE_DRIVER = "pg"
+  EVENT_STORE_DRIVER = "pg"
+  LOG_LEVEL = "info"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[processes]
+  worker = "node dist/main.js"

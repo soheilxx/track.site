@@ -1,9 +1,12 @@
+import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { silentLogger } from "@track-site/core";
+import { AppError, silentLogger } from "@track-site/core";
 import type OpenAI from "openai";
 import { runAgentTurn, type AgentEvent } from "./agent.ts";
+import { diffHashOf, issueApprovalToken, verifyApprovalToken } from "./approvals.ts";
 import type { AgentContext } from "./context.ts";
+import { APPROVAL_TOKEN_PLACEHOLDER } from "./dlp.ts";
 import { ToolRegistry, defineTool } from "./tools/registry.ts";
 import type { AssistantUiResponse } from "./ui-schema.ts";
 
@@ -67,8 +70,21 @@ function registry(calls: string[]) {
         },
       }),
     )
-    .register(defineTool({ name: "publish_config_version", description: "publish", kind: "confirm", permission: "config.publish", input: z.object({ draft_id: z.string(), approval_token: z.string() }), handler: async () => ({ published: true }) }));
+    .register(defineTool({ name: "publish_config_version", description: "publish", kind: "confirm", permission: "config.publish", input: z.object({ draft_id: z.string(), approval_token: z.string() }), handler: async () => ({ published: true }) }))
+    .register(
+      defineTool({
+        name: "prepare_publish",
+        description: "prepare",
+        kind: "draft",
+        permission: "config.publish",
+        input: z.object({}),
+        handler: async () => ({ draft_id: DRAFT_ID, lint_ok: true, changes: [{ summary: "add pixel", op: "add" }], approval: { token: APPROVAL.token, expires_at: new Date(APPROVAL.claims.expiresAt).toISOString() } }),
+      }),
+    );
 }
+
+const DRAFT_ID = randomUUID();
+const APPROVAL = issueApprovalToken("approval-secret", { action: "publish_config_version", targetType: "config_draft", targetId: DRAFT_ID, organizationId: "o1", userId: "u1", diffHash: diffHashOf({ draft: DRAFT_ID }) });
 
 const ctx = { role: "DEVELOPER", logger: silentLogger(), now: () => new Date() } as unknown as AgentContext;
 const models = { primary: "gpt-5.6-terra", fast: "gpt-5.6-luna", complex: "gpt-5.6-sol" };
@@ -92,6 +108,62 @@ describe("agent turn", () => {
     expect(second.store).toBe(false);
     expect(second.text.format.strict).toBe(true);
     expect(events.map((e) => e.type)).toEqual(expect.arrayContaining(["tool.started", "tool.completed", "ui.final"]));
+  });
+
+  it("hands the raw handler output to onToolRun but never the approval token to the model", async () => {
+    const client = fakeClient([{ calls: [{ name: "prepare_publish", args: {} }, { name: "set_business_profile_draft", args: { business_type: "saas" } }] }, { text: ui("ready") }]);
+    const runs: Array<{ name: string; result: { ok: boolean; code: string; data: unknown } }> = [];
+    const events: AgentEvent[] = [];
+    const r = await runAgentTurn({ ctx, client, models, registry: registry([]), toolNames: ["prepare_publish", "set_business_profile_draft"], instructions: "x", contextBlock: "", history: [], userMessage: "publish", emit: (e) => events.push(e), safetyIdentifier: "t", promptCacheKey: "k", onToolRun: async (run) => void runs.push({ name: run.name, result: run.result }) });
+    expect(r.ui?.message).toBe("ready");
+    expect(runs.map((x) => x.name)).toEqual(["prepare_publish", "set_business_profile_draft"]);
+    // the app receives the unredacted output so it can store the token for the UI approval
+    const prepared = runs[0]!.result.data as { draft_id: string; approval: { token: string; expires_at: string } };
+    expect(prepared.draft_id).toBe(DRAFT_ID);
+    expect(prepared.approval.token).toBe(APPROVAL.token);
+    expect(verifyApprovalToken("approval-secret", prepared.approval.token, { action: "publish_config_version", targetType: "config_draft", targetId: DRAFT_ID, organizationId: "o1", userId: "u1", diffHash: diffHashOf({ draft: DRAFT_ID }) }, APPROVAL.claims.expiresAt - 1).ok).toBe(true);
+    expect((runs[1]!.result.data as { token: string }).token).toBe("sk_live_51H8abcdefghijklmnop");
+    // the model only sees the redacted copy: ids intact, token withheld
+    const second = client.seen[1] as { input: Array<{ type?: string; output?: string }> };
+    const outputs = second.input.filter((i) => i.type === "function_call_output").map((i) => JSON.parse(i.output!) as { data: Record<string, unknown> });
+    const modelView = outputs[0]!.data as { draft_id: string; approval: { token: string; expires_at: string } };
+    expect(modelView.draft_id).toBe(DRAFT_ID);
+    expect(modelView.approval.token).toBe(APPROVAL_TOKEN_PLACEHOLDER);
+    expect(modelView.approval.expires_at).toBe(new Date(APPROVAL.claims.expiresAt).toISOString());
+    expect(JSON.stringify(second.input)).not.toContain(APPROVAL.token.slice(0, 20));
+    expect(JSON.stringify(second.input)).not.toContain("sk_live");
+    // events reach the client and must not carry the token either
+    expect(JSON.stringify(events)).not.toContain(APPROVAL.token.slice(0, 20));
+  });
+
+  it("redacts result messages before they reach the model or the client", async () => {
+    const reg = registry([]).register(
+      defineTool({
+        name: "validate_integration_credentials",
+        description: "validate",
+        kind: "draft",
+        permission: "config.draft",
+        input: z.object({}),
+        handler: async () => {
+          throw new AppError("PROVIDER_ERROR", `vendor rejected key sk_live_51H8abcdefghijklmnop for jane@example.com (approval ${APPROVAL.token})`);
+        },
+      }),
+    );
+    const client = fakeClient([{ calls: [{ name: "validate_integration_credentials", args: {} }] }, { text: ui("ok") }]);
+    const events: AgentEvent[] = [];
+    const r = await runAgentTurn({ ctx, client, models, registry: reg, toolNames: ["validate_integration_credentials"], instructions: "x", contextBlock: "", history: [], userMessage: "check", emit: (e) => events.push(e), safetyIdentifier: "t", promptCacheKey: "k" });
+    expect(r.ui?.message).toBe("ok");
+    const second = client.seen[1] as { input: Array<{ type?: string; output?: string }> };
+    const out = JSON.parse(second.input.find((i) => i.type === "function_call_output")!.output!) as { code: string; message: string; data: unknown };
+    expect(out.code).toBe("PROVIDER_ERROR");
+    expect(out.data).toBeNull();
+    expect(out.message.startsWith("vendor rejected key [redacted:secret] for [redacted:email] (approval [redacted:")).toBe(true);
+    for (const text of [JSON.stringify(second.input), JSON.stringify(events)]) {
+      expect(text).not.toContain("sk_live");
+      expect(text).not.toContain("jane@example.com");
+      expect(text).not.toContain(APPROVAL.token.slice(0, 20));
+      expect(text).not.toContain(APPROVAL.token.split(".")[1]!.slice(0, 16));
+    }
   });
 
   it("refuses confirm tools without an approval token and unknown tools", async () => {

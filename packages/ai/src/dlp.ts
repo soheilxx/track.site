@@ -1,4 +1,4 @@
-import { redactPii, scanForPii, type PiiFinding } from "@track-site/core";
+import { redactPii, scanForPii, type PiiFinding, type PiiKind } from "@track-site/core";
 
 /**
  * Pre-LLM data-loss-prevention interceptor. Secrets pasted into the chat never reach the model or
@@ -39,9 +39,44 @@ export function interceptUserMessage(text: string): DlpResult {
   };
 }
 
-/** Tool outputs are redacted again before they are handed back to the model. */
+const TOOL_OUTPUT_KINDS: PiiKind[] = ["secret", "jwt", "email", "phone", "card", "iban"];
+/** Under identifier keys only real secrets are hidden: pixel/measurement ids and UUIDs are neither cards nor phone numbers. */
+const IDENTIFIER_KINDS: PiiKind[] = ["secret", "jwt"];
+const IDENTIFIER_KEY_RE = /(?:^|_)ids?$/i;
+const PUBLIC_CONFIG_KEY = "public_config";
+
+/** What the model sees in place of an approval token; the real token only ever reaches the UI confirmation. */
+export const APPROVAL_TOKEN_PLACEHOLDER = "[approval token withheld: the user confirms through the approval card]";
+
+function isApprovalTokenField(key: string | null, parentKey: string | null): boolean {
+  return key === "approval_token" || (key === "token" && parentKey === "approval");
+}
+
+function redactWalk(value: unknown, key: string | null, parentKey: string | null, identifierContext: boolean): unknown {
+  if (isApprovalTokenField(key, parentKey)) return value === null || value === undefined ? value : APPROVAL_TOKEN_PLACEHOLDER;
+  if (typeof value === "string") return redactPii(value, identifierContext ? IDENTIFIER_KINDS : TOOL_OUTPUT_KINDS).text;
+  if (Array.isArray(value)) return value.map((v) => redactWalk(v, key, parentKey, identifierContext));
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      // keys are serialised too: a map keyed by ids stays intact, a secret used as a key is replaced like a value
+      out[redactPii(k, IDENTIFIER_KINDS).text] = redactWalk(v, k, key, identifierContext || IDENTIFIER_KEY_RE.test(k) || k === PUBLIC_CONFIG_KEY);
+    }
+    return out;
+  }
+  return value;
+}
+
+/**
+ * Tool outputs are redacted again before they are handed back to the model or persisted: secrets and
+ * personal data are replaced (in values, object keys and result messages alike) and approval tokens are
+ * withheld, while identifiers (UUIDs, draft ids, pixel ids, domain verification tokens) stay intact so
+ * the model can pass them on to other tools.
+ * The value is normalised the way the transport would serialise it (dates become strings).
+ */
 export function redactToolOutput<T>(value: T): T {
-  return JSON.parse(redactPii(JSON.stringify(value), ["secret", "jwt", "email", "phone", "card", "iban"]).text) as T;
+  if (value === undefined) return value;
+  return redactWalk(JSON.parse(JSON.stringify(value)) as unknown, null, null, false) as T;
 }
 
 /** Untrusted content (site scans, vendor responses) is wrapped and size-limited before the model sees it. */

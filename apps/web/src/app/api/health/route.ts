@@ -30,7 +30,7 @@ async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: strin
   if (!mailCache || Date.now() - mailCache.at > 10 * 60_000) {
     const from = e.MAIL_FROM ?? "";
     const domain = from.match(/@([A-Za-z0-9.-]+)/)?.[1]?.toLowerCase() ?? null;
-    let status = "unknown";
+    let status: string;
     try {
       const res = await fetch("https://api.resend.com/domains", { headers: { authorization: `Bearer ${e.RESEND_API_KEY}` }, signal: AbortSignal.timeout(8_000) });
       if (res.status === 401 || res.status === 403) {
@@ -63,7 +63,6 @@ export async function GET() {
   } catch {
     dbOk = false;
   }
-  const e = env();
   const p = publicEnv();
   const ai = await aiStatus();
   return NextResponse.json(

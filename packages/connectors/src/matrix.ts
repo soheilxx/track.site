@@ -70,7 +70,7 @@ export function buildIntegrationMatrix(): MatrixRow[] {
       dedup: c.meta.dedupField ?? "n/a",
       clickIds: [...(DESTINATION_CLICK_IDS[type] ?? [])],
       publicIds: c.meta.requiredPublicIds.map((p) => p.key),
-      credentials: c.meta.requiredCredentials.map((r) => (r.oauth ? `${r.kind} (OAuth ${r.oauth.provider})` : r.kind)),
+      credentials: c.meta.requiredCredentials.map((r) => `${r.oauth ? `${r.kind} (OAuth ${r.oauth.provider})` : r.kind}${r.optional ? " (optional)" : ""}`),
       apiVersion: c.meta.apiVersion,
       verifiedAt: pin?.verifiedAt ?? c.meta.verifiedAt,
       docsUrl: c.meta.docsUrl,

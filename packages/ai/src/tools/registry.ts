@@ -30,8 +30,50 @@ export interface RegisteredTool {
   run: (args: unknown, ctx: AgentContext) => Promise<Result<unknown>>;
 }
 
+interface ZodDefLike {
+  type: string;
+  shape?: Record<string, z.ZodType>;
+  element?: z.ZodType;
+  options?: z.ZodType[];
+  innerType?: z.ZodType;
+  in?: z.ZodType;
+}
+
+/**
+ * Strict mode has no optional properties: every property is required and an omitted value is sent
+ * as null, so strictJsonSchema declares optionals nullable. That only holds up when the Zod side
+ * accepts null too — a `.optional()` or `.default()` without `.nullable()` would tell the model
+ * "null is fine" and then answer VALIDATION_ERROR to exactly that. Checked once at registration.
+ */
+export function assertOptionalsAcceptNull(schema: z.ZodType, path = "", seen = new Set<z.ZodType>()): void {
+  if (seen.has(schema)) return;
+  seen.add(schema);
+  const def = (schema as unknown as { def: ZodDefLike }).def;
+  if (def.type === "object" && def.shape) {
+    for (const [key, property] of Object.entries(def.shape)) {
+      const propertyPath = `${path}.${key}`;
+      if (property.safeParse(undefined).success && !property.safeParse(null).success) {
+        throw new Error(`property ${propertyPath} accepts undefined but not null; strict mode sends null for omitted values, so use .nullable() (for example z.string().nullable() or .nullable().default(null))`);
+      }
+      assertOptionalsAcceptNull(property, propertyPath, seen);
+    }
+    return;
+  }
+  if (def.element) assertOptionalsAcceptNull(def.element, `${path}[]`, seen);
+  if (def.options) def.options.forEach((option, i) => assertOptionalsAcceptNull(option, `${path}<${i}>`, seen));
+  if (def.innerType) assertOptionalsAcceptNull(def.innerType, path, seen);
+  if (def.in) assertOptionalsAcceptNull(def.in, path, seen);
+}
+
 export function defineTool<I extends z.ZodObject<z.ZodRawShape>, O>(def: ToolDefinition<I, O>): RegisteredTool {
-  const jsonSchema = strictJsonSchema(z.toJSONSchema(def.input, { target: "draft-2020-12", unrepresentable: "any" }) as Record<string, unknown>);
+  let jsonSchema: Record<string, unknown>;
+  try {
+    assertOptionalsAcceptNull(def.input);
+    jsonSchema = strictJsonSchema(z.toJSONSchema(def.input, { target: "draft-2020-12", unrepresentable: "any" }) as Record<string, unknown>);
+  } catch (e) {
+    // fail at registration (module load / tests), never as a provider 400 for every turn that offers the tool
+    throw new Error(`tool ${def.name}: ${e instanceof Error ? e.message : String(e)}`, { cause: e });
+  }
   return {
     name: def.name,
     description: def.description,

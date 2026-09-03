@@ -42,10 +42,21 @@ export function InputComponentView({ component, onSend, siteId, onCredentialStor
   }
 }
 
+/** A missing or malformed pattern means "no format check here"; the server validates the id anyway. */
+function safeRegExp(pattern: string | null): RegExp | null {
+  if (!pattern) return null;
+  try {
+    return new RegExp(pattern);
+  } catch {
+    return null;
+  }
+}
+
 function TextInput({ component, onSend }: { component: Extract<UiInputComponent, { type: "text" | "url" | "pixel_id" }>; onSend: (text: string) => void }) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const pattern = component.type === "pixel_id" ? component.pattern : component.type === "text" ? component.pattern : null;
+  const regex = safeRegExp(component.type === "pixel_id" || component.type === "text" ? component.pattern : null);
+  const example = component.type === "pixel_id" ? component.example : null;
   return (
     <form
       className="flex flex-col gap-2 sm:flex-row sm:items-end"
@@ -53,8 +64,8 @@ function TextInput({ component, onSend }: { component: Extract<UiInputComponent,
         e.preventDefault();
         const v = value.trim();
         if (!v) return;
-        if (pattern && !new RegExp(pattern).test(v)) {
-          setError(component.type === "pixel_id" ? `Expected format like ${component.example}` : "Invalid format");
+        if (regex && !regex.test(v)) {
+          setError(example ? `Expected format like ${example}` : "Invalid format");
           return;
         }
         if (/\b(EAA[A-Za-z0-9]{40,}|sk_(live|test)_|whsec_|AKIA)/.test(v)) {
@@ -68,7 +79,7 @@ function TextInput({ component, onSend }: { component: Extract<UiInputComponent,
     >
       <div className="flex-1">
         <Label htmlFor={`inp-${component.field}`}>{component.label}</Label>
-        <Input id={`inp-${component.field}`} value={value} onChange={(e) => setValue(e.target.value)} placeholder={"placeholder" in component ? (component.placeholder ?? undefined) : undefined} inputMode={component.type === "url" ? "url" : "text"} className="mt-1" aria-invalid={Boolean(error)} aria-describedby={error ? `err-${component.field}` : undefined} />
+        <Input id={`inp-${component.field}`} value={value} onChange={(e) => setValue(e.target.value)} placeholder={"placeholder" in component ? (component.placeholder ?? undefined) : (example ?? undefined)} inputMode={component.type === "url" ? "url" : "text"} className="mt-1" aria-invalid={Boolean(error)} aria-describedby={error ? `err-${component.field}` : undefined} />
         {"help" in component && component.help ? <p className="mt-1 text-xs text-ink-3">{component.help}</p> : null}
         {error ? (
           <p id={`err-${component.field}`} role="alert" className="mt-1 text-xs text-bad">

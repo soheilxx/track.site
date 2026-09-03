@@ -15,6 +15,11 @@ export interface CredentialRequirement {
   /** captured only through the secure credential card or OAuth, never through chat */
   secret: true;
   oauth?: { provider: string; scopes: string[] } | null;
+  /**
+   * the destination delivers without it (a network feature that is off by default, or a secret only some presets of a
+   * multi-network connector use); consumers must not report it as missing or gate publishing on it
+   */
+  optional?: boolean;
 }
 
 export interface PublicIdRequirement {

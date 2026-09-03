@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { CONFIRM_TOOLS, buildToolRegistry } from "@track-site/ai";
+import { CONFIRM_TOOLS, buildToolRegistry, redactToolOutput } from "@track-site/ai";
 import { getOrgContext } from "@/server/session";
 import { getOrCreateChatSession, recordToolRun, storePendingApproval } from "@/server/ai/chat-store";
 import { buildAgentContext, siteBelongsToOrg } from "@/server/ai/context";
@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
   if (!agentCtx) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
   const started = Date.now();
   const result = await tool.run(parsed.data.args, agentCtx);
-  await recordToolRun(ctx.organization.id, session.id, { callId: `wizard_${started}`, name: tool.name, args: parsed.data.args, result: { ok: result.ok, code: result.code, data: result.ok ? result.data : null }, durationMs: Date.now() - started });
+  // the audit row must never hold the approval token: persist the redacted copy (the UI gets an opaque approval id below)
+  await recordToolRun(ctx.organization.id, session.id, { callId: `wizard_${started}`, name: tool.name, args: parsed.data.args, result: { ok: result.ok, code: result.code, data: result.ok ? redactToolOutput(result.data) : null }, durationMs: Date.now() - started });
   // prepare_publish: keep the approval token server-side and hand the client an opaque approval id
   if (result.ok && tool.name === "prepare_publish") {
     const data = result.data as { approval?: { token: string; expires_at: string } | null; draft_id: string; changes?: unknown; recipients?: unknown };
