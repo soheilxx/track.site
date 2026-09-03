@@ -8,7 +8,8 @@ import { db } from "./db";
 /** Stripe client (secret key from the environment only; never persisted). */
 export function stripe(): Stripe | null {
   const key = env().STRIPE_SECRET_KEY;
-  return key ? new Stripe(key, { apiVersion: "2026-08-27.dahlia" as Stripe.LatestApiVersion }) : null;
+  // no apiVersion override: the SDK pins its own version (2026-08-26.dahlia for stripe 20.x); a mistyped override made every call fail with "Invalid Stripe API version"
+  return key ? new Stripe(key) : null;
 }
 
 export function priceIdFor(plan: { stripePriceEnv: { monthly: string | null; yearly: string | null } }, interval: "monthly" | "yearly"): string | null {
