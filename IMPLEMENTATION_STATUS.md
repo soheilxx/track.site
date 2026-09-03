@@ -30,7 +30,7 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Playwright smoke tests (marketing a11y/SEO structure, blog, pricing honesty, dashboard sign-in, shop connection page) | DONE | `apps/web/e2e/*.spec.ts`, `apps/web/playwright.config.ts` | `pnpm --filter @track-site/web test:e2e` (against a running server, seeded demo user) | axe-core WCAG 2 A/AA: contrast tokens raised to AA |
 | SEO gate | DONE | `apps/web/scripts/seo-check.ts` | `pnpm seo:check` | 113 pages (en/de static, integrations, 60 blog posts), robots, sitemap, feed; titles/descriptions cut for snippets |
 | Load test baseline | DONE | `docs/performance-baseline.md` | `pnpm load:collector` | dev laptop: 483 req/s = 2,417 events/s, p95 189 ms, 0 errors; limiter runs show 429 at the configured per-IP/per-site limits; single worker drained 70k events within 2.5 min |
-| Data plane on Fly.io (collector + worker, Frankfurt) | DONE | `infra/docker/*.Dockerfile`, `infra/fly/*.toml`, docs/07 §Data plane | `fly status -a track-site-collector`, collector `/health` | live at https://track-site-collector.fly.dev (db ok, queue ok); worker running with retention job; `ingest.track.site` waits for the owner's DNS records |
+| Data plane on Fly.io (collector + worker, Frankfurt) | DONE | `infra/docker/*.Dockerfile`, `infra/fly/*.toml`, docs/07 §Data plane | `fly status -a track-site-collector`, collector `/health` | live at https://track-site-collector.fly.dev (db ok, queue ok); worker running with retention job; ingest host https://ingest.track.site live with certificate |
 | Vercel deployment of apps/web | DONE | `apps/web/vercel.json`, docs/07 §Vercel | `SEO_BASE_URL=https://www.track.site pnpm seo:check` | live at https://www.track.site (project modernice/track-site, fra1); dashboard needs `DATABASE_URL`; collector/worker still need an EU container host |
 
 ## External blockers (owner action)
@@ -43,7 +43,6 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Vendor accounts for production sends | live vendor verification | first real test events per destination (docs/09 §7) |
 | DNS for `track.site`, `app.`, `api.`, `cdn.`, `ingest.` | production hosts | configure DNS + TLS |
 | EU infrastructure (DB, SQS, S3, KMS, ClickHouse) | production data plane | provision via `infra/terraform` |
-| DNS for `ingest.track.site` (A 66.241.124.201, AAAA 2a09:8280:1::182:cb36:0) | first-party ingest hostname instead of the interim fly.dev host | add the records, then `HOST_INGEST` values switch to https://ingest.track.site |
 
 ## Next executable step
 
