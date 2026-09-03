@@ -35,7 +35,7 @@ export async function runRetention(ctx: WorkerContext): Promise<Record<string, n
     }
     result.events = events;
     // org-scoped kinds honour the organisation override (site overrides do not apply to org-level tables)
-    const orgs = await client.query<{ id: string }>(`SELECT id FROM organizations`);
+    const orgs = await client.query<{ id: string }>(`SELECT id FROM organization`);
     const del = async (kind: string, sql: string) => {
       let n = 0;
       for (const o of orgs.rows) {
