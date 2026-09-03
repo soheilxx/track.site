@@ -110,3 +110,9 @@ Both services use the same database and the same `MASTER_KEY`/`CONFIG_SIGNING_*`
 - Secrets set from the Vercel production environment: database, master key, hosts, drivers; `RATE_LIMIT_SALT` generated per app. No vendor platform credentials on the worker yet (OAuth apps pending).
 - Ingest host: `https://ingest.track.site` (A 66.241.124.201 / AAAA 2a09:8280:1::182:cb36:0 at Namecheap, Let's Encrypt certificate issued by Fly). `HOST_INGEST` / `NEXT_PUBLIC_HOST_INGEST` on Vercel and the Fly secrets of both apps point there since 2026-09-03; CSP `connect-src` and the served tracker reference it.
 - Tracker is served by the web app at `https://www.track.site/cdn/v1/tracker.js` (SDK built during the Vercel build with the production signing public key); `cdn.track.site` is not needed for now.
+
+### Stripe (2026-09-03)
+
+- Same Stripe account as the company's other product; separation by naming: products `track.site …`, restricted API key `track.site production` (Checkout Sessions/Customer portal/Customers write, Subscriptions/Prices/Products read), dedicated webhook destination `https://www.track.site/api/stripe/webhook` with its own signing secret and the eight subscription/invoice/checkout events.
+- `STRIPE_PRICE_*` accepts a price id or a product id (the product's single active recurring price with the slot's interval is used); `/api/health` reports `billing: ok | prices_failing | no_prices | not_configured` with per-slot detail. The SDK's pinned API version is used (no override).
+- Verified: health `billing: ok` for all six slots, pricing pages show the live amounts, unsigned webhook calls are rejected with 400.
