@@ -71,3 +71,17 @@ Environment variables (Production and Preview; secrets never in the repo):
 - Optional, each enabling one feature honestly: `OPENAI_API_KEY` + `AI_MODEL_*`, `STRIPE_*`, vendor OAuth apps (`GOOGLE_OAUTH_*`, `LINKEDIN_*`, `AMAZON_ADS_*`, `X_CONSUMER_*`, `GOOGLE_ADS_DEVELOPER_TOKEN`), `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`.
 
 Without `DATABASE_URL` the marketing site works and every dashboard/auth route fails; run migrations with the unpooled URL before the first sign-up. The database must be PostgreSQL in the EU (Neon Frankfurt, Supabase Frankfurt or RDS eu-central-1) with the `tracksite_app` and `tracksite_worker` roles created by the migrations.
+
+### Current state (2026-09-03)
+
+- Vercel project `modernice/track-site` (ID `prj_w3HvPvF8Q8d9FRZgNXD4r8u4Ig1W`), Git-connected to `soheilxx/track.site`, Root Directory `apps/web`, Node 22.x, functions in `fra1`. Domains: `www.track.site` (canonical), `track.site` (308 → www), `track-site-tau.vercel.app`.
+- Environment variables set for Production and Preview: generated `AUTH_SECRET`, `MASTER_KEY` (+`MASTER_KEY_ID=vercel-v1`), `APPROVAL_TOKEN_SECRET`, Ed25519 `CONFIG_SIGNING_*` (`cfg-vercel-v1`), `HOST_*` (marketing/app on `https://www.track.site`, ingest/cdn on the planned `ingest.`/`cdn.track.site`), drivers (`pg`/`local`), AI model names, `APP_ENV`.
+- Not set yet: `DATABASE_URL` / `DATABASE_URL_UNPOOLED` (EU Postgres), mail, `OPENAI_API_KEY`, `STRIPE_*`, `LEGAL_*`, vendor OAuth apps. Without the database the marketing site is live and every dashboard/auth route answers as signed-out; `/api/health` reports `db:false`.
+- Production branch is `main` (does not exist yet); pushes to `feat/*` build previews. Production deployments are triggered manually until `main` exists:
+
+```bash
+# from the repository root (linked to modernice/track-site)
+npx vercel@latest deploy --prod --scope modernice
+```
+
+- Collector and worker are not on Vercel (long-running processes, EU containers per topology); until they run, `ingest.track.site` and `cdn.track.site` do not resolve and browser snippets cannot send.

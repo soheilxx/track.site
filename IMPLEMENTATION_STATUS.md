@@ -30,6 +30,7 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Playwright smoke tests (marketing a11y/SEO structure, blog, pricing honesty, dashboard sign-in, shop connection page) | DONE | `apps/web/e2e/*.spec.ts`, `apps/web/playwright.config.ts` | `pnpm --filter @track-site/web test:e2e` (against a running server, seeded demo user) | axe-core WCAG 2 A/AA: contrast tokens raised to AA |
 | SEO gate | DONE | `apps/web/scripts/seo-check.ts` | `pnpm seo:check` | 113 pages (en/de static, integrations, 60 blog posts), robots, sitemap, feed; titles/descriptions cut for snippets |
 | Load test baseline | DONE | `docs/performance-baseline.md` | `pnpm load:collector` | dev laptop: 483 req/s = 2,417 events/s, p95 189 ms, 0 errors; limiter runs show 429 at the configured per-IP/per-site limits; single worker drained 70k events within 2.5 min |
+| Vercel deployment of apps/web | DONE | `apps/web/vercel.json`, docs/07 §Vercel | `SEO_BASE_URL=https://www.track.site pnpm seo:check` | live at https://www.track.site (project modernice/track-site, fra1); dashboard needs `DATABASE_URL`; collector/worker still need an EU container host |
 
 ## External blockers (owner action)
 
@@ -41,6 +42,8 @@ States: `DONE` (implemented + tested), `PARTIAL` (usable, incomplete; see note),
 | Vendor accounts for production sends | live vendor verification | first real test events per destination (docs/09 §7) |
 | DNS for `track.site`, `app.`, `api.`, `cdn.`, `ingest.` | production hosts | configure DNS + TLS |
 | EU infrastructure (DB, SQS, S3, KMS, ClickHouse) | production data plane | provision via `infra/terraform` |
+| EU PostgreSQL for production (Neon Frankfurt, Supabase Frankfurt or RDS eu-central-1) | dashboard, auth, billing on www.track.site | create the database, set `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` in Vercel, run `pnpm --filter @track-site/db migrate` and `pnpm db:seed` against it |
+| Container host for collector + worker (Fly.io fra, Railway EU, ECS eu-central-1) | `ingest.track.site`, event processing | deploy `infra/docker/*.Dockerfile`, point DNS, set `HOST_INGEST`/`NEXT_PUBLIC_HOST_INGEST` if the host differs |
 
 ## Next executable step
 

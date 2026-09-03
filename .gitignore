@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Vercel CLI link metadata
 .vercel
+
+.vercel
+.env*

@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { logger } from "@/server/db";
 import "server-only";
 import { eq, and } from "drizzle-orm";
 import { headers } from "next/headers";
@@ -27,7 +28,14 @@ export interface OrgContext {
 
 /** Session lookup, deduplicated per request so layouts, pages and the i18n request config share one call. */
 export const getSession = cache(async (): Promise<{ user: SessionUser; activeOrganizationId: string | null } | null> => {
-  const s = await auth().api.getSession({ headers: await headers() });
+  let s: Awaited<ReturnType<ReturnType<typeof auth>["api"]["getSession"]>>;
+  try {
+    s = await auth().api.getSession({ headers: await headers() });
+  } catch (e) {
+    // no database (or an unreachable one) means no session: callers redirect to the sign-in page instead of failing with 500
+    logger.warn({ err: e instanceof Error ? e.message : String(e) }, "session lookup failed");
+    return null;
+  }
   if (!s) return null;
   const u = s.user as unknown as SessionUser & { platformRole?: string };
   return {

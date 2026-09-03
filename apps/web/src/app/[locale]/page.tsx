@@ -12,7 +12,8 @@ import { seoDescription, seoTitle } from "@/lib/seo-text";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  return { title: seoTitle(t("defaultTitle")), description: seoDescription(t("defaultDescription")), alternates: alternatesFor("/", locale) };
+  // the home page carries the brand itself: no " · track.site" template suffix, one complete sentence within snippet length
+  return { title: { absolute: seoTitle(t("defaultTitle"), 70) }, description: seoDescription(t("defaultDescription")), alternates: alternatesFor("/", locale) };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

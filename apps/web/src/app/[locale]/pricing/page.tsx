@@ -20,6 +20,7 @@ const COPY = {
     perMonth: "per month",
     perYear: "per year",
     notConfigured: "Price not published yet — pricing for this plan is being finalized. Contact us for a quote.",
+    noPlans: "Plans are not published yet. Contact us for a quote and we will set you up manually.",
     contactSales: "Talk to sales",
     start: "Start free",
     limits: (l: { sites: number; eventsPerMonth: number; destinations: number; retentionDays: number; teamMembers: number; serverSide: boolean; exports: boolean; sso: boolean }) => [
@@ -49,6 +50,7 @@ const COPY = {
     perMonth: "pro Monat",
     perYear: "pro Jahr",
     notConfigured: "Preis noch nicht veröffentlicht — die Preisgestaltung für diesen Tarif wird gerade finalisiert. Kontaktiere uns für ein Angebot.",
+    noPlans: "Die Tarife sind noch nicht veröffentlicht. Kontaktiere uns für ein Angebot, wir richten dich manuell ein.",
     contactSales: "Mit dem Vertrieb sprechen",
     start: "Kostenlos starten",
     limits: (l: { sites: number; eventsPerMonth: number; destinations: number; retentionDays: number; teamMembers: number; serverSide: boolean; exports: boolean; sso: boolean }) => [
@@ -95,6 +97,16 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
       <PageHero eyebrow={c.eyebrow} title={c.title} text={c.text} />
       <Section>
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {plans.length === 0 ? (
+            <Card className="col-span-full p-6 text-sm text-ink-2">
+              <p>{c.noPlans}</p>
+              <Link href="/contact?topic=enterprise" className="mt-3 inline-block">
+                <Button size="sm" variant="secondary">
+                  {c.contactSales}
+                </Button>
+              </Link>
+            </Card>
+          ) : null}
           {plans.map((p) => (
             <li key={p.id}>
               <Card className={`flex h-full flex-col p-5 ${p.id === "growth" ? "border-primary" : ""}`}>

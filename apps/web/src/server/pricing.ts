@@ -1,6 +1,6 @@
 import "server-only";
 import { plans } from "@track-site/db";
-import { db } from "./db";
+import { db, logger } from "./db";
 import { priceIdFor, stripe } from "./billing";
 
 export interface PublicPlan {
@@ -19,7 +19,14 @@ let cache: { at: number; value: PublicPlan[] } | null = null;
 /** Public plans with real Stripe prices (cached 10 minutes). Limits come from the database, prices only from Stripe. */
 export async function publicPlans(): Promise<PublicPlan[]> {
   if (cache && Date.now() - cache.at < 10 * 60_000) return cache.value;
-  const rows = await db().select().from(plans).orderBy(plans.sortOrder);
+  let rows: (typeof plans.$inferSelect)[];
+  try {
+    rows = await db().select().from(plans).orderBy(plans.sortOrder);
+  } catch (e) {
+    // no database configured or reachable: publish no plans rather than failing the page (the UI shows an honest state)
+    logger.warn({ err: e instanceof Error ? e.message : String(e) }, "public plans unavailable");
+    return [];
+  }
   const client = stripe();
   const value: PublicPlan[] = [];
   for (const p of rows.filter((r) => r.isPublic)) {
