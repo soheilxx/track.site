@@ -12,7 +12,7 @@ async function aiStatus(): Promise<{ ai: string; aiModels: { available: string[]
   const e = env();
   if (!e.AI_ENABLED || !e.OPENAI_API_KEY) return { ai: "not_configured", aiModels: null, aiCheckedAt: null };
   if (!aiCache || Date.now() - aiCache.at > 10 * 60_000) {
-    const value = await verifyModelAvailability(createOpenAI(e.OPENAI_API_KEY, { timeoutMs: 8_000, maxRetries: 0 }), { primary: e.AI_MODEL_PRIMARY, fast: e.AI_MODEL_FAST, complex: e.AI_MODEL_COMPLEX });
+    const value = await verifyModelAvailability(createOpenAI(e.OPENAI_API_KEY, { timeoutMs: 8_000, maxRetries: 0 }), { primary: e.AI_MODEL_PRIMARY ?? "gpt-5.6-terra", fast: e.AI_MODEL_FAST ?? "gpt-5.6-luna", complex: e.AI_MODEL_COMPLEX ?? "gpt-5.6-sol" });
     aiCache = { at: Date.now(), value };
   }
   const v = aiCache.value;
