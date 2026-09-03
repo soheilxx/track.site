@@ -33,8 +33,11 @@ async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: strin
     let status = "unknown";
     try {
       const res = await fetch("https://api.resend.com/domains", { headers: { authorization: `Bearer ${e.RESEND_API_KEY}` }, signal: AbortSignal.timeout(8_000) });
-      if (res.status === 401 || res.status === 403) status = "invalid_key";
-      else if (res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        // a "sending access" key may not list domains: sending still works, only the domain check is unavailable
+        const body = (await res.json().catch(() => null)) as { name?: string } | null;
+        status = body?.name === "restricted_api_key" ? "sending_only_key" : "invalid_key";
+      } else if (res.ok) {
         const json = (await res.json()) as { data?: Array<{ name: string; status: string }> };
         const match = (json.data ?? []).find((d) => d.name.toLowerCase() === domain);
         status = match ? match.status : "domain_missing";
