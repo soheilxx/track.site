@@ -17,6 +17,7 @@
     "prebuild": "node scripts/sync-sdk.mjs"
   },
   "dependencies": {
+    "@better-auth/passkey": "^1.7.2",
     "@hookform/resolvers": "^5.9.1",
     "@track-site/ai": "workspace:*",
     "@track-site/analytics": "workspace:*",
@@ -54,13 +55,13 @@
     "sharp": "^0.35.4",
     "sonner": "^2.0.8",
     "stripe": "^22.6.1",
-    "zod": "^4.5.4",
-    "@better-auth/passkey": "^1.7.2"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/typography": "0.5.16",
     "@types/node": "^24.0.0",
     "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.23.1",

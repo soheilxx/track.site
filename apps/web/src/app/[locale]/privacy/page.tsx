@@ -1,0 +1,18 @@
+import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
+import { LegalPage } from "@/components/marketing/legal-page";
+import { LEGAL, operatorFromEnv } from "@/lib/legal-copy";
+import { pick } from "@/lib/marketing-copy";
+import { alternatesFor } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const d = pick(locale, LEGAL).privacy;
+  return { title: d.title, description: d.intro, alternates: alternatesFor("/privacy", locale) };
+}
+
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  return <LegalPage doc={pick(locale, LEGAL).privacy} path="/privacy" locale={locale} operator={operatorFromEnv()} />;
+}
