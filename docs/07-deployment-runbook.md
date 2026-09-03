@@ -50,3 +50,24 @@ Environments: development -> staging -> production, with separate OpenAI project
 ## Observability
 
 OTLP endpoint via `OTEL_EXPORTER_OTLP_ENDPOINT`; metrics per org/site/env/connector (received, accepted, dropped, deduplicated, billable, consent drops, schema/PII errors, queue lag, retries, DLQ size, delivery success, 4xx/5xx, latency, active config version, token health). SLOs: collector P95 < 150 ms, delivery P95 < 60 s, config activation <= 60 s.
+
+## Vercel (apps/web)
+
+The dashboard and marketing site run on Vercel; collector and worker stay on containers (see topology). Settings that matter:
+
+| Setting | Value | Why |
+| --- | --- | --- |
+| Root Directory | `apps/web` | monorepo; Vercel installs the pnpm workspace from the repository root ("include files outside root" stays on) |
+| Framework | Next.js (auto) | `apps/web/vercel.json` pins it |
+| Functions region | `fra1` | EU data residency; pinned in `apps/web/vercel.json` |
+| Node.js | 22.x | `engines.node >= 22.12` in the root `package.json` |
+| Install / build | `pnpm install --frozen-lockfile` / `pnpm --filter @track-site/web build` | pnpm 11 from `packageManager`; turbo is not needed for the web build |
+| Git | connect `soheilxx/track.site`, production branch `main`, previews for `feat/*` | every push deploys |
+
+Environment variables (Production and Preview; secrets never in the repo):
+
+- Minimum for the public site: `NODE_ENV=production`, `APP_ENV=production|staging`, `HOST_MARKETING`, `HOST_APP`, `HOST_CDN`, `HOST_INGEST`, `NEXT_PUBLIC_HOST_INGEST`, `NEXT_PUBLIC_HOST_CDN`, `LEGAL_*` (operator identity for imprint/privacy).
+- Dashboard and auth: `DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED` (migrations), `AUTH_SECRET`, `MASTER_KEY` + `MASTER_KEY_ID`, `CONFIG_SIGNING_PRIVATE_KEY` / `CONFIG_SIGNING_PUBLIC_KEY` / `CONFIG_SIGNING_KEY_ID`, `APPROVAL_TOKEN_SECRET`, mail (`SMTP_URL` or `RESEND_API_KEY`, `MAIL_FROM`, `CONTACT_INBOX_EMAIL`).
+- Optional, each enabling one feature honestly: `OPENAI_API_KEY` + `AI_MODEL_*`, `STRIPE_*`, vendor OAuth apps (`GOOGLE_OAUTH_*`, `LINKEDIN_*`, `AMAZON_ADS_*`, `X_CONSUMER_*`, `GOOGLE_ADS_DEVELOPER_TOKEN`), `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`.
+
+Without `DATABASE_URL` the marketing site works and every dashboard/auth route fails; run migrations with the unpooled URL before the first sign-up. The database must be PostgreSQL in the EU (Neon Frankfurt, Supabase Frankfurt or RDS eu-central-1) with the `tracksite_app` and `tracksite_worker` roles created by the migrations.
