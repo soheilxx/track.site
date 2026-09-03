@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@track-site/analytics": "workspace:*",
+    "@track-site/catalog": "workspace:*",
     "@track-site/config": "workspace:*",
     "@track-site/connectors": "workspace:*",
     "@track-site/core": "workspace:*",

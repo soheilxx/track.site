@@ -12,8 +12,10 @@ const initial: ActionState = { ok: false, error: null };
 export interface PlanView {
   id: string;
   name: string;
-  limits: { sites: number; eventsPerMonth: number; destinations: number; retentionDays: number; teamMembers: number; serverSide: boolean; exports: boolean; sso: boolean };
-  features: string[];
+  /** localised limits + highlights from the tariff catalogue (already resolved on the server) */
+  bullets: string[];
+  /** formatted catalogue list prices; null for custom-priced plans */
+  price: { monthly: string; yearly: string } | null;
   contactSales: boolean;
   hasMonthly: boolean;
   hasYearly: boolean;
@@ -53,17 +55,14 @@ export function PlanCards({ plans, currentPlanId, status, hasCustomer }: { plans
                 <p className="font-semibold text-ink">{p.name}</p>
                 {current ? <Badge tone="ok">{t("current")}</Badge> : null}
               </div>
+              {p.price ? (
+                <p className="mt-2 text-sm text-ink">
+                  <span className="font-display text-xl font-semibold">{interval === "monthly" ? p.price.monthly : p.price.yearly}</span> <span className="text-xs text-ink-3">{t(interval)}</span>
+                </p>
+              ) : null}
               <ul className="mt-3 space-y-1 text-xs text-ink-2">
-                <li>{t("limitEvents", { n: p.limits.eventsPerMonth.toLocaleString() })}</li>
-                <li>{t("limitSites", { n: p.limits.sites })}</li>
-                <li>{t("limitDestinations", { n: p.limits.destinations })}</li>
-                <li>{t("limitRetention", { n: p.limits.retentionDays })}</li>
-                <li>{t("limitTeam", { n: p.limits.teamMembers })}</li>
-                {p.limits.serverSide ? <li>{t("serverSide")}</li> : null}
-                {p.limits.exports ? <li>{t("exports")}</li> : null}
-                {p.limits.sso ? <li>{t("sso")}</li> : null}
-                {p.features.map((f) => (
-                  <li key={f}>{f}</li>
+                {p.bullets.map((b) => (
+                  <li key={b}>{b}</li>
                 ))}
               </ul>
               <div className="mt-auto pt-4">

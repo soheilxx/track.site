@@ -352,8 +352,8 @@ export function registerShopInbound(app: Hono, deps: CollectorDeps, now: () => D
     const raw = await c.req.text();
     if (raw.length > deps.env.COLLECTOR_MAX_BODY_BYTES * 8) return c.text("payload too large", 413);
 
-    let events: IncomingServerEvent[] = [];
-    let topic: string | null = null;
+    let events: IncomingServerEvent[];
+    let topic: string | null;
     if (platform === "shopify") {
       if (!verifyShopify(raw, c.req.header("x-shopify-hmac-sha256"), secret)) return c.text("invalid signature", 401);
       const shop = c.req.header("x-shopify-shop-domain") ?? "";
@@ -372,7 +372,7 @@ export function registerShopInbound(app: Hono, deps: CollectorDeps, now: () => D
     } else if (platform === "woocommerce") {
       if (!verifyWooCommerce(raw, c.req.header("x-wc-webhook-signature"), secret)) return c.text("invalid signature", 401);
       topic = c.req.header("x-wc-webhook-topic") ?? null;
-      let body: unknown = null;
+      let body: unknown;
       try {
         body = JSON.parse(raw);
       } catch {

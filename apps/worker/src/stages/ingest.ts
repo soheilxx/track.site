@@ -1,4 +1,5 @@
 import type { PoolClient } from "pg";
+import { isBillableEvent } from "@track-site/catalog";
 import { newUlid, usagePeriodKey } from "@track-site/core";
 import {
   normalizeBrowserEvent,
@@ -15,6 +16,8 @@ import type { WorkerContext } from "../context.ts";
 export interface IngestStats {
   received: number;
   accepted: number;
+  /** accepted events written to the usage ledger (test-mode events, duplicates and retries excluded) */
+  billable: number;
   duplicates: number;
   routed: number;
   dropped: Record<string, number>;
@@ -23,10 +26,12 @@ export interface IngestStats {
 /**
  * Ingest stage: validate -> normalize -> PII scan -> policy (persistence) -> consent snapshot ->
  * dedup + event store -> conversion dedup -> usage ledger -> policy (dispatch) -> destination queues.
- * Events blocked by consent or PII are never persisted; they are only counted.
+ * Events blocked by consent or PII are never persisted; they are only counted. Usage follows the
+ * catalogue's billable-event rules: one ledger row per accepted event, none for test-mode
+ * environments, duplicates (event id or order id) or retries of an already-ledgered event.
  */
 export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessage): Promise<IngestStats> {
-  const stats: IngestStats = { received: msg.events.length, accepted: 0, duplicates: 0, routed: 0, dropped: {} };
+  const stats: IngestStats = { received: msg.events.length, accepted: 0, billable: 0, duplicates: 0, routed: 0, dropped: {} };
   const drop = (reason: string) => (stats.dropped[reason] = (stats.dropped[reason] ?? 0) + 1);
   const runtime = await ctx.configs.get(msg.site.site_id, msg.site.environment_id);
   const serverTs = new Date(msg.received_at);
@@ -74,7 +79,7 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
     event = applyStrip(event, decision.strippedFields);
     if (runtime.bundle && !runtime.bundle.consent.click_ids.capture) event.click_ids = null;
     event.processing_state = "policy_passed";
-    event.is_billable = !runtime.testMode;
+    event.is_billable = isBillableEvent({ accepted: true, testMode: runtime.testMode });
     event.config_version = runtime.configVersion ?? event.config_version;
     toStore.push(event);
   }
@@ -128,8 +133,9 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
             [e.organization_id, e.site_id, e.event_id, e.name, e.commerce.order_id, e.commerce.value ?? null, e.commerce.currency ?? null, e.source, e.source_verified, e.server_ts],
           );
         } else if ((prior.source === "browser") === (e.source === "browser")) {
-          // the same path reported the order again: duplicate
+          // the same path reported the order again: duplicate, not accepted and never billed
           await ctx.eventStore.updateState(e.site_id, e.event_id, "deduplicated", "duplicate_conversion");
+          stats.accepted--;
           stats.duplicates++;
           stats.dropped.duplicate_conversion = (stats.dropped.duplicate_conversion ?? 0) + 1;
           continue;
@@ -148,10 +154,12 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
         }
       }
       if (e.is_billable) {
-        await client2.query(
+        // the unique (event_id, kind) index makes a retry of an already-ledgered event a no-op: counted exactly once
+        const ledger = await client2.query(
           `INSERT INTO usage_ledger (id, organization_id, site_id, period_key, event_id, kind, quantity) VALUES ($1,$2,$3,$4,$5,'billable_event',1) ON CONFLICT DO NOTHING`,
           [newUlid(), e.organization_id, e.site_id, usagePeriodKey(new Date(e.server_ts)), e.event_id],
         );
+        if ((ledger.rowCount ?? 0) > 0) stats.billable++;
       }
       // fan-out to destinations from the active bundle (server + hybrid mode)
       let routedTo = 0;
@@ -245,6 +253,7 @@ async function recordAggregates(ctx: WorkerContext, msg: IngestMessage, stats: I
     for (const [name, received] of names) {
       const share = received / Math.max(1, stats.received);
       const accepted = Math.round(stats.accepted * share);
+      const billable = Math.round(stats.billable * share);
       const dedup = Math.round(stats.duplicates * share);
       const dropped: Record<string, number> = {};
       for (const [k, v] of Object.entries(stats.dropped)) dropped[k] = Math.round(v * share);
@@ -258,20 +267,21 @@ async function recordAggregates(ctx: WorkerContext, msg: IngestMessage, stats: I
            billable = event_aggregates.billable + EXCLUDED.billable,
            dropped = (SELECT coalesce(jsonb_object_agg(k, coalesce((event_aggregates.dropped->>k)::int, 0) + coalesce((EXCLUDED.dropped->>k)::int, 0)), '{}'::jsonb)
                       FROM (SELECT jsonb_object_keys(event_aggregates.dropped || EXCLUDED.dropped) AS k) keys)`,
-        [msg.site.organization_id, msg.site.site_id, msg.site.environment_id, bucket, name, source, received, accepted, JSON.stringify(dropped), dedup, accepted],
+        [msg.site.organization_id, msg.site.site_id, msg.site.environment_id, bucket, name, source, received, accepted, JSON.stringify(dropped), dedup, billable],
       );
     }
-    if (stats.accepted > 0) {
+    if (stats.accepted > 0 || stats.billable > 0) {
+      // billable_events is what plan limits are measured against: only ledgered events (no test mode, no duplicates, no retries)
       await client.query(
         `INSERT INTO usage_periods (organization_id, period_key, accepted_events, billable_events, dropped_events, deduplicated_events)
-         VALUES ($1,$2,$3,$3,$4,$5)
+         VALUES ($1,$2,$3,$4,$5,$6)
          ON CONFLICT (organization_id, period_key) DO UPDATE SET
            accepted_events = usage_periods.accepted_events + EXCLUDED.accepted_events,
            billable_events = usage_periods.billable_events + EXCLUDED.billable_events,
            dropped_events = usage_periods.dropped_events + EXCLUDED.dropped_events,
            deduplicated_events = usage_periods.deduplicated_events + EXCLUDED.deduplicated_events,
            updated_at = now()`,
-        [msg.site.organization_id, usagePeriodKey(bucket), stats.accepted, Object.values(stats.dropped).reduce((a, b) => a + b, 0), stats.duplicates],
+        [msg.site.organization_id, usagePeriodKey(bucket), stats.accepted, stats.billable, Object.values(stats.dropped).reduce((a, b) => a + b, 0), stats.duplicates],
       );
     }
     await client.query("COMMIT");

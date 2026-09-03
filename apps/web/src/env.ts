@@ -20,7 +20,7 @@ export const webEnvSchema = baseEnvSchema.extend({
   CLICKHOUSE_URL: envString(),
   CLICKHOUSE_USER: envString(),
   CLICKHOUSE_PASSWORD: envString(),
-  MAIL_FROM: envString("track.site <no-reply@track.site>"),
+  MAIL_FROM: envString("Track <no-reply@track.site>"),
   SMTP_URL: envString(),
   RESEND_API_KEY: envString(),
   CONTACT_INBOX_EMAIL: envString(),
@@ -34,11 +34,16 @@ export const webEnvSchema = baseEnvSchema.extend({
   STRIPE_SECRET_KEY: envString(),
   STRIPE_PUBLISHABLE_KEY: envString(),
   STRIPE_WEBHOOK_SECRET: envString(),
+  // one slot per catalogue plan and interval (@track-site/catalog `stripePriceSlots()`); values are price or product ids
   STRIPE_PRICE_STARTER_MONTHLY: envString(),
   STRIPE_PRICE_GROWTH_MONTHLY: envString(),
-  STRIPE_PRICE_SCALE_MONTHLY: envString(),
+  STRIPE_PRICE_PRO_MONTHLY: envString(),
   STRIPE_PRICE_STARTER_YEARLY: envString(),
   STRIPE_PRICE_GROWTH_YEARLY: envString(),
+  STRIPE_PRICE_PRO_YEARLY: envString(),
+  /** @deprecated the third plan is "Pro": read as a fallback for STRIPE_PRICE_PRO_* and reported by /api/health */
+  STRIPE_PRICE_SCALE_MONTHLY: envString(),
+  /** @deprecated see STRIPE_PRICE_SCALE_MONTHLY */
   STRIPE_PRICE_SCALE_YEARLY: envString(),
   GOOGLE_SITE_VERIFICATION: envString(),
   BING_SITE_VERIFICATION: envString(),

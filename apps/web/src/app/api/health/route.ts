@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createOpenAI, verifyModelAvailability, type ModelAvailability } from "@track-site/ai";
+import { stripePriceSlots } from "@track-site/catalog";
 import { env, publicEnv } from "@/env";
 import { resolvePrice, stripe } from "@/server/billing";
 import { pool } from "@/server/db";
@@ -54,29 +55,35 @@ async function mailStatus(): Promise<{ mail: string; mailDomain: { domain: strin
   return { mail: "resend", mailDomain: mailCache.value };
 }
 
-/** Stripe price configuration is verified at most every 10 minutes per instance (Prices: read only). */
-const PRICE_ENV = ["STRIPE_PRICE_STARTER_MONTHLY", "STRIPE_PRICE_STARTER_YEARLY", "STRIPE_PRICE_GROWTH_MONTHLY", "STRIPE_PRICE_GROWTH_YEARLY", "STRIPE_PRICE_SCALE_MONTHLY", "STRIPE_PRICE_SCALE_YEARLY"] as const;
-type BillingPrices = { ok: string[]; missing: string[]; failed: Array<{ env: string; error: string }> };
+/**
+ * Stripe price configuration is verified at most every 10 minutes per instance (Prices: read only).
+ * One slot per catalogue plan and interval; `resolvePrice` already rejects amounts/currencies that differ
+ * from the catalogue list price (`amount_mismatch:<stripe>≠<catalogue>`). `billing` is `ok` only when every
+ * slot verifies; `deprecated` lists the legacy `STRIPE_PRICE_SCALE_*` names still serving as fallback.
+ */
+type BillingPrices = { ok: string[]; missing: string[]; failed: Array<{ env: string; error: string }>; deprecated: string[] };
 let billingCache: { at: number; value: { billing: string; billingPrices: BillingPrices | null } } | null = null;
 
 async function billingStatus(): Promise<{ billing: string; billingPrices: BillingPrices | null }> {
   if (!stripe() || !publicEnv().stripeEnabled) return { billing: "not_configured", billingPrices: null };
   if (!billingCache || Date.now() - billingCache.at > 10 * 60_000) {
-    const value: BillingPrices = { ok: [], missing: [], failed: [] };
-    for (const name of PRICE_ENV) {
-      const interval = name.endsWith("_YEARLY") ? "yearly" : "monthly";
-      const { price, error } = await resolvePrice(name, interval);
+    const value: BillingPrices = { ok: [], missing: [], failed: [], deprecated: [] };
+    const slots = stripePriceSlots();
+    for (const slot of slots) {
+      const name = slot.envName;
+      const { price, error, envName, deprecated } = await resolvePrice(name, slot.interval);
+      if (deprecated && envName) value.deprecated.push(envName);
       if (!price) {
         if (error === "missing") value.missing.push(name);
         else value.failed.push({ env: name, error: error ?? "unknown" });
         continue;
       }
-      const want = interval === "monthly" ? "month" : "year";
+      const want = slot.interval === "monthly" ? "month" : "year";
       const problem = !price.active ? "price_inactive" : price.type !== "recurring" ? "not_recurring" : price.recurring?.interval !== want ? `interval_${price.recurring?.interval ?? "none"}_expected_${want}` : price.unit_amount == null ? "no_unit_amount" : price.tax_behavior === "unspecified" ? "tax_behavior_unspecified" : null;
       if (problem) value.failed.push({ env: name, error: problem });
       else value.ok.push(name);
     }
-    const billing = value.failed.length ? "prices_failing" : value.ok.length ? "ok" : "no_prices";
+    const billing = value.failed.length ? "prices_failing" : value.ok.length === slots.length ? "ok" : value.ok.length ? "prices_missing" : "no_prices";
     billingCache = { at: Date.now(), value: { billing, billingPrices: value } };
   }
   return billingCache.value;

@@ -1,20 +1,17 @@
+import type { PlanRecordLimits } from "@track-site/catalog";
 import { bigint, boolean, index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { createdAt, id, timestamps, tz } from "./_helpers.ts";
 import { organization } from "./auth.ts";
 import { orgRef, sites } from "./tenancy.ts";
 
-export interface PlanLimits {
-  sites: number;
-  eventsPerMonth: number;
-  destinations: number;
-  retentionDays: number;
-  teamMembers: number;
-  serverSide: boolean;
-  exports: boolean;
-  sso: boolean;
-}
+/** Shape of `plans.limits`; defined by the tariff catalogue (`null` = no fixed cap in this plan). */
+export type PlanLimits = PlanRecordLimits;
 
-/** Plans are configuration; prices live in Stripe and are referenced via env-configured price ids. */
+/**
+ * Plans mirror the tariff catalogue (`@track-site/catalog`): the seed writes one row per catalogue plan,
+ * list prices live in the catalogue, Stripe price ids are referenced via env-configured names.
+ * `features` holds catalogue feature keys (labels come from the catalogue per locale).
+ */
 export const plans = pgTable("plans", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -117,7 +114,10 @@ export const usagePeriods = pgTable(
     siteCount: integer("site_count").notNull().default(0),
     destinationCount: integer("destination_count").notNull().default(0),
     limitEvents: bigint("limit_events", { mode: "number" }),
+    /** catalogue thresholds 70 / 90 / 100 %; `warned_80_at` is kept for rows written before the catalogue */
+    warned70At: tz("warned_70_at"),
     warned80At: tz("warned_80_at"),
+    warned90At: tz("warned_90_at"),
     warned100At: tz("warned_100_at"),
     softLimitHitAt: tz("soft_limit_hit_at"),
     hardLimitHitAt: tz("hard_limit_hit_at"),

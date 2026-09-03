@@ -1,5 +1,6 @@
+import type { OveragePolicy } from "@track-site/catalog";
 import { sql } from "drizzle-orm";
-import { boolean, char, index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, char, index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { organization } from "./auth.ts";
 import { createdAt, id, timestamps, tz } from "./_helpers.ts";
 
@@ -156,5 +157,9 @@ export const orgSettings = pgTable("organization_settings", {
   retentionOverrides: jsonb("retention_overrides").$type<Record<string, number>>().notNull().default({}),
   benchmarkOptIn: boolean("benchmark_opt_in").notNull().default(false),
   maxSites: integer("max_sites"),
+  /** overage is never activated without an explicit choice: allow | cost_limit | pause (catalogue default: pause) */
+  usageOveragePolicy: text("usage_overage_policy").$type<OveragePolicy>().notNull().default("pause"),
+  /** monthly overage cost limit in cents for the `cost_limit` policy; null = not set */
+  usageCostLimitCents: bigint("usage_cost_limit_cents", { mode: "number" }),
   ...timestamps(),
 });

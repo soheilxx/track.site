@@ -1,6 +1,7 @@
 import "server-only";
 import { desc, eq } from "drizzle-orm";
 import Stripe from "stripe";
+import { LEGACY_STRIPE_PRICE_ENV, planForStripePriceEnv, verifyStripeAmount } from "@track-site/catalog";
 import { plans, subscriptions, usagePeriods } from "@track-site/db";
 import { env } from "@/env";
 import { db } from "./db";
@@ -12,15 +13,44 @@ export function stripe(): Stripe | null {
   return key ? new Stripe(key) : null;
 }
 
+export interface PriceEnvValue {
+  /** configured price/product id, or null when neither the current nor a deprecated name is set */
+  value: string | null;
+  /** env name the value was read from (the deprecated `STRIPE_PRICE_SCALE_*` name when it served as fallback) */
+  envName: string | null;
+  deprecated: boolean;
+}
+
+/**
+ * Reads a `STRIPE_PRICE_*` slot. The third plan was renamed from "Scale" to "Pro": when
+ * `STRIPE_PRICE_PRO_*` is unset the deprecated `STRIPE_PRICE_SCALE_*` value is used and flagged.
+ */
+export function priceEnvValue(envName: string | null): PriceEnvValue {
+  if (!envName) return { value: null, envName: null, deprecated: false };
+  const e = env() as unknown as Record<string, string | undefined>;
+  const direct = e[envName];
+  if (direct) return { value: direct, envName, deprecated: false };
+  const legacy = LEGACY_STRIPE_PRICE_ENV[envName];
+  const fallback = legacy ? e[legacy] : undefined;
+  if (legacy && fallback) return { value: fallback, envName: legacy, deprecated: true };
+  return { value: null, envName, deprecated: false };
+}
+
 export function priceIdFor(plan: { stripePriceEnv: { monthly: string | null; yearly: string | null } }, interval: "monthly" | "yearly"): string | null {
-  const name = plan.stripePriceEnv[interval];
-  if (!name) return null;
-  return (env() as unknown as Record<string, string | undefined>)[name] ?? null;
+  return priceEnvValue(plan.stripePriceEnv[interval]).value;
 }
 
 type PriceInterval = "monthly" | "yearly";
-export type ResolvedPrice = { price: Stripe.Price | null; error: string | null };
-const priceCache = new Map<string, { at: number; value: ResolvedPrice }>();
+export type ResolvedPrice = {
+  /** null when unresolved or when the Stripe amount does not match the catalogue list price */
+  price: Stripe.Price | null;
+  error: string | null;
+  /** env name the value was read from */
+  envName: string | null;
+  /** the deprecated `STRIPE_PRICE_SCALE_*` name served as fallback */
+  deprecated: boolean;
+};
+const priceCache = new Map<string, { at: number; value: { price: Stripe.Price | null; error: string | null } }>();
 
 /** Stripe errors carry type/code/status; the message may name a price or product id (not a secret). */
 export function stripeErrorText(err: unknown): string {
@@ -29,27 +59,29 @@ export function stripeErrorText(err: unknown): string {
 }
 
 /**
- * Resolves a `STRIPE_PRICE_*` value to a Stripe price. The value is a price id (`price_…`) or a product id
- * (`prod_…`: the product's single active recurring price with the slot's interval is used). Cached 10 minutes.
- * Errors come back as text, never thrown, so pages and health show an honest state.
+ * Resolves a `STRIPE_PRICE_*` slot to a Stripe price. The value is a price id (`price_…`) or a product id
+ * (`prod_…`: the product's single active recurring price with the slot's interval is used). The Stripe
+ * amount and currency are verified against the tariff catalogue: a price that differs from the list price
+ * comes back as `error: amount_mismatch:<stripe>≠<catalogue>` (or `currency_mismatch:…`) with `price: null`,
+ * so it is never shown or sold. Cached 10 minutes. Errors come back as text, never thrown.
  */
 export async function resolvePrice(envName: string | null, interval: PriceInterval): Promise<ResolvedPrice> {
-  if (!envName) return { price: null, error: "no_price_slot" };
-  const value = (env() as unknown as Record<string, string | undefined>)[envName];
-  if (!value) return { price: null, error: "missing" };
+  if (!envName) return { price: null, error: "no_price_slot", envName: null, deprecated: false };
+  const slot = priceEnvValue(envName);
+  if (!slot.value) return { price: null, error: "missing", envName, deprecated: false };
   const client = stripe();
-  if (!client) return { price: null, error: "stripe_not_configured" };
-  const key = `${value}:${interval}`;
+  if (!client) return { price: null, error: "stripe_not_configured", envName: slot.envName, deprecated: slot.deprecated };
+  const key = `${envName}:${slot.value}:${interval}`;
   const hit = priceCache.get(key);
-  if (hit && Date.now() - hit.at < 10 * 60_000) return hit.value;
+  if (hit && Date.now() - hit.at < 10 * 60_000) return { ...hit.value, envName: slot.envName, deprecated: slot.deprecated };
   const opts = { timeout: 8_000, maxNetworkRetries: 0 };
-  let resolved: ResolvedPrice;
+  let resolved: { price: Stripe.Price | null; error: string | null };
   try {
-    if (value.startsWith("price_")) {
-      resolved = { price: await client.prices.retrieve(value, undefined, opts), error: null };
-    } else if (value.startsWith("prod_")) {
+    if (slot.value.startsWith("price_")) {
+      resolved = { price: await client.prices.retrieve(slot.value, undefined, opts), error: null };
+    } else if (slot.value.startsWith("prod_")) {
       const want = interval === "monthly" ? "month" : "year";
-      const list = await client.prices.list({ product: value, active: true, type: "recurring", limit: 100 }, opts);
+      const list = await client.prices.list({ product: slot.value, active: true, type: "recurring", limit: 100 }, opts);
       const matches = list.data.filter((p) => p.recurring?.interval === want && (p.recurring.interval_count ?? 1) === 1);
       resolved = matches.length === 1 ? { price: matches[0]!, error: null } : { price: null, error: matches.length ? `ambiguous_product_prices:${matches.length}` : `no_active_${interval}_price_on_product` };
     } else {
@@ -58,8 +90,15 @@ export async function resolvePrice(envName: string | null, interval: PriceInterv
   } catch (err) {
     resolved = { price: null, error: stripeErrorText(err) };
   }
+  if (resolved.price) {
+    const parsed = planForStripePriceEnv(envName);
+    if (parsed) {
+      const check = verifyStripeAmount({ planId: parsed.planId, interval, unitAmount: resolved.price.unit_amount, currency: resolved.price.currency });
+      if (!check.ok) resolved = { price: null, error: check.error };
+    }
+  }
   priceCache.set(key, { at: Date.now(), value: resolved });
-  return resolved;
+  return { ...resolved, envName: slot.envName, deprecated: slot.deprecated };
 }
 
 export function periodKey(d = new Date()): string {
@@ -80,8 +119,7 @@ export async function syncSubscription(organizationId: string, s: Stripe.Subscri
   const item = s.items.data[0];
   const priceId = item?.price.id ?? null;
   const allPlans = await db().select().from(plans);
-  const e = env() as unknown as Record<string, string | undefined>;
-  const plan = allPlans.find((p) => [p.stripePriceEnv.monthly, p.stripePriceEnv.yearly].some((n) => n && e[n] === priceId)) ?? allPlans.find((p) => p.id === "starter");
+  const plan = allPlans.find((p) => [p.stripePriceEnv.monthly, p.stripePriceEnv.yearly].some((n) => n && priceEnvValue(n).value === priceId)) ?? allPlans.find((p) => p.id === "starter");
   if (!plan) return;
   const status = (["trialing", "active", "past_due", "canceled", "unpaid", "incomplete", "incomplete_expired", "paused"] as const).find((x) => x === s.status) ?? "none";
   const periodStart = item?.current_period_start ? new Date(item.current_period_start * 1000) : null;

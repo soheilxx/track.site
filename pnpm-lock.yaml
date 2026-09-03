@@ -99,6 +99,9 @@ importers:
       '@track-site/analytics':
         specifier: workspace:*
         version: link:../../packages/analytics
+      '@track-site/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
       '@track-site/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -256,6 +259,9 @@ importers:
       '@track-site/analytics':
         specifier: workspace:*
         version: link:../../packages/analytics
+      '@track-site/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
       '@track-site/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -389,6 +395,15 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11(@types/node@24.13.3)(jsdom@30.0.1(@noble/hashes@2.4.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0))
 
+  packages/catalog:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.3
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(@types/node@24.13.3)(jsdom@30.0.1(@noble/hashes@2.4.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0))
+
   packages/config:
     dependencies:
       '@track-site/core':
@@ -478,6 +493,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@track-site/catalog':
+        specifier: workspace:*
+        version: link:../catalog
       '@track-site/config':
         specifier: workspace:*
         version: link:../config

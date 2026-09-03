@@ -24,7 +24,7 @@ Environments: development -> staging -> production, with separate OpenAI project
 4. Run migrations with the owner URL (unpooled): `pnpm --filter @track-site/db migrate`.
 5. Deploy collector + worker containers (`infra/docker/*.Dockerfile`), then web.
 6. DNS: `track.site`, `app.`, `api.` -> web; `ingest.` -> collector; `cdn.` -> CDN. TLS via platform.
-7. Stripe: create products/prices (test mode), set `STRIPE_PRICE_*`, register webhook `https://api.<host>/billing/webhook`, store `STRIPE_WEBHOOK_SECRET`.
+7. Stripe: create products/prices (test mode) with the list prices of the tariff catalogue (`packages/catalog`: Starter 19 €/190 €, Growth 90 €/900 €, Pro 180 €/1 800 €, EUR), set `STRIPE_PRICE_{STARTER,GROWTH,PRO}_{MONTHLY,YEARLY}`, register webhook `https://api.<host>/billing/webhook`, store `STRIPE_WEBHOOK_SECRET`.
 8. Vendor OAuth apps (Google Ads, LinkedIn): redirect URIs `https://app.<host>/api/oauth/<vendor>/callback`.
 9. Smoke: `/api/health`, collector `/health`, publish demo config, send a test event, verify delivery in the Event Debugger.
 
@@ -114,5 +114,7 @@ Both services use the same database and the same `MASTER_KEY`/`CONFIG_SIGNING_*`
 ### Stripe (2026-09-03)
 
 - Same Stripe account as the company's other product; separation by naming: products `track.site …`, restricted API key `track.site production` (Checkout Sessions/Customer portal/Customers write, Subscriptions/Prices/Products read), dedicated webhook destination `https://www.track.site/api/stripe/webhook` with its own signing secret and the eight subscription/invoice/checkout events.
-- `STRIPE_PRICE_*` accepts a price id or a product id (the product's single active recurring price with the slot's interval is used); `/api/health` reports `billing: ok | prices_failing | no_prices | not_configured` with per-slot detail. The SDK's pinned API version is used (no override).
-- Verified: health `billing: ok` for all six slots, pricing pages show the live amounts, unsigned webhook calls are rejected with 400.
+- `STRIPE_PRICE_*` accepts a price id or a product id (the product's single active recurring price with the slot's interval is used); `/api/health` reports `billing: ok | prices_failing | prices_missing | no_prices | not_configured` with per-slot detail (`billingPrices.ok/missing/failed/deprecated`). The SDK's pinned API version is used (no override).
+- Tariff catalogue (since 2026-09-03): the slots are `STRIPE_PRICE_{STARTER,GROWTH,PRO}_{MONTHLY,YEARLY}` (one per catalogue plan and interval, `packages/catalog`). The Stripe `unit_amount`/`currency` of every slot is verified against the catalogue list price: a differing price is reported as `amount_mismatch:<stripe>≠<catalogue>` (or `currency_mismatch`), is never shown on the pricing page (which renders the catalogue list prices) and is refused by checkout. `billing` is `ok` only when all six slots verify. The former `STRIPE_PRICE_SCALE_*` names still work as a fallback for the Pro slots and are listed under `billingPrices.deprecated` until they are renamed on Vercel. The `plans` table is synced from the catalogue by `pnpm db:seed`; migration `0004` renames plan `scale` to `pro` and keeps existing subscriptions.
+- Owner actions: the live yearly prices (220/990/1 840 €) differ from the catalogue (190/900/1 800 €) and must be recreated in Stripe; products should be named `Track Starter/Growth/Pro`; env names renamed to `STRIPE_PRICE_PRO_*` (docs/11 §6).
+- Verified before the catalogue: health `billing: ok` for all six slots, pricing pages showed the live amounts, unsigned webhook calls are rejected with 400.
