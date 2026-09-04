@@ -10,6 +10,11 @@ platforms: ["reddit", "pinterest", "snapchat"]
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "Alle drei APIs teilen Metas Form — Eventname, Zeitstempel, Event-ID, gehashte Nutzerdaten plus Click-ID, Custom Data —, unterscheiden sich aber in Endpunkt, Auth, Click-ID-Parameter, Event-Vokabular und Zeitstempelformat."
+  - "Die Click-IDs heißen rdt_cid, epik und ScCid (Groß-/Kleinschreibung relevant) und speisen jeweils ein plattformspezifisches Feld; bei Pinterest schmerzt ein fehlendes epik am meisten."
+  - "Das Testen unterscheidet sich: Reddit nutzt test_mode im Body, Pinterest den Query-Parameter ?test=true, Snapchat tauscht /events gegen /validate."
+  - "Typische Fehler sind falsche Parameternamen, doppeltes Hashing, ein Pixel-Token über mehrere Konten und ein in Produktion vergessener Testmodus."
 tags: ["reddit", "pinterest", "snapchat", "conversions-api"]
 author: "track-site-editorial"
 publishedAt: "2026-08-26"

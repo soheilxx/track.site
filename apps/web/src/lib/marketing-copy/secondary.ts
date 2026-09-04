@@ -1,4 +1,4 @@
-import type { LocalizedCopy, SecondaryCopy, TitledText } from "./types";
+import type { LocalizedCopy, SecondaryCopy } from "./types";
 
 /**
  * Copy of the secondary public pages: docs, support, contact, demo, status, security and the
@@ -6,139 +6,16 @@ import type { LocalizedCopy, SecondaryCopy, TitledText } from "./types";
  * texts themselves stay in lib/legal-copy.ts; this module only carries the page chrome around
  * them (eyebrows, table-of-contents labels, operator labels, related links).
  *
- * `SecondaryPagesCopy` extends the `SecondaryCopy` shape from types.ts so every existing reader of
- * `SECONDARY_COPY` keeps working; the extra fields are what the redesigned pages need. Only
+ * The shape is `SecondaryCopy` in types.ts. Only
  * verifiable product facts: every claim below mirrors docs, legal-copy.ts or the connector catalogue.
  */
-
-export interface DocsGuide {
-  id: string;
-  title: string;
-  text: string;
-  code?: string;
-  /** Language label of the code sample (html, js, bash). */
-  language?: string;
-  /** Title of the code block (file name, endpoint, tool). */
-  codeTitle?: string;
-  bullets?: string[];
-}
-
-export interface SecondaryLinkItem {
-  title: string;
-  text: string;
-  /** Locale-neutral path; next-intl's Link adds the prefix. */
-  href: string;
-}
-
-export interface QuickstartStep extends TitledText {
-  /** What the customer can verify in the product after the step. */
-  outcome: string;
-}
-
-export interface ReferenceRow {
-  endpoint: string;
-  purpose: string;
-  notes: string;
-}
-
-export interface ControlRow {
-  control: string;
-  scope: string;
-  mechanism: string;
-}
-
-export interface SecondaryPagesCopy extends SecondaryCopy {
-  common: {
-    onThisPage: string;
-    breadcrumb: string;
-    home: string;
-    updated: string;
-    copy: string;
-    copied: string;
-    utc: string;
-    related: string;
-  };
-  docs: SecondaryCopy["docs"] & {
-    eyebrow: string;
-    links: { integrations: string; support: string; knowledge: string };
-    quickstart: { title: string; text: string; outcomeLabel: string; steps: QuickstartStep[] };
-    flow: {
-      title: string;
-      text: string;
-      caption: string;
-      nodes: { website: string; websiteSub: string; track: string; trackSub: string; consent: string; destinations: string };
-      labels: { granted: string; held: string };
-    };
-    guidesTitle: string;
-    guides: DocsGuide[];
-    reference: { title: string; text: string; columns: { endpoint: string; purpose: string; notes: string }; rows: ReferenceRow[] };
-  };
-  support: SecondaryCopy["support"] & {
-    eyebrow: string;
-    formTitle: string;
-    before: { title: string; items: SecondaryLinkItem[] };
-    include: { title: string; items: string[] };
-    reply: string;
-  };
-  contact: SecondaryCopy["contact"] & {
-    eyebrow: string;
-    formTitle: string;
-    topics: { title: string; items: TitledText[] };
-    other: { title: string; items: SecondaryLinkItem[] };
-  };
-  demo: SecondaryCopy["demo"] & {
-    eyebrow: string;
-    formTitle: string;
-    agendaTitle: string;
-    duration: string;
-    prepare: { title: string; items: string[] };
-    honest: string;
-  };
-  status: SecondaryCopy["status"] & {
-    eyebrow: string;
-    componentsTitle: string;
-    detail: string;
-    /** "{n} pending" */
-    pending: string;
-    checkedAt: string;
-    /** Short node labels of the status diagram (the table carries the long names). */
-    flow: { title: string; caption: string; collector: string; queue: string; worker: string; database: string; destinations: string };
-    incidentsText: string;
-  };
-  security: SecondaryCopy["security"] & {
-    eyebrow: string;
-    flow: {
-      title: string;
-      text: string;
-      caption: string;
-      nodes: { website: string; config: string; configSub: string; collector: string; collectorSub: string; queue: string; queueSub: string; policy: string; worker: string; workerSub: string; destination: string; vault: string; vaultSub: string; kill: string };
-    };
-    controls: { title: string; text: string; columns: { control: string; scope: string; mechanism: string }; rows: ControlRow[] };
-    report: { title: string; text: string; missing: string; ack: string };
-  };
-  legal: {
-    eyebrow: string;
-    operator: { title: string; company: string; address: string; representatives: string; email: string; phone: string; register: string; vatId: string; dpo: string; missing: string };
-    related: { privacy: string; terms: string; dpa: string; subprocessors: string; imprint: string; security: string };
-  };
-  subprocessors: {
-    title: string;
-    intro: string;
-    processorsTitle: string;
-    columns: { name: string; purpose: string; region: string; basis: string };
-    vendors: string;
-    vendorsText: string;
-    updated: string;
-  };
-  imprint: { title: string; intro: string; dispute: string; liability: string };
-}
 
 const SNIPPET = `<script async src="https://cdn.track.site/v1/tracker.js" data-site-id="TRACKING_ID"></script>`;
 const CONSENT_CALL = `tsq.push(["consent", { granted: ["necessary", "analytics", "marketing"], source: "api", policy_version: "2026-09" }]);`;
 const SERVER_CALL = `curl -X POST https://api.track.site/v1/s \\\n  -H "Authorization: Bearer tsk_..." -H "Content-Type: application/json" \\\n  -d '{"events":[{"name":"purchase","ts":1767225600000,"props":{"offline":true},"commerce":{"order_id":"A1001","currency":"EUR","value":129.9},"user_data":{"email":"customer@example.com"},"click_ids":{"gclid":"Cj0K..."},"consent":{"granted":["necessary","marketing"],"source":"crm"}}]}'`;
 const browserEvents = (comment: string) => `window.tsq = window.tsq || [];\ntsq.push(["track", "purchase", { order_id: "A1001", currency: "EUR", value: 129.9, items: [{ item_id: "SKU-1", price: 99.9, quantity: 1 }] }]);\ntsq.push(["identify", { user_id: "u_42", email: "customer@example.com" }]); // ${comment}`;
 
-export const SECONDARY_COPY: LocalizedCopy<SecondaryPagesCopy> = {
+export const SECONDARY_COPY: LocalizedCopy<SecondaryCopy> = {
   en: {
     common: { onThisPage: "On this page", breadcrumb: "Breadcrumb", home: "Home", updated: "Last updated", copy: "Copy code", copied: "Copied", utc: "UTC", related: "Related pages" },
     docs: {
@@ -189,8 +66,6 @@ export const SECONDARY_COPY: LocalizedCopy<SecondaryPagesCopy> = {
     support: {
       title: "Support",
       intro: "Customers reach engineering support here. Include your site's tracking ID (six characters, shown in the dashboard) so we can look at the right events — never paste access tokens.",
-      docs: "Check the documentation first",
-      status: "System status",
       placeholder: "Tracking ID, destination, what you expected and what happened.",
       eyebrow: "Support",
       formTitle: "Write to engineering support",
@@ -367,8 +242,6 @@ export const SECONDARY_COPY: LocalizedCopy<SecondaryPagesCopy> = {
     support: {
       title: "Support",
       intro: "Kunden erreichen hier den Engineering-Support. Gib die Tracking-ID deiner Site an (sechs Zeichen, im Dashboard sichtbar), damit wir die richtigen Events prüfen — niemals Access-Tokens einfügen.",
-      docs: "Erst in die Dokumentation schauen",
-      status: "Systemstatus",
       placeholder: "Tracking-ID, Destination, was du erwartet hast und was passiert ist.",
       eyebrow: "Support",
       formTitle: "An den Engineering-Support schreiben",

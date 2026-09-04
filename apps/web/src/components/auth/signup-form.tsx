@@ -5,6 +5,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Alert, Button, Field, Input } from "@track-site/ui";
+import { planSelectionQuery, storePlanSelection, type PlanSelection } from "@/components/marketing/pricing/plan-selection";
+import { useStoredPlanSelection } from "@/components/marketing/pricing/use-stored-plan-selection";
 import { Link, useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth-client";
 import { signupSchema, type SignupInput } from "@/lib/validation/auth";
@@ -14,15 +16,20 @@ import { PasswordInput } from "./password-input";
 const linkClass = "font-medium text-primary underline underline-offset-4 hover:text-primary-strong";
 
 /**
- * Signup with the domain handed over from the hero: prefilled from the validated `?domain=` query
- * (or the value the start page remembered in this tab), visible, editable and re-validated before
- * it travels on to verification and onboarding.
+ * Signup with the hand-overs from the marketing site: the domain from the hero (prefilled from the
+ * validated `?domain=` query or the value the start page remembered in this tab, visible, editable
+ * and re-validated) and the plan + billing period from a pricing CTA (`?plan=&interval=`, or the
+ * selection remembered in this tab). Both travel on to verification and onboarding through the
+ * callback URL and session storage, like the domain alone did before.
  */
-export function SignupForm({ domain }: { domain: string | null }) {
+export function SignupForm({ domain, selection }: { domain: string | null; selection: PlanSelection | null }) {
   const t = useTranslations("auth");
   const locale = useLocale();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const stored = useStoredPlanSelection();
+  // the query string wins; without it the selection the pricing page remembered in this tab travels on
+  const plan = selection ?? stored;
   const form = useForm<SignupInput>({ resolver: zodResolver(signupSchema), defaultValues: { name: "", email: "", password: "", company: "", domain: domain ?? "", website: "" } });
   const errors = form.formState.errors;
   const domainValue = useWatch({ control: form.control, name: "domain" });
@@ -32,8 +39,8 @@ export function SignupForm({ domain }: { domain: string | null }) {
   useEffect(() => {
     // no query value: fall back to the domain the start page remembered in this tab (client-only storage)
     if (domain) return;
-    const stored = readStoredDomain();
-    if (stored && !form.getValues("domain")) form.setValue("domain", stored);
+    const remembered = readStoredDomain();
+    if (remembered && !form.getValues("domain")) form.setValue("domain", remembered);
   }, [domain, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -44,7 +51,7 @@ export function SignupForm({ domain }: { domain: string | null }) {
       form.setError("domain", { type: "validate" });
       return;
     }
-    const callbackURL = `/app/onboarding${domainQuery(host)}`;
+    const callbackURL = `/app/onboarding${domainQuery(host)}${planSelectionQuery(plan, !host)}`;
     const res = await authClient.signUp.email({ name: values.name, email: values.email, password: values.password, callbackURL, locale } as never);
     if (res.error) {
       const code = res.error.code ?? "";
@@ -60,7 +67,8 @@ export function SignupForm({ domain }: { domain: string | null }) {
       /* ignore */
     }
     storeDomain(host);
-    router.push(`/verify-email?email=${encodeURIComponent(values.email)}${domainQuery(host, false)}`);
+    storePlanSelection(plan);
+    router.push(`/verify-email?email=${encodeURIComponent(values.email)}${domainQuery(host, false)}${planSelectionQuery(plan, false)}`);
   });
 
   return (

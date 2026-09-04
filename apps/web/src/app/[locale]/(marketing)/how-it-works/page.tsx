@@ -9,7 +9,7 @@ import { modeFlow } from "@/components/marketing/features/feature-view";
 import { FlowDiagram } from "@/components/marketing/features/flow-diagram";
 import { MilestoneTimeline } from "@/components/marketing/features/milestones";
 import { AiSetupView, HealthScoreView, PublishedVersionView } from "@/components/marketing/features/product-views";
-import { ClosingCta, FeatureHero, MarketingSection, Narrative, SectionHeading } from "@/components/marketing/features/section";
+import { FinalCta, Narrative, PageIntro, PageSection, SectionHeading } from "@/components/marketing/page-shell";
 import { pick } from "@/lib/marketing-copy";
 import { FEATURE_UI_COPY } from "@/lib/marketing-copy/features";
 import { HOW_IT_WORKS } from "@/lib/marketing-copy/how-it-works";
@@ -47,20 +47,20 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ loc
         ]}
       />
 
-      <FeatureHero eyebrow={c.eyebrow} title={c.title} text={c.intro} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.ctaSecondary, href: "/features" }}>
+      <PageIntro width="wide" spacing="lg" eyebrow={c.eyebrow} title={c.title} text={c.intro} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.ctaSecondary, href: "/features" }}>
         <ProductStage tone="dark" dots padding="md">
           <FlowDiagram title={c.stage.title} description={c.stage.description} caption={c.stage.caption} labels={ui.diagram} paths={hero.paths} gate={hero.gate} destinations={hero.destinations} />
         </ProductStage>
-      </FeatureHero>
+      </PageIntro>
 
-      <MarketingSection tone="surface" labelledBy="milestones-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="milestones-title">
         <SectionHeading id="milestones-title" title={c.milestonesTitle} text={c.milestonesText} />
         <div className="mt-12 md:mt-16">
           <MilestoneTimeline items={c.steps} youLabel={c.youLabel} outcomeLabel={c.outcomeLabel} visuals={milestoneVisuals} />
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="flows-title">
+      <PageSection spacing="lg" labelledBy="flows-title">
         <SectionHeading id="flows-title" title={c.flows.title} text={c.flows.text} />
         <Tabs defaultValue="hybrid" className="mt-10">
           <TabList aria-label={c.flows.tabsLabel} variant="pill">
@@ -99,13 +99,13 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ loc
             );
           })}
         </Tabs>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection tone="surface" labelledBy="checks-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="checks-title">
         <TechnicalChecks headingId="checks-title" title={c.checks.title} summary={c.checks.summary} intro={c.checks.intro} groups={c.checks.groups} />
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="architecture-title">
+      <PageSection spacing="lg" labelledBy="architecture-title">
         <SectionHeading id="architecture-title" title={c.architectureTitle} text={c.architectureText} />
         <div className="mt-10 overflow-hidden rounded-[var(--radius-panel)] border border-line bg-surface">
           <Table caption={c.architectureTitle}>
@@ -129,16 +129,16 @@ export default async function HowItWorksPage({ params }: { params: Promise<{ loc
             </TBody>
           </Table>
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection tone="surface" labelledBy="faq-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="faq-title">
         <SectionHeading id="faq-title" title={c.faqTitle} />
         <div className="mt-8">
           <FaqList items={c.faq} />
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <ClosingCta title={c.closing.title} text={c.closing.text} primary={{ label: c.closing.cta, href: "/signup" }} secondary={{ label: c.closing.secondary, href: "/docs" }} />
+      <FinalCta title={c.closing.title} text={c.closing.text} primary={{ label: c.closing.cta, href: "/signup" }} secondary={{ label: c.closing.secondary, href: "/docs" }} />
     </>
   );
 }

@@ -28,3 +28,21 @@ export const resetSchema = z
   .refine((v) => v.password === v.confirm, { path: ["confirm"], message: "passwordMatch" });
 
 export const totpSchema = z.object({ code: z.string().regex(/^\d{6}$/), trust: z.boolean().optional() });
+
+/**
+ * Backup code as issued by the two-factor plugin: alphanumeric groups, optionally joined with dashes
+ * (`abcde-12345`). Deliberately separate from `totpSchema`, whose six-digit rule stays strict.
+ */
+export const backupCodeSchema = z.object({
+  code: z
+    .string()
+    .trim()
+    .min(8)
+    .max(32)
+    .regex(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/),
+  trust: z.boolean().optional(),
+});
+
+/** One form, two modes: the authenticator code (six digits) or a backup code (alphanumeric). */
+export const twoFactorSchema = z.discriminatedUnion("mode", [totpSchema.extend({ mode: z.literal("totp") }), backupCodeSchema.extend({ mode: z.literal("backup") })]);
+export type TwoFactorInput = z.infer<typeof twoFactorSchema>;

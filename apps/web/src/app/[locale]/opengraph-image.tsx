@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { isLocale, routing } from "@/i18n/routing";
-import { CARD_CONTENT_TYPE, CARD_SIZE, SocialCard } from "./tracking-knowledge/social-card";
+import { CARD_CONTENT_TYPE, CARD_SIZE, SocialCard } from "./(marketing)/tracking-knowledge/social-card";
 
 /**
  * Default 1200×630 social card for every `/[locale]/**` page that does not define its own

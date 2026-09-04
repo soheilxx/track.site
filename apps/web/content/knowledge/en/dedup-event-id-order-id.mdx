@@ -10,6 +10,11 @@ platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "li
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "Use two keys: an event id generated once at the source and handed to every path, plus the order id on every commerce event."
+  - "Platforms merge on different keys — Meta, TikTok, Microsoft, LinkedIn and Pinterest on the event id, Google Ads and GA4 on the order or transaction id, Snapchat on a matching pair, CM360 on the ordinal."
+  - "Vendors merge only within a window (Meta documents about 48 hours), so delayed CRM qualifications belong on a separate vendor event, not as a duplicate of the browser one."
+  - "Refunds are their own events with the original order id; verify deduplication in the event debugger, the destination monitor and the vendor UI."
 tags: ["deduplication", "event-id", "order-id", "hybrid"]
 author: "track-site-editorial"
 publishedAt: "2026-08-29"

@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { CodeBlock, ProductStage, TBody, Table, Td, Th, THead, Tr } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { PipelineDiagram } from "@/components/marketing/secondary/diagrams";
-import { ArrowLink, PageIntro, PageSection, SectionHeading } from "@/components/marketing/secondary/shell";
+import { ArrowLink, PageIntro, PageSection, SectionHeading } from "@/components/marketing/page-shell";
 import { NumberedTimeline } from "@/components/marketing/secondary/timeline";
 import { PageToc } from "@/components/marketing/secondary/toc";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";

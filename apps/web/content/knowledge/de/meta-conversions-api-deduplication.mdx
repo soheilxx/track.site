@@ -10,6 +10,11 @@ platforms: ["meta"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "Meta führt Pixel- und Server-Event nur zusammen, wenn beide event_id und event_name innerhalb des Dedup-Fensters teilen — erzeuge die ID also einmal und gib sie beiden Wegen mit."
+  - "user_data-Kennungen werden nach Normalisierung SHA-256-gehasht; fbc, fbp, IP und User-Agent bleiben im Klartext, und fbc/fbp werden nur nach Marketing-Consent erfasst."
+  - "Der Hybridmodus gibt Meta die Vereinigung der Matching-Schlüssel — gehashte E-Mail und Telefon aus dem Bestellsystem plus fbp/fbc aus dem Browser."
+  - "Ein test_event_code hält Test-Käufe im Tab Test-Events und aus dem Reporting; jeder Versuch und Fehlercode ist im Event-Debugger sichtbar."
 tags: ["meta", "conversions-api", "deduplizierung", "hashing"]
 author: "track-site-editorial"
 publishedAt: "2026-09-03"

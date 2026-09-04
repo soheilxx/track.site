@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { safeDomain } from "@/components/auth/domain";
 import { ResendVerification } from "@/components/auth/resend-verification";
+import { planSelectionFromSearchParams } from "@/components/marketing/pricing/plan-selection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -11,10 +12,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("verify.title"), robots: { index: false, follow: false } };
 }
 
-export default async function VerifyEmailPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ email?: string; domain?: string }> }) {
+export default async function VerifyEmailPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { email, domain } = await searchParams;
+  const query = await searchParams;
+  const email = typeof query.email === "string" ? query.email : undefined;
   const t = await getTranslations("auth");
   const safeEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
   return (
@@ -29,7 +31,7 @@ export default async function VerifyEmailPage({ params, searchParams }: { params
         </div>
       </div>
       <div className="mt-6">
-        <ResendVerification email={safeEmail} domain={safeDomain(domain)} />
+        <ResendVerification email={safeEmail} domain={safeDomain(query.domain)} selection={planSelectionFromSearchParams(query)} />
       </div>
     </AuthShell>
   );

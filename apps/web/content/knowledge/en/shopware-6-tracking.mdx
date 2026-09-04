@@ -10,6 +10,11 @@ platforms: []
 shopSystems: ["shopware"]
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "The Track app is a manifest, not a plugin: Shopware sends signed webhooks, nothing from Track runs in the shop, and the API credentials from registration are deliberately discarded."
+  - "By default the paid transaction state becomes the purchase and the refunded state the refund; shops where placement is the meaningful moment can switch the connection to placed orders."
+  - "A missing currency falls back to the connection's setting or is reported as a missing field rather than guessed."
+  - "The storefront snippet in base.html.twig creates the browser purchase whose consent the verified server purchase inherits by order id."
 tags: ["shopware", "app-system", "webhooks", "server-side"]
 author: "track-site-editorial"
 publishedAt: "2026-08-06"

@@ -10,6 +10,11 @@ platforms: ["microsoft"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "CAPI accepts server events per UET tag id at capi.uet.microsoft.com with an OAuth bearer token (scope msads.manage); goals match server events the same way as tag events."
+  - "continueOnValidationError makes the endpoint accept valid rows and report invalid ones by index; Track marks those rows invalid and retries only 5xx and 429."
+  - "Pass the same eventId and event name on the UET tag and the API so Microsoft counts the conversion once."
+  - "msclkid captured after marketing consent is the primary match key, complemented by hashed e-mail and phone; there is no test flag, so give staging its own UET tag id."
 tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
 author: "track-site-editorial"
 publishedAt: "2026-08-28"

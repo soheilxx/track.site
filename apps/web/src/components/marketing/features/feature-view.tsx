@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { FeatureUiCopy } from "@/lib/marketing-copy/features";
+import type { FeatureUiCopy } from "@/lib/marketing-copy/types";
 import { ChainDiagram, FlowDiagram, type FlowDestination, type FlowPaths, type GateState } from "./flow-diagram";
 import { AiSetupView, ClickIdView, ConsentView, DestinationHealthView, EventStreamView, HealthScoreView, LineageView } from "./product-views";
 

@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
  * and fails on any occurrence that is not covered by the allow-list below, so a new "track.site"
  * product mention (or a `TRACK` / `Track.site` wordmark) cannot slip back in unnoticed.
  *
- * Scanned: `messages/**`, `src/components/**`, `src/app/**`, `src/lib/marketing-copy/**`, `src/lib/marketing-copy.ts`,
+ * Scanned: `messages/**`, `src/components/**` (incl. the Tracking Knowledge components), `src/app/**`, `src/lib/marketing-copy/**`,
  * `src/lib/knowledge.ts` (test files are skipped; they assert URLs and hosts on purpose).
  *
  * Allow-list — an occurrence is technical (and therefore allowed) when it is
@@ -36,7 +36,7 @@ const FORBIDDEN_WORDMARKS = [/\bTRACK\.site\b/, /\bTrack\.site\b/, /\bTRACK\b(?!
 
 const WEB_ROOT = process.cwd();
 const SCAN_DIRS = ["messages", path.join("src", "components"), path.join("src", "app"), path.join("src", "lib", "marketing-copy")];
-const SCAN_FILES = [path.join("src", "lib", "marketing-copy.ts"), path.join("src", "lib", "knowledge.ts")];
+const SCAN_FILES = [path.join("src", "lib", "knowledge.ts")];
 const EXTENSIONS = new Set([".json", ".ts", ".tsx", ".mdx", ".md", ".css", ".svg", ".txt"]);
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -71,6 +71,9 @@ describe("brand guard: visible name is 'Track', 'track.site' only as domain or t
     expect(files.length).toBeGreaterThan(50);
     expect(files.some((f) => f.endsWith(path.join("messages", "en", "common.json")))).toBe(true);
     expect(files.some((f) => f.endsWith(path.join("components", "marketing", "header.tsx")))).toBe(true);
+    expect(files.some((f) => f.endsWith(path.join("components", "marketing", "knowledge", "hub", "sections.tsx")))).toBe(true);
+    expect(files.some((f) => f.endsWith(path.join("lib", "marketing-copy", "knowledge.ts")))).toBe(true);
+    expect(files.some((f) => f.endsWith(path.join("lib", "marketing-copy.ts")))).toBe(false);
   });
 
   it("treats URLs, host names, e-mail addresses, snippets and legal domain notes as technical", () => {

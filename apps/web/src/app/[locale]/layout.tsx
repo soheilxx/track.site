@@ -3,13 +3,9 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { MarketingFooter } from "@/components/marketing/footer";
-import { MarketingHeader } from "@/components/marketing/header";
 import { LocalizedPathsProvider } from "@/components/marketing/localized-paths";
 import { ThemeScript } from "@/components/theme-script";
 import { routing } from "@/i18n/routing";
-import { pick } from "@/lib/marketing-copy/pick";
-import { HEADER_COPY } from "@/lib/marketing-copy/shared";
 import { BRAND_NAME, baseUrl, ogLocale } from "@/lib/seo";
 import { bodyClassName, fontClassName } from "../fonts";
 import "../globals.css";
@@ -35,21 +31,22 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /**
- * Root layout of the marketing tree. It renders `<html lang>` itself (there is no shared root
+ * Root layout of the localized public tree. It renders `<html lang>` itself (there is no shared root
  * layout above the `[locale]` segment) so the locale is known statically from the URL segment:
  * `setRequestLocale` runs before any next-intl call, nothing reads request headers or cookies, and
  * every `/[locale]/**` page stays prerendered. The dashboard (`/app`) has its own root layout.
  *
- * Shell: skip link → header (sticky, mega navigation + mobile drawer) → `<main id="main">` → footer.
- * There is deliberately no consent dialog: the marketing site sets no optional cookies or storage
- * (see components/marketing/consent-dialog.tsx for the audit and the mounting instructions).
+ * The page chrome belongs to the route groups: `(marketing)` renders skip link → header → `<main>`
+ * → footer around every public page, `(auth)` its compact frame around the auth pages. Both share
+ * the providers below (messages, localized paths for the language switcher) and the default social
+ * card next to this file. There is deliberately no consent dialog: the marketing site sets no
+ * optional cookies or storage (see components/marketing/consent-dialog.tsx).
  */
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
-  const shell = pick(locale, HEADER_COPY);
   return (
     <html lang={locale} suppressHydrationWarning className={fontClassName}>
       <head>
@@ -57,18 +54,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       </head>
       <body className={bodyClassName}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <LocalizedPathsProvider>
-            <div className="flex min-h-screen flex-col">
-              <a href="#main" className="skip-link">
-                {shell.skipToContent}
-              </a>
-              <MarketingHeader />
-              <main id="main" tabIndex={-1} className="flex-1 outline-none">
-                {children}
-              </main>
-              <MarketingFooter locale={locale} />
-            </div>
-          </LocalizedPathsProvider>
+          <LocalizedPathsProvider>{children}</LocalizedPathsProvider>
         </NextIntlClientProvider>
       </body>
     </html>

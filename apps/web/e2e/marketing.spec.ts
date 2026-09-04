@@ -47,7 +47,7 @@ test.describe("marketing site", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
   });
 
-  test("Tracking Knowledge index lists articles and an article renders with BlogPosting + BreadcrumbList JSON-LD and a large social card", async ({ page }) => {
+  test("Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card", async ({ page }) => {
     await page.goto("/en/tracking-knowledge");
     await expect(page.locator("h1")).toHaveText("Tracking Knowledge");
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/opengraph-image/);
@@ -56,8 +56,20 @@ test.describe("marketing site", () => {
     await first.click();
     await expect(page).toHaveURL(/\/en\/tracking-knowledge\/[a-z0-9-]+$/);
     await expect(page.locator("h1")).toHaveCount(1);
+    // article template (supplement §6): breadcrumbs, reading progress, table of contents, responsible editor, topic CTA and a feedback block without any totals
+    await expect(page.getByRole("navigation", { name: /breadcrumb|navigationspfad/i })).toHaveCount(1);
+    await expect(page.locator('[role="progressbar"]')).toHaveCount(1);
+    await expect(page.locator("[data-article-toc] nav a[href^='#']").first()).toBeAttached();
+    await expect(page.locator("[data-article-editor]")).toBeVisible();
+    await expect(page.locator("[data-article-cta] a")).toHaveCount(1);
+    await expect(page.locator("[data-article-feedback]")).toBeVisible();
+    await expect(page.locator("[data-article-feedback]")).not.toContainText(/\d/);
+    // WCAG gate on the article template itself (GFM task lists must not leave unlabeled form controls behind)
+    const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+    const serious = axe.violations.filter((v) => v.impact === "critical" || v.impact === "serious");
+    expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(" | ")}`)).toEqual([]);
     const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
-    expect(jsonLd.some((t) => /"@type":"BlogPosting"/.test(t) && /"publisher":\{"@type":"Organization","name":"Track"/.test(t))).toBe(true);
+    expect(jsonLd.some((t) => /"@type":"(BlogPosting|TechArticle)"/.test(t) && /"publisher":\{"@type":"Organization","name":"Track"/.test(t))).toBe(true);
     expect(jsonLd.some((t) => /"@type":"BreadcrumbList"/.test(t) && t.includes('"name":"Tracking Knowledge"'))).toBe(true);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/[a-z0-9-]+\/opengraph-image/);
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", /Tracking Knowledge/);

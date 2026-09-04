@@ -1,5 +1,4 @@
-import type { FeatureGroup } from "@track-site/catalog";
-import type { FaqItem, LocalizedCopy, PricingCopy } from "./types";
+import type { LocalizedCopy, PricingCopy } from "./types";
 
 /**
  * Pricing page copy (supplement §5 layout: toggle, three main cards, Enterprise panel, plan finder,
@@ -9,163 +8,9 @@ import type { FaqItem, LocalizedCopy, PricingCopy } from "./types";
  * tariff catalogue (`@track-site/catalog`) through `@/server/pricing`; this module only holds the
  * wording around them. Strings that client components render use `{placeholder}` templates filled
  * with `fill()` from components/marketing/pricing/pricing-helpers.ts (functions cannot cross the
- * server/client boundary). The legacy function-valued keys of `PricingCopy` are kept so existing
- * imports keep type-checking; `PricingPageCopy` extends that shape until the type moves to types.ts.
+ * server/client boundary). The shape is `PricingCopy` in types.ts.
  */
-export interface PricingPageCopy extends PricingCopy {
-  hero: { facts: string[] };
-  interval: { legend: string; monthly: string; yearly: string; monthlyHint: string; yearlyHint: string; announceMonthly: string; announceYearly: string };
-  plan: {
-    perMonth: string;
-    perYear: string;
-    billedMonthly: string;
-    /** `{total}` */
-    billedYearly: string;
-    /** `{monthly}` */
-    equivalent: string;
-    /** `{n}` */
-    instalments: string;
-    eventsLabel: string;
-    sites: string;
-    team: string;
-    retention: string;
-    unlimited: string;
-    /** `{n}` */
-    days: string;
-    /** `{n}` */
-    months: string;
-    /** `{plan}` */
-    choose: string;
-    /** `{days}` */
-    trialHint: string;
-    /** `{price}`, `{events}` */
-    overageHint: string;
-    recommended: string;
-    /** `{plan}` */
-    listLabel: string;
-  };
-  tax: { title: string; text: string };
-  enterprise: { lead: string; text: string; price: string; benefitsTitle: string; trustTitle: string; trust: string[]; cta: string; secondary: string; overage: string };
-  includedSection: { title: string; text: string; note: string };
-  /** section around the plan finder and the calculator */
-  tools: { title: string; text: string };
-  faqTitle: string;
-  finder: {
-    title: string;
-    text: string;
-    sites: string;
-    events: string;
-    team: string;
-    retention: string;
-    /** `{n}` */
-    retentionDays: string;
-    /** `{n}` */
-    retentionMonths: string;
-    /** `{n}` */
-    retentionLonger: string;
-    /** `{n}` */
-    eventsMore: string;
-    resultLabel: string;
-    /** `{plan}` */
-    result: string;
-    resultEnterprise: string;
-    resultEnterpriseText: string;
-    checks: { sites: string; events: string; team: string; retention: string };
-    /** `{wanted}`, `{limit}` */
-    limitOf: string;
-    /** `{wanted}` */
-    noCap: string;
-    /** `{plan}` */
-    cta: string;
-    ctaEnterprise: string;
-    /** `{price}` */
-    priceMonthly: string;
-    /** `{price}` */
-    priceYearly: string;
-  };
-  calculator: {
-    title: string;
-    text: string;
-    plan: string;
-    events: string;
-    slider: string;
-    eventsInput: string;
-    base: string;
-    included: string;
-    above: string;
-    packs: string;
-    /** `{n}`, `{events}`, `{price}` */
-    packsValue: string;
-    packsNone: string;
-    overageCost: string;
-    total: string;
-    perMonth: string;
-    perYear: string;
-    /** `{plan}`, `{total}`, `{savings}`, `{current}` */
-    cheaper: string;
-    /** `{plan}` */
-    cheaperCta: string;
-    noCheaper: string;
-    beyondPro: string;
-    /** `{thresholds}` */
-    policyNote: string;
-    /** `{plan}` */
-    cta: string;
-  };
-  matrix: {
-    title: string;
-    text: string;
-    feature: string;
-    included: string;
-    notIncluded: string;
-    custom: string;
-    contractual: string;
-    planLabel: string;
-    groups: Record<"limits" | FeatureGroup, string>;
-    rows: { sites: string; events: string; team: string; retention: string; monthly: string; yearly: string; overage: string };
-    unlimited: string;
-    /** `{n}` */
-    days: string;
-    /** `{n}` */
-    months: string;
-    /** `{price}`, `{events}` */
-    pack: string;
-    perMonth: string;
-    perYear: string;
-    /** `{included}`, `{total}` */
-    summaryCount: string;
-  };
-  events: { notCountedTitle: string; diagramTitle: string; diagramDescription: string; diagramCaption: string; nodes: { website: string; track: string; trackSub: string; destinations: string[]; fanOut: string } };
-  overageSection: {
-    packsTitle: string;
-    packPlan: string;
-    packSize: string;
-    packPrice: string;
-    packEnterprise: string;
-    policyTitle: string;
-    policyText: string;
-    defaultTag: string;
-    /** `{thresholds}` */
-    thresholds: string;
-    /** `{percent}` */
-    grace: string;
-    honest: string;
-  };
-  trial: {
-    /** `{plan}`, `{days}` */
-    title: string;
-    /** `{plan}` */
-    text: string;
-    /** `{days}`, `{events}` */
-    facts: string[];
-    /** `{plan}` */
-    cta: string;
-  };
-  plansLabel: string;
-  faq: FaqItem[];
-}
-
-export const PRICING_COPY: LocalizedCopy<PricingPageCopy> = {
+export const PRICING_COPY: LocalizedCopy<PricingCopy> = {
   en: {
     eyebrow: "Pricing",
     title: "Clear plans that grow with your event volume",
@@ -180,14 +25,7 @@ export const PRICING_COPY: LocalizedCopy<PricingPageCopy> = {
       announceMonthly: "Showing monthly prices.",
       announceYearly: "Showing yearly prices.",
     },
-    perMonth: "per month",
-    perYear: "per year",
-    yearlyNote: (yearly, monthly) => `${yearly} per year when paid annually, i.e. ${monthly} per month.`,
-    custom: "Custom",
-    customText: "Custom volume, contract and SLA.",
     recommended: "Recommended",
-    overage: (price, events) => `Optional overage: ${price} per ${events} additional events, never activated without your choice.`,
-    overageContractual: "Overage is agreed in the contract.",
     contactSales: "Talk to sales",
     start: "Get started",
     plansLabel: "Plans",
@@ -226,8 +64,6 @@ export const PRICING_COPY: LocalizedCopy<PricingPageCopy> = {
       secondary: "Book a demo",
       overage: "Overage, retention and volumes are agreed in the contract.",
     },
-    included: "Included in every plan",
-    includedItems: ["Privacy and consent functions", "Security functions", "Data export and deletion", "AI assistant in every paid plan"],
     includedSection: {
       title: "Included in every plan",
       text: "The basics are never paywalled: privacy, consent, security, export and deletion functions work in every plan, and the AI assistant is part of every paid plan. Upgrades add volume, team size, retention and advanced modules.",
@@ -372,14 +208,7 @@ export const PRICING_COPY: LocalizedCopy<PricingPageCopy> = {
       announceMonthly: "Monatspreise werden angezeigt.",
       announceYearly: "Jahrespreise werden angezeigt.",
     },
-    perMonth: "pro Monat",
-    perYear: "pro Jahr",
-    yearlyNote: (yearly, monthly) => `${yearly} pro Jahr bei jährlicher Vorauszahlung, rechnerisch ${monthly} pro Monat.`,
-    custom: "Custom",
-    customText: "Individuelles Volumen, Vertrag und SLA.",
     recommended: "Empfohlen",
-    overage: (price, events) => `Optionaler Mehrverbrauch: ${price} je ${events} weitere Events, niemals ungefragt aktiviert.`,
-    overageContractual: "Mehrverbrauch wird vertraglich vereinbart.",
     contactSales: "Mit dem Vertrieb sprechen",
     start: "Jetzt starten",
     plansLabel: "Tarife",
@@ -418,8 +247,6 @@ export const PRICING_COPY: LocalizedCopy<PricingPageCopy> = {
       secondary: "Demo buchen",
       overage: "Mehrverbrauch, Aufbewahrung und Volumen werden vertraglich vereinbart.",
     },
-    included: "In jedem Tarif enthalten",
-    includedItems: ["Datenschutz- und Consent-Funktionen", "Sicherheitsfunktionen", "Datenexport und Löschung", "AI-Assistent in jedem bezahlten Tarif"],
     includedSection: {
       title: "In jedem Tarif enthalten",
       text: "Die Grundfunktionen sind nie hinter einer Paywall: Datenschutz-, Consent-, Sicherheits-, Export- und Löschfunktionen funktionieren in jedem Tarif, und der AI-Assistent gehört zu jedem bezahlten Tarif. Upgrades bringen Volumen, Teamgröße, Aufbewahrung und erweiterte Module.",

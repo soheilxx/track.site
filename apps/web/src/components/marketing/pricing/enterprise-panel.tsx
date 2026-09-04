@@ -1,7 +1,7 @@
 import { Check, ShieldCheck } from "lucide-react";
 import { ProductStage, buttonVariants } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicPlan } from "@/server/pricing";
 import { CONTACT_SALES_HREF } from "./pricing-helpers";
 
@@ -9,7 +9,7 @@ import { CONTACT_SALES_HREF } from "./pricing-helpers";
  * Enterprise as a wide custom panel below the three main cards (supplement §5): a dark product
  * stage with the benefits from the catalogue, verifiable trust signals and its own CTA.
  */
-export function EnterprisePanel({ plan, copy }: { plan: PublicPlan; copy: PricingPageCopy["enterprise"] }) {
+export function EnterprisePanel({ plan, copy }: { plan: PublicPlan; copy: PricingCopy["enterprise"] }) {
   const headingId = `plan-${plan.id}-title`;
   return (
     <ProductStage as="div" tone="dark" dots padding="lg" aria-labelledby={headingId} role="region">

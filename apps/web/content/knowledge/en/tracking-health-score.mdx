@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "The score is a weighted average of six components — consent 0.20, coverage 0.25, schema 0.15, dedup 0.10, delivery 0.20, liveness 0.10 — and the same function feeds dashboard, assistant and alerts."
+  - "Components without data score a neutral 50 with a \"No events yet\" detail line; liveness scores 0 when no browser event was ever received, because that is the first thing to fix."
+  - "Each component has a typical cause: missing CMP integration, broken critical events, schema or PII findings, double-firing tags, failed deliveries or expired credentials, a lost snippet."
+  - "The score is not comparable across sites with different tracking plans; use it to notice change and the components to find the cause."
 tags: ["health-score", "monitoring", "data-quality", "alerts"]
 author: "track-site-editorial"
 publishedAt: "2026-08-18"

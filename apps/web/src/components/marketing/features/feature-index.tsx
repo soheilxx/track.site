@@ -1,16 +1,16 @@
 import { ArrowRight, Check } from "lucide-react";
 import { ProductStage, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
-import type { FeatureDetailCopy, FeatureUiCopy } from "@/lib/marketing-copy/features";
+import type { FeatureCopy, FeatureUiCopy } from "@/lib/marketing-copy/types";
 import { FeatureIndexView } from "./feature-view";
-import { Narrative } from "./section";
+import { Narrative } from "@/components/marketing/page-shell";
 
 /*
  * The six capabilities on /features as alternating two-column narratives (text + product view)
  * instead of a grid of identical cards. Dark and light stages alternate for rhythm; the title links
  * to the detail page, the "read more" link is a button-styled <Link> (never a nested button).
  */
-export function FeatureIndex({ features, ui, more }: { features: FeatureDetailCopy[]; ui: FeatureUiCopy; more: string }) {
+export function FeatureIndex({ features, ui, more }: { features: FeatureCopy[]; ui: FeatureUiCopy; more: string }) {
   return (
     <div className="space-y-20 md:space-y-28">
       {features.map((f, i) => {

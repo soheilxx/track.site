@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import { Lock, Sparkles, User } from "lucide-react";
 import { Badge, CodeBlock, Status, TBody, Table, Td, Th, THead, Tr, cn } from "@track-site/ui";
-import type { FeatureUiCopy } from "@/lib/marketing-copy/features";
-import type { HowItWorksPageCopy } from "@/lib/marketing-copy/how-it-works";
+import type { FeatureUiCopy, HowItWorksCopy } from "@/lib/marketing-copy/types";
 
 /*
  * Static product views composed from the design-system primitives (supplement §4: real UI states
@@ -376,7 +375,7 @@ export function DestinationHealthView({ ui, className }: { ui: FeatureUiCopy; cl
 
 /* ------------------------------------------------------------------------ published version */
 
-export function PublishedVersionView({ published, ui, className }: { published: HowItWorksPageCopy["published"]; ui: FeatureUiCopy; className?: string }) {
+export function PublishedVersionView({ published, ui, className }: { published: HowItWorksCopy["published"]; ui: FeatureUiCopy; className?: string }) {
   return (
     <ViewFrame title={published.title} example={ui.example} exampleHint={ui.exampleHint} className={className}>
       <Status tone="ok" indicator="both" chip>

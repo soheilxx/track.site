@@ -10,6 +10,11 @@ platforms: ["google-ads", "google-marketing-platform", "microsoft", "meta", "tik
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "Jede Werbeplattform stempelt ihre eigene Click-ID auf die Landing-URL — gclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id und die Affiliate-IDs — und jede speist ein bestimmtes Server-Feld."
+  - "Click-IDs sind personenbezogene Daten zu Werbezwecken: Das SDK erfasst sie nur mit Marketing-Consent und entfernt sie bei reinem Analytics-Consent aus den URLs."
+  - "Attributionsfenster unterscheiden sich je Plattform; eine außerhalb des Fensters hochgeladene Conversion ist kein API-Fehler, sie wird schlicht nicht attribuiert."
+  - "IDs liegen First-Party in _ts_cid für die Click-ID-TTL der Site, werden beim Widerruf des Marketing-Consents gelöscht und vor der Speicherung aus page_location und referrer entfernt."
 tags: ["click-ids", "attribution", "gclid", "consent"]
 author: "track-site-editorial"
 publishedAt: "2026-08-25"

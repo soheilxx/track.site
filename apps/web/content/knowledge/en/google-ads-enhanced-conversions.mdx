@@ -10,6 +10,11 @@ platforms: ["google-ads"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "Browser tag and API upload refer to the same conversion action; the API path enables offline sales, CRM-qualified leads and refund corrections."
+  - "Each click conversion needs the conversion action, a conversionDateTime with time zone offset, a gclid/gbraid/wbraid or hashed user identifiers, and consent flags derived from the event's purposes."
+  - "Enhanced Conversions expect SHA-256 of normalised values — lowercase trimmed e-mail with Gmail dots and plus suffixes removed, E.164 phone — with userIdentifierSource FIRST_PARTY."
+  - "partialFailure reports errors per row and validateOnly keeps tests out of reporting; deduplicate purchases with the same order id and keep leads on separate conversion actions."
 tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
 author: "track-site-editorial"
 publishedAt: "2026-09-01"

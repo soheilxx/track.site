@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@track-site/ui";
-import type { Milestone } from "@/lib/marketing-copy/how-it-works";
+import type { Milestone } from "@/lib/marketing-copy/types";
 
 /*
  * Customer milestones as a vertical timeline (docs/12 §4 "timeline/flow"): numbered markers on a

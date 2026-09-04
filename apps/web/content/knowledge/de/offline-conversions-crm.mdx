@@ -10,6 +10,11 @@ platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"]
 shopSystems: []
 contentType: "guide"
 level: "intermediate"
+takeaways:
+  - "Exportiere eine Zeile pro CRM-Ergebnis, sende sie mit einem CRM-Source-Key an den Server-Event-Endpunkt, und sie wird zum kanonischen Event mit Originalzeitstempel und erfasstem Consent-Stand."
+  - "Normalisiere und hashe Kennungen vor dem Senden; Zeilen mit Klartext-Kennungen scheitern an der Validierung, und ein Event ohne Consent-Information erreicht keine Werbe-Destination."
+  - "Jede Plattform hat einen eigenen Mechanismus, eine benötigte Kennung und eigene Zeitregeln; lade die Zeit des Ergebnisses hoch, nie die Exportzeit."
+  - "Speichere Click-IDs am Lead für deterministisches Matching, halte Werte echt, als dokumentierte Konstanten oder leer, und sende nachgelagerte Ergebnisse als eigene Events, statt das Browser-Event zu duplizieren."
 tags: ["offline-conversions", "crm", "import", "attribution"]
 author: "track-site-editorial"
 publishedAt: "2026-08-23"

@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { BILLING_INTERVALS, PAID_PLAN_IDS, PLAN_IDS } from "@track-site/catalog";
-import { DEFAULT_INTERVAL, INTERVAL_PARAM, PLAN_PARAM, planSelectionFromSearchParams, planSelectionQuery, safePlanSelection } from "./plan-selection";
+import { DEFAULT_INTERVAL, INTERVAL_PARAM, PLAN_PARAM, PLAN_SELECTION_KEY, planSelectionFromSearchParams, planSelectionQuery, readStoredPlanSelection, safePlanSelection, storePlanSelection } from "./plan-selection";
 
 describe("safePlanSelection", () => {
   it("accepts every paid plan with every billing interval", () => {
@@ -74,6 +74,33 @@ describe("planSelectionQuery", () => {
         expect(appended.get("domain")).toBe("shop.example.com");
         expect(planSelectionFromSearchParams(appended)).toEqual({ planId, interval });
       }
+    }
+  });
+});
+
+describe("stored plan selection", () => {
+  it("is a no-op without session storage (server, private mode)", () => {
+    expect(readStoredPlanSelection()).toBeNull();
+    expect(() => storePlanSelection({ planId: "growth", interval: "yearly" })).not.toThrow();
+  });
+
+  it("round-trips a selection through session storage and re-validates what it reads", () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal("sessionStorage", { getItem: (key: string) => store.get(key) ?? null, setItem: (key: string, value: string) => void store.set(key, value) });
+    try {
+      storePlanSelection(null);
+      expect(store.size).toBe(0);
+      storePlanSelection({ planId: "pro", interval: "yearly" });
+      expect(store.get(PLAN_SELECTION_KEY)).toBe('{"planId":"pro","interval":"yearly"}');
+      expect(readStoredPlanSelection()).toEqual({ planId: "pro", interval: "yearly" });
+      store.set(PLAN_SELECTION_KEY, '{"planId":"enterprise","interval":"yearly"}');
+      expect(readStoredPlanSelection()).toBeNull();
+      store.set(PLAN_SELECTION_KEY, '{"planId":"growth","interval":"weekly"}');
+      expect(readStoredPlanSelection()).toEqual({ planId: "growth", interval: "monthly" });
+      store.set(PLAN_SELECTION_KEY, "not json");
+      expect(readStoredPlanSelection()).toBeNull();
+    } finally {
+      vi.unstubAllGlobals();
     }
   });
 });

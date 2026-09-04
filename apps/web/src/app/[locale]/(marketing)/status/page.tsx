@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { EmptyState, ProductStage, Status, TBody, Table, Td, Th, THead, Tr, type Tone } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { StatusFlowDiagram } from "@/components/marketing/secondary/diagrams";
-import { PageIntro, PageSection, SectionHeading } from "@/components/marketing/secondary/shell";
+import { PageIntro, PageSection, SectionHeading } from "@/components/marketing/page-shell";
 import { pool } from "@/server/db";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";

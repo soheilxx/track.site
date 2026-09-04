@@ -7,7 +7,7 @@ import { BeforeAfter } from "@/components/marketing/features/comparison";
 import { FeatureIndex } from "@/components/marketing/features/feature-index";
 import { scenarioFlow } from "@/components/marketing/features/feature-view";
 import { FlowDiagram } from "@/components/marketing/features/flow-diagram";
-import { ClosingCta, FeatureHero, MarketingSection, Narrative, SectionHeading } from "@/components/marketing/features/section";
+import { FinalCta, Narrative, PageIntro, PageSection, SectionHeading } from "@/components/marketing/page-shell";
 import { pick } from "@/lib/marketing-copy";
 import { FEATURES, FEATURES_PAGE_COPY, FEATURE_UI_COPY } from "@/lib/marketing-copy/features";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -30,13 +30,13 @@ export default async function FeaturesPage({ params }: { params: Promise<{ local
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.eyebrow, path: "/features" }], locale)} />
 
-      <FeatureHero eyebrow={c.eyebrow} title={c.title} text={c.text} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.ctaSecondary, href: "/how-it-works" }}>
+      <PageIntro width="wide" spacing="lg" eyebrow={c.eyebrow} title={c.title} text={c.text} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.ctaSecondary, href: "/how-it-works" }}>
         <ProductStage tone="dark" dots padding="md">
           <FlowDiagram title={c.stage.title} description={c.stage.description} caption={c.stage.caption} labels={ui.diagram} paths={hero.paths} gate={hero.gate} destinations={hero.destinations} />
         </ProductStage>
-      </FeatureHero>
+      </PageIntro>
 
-      <MarketingSection tone="surface" labelledBy="scenarios-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="scenarios-title">
         <SectionHeading id="scenarios-title" title={c.scenarios.title} text={c.scenarios.text} />
         <Tabs defaultValue="granted" className="mt-10">
           <TabList aria-label={c.scenarios.tabsLabel} variant="pill">
@@ -75,21 +75,21 @@ export default async function FeaturesPage({ params }: { params: Promise<{ local
             );
           })}
         </Tabs>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="index-title">
+      <PageSection spacing="lg" labelledBy="index-title">
         <SectionHeading id="index-title" title={c.index.title} text={c.index.text} />
         <div className="mt-14 md:mt-20">
           <FeatureIndex features={features} ui={ui} more={c.index.more} />
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection tone="surface" labelledBy="comparison-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="comparison-title">
         <SectionHeading id="comparison-title" title={c.comparison.title} text={c.comparison.text} />
         <BeforeAfter comparison={c.comparison} className="mt-10" />
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="trust-title">
+      <PageSection spacing="lg" labelledBy="trust-title">
         <SectionHeading id="trust-title" title={c.trust.title} />
         <dl className="mt-10 grid gap-x-12 gap-y-8 sm:grid-cols-2">
           {c.trust.items.map((item) => (
@@ -99,9 +99,9 @@ export default async function FeaturesPage({ params }: { params: Promise<{ local
             </div>
           ))}
         </dl>
-      </MarketingSection>
+      </PageSection>
 
-      <ClosingCta title={c.closing.title} text={c.closing.text} primary={{ label: c.closing.cta, href: "/signup" }} secondary={{ label: c.closing.secondary, href: "/pricing" }} />
+      <FinalCta title={c.closing.title} text={c.closing.text} primary={{ label: c.closing.cta, href: "/signup" }} secondary={{ label: c.closing.secondary, href: "/pricing" }} />
     </>
   );
 }

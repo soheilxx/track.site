@@ -13,6 +13,7 @@
     "test:integration": "vitest run -c vitest.integration.config.ts",
     "test:e2e": "playwright test",
     "seo:check": "tsx scripts/seo-check.ts",
+    "knowledge:validate": "node scripts/validate-knowledge-content.mjs && node scripts/migrate-knowledge-frontmatter.mjs --check",
     "predev": "node scripts/sync-sdk.mjs",
     "prebuild": "node scripts/sync-sdk.mjs"
   },

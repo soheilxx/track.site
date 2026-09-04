@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "guide"
 level: "intermediate"
+takeaways:
+  - "Four scopes — destination, site, organisation, platform — stop different things: a paused destination keeps collecting, a paused site drops events and disables the SDK on the next page view."
+  - "Worker and collector react immediately; the browser reacts on the next page view because the SDK fetches the manifest fresh on every load."
+  - "The kill switch never deletes stored events, recalls successful deliveries or changes vendor-side data; every activation writes a distinct audit entry."
+  - "Wrong data: pause the destination and roll back; legal question: pause the site; vendor outage: do nothing and let retries work; leaked credentials: rotate; compromised account: remove the member and review its publishes."
 tags: ["kill-switch", "incident", "operations", "governance"]
 author: "track-site-editorial"
 publishedAt: "2026-08-11"

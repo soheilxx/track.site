@@ -262,3 +262,53 @@ export function SignalDot({ x, y, r = 4, tone = "primary", pulse = false, classN
     </g>
   );
 }
+
+export type DiagramBreakpoint = "sm" | "md" | "lg";
+
+const breakpointClass: Record<DiagramBreakpoint, { wide: string; narrow: string }> = {
+  sm: { wide: "hidden sm:block", narrow: "sm:hidden" },
+  md: { wide: "hidden md:block", narrow: "md:hidden" },
+  lg: { wide: "hidden lg:block", narrow: "lg:hidden" },
+};
+
+export interface ResponsiveDiagramLayout {
+  /** viewBox of this layout in user units. */
+  width: number;
+  height: number;
+  children: ReactNode;
+  /** Extra classes on this layout's <figure> (e.g. a max width for the compact variant). */
+  className?: string;
+}
+
+export interface ResponsiveDiagramProps {
+  /** Accessible name shared by both layouts; omit for decorative diagrams. */
+  title?: string;
+  description?: string;
+  caption?: ReactNode;
+  className?: string;
+  /** Viewport from which the wide layout is shown; below it the narrow layout renders. */
+  breakpoint?: DiagramBreakpoint;
+  /** Wide (left-to-right) drawing for larger viewports. */
+  wide: ResponsiveDiagramLayout;
+  /** Compact (top-to-bottom) drawing for small viewports, so labels stay legible at 320 px. */
+  narrow: ResponsiveDiagramLayout;
+}
+
+/**
+ * One diagram drawn twice — a wide and a narrow layout — instead of scaling a 720-unit drawing down
+ * to 5 px labels. Only one layout is in the accessibility tree at a time (the other is display:none);
+ * both carry the same title, description and caption.
+ */
+export function ResponsiveDiagram({ title, description, caption, className, breakpoint = "md", wide, narrow }: ResponsiveDiagramProps) {
+  const visibility = breakpointClass[breakpoint];
+  return (
+    <div className={cn("w-full min-w-0", className)}>
+      <Diagram width={wide.width} height={wide.height} title={title} description={description} caption={caption} figureClassName={cn(visibility.wide, wide.className)}>
+        {wide.children}
+      </Diagram>
+      <Diagram width={narrow.width} height={narrow.height} title={title} description={description} caption={caption} figureClassName={cn(visibility.narrow, narrow.className)}>
+        {narrow.children}
+      </Diagram>
+    </div>
+  );
+}

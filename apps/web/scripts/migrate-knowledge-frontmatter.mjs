@@ -40,16 +40,16 @@ export const MAPPING = {
   "data-retention-policy-tracking": { topic: "consent-privacy", platforms: [], shopSystems: [], contentType: "reference", level: "intermediate" },
   "dedup-event-id-order-id": { topic: "server-side-tracking", platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "linkedin", "pinterest", "snapchat", "reddit", "x", "google-marketing-platform"], shopSystems: [], contentType: "reference", level: "intermediate" },
   "dsar-deletion-tracking-data": { topic: "consent-privacy", platforms: [], shopSystems: [], contentType: "guide", level: "intermediate" },
-  "event-taxonomy-standard-events": { topic: "getting-started", platforms: [], shopSystems: [], contentType: "reference", level: "beginner" },
+  "event-taxonomy-standard-events": { topic: "getting-started", platforms: ["meta", "google-ads", "google-analytics", "tiktok", "linkedin", "pinterest", "snapchat"], shopSystems: [], contentType: "reference", level: "beginner" },
   "first-party-tracking-domains": { topic: "server-side-tracking", platforms: [], shopSystems: [], contentType: "guide", level: "advanced" },
   "ga4-measurement-protocol-eu": { topic: "pixel-platform-integrations", platforms: ["google-analytics"], shopSystems: [], contentType: "tutorial", level: "intermediate" },
   "google-ads-enhanced-conversions": { topic: "pixel-platform-integrations", platforms: ["google-ads"], shopSystems: [], contentType: "tutorial", level: "intermediate" },
   "kill-switch-incident-playbook": { topic: "troubleshooting", platforms: [], shopSystems: [], contentType: "guide", level: "intermediate" },
-  "lead-gen-tracking-b2b": { topic: "attribution-analytics", platforms: ["linkedin", "google-ads"], shopSystems: [], contentType: "guide", level: "intermediate" },
+  "lead-gen-tracking-b2b": { topic: "attribution-analytics", platforms: ["linkedin", "google-ads", "meta", "microsoft"], shopSystems: [], contentType: "guide", level: "intermediate" },
   "linkedin-conversions-api-b2b": { topic: "pixel-platform-integrations", platforms: ["linkedin"], shopSystems: [], contentType: "tutorial", level: "intermediate" },
   "meta-conversions-api-deduplication": { topic: "pixel-platform-integrations", platforms: ["meta"], shopSystems: [], contentType: "tutorial", level: "intermediate" },
   "microsoft-conversions-api-uet": { topic: "pixel-platform-integrations", platforms: ["microsoft"], shopSystems: [], contentType: "tutorial", level: "intermediate" },
-  "migrating-from-gtm": { topic: "getting-started", platforms: [], shopSystems: [], contentType: "guide", level: "beginner" },
+  "migrating-from-gtm": { topic: "getting-started", platforms: [], shopSystems: [], contentType: "guide", level: "intermediate" },
   "offline-conversions-crm": { topic: "attribution-analytics", platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"], shopSystems: [], contentType: "guide", level: "intermediate" },
   "pii-in-tracking-data": { topic: "consent-privacy", platforms: [], shopSystems: [], contentType: "explainer", level: "intermediate" },
   "reddit-pinterest-snapchat-capi": { topic: "pixel-platform-integrations", platforms: ["reddit", "pinterest", "snapchat"], shopSystems: [], contentType: "reference", level: "intermediate" },
@@ -149,4 +149,5 @@ function run() {
   if (check && changed) process.exit(1);
 }
 
-run();
+// Only migrate when executed directly; `validate-knowledge-content.mjs` imports the catalogue constants.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) run();

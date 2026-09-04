@@ -4,7 +4,7 @@ import { TBody, Table, Td, Th, THead, Tr } from "@track-site/ui";
 import { IntegrationGlyph } from "@/components/marketing/integrations/glyph";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { legalRelated } from "@/components/marketing/legal-page";
-import { PageIntro, PageSection, RelatedLinks, SectionHeading } from "@/components/marketing/secondary/shell";
+import { PageIntro, PageSection, RelatedLinks, SectionHeading } from "@/components/marketing/page-shell";
 import { INTEGRATIONS } from "@/lib/integrations-catalog";
 import { SUBPROCESSORS } from "@/lib/legal-copy";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";
@@ -31,7 +31,7 @@ export default async function SubprocessorsPage({ params }: { params: Promise<{ 
       <PageIntro eyebrow={c.legal.eyebrow} title={s.title} text={s.intro} meta={`${c.common.updated}: ${SUBPROCESSORS_UPDATED} · ${s.updated}`} />
 
       <PageSection id="processors" labelledBy="processors-title">
-        <SectionHeading id="processors-title" title={s.processorsTitle} level={2} className="[&>h2]:text-2xl" />
+        <SectionHeading id="processors-title" title={s.processorsTitle} className="[&>h2]:text-2xl" />
         <Table className="mt-6" caption={s.processorsTitle}>
           <THead>
             <tr>

@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "Der Score ist ein gewichteter Durchschnitt aus sechs Komponenten — Consent 0,20, Abdeckung 0,25, Schema 0,15, Dedup 0,10, Zustellung 0,20, Liveness 0,10 — und dieselbe Funktion speist Dashboard, Assistent und Alarme."
+  - "Komponenten ohne Daten erhalten eine neutrale 50 mit der Detailzeile „Noch keine Events“; Liveness ergibt 0, wenn nie ein Browser-Event ankam, weil genau das zuerst zu beheben ist."
+  - "Jede Komponente hat eine typische Ursache: fehlende CMP-Integration, kaputte kritische Events, Schema- oder PII-Befunde, doppelt feuernde Tags, fehlgeschlagene Zustellungen oder abgelaufene Zugangsdaten, ein verlorenes Snippet."
+  - "Der Score ist nicht über Sites mit unterschiedlichen Tracking-Plänen vergleichbar; nutze ihn, um Veränderung zu bemerken, und die Komponenten, um die Ursache zu finden."
 tags: ["health-score", "monitoring", "datenqualität", "alarme"]
 author: "track-site-editorial"
 publishedAt: "2026-08-18"

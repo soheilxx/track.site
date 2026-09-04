@@ -6,7 +6,8 @@ import { useCallback, useEffect, useId, useRef, useState, type FocusEvent, type 
 import { Brand, Container, IconButton, Sheet, buttonVariants, cn } from "@track-site/ui";
 import { Link, usePathname } from "@/i18n/navigation";
 import { pick } from "@/lib/marketing-copy/pick";
-import { HEADER_COPY, type HeaderCopy, type NavGroup, type NavLink } from "@/lib/marketing-copy/shared";
+import { HEADER_COPY } from "@/lib/marketing-copy/shared";
+import type { HeaderCopy, NavGroup, NavLink } from "@/lib/marketing-copy/types";
 import { LocaleSwitcher } from "./locale-switcher";
 
 /**

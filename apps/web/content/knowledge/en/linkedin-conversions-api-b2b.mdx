@@ -10,6 +10,11 @@ platforms: ["linkedin"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "LinkedIn needs a conversion rule with source \"Conversions API\", an OAuth token with r_ads and rw_conversions, and optionally the Insight Tag for li_fat_id."
+  - "Requests go to /rest/conversionEvents with a monthly LinkedIn-Version header; Track pins the version and warns before its sunset."
+  - "li_fat_id gives the highest match quality but needs marketing consent; SHA256_EMAIL works without the tag; userInfo fields are auxiliary signals."
+  - "Pass the same eventId on tag and API to deduplicate, or keep browser and CRM rules separate; conversionHappenedAt may be up to 90 days back, which makes delayed CRM qualifications practical."
 tags: ["linkedin", "conversions-api", "b2b", "li_fat_id"]
 author: "track-site-editorial"
 publishedAt: "2026-08-27"

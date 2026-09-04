@@ -8,7 +8,7 @@ import {
   SignalDot,
   type Tone,
 } from "@track-site/ui";
-import type { SecondaryPagesCopy } from "@/lib/marketing-copy/secondary";
+import type { SecondaryCopy } from "@/lib/marketing-copy/types";
 
 /*
  * Data-flow diagrams of the secondary pages, composed from the @track-site/ui SVG primitives so
@@ -41,7 +41,7 @@ export function PipelineDiagram({
   title,
   caption,
 }: {
-  copy: SecondaryPagesCopy["docs"]["flow"];
+  copy: SecondaryCopy["docs"]["flow"];
   title: string;
   caption: string;
 }) {
@@ -196,7 +196,7 @@ export function SecurityFlowDiagram({
   title,
   caption,
 }: {
-  copy: SecondaryPagesCopy["security"]["flow"];
+  copy: SecondaryCopy["security"]["flow"];
   title: string;
   caption: string;
 }) {

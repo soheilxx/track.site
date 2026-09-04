@@ -10,6 +10,11 @@ platforms: ["reddit", "pinterest", "snapchat"]
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "All three APIs share Meta's shape — event name, timestamp, event id, hashed user data plus click id, custom data — but differ in endpoint, auth, click id parameter, event vocabulary and timestamp format."
+  - "The click ids are rdt_cid, epik and ScCid (case-sensitive), each feeding a platform-specific field; Pinterest suffers most from a missing epik."
+  - "Testing differs: Reddit uses test_mode in the body, Pinterest a ?test=true query parameter, Snapchat swaps /events for /validate."
+  - "Common mistakes are wrong parameter names, double hashing, sharing a pixel token across accounts and leaving test mode on in production."
 tags: ["reddit", "pinterest", "snapchat", "conversions-api"]
 author: "track-site-editorial"
 publishedAt: "2026-08-26"

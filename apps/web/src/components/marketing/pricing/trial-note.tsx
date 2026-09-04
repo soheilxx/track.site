@@ -1,12 +1,12 @@
 import { Check } from "lucide-react";
 import { Container, buttonVariants } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicTrial } from "@/server/pricing";
 import { fill, formatInteger, signupHref } from "./pricing-helpers";
 
 /** The 14-day Growth trial as configured in the catalogue: no card, capped events, no auto-conversion. */
-export function TrialNote({ locale, trial, copy }: { locale: string; trial: PublicTrial; copy: PricingPageCopy["trial"] }) {
+export function TrialNote({ locale, trial, copy }: { locale: string; trial: PublicTrial; copy: PricingCopy["trial"] }) {
   const vars = { plan: trial.planName, days: formatInteger(trial.days, locale), events: formatInteger(trial.maxEvents, locale) };
   return (
     <section aria-labelledby="trial-title" className="border-t border-line bg-surface">

@@ -120,3 +120,52 @@
     margin: 2rem 0;
   }
 }
+
+/*
+ * Print view of Tracking Knowledge articles (supplement §6 "saubere Druckansicht"): site chrome,
+ * navigation, reading progress, table of contents, CTA, feedback and related articles are hidden
+ * (`data-print="hide"`), the text column uses the full page width and link targets are printed.
+ */
+@media print {
+  header,
+  footer,
+  nav,
+  .skip-link,
+  [data-print="hide"],
+  main button {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  main {
+    padding: 0;
+  }
+  .prose-track {
+    max-width: none;
+    color: #000;
+  }
+  .prose-track a[href^="http"]::after,
+  [data-article-sources] a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #444;
+    word-break: break-all;
+  }
+  .prose-track pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  pre,
+  table,
+  aside,
+  figure {
+    break-inside: avoid;
+  }
+}

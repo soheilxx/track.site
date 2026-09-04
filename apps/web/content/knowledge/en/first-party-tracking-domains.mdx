@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "guide"
 level: "advanced"
+takeaways:
+  - "A tracking subdomain of your own site keeps consented requests off blocklists and outside third-party cookie restrictions, with only one extra host in your CSP."
+  - "The domain becomes active only after verification by DNS TXT record, file or meta tag plus a passing CNAME check; TLS is terminated at the platform edge."
+  - "The SDK writes _ts_id, _ts_sid and _ts_cid only after the matching consent, and Safari's 7-day cap on script-written storage still applies — the custom domain protects delivery, not identifier lifetime."
+  - "It does not restore denied purposes, does not make vendor pixels first-party and hides nothing from the visitor."
 tags: ["first-party", "cname", "itp", "cookies"]
 author: "track-site-editorial"
 publishedAt: "2026-08-24"

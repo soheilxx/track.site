@@ -32,6 +32,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - name: Tracking Knowledge content (front matter, takeaways, learning paths, migration check)
+        run: pnpm --filter @track-site/web knowledge:validate
       - name: Connector contract tests (mock vendors)
         run: pnpm --filter @track-site/connectors test:contract
         env:

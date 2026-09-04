@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import NextLink from "next/link";
 import { useState } from "react";
 import { Alert, Button, buttonVariants } from "@track-site/ui";
@@ -10,6 +11,7 @@ import { authClient } from "@/lib/auth-client";
 export function AcceptInvitation({ invitationId, signedIn }: { invitationId: string | null; signedIn: boolean }) {
   const t = useTranslations("auth");
   const locale = useLocale();
+  const router = useRouter();
   const [state, setState] = useState<"idle" | "done" | "error">("idle");
   const [pending, setPending] = useState(false);
   if (!invitationId) return <Alert tone="bad">{t("invitation.invalid")}</Alert>;
@@ -54,7 +56,7 @@ export function AcceptInvitation({ invitationId, signedIn }: { invitationId: str
           if (res.error) setState("error");
           else {
             setState("done");
-            window.location.assign("/app");
+            router.push("/app");
           }
         }}
       >

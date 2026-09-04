@@ -4,7 +4,7 @@ import { Clock } from "lucide-react";
 import { Container } from "@track-site/ui";
 import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
-import { Checklist, FormPanel, SplitLayout } from "@/components/marketing/secondary/shell";
+import { Checklist, FormPanel, SplitLayout } from "@/components/marketing/page-shell";
 import { NumberedTimeline } from "@/components/marketing/secondary/timeline";
 import { FORM_COPY, SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";

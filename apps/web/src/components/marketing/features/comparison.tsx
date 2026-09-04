@@ -1,6 +1,6 @@
 import { Check, Minus } from "lucide-react";
 import { cn } from "@track-site/ui";
-import type { Comparison } from "@/lib/marketing-copy/features";
+import type { Comparison } from "@/lib/marketing-copy/types";
 
 /*
  * Before/after comparison (docs/12 §4 "comparison"). Rendered as a real table so the aspect, the

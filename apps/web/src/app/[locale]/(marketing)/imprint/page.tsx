@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Container } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { OperatorBlock, legalRelated } from "@/components/marketing/legal-page";
-import { PageIntro, RelatedLinks } from "@/components/marketing/secondary/shell";
+import { PageIntro, RelatedLinks } from "@/components/marketing/page-shell";
 import { operatorFromEnv } from "@/lib/legal-copy";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";

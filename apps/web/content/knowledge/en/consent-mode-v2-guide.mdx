@@ -10,6 +10,11 @@ platforms: ["google-ads", "google-analytics"]
 shopSystems: []
 contentType: "guide"
 level: "intermediate"
+takeaways:
+  - "Consent Mode is a set of granted/denied flags that Google tags read; it is not a CMP and does not make a banner compliant."
+  - "Derive analytics_storage, ad_storage, ad_user_data and ad_personalization from consent purposes rather than from vendor lists."
+  - "Basic mode loads nothing before consent; advanced mode sends cookieless pings while denied and needs a documented legal decision, so it is never switched on silently."
+  - "The server must mirror the browser: every event carries a consent snapshot, uploads carry the derived consent fields and pre-consent events are dropped, not replayed."
 tags: ["consent-mode", "google", "purposes", "cmp"]
 author: "track-site-editorial"
 publishedAt: "2026-09-02"

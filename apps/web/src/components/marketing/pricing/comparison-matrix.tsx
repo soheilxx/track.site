@@ -1,10 +1,10 @@
 import { Check, ChevronDown, Minus } from "lucide-react";
 import type { FeatureGroup, PlanId } from "@track-site/catalog";
-import { Tab, TabList, TabPanel, Table, Tabs, Td, Th, THead, Tr, buttonVariants, cn } from "@track-site/ui";
-import { Link } from "@/i18n/navigation";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import { Tab, TabList, TabPanel, Table, Tabs, Td, Th, THead, Tr } from "@track-site/ui";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { FeatureMatrix, PublicPlan } from "@/server/pricing";
-import { CONTACT_SALES_HREF, fill, formatAmount, formatInteger, signupHref } from "./pricing-helpers";
+import { PlanCta } from "./plan-cta";
+import { fill, formatAmount, formatInteger } from "./pricing-helpers";
 
 type Cell = { kind: "bool"; value: boolean } | { kind: "text"; value: string };
 interface Row {
@@ -23,7 +23,7 @@ export interface ComparisonMatrixProps {
   /** all four plans in display order */
   plans: PublicPlan[];
   matrix: FeatureMatrix;
-  copy: PricingPageCopy["matrix"];
+  copy: PricingCopy["matrix"];
   labels: { recommended: string; start: string; contactSales: string };
 }
 
@@ -78,7 +78,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
               <td className="px-4 py-4" />
               {plans.map((p) => (
                 <td key={p.id} className="px-4 py-4 text-center">
-                  <PlanCta plan={p} labels={labels} size="sm" />
+                  <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="sm" />
                 </td>
               ))}
             </tr>
@@ -132,7 +132,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
                 })}
               </div>
               <div className="mt-5">
-                <PlanCta plan={p} labels={labels} size="md" className="w-full" />
+                <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="md" className="w-full" />
               </div>
             </TabPanel>
           ))}
@@ -142,15 +142,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
   );
 }
 
-function PlanCta({ plan, labels, size, className }: { plan: PublicPlan; labels: ComparisonMatrixProps["labels"]; size: "sm" | "md"; className?: string }) {
-  return (
-    <Link href={plan.contactSales ? CONTACT_SALES_HREF : signupHref(plan.id, "monthly")} className={cn(buttonVariants({ variant: plan.recommended ? "primary" : "secondary", size }), className)}>
-      {plan.contactSales ? labels.contactSales : labels.start}
-    </Link>
-  );
-}
-
-function CellView({ cell, copy }: { cell: Cell; copy: PricingPageCopy["matrix"] }) {
+function CellView({ cell, copy }: { cell: Cell; copy: PricingCopy["matrix"] }) {
   if (cell.kind === "text") return <span className="font-medium text-ink tabular-nums">{cell.value}</span>;
   return cell.value ? (
     <>
@@ -165,7 +157,7 @@ function CellView({ cell, copy }: { cell: Cell; copy: PricingPageCopy["matrix"] 
   );
 }
 
-function buildGroups(plans: PublicPlan[], matrix: FeatureMatrix, copy: PricingPageCopy["matrix"], locale: string): Group[] {
+function buildGroups(plans: PublicPlan[], matrix: FeatureMatrix, copy: PricingCopy["matrix"], locale: string): Group[] {
   const text = (fn: (p: PublicPlan) => string): Record<PlanId, Cell> => {
     const cells = {} as Record<PlanId, Cell>;
     for (const p of plans) cells[p.id] = { kind: "text", value: fn(p) };

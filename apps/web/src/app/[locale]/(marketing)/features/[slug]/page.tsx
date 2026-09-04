@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { BeforeAfter } from "@/components/marketing/features/comparison";
 import { FaqList, faqJsonLd } from "@/components/marketing/features/faq";
 import { FeatureFlowDiagram, FeatureProductView } from "@/components/marketing/features/feature-view";
-import { ClosingCta, FeatureHero, MarketingSection, Narrative, SectionHeading } from "@/components/marketing/features/section";
+import { FinalCta, Narrative, PageIntro, PageSection, SectionHeading } from "@/components/marketing/page-shell";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { pick } from "@/lib/marketing-copy";
@@ -43,7 +43,9 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
     <>
       <JsonLd data={[breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: l.features, path: "/features" }, { name: f.title, path: `/features/${slug}` }], locale), faqJsonLd(f.faq)]} />
 
-      <FeatureHero
+      <PageIntro
+        width="wide"
+        spacing="lg"
         eyebrow={l.features}
         title={f.title}
         text={f.benefit}
@@ -55,9 +57,9 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
           <FeatureProductView slug={slug} ui={ui} />
           <p className="mt-4 text-small text-ink-2">{f.viewCaption}</p>
         </ProductStage>
-      </FeatureHero>
+      </PageIntro>
 
-      <MarketingSection tone="surface" labelledBy="flow-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="flow-title">
         <Narrative
           text={
             <div>
@@ -74,9 +76,9 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
             </ProductStage>
           }
         />
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="built-title">
+      <PageSection spacing="lg" labelledBy="built-title">
         <SectionHeading id="built-title" title={l.howBuilt} text={l.howBuiltText} />
         <ol className="mt-10 grid gap-8 md:grid-cols-3">
           {f.sections.map((s, i) => (
@@ -87,14 +89,14 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
             </li>
           ))}
         </ol>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection tone="surface" labelledBy="compare-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="compare-title">
         <SectionHeading id="compare-title" title={f.comparison.title} text={f.comparison.text} />
         <BeforeAfter comparison={f.comparison} className="mt-10" />
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="proof-title">
+      <PageSection spacing="lg" labelledBy="proof-title">
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
             <SectionHeading id="proof-title" title={l.proof} text={l.proofText} />
@@ -108,16 +110,16 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
             ))}
           </ul>
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection tone="surface" labelledBy="faq-title">
+      <PageSection spacing="lg" tone="surface" labelledBy="faq-title">
         <SectionHeading id="faq-title" title={l.faq} />
         <div className="mt-8">
           <FaqList items={f.faq} />
         </div>
-      </MarketingSection>
+      </PageSection>
 
-      <MarketingSection labelledBy="more-title">
+      <PageSection spacing="lg" labelledBy="more-title">
         <SectionHeading id="more-title" title={l.more} text={l.moreText} />
         <ul className="mt-8 grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
           {others.map((x) => (
@@ -129,9 +131,9 @@ export default async function FeaturePage({ params }: { params: Promise<{ locale
             </li>
           ))}
         </ul>
-      </MarketingSection>
+      </PageSection>
 
-      <ClosingCta title={l.cta} text={l.ctaText} primary={{ label: l.start, href: "/signup" }} secondary={{ label: l.pricing, href: "/pricing" }} />
+      <FinalCta title={l.cta} text={l.ctaText} primary={{ label: l.start, href: "/signup" }} secondary={{ label: l.pricing, href: "/pricing" }} />
     </>
   );
 }

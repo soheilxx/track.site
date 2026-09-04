@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Container, cn } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { anchorId } from "@/components/marketing/secondary/anchor";
-import { PageIntro, RelatedLinks } from "@/components/marketing/secondary/shell";
+import { PageIntro, RelatedLinks } from "@/components/marketing/page-shell";
 import { PageToc, type TocItem } from "@/components/marketing/secondary/toc";
 import type { LegalDoc, Operator } from "@/lib/legal-copy";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";

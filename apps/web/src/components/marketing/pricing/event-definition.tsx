@@ -1,13 +1,13 @@
 import { Check } from "lucide-react";
 import { DestinationChip, Diagram, FlowEdge, FlowNode, SignalDot } from "@track-site/ui";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 
 /**
  * "What counts as an event?" as a two-column narrative: the rule and the never-billed cases as text,
  * next to a data-flow diagram that shows one accepted event counted once and fanned out to several
  * destinations. The diagram is labelled; everything it says is also in the text and the caption.
  */
-export function EventDefinition({ text, notCounted, copy }: { text: string; notCounted: string[]; copy: PricingPageCopy["events"] }) {
+export function EventDefinition({ text, notCounted, copy }: { text: string; notCounted: string[]; copy: PricingCopy["events"] }) {
   const n = copy.nodes;
   const trackX = 140;
   const trackW = 124;

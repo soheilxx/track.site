@@ -10,6 +10,11 @@ platforms: ["google-analytics"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "Track sends Measurement Protocol requests to the region1 endpoint by default so traffic originates and terminates in the EU; the api_secret belongs in the vault."
+  - "Server events are stitched into sessions only with the real client_id from the _ga cookie, captured under analytics consent; without it, user counts are inflated."
+  - "The production endpoint always answers 2xx, so test mode validates every event on the debug endpoint first and forwards it only when there are no validation messages."
+  - "The pragmatic split: gtag for page views and interactions, Measurement Protocol for the authoritative purchase with transaction_id, refunds and backend events, with consent fields derived from the visitor's purposes."
 tags: ["ga4", "measurement-protocol", "analytics", "eu"]
 author: "track-site-editorial"
 publishedAt: "2026-08-30"

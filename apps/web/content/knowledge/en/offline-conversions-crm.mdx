@@ -10,6 +10,11 @@ platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"]
 shopSystems: []
 contentType: "guide"
 level: "intermediate"
+takeaways:
+  - "Export one row per CRM outcome, send it to the server event endpoint with a CRM source key, and it becomes a canonical event with the original timestamp and the recorded consent state."
+  - "Normalise and hash identifiers before sending; rows with plain identifiers fail validation, and an event without consent information reaches no advertising destination."
+  - "Each platform has its own mechanism, required identifier and time rules; upload the time the outcome happened, never the export time."
+  - "Store click ids on the lead for deterministic matching, keep values real, documented constants or empty, and send downstream outcomes as their own events rather than duplicating the browser's."
 tags: ["offline-conversions", "crm", "import", "attribution"]
 author: "track-site-editorial"
 publishedAt: "2026-08-23"

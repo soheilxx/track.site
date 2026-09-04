@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Container } from "@track-site/ui";
 import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
-import { Checklist, FormPanel, LinkList, SplitLayout } from "@/components/marketing/secondary/shell";
+import { Checklist, FormPanel, LinkList, SplitLayout } from "@/components/marketing/page-shell";
 import { FORM_COPY, SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";

@@ -10,6 +10,11 @@ platforms: ["google-ads"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "Browser-Tag und API-Upload beziehen sich auf dieselbe Conversion-Aktion; der API-Weg ermöglicht Offline-Verkäufe, CRM-qualifizierte Leads und Erstattungskorrekturen."
+  - "Jede Click Conversion braucht die Conversion-Aktion, eine conversionDateTime mit Zeitzonen-Offset, gclid/gbraid/wbraid oder gehashte Nutzerkennungen sowie aus den Zwecken des Events abgeleitete Consent-Flags."
+  - "Enhanced Conversions erwarten SHA-256 normalisierter Werte — kleingeschriebene, getrimmte E-Mail ohne Gmail-Punkte und Plus-Suffixe, Telefon in E.164 — mit userIdentifierSource FIRST_PARTY."
+  - "partialFailure meldet Fehler je Zeile und validateOnly hält Tests aus dem Reporting; dedupliziere Käufe über dieselbe Bestellnummer und halte Leads auf getrennten Conversion-Aktionen."
 tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
 author: "track-site-editorial"
 publishedAt: "2026-09-01"

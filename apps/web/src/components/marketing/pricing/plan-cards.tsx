@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import { Badge, Card, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicPlan } from "@/server/pricing";
 import { useBillingInterval } from "./interval";
 import { fill, formatAmount, formatInteger, signupHref } from "./pricing-helpers";
@@ -12,7 +12,7 @@ export interface PlanCardsProps {
   locale: string;
   /** the three paid plans in display order (Enterprise has its own panel) */
   plans: PublicPlan[];
-  copy: PricingPageCopy["plan"];
+  copy: PricingCopy["plan"];
   trial: { planId: string; days: number };
 }
 
@@ -34,7 +34,7 @@ export function PlanCards({ locale, plans, copy, trial }: PlanCardsProps) {
   );
 }
 
-function PlanCard({ plan: p, locale, copy, interval, trial }: { plan: PublicPlan; locale: string; copy: PricingPageCopy["plan"]; interval: "monthly" | "yearly"; trial: { planId: string; days: number } }) {
+function PlanCard({ plan: p, locale, copy, interval, trial }: { plan: PublicPlan; locale: string; copy: PricingCopy["plan"]; interval: "monthly" | "yearly"; trial: { planId: string; days: number } }) {
   const price = interval === "monthly" ? p.monthly : p.yearly;
   const headingId = `plan-${p.id}-title`;
   const retention = p.limits.retentionMonths != null ? fill(copy.months, { n: formatInteger(p.limits.retentionMonths, locale) }) : p.limits.retentionDays != null ? fill(copy.days, { n: formatInteger(p.limits.retentionDays, locale) }) : "–";

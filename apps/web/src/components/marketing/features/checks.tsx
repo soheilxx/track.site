@@ -1,5 +1,5 @@
 import { Check, ChevronDown } from "lucide-react";
-import type { CheckGroup } from "@/lib/marketing-copy/how-it-works";
+import type { CheckGroup } from "@/lib/marketing-copy/types";
 
 /*
  * Collapsible "what Track checks" list. Native <details>/<summary>: keyboard operable, announced

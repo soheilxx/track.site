@@ -6,21 +6,26 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert, Button, Checkbox, Field, Input } from "@track-site/ui";
 import { authClient } from "@/lib/auth-client";
-import { totpSchema } from "@/lib/validation/auth";
+import { twoFactorSchema, type TwoFactorInput } from "@/lib/validation/auth";
 
+/**
+ * Second factor after the password: the six-digit authenticator code by default, or one of the
+ * saved backup codes (alphanumeric, `abcde-12345`). The form's `mode` selects the matching branch of
+ * `twoFactorSchema`, so a backup code never has to pass the digit rule and a TOTP never loosens it.
+ */
 export function TwoFactorForm({ next }: { next: string }) {
   const t = useTranslations("auth");
   const [error, setError] = useState<string | null>(null);
   const [useBackup, setUseBackup] = useState(false);
-  const form = useForm<{ code: string; trust?: boolean }>({ resolver: zodResolver(totpSchema), defaultValues: { code: "", trust: false } });
+  const form = useForm<TwoFactorInput>({ resolver: zodResolver(twoFactorSchema), defaultValues: { mode: "totp", code: "", trust: false } });
   const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/app";
   return (
     <form
       noValidate
       className="space-y-5"
-      onSubmit={form.handleSubmit(async ({ code, trust }) => {
+      onSubmit={form.handleSubmit(async ({ mode, code, trust }) => {
         setError(null);
-        const res = useBackup ? await authClient.twoFactor.verifyBackupCode({ code, trustDevice: trust }) : await authClient.twoFactor.verifyTotp({ code, trustDevice: trust });
+        const res = mode === "backup" ? await authClient.twoFactor.verifyBackupCode({ code, trustDevice: trust }) : await authClient.twoFactor.verifyTotp({ code, trustDevice: trust });
         if (res.error) setError(t("errors.generic"));
         else window.location.assign(safeNext);
       })}
@@ -49,7 +54,9 @@ export function TwoFactorForm({ next }: { next: string }) {
         size="sm"
         className="w-full text-primary"
         onClick={() => {
-          setUseBackup((v) => !v);
+          const backup = !useBackup;
+          setUseBackup(backup);
+          form.setValue("mode", backup ? "backup" : "totp");
           form.clearErrors("code");
         }}
       >

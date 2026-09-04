@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 /**
  * Global 404 (`experimental.globalNotFound`): the app has no shared root layout, so this file is a
  * complete document. It serves unmatched non-localized paths (/app, /api, /cdn, file-like paths)
- * and an unknown locale segment; localized marketing 404s are handled by `[locale]/not-found.tsx`
- * inside the marketing layout. Returns a real 404 status.
+ * and an unknown locale segment; localized marketing 404s are handled by
+ * `[locale]/(marketing)/not-found.tsx` inside the marketing layout. Returns a real 404 status.
  */
 export default function GlobalNotFound() {
   return (

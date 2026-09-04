@@ -6,10 +6,15 @@ category: "guides"
 translationGroupId: "lead-gen-tracking-b2b"
 slug: "lead-gen-tracking-b2b"
 topic: "attribution-analytics"
-platforms: ["linkedin", "google-ads"]
+platforms: ["linkedin", "google-ads", "meta", "microsoft"]
 shopSystems: []
 contentType: "guide"
 level: "intermediate"
+takeaways:
+  - "Each funnel stage — form submit, demo booked, qualified lead, closed won — is its own event and its own conversion action or rule, which is what prevents double counting."
+  - "Fire generate_lead on successful submission, call identify with the business e-mail only after marketing consent, and copy click ids into hidden form fields stored on the lead."
+  - "The CRM sends qualified_lead with the original click ids, the hashed e-mail and the stage timestamp; closed deals become purchase with the real value, sent from the server."
+  - "The consent recorded at submission travels with every later upload: a lead that refused marketing is never uploaded to advertising platforms, and values are real or documented constants, never backfilled."
 tags: ["b2b", "lead-generation", "crm", "linkedin", "google-ads"]
 author: "track-site-editorial"
 publishedAt: "2026-08-10"

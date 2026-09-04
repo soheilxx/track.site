@@ -10,6 +10,11 @@ platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "li
 shopSystems: []
 contentType: "reference"
 level: "intermediate"
+takeaways:
+  - "Nutze zwei Schlüssel: eine an der Quelle einmal erzeugte Event-ID, die jedem Weg mitgegeben wird, plus die Bestellnummer auf jedem Commerce-Event."
+  - "Plattformen führen über verschiedene Schlüssel zusammen — Meta, TikTok, Microsoft, LinkedIn und Pinterest über die Event-ID, Google Ads und GA4 über Bestell- bzw. Transaktions-ID, Snapchat über ein passendes Paar, CM360 über das Ordinal."
+  - "Anbieter führen nur innerhalb eines Fensters zusammen (Meta dokumentiert rund 48 Stunden); verzögerte CRM-Qualifizierungen gehören auf ein eigenes Anbieter-Event, nicht als Duplikat des Browser-Events."
+  - "Erstattungen sind eigene Events mit der ursprünglichen Bestellnummer; prüfe die Deduplizierung im Event-Debugger, im Destination-Monitor und in der Anbieter-Oberfläche."
 tags: ["deduplizierung", "event-id", "bestellnummer", "hybrid"]
 author: "track-site-editorial"
 publishedAt: "2026-08-29"

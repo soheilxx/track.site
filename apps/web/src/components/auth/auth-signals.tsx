@@ -1,6 +1,6 @@
 import { Globe, KeyRound, ShieldCheck } from "lucide-react";
 import { cn } from "@track-site/ui";
-import type { AuthSignal } from "@/lib/marketing-copy/auth";
+import type { AuthSignal } from "@/lib/marketing-copy/types";
 
 const ICONS = { passkey: KeyRound, eu: Globe, consent: ShieldCheck } as const;
 

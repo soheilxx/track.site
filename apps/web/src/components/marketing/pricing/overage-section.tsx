@@ -1,5 +1,5 @@
 import { Badge, Table, TBody, Td, Th, THead, Tr } from "@track-site/ui";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicOveragePack, PublicUsagePolicy } from "@/server/pricing";
 import { fill, formatAmount, formatInteger, formatList } from "./pricing-helpers";
 
@@ -7,7 +7,7 @@ import { fill, formatAmount, formatInteger, formatList } from "./pricing-helpers
  * Overage and cost control (supplement §5): the event packs per plan as a small table, the explicit
  * policy choice with its default, the warning thresholds, the grace window and the honesty rule.
  */
-export function OverageSection({ locale, intro, packs, policy, enterpriseName, copy }: { locale: string; intro: string; packs: PublicOveragePack[]; policy: PublicUsagePolicy; enterpriseName: string; copy: PricingPageCopy["overageSection"] }) {
+export function OverageSection({ locale, intro, packs, policy, enterpriseName, copy }: { locale: string; intro: string; packs: PublicOveragePack[]; policy: PublicUsagePolicy; enterpriseName: string; copy: PricingCopy["overageSection"] }) {
   const thresholds = formatList(
     policy.thresholds.map((t) => `${formatInteger(t, locale)} %`),
     locale,

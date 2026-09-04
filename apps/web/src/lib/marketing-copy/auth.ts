@@ -4,61 +4,18 @@ import type { AuthCopy, LocalizedCopy } from "./types";
  * Auth shell copy (supplement §4 "Login und Registrierung": minimal Track brand, clear form flow,
  * optional product preview, short privacy/security signals, no full marketing footer).
  *
- * `login`/`signup` mirror the page-level titles of messages/{en,de}/auth.json verbatim; field
- * labels, errors and flow-specific strings stay in that catalog because the auth forms are client
- * components that read it through next-intl. Everything the server-rendered shell shows around the
- * forms (chrome, setup steps, signals, the static preview) lives here, typed, en + de of one shape.
+ * Field labels, errors and flow-specific strings stay in messages/{en,de}/auth.json because the auth
+ * forms are client components that read it through next-intl. Everything the server-rendered shell
+ * shows around the forms (chrome, setup steps, signals, the static preview, the plan hand-over note)
+ * lives here, typed, en + de of one shape.
  *
  * Every signal is a verifiable product fact (passkey + TOTP plugins are wired in auth-client.ts,
  * the EU region / Art. 28 statement is the one the footer makes, consent-gated delivery is the
  * policy engine's rule). No customers, numbers or success claims.
  */
-export interface AuthSignal {
-  icon: "passkey" | "eu" | "consent";
-  title: string;
-  text: string;
-}
-
-export interface AuthShellCopy extends AuthCopy {
-  shell: {
-    /** Accessible name of the brand link (leads to the start page). */
-    brandHome: string;
-    /** Landmark label of the compact legal footer. */
-    legalLabel: string;
-    legal: { privacy: string; terms: string; imprint: string; security: string };
-    /** Region statement under the legal links (same fact as the marketing footer). */
-    region: string;
-    /** Label of the setup-step list shown above signup and e-mail verification. */
-    stepsLabel: string;
-  };
-  /** Three setup steps: account → e-mail → website. Signup is step 1, verification step 2. */
-  steps: [string, string, string];
-  signals: AuthSignal[];
-  preview: {
-    eyebrow: string;
-    title: string;
-    text: string;
-    /** Honesty note under the diagram: example values, not live data. */
-    caption: string;
-    diagram: {
-      /** Accessible name of the SVG. */
-      title: string;
-      website: string;
-      websiteSub: string;
-      track: string;
-      trackSub: string;
-      consent: string;
-      consentState: string;
-      destinations: [string, string, string];
-      delivered: string;
-    };
-  };
-}
-
-export const AUTH_COPY: LocalizedCopy<AuthShellCopy> = {
+export const AUTH_COPY: LocalizedCopy<AuthCopy> = {
   en: {
-    login: { title: "Welcome back", subtitle: "Log in to your Track workspace." },
-    signup: { title: "Create your account", subtitle: "Free to start. No credit card required. EU data region.", terms: "By creating an account you agree to the terms of service and the data processing agreement." },
+    plan: { selected: "Selected on the pricing page: {plan}, {interval}. Checkout follows after the setup; you can still change the plan there.", intervals: { monthly: "billed monthly", yearly: "billed yearly" } },
     shell: {
       brandHome: "Track – home",
       legalLabel: "Legal",
@@ -91,8 +48,7 @@ export const AUTH_COPY: LocalizedCopy<AuthShellCopy> = {
     },
   },
   de: {
-    login: { title: "Willkommen zurück", subtitle: "Melde dich in deinem Track-Workspace an." },
-    signup: { title: "Konto erstellen", subtitle: "Kostenlos starten. Keine Kreditkarte nötig. EU-Datenregion.", terms: "Mit der Registrierung stimmst du den Nutzungsbedingungen und dem Auftragsverarbeitungsvertrag zu." },
+    plan: { selected: "Auf der Preisseite gewählt: {plan}, {interval}. Der Checkout folgt nach der Einrichtung; der Tarif lässt sich dort noch ändern.", intervals: { monthly: "monatliche Abrechnung", yearly: "jährliche Abrechnung" } },
     shell: {
       brandHome: "Track – Startseite",
       legalLabel: "Rechtliches",

@@ -3,7 +3,7 @@
 import { Activity, BarChart3, Bug, CreditCard, Gauge, Globe, LogOut, Menu, Settings, ShieldCheck, Sparkles, Users, Waypoints, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { Brand, Button, cn } from "@track-site/ui";
 import { authClient } from "@/lib/auth-client";
@@ -78,6 +78,7 @@ export function AppShell({ user, organization, locale, children }: { user: { nam
 }
 
 function UserMenu({ user, logoutLabel }: { user: { name: string; email: string }; logoutLabel: string }) {
+  const router = useRouter();
   return (
     <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-4">
       <div className="min-w-0">
@@ -90,7 +91,8 @@ function UserMenu({ user, logoutLabel }: { user: { name: string; email: string }
         aria-label={logoutLabel}
         onClick={async () => {
           await authClient.signOut();
-          window.location.assign("/login");
+          // the login page lives under the localized root layout: the router performs the document load
+          router.push("/login");
         }}
       >
         <LogOut className="h-4 w-4" aria-hidden="true" />

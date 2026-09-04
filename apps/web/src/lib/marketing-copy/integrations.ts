@@ -1,108 +1,17 @@
-import type { ConsentPurposeId, CredentialKindId, IntegrationAccess, IntegrationCategory, IntegrationKind, IntegrationMode, IntegrationVerification } from "@/lib/integrations-catalog";
-import type { FaqItem, IntegrationsCopy, LocalizedCopy, TitledText } from "./types";
+import type { IntegrationsCopy, LocalizedCopy } from "./types";
 
 /**
  * Integrations area copy (overview with search + filters, detail pages; supplement §4).
  *
- * `IntegrationsAreaCopy` extends the shared `IntegrationsCopy` shape from types.ts so existing
- * imports keep working; the additional keys belong to the redesigned overview and detail pages.
+ * The shape is `IntegrationsCopy` in types.ts (overview with search + filters, detail pages).
  * Every fact rendered next to this copy comes from `@/lib/integrations-catalog` (verified against
  * the connector registry) — the copy only labels it.
  */
-export interface IntegrationsAreaCopy extends IntegrationsCopy {
-  breadcrumbs: { home: string; label: string; nav: string };
-  /** Verifiable counts computed from the catalogue at render time. */
-  stats: { destinations: (n: number) => string; presets: (n: number) => string; shops: (n: number) => string };
-  diagram: {
-    title: string;
-    description: string;
-    caption: string;
-    nodes: { website: string; websiteSub: string; server: string; serverSub: string; track: string; trackSub: string; consent: string; ads: string; analytics: string; own: string };
-  };
-  /** Rendered by a client component: plain strings only (templates with `{shown}`, `{total}`, `{n}`), no functions across the RSC boundary. */
-  explorer: {
-    heading: string;
-    searchLabel: string;
-    searchPlaceholder: string;
-    clear: string;
-    resultsAll: string;
-    resultsSome: string;
-    categoryFilter: string;
-    modeFilter: string;
-    allCategories: string;
-    allModes: string;
-    reset: string;
-    emptyTitle: string;
-    emptyText: string;
-    resultsHeading: string;
-    details: string;
-    presets: string;
-  };
-  categories: Record<IntegrationCategory, string>;
-  categoryText: Record<IntegrationCategory, string>;
-  kinds: Record<IntegrationKind, string>;
-  modes: Record<IntegrationMode, string>;
-  modeText: Record<IntegrationMode, string>;
-  modesSection: { title: string; text: string; hybridTitle: string; hybridText: string };
-  verification: Record<IntegrationVerification, string>;
-  /** Compact status for list rows. */
-  verificationShort: Record<IntegrationVerification, string>;
-  verifiedOn: (date: string) => string;
-  access: Record<IntegrationAccess, string>;
-  purposes: Record<ConsentPurposeId, string>;
-  credentialKinds: Record<CredentialKindId, string>;
-  oauthProviders: Record<string, string>;
-  optional: string;
-  detail: {
-    eyebrow: Record<IntegrationKind, string>;
-    flow: {
-      title: (name: string) => string;
-      text: Record<IntegrationKind, string>;
-      diagramTitle: (name: string) => string;
-      caption: Record<IntegrationKind, string>;
-      nodes: { website: string; websiteSub: string; server: string; serverSub: string; offline: string; offlineSub: string; shop: string; shopSub: string; track: string; trackSub: string; trackPairing: string; consent: string; destinations: string };
-      edges: Record<IntegrationMode, string> & { shop: string };
-    };
-    modeDetail: Record<IntegrationMode, string>;
-    sourceModes: { browser: string; server: string };
-    hybrid: (field: string) => string;
-    hybridNoField: string;
-    sends: {
-      title: string;
-      intro: string;
-      event: string;
-      eventId: (field: string) => string;
-      eventIdNoField: string;
-      clickIds: (ids: string) => string;
-      noClickIds: string;
-      order: string;
-      hashed: string;
-      noHashed: string;
-      consent: string;
-      neverTitle: string;
-      never: string[];
-    };
-    receives: { title: string; intro: string; items: string[]; neverTitle: string; never: string[] };
-    facts: { title: string; dedup: string; pairing: string; clickIds: string; purpose: string; apiVersion: string; verified: string; status: string; docs: string; docsLink: (name: string) => string; ownDocs: string; none: string; presets: string };
-    ids: { title: string; intro: string; publicIds: string; credentials: string; vault: string; noCredentials: string; key: string; label: string };
-    prerequisites: string;
-    consent: { title: string; text: Record<ConsentPurposeId, string>; source: string };
-    setup: { title: string; intro: string; destination: TitledText[]; source: TitledText[] };
-    knowledge: { title: string; text: string; all: string; none: string; minutes: (n: number) => string };
-    faq: { title: string; destination: FaqItem[]; source: FaqItem[] };
-    cta: { title: (name: string) => string; text: string; start: string; all: string };
-  };
-}
-
-export const INTEGRATIONS_COPY: LocalizedCopy<IntegrationsAreaCopy> = {
+export const INTEGRATIONS_COPY: LocalizedCopy<IntegrationsCopy> = {
   en: {
     eyebrow: "Integrations",
     title: "Every platform with browser tag, server API and shared deduplication",
     text: "Advertising platforms, analytics, affiliate networks, your own systems and three shop platforms — each implemented, documented and tested against the vendor contract. No “coming soon”.",
-    groups: { 1: "Core advertising platforms", 2: "Reach and discovery", 3: "Programmatic, retargeting and affiliate", commerce: "Shop platforms" },
-    browser: "Browser",
-    server: "Server",
-    offline: "Offline",
     cta: "Connect your first platform",
     ctaText: "The assistant walks through identifiers, credentials, mapping and a verified test event.",
     start: "Start free",
@@ -330,10 +239,6 @@ export const INTEGRATIONS_COPY: LocalizedCopy<IntegrationsAreaCopy> = {
     eyebrow: "Integrationen",
     title: "Jede Plattform mit Browser-Tag, Server-API und gemeinsamer Deduplizierung",
     text: "Werbeplattformen, Analytics, Affiliate-Netzwerke, eigene Systeme und drei Shopsysteme — jeweils umgesetzt, dokumentiert und gegen den Anbieter-Vertrag getestet. Kein „Coming soon“.",
-    groups: { 1: "Zentrale Werbeplattformen", 2: "Reichweite und Discovery", 3: "Programmatic, Retargeting und Affiliate", commerce: "Shopsysteme" },
-    browser: "Browser",
-    server: "Server",
-    offline: "Offline",
     cta: "Erste Plattform verbinden",
     ctaText: "Der Assistent führt durch Kennungen, Zugangsdaten, Mapping und einen verifizierten Testevent.",
     start: "Kostenlos starten",

@@ -1,5 +1,5 @@
 import { ConsentGate, DestinationChip, Diagram, FlowEdge, FlowNode, ProductStage, SignalDot } from "@track-site/ui";
-import type { AuthShellCopy } from "@/lib/marketing-copy/auth";
+import type { AuthCopy } from "@/lib/marketing-copy/types";
 import { AuthSignals } from "./auth-signals";
 
 /**
@@ -8,7 +8,7 @@ import { AuthSignals } from "./auth-signals";
  * Nothing here is live, animated or interactive; the caption says so. The diagram carries an
  * accessible name and the same information is in the surrounding text.
  */
-export function AuthPreview({ copy, id, className }: { copy: AuthShellCopy; id: string; className?: string }) {
+export function AuthPreview({ copy, id, className }: { copy: AuthCopy; id: string; className?: string }) {
   const p = copy.preview;
   const d = p.diagram;
   const gate = { x: 340, y: 115 };

@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/marketing/json-ld";
 import { legalRelated } from "@/components/marketing/legal-page";
 import { anchorId } from "@/components/marketing/secondary/anchor";
 import { SecurityFlowDiagram } from "@/components/marketing/secondary/diagrams";
-import { PageIntro, PageSection, RelatedLinks, SectionHeading } from "@/components/marketing/secondary/shell";
+import { PageIntro, PageSection, RelatedLinks, SectionHeading } from "@/components/marketing/page-shell";
 import { PageToc } from "@/components/marketing/secondary/toc";
 import { LEGAL, operatorFromEnv } from "@/lib/legal-copy";
 import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";

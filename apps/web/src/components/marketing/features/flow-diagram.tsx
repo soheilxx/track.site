@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { ConsentGate, DestinationChip, Diagram, FlowEdge, FlowNode, cn, type NodeTone, type Tone } from "@track-site/ui";
-import type { FeatureUiCopy } from "@/lib/marketing-copy/features";
+import { ConsentGate, DestinationChip, FlowEdge, FlowNode, ResponsiveDiagram, cn, type NodeTone, type Tone } from "@track-site/ui";
+import type { FeatureUiCopy } from "@/lib/marketing-copy/types";
 
 /*
  * Data-flow diagrams for the feature and how-it-works pages, composed from the SVG primitives in
@@ -55,19 +55,6 @@ const gateTextClass: Record<GateState, string> = { granted: "fill-ok", denied: "
 
 function gateText(labels: DiagramLabels, gate: GateState): string {
   return gate === "granted" ? labels.gateGranted : gate === "denied" ? labels.gateDenied : labels.gatePending;
-}
-
-function ResponsiveDiagram({ title, description, caption, className, wide, narrow }: BaseProps & { wide: { width: number; height: number; children: ReactNode }; narrow: { width: number; height: number; children: ReactNode } }) {
-  return (
-    <div className={cn("w-full min-w-0", className)}>
-      <Diagram width={wide.width} height={wide.height} title={title} description={description} caption={caption} figureClassName="hidden md:block">
-        {wide.children}
-      </Diagram>
-      <Diagram width={narrow.width} height={narrow.height} title={title} description={description} caption={caption} figureClassName="md:hidden">
-        {narrow.children}
-      </Diagram>
-    </div>
-  );
 }
 
 /* ------------------------------------------------------------------ Website → Track → gate → destinations */

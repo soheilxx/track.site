@@ -7,6 +7,7 @@ export * from "./feedback.tsx";
 export * from "./field.tsx";
 export * from "./layout.tsx";
 export * from "./navigation.tsx";
+export * from "./pagination.tsx";
 export * from "./search.tsx";
 export * from "./status.tsx";
 export * from "./table.tsx";

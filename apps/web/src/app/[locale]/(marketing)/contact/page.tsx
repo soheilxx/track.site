@@ -4,7 +4,7 @@ import { Building2 } from "lucide-react";
 import { Banner, Container } from "@track-site/ui";
 import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
-import { FormPanel, LinkList, SplitLayout, TopicList } from "@/components/marketing/secondary/shell";
+import { FormPanel, LinkList, SplitLayout, TopicList } from "@/components/marketing/page-shell";
 import { FORM_COPY, SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";

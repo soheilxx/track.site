@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "explainer"
 level: "advanced"
+takeaways:
+  - "TCF 2.2 encodes per-purpose and per-vendor consent for the EEA and UK, GPP bundles regional sections including US state opt-outs, and GPC is a browser-level opt-out without purpose detail."
+  - "Track normalises every signal into necessary, analytics, marketing and personalization; a purpose is granted only when a signal positively grants it, and the most restrictive signal wins."
+  - "The SDK reads __tcfapi, __gpp and navigator.globalPrivacyControl, records a consent entry on every event and never sets consent itself — without a signal only necessary applies."
+  - "Server-side sources supply the consent state they recorded; an event without consent information reaches no advertising destination, and marketing consent is never assumed from an order."
 tags: ["tcf", "gpp", "gpc", "consent"]
 author: "track-site-editorial"
 publishedAt: "2026-08-21"

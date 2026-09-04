@@ -10,6 +10,12 @@ platforms: []
 shopSystems: []
 contentType: "explainer"
 level: "beginner"
+takeaways:
+  - "Server-side tracking moves the delivery of events to a server you control; the browser still observes behaviour, reads consent and captures click ids."
+  - "It improves reliability, sends authoritative purchases from the order system and gives you control over every payload — but it does not change the consent rules."
+  - "Consent is evaluated twice, in the browser and on the server, and pre-consent events are dropped rather than replayed."
+  - "In hybrid mode one event id per action shared by both paths, plus the order id on purchases, is what lets vendors count once."
+featured: true
 tags: ["server-side", "fundamentals", "consent", "deduplication"]
 author: "track-site-editorial"
 publishedAt: "2026-09-03"

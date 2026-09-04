@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ACTIVE_LOCALES, ALL_LOCALES, DEFAULT_LOCALE } from "@/i18n/routing";
-import { AUTH_COPY, COPY_LOCALES, FEATURES, FORM_COPY, HOME_COPY, HOW_IT_WORKS, INTEGRATIONS_COPY, PRICING_COPY, SECONDARY_COPY, SHARED_COPY, isCopyLocale, pick, type LocalizedCopy } from "./index";
+import * as copyModules from "./index";
+import { COPY_LOCALES, FEATURES, isCopyLocale, pick, type LocalizedCopy } from "./index";
 
 /** Structural signature of a copy object: key paths, array lengths and value kinds. */
 function shape(value: unknown, path = ""): string[] {
@@ -15,6 +16,13 @@ function shape(value: unknown, path = ""): string[] {
   }
   return [`${path}:${typeof value}`];
 }
+
+function isLocalizedCopy(value: unknown): value is LocalizedCopy<unknown> {
+  return !!value && typeof value === "object" && COPY_LOCALES.every((locale) => locale in (value as Record<string, unknown>));
+}
+
+/** Every `*_COPY`-style constant the barrel exports (objects keyed by copy locale), discovered instead of listed. */
+const MODULES = Object.entries(copyModules as Record<string, unknown>).filter((entry): entry is [string, LocalizedCopy<unknown>] => isLocalizedCopy(entry[1]));
 
 describe("marketing copy locales", () => {
   it("covers every active locale with typed copy and keeps English as the default", () => {
@@ -41,10 +49,15 @@ describe("marketing copy locales", () => {
 });
 
 describe("marketing copy modules have the same shape in every locale", () => {
-  const modules: Record<string, LocalizedCopy<unknown>> = { SHARED_COPY, FORM_COPY, HOME_COPY, FEATURES, HOW_IT_WORKS, INTEGRATIONS_COPY, PRICING_COPY, AUTH_COPY, SECONDARY_COPY };
-  for (const [name, copy] of Object.entries(modules)) {
+  it("exports every copy module through the barrel", () => {
+    const names = MODULES.map(([name]) => name).sort();
+    expect(names).toEqual(["AUTH_COPY", "CONSENT_COPY", "FEATURES", "FEATURES_PAGE_COPY", "FEATURE_DETAIL_COPY", "FEATURE_UI_COPY", "FOOTER_COPY", "FORM_COPY", "HEADER_COPY", "HOME_COPY", "HOW_IT_WORKS", "INTEGRATIONS_COPY", "KNOWLEDGE_ARTICLE_COPY", "KNOWLEDGE_HUB_COPY", "PRICING_COPY", "SECONDARY_COPY"]);
+  });
+
+  for (const [name, copy] of MODULES) {
     it(name, () => {
       const reference = shape(copy.en);
+      expect(reference.length).toBeGreaterThan(0);
       for (const locale of COPY_LOCALES) expect(shape(copy[locale]), `${name}.${locale}`).toEqual(reference);
     });
   }

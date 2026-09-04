@@ -1,4 +1,4 @@
-import type { HowItWorksCopy, LocalizedCopy, TitledText } from "./types";
+import type { HowItWorksCopy, LocalizedCopy } from "./types";
 
 /*
  * /how-it-works. Keeps the `HowItWorksCopy` shape (title, intro, steps, architecture, faq) and adds
@@ -8,52 +8,10 @@ import type { HowItWorksCopy, LocalizedCopy, TitledText } from "./types";
  * test, review, publish, health) without turning it into a step count.
  */
 
-export interface Milestone extends TitledText {
-  /** What the customer does. */
-  you: string;
-  /** What the customer gets at the end of the milestone. */
-  outcome: string;
-}
-
-export interface FlowTab {
-  id: "browser" | "server" | "hybrid";
-  label: string;
-  title: string;
-  text: string;
-  points: string[];
-}
-
-export interface CheckGroup {
-  title: string;
-  items: string[];
-}
-
-export interface HowItWorksPageCopy extends HowItWorksCopy {
-  eyebrow: string;
-  cta: string;
-  ctaSecondary: string;
-  stage: { title: string; description: string; caption: string };
-  milestonesTitle: string;
-  milestonesText: string;
-  youLabel: string;
-  outcomeLabel: string;
-  steps: Milestone[];
-  snippet: { title: string; code: string; copy: string; copied: string; note: string };
-  /** Example state of a published configuration (milestone 3). */
-  published: { title: string; state: string; facts: Array<{ label: string; value: string }> };
-  flows: { title: string; text: string; tabsLabel: string; items: FlowTab[] };
-  checks: { title: string; summary: string; intro: string; groups: CheckGroup[] };
-  architectureTitle: string;
-  architectureText: string;
-  architectureColumns: { component: string; responsibility: string };
-  faqTitle: string;
-  closing: { title: string; text: string; cta: string; secondary: string };
-}
-
 /** Same shape as the real snippet in components/app/snippet.tsx; TRACKING_ID stands for the site's six-character id. */
 const SNIPPET = `<script async src="https://cdn.track.site/v1/tracker.js" data-site-id="TRACKING_ID"></script>`;
 
-export const HOW_IT_WORKS: LocalizedCopy<HowItWorksPageCopy> = {
+export const HOW_IT_WORKS: LocalizedCopy<HowItWorksCopy> = {
   en: {
     eyebrow: "How it works",
     title: "From your domain to verified conversions on every platform",

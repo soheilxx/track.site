@@ -3,6 +3,7 @@ import { USAGE_WARNING_THRESHOLDS, findPlan } from "@track-site/catalog";
 import { can } from "@track-site/core";
 import { Alert, Badge, Card, CardContent, CardHeader, CardTitle, StatCard } from "@track-site/ui";
 import { PlanCards, type PlanView } from "@/components/app/billing";
+import { planSelectionFromSearchParams } from "@/components/marketing/pricing/plan-selection";
 import { billingOverview, priceIdFor } from "@/server/billing";
 import { env } from "@/env";
 import { planBullets } from "@/server/pricing";
@@ -12,7 +13,7 @@ function money(cents: number, currency: string, locale: string): string {
   return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-IE", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
 }
 
-export default async function BillingPage({ searchParams }: { searchParams: Promise<{ checkout?: string }> }) {
+export default async function BillingPage({ searchParams }: { searchParams: Promise<{ checkout?: string; plan?: string; interval?: string }> }) {
   const q = await searchParams;
   const ctx = await requireOrgContext("billing.read");
   const t = await getTranslations("app.billing");
@@ -54,7 +55,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
         <StatCard label={t("periodEnd")} value={subscription?.currentPeriodEnd ? subscription.currentPeriodEnd.toLocaleDateString() : "—"} hint={subscription?.cancelAt ? t("cancelsAt", { date: subscription.cancelAt.toLocaleDateString() }) : undefined} />
         <StatCard label={t("grace")} value={subscription?.graceUntil ? subscription.graceUntil.toLocaleDateString() : "—"} tone={subscription?.graceUntil ? "warn" : "neutral"} />
       </div>
-      {can(ctx.role, "billing.manage") ? <PlanCards plans={views} currentPlanId={currentPlanId} status={subscription?.status ?? "none"} hasCustomer={Boolean(subscription?.stripeCustomerId)} /> : <p className="text-sm text-ink-3">{t("readOnly")}</p>}
+      {can(ctx.role, "billing.manage") ? <PlanCards plans={views} currentPlanId={currentPlanId} status={subscription?.status ?? "none"} hasCustomer={Boolean(subscription?.stripeCustomerId)} preselected={planSelectionFromSearchParams(q)} /> : <p className="text-sm text-ink-3">{t("readOnly")}</p>}
       <Card>
         <CardHeader>
           <CardTitle>{t("history")}</CardTitle>

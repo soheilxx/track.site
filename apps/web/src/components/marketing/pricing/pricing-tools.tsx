@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { isPaidPlanId, type PaidPlanId } from "@track-site/catalog";
 import { Alert, Button, Field, Input, ProductStage, Select, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
-import type { PricingPageCopy } from "@/lib/marketing-copy/pricing";
+import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicPlan } from "@/server/pricing";
 import { useBillingInterval } from "./interval";
 import { CONTACT_SALES_HREF, EVENT_STOPS, FINDER_EVENT_OPTIONS, calculate, fill, findPlanFor, formatCompact, formatInteger, formatList, formatMoney, largestPaidEventLimit, longestPaidRetentionMonths, nearestStopIndex, parseEventsInput, retentionOptions, signupHref } from "./pricing-helpers";
@@ -14,8 +14,8 @@ export interface PricingToolsProps {
   locale: string;
   /** paid plans in display order (calculator plan choice) */
   plans: PublicPlan[];
-  finder: PricingPageCopy["finder"];
-  calculator: PricingPageCopy["calculator"];
+  finder: PricingCopy["finder"];
+  calculator: PricingCopy["calculator"];
   /** warning thresholds in percent (from the catalogue) */
   thresholds: number[];
 }

@@ -10,6 +10,11 @@ platforms: ["tiktok"]
 shopSystems: []
 contentType: "tutorial"
 level: "intermediate"
+takeaways:
+  - "You need the public pixel code as event_source_id, an Events API access token kept in the vault, and optionally a test event code."
+  - "Events go to /open_api/v1.3/event/track/ with PascalCase names; Track maps canonical events by default, for example purchase to CompletePayment."
+  - "Match keys in order of impact are ttclid (captured after marketing consent), the _ttp cookie value, hashed e-mail and phone, and a hashed external_id."
+  - "TikTok deduplicates pixel and API on event_id with the same event name; in test mode every request carries test_event_code and stays out of reporting."
 tags: ["tiktok", "events-api", "ttclid", "deduplication"]
 author: "track-site-editorial"
 publishedAt: "2026-08-31"

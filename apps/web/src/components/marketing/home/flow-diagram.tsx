@@ -1,4 +1,4 @@
-import { ConsentGate, DestinationChip, Diagram, FlowEdge, FlowNode } from "@track-site/ui";
+import { ConsentGate, DestinationChip, FlowEdge, FlowNode, ResponsiveDiagram } from "@track-site/ui";
 import { DEMO_PLATFORMS_FIXTURE } from "@/components/marketing/demo/fixtures";
 import type { HomeCopy } from "@/lib/marketing-copy/types";
 
@@ -89,13 +89,12 @@ function FlowNarrow({ nodes }: { nodes: FlowNodes }) {
 export function FlowDiagram({ copy }: { copy: HomeCopy }) {
   const { nodes, caption } = copy.flow;
   return (
-    <div className="w-full min-w-0">
-      <Diagram width={FLOW_WIDE.width} height={FLOW_WIDE.height} title={caption} caption={caption} figureClassName="hidden min-w-0 sm:block">
-        <FlowWide nodes={nodes} />
-      </Diagram>
-      <Diagram width={FLOW_NARROW.width} height={FLOW_NARROW.height} title={caption} caption={caption} figureClassName="mx-auto w-full max-w-[20rem] sm:hidden">
-        <FlowNarrow nodes={nodes} />
-      </Diagram>
-    </div>
+    <ResponsiveDiagram
+      breakpoint="sm"
+      title={caption}
+      caption={caption}
+      wide={{ width: FLOW_WIDE.width, height: FLOW_WIDE.height, children: <FlowWide nodes={nodes} /> }}
+      narrow={{ width: FLOW_NARROW.width, height: FLOW_NARROW.height, className: "mx-auto w-full max-w-[20rem]", children: <FlowNarrow nodes={nodes} /> }}
+    />
   );
 }

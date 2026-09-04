@@ -10,6 +10,11 @@ platforms: []
 shopSystems: []
 contentType: "explainer"
 level: "advanced"
+takeaways:
+  - "A tag manager ships code to every visitor, so Track treats configuration delivery as a supply chain with three threats: harmful changes by insiders, tampered delivery and untracked drift."
+  - "Declarative templates with typed parameters replace custom HTML and JavaScript; a bundle is data, validated on server and client, with no eval and no arbitrary script loading."
+  - "Published bundles are Ed25519-signed with a key that never leaves the publishing service; the SDK verifies digest and signature with Web Crypto and discards anything that fails."
+  - "A freshly fetched manifest carries version, digest, key id and the kill switch flag, and every publish is an immutable, approved, attributable version that can be rolled back."
 tags: ["security", "supply-chain", "signing", "configuration"]
 author: "track-site-editorial"
 publishedAt: "2026-08-12"

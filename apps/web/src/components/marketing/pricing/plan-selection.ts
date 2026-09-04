@@ -51,3 +51,45 @@ export function planSelectionQuery(selection: PlanSelection | null, first = true
   if (!selection) return "";
   return `${first ? "?" : "&"}${PLAN_PARAM}=${encodeURIComponent(selection.planId)}&${INTERVAL_PARAM}=${selection.interval}`;
 }
+
+/* ------------------------------------------------------------- storage */
+
+/** Session-storage key of the selection remembered for the rest of the signup flow in this tab. */
+export const PLAN_SELECTION_KEY = "ts-plan-selection";
+
+/** Validated selection from the raw storage value (null for a missing, unreadable or unknown one). */
+export function parseStoredPlanSelection(raw: string | null): PlanSelection | null {
+  if (!raw) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    const { planId, interval } = parsed as Record<string, unknown>;
+    return safePlanSelection(planId, interval);
+  } catch {
+    return null;
+  }
+}
+
+/** Raw storage value; null without storage (SSR, private mode). A stable primitive, so `useSyncExternalStore` can read it. */
+export function readStoredPlanSelectionRaw(): string | null {
+  try {
+    return sessionStorage.getItem(PLAN_SELECTION_KEY);
+  } catch {
+    return null; // no storage: the URL is the only source
+  }
+}
+
+/** Selection remembered in this tab, if it is still a catalogue plan with a list price. */
+export function readStoredPlanSelection(): PlanSelection | null {
+  return parseStoredPlanSelection(readStoredPlanSelectionRaw());
+}
+
+/** Remember a validated selection for the rest of the flow in this tab (no-op without a selection). */
+export function storePlanSelection(selection: PlanSelection | null): void {
+  if (!selection) return;
+  try {
+    sessionStorage.setItem(PLAN_SELECTION_KEY, JSON.stringify({ planId: selection.planId, interval: selection.interval }));
+  } catch {
+    /* storage unavailable: the selection still travels in the URL */
+  }
+}

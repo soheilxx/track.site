@@ -1,0 +1,56 @@
+[
+  {
+    "id": "server-side-foundations",
+    "title": "Server-side tracking from the ground up",
+    "description": "What changes when events leave the browser, the standard event vocabulary, a safe migration from GTM, deduplication, the health score and the limits of first-party domains.",
+    "groupIds": [
+      "server-side-tracking-explained",
+      "event-taxonomy-standard-events",
+      "migrating-from-gtm",
+      "dedup-event-id-order-id",
+      "tracking-health-score",
+      "ad-blockers-itp-measurement",
+      "first-party-tracking-domains"
+    ]
+  },
+  {
+    "id": "consent-and-privacy",
+    "title": "Consent-compliant tracking",
+    "description": "Consent Mode v2, personal data in payloads, retention windows, data subject requests and how TCF 2.2, GPP and GPC signals are read.",
+    "groupIds": [
+      "consent-mode-v2-guide",
+      "pii-in-tracking-data",
+      "data-retention-policy-tracking",
+      "dsar-deletion-tracking-data",
+      "tcf-2-2-gpp-gpc"
+    ]
+  },
+  {
+    "id": "conversion-apis",
+    "title": "Conversion APIs platform by platform",
+    "description": "Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Reddit, Pinterest and Snapchat: payloads, matching keys, deduplication with the pixel and safe test workflows.",
+    "groupIds": [
+      "meta-conversions-api-deduplication",
+      "google-ads-enhanced-conversions",
+      "ga4-measurement-protocol-eu",
+      "tiktok-events-api-setup",
+      "microsoft-conversions-api-uet",
+      "linkedin-conversions-api-b2b",
+      "reddit-pinterest-snapchat-capi"
+    ]
+  },
+  {
+    "id": "commerce-and-attribution",
+    "title": "Shop purchases and the attribution loop",
+    "description": "Verified purchases from Shopify, WooCommerce and Shopware, subscription events, click ids and attribution windows, offline conversions from the CRM and affiliate postbacks.",
+    "groupIds": [
+      "shopify-server-side-purchases",
+      "woocommerce-server-side-tracking",
+      "shopware-6-tracking",
+      "subscription-saas-events",
+      "click-ids-attribution-windows",
+      "offline-conversions-crm",
+      "affiliate-postbacks-s2s"
+    ]
+  }
+]
