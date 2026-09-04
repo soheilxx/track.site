@@ -1,0 +1,71 @@
+---
+title: "Una policy di conservazione per i dati di tracking: nove tipi di dati, valori predefiniti sensati e come viene applicata la scadenza"
+description: "Quali tipi di dati di tracking esistono, perché ognuno ha una durata diversa, le finestre predefinite con cui Track viene fornito, come sovrascriverle per organizzazione o per sito e come i job di scadenza dimostrano di essere stati eseguiti."
+excerpt: "Conservare tutto per sempre è la decisione più costosa che puoi prendere in materia di privacy. Una policy di conservazione dà un nome a ogni tipo di dato, gli assegna una ragione per esistere e una data di scadenza. Ecco i nove tipi, i valori predefiniti e come vengono applicati."
+category: "privacy"
+translationGroupId: "data-retention-policy-tracking"
+slug: "data-retention-policy-tracking"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Nove tipi di dati — eventi, click ID, snapshot del consenso, tentativi di consegna, audit log, trascrizioni delle chat, archivio grezzo, record DSAR, hash degli IP — ricevono ciascuno una finestra predefinita con una motivazione esplicita."
+  - "Le finestre si impostano per organizzazione e, per eventi e click ID, si possono sovrascrivere per sito; la finestra effettiva è la sovrascrittura del sito, poi il valore dell'organizzazione, poi il valore predefinito."
+  - "Un job di conservazione giornaliero elimina le partizioni scadute, rimuove i click ID dagli eventi più vecchi e registra le righe rimosse per tipo di dato come prova."
+  - "La conservazione non è anonimizzazione, non è la conservazione dei vendor e non sostituisce il consenso."
+tags: ["conservazione", "gdpr", "minimizzazione-dei-dati", "policy"]
+author: "track-site-editorial"
+publishedAt: "2026-08-19"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Finestre di conservazione per tipo di dato su una linea temporale"
+sources:
+  - title: "GDPR Article 5 — Principles relating to processing of personal data"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e1807-1-1"
+  - title: "EDPB — Guidelines on data protection by design and by default"
+    url: "https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-42019-article-25-data-protection-design-and_en"
+legalNotice: true
+---
+
+## I nove tipi di dati e i loro valori predefiniti
+
+| Tipo di dato | Predefinito | Perché così a lungo |
+| --- | --- | --- |
+| events | 395 giorni | tredici mesi consentono il confronto anno su anno con un mese di sovrapposizione |
+| click_ids | 90 giorni | la finestra di attribuzione più lunga di uso comune |
+| consent_snapshots | 1.095 giorni | prova del trattamento lecito lungo il termine di prescrizione che la maggior parte dei gestori applica |
+| delivery_attempts | 90 giorni | sufficienti per chiarire le contestazioni con i vendor e per la riconciliazione mensile |
+| audit_log | 730 giorni | cronologia di configurazione e accessi per due cicli di revisione annuali |
+| chat_transcripts | 30 giorni | le conversazioni con l'assistente AI sono operative, non documentazione |
+| raw_archive | 14 giorni | buffer di replay per gli incidenti; contiene payload non elaborati |
+| dsar_records | 1.095 giorni | dimostra che le richieste sono state gestite |
+| ip_hashes | 30 giorni | solo rilevamento degli abusi; il salt ruota, quindi gli hash più vecchi sono comunque inutilizzabili |
+
+Ogni finestra è un valore predefinito, non una raccomandazione valida per qualsiasi azienda. Un retailer con un diritto di reso di 14 giorni può ridurre i tentativi di consegna a 30 giorni; un'azienda B2B con cicli di vendita di 9 mesi può estendere i click ID fino a quella durata, se le finestre delle sue piattaforme pubblicitarie arrivano davvero così lontano. Estendere una finestra oltre il valore predefinito è una decisione da documentare nel registro delle attività di trattamento; la modifica stessa viene scritta nell'audit log.
+
+## Ambito e precedenza
+
+La conservazione si imposta per organizzazione e può essere sovrascritta per sito per eventi e click ID; tentativi di consegna, audit log e trascrizioni delle chat valgono per l'intera organizzazione. La finestra effettiva è la sovrascrittura del sito se presente, altrimenti il valore dell'organizzazione, altrimenti il valore predefinito. Una riduzione si applica alla successiva esecuzione giornaliera; un'estensione si applica solo ai record non ancora scaduti — non c'è resurrezione.
+
+## Applicazione
+
+- Un **job di conservazione** viene eseguito una volta al giorno. Per gli eventi applica la finestra effettiva per sito ed elimina le righe più vecchie; lo store degli eventi è partizionato per mese, quindi nella maggior parte dei casi la scadenza è un drop di partizione anziché una cancellazione di righe.
+- Trascorsa la finestra dei click ID, **click ID e ID dei vendor vengono rimossi** dagli eventi che per il resto vengono conservati, così una cronologia di eventi di tredici mesi non porta con sé tredici mesi di identificatori di attribuzione.
+- Tentativi di consegna, audit log e trascrizioni delle chat vengono eliminati per organizzazione con la finestra dell'organizzazione; chiavi di deduplicazione, nonce e touchpoint di attribuzione scadono secondo i propri calendari.
+- Ogni esecuzione **registra il numero di righe rimosse** per tipo di dato; il log del worker è la prova che la scadenza è stata applicata.
+- I **backup** seguono le stesse finestre più il ciclo di backup; la pagina Sicurezza indica la conservazione dei backup, così la durata complessiva è conoscibile.
+
+## Cosa la conservazione non è
+
+- Non è anonimizzazione. Gli aggregati calcolati dagli eventi (conteggi giornalieri, health score, tassi del funnel) vengono conservati oltre la finestra degli eventi perché non contengono dati personali; la pagina della policy li elenca esplicitamente.
+- Non è la conservazione dei vendor. Ciò che Meta o Google conservano segue le loro condizioni; la pagina dei sub-responsabili rimanda alla documentazione sulla conservazione di ciascun vendor.
+- Non sostituisce il consenso. Una conservazione breve di dati raccolti senza base giuridica non rende lecita la raccolta.
+
+## Configurazione
+
+1. Apri Privacy → Conservazione e confronta i valori predefiniti con le tue reali esigenze di reporting e attribuzione.
+2. Riduci tutto ciò che non puoi giustificare; estendi solo con una motivazione scritta.
+3. Conferma le sovrascritture per i siti in giurisdizioni diverse o con modelli di business diversi.
+4. Controlla la pagina di stato dopo la prima esecuzione pianificata; le voci del job sono la tua prova.

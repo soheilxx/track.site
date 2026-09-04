@@ -1,0 +1,74 @@
+---
+title: "Affiliate server-to-server postbacks: één engine, veertien netwerken en wat elk netwerk ondertekent"
+description: "Hoe affiliate S2S-postbacks van begin tot eind werken — de click-ID van het netwerk vastleggen, first-party opslaan, de postback afvuren bij de geverifieerde aankoop, terugdraaiingen afhandelen — met de details van Awin, CJ, Impact, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, Adcell, Belboon, TUNE en Everflow."
+excerpt: "Elk affiliatenetwerk wil hetzelfde in een net iets andere envelop: de click-ID die het heeft uitgegeven, de bestelreferentie, het bedrag en de valuta, verstuurd vanaf jouw server zodra de verkoop echt is. Deze gids legt de gemeenschappelijke engine en de verschillen per netwerk uit."
+category: "integrations"
+translationGroupId: "affiliate-postbacks-s2s"
+slug: "affiliate-postbacks-s2s"
+topic: "pixel-platform-integrations"
+platforms: ["affiliate-postbacks"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Elk netwerk volgt dezelfde engine: leg de click-ID vast met marketingtoestemming, bevestig de aankoop vanuit een vertrouwde bron, vuur de ondertekende postback af vanaf de server en verwerk terugdraaiingen."
+  - "Veertien presets — Awin, CJ, Impact, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, Adcell, Belboon, TUNE, Everflow en een custom template — verschillen in methode, click-ID, handtekening en afhandeling van terugdraaiingen."
+  - "Inkomende postbacks zoals de IPN van Digistore24 worden per site geverifieerd en omgezet in purchase- of refund-events; ongeverifieerde requests worden geweigerd en meegeteld in de health van de destination."
+  - "Eén postback per bestelreferentie plus de kortingscode op de postback voorkomt dat je twee publishers betaalt voor dezelfde verkoop."
+tags: ["affiliate", "postback", "s2s", "awin", "cj", "impact"]
+author: "track-site-editorial"
+publishedAt: "2026-08-22"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Affiliate-postbackflow van het vastleggen van de click-ID tot de server-postback"
+sources:
+  - title: "Awin — Server to server tracking"
+    url: "https://wiki.awin.com/index.php/Advertiser_Tracking_Guide/Server_to_Server_Tracking"
+  - title: "Impact — Conversions API"
+    url: "https://integrations.impact.com/impact-brand/reference/conversions"
+legalNotice: false
+---
+
+## De gemeenschappelijke engine
+
+1. **Vastleggen.** De bezoeker landt met de klikparameter van het netwerk (`awc`, `cjevent`, `irclickid`, `tduid`, `clickref` …). Met marketingtoestemming slaat de SDK die first-party op onder de naam van het netwerk, voor de cookieperiode van het programma (meestal 30 dagen).
+2. **Bevestigen.** De aankoop wordt bevestigd door een vertrouwde bron — een geverifieerde shopwebhook, het bestelsysteem, of een browseraankoop die het beleid als betrouwbaar genoeg voor het netwerk markeert.
+3. **Postback.** De worker rendert het postback-template van het netwerk met click-ID, bestelreferentie, bedrag, valuta, optionele kortingscode en uitsplitsing per artikel, ondertekent het waar nodig en verstuurt het vanaf de server.
+4. **Afstemmen.** Terugdraaiingen (terugbetalingen, annuleringen) vuren de terugdraai- of correctie-aanroep van het netwerk af met dezelfde bestelreferentie.
+
+Omdat de click-ID first-party is opgeslagen en de postback vanaf de server vertrekt, kosten geblokkeerde pixels en verlopen third-party cookies geen commissies — en het netwerk ontvangt uitsluitend echte, bevestigde bestellingen.
+
+## Details per netwerk
+
+| Netwerk | Methode | Click-id | Auth / handtekening | Terugdraaiing |
+| --- | --- | --- | --- | --- |
+| Awin | GET `sread.php` | `awc` → `cks` | geen; `testmode`-flag | via Awin API / handmatige validatie |
+| CJ | GET `emjcd.com/u` | `cjevent` | `SIGNATURE` (enterprise key) | correcties via API |
+| Impact | POST `Conversions` | `irclickid` → `ClickId` | Basic (account-SID + auth-token) | conversion modifications |
+| TradeTracker | GET `ts.tradetracker.net/?tt=…` | `ttref`/`tt` | campagne-id + product-ID | status ‘pending’ |
+| Tradedoubler | GET `tbs.tradedoubler.com/report` | `tduid` | `checksum=v04` + md5(secret + bestelling + waarde) | orderNumber-correctie |
+| Partnerize | GET/POST tracking-endpoint | `clickref` | campagne-id; API-key voor updates | conversion update API |
+| Rakuten | GET/XML | `ranMID`/`ranSiteID` | token | correctiefeed |
+| Webgains | GET `track.webgains.com/transact` | `wgcampaignid`/`clickref` | programma-id | via API |
+| Digistore24 | inkomende IPN | aan vendor-zijde | `sha_sign` (SHA-512 over gesorteerde velden + passphrase) | IPN-events `refund`/`chargeback` |
+| Adcell | GET `t.adcell.com/t/track` | `bid` | pid/eventid | statusupdate |
+| Belboon | GET tracking-pixel | `bbcid` | tracking-key | via het netwerk |
+| TUNE | GET `aff_sale` | `transaction_id` | `offer_id`/`goal_id`; optioneel security-token | correctie |
+| Everflow | GET `sdk/conversion` | `transaction_id` | `nid` + optioneel `security_token` | correctie-endpoint |
+| Custom | GET/POST-template | naar keuze | geen / basic / bearer / query | template |
+
+Deze presets zijn declaratieve templates in Track; de wizard toont de gerenderde URL of body met placeholders voordat je iets activeert, en de parameternamen hierboven komen uit de actuele advertiser-documentatie van elk netwerk, gelinkt in de helptekst van de destination.
+
+## Inkomend: als het netwerk jou aanroept
+
+Sommige platforms melden de verkoop juist aan jou (de IPN van Digistore24, of de postback van een netwerk naar je eigen endpoint). Track biedt per site en preset een inkomende URL. Die verifieert het request — de `sha_sign` van Digistore24, een gedeeld secret-token bij generieke presets — en zet het om in een geverifieerd `purchase`- of `refund`-event dat door dezelfde router stroomt. Ongeverifieerde requests worden geweigerd en meegeteld in de health van de destination.
+
+## Dubbele commissies voorkomen
+
+- Eén postback per bestelreferentie: de ingest-stap markeert een tweede aankoop met hetzelfde bestelnummer als dubbele conversie, en elke levering is gekoppeld aan de event-ID, zodat een opnieuw afgespeelde webhook niet twee keer vuurt.
+- Netwerken passen hun eigen duplicaatbescherming toe op de bestelreferentie; een tweede postback met dezelfde referentie wordt genegeerd of gemarkeerd.
+- Kortingscodes horen op de postback (`vc`, `coupon`, `promo_code`, afhankelijk van het netwerk), zodat het netwerk codegebaseerde attributieregels kan toepassen in plaats van twee publishers te betalen.
+
+## Testen
+
+De meeste netwerken bieden een testmodus-flag (Awin `testmode=1`, Impact-testaccounts, TUNE-testoffers). In de testmodus van Track wordt de testparameter van de preset automatisch gezet waar die bestaat; waar die ontbreekt, stuurt de wizard naar het netwerk en toont het antwoord, en valideer je de transactie in de interface van het netwerk voordat je de destination live zet.

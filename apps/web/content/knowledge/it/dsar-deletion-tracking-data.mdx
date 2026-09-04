@@ -1,0 +1,78 @@
+---
+title: "Gestire una richiesta dell'interessato sui dati di tracking: esportare, cancellare, limitare e dimostrarlo"
+description: "Come le richieste di accesso e di cancellazione si applicano a dati degli eventi, click ID, record del consenso e log di consegna; come Track identifica l'interessato a partire da un'e-mail, un ID utente o un ID anonimo; cosa contiene l'esportazione; e cosa un job di cancellazione lascia intenzionalmente."
+excerpt: "I dati di tracking sono dati personali. Quando arriva una richiesta devi trovare ogni record della persona, consegnarlo o rimuoverlo entro la scadenza e conservare la prova di averlo fatto — senza tenere una copia di ciò che hai cancellato. Ecco il flusso di lavoro, passo dopo passo."
+category: "privacy"
+translationGroupId: "dsar-deletion-tracking-data"
+slug: "dsar-deletion-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "I record di tracking relativi a una persona includono eventi, click ID, record del consenso, tentativi di consegna, record di conversione e le copie detenute dai vendor."
+  - "L'interessato viene identificato tramite l'hash SHA-256 dell'e-mail, un ID utente o un ID anonimo — mai tramite l'e-mail in chiaro, che non viene memorizzata; «nessun record trovato» è un esito legittimo."
+  - "Esportazione, cancellazione, limitazione e rettifica producono ciascuna una voce di audit e un report di completamento con i conteggi, mai il contenuto cancellato; le richieste hanno una scadenza di 30 giorni."
+  - "La cancellazione conserva intenzionalmente la voce di audit, le statistiche aggregate e i record del consenso necessari come prova, ed elenca i vendor che il gestore deve contattare separatamente."
+tags: ["dsar", "gdpr", "cancellazione", "esportazione"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ciclo di vita di una richiesta dell'interessato, dalla ricezione al report di completamento"
+sources:
+  - title: "GDPR Article 15 — Right of access"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "GDPR Article 17 — Right to erasure"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Quali record di tracking riguardano una persona
+
+Più di quanto la maggior parte dei team immagini:
+
+- **Eventi** — ogni visualizzazione di pagina, clic e conversione, associati a ID anonimo, ID sessione e, dopo il login, ID utente; con identificatori sottoposti a hash (`em`, `ph`) quando il consenso lo permetteva.
+- **Click ID** — `gclid`, `fbc` e simili, memorizzati in first-party per l'attribuzione.
+- **Record del consenso** — le finalità accordate, l'hash della TC string, i timestamp; sono dati personali *e* la tua prova di trattamento lecito.
+- **Tentativi di consegna** — cosa è stato inviato a quale vendor, con l'anteprima del payload oscurato.
+- **Record di conversione** ed esiti importati dal CRM.
+- **Copie lato vendor** — ciò che Meta, Google e gli altri hanno ricevuto; la cancellazione lì è una richiesta separata a ciascun vendor.
+
+## Identificare l'interessato
+
+Una richiesta arriva di solito con un indirizzo e-mail. Track ne calcola l'hash (in minuscolo, senza spazi iniziali e finali, SHA-256) e cerca gli eventi tramite l'hash `em`; accetta anche un ID utente del tuo sistema o un ID anonimo che la persona può leggere dalla pagina privacy. Non cerca mai tramite l'e-mail in chiaro, perché le e-mail in chiaro non vengono memorizzate.
+
+Se non c'è alcuna corrispondenza, il report lo dice — «nessun record trovato per gli identificatori forniti» è un esito legittimo e frequente per i visitatori che non hanno mai prestato il consenso agli identificatori.
+
+## Tipi di richiesta
+
+| Tipo | Cosa fa Track |
+| --- | --- |
+| esportazione / portabilità | genera un report JSON per sito: eventi (nome, ora, URL, consenso, dati commerce, click ID, sorgente), record di conversione; scaricabile dal centro privacy |
+| cancellazione | cancella eventi, record di conversione e click ID dell'interessato su ogni sito dell'organizzazione; scrive una voce del job di cancellazione per ogni archivio dati con i conteggi |
+| limitazione / opposizione | registrata; applicata dalla policy del consenso (gli eventi futuri per quegli identificatori vengono scartati) e dalla conservazione |
+| rettifica | registrata; i dati di tracking non vengono rettificati campo per campo — il valore corretto arriva dal sistema sorgente con l'evento successivo |
+
+Ogni tipo produce una **voce di audit** (chi l'ha gestita, quando, quali siti) e un **report di completamento** archiviato insieme alla richiesta. Il report contiene conteggi, non il contenuto cancellato.
+
+## La scadenza
+
+Le richieste hanno una scadenza di 30 giorni dalla ricezione; il centro privacy elenca le richieste aperte con le rispettive scadenze. Le proroghe sono una decisione del gestore, non un'impostazione predefinita.
+
+## Cosa la cancellazione lascia intenzionalmente
+
+- La voce dell'**audit log** che attesta che una cancellazione è avvenuta, con i conteggi e l'ID della richiesta — non gli identificatori.
+- Le **statistiche aggregate** già calcolate (conteggi giornalieri degli eventi, health score), che non sono dati personali.
+- I **record del consenso** per il periodo di conservazione necessario a dimostrare il trattamento lecito, con gli identificatori rimossi quando il record non serve più a quello scopo.
+- I **dati lato vendor**. Il report elenca ogni destinazione a cui sono stati consegnati gli eventi dell'interessato, così il gestore può presentare le corrispondenti richieste di cancellazione ai vendor; Track non finge di cancellare dati che non controlla.
+
+## La conservazione rende più piccole la maggior parte delle richieste
+
+Finestre di conservazione brevi per click ID, tentativi di consegna e archivi grezzi fanno sì che gran parte dei dati di un interessato sia già scaduta quando arriva una richiesta. La pagina della policy di conservazione mostra le finestre configurate per tipo di dato, e il report di esportazione indica quali finestre si sono applicate.
+
+## Come i visitatori ti contattano
+
+L'informativa sulla privacy pubblica indica il canale per le richieste — il modulo di contatto o l'indirizzo nelle note legali. Il gestore inserisce la richiesta nel centro privacy con gli identificatori forniti dal visitatore; da lì segue la coda e l'audit trail descritti sopra.
+

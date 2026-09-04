@@ -1,0 +1,88 @@
+---
+title: "LinkedIn Conversions API voor B2B: conversieregels, li_fat_id en gehashte e-mail"
+description: "B2B-conversies naar de Conversions API van LinkedIn sturen — het conversionEvents-endpoint, de LinkedIn-Version-header, URN's van conversieregels, gebruikersidentifiers, eventId-deduplicatie met de Insight Tag en het venster van 90 dagen."
+excerpt: "De Conversions API van LinkedIn matcht server-events aan campagnes via li_fat_id of gehashte e-mail en heeft per event een conversieregel nodig. Deze gids behandelt het request, de versionering, deduplicatie met de Insight Tag en wat je doet met vertraagde CRM-kwalificaties."
+category: "integrations"
+translationGroupId: "linkedin-conversions-api-b2b"
+slug: "linkedin-conversions-api-b2b"
+topic: "pixel-platform-integrations"
+platforms: ["linkedin"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "LinkedIn heeft een conversieregel met bron ‘Conversions API’ nodig, een OAuth-token met r_ads en rw_conversions, en optioneel de Insight Tag voor li_fat_id."
+  - "Requests gaan naar /rest/conversionEvents met een maandelijkse LinkedIn-Version-header; Track pint de versie vast en waarschuwt vóór de sunset."
+  - "li_fat_id geeft de hoogste matchkwaliteit maar vereist marketingtoestemming; SHA256_EMAIL werkt zonder de tag; userInfo-velden zijn aanvullende signalen."
+  - "Geef dezelfde eventId mee op tag en API om te dedupliceren, of houd browser- en CRM-regels gescheiden; conversionHappenedAt mag tot 90 dagen terug liggen, wat vertraagde CRM-kwalificaties praktisch haalbaar maakt."
+tags: ["linkedin", "conversions-api", "b2b", "li_fat_id"]
+author: "track-site-editorial"
+publishedAt: "2026-08-27"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "LinkedIn Conversions API-request met de URN van een conversieregel"
+sources:
+  - title: "LinkedIn Marketing API — Conversions API"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api"
+  - title: "LinkedIn Marketing API — Versioning"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/versioning"
+legalNotice: false
+---
+
+## Wat LinkedIn van je nodig heeft
+
+1. Een **conversieregel** in Campaign Manager (Analyseren → Conversietracking) met bron ‘Conversions API’. Elke regel heeft een numerieke ID; de API verwijst ernaar als `urn:lla:llaPartnerConversion:{id}`.
+2. Een **OAuth 2.0-token** met de scopes `r_ads` en `rw_conversions`, uitgegeven aan een gebruiker met toegang tot het advertentieaccount. Track verbindt het account via LinkedIn OAuth en vernieuwt het token automatisch.
+3. De **Insight Tag** in de browser als je hybride wilt tracken — die zet de first-party identifier `li_fat_id`, die het matchen aan de serverkant precies maakt.
+
+## Het request
+
+`POST https://api.linkedin.com/rest/conversionEvents` met de headers `Authorization: Bearer <token>`, `LinkedIn-Version: 202608`, `X-Restli-Protocol-Version: 2.0.0` en `Content-Type: application/json`:
+
+```json
+{
+  "conversion": "urn:lla:llaPartnerConversion:123456",
+  "conversionHappenedAt": 1767225600000,
+  "conversionValue": { "currencyCode": "EUR", "amount": "1200.00" },
+  "eventId": "01J9EXAMPLESOURCEEVENTID00",
+  "user": {
+    "userIds": [
+      { "idType": "SHA256_EMAIL", "idValue": "<sha256>" },
+      { "idType": "LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID", "idValue": "<li_fat_id>" }
+    ],
+    "userInfo": { "firstName": "…", "lastName": "…", "companyName": "…", "title": "…", "countryCode": "DE" }
+  }
+}
+```
+
+Een `201 Created` bevestigt de acceptatie. Batchcreatie gebruikt hetzelfde pad met de header `X-RestLi-Method: BATCH_CREATE` en een `elements`-array; LinkedIn antwoordt per element.
+
+De versionering is maandelijks. De `LinkedIn-Version`-header benoemt een versie die ongeveer een jaar geldig blijft; Track pint hem vast in zijn versieregister en waarschuwt vóór de sunsetdatum.
+
+## Identifiers, en wat er werkelijk matcht
+
+- `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` — de `li_fat_id`-waarde die de Insight Tag opslaat (ook als `li_fat_id` toegevoegd aan de URL's van landingspagina's). Hoogste matchkwaliteit; het vastleggen vereist marketingtoestemming.
+- `SHA256_EMAIL` — het genormaliseerde zakelijke e-mailadres in kleine letters, gehasht. B2B-leads leveren het meestal aan; het werkt zonder de tag.
+- `userInfo` — naam, bedrijf, functietitel en land in platte tekst. LinkedIn gebruikt ze als aanvullende matchingsignalen; stuur alleen de velden die jouw beleid toestaat.
+
+Voor lead-events is geen `conversionValue` vereist, maar een gemodelleerde waarde meesturen helpt bij de campagneoptimalisatie.
+
+## Dedupliceren met de Insight Tag
+
+Wordt een regel zowel door de Insight Tag (`window.lintrk('track', { conversion_id: 123456 })`) als door de API getrackt, geef dan op beide routes dezelfde `eventId` mee; LinkedIn dedupliceert identieke id's voor dezelfde regel. In de praktijk houden de meeste B2B-teams browser- en serverregels gescheiden: ‘Formulier verzonden (tag)’ vuurt direct af, ‘Gekwalificeerde lead (CRM)’ komt dagen later vanaf de server binnen met een andere regel, dus er hoeft niets gededupliceerd te worden.
+
+## Het venster van 90 dagen en vertraagde kwalificaties
+
+`conversionHappenedAt` moet binnen de afgelopen 90 dagen liggen. Dat is precies wat CRM-gedreven conversies praktisch haalbaar maakt: wordt een lead drie weken na de klik een opportunity, upload hem dan met het *oorspronkelijke* conversietijdstip en het e-mailadres, en LinkedIn attribueert hem terug aan de advertentie-interactie.
+
+## Fouten
+
+| Status | Betekenis |
+| --- | --- |
+| 401 | token ongeldig of verlopen → automatische vernieuwing, opnieuw verbinden als die mislukt |
+| 403 | geen `rw_conversions`-scope of geen toegang tot het advertentieaccount |
+| 404 | id van de conversieregel onbekend, of hoort bij een ander account |
+| 422 | payload-semantiek (verkeerde urn, tijdstempel buiten het venster, niet-ondersteund id-type) |
+| 429 | rate limit bereikt → opnieuw proberen met backoff |
+
+De wizard valideert de verbinding door de conversieregels op te sommen die het token kan zien, zodat een onbekende regel-ID wordt afgevangen vóór het eerste event.

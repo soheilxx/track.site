@@ -1,0 +1,70 @@
+---
+title: "Shopware 6-tracking goed gedaan: een app met ondertekende webhooks, de betaalde transactie als aankoop en het storefront-snippet"
+description: "Hoe de Track-Shopware-app zich registreert, welke orderevents op purchase en refund worden gemapt, hoe de shopware-shop-signature wordt geverifieerd, waarom de transactiestatus ‘betaald’ de geplaatste bestelling verslaat en waar het snippet in het theme hoort."
+excerpt: "Het app-systeem van Shopware 6 geeft je ondertekende webhooks zonder PHP in de shop te zetten. De Track-app abonneert zich op de transactiestatussen betaald en terugbetaald, de collector verifieert elke aflevering, en het storefront-snippet dekt de browserkant. Dit is het hele pad."
+category: "integrations"
+translationGroupId: "shopware-6-tracking"
+slug: "shopware-6-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopware"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "De Track-app is een manifest, geen plugin: Shopware stuurt ondertekende webhooks, er draait niets van Track in de shop, en de API-credentials uit de registratie worden bewust weggegooid."
+  - "Standaard wordt de transactiestatus betaald de aankoop en de status terugbetaald de terugbetaling; shops waar het plaatsen het betekenisvolle moment is, zetten de verbinding om naar geplaatste bestellingen."
+  - "Een ontbrekende valuta valt terug op de instelling van de verbinding of wordt als ontbrekend veld gemeld in plaats van geraden."
+  - "Het storefront-snippet in base.html.twig maakt de browseraankoop aan waarvan de geverifieerde serveraankoop de toestemming op order-ID overerft."
+tags: ["shopware", "app-system", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-06"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Registratie van de Shopware-app en webhookstroom naar de collector"
+sources:
+  - title: "Shopware — App base guide"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/app-base-guide.html"
+  - title: "Shopware — Webhooks for apps"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/webhooks.html"
+legalNotice: false
+---
+
+## Waarom een app en geen plugin
+
+Een Shopware-plugin is PHP die in de shop draait; een app is een manifest dat Shopware vertelt welke URL's het moet aanroepen. Voor ordertracking is de app genoeg: Shopware stuurt ondertekende webhooks voor de events waarop je je abonneert, en er wordt niets van Track in de shop uitgevoerd. `integrations/shopware/manifest.xml` is dat manifest.
+
+## Registratie
+
+Bij `app:install` roept Shopware de registratie-URL van de app aan met `shop-id`, `shop-url` en een tijdstempel, ondertekend in de header `shopware-app-signature` met het app-secret uit het manifest. De collector verifieert de handtekening, antwoordt met een proof (HMAC-SHA256 over shop-ID, shop-URL en appnaam) en een shop-secret, en Shopware bevestigt door API-credentials naar de bevestigings-URL te posten. Track gooit die credentials bewust weg: de integratie ontvangt alleen webhooks en roept nooit de API van de shop aan. Het secret dat je in de verbinding hebt opgeslagen, dient als app-secret én als shop-secret, zodat elke latere webhook wordt geverifieerd met `shopware-shop-signature`, de hex-gecodeerde HMAC-SHA256 van de ruwe body.
+
+## Welke events wat worden
+
+| Shopware-event | Track-event |
+| --- | --- |
+| `state_enter.order_transaction.state.paid` | `purchase` |
+| `state_enter.order_transaction.state.refunded` | `refund` (ordertotaal) |
+| `checkout.order.placed` | `purchase`, alleen wanneer de verbinding is ingesteld op het tellen van geplaatste bestellingen |
+
+De standaard telt de **betaalde transactie**, niet de geplaatste bestelling. Bij shops met vooruitbetaling of betaling op factuur kan een bestelling dagenlang onbetaald blijven of nooit worden betaald; die bij het plaatsen tellen blaast de omzet op en leert advertentieplatformen het verkeerde. Shops waar het plaatsen het betekenisvolle moment is (rembours, B2B-facturatie), zetten de verbinding om naar *geplaatst*.
+
+De aankoop draagt de order-ID, het ordernummer als transactie-ID, het bruto- en nettobedrag (belasting als het verschil), verzendkosten, valuta, productregels op productnummer, en het e-mailadres, de naam en de factuurplaats, -postcode en het factuurland van de bestellende klant als ruwe matchinggegevens die de router hasht. Promotie- en verzendregels zijn geen producten en worden overgeslagen.
+
+## Valuta
+
+De events `paid` en `refunded` dragen in huidige Shopware-versies de bestelling met haar valuta-associatie. Laat een versie die weg, dan geldt de fallbackvaluta van de verbinding; ontbreekt die ook, dan wordt het event zonder valuta opgeslagen en meldt de destination-monitor het ontbrekende veld in plaats van te raden.
+
+## Het storefront-snippet
+
+Voeg het standaard-snippet toe aan de `base.html.twig` van je theme, in het blok `base_head`. Het dekt de storefront en de afrondingspagina van de checkout, die Shopware zelf rendert, zodat de browseraankoop — met de toestemmingsregistratie en click-ID's van de bezoeker — naast de webhook bestaat. Het koppelen op order-ID laat de geverifieerde serveraankoop die toestemming vervolgens overerven; zonder browseraankoop blijft het serverrecord operationeel en bereikt het geen enkele advertentie-destination.
+
+## Instellen
+
+1. Site → Shopverbinding → Shopware 6: shopdomein, fallbackvaluta, aankoopmoment; sla een secret op (32 willekeurige tekens); kopieer de registratie-URL.
+2. Zet het manifest in `custom/apps/TrackSite/manifest.xml`, vervang tracking-ID, padtoken en secret, en voer `bin/console app:install --activate TrackSite` uit.
+3. Markeer de transactie van een testbestelling als betaald. De verbinding meldt de registratie en de eerste webhook; de debugger toont de shopware-aankoop.
+
+## Beperkingen
+
+- Een tweede gedeeltelijke terugbetaling op dezelfde bestelling wordt op order-ID gededupliceerd; de eerste wordt geregistreerd.
+- Apps kunnen zelf geen storefront-scripts injecteren; het snippet is een theme-wijziging, gedocumenteerd in de README.
+- Bestellingen die na betaling in de admin worden bewerkt, versturen het betaald-event niet opnieuw; waardecorrecties gebeuren in je eigen rapportage, niet bij de leveranciers.

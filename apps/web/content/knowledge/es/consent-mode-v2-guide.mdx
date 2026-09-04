@@ -1,0 +1,86 @@
+---
+title: "Consent Mode v2 sin adivinanzas: finalidades, señales y qué debe hacer un router server-side"
+description: "Qué señales de consentimiento espera Google, cómo derivarlas de las finalidades del consentimiento en lugar de listas de proveedores, por qué el modo avanzado exige una decisión jurídica y cómo el lado servidor tiene que reflejar al navegador."
+excerpt: "Consent Mode v2 añade ad_user_data y ad_personalization a las señales que Google lee. Esta guía las asigna a finalidades del consentimiento, explica el modo básico frente al avanzado y muestra cómo un router server-side mantiene coherentes las dos rutas."
+category: "consent"
+translationGroupId: "consent-mode-v2-guide"
+slug: "consent-mode-v2-guide"
+topic: "consent-privacy"
+platforms: ["google-ads", "google-analytics"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Consent Mode es un conjunto de flags granted/denied que leen las etiquetas de Google; no es una CMP y no hace que un banner sea conforme a la ley."
+  - "Deriva analytics_storage, ad_storage, ad_user_data y ad_personalization de las finalidades del consentimiento, no de listas de proveedores."
+  - "El modo básico no carga nada antes del consentimiento; el modo avanzado envía pings sin cookies mientras está denegado y exige una decisión jurídica documentada, así que nunca se activa en silencio."
+  - "El servidor debe reflejar al navegador: cada evento lleva una instantánea del consentimiento, las subidas llevan los campos de consentimiento derivados y los eventos previos al consentimiento se descartan, no se reenvían."
+tags: ["consent-mode", "google", "finalidades", "cmp"]
+author: "track-site-editorial"
+publishedAt: "2026-09-02"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Finalidades del consentimiento asignadas a las señales de Consent Mode de Google"
+sources:
+  - title: "Google — Consent mode overview"
+    url: "https://developers.google.com/tag-platform/security/guides/consent"
+  - title: "IAB Europe — TCF v2.2 technical specification"
+    url: "https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework"
+legalNotice: true
+---
+
+## Qué es realmente Consent Mode
+
+Consent Mode es un conjunto de flags que las etiquetas de Google leen para decidir cómo comportarse: `analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization` (los dos últimos se añadieron en la v2), además de `functionality_storage`, `personalization_storage` y `security_storage`. Cada uno vale `granted` o `denied`. Los flags se establecen con `gtag('consent', 'default', {...})` antes de que cargue cualquier etiqueta y se actualizan con `gtag('consent', 'update', {...})` cuando el visitante decide.
+
+No es una plataforma de gestión del consentimiento y no hace que un banner sea conforme a la ley. Es la interfaz entre tu decisión de consentimiento y las etiquetas de Google.
+
+## Asigna finalidades, no proveedores
+
+La mayoría de las implementaciones fallan al conectar una lista de proveedores a los flags. Un modelo más limpio —el que usa Track— deriva los flags de las finalidades del consentimiento:
+
+| Finalidad | analytics_storage | ad_storage | ad_user_data | ad_personalization |
+| --- | --- | --- | --- | --- |
+| solo necesarias | denied | denied | denied | denied |
+| + analítica | granted | denied | denied | denied |
+| + marketing | granted* | granted | granted | denied |
+| + marketing + personalización | granted* | granted | granted | granted |
+
+\* solo si la analítica también está otorgada.
+
+`ad_user_data` cubre el envío de datos de usuario a Google con fines publicitarios: es el flag que condiciona Enhanced Conversions y los datos proporcionados por el usuario. `ad_personalization` cubre la publicidad personalizada y el remarketing. Separarlos permite que un visitante acepte la medición sin aceptar la personalización, que es justo la distinción que importa a las autoridades de control como la AEPD.
+
+## Básico frente a avanzado
+
+Modo **básico**: nada de Google se carga hasta que el flag correspondiente está otorgado. Sin pings sin cookies, sin datos para el modelado. Fácil de explicar, fácil de defender.
+
+Modo **avanzado**: las etiquetas de Google se cargan de inmediato y envían pings sin cookies mientras el consentimiento está denegado, para que Google pueda modelar conversiones más adelante. Si esos pings son admisibles es una valoración jurídica de tu situación, no un ajuste técnico. Por eso Track mantiene el modo básico por defecto y solo activa el modo avanzado cuando hay una nota de revisión jurídica guardada junto a la política de consentimiento; el asistente no puede cambiarlo en silencio.
+
+## El lado servidor debe reflejar al navegador
+
+La entrega server-side toma la misma decisión por segunda vez, y debe llegar a la misma conclusión. En concreto:
+
+- El evento lleva la instantánea del consentimiento (finalidades otorgadas, origen, versión de la política, región, flag GPC) del momento en que se registró.
+- Las subidas de conversiones de clic de Google Ads incluyen `consent: { adUserData, adPersonalization }`, derivado de esa instantánea.
+- Las peticiones al Measurement Protocol de GA4 llevan `consent.ad_user_data` y `consent.ad_personalization`, y `non_personalized_ads` cuando el marketing no está otorgado.
+- Ningún evento se pone en cola para entregarlo más tarde «cuando llegue el consentimiento». El comportamiento previo al consentimiento se descarta.
+
+Si el navegador dice denegado y el servidor dice otorgado, uno de los dos miente; normalmente porque el servidor lee un flag a nivel de sesión que cambió después del evento. Tomar una instantánea por evento elimina esa clase de error.
+
+## Global Privacy Control y TCF
+
+GPC es una señal del navegador (`navigator.globalPrivacyControl`) que algunas jurisdicciones tratan como un opt-out. Una regla segura: cuando GPC está activado, trata marketing y personalización como denegados independientemente del banner, salvo que una política deliberada diga otra cosa para una región.
+
+Bajo TCF 2.2, las finalidades 1 (almacenamiento), 7 (medir el rendimiento de la publicidad) y 8 (medir el rendimiento del contenido) y los consentimientos por proveedor se asignan a los cuatro flags; la TC String se guarda con la instantánea del consentimiento como evidencia. Un adaptador de CMP lee los eventos de `__tcfapi`, de modo que el tracker se actualiza sin código a medida.
+
+## Pruébalo como lo haría una autoridad de control
+
+1. Carga el sitio con un perfil nuevo. Comprueba que no se dispara ninguna petición a Google antes de la decisión en el banner (modo básico).
+2. Recházalo todo. Confirma que no se guarda nada más allá del propio registro de consentimiento y que el servidor no ha recibido nada para analítica ni marketing.
+3. Acepta solo analítica. Confirma que los eventos de GA4 fluyen con `ad_user_data: DENIED`.
+4. Acéptalo todo y luego retira el consentimiento. Confirma que el siguiente evento se descarta y que no se produce ningún reenvío.
+5. Lee la instantánea del consentimiento de un evento de ejemplo en el depurador de eventos: ese es el artefacto que necesitarás si alguien pregunta.
+
+## Dónde ayuda el asistente
+
+El asistente de configuración registra la CMP, propone la asignación de finalidades y escribe la versión de la política de consentimiento. Lo que no hará es debilitar un valor por defecto: el modo avanzado, las regiones con opt-out o el marketing sin consentimiento exigen una decisión humana explícita con una nota, y esa decisión queda auditada.

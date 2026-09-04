@@ -1,0 +1,87 @@
+---
+title: "IDs de clic y ventanas de atribución: qué parámetros capturar, cuánto tiempo conservarlos y dónde guardarlos"
+description: "Una referencia de los IDs de clic publicitarios (gclid, gbraid, wbraid, dclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id, IDs de afiliación), cómo el consentimiento condiciona su captura, en qué se diferencian las ventanas de atribución de cada plataforma y cómo debería caducar el almacenamiento first-party."
+excerpt: "Todas las plataformas publicitarias estampan un ID de clic en la URL de la landing page. Capturarlo correctamente marca la diferencia entre una conversión de servidor emparejada y una anónima. Esta referencia recoge los parámetros, las reglas de consentimiento y la retención que encaja con la ventana de cada plataforma."
+category: "guides"
+translationGroupId: "click-ids-attribution-windows"
+slug: "click-ids-attribution-windows"
+topic: "attribution-analytics"
+platforms: ["google-ads", "google-marketing-platform", "microsoft", "meta", "tiktok", "linkedin", "reddit", "pinterest", "snapchat", "x", "taboola", "outbrain", "affiliate-postbacks"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Cada plataforma publicitaria estampa su propio ID de clic en la URL de la landing page —gclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id y los IDs de afiliación— y cada uno alimenta un campo de servidor concreto."
+  - "Los IDs de clic son datos personales con una finalidad publicitaria: el SDK solo los captura con consentimiento de marketing y los elimina de las URL cuando el consentimiento es solo de analítica."
+  - "Las ventanas de atribución varían según la plataforma; una conversión subida fuera de la ventana no es un error de API, simplemente no se atribuye."
+  - "Los IDs viven first-party en _ts_cid durante el TTL de IDs de clic del sitio, se borran al retirar el consentimiento de marketing y se limpian de page_location y referrer antes de guardarse."
+tags: ["ids-de-clic", "atribución", "gclid", "consentimiento"]
+author: "track-site-editorial"
+publishedAt: "2026-08-25"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tabla de parámetros de ID de clic publicitarios y sus plataformas"
+sources:
+  - title: "Google Ads Help — About auto-tagging"
+    url: "https://support.google.com/google-ads/answer/3095550"
+  - title: "Meta for Developers — fbc and fbp parameters"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc"
+legalNotice: false
+---
+
+## La lista de parámetros
+
+| Parámetro | Plataforma | Campo de servidor que alimenta | Notas |
+| --- | --- | --- | --- |
+| `gclid` | Google Ads (búsqueda, shopping, display) | `gclid` en las subidas de conversiones de clic | sustituido por `gbraid`/`wbraid` en campañas de apps iOS |
+| `gbraid`, `wbraid` | Google Ads (variantes de privacidad de iOS) | misma subida, campos alternativos | mutuamente excluyentes con gclid |
+| `dclid` | Campaign Manager 360 / DV360 | `dclid` en las conversiones offline de Floodlight | |
+| `msclkid` | Microsoft Advertising | `userData.msclkid` | |
+| `fbclid` | Meta | `user_data.fbc` como `fb.1.<timestamp>.<fbclid>` | el píxel escribe el mismo valor en `_fbc` |
+| `ttclid` | TikTok | `user.ttclid` | |
+| `li_fat_id` | LinkedIn | `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` | también lo establece el Insight Tag |
+| `rdt_cid` | Reddit | `click_id` | |
+| `epik` | Pinterest | `user_data.click_id` | |
+| `ScCid` | Snapchat | `user_data.sc_click_id` | distingue mayúsculas y minúsculas |
+| `twclid` | X | `twclid` | |
+| `tblci` | Taboola | `click-id` en la acción S2S | obligatorio; sin ID de clic no hay conversión |
+| `ob_click_id` (`dicbo`) | Outbrain | `ob_click_id` | |
+| `irclickid` | Impact | `ClickId` en el postback | |
+| `cjevent` | CJ | `CJEVENT` | |
+| `awc` | Awin | `cks` | |
+| `tduid` | Tradedoubler | `tduid` | |
+| `clickref` / `pclickid` | Partnerize, genérico | según el preset | |
+| `ranMID`/`ranSiteID` | Rakuten | según el preset | |
+
+El SDK de Track reconoce todos ellos y registra cada uno bajo su propio nombre en el evento, de modo que el conector de cada plataforma encuentra exactamente el ID que necesita.
+
+## El consentimiento condiciona la captura
+
+Un ID de clic vincula la sesión de una persona con un clic publicitario; es un dato personal y sirve a una finalidad publicitaria. Por eso el SDK solo captura IDs de clic cuando la finalidad de marketing está otorgada. Si el consentimiento llega después de aterrizar (el visitante pulsa «aceptar» en la segunda página), los IDs de la URL de la landing page se capturan para los eventos posteriores a la decisión de consentimiento, nunca para los anteriores.
+
+Con consentimiento solo de analítica, los IDs se eliminan de la URL antes de enviarla al collector, de modo que tampoco se filtran a los datos de páginas vistas.
+
+## Las ventanas de atribución varían
+
+Las plataformas solo cuentan una conversión si se produce dentro de su ventana tras el clic. Valores por defecto habituales, todos configurables en la interfaz de cada plataforma:
+
+- Google Ads: ventana de clic de 30 días por acción de conversión (de 1 a 90 días)
+- Meta: 7 días tras el clic, 1 día tras la visualización
+- Microsoft: 30 días tras el clic (de 1 a 90 días)
+- TikTok: 7 días tras el clic, 1 día tras la visualización
+- LinkedIn: 30 días tras el clic, 7 días tras la visualización; las subidas por API se aceptan durante 90 días
+- Pinterest: 30 días tras el clic, 30 días tras la interacción, 1 día tras la visualización
+- Snapchat: 28 días tras el swipe-up, 1 día tras la visualización
+- Redes de afiliación: normalmente 30 días, definidos por programa
+
+Subir una conversión fuera de la ventana no es un error a nivel de API; simplemente no se atribuye. El evento sigue contando en tus propios informes.
+
+## Almacenamiento y caducidad
+
+Los IDs de clic capturados en la landing page se conservan first-party en el navegador bajo `_ts_cid` (localStorage), solo mientras la finalidad de marketing esté otorgada y durante el TTL de IDs de clic del sitio: 90 días por defecto, un techo razonable teniendo en cuenta las ventanas más largas de arriba. Cada evento posterior de la visita los lleva, un ID más reciente de la misma plataforma sustituye al anterior, y retirar el consentimiento de marketing vacía el almacén de inmediato. El límite de 7 días de Safari al almacenamiento escrito por script también se aplica a este almacén.
+
+Los eventos server-side del mismo pedido los reciben cuando el router empareja una compra verificada de la tienda con la compra del navegador que lleva el mismo ID de pedido. En el almacén de eventos, los IDs de clic se eliminan al terminar la ventana de retención de IDs de clic, y el flujo de supresión por solicitud de derechos (DSAR) los elimina junto con el resto de datos del visitante.
+
+## Higiene de la URL de la landing page
+
+Los IDs de clic en la URL de la landing page son útiles; los IDs de clic en tus informes de analítica son ruido y una exposición en materia de privacidad. El collector limpia todos los IDs de clic conocidos de `page_location` y `referrer` antes de guardarlos y antes de entregarlos a los destinos de analítica, pero los conserva como campos separados para los conectores publicitarios que los necesitan.

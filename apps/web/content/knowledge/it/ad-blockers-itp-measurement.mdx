@@ -1,0 +1,67 @@
+---
+title: "Ad blocker, ITP e perdita di misurazione: cosa manca davvero e cosa si può recuperare"
+description: "Uno sguardo lucido alle tre fonti di perdita di misurazione — content blocker, protezione anti-tracciamento del browser e rifiuto del consenso — quanto pesa ciascuna, quale recupera un setup first-party server-side e quale non deve recuperare."
+excerpt: "I team spesso mettono “ad blocker” e “consenso” nello stesso calderone dei dati persi. Sono problemi diversi con soluzioni diverse, e uno dei due non è affatto un problema da risolvere. Ecco come distinguerli e cosa aspettarti da un setup first-party."
+category: "guides"
+translationGroupId: "ad-blockers-itp-measurement"
+slug: "ad-blockers-itp-measurement"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Content blocker, protezione anti-tracciamento del browser e rifiuto del consenso sono tre perdite diverse con soluzioni diverse — e il rifiuto del consenso non è una perdita da correggere."
+  - "Misura il tuo gap: confronta le visualizzazioni di pagina accettate dal collector con il conteggio del tag del vendor, leggi la quota di rifiuti nella pagina del consenso e il rapporto di visitatori di ritorno per browser."
+  - "Un setup first-party server-side recupera gli eventi con consenso che i blocker basati su liste scartano, consegna dal server acquisti e lead confermati e ritenta in caso di interruzioni del vendor."
+  - "Non rimuove il limite di Safari sullo storage scritto da script, non ripristina un consenso rifiutato, non inietta i pixel bloccati dei vendor e non sostituisce gli identificatori con il fingerprinting."
+tags: ["ad-blocker", "itp", "misurazione", "perdita-di-dati"]
+author: "track-site-editorial"
+publishedAt: "2026-08-17"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ripartizione della perdita di misurazione per causa"
+sources:
+  - title: "WebKit — Tracking Prevention Policy"
+    url: "https://webkit.org/tracking-prevention-policy/"
+  - title: "Mozilla — Enhanced Tracking Protection"
+    url: "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+legalNotice: false
+---
+
+## Tre perdite diverse
+
+**I content blocker** (uBlock Origin, AdGuard, Brave Shields, blocker a livello DNS) confrontano gli hostname delle richieste e gli URL degli script con liste pubbliche. `connect.facebook.net`, `googletagmanager.com` e `analytics.google.com` sono in quelle liste; il sottodominio del sito stesso no. Il blocco avviene prima che qualsiasi codice venga eseguito, quindi nulla nella pagina può dirti che è successo — il visitatore semplicemente non compare.
+
+**La protezione anti-tracciamento del browser** (Safari ITP, Firefox ETP, Brave) non blocca le richieste verso host first-party; limita lo *stato*: i cookie di terze parti vengono partizionati o bloccati, i cookie scritti da script scadono dopo 7 giorni e anche i cookie impostati tramite un CNAME verso un indirizzo di terze parti hanno un tetto. Il visitatore compare, ma come nuovo visitatore più spesso di quanto accada nella realtà.
+
+**Il rifiuto del consenso** è il visitatore che dice no. Non c'è nulla di rotto a livello tecnico; i dati non devono essere raccolti. Un setup che “recupera” questa perdita non è misurazione, è una violazione.
+
+## Quanto pesa ciascuna
+
+Dipende dal pubblico. Il pubblico tecnico e più giovane — in Germania, per esempio — mostra tassi di content blocker ben sopra la media globale; la quota di Safari determina gli effetti dell'ITP; i tassi di consenso dipendono dal design della CMP e dalla fiducia nel sito. Invece di citare medie di settore, misura le tue: confronta le visualizzazioni di pagina accettate dal collector (pagina Eventi, per origine) con il conteggio delle visualizzazioni che il tag del vendor riporta per lo stesso periodo — il divario è la tua perdita da content blocker sull'host di quel vendor. La pagina del consenso mostra direttamente la quota di rifiuti, e il rapporto di visitatori di ritorno per browser nel tuo strumento di analytics evidenzia l'effetto dell'ITP.
+
+## Cosa recupera un setup first-party server-side
+
+- **Eventi con consenso bloccati dai blocker basati su liste.** L'SDK viene caricato dal tuo sottodominio e invia al tuo collector; i blocker non lo riconoscono. L'evento con consenso raggiunge il tuo collector e, da lì, le API server dei vendor. La qualità del match dipende da quali identificatori il consenso ha permesso.
+- **Consegna server-side di ciò che il browser non ha potuto inviare.** Acquisti e lead confermati dal negozio o dal server vengono consegnati anche se il pixel del vendor non si è mai caricato.
+- **Interruzioni dei vendor ed errori transitori.** Il worker ritenta; il browser non l'ha mai fatto.
+
+Cosa non cambia: l'ID anonimo viene scritto dall'SDK con consenso analytics o marketing, e Safari continua a limitare a sette giorni lo storage scritto da script. Oltre quel limite, il riconoscimento dei visitatori di ritorno su Safari resta limitato; Track non lo aggira.
+
+## Cosa non deve recuperare
+
+- **Il consenso rifiutato.** Nessun click ID, nessun identificatore, nessuna destinazione marketing. Il router lo applica evento per evento; non è una configurazione che si può disattivare.
+- **I pixel bloccati dei vendor in quanto tali.** Se il visitatore blocca `fbevents.js`, il lato browser di Meta resta bloccato. Il percorso server riceve l'evento con consenso — questo è il design — ma non inietta il pixel per un'altra via.
+- **Il fingerprinting per sostituire gli identificatori.** Non implementato, non configurabile. Ciò che è sconosciuto resta sconosciuto.
+
+## Leggere con onestà l'“Event Match Quality” dei vendor
+
+I vendor assegnano un punteggio in base a quanti identificatori porta ogni evento server. Dopo il passaggio al server-side il punteggio spesso sale, perché ora è inclusa l'e-mail con hash proveniente dal sistema ordini. È un miglioramento reale per gli acquisti con consenso. Non è la prova che vengano tracciate più persone: la pagina del consenso mostra la stessa quota di rifiuti di prima.
+
+## Passi pratici
+
+1. Metti collector e SDK su un sottodominio first-party (vedi la guida ai domini first-party).
+2. Invia acquisti e lead dal server con lo stesso ID evento del browser.
+3. Confronta i conteggi per browser nella pagina della qualità dei dati; aspettati che il divario si riduca per Chrome con blocker e per Firefox, e che il riconoscimento dei visitatori di ritorno migliori su Safari.
+4. Lascia in pace il tasso di consenso — o miglioralo con un banner più chiaro, mai con la tecnologia.

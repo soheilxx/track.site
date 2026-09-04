@@ -1,0 +1,70 @@
+---
+title: "Tracking Shopify che sopravvive al checkout ospitato: web pixel, webhook degli ordini verificati e abbinamento per ID ordine"
+description: "Perché uno script del tema non vede il checkout di Shopify, come collaborano la web pixel extension di Track e i webhook orders/paid firmati, cosa verifica il collector e come l'acquisto server eredita il consenso e i click ID del cliente."
+excerpt: "Su Shopify il checkout è di Shopify, non tuo. Il setup onesto è un web pixel per il lato browser e webhook degli ordini verificati per la verità, abbinati per ID ordine così che il consenso venga rispettato e i vendor contino una sola volta."
+category: "integrations"
+translationGroupId: "shopify-server-side-purchases"
+slug: "shopify-server-side-purchases"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopify"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Shopify ospita il checkout, quindi uno script del tema non può vedere l'acquisto; la web pixel extension copre il lato browser e legge il consenso dalla Customer Privacy API."
+  - "I webhook orders/paid e refunds/create vengono verificati tramite firma HMAC-SHA256 e dominio dello shop e diventano eventi purchase e refund con sorgente verificata e ID deterministici."
+  - "Il router abbina l'acquisto server all'acquisto browser tramite l'ID ordine, così eredita il record del consenso, l'ID anonimo, i click ID e gli identificatori con hash."
+  - "Senza un acquisto browser il record server resta operativo e non raggiunge mai le piattaforme pubblicitarie: un cliente che paga non viene dato per consenziente."
+tags: ["shopify", "web-pixels", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-08"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Web pixel di Shopify e webhook dell'ordine che alimentano un unico record di acquisto"
+sources:
+  - title: "Shopify — Web Pixels API"
+    url: "https://shopify.dev/docs/api/web-pixels-api"
+  - title: "Shopify — Webhooks: verify a webhook"
+    url: "https://shopify.dev/docs/apps/build/webhooks/subscribe/https#step-5-verify-the-webhook"
+legalNotice: false
+---
+
+## Il vincolo
+
+Le pagine di checkout e di ringraziamento di Shopify sono ospitate da Shopify. Uno script in `theme.liquid` viene eseguito nella vetrina ma non lì, quindi un setup basato solo sul tema perde l'acquisto oppure si affida alla casella degli script aggiuntivi, ormai deprecata. Due cose la sostituiscono:
+
+1. **Una web pixel extension** — codice in sandbox che Shopify esegue su ogni pagina, checkout compreso, con accesso agli eventi cliente standard e alla Customer Privacy API.
+2. **Webhook degli ordini** — Shopify invia l'ordine al tuo endpoint quando viene pagato, firmato con un segreto che conoscete solo tu e Shopify.
+
+Track fornisce entrambi: `integrations/shopify/web-pixel` e un ricevitore con verifica nel collector.
+
+## Il web pixel
+
+Il pixel si iscrive a `page_viewed`, `product_viewed`, `product_added_to_cart`, `checkout_started`, `payment_info_submitted` e `checkout_completed`, li mappa sugli eventi standard e li invia all'endpoint browser del collector. Legge il consenso dalla Customer Privacy API di Shopify: `analyticsProcessingAllowed` diventa la finalità analytics, `marketingAllowed` la finalità marketing, e un aggiornamento `visitorConsentCollected` modifica gli eventi successivi. Dall'interno della sandbox nulla viene replicato verso i tag dei vendor; i vendor ricevono gli eventi server-side tramite le destinazioni configurate.
+
+L'evento `checkout_completed` porta con sé l'ID ordine di Shopify. È proprio quell'ID a rendere onesto il passo successivo.
+
+## Il webhook verificato
+
+Nell'admin di Shopify, in Impostazioni → Notifiche → Webhook, crei `orders/paid` e `refunds/create` puntando all'URL webhook della connessione — un URL univoco per il tuo sito con un token non indovinabile. Shopify firma ogni consegna con `X-Shopify-Hmac-Sha256`, l'HMAC-SHA256 in base64 del body grezzo calcolato con il segreto di firma mostrato sotto l'elenco dei webhook. Quel segreto lo salvi nel vault di Track; il collector ricalcola l'HMAC, lo confronta in tempo costante e verifica anche `X-Shopify-Shop-Domain` rispetto al dominio collegato.
+
+Un `orders/paid` accettato diventa un `purchase` con `source: shopify` e `source_verified: true`: ID ordine, valuta, totali, imposte, spedizione, codice sconto, righe con ID variante e l'e-mail, il telefono e l'indirizzo del cliente come dati di abbinamento grezzi che il router sottopone a hash. `orders/create` viene accettato solo se l'ordine è già pagato; `refunds/create` diventa un `refund` con gli importi delle transazioni rimborsate. Le riconsegne producono lo stesso ID evento deterministico e vengono scartate dalla protezione anti-duplicati.
+
+## Abbinamento per ID ordine
+
+Il webhook non sa nulla del consenso. L'acquisto del pixel sì. Quando arriva l'acquisto server, il router cerca un acquisto browser con lo stesso ID ordine negli ultimi 30 giorni e, se lo trova, l'evento server **eredita** il suo record del consenso, l'ID anonimo, i click ID e gli identificatori con hash, con una provenienza che contrassegna il consenso come derivato dall'evento browser. Il record server verificato sostituisce poi l'osservazione del browser nella tabella delle conversioni, ed entrambi gli eventi vengono instradati: i vendor che deduplicano sull'ID evento ricevono `purchase:<ID ordine>` da entrambi i percorsi e contano una sola volta.
+
+Se non esiste alcun acquisto browser — il cliente ha rifiutato o ha bloccato il pixel — l'acquisto server viene memorizzato come record operativo e raggiunge solo le destinazioni che non richiedono consenso. Non viene mai inviato alle piattaforme pubblicitarie partendo dal presupposto che un cliente che paga abbia per forza prestato il consenso.
+
+## Configurazione
+
+1. Sito → Connessione shop → Shopify: inserisci `tuo-negozio.myshopify.com`, salva, copia l'URL webhook.
+2. Crea i due webhook nell'admin di Shopify in formato JSON; copia il segreto di firma nella connessione.
+3. Distribuisci la web pixel extension con il tuo tracking ID (e un host first-party per il collector, se ne usi uno).
+4. Effettua un ordine di prova. La connessione mostra *connessa* dopo il primo webhook verificato; l'Event Debugger mostra l'acquisto del pixel e l'acquisto shopify con lo stesso ID ordine, e il monitor delle destinazioni mostra una consegna per destinazione e percorso.
+
+## Cosa controllare ogni mese
+
+- Errori di firma nell'ultimo errore della connessione: un segreto ruotato in Shopify senza aggiornare il vault.
+- Ordini con acquisto server ma senza acquisto browser: la quota ti dice quanti clienti rifiutano o bloccano, ed è il tetto massimo per l'attribuzione pubblicitaria.
+- Copertura dei rimborsi: `refunds/create` deve essere sottoscritto, altrimenti i valori presso i vendor derivano verso l'alto.

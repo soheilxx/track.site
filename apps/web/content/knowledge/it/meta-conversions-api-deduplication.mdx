@@ -1,0 +1,94 @@
+---
+title: "Meta Conversions API nella pratica: event_id, dati di abbinamento con hash e codici evento di prova"
+description: "Come far funzionare in parallelo il Pixel di Meta e la Conversions API senza conteggi doppi — con i campi esatti, le regole di hashing e il flusso degli eventi di prova dalla documentazione di Meta."
+excerpt: "Meta conta un evento browser e un evento server come uno solo quando entrambi portano lo stesso event_id e lo stesso event_name. Questa guida illustra il payload, le regole di hashing per user_data e come verificare le consegne con un codice evento di prova."
+category: "integrations"
+translationGroupId: "meta-conversions-api-deduplication"
+slug: "meta-conversions-api-deduplication"
+topic: "pixel-platform-integrations"
+platforms: ["meta"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Meta unisce un evento del pixel e un evento del server solo quando entrambi condividono event_id ed event_name entro la finestra di deduplicazione: genera l'ID una sola volta e passalo a entrambi i percorsi."
+  - "Gli identificatori in user_data vengono normalizzati e poi sottoposti a hash SHA-256; fbc, fbp, IP e user agent restano in chiaro, e fbc/fbp vengono acquisiti solo dopo il consenso al marketing."
+  - "La modalità ibrida dà a Meta l'unione delle chiavi di abbinamento: e-mail e telefono con hash dal sistema degli ordini più fbp/fbc dal browser."
+  - "Un test_event_code tiene gli acquisti di prova nella scheda Eventi di prova e fuori dai report; ogni tentativo e ogni codice di errore è visibile nell'Event Debugger."
+tags: ["meta", "conversions-api", "deduplicazione", "hashing"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Payload della Meta Conversions API con event_id evidenziato"
+sources:
+  - title: "Meta — Conversions API: Using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Meta — Customer information parameters (hashing)"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/customer-information-parameters"
+legalNotice: false
+---
+
+## L'endpoint in una riga
+
+`POST https://graph.facebook.com/{version}/{pixel_id}/events` con un token di accesso di un utente di sistema e un body JSON che contiene un array `data` di eventi. Track fissa centralmente la versione della Graph API (v25.0 al momento della stesura) e registra quando l'endpoint è stato verificato l'ultima volta rispetto alla documentazione di Meta.
+
+## I campi che contano
+
+Ogni oggetto evento contiene:
+
+- `event_name` — `Purchase`, `Lead`, `AddToCart`, `InitiateCheckout`, `CompleteRegistration`, `Subscribe`, `StartTrial`, `Contact`, `Schedule`, `Search`, `ViewContent`, `PageView` oppure un nome personalizzato
+- `event_time` — secondi Unix, al massimo di sette giorni prima
+- `event_id` — la tua chiave di deduplicazione
+- `event_source_url` — l'URL della pagina
+- `action_source` — `website` per gli eventi web
+- `user_data` — dati di abbinamento (vedi sotto)
+- `custom_data` — `value`, `currency`, `content_ids`, `contents`, `order_id`, `num_items`
+
+Opzionale ma prezioso in fase di test: `test_event_code` al livello superiore del body. Gli eventi inviati con un codice di prova compaiono in Gestione eventi → Eventi di prova e non vengono conteggiati nei report.
+
+## Deduplicazione: stesso event_id, stesso event_name
+
+Meta unisce un evento del pixel e un evento del server quando entrambi condividono `event_id` **ed** `event_name` e arrivano entro una finestra dello stesso ordine di grandezza dell'evento stesso (Meta documenta 48 ore). Due conseguenze:
+
+1. Genera l'ID **una sola volta**, nel momento in cui avviene l'azione, e passalo sia alla chiamata del pixel (`fbq('track', 'Purchase', {...}, { eventID: id })`) sia al payload del server.
+2. Mantieni identici i nomi degli eventi su entrambi i percorsi. Un `Purchase` dal browser e un `purchase` dal server sono due eventi.
+
+Track lo fa per costruzione: l'SDK genera un ID dell'evento sorgente, replica la chiamata del pixel con quell'ID e il worker invia lo stesso ID in `event_id`.
+
+## user_data: cosa sottoporre a hash e come
+
+Meta richiede l'hashing SHA-256 degli identificatori personali dopo la normalizzazione:
+
+| Campo | Normalizzazione prima dell'hashing |
+| --- | --- |
+| `em` | senza spazi ai margini, tutto minuscolo |
+| `ph` | solo cifre, prefisso internazionale incluso, senza zeri iniziali né segno più |
+| `fn`, `ln` | minuscolo, senza spazi ai margini, solo lettere |
+| `ct` | minuscolo, senza spazi né punteggiatura |
+| `zp` | minuscolo, le prime cinque cifre per gli Stati Uniti |
+| `country` | codice ISO a due lettere, minuscolo |
+| `external_id` | qualsiasi ID stabile, con hash |
+
+Non sottoposti a hash: `client_ip_address`, `client_user_agent`, `fbc`, `fbp`. Il valore `fbc` si costruisce dal parametro URL `fbclid` come `fb.1.{timestamp}.{fbclid}`; `fbp` è il cookie `_fbp` impostato dal pixel. L'SDK di Track li acquisisce entrambi solo dopo il consenso al marketing e li inoltra esclusivamente a Meta.
+
+## Cosa premia la «qualità dell'abbinamento degli eventi»
+
+Meta valuta ogni evento in base a quante chiavi di abbinamento ha ricevuto. Quelle con l'effetto maggiore sono e-mail con hash, telefono con hash, `fbp`/`fbc` ed `external_id`. Gli eventi server provenienti da un sistema degli ordini portano di solito e-mail e telefono; gli eventi browser portano `fbp` e `fbc`. Inviare entrambi i percorsi con lo stesso `event_id` dà quindi a Meta l'unione delle chiavi — il motivo pratico per cui la modalità ibrida rende più di ciascun percorso preso da solo.
+
+## Il flusso di test
+
+1. In Gestione eventi apri il set di dati → **Eventi di prova** e copia il codice (per esempio `TEST12345`).
+2. Salvalo nelle impostazioni della destinazione; Track lo allega solo finché la destinazione è in modalità di test.
+3. Invia un acquisto di prova dalla procedura guidata. Il worker lo consegna e mostra la risposta di Meta (`events_received: 1` e un `fbtrace_id`).
+4. Conferma l'evento nella scheda Eventi di prova con i parametri e le chiavi di abbinamento attesi.
+5. Disattiva la modalità di test; da questo momento gli eventi vengono conteggiati.
+
+## Le classi di errore che incontrerai
+
+- **190 / OAuthException** — token non valido o scaduto: ruota il token dell'utente di sistema
+- **100 con sottocodice 2804** — parametro non valido: di solito un hash malformato o un `action_source` mancante
+- **4 / 17 / 32 / 613** — rate limit: Track attende con jitter e riprova
+- **5xx** — temporaneo: viene ritentato; il circuit breaker mette in pausa la destinazione se l'errore persiste
+
+Ogni tentativo, inclusa l'anteprima oscurata del payload, è visibile nell'Event Debugger — ed è da lì che parti quando manca un acquisto.

@@ -1,0 +1,71 @@
+---
+title: "Una política de retención para los datos de tracking: nueve tipos de datos, valores predeterminados razonables y cómo se aplica la caducidad"
+description: "Qué tipos de datos de tracking existen, por qué cada uno tiene una vida útil distinta, los periodos predeterminados con los que se entrega Track, cómo sobrescribirlos por organización o por sitio y cómo los jobs de caducidad demuestran que se han ejecutado."
+excerpt: "Conservarlo todo para siempre es la decisión de privacidad más cara que puedes tomar. Una política de retención nombra cada tipo de datos, le da una razón para existir y una fecha para caducar. Estos son los nueve tipos, los valores predeterminados y cómo se aplican."
+category: "privacy"
+translationGroupId: "data-retention-policy-tracking"
+slug: "data-retention-policy-tracking"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Nueve tipos de datos — eventos, IDs de clic, instantáneas de consentimiento, intentos de entrega, registro de auditoría, transcripciones de chat, archivo de datos sin procesar, registros de solicitudes de derechos, hashes de IP — reciben cada uno su propio periodo predeterminado con una razón declarada."
+  - "Los periodos se definen por organización y pueden sobrescribirse por sitio para eventos e IDs de clic; el periodo efectivo es la sobrescritura del sitio, después el valor de la organización y después el predeterminado."
+  - "Un job de retención diario descarta las particiones caducadas, retira los IDs de clic de los eventos más antiguos y registra las filas eliminadas por tipo de datos como prueba."
+  - "La retención no es anonimización, no es la retención del proveedor y no sustituye al consentimiento."
+tags: ["retención", "rgpd", "minimización-de-datos", "política"]
+author: "track-site-editorial"
+publishedAt: "2026-08-19"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Periodos de retención por tipo de datos en una línea de tiempo"
+sources:
+  - title: "GDPR Article 5 — Principles relating to processing of personal data"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e1807-1-1"
+  - title: "EDPB — Guidelines on data protection by design and by default"
+    url: "https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-42019-article-25-data-protection-design-and_en"
+legalNotice: true
+---
+
+## Los nueve tipos de datos y sus valores predeterminados
+
+| Tipo de datos | Predeterminado | Por qué tanto tiempo |
+| --- | --- | --- |
+| events | 395 días | trece meses permiten la comparación interanual con un mes de solapamiento |
+| click_ids | 90 días | la ventana de atribución más larga de uso habitual |
+| consent_snapshots | 1.095 días | prueba de la licitud del tratamiento durante el plazo de prescripción que aplican la mayoría de los operadores |
+| delivery_attempts | 90 días | suficiente para resolver discrepancias con los proveedores y la conciliación mensual |
+| audit_log | 730 días | historial de configuración y accesos para dos ciclos anuales de revisión |
+| chat_transcripts | 30 días | las conversaciones con el asistente de IA son operativas, no registros |
+| raw_archive | 14 días | búfer de reproducción para incidentes; contiene payloads sin procesar |
+| dsar_records | 1.095 días | demuestra que las solicitudes se atendieron |
+| ip_hashes | 30 días | solo detección de abusos; el salt rota, así que los hashes antiguos son inutilizables de todos modos |
+
+Cada periodo es un valor predeterminado, no una recomendación para todas las empresas. Un comercio con una política de devoluciones de 14 días puede reducir los intentos de entrega a 30 días; una empresa B2B con ciclos de venta de 9 meses puede ampliar los IDs de clic hasta esa duración si las ventanas de sus plataformas publicitarias llegan realmente tan lejos. Ampliar un periodo más allá del valor predeterminado es una decisión que conviene documentar en tu registro de actividades de tratamiento; el cambio en sí se escribe en el registro de auditoría.
+
+## Ámbito y precedencia
+
+La retención se define por organización y puede sobrescribirse por sitio para eventos e IDs de clic; los intentos de entrega, el registro de auditoría y las transcripciones de chat se aplican a toda la organización. El periodo efectivo es la sobrescritura del sitio si existe; si no, el valor de la organización; si no, el predeterminado. Acortar un periodo surte efecto en la siguiente ejecución diaria; ampliarlo solo afecta a los registros que aún no han caducado: no hay resurrección.
+
+## Aplicación
+
+- Un **job de retención** se ejecuta una vez al día. Para los eventos aplica el periodo efectivo por sitio y elimina las filas más antiguas; el almacén de eventos está particionado por meses, así que la mayor parte de la caducidad consiste en descartar una partición en lugar de borrar filas.
+- Pasada la ventana de los IDs de clic, **los IDs de clic y los IDs de proveedor se eliminan** de los eventos que por lo demás se conservan, de modo que un historial de eventos de trece meses no arrastre trece meses de identificadores de atribución.
+- Los intentos de entrega, el registro de auditoría y las transcripciones de chat se eliminan por organización con el periodo de la organización; las claves de deduplicación, los nonces y los puntos de contacto de atribución caducan según sus propios calendarios.
+- Cada ejecución **registra el número de filas eliminadas** por tipo de datos; el log del worker es la prueba de que la caducidad se ejecutó.
+- Las **copias de seguridad** siguen los mismos periodos más el ciclo de backup; la página de seguridad indica la retención de las copias de seguridad para que la vida útil total sea conocible.
+
+## Lo que la retención no es
+
+- No es anonimización. Los agregados calculados a partir de eventos (recuentos diarios, Health Scores, tasas de embudo) se conservan más allá del periodo de los eventos porque no contienen datos personales; la página de la política los nombra explícitamente.
+- No es la retención del proveedor. Lo que Meta o Google conservan se rige por sus condiciones; la página de subencargados enlaza a la documentación de retención de cada proveedor.
+- No sustituye al consentimiento. Conservar durante poco tiempo datos recogidos sin base jurídica no convierte la recogida en lícita.
+
+## Configuración
+
+1. Abre Privacidad → Retención y revisa los valores predeterminados frente a tus necesidades reales de reporting y atribución.
+2. Acorta todo lo que no puedas justificar; amplía solo con una razón por escrito.
+3. Confirma las sobrescrituras de sitio para los sitios en jurisdicciones distintas o con modelos de negocio diferentes.
+4. Comprueba la página de estado después de la primera ejecución programada; las entradas del job son tu prueba.

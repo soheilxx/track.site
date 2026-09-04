@@ -1,0 +1,75 @@
+---
+title: "Domaines de tracking first-party : vérification, ce qu'ITP continue de limiter et ce qu'un domaine personnalisé ne corrige pas"
+description: "Pourquoi le collecteur et le SDK devraient être joignables via un sous-domaine de votre propre site, comment fonctionnent la vérification du domaine et le contrôle CNAME, quelles limites des navigateurs s'appliquent toujours aux cookies écrits par script, et ce qu'il faut ajouter à votre Content Security Policy."
+excerpt: "Servir le tracker via t.votredomaine.fr plutôt que via l'hôte d'une plateforme garde les requêtes consenties hors des listes de blocage et des restrictions sur les cookies tiers. Voici la mise en place, les limites que Safari continue d'appliquer et la liste honnête de ce qu'un domaine personnalisé ne change pas."
+category: "guides"
+translationGroupId: "first-party-tracking-domains"
+slug: "first-party-tracking-domains"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "advanced"
+takeaways:
+  - "Un sous-domaine de tracking sur votre propre site garde les requêtes consenties hors des listes de blocage et des restrictions sur les cookies tiers, avec un seul hôte supplémentaire dans votre CSP."
+  - "Le domaine ne devient actif qu'après vérification par enregistrement DNS TXT, fichier ou balise meta, plus un contrôle CNAME réussi ; TLS est terminé à l'edge de la plateforme."
+  - "Le SDK n'écrit _ts_id, _ts_sid et _ts_cid qu'après le consentement correspondant, et le plafond de 7 jours de Safari sur le stockage écrit par script s'applique toujours — le domaine personnalisé protège la livraison, pas la durée de vie des identifiants."
+  - "Il ne rétablit pas les finalités refusées, ne rend pas les pixels des plateformes first-party et ne cache rien au visiteur."
+tags: ["first-party", "cname", "itp", "cookies"]
+author: "track-site-editorial"
+publishedAt: "2026-08-24"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Enregistrement DNS faisant pointer un sous-domaine de tracking vers le collecteur"
+sources:
+  - title: "WebKit — CNAME cloaking and bounce tracking defense"
+    url: "https://webkit.org/blog/11338/cname-cloaking-and-bounce-tracking-defense/"
+  - title: "MDN — Set-Cookie"
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"
+legalNotice: false
+---
+
+## Ce qu'un domaine first-party change
+
+Les requêtes vers `t.shop.example` sont same-site avec `shop.example`. Trois conséquences en découlent :
+
+1. **Les listes de blocage ne correspondent plus.** La plupart des bloqueurs de contenu filtrent sur les noms d'hôte ; un sous-domaine de votre propre site n'y figure pas. Il ne s'agit pas de contourner un choix de l'utilisateur — la décision de consentement conditionne toujours chaque finalité — mais de supprimer le blocage collatéral de requêtes first-party consenties.
+2. **Les restrictions sur les cookies tiers ne s'appliquent pas.** Les navigateurs qui cloisonnent ou bloquent les cookies tiers laissent le stockage same-site tranquille.
+3. **Votre politique de sécurité reste stricte.** Un seul hôte supplémentaire dans `script-src` et `connect-src`, aucun domaine de plateforme en wildcard pour le chemin du collecteur.
+
+## La mise en place
+
+- Ajoutez le domaine dans les paramètres du site. Track émet un **jeton de vérification** ; prouvez que vous contrôlez le domaine avec un enregistrement DNS TXT, un fichier sur le domaine ou une balise meta. Le domaine ne devient actif qu'une fois la vérification réussie, de sorte que personne ne peut faire pointer vers votre site un domaine qu'il ne contrôle pas.
+- Créez `t.shop.example` en **CNAME** vers l'hôte du collecteur affiché dans les paramètres. La page du domaine enregistre la date du dernier contrôle CNAME réussi.
+- **TLS** pour l'hôte de tracking est terminé par l'edge de la plateforme dès que le CNAME résout.
+- Mettez à jour votre **Content Security Policy** : `script-src` et `connect-src` ont besoin de l'hôte de tracking. Aucun `unsafe-inline` n'est nécessaire, car le loader est un script externe.
+- Le **loader du SDK** est ensuite servi via l'hôte de tracking, avec la configuration signée du site.
+
+## Ce que le SDK stocke, et ce qu'ITP continue de limiter
+
+Track écrit trois choses dans le navigateur, chacune uniquement après le consentement correspondant :
+
+| Clé | Finalité | Écrite lors de | Durée de vie |
+| --- | --- | --- | --- |
+| `_ts_id` (cookie, dupliqué dans localStorage) | identifiant de visiteur anonyme | consentement analytics ou marketing | jusqu'à 13 mois, ou la durée de conservation du site |
+| `_ts_sid` (session storage) | identifiant de session | consentement analytics ou marketing | 30 minutes glissantes |
+| `_ts_cid` (localStorage) | identifiants de clic de l'URL d'atterrissage | consentement marketing | TTL des identifiants de clic, 90 jours par défaut |
+
+Les identifiants de clic de l'URL d'atterrissage sont conservés dans localStorage sous `_ts_cid`, uniquement avec le consentement marketing et uniquement pendant la TTL des identifiants de clic du site (90 jours par défaut) ; ils sont attachés à chaque événement ultérieur de la visite et effacés lorsque le consentement marketing est retiré.
+
+Les deux identifiants sont écrits par JavaScript. L'Intelligent Tracking Prevention de Safari plafonne les cookies et le stockage **écrits par script** à 7 jours (24 heures lorsque l'URL d'atterrissage contenait un paramètre de tracking connu), et un domaine first-party ne lève pas ce plafond. Le collecteur ne pose pas de cookies via les réponses HTTP, si bien qu'un visiteur Safari qui revient après plus d'une semaine reçoit un nouvel identifiant anonyme. Firefox et Brave appliquent des heuristiques comparables ; Chrome conserve le stockage first-party jusqu'à son expiration complète.
+
+Le résumé honnête : le domaine personnalisé protège la **livraison des requêtes** ; il n'allonge pas la **durée de vie des identifiants** sur Safari.
+
+## Ce qu'un domaine first-party ne corrige pas
+
+- Il ne rétablit pas les finalités refusées. Sans consentement marketing, aucun identifiant de clic n'est capturé et aucune destination publicitaire ne reçoit d'événements, quel que soit le domaine.
+- Il ne rend pas les pixels des plateformes first-party. `fbevents.js` se charge toujours depuis Meta et pose `_fbp` ; seul le chemin du collecteur vous appartient.
+- Il ne cache rien au visiteur. L'hôte de tracking, la source du SDK et les endpoints du collecteur sont visibles dans les outils de développement, et la page de confidentialité les liste.
+
+## Liste de contrôle
+
+- [ ] Domaine vérifié (TXT, fichier ou balise meta) et contrôle CNAME réussi
+- [ ] CSP mise à jour pour `script-src` et `connect-src`
+- [ ] Le snippet référence l'hôte de tracking, pas la valeur par défaut de la plateforme
+- [ ] La page Qualité des données affiche des événements navigateur en provenance du nouvel hôte

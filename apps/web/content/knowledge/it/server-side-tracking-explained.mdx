@@ -1,0 +1,104 @@
+---
+title: "Server-side tracking spiegato: cosa cambia davvero quando gli eventi lasciano il browser"
+description: "Una spiegazione in parole semplici del server-side tracking: cos'è, cosa non risolve, perché il consenso continua ad applicarsi e come funziona la deduplicazione con il tag nel browser."
+excerpt: "Il server-side tracking sposta la consegna degli eventi dal browser del visitatore a un router server-side sotto il tuo controllo. Questa guida spiega cosa cambia, cosa resta uguale e dove nascono i malintesi più comuni."
+category: "guides"
+translationGroupId: "server-side-tracking-explained"
+slug: "server-side-tracking-explained"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "beginner"
+takeaways:
+  - "Il server-side tracking sposta la consegna degli eventi su un server che controlli tu; il browser continua a osservare il comportamento, leggere il consenso e acquisire i click ID."
+  - "Migliora l'affidabilità, invia acquisti autorevoli dal sistema degli ordini e ti dà il controllo su ogni payload — ma non cambia le regole sul consenso."
+  - "Il consenso viene valutato due volte, nel browser e sul server, e gli eventi precedenti al consenso vengono scartati, non riprodotti in seguito."
+  - "In modalità ibrida, un ID evento per azione condiviso da entrambi i percorsi, più l'ID ordine sugli acquisti, è ciò che permette ai vendor di contare una sola volta."
+featured: true
+tags: ["server-side", "fondamenti", "consenso", "deduplicazione"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Diagramma degli eventi che fluiscono dal browser e dal server attraverso un router verso le piattaforme pubblicitarie"
+sources:
+  - title: "Meta — Conversions API: using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Google Analytics — Measurement Protocol reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+legalNotice: true
+---
+
+## La versione in una frase
+
+Server-side tracking significa che il tuo sito web continua a registrare cosa fa un visitatore, ma la *consegna* di quelle informazioni alle piattaforme pubblicitarie e di analytics avviene da un server che controlli tu, invece che da uno script in esecuzione nel browser del visitatore.
+
+Questo singolo cambiamento ha conseguenze su affidabilità, qualità dei dati e privacy — alcune positive, altre spesso sopravvalutate. Questo articolo separa le une dalle altre.
+
+## Cosa si sposta, cosa resta
+
+| Resta nel browser | Si sposta sul server |
+| --- | --- |
+| Osservare clic, visualizzazioni di pagina, invii di form | Formattare gli eventi per ogni vendor |
+| Leggere lo stato del consenso dalla tua CMP | Applicare la policy del consenso una seconda volta |
+| Acquisire i click ID (`gclid`, `fbclid`, `ttclid`, …) dopo il consenso al marketing | Ritentare le consegne fallite, circuit breaking, gestione della dead-letter queue |
+| Caricare i tag dei vendor che vuoi mantenere (modalità ibrida) | Normalizzare e sottoporre a hash i dati di abbinamento |
+| | Deduplicare con l'ID ordine |
+
+Il browser ha ancora bisogno di un piccolo script — in Track è un unico snippet sotto i 30 KB gzip — perché qualcuno deve osservare il comportamento e leggere il consenso. Quello che elimini è la pila di script dei vendor e la pila di richieste di rete specifiche per ciascun vendor.
+
+## Perché i team lo fanno
+
+**Affidabilità.** Ad blocker, tracking prevention e reti mobili instabili fanno perdere una quota delle richieste del browser. Una richiesta server dal tuo router alla Conversions API di Meta o al Measurement Protocol di Google non dipende dal fatto che il dispositivo del visitatore resti sulla pagina.
+
+**Conversioni autorevoli.** Il browser vede una pagina di ringraziamento; il tuo server vede l'ordine. Inviare gli acquisti dal sistema degli ordini (webhook di Shopify, hook di WooCommerce, esportazione dal CRM) dà alle piattaforme la transazione realmente avvenuta, rimborsi successivi inclusi.
+
+**Controllo.** Ogni payload passa attraverso codice di tua proprietà. Puoi rimuovere campi, bloccare dati personali, garantire che un consenso dedotto non venga mai esportato e registrare una copia oscurata di ciò che è stato inviato.
+
+## Perché non risolve il consenso
+
+Il malinteso più comune: «i dati passano dal mio server, quindi le regole sul consenso non si applicano». Si applicano esattamente come prima. La questione giuridica è *se* puoi trattare e condividere i dati del visitatore per una finalità, non *quale macchina* li invia.
+
+Un'implementazione corretta valuta quindi il consenso due volte:
+
+1. Nel browser, prima che qualcosa venga memorizzato o che un tag di un vendor venga caricato.
+2. Sul server, prima di ogni consegna, usando lo snapshot del consenso che ha viaggiato insieme all'evento.
+
+Gli eventi privi della finalità richiesta devono essere scartati, non parcheggiati e riprodotti quando il consenso viene prestato in seguito. Riprodurre il comportamento precedente al consenso è esattamente ciò che le autorità di controllo, Garante privacy compreso, contestano in modo esplicito.
+
+## Deduplicazione: la parte che all'inizio sbagliano tutti
+
+Se per la stessa piattaforma usi *sia* il pixel nel browser *sia* l'API server (modalità ibrida), la piattaforma riceve due eventi per ogni azione. I vendor deduplicano su un ID evento che entrambi i percorsi devono condividere:
+
+- Meta: `event_id` nella Conversions API corrisponde a `eventID` nella chiamata del pixel
+- TikTok: `event_id` nella Events API corrisponde all'`event_id` del pixel
+- Pinterest e Snapchat: `event_id` / `client_dedup_id`
+- Microsoft: lo stesso `eventId` sul tag UET e nella Conversions API
+- LinkedIn: `eventId`
+
+La regola pratica: genera un ID per evento alla sorgente e passalo attraverso tutto. Gli acquisti portano in più l'ID ordine (`transaction_id` in GA4, `orderId` in Google Ads, `ordinal` in Campaign Manager), così anche se l'evento browser è andato perso il vendor può comunque unire sull'ordine.
+
+## Un'architettura minima che regge
+
+1. **Collector** — accetta batch dal browser e dal server, valida origini e chiavi sorgente, applica i rate limit e passa ogni batch a una coda durevole *prima* di rispondere con 202.
+2. **Worker** — normalizza in un unico schema, cerca dati personali, valuta la policy del consenso, memorizza l'evento, deduplica le conversioni per ID ordine e genera un messaggio di consegna per ogni destinazione.
+3. **Consegna** — mappa sul payload del vendor, lo valida, lo invia, classifica la risposta (autenticazione, rate limit, payload non valido, errore temporaneo), ritenta con backoff o parcheggia in una dead-letter queue.
+4. **Debugger** — mostra ogni evento con il suo snapshot del consenso, la decisione di routing e il payload del vendor oscurato.
+
+Se manca uno di questi elementi, prima o poi non sarai in grado di rispondere alla domanda «perché questo acquisto non compare nella piattaforma X?» — ed è la domanda che decide se il progetto godrà di fiducia.
+
+## Checklist prima di passare una destinazione al server-side
+
+- [ ] Il consenso viene valutato nel browser e sul server, senza replay a posteriori
+- [ ] Un ID evento per azione condiviso dal percorso browser e dal percorso server
+- [ ] ID ordine su ogni acquisto e rimborso
+- [ ] Dati di abbinamento (e-mail, telefono) normalizzati e con hash SHA-256 prima che lascino i tuoi sistemi
+- [ ] Click ID acquisiti solo dopo il consenso al marketing e inoltrati solo alla piattaforma a cui appartengono
+- [ ] Un evento di prova che raggiunge la vista degli eventi di prova del vendor
+- [ ] Retry, una dead-letter queue e un modo per fare replay
+- [ ] Finestre di conservazione per eventi, click ID e log di consegna
+
+## Cosa aspettarsi dopo il passaggio
+
+Di solito i team vedono i conteggi delle conversioni salire di una quota apprezzabile una volta aggiunta la consegna dal server — è il traffico browser che prima andava perso, non nuovi clienti. Aspettati che le piattaforme riportino metriche di *qualità dell'abbinamento degli eventi*; migliorano con e-mail e telefono con hash dal sistema degli ordini. E aspettati qualche settimana in cui percorso browser e percorso server girano fianco a fianco mentre confronti i numeri nel debugger.

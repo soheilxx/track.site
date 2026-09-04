@@ -1,0 +1,88 @@
+---
+title: "LinkedIn Conversions API pour le B2B : règles de conversion, li_fat_id et e-mail haché"
+description: "Envoyer des conversions B2B à la Conversions API de LinkedIn — l'endpoint conversionEvents, l'en-tête LinkedIn-Version, les URN de règles de conversion, les identifiants utilisateur, la déduplication par eventId avec l'Insight Tag et la fenêtre de 90 jours."
+excerpt: "La Conversions API de LinkedIn rattache les événements serveur aux campagnes via li_fat_id ou l'e-mail haché et a besoin d'une règle de conversion par événement. Ce guide couvre la requête, la gestion des versions, la déduplication avec l'Insight Tag et le traitement des qualifications CRM tardives."
+category: "integrations"
+translationGroupId: "linkedin-conversions-api-b2b"
+slug: "linkedin-conversions-api-b2b"
+topic: "pixel-platform-integrations"
+platforms: ["linkedin"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "LinkedIn a besoin d'une règle de conversion avec la source « Conversions API », d'un jeton OAuth avec r_ads et rw_conversions et, en option, de l'Insight Tag pour li_fat_id."
+  - "Les requêtes vont vers /rest/conversionEvents avec un en-tête LinkedIn-Version mensuel ; Track fige la version et vous avertit avant sa fin de vie."
+  - "li_fat_id offre la meilleure qualité de correspondance mais exige le consentement marketing ; SHA256_EMAIL fonctionne sans le tag ; les champs userInfo sont des signaux complémentaires."
+  - "Transmettez le même eventId sur le tag et l'API pour dédupliquer, ou gardez les règles navigateur et CRM séparées ; conversionHappenedAt peut remonter jusqu'à 90 jours, ce qui rend praticables les qualifications CRM tardives."
+tags: ["linkedin", "conversions-api", "b2b", "li_fat_id"]
+author: "track-site-editorial"
+publishedAt: "2026-08-27"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Requête LinkedIn Conversions API avec l'URN d'une règle de conversion"
+sources:
+  - title: "LinkedIn Marketing API — Conversions API"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api"
+  - title: "LinkedIn Marketing API — Versioning"
+    url: "https://learn.microsoft.com/en-us/linkedin/marketing/versioning"
+legalNotice: false
+---
+
+## Ce dont LinkedIn a besoin de votre part
+
+1. Une **règle de conversion** dans Campaign Manager (Analyser → Suivi des conversions) avec la source « Conversions API ». Chaque règle a un identifiant numérique ; l'API y fait référence sous la forme `urn:lla:llaPartnerConversion:{id}`.
+2. Un **jeton OAuth 2.0** avec les scopes `r_ads` et `rw_conversions`, délivré à un utilisateur ayant accès au compte publicitaire. Track connecte le compte via LinkedIn OAuth et renouvelle le jeton automatiquement.
+3. L'**Insight Tag** dans le navigateur si vous voulez un tracking hybride — il pose l'identifiant first-party `li_fat_id` qui rend la correspondance côté serveur précise.
+
+## La requête
+
+`POST https://api.linkedin.com/rest/conversionEvents` avec les en-têtes `Authorization: Bearer <token>`, `LinkedIn-Version: 202608`, `X-Restli-Protocol-Version: 2.0.0` et `Content-Type: application/json` :
+
+```json
+{
+  "conversion": "urn:lla:llaPartnerConversion:123456",
+  "conversionHappenedAt": 1767225600000,
+  "conversionValue": { "currencyCode": "EUR", "amount": "1200.00" },
+  "eventId": "01J9EXAMPLESOURCEEVENTID00",
+  "user": {
+    "userIds": [
+      { "idType": "SHA256_EMAIL", "idValue": "<sha256>" },
+      { "idType": "LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID", "idValue": "<li_fat_id>" }
+    ],
+    "userInfo": { "firstName": "…", "lastName": "…", "companyName": "…", "title": "…", "countryCode": "DE" }
+  }
+}
+```
+
+Un `201 Created` confirme l'acceptation. La création par lot utilise le même chemin avec l'en-tête `X-RestLi-Method: BATCH_CREATE` et un tableau `elements` ; LinkedIn répond élément par élément.
+
+La gestion des versions est mensuelle. L'en-tête `LinkedIn-Version` désigne une version qui reste valide environ un an ; Track la fige dans son registre de versions et vous avertit avant la date de fin de vie.
+
+## Les identifiants et ce qui correspond vraiment
+
+- `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` — la valeur `li_fat_id` que l'Insight Tag stocke (également ajoutée aux URL des pages d'atterrissage en tant que `li_fat_id`). Meilleure qualité de correspondance ; sa capture exige le consentement marketing.
+- `SHA256_EMAIL` — l'e-mail professionnel normalisé, en minuscules, haché. Les leads B2B le fournissent généralement ; il fonctionne sans le tag.
+- `userInfo` — nom, entreprise, fonction et pays en clair. LinkedIn les utilise comme signaux de correspondance complémentaires ; n'envoyez que ceux que votre politique autorise.
+
+Aucun `conversionValue` n'est requis pour les événements de lead, mais envoyer une valeur modélisée aide l'optimisation des campagnes.
+
+## Dédupliquer avec l'Insight Tag
+
+Si une règle est suivie à la fois par l'Insight Tag (`window.lintrk('track', { conversion_id: 123456 })`) et par l'API, transmettez le même `eventId` sur les deux voies ; LinkedIn déduplique les identifiants identiques pour une même règle. En pratique, la plupart des équipes B2B gardent les règles navigateur et serveur séparées : « Formulaire envoyé (tag) » se déclenche immédiatement, « Lead qualifié (CRM) » arrive du serveur quelques jours plus tard avec une règle différente, et rien n'a besoin d'être dédupliqué.
+
+## La fenêtre de 90 jours et les qualifications tardives
+
+`conversionHappenedAt` doit se situer dans les 90 derniers jours. C'est ce qui rend praticables les conversions pilotées par le CRM : lorsqu'un lead devient une opportunité trois semaines après le clic, importez-le avec l'heure de conversion *d'origine* et l'e-mail, et LinkedIn l'attribue rétroactivement à l'interaction publicitaire.
+
+## Erreurs
+
+| Statut | Signification |
+| --- | --- |
+| 401 | jeton invalide ou expiré → renouvellement automatique, reconnexion en cas d'échec |
+| 403 | pas de scope `rw_conversions` ou pas d'accès au compte publicitaire |
+| 404 | identifiant de règle de conversion inconnu ou appartenant à un autre compte |
+| 422 | sémantique du payload (URN incorrect, horodatage hors fenêtre, type d'identifiant non pris en charge) |
+| 429 | limite de débit atteinte → nouvelle tentative avec délai progressif |
+
+L'assistant valide la connexion en listant les règles de conversion visibles par le jeton, de sorte qu'un identifiant de règle inconnu est détecté avant le premier événement.

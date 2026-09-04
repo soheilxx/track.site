@@ -1,0 +1,70 @@
+---
+title: "Configuration signée : pourquoi le tag manager est un maillon de la chaîne d'approvisionnement et comment Ed25519 le garde honnête"
+description: "Un tag manager livre du code à chaque visiteur de votre site. Track traite cela comme une chaîne d'approvisionnement : des templates déclaratifs au lieu de scripts personnalisés, des bundles de configuration signés en Ed25519, un manifeste avec empreinte et identifiant de clé, une vérification côté client et un historique des versions avec rollback."
+excerpt: "Le plus dangereux dans un tag manager classique n'est pas telle ou telle balise ; c'est que quiconque a accès au conteneur peut livrer du JavaScript arbitraire à vos visiteurs. Voici comment une configuration déclarative et signée supprime cette capacité tout en conservant tout le reste."
+category: "product"
+translationGroupId: "signed-configuration-supply-chain"
+slug: "signed-configuration-supply-chain"
+topic: "product-updates"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "advanced"
+takeaways:
+  - "Un tag manager livre du code à chaque visiteur ; Track traite donc la livraison de la configuration comme une chaîne d'approvisionnement exposée à trois menaces : des changements nuisibles par des personnes habilitées, une livraison altérée et une dérive non suivie."
+  - "Des templates déclaratifs à paramètres typés remplacent le HTML et le JavaScript personnalisés ; un bundle, ce sont des données, validées côté serveur et côté client, sans eval ni chargement de script arbitraire."
+  - "Les bundles publiés sont signés en Ed25519 avec une clé qui ne quitte jamais le service de publication ; le SDK vérifie l'empreinte et la signature avec Web Crypto et écarte tout ce qui échoue."
+  - "Un manifeste récupéré à chaque fois porte la version, l'empreinte, l'identifiant de clé et l'indicateur de kill switch, et chaque publication est une version immuable, approuvée et attribuable qui peut faire l'objet d'un rollback."
+tags: ["sécurité", "supply-chain", "signature", "configuration"]
+author: "track-site-editorial"
+publishedAt: "2026-08-12"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Bundle de configuration signé, vérifié par le SDK avant utilisation"
+sources:
+  - title: "RFC 8032 — Edwards-Curve Digital Signature Algorithm (EdDSA)"
+    url: "https://www.rfc-editor.org/rfc/rfc8032"
+  - title: "MDN — SubtleCrypto.verify()"
+    url: "https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/verify"
+legalNotice: false
+---
+
+## Le modèle de menace
+
+Trois choses peuvent mal tourner avec une configuration livrée aux navigateurs :
+
+1. **Une personne disposant d'un accès légitime livre quelque chose de nuisible** — une balise HTML personnalisée qui exfiltre des données de formulaire, un script « temporaire » qui reste des années.
+2. **Le chemin de livraison est altéré** — un nœud edge de CDN compromis, un proxy mal configuré, une attaque de l'homme du milieu sur un réseau hostile.
+3. **Personne ne peut dire ce qui a changé** — la configuration en production dérive de ce qui a été revu.
+
+## Les templates déclaratifs ferment la première porte
+
+Track n'a pas de type de balise HTML personnalisée ni de JavaScript personnalisé. Chaque action côté navigateur est un **template** issu d'un ensemble fixe (pixel Meta, balise Google, pixel TikTok, UET, Insight Tag, etc.) avec des paramètres typés : identifiants, mappings d'événements, finalités de consentement. Un template ne peut pas contenir de code ; il sélectionne un loader que le SDK embarque déjà et y renseigne des identifiants. Le bundle de configuration, ce sont des données, validées contre un schéma sur le serveur puis à nouveau sur le client. Il n'y a pas d'`eval`, pas de `new Function`, et rien dans un bundle ne peut amener le SDK à récupérer un script depuis une URL que le template ne connaît pas déjà.
+
+C'est une perte de flexibilité délibérée. Le guide de migration liste ce qui n'a pas d'équivalent ; la réponse est toujours « placez cette logique dans le code du site lui-même, où elle est revue comme du code ».
+
+## La signature ferme la deuxième
+
+Lorsqu'une version est publiée, le serveur sérialise le bundle sous forme canonique, calcule son empreinte SHA-256 et signe les octets avec une clé privée **Ed25519** qui n'existe que sur le service de publication. L'artefact publié est `{ payload, digest, keyId, algorithm, signature }`.
+
+Le SDK embarque les clés publiques correspondant aux identifiants de clé du site. Avant d'appliquer un bundle, il recalcule l'empreinte, la compare à celle qui a été signée et vérifie la signature avec Web Crypto (`SubtleCrypto.verify` avec `Ed25519`). Un bundle qui échoue à la vérification est écarté et le SDK conserve son dernier bundle vérifié depuis le cache de session — ou fonctionne sans aucune destination plutôt qu'avec une configuration non vérifiée.
+
+La signature ne remplace pas TLS ; elle protège contre tout ce que TLS ne couvre pas, y compris un nœud edge compromis qui sert du JSON d'apparence valide sous un certificat valide.
+
+## Le manifeste
+
+Le loader récupère d'abord un petit manifeste : identifiant de tracking, environnement, version, URL du bundle, empreinte, identifiant de clé, horodatage de publication et indicateur de **kill switch**. Le manifeste est récupéré à chaque fois ; le bundle est mis en cache dans le session storage par version et empreinte. C'est ce qui permet à un kill switch ou à un rollback de prendre effet dès la page vue suivante, sans avoir à invalider le cache du bundle lui-même.
+
+## Le versionnage ferme la troisième
+
+Chaque publication crée une version immuable avec un diff par rapport à la précédente, l'acteur, l'approbation qui l'a autorisée et l'identifiant de requête. L'historique des versions montre exactement ce que reçoivent les visiteurs, et un rollback republie une version antérieure comme nouvelle version — signée à nouveau, auditée à nouveau. Les brouillons et les versions publiées ne partagent jamais le même stockage, de sorte que « ce qui est en production » est un fait unique, et non l'état de plusieurs interrupteurs.
+
+## Gestion des clés
+
+- Les clés de signature sont générées par environnement et ne quittent jamais le service de publication ; la clé privée n'est jamais stockée en base de données.
+- Les identifiants de clé permettent la rotation : une nouvelle clé est ajoutée, les nouvelles versions sont signées avec elle, l'ancienne clé publique reste valide pour la vérification jusqu'à ce que chaque site ait republié, puis elle est retirée.
+- Le `key_id` de chaque manifeste vous indique quelle clé a signé la configuration en production.
+
+## Ce que cela signifie pour votre revue de sécurité
+
+Vous pouvez décrire le tag manager à une équipe sécurité en un paragraphe : il livre des données signées et validées par schéma à un SDK fixe ; il ne peut pas exécuter de code écrit par le site ; chaque modification est versionnée, approuvée et attribuable ; et une compromission du chemin de livraison ne peut pas modifier le comportement sans la clé de signature. La page Sécurité renvoie vers les identifiants de clé actuels et vers le code source de vérification du SDK.

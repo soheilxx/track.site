@@ -1,0 +1,75 @@
+---
+title: "Données personnelles dans les payloads de tracking : par où elles s'infiltrent, ce que le scanner détecte et ce qui bloque un événement"
+description: "Les voies habituelles par lesquelles e-mails, numéros de téléphone, numéros de carte et jetons se retrouvent dans les événements de tracking — URL, titres de page, champs de formulaire, termes de recherche — et comment le scanner PII de Track masque, signale et, pour les cartes et les secrets, bloque avant tout stockage ou transfert."
+excerpt: "Personne n'envoie volontairement un numéro de carte bancaire à un outil d'analytics. Cela arrive par un paramètre d'URL, un titre de page ou un champ de formulaire nommé « commentaire ». Le scanner s'exécute sur chaque événement avant le stockage et avant le routage ; voici ce qu'il recherche et ce qu'il fait lorsqu'il trouve quelque chose."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Les données personnelles s'infiltrent par les URL, les titres de page, les référents, les champs de formulaire et de recherche, les objets imbriqués et les noms d'articles personnalisés."
+  - "Le scanner s'exécute avant le stockage et le routage et connaît six catégories : e-mails et numéros de téléphone sont masqués et signalés ; numéros de carte, IBAN, secrets et JWT bloquent entièrement l'événement."
+  - "L'e-mail et le téléphone hachés dans user_data sont des clés de correspondance intentionnelles conditionnées au consentement marketing ; le scanner ne les signale pas, le moteur de règles décide par destination."
+  - "Les détections deviennent des problèmes groupés sur la page de qualité des données avec des correctifs types ; la composante schéma du Health Score se rétablit une fois la fuite colmatée."
+tags: ["pii", "qualité-des-données", "masquage", "sécurité"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Champs d'événement analysés à la recherche de données personnelles avant le stockage"
+sources:
+  - title: "GDPR Article 25 — Data protection by design and by default"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Par où les données personnelles s'infiltrent
+
+- **URL.** Les liens de réinitialisation de mot de passe, les liens de désabonnement et les confirmations de réservation placent des adresses e-mail et des jetons dans les chaînes de requête. Une page vue enregistre l'URL.
+- **Titres de page.** « Commande n° 1234 pour marie.dupont@example.com » comme `<title>` devient le titre de l'événement.
+- **Référents.** L'URL de la page précédente, avec tout ce qui précède.
+- **Champs de formulaire et de recherche.** Une recherche sur le site portant sur un numéro de téléphone, ou un champ « message » recopié dans les propriétés de l'événement.
+- **Objets imbriqués.** Un objet formulaire entier poussé dans `props` parce que c'était pratique.
+- **Noms d'articles.** Des produits personnalisés (« Mug pour Marie ») dans les articles commerce.
+
+## Ce que le scanner recherche
+
+Le scanner s'exécute après la normalisation et avant le moteur de règles, sur `title`, `url`, `referrer`, chaque chaîne de `props`, les objets imbriqués de `props` et les noms d'articles commerce. Six catégories :
+
+| Catégorie | Exemples | Action |
+| --- | --- | --- |
+| email | toute adresse au format RFC | masqué, signalé |
+| phone | formats internationaux et nationaux d'au moins 7 chiffres | masqué, signalé |
+| card | séquences de 13 à 19 chiffres qui passent la vérification de Luhn | masqué, **événement bloqué** |
+| iban | code pays + clé de contrôle + BBAN | masqué, **événement bloqué** |
+| secret | clés d'API et jetons à préfixe connu, longues chaînes à forte entropie dans des champs de type clé | masqué, **événement bloqué** |
+| jwt | trois segments base64url séparés par des points | masqué, **événement bloqué** |
+
+« Masqué » signifie que la correspondance est remplacée sur place par un marqueur avant le stockage. Les objets imbriqués contenant une détection sont remplacés entièrement par `[redacted:nested]`, parce que le masquage partiel de données structurées n'est pas fiable. « Bloqué » signifie que l'événement n'est ni stocké ni routé ; un problème de qualité des données enregistre le champ et la catégorie, jamais la valeur.
+
+## Pourquoi les cartes et les secrets bloquent, mais pas les e-mails
+
+Un e-mail dans un titre de page est un problème de qualité des données avec une dimension juridique ; le masquer et vous indiquer d'où il vient règle les deux. Un numéro de carte ou un jeton bearer dans un événement est un incident : stocker même un événement masqué avec son contexte laisserait une trace disant « ceci s'est produit ici, à cette heure, dans cette session », et le transférer où que ce soit est hors de question. Le blocage est le choix prudent, et la détection vous indique quelle page ou quel formulaire corriger.
+
+## Les identifiants hachés sont un cas différent
+
+L'e-mail et le téléphone hachés dans `user_data` sont des identifiants *intentionnels* servant de clés de correspondance publicitaires, fournis via l'appel `identify` du SDK ou une source serveur, hachés avant de quitter le navigateur ou la boutique, et conditionnés à la finalité marketing. Le scanner ne les signale pas ; le moteur de règles décide, destination par destination, s'ils peuvent être transférés.
+
+## La boucle des détections
+
+Chaque détection devient un problème sur la page de qualité des données, groupé par champ et par catégorie, avec un compteur et les dates de première et de dernière occurrence. Correctifs types :
+
+- Paramètres d'URL : retirez les jetons côté serveur avant le rendu, ou ajoutez le paramètre à la liste de nettoyage du site pour que le SDK le supprime avant l'envoi.
+- Titres : affichez des titres génériques sur les pages de compte et de confirmation.
+- Formulaires : n'envoyez à `props` que les champs explicitement autorisés ; jamais l'objet formulaire entier.
+- Recherche : envoyez le fait qu'une recherche a eu lieu et le nombre de résultats, pas la requête, sauf si celle-ci relève du vocabulaire produit.
+
+Un problème peut être marqué comme résolu ou ignoré avec un motif ; l'action d'ignorer est auditée.
+
+## Vérification
+
+La composante schéma du Health Score est la part d'événements sans détection. Après avoir colmaté une fuite, la composante se rétablit dans la fenêtre ; l'horodatage de dernière occurrence du problème cesse d'avancer. Le débogueur d'événements affiche l'événement masqué pour que vous puissiez confirmer que le marqueur se trouve bien là où vous l'attendez.

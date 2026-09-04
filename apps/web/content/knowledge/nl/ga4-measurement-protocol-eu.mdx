@@ -1,0 +1,83 @@
+---
+title: "GA4 Measurement Protocol goed toepassen: het EU-endpoint, client_id, debugvalidatie en wat het niet kan"
+description: "Server-events naar Google Analytics 4 sturen via het Measurement Protocol: het region1-endpoint, waarom client_id belangrijk is, de limiet van 25 events, timestamp_micros, het debug-endpoint en de toestemmingsvelden."
+excerpt: "Het Measurement Protocol is de enige ondersteunde manier om server-events naar GA4 te sturen, en het heeft scherpe randjes: het antwoordt altijd met 2xx, het heeft de client_id van de browser nodig om sessies te koppelen en het vervangt de gtag voor de meeste rapporten niet. Zo gebruik je het goed."
+category: "integrations"
+translationGroupId: "ga4-measurement-protocol-eu"
+slug: "ga4-measurement-protocol-eu"
+topic: "pixel-platform-integrations"
+platforms: ["google-analytics"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Track stuurt Measurement Protocol-requests standaard naar het region1-endpoint, zodat verkeer in de EU ontstaat en eindigt; het api_secret hoort in de kluis."
+  - "Server-events worden alleen aan sessies gekoppeld met de echte client_id uit de _ga-cookie, vastgelegd met analyticstoestemming; zonder die ID blazen ze de gebruikersaantallen op."
+  - "Het productie-endpoint antwoordt altijd met 2xx, dus de testmodus valideert elk event eerst op het debug-endpoint en stuurt het pas door als er geen validatiemeldingen zijn."
+  - "De pragmatische verdeling: gtag voor paginaweergaven en interacties, Measurement Protocol voor de gezaghebbende aankoop met transaction_id, terugbetalingen en backend-events, met toestemmingsvelden afgeleid uit de doelen van de bezoeker."
+tags: ["ga4", "measurement-protocol", "analytics", "eu"]
+author: "track-site-editorial"
+publishedAt: "2026-08-30"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "GA4 Measurement Protocol-request naar het region1-endpoint"
+sources:
+  - title: "Google Analytics — Measurement Protocol (GA4) reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+  - title: "Google Analytics — Validating events"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/validating-events"
+legalNotice: false
+---
+
+## Het endpoint en de EU-variant
+
+`POST https://www.google-analytics.com/mp/collect?measurement_id=G-XXXX&api_secret=…` is het gedocumenteerde verzamel-endpoint. Google documenteert daarnaast `https://region1.google-analytics.com/mp/collect` voor verkeer uit de EU; Track gebruikt standaard de region1-host, zodat requests in de EU ontstaan en eindigen.
+
+De `measurement_id` is openbaar (hij staat in je gtag-snippet). Het `api_secret` maak je aan onder Beheer → Gegevensstreams → API-secrets voor Measurement Protocol, en het hoort in de kluis.
+
+## De body
+
+```json
+{
+  "client_id": "1234567890.1700000000",
+  "user_id": "u_42",
+  "timestamp_micros": 1767225600000000,
+  "non_personalized_ads": false,
+  "consent": { "ad_user_data": "GRANTED", "ad_personalization": "DENIED" },
+  "user_data": { "sha256_email_address": ["<hash>"] },
+  "events": [{ "name": "purchase", "params": { "transaction_id": "A1001", "value": 129.9, "currency": "EUR", "items": [{ "item_id": "SKU-1", "price": 99.9, "quantity": 1 }], "engagement_time_msec": 100 } }]
+}
+```
+
+Limieten volgens de referentie: maximaal 25 events per request, 25 parameters per event, eventnamen van maximaal 40 tekens en een `timestamp_micros` van hoogstens 72 uur oud. Namen die beginnen met `google_`, `ga_` of `firebase_` zijn gereserveerd.
+
+## client_id is wat iedereen vergeet
+
+GA4 koppelt server-events aan sessies via `client_id`, de waarde die in de `_ga`-cookie staat (`GA1.1.<random>.<timestamp>` → `client_id = "<random>.<timestamp>"`). Zonder de echte client-ID vormen server-events hun eigen verweesde gebruikers en blazen ze de gebruikersaantallen op.
+
+Track leest de `_ga`-cookie in de browser zodra analyticstoestemming is gegeven, stuurt hem met elk event mee als leveranciers-id en gebruikt hem als `client_id` voor Measurement Protocol-leveringen. Bestaat er geen `_ga`-waarde (zuivere serverbronnen), dan leidt Track een stabiele pseudo-client-ID af uit de anonieme ID, zodat events in elk geval per bezoeker worden gegroepeerd.
+
+## Het zegt altijd ja — valideer op het debug-endpoint
+
+Het productie-endpoint geeft 2xx terug voor alles wat syntactisch acceptabel is. Semantische problemen (onbekende parametertypen, gereserveerde namen, een ontbrekende client-ID) kom je alleen te weten via het debug-endpoint `/debug/mp/collect`, dat antwoordt met `validationMessages`. In de testmodus stuurt Track elk event eerst naar het debug-endpoint en stuurt het pas door als die lijst leeg is, zodat een kapotte mapping luid faalt in de wizard in plaats van stilletjes in productie.
+
+## Wat het Measurement Protocol niet kan
+
+- Het maakt zelf geen sessies aan; paginaweergaven horen van de gtag in de browser te komen.
+- Het heeft geen geo-, apparaat- of campagnedata, tenzij je die zelf meestuurt; de meeste teams sturen alleen aankopen, terugbetalingen en backend-events.
+- Realtime-rapporten hebben `engagement_time_msec` nodig (elke positieve waarde) om de gebruiker als betrokken te tellen.
+- Attributie aan campagnes leunt nog altijd op de browsersessie waar de `client_id` bij hoort.
+
+De pragmatische verdeling: gtag voor paginaweergaven en interacties, Measurement Protocol voor de gezaghebbende aankoop met `transaction_id` (GA4 dedupliceert aankopen op transactie-ID), terugbetalingen en backend-events.
+
+## Toestemmingsvelden
+
+Stuur `consent.ad_user_data` en `consent.ad_personalization` mee, afgeleid uit de doelen van de bezoeker, en zet `non_personalized_ads: true` wanneer marketingtoestemming ontbreekt. Zonder analyticstoestemming wordt het event helemaal niet verstuurd — de GA4-destination heeft in Track het doel analytics nodig, niet marketing.
+
+## Checklist
+
+- [ ] Measurement-ID in de destination, API-secret in de kluis
+- [ ] `_ga`-client-ID vastgelegd met analyticstoestemming
+- [ ] Aankopen dragen een `transaction_id`; browser- en serveraankopen delen dezelfde
+- [ ] Debugvalidatie slaagt in de testmodus
+- [ ] Events bevestigd in DebugView met de verwachte parameters

@@ -1,0 +1,71 @@
+---
+title: "Les Conversions API de Reddit, Pinterest et Snapchat côte à côte : identifiants de clic, modes test et noms d'événements"
+description: "Un comparatif compact de la Reddit Conversions API, de la Pinterest Conversions API et de la Snapchat Conversions API — endpoints, authentification, identifiants de clic (rdt_cid, epik, ScCid), noms d'événements, champs de déduplication et bascules de test."
+excerpt: "Les trois plateformes sociales de la « deuxième vague » proposent toutes une Conversions API côté serveur calquée sur celle de Meta. Elles diffèrent par l'identifiant de clic, le vocabulaire d'événements et la façon de tester sans polluer les rapports. Voici le comparatif côte à côte."
+category: "integrations"
+translationGroupId: "reddit-pinterest-snapchat-capi"
+slug: "reddit-pinterest-snapchat-capi"
+topic: "pixel-platform-integrations"
+platforms: ["reddit", "pinterest", "snapchat"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Les trois API partagent la structure de Meta — nom d'événement, horodatage, identifiant d'événement, données utilisateur hachées plus identifiant de clic, données personnalisées — mais diffèrent par l'endpoint, l'authentification, le paramètre d'identifiant de clic, le vocabulaire d'événements et le format d'horodatage."
+  - "Les identifiants de clic sont rdt_cid, epik et ScCid (sensibles à la casse) et alimentent chacun un champ propre à la plateforme ; c'est Pinterest qui souffre le plus d'un epik manquant."
+  - "Le test diffère : Reddit utilise test_mode dans le corps de la requête, Pinterest le paramètre de requête ?test=true, Snapchat remplace /events par /validate."
+  - "Les erreurs courantes sont des noms de paramètres erronés, un double hachage, un jeton de pixel partagé entre plusieurs comptes et un mode test laissé actif en production."
+tags: ["reddit", "pinterest", "snapchat", "conversions-api"]
+author: "track-site-editorial"
+publishedAt: "2026-08-26"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tableau comparatif des Conversions API de Reddit, Pinterest et Snapchat"
+sources:
+  - title: "Reddit Ads — Conversions API"
+    url: "https://ads-api.reddit.com/docs/v3/"
+  - title: "Pinterest API — Conversions"
+    url: "https://developers.pinterest.com/docs/api/v5/events-create"
+  - title: "Snap — Conversions API"
+    url: "https://developers.snap.com/api/marketing-api/Conversions-API/GettingStarted"
+legalNotice: false
+---
+
+## La structure commune
+
+Les trois API acceptent un tableau JSON d'événements, chacun avec un nom d'événement, un horodatage, un identifiant d'événement pour la déduplication, un bloc `user`/`user_data` contenant l'e-mail et le numéro de téléphone hachés plus l'identifiant de clic de la plateforme, et un bloc de données personnalisées avec la valeur, la devise, le numéro de commande et le contenu du panier. Les trois attendent des hachages SHA-256 d'e-mails en minuscules et de numéros de téléphone au format E.164. Les trois disposent d'un pixel navigateur qui pose un cookie first-party et accepte le même identifiant d'événement, et les trois attribuent le mieux lorsque l'identifiant de clic capturé sur la page d'atterrissage voyage avec l'événement serveur.
+
+## Côte à côte
+
+| | Reddit | Pinterest | Snapchat |
+| --- | --- | --- | --- |
+| Endpoint | `ads-api.reddit.com/api/v3/pixels/{pixel_id}/conversion_events` | `api.pinterest.com/v5/ad_accounts/{ad_account_id}/events` | `tr.snapchat.com/v3/{pixel_id}/events` |
+| Authentification | Jeton Bearer (OAuth Reddit Ads ou jeton Conversions) | Jeton Bearer avec `ads:write` (jeton d'accès conversions) | Jeton Bearer (jeton CAPI de l'Ads Manager) |
+| Paramètre d'URL de l'identifiant de clic | `rdt_cid` | `epik` | `ScCid` |
+| Champ de l'identifiant de clic | `click_id` | `user_data.click_id` | `user_data.sc_click_id` |
+| Cookie navigateur | `_rdt_uuid` | `_epik` | `_scid` → `user_data.sc_cookie1` |
+| Nom de l'événement d'achat | `Purchase` | `checkout` | `PURCHASE` |
+| Nom de l'événement de lead | `Lead` | `lead` | `SIGN_UP` |
+| Champ de déduplication | `event_metadata.conversion_id` | `event_id` | `event_id` (pixel : `client_dedup_id`) |
+| Horodatage | `event_at` en RFC 3339 | `event_time` en secondes Unix | `event_time` en millisecondes Unix |
+| Bascule de test | `test_mode: true` dans le corps | paramètre de requête `?test=true` | endpoint `/validate` à la place de `/events` |
+| Limite par lot | 1 000 | 1 000 | 2 000 |
+
+## Reddit
+
+Le vocabulaire d'événements de Reddit est court : `PageVisit`, `ViewContent`, `Search`, `AddToCart`, `AddToWishlist`, `Purchase`, `Lead`, `SignUp`, `Custom`. Les valeurs vont dans `event_metadata.value_decimal`, avec `currency` et `item_count`. L'indicateur `test_mode` enregistre l'événement dans l'onglet Test de l'Events Manager sans le comptabiliser, ce qui rend l'événement de test de l'assistant sans risque. Un `conversion_id` dans les métadonnées déduplique avec l'appel du pixel `rdt('track', 'Purchase', { conversionId })`.
+
+## Pinterest
+
+Pinterest utilise des noms d'événements en minuscules (`checkout`, `add_to_cart`, `lead`, `signup`, `page_visit`, `view_category`, `search`, `watch_video`, `custom`) et `action_source: web|app_android|app_ios|offline`. `user_data.em` et `ph` sont des tableaux de hachages ; `external_id` aussi. Le paramètre de requête `?test=true` valide et renvoie un résultat par événement sans rien écrire dans le reporting. Pinterest est la plateforme où un `epik` manquant fait le plus mal, car le cookie du pixel est souvent bloqué ; capturez `epik` dès l'atterrissage.
+
+## Snapchat
+
+L'API v3 de Snapchat reprend le plus fidèlement les noms de champs de Meta (`action_source`, `user_data`, `custom_data`) et utilise des noms d'événements en majuscules : `PURCHASE`, `SAVE`, `START_CHECKOUT`, `ADD_CART`, `VIEW_CONTENT`, `ADD_BILLING`, `SIGN_UP`, `SEARCH`, `PAGE_VIEW`, `SUBSCRIBE`, `AD_CLICK`, `AD_VIEW`, `COMPLETE_TUTORIAL`, `LEVEL_COMPLETE`, `INVITE`, `LOGIN`, `SHARE`, `RESERVE`, `ACHIEVEMENT_UNLOCKED`, `SPENT_CREDITS`, `RATE`, `START_TRIAL`, `LIST_VIEW`, `APP_INSTALL`, `APP_OPEN`, `CUSTOM_EVENT_1..5`. L'endpoint `/validate` renvoie les mêmes erreurs de validation que l'endpoint de production mais n'enregistre rien ; le mode test remplace donc le chemin au lieu d'ajouter un indicateur. Envoyez `sc_click_id` à partir du paramètre `ScCid` et `sc_cookie1` à partir du cookie `_scid` lorsque le consentement marketing est présent.
+
+## Erreurs courantes
+
+- Envoyer l'identifiant de clic depuis le mauvais nom de paramètre (`ScCid` est sensible à la casse ; celui de Pinterest s'appelle `epik`, pas `pin_click_id`).
+- Hacher une seconde fois des valeurs déjà hachées lorsque le CRM exporte des hachages.
+- Utiliser le même jeton de pixel pour plusieurs comptes publicitaires — chaque jeton est limité à un pixel ou à un compte.
+- Laisser le mode test actif en production : Track affiche un bandeau permanent sur toute destination encore en mode test.

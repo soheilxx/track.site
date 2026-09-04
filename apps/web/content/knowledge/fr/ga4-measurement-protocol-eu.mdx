@@ -1,0 +1,83 @@
+---
+title: "Bien utiliser le Measurement Protocol de GA4 : l'endpoint UE, le client_id, la validation de débogage et ses limites"
+description: "Envoyer des événements serveur à Google Analytics 4 via le Measurement Protocol : l'endpoint region1, pourquoi le client_id est décisif, la limite de 25 événements, timestamp_micros, l'endpoint de débogage et les champs de consentement."
+excerpt: "Le Measurement Protocol est le seul moyen pris en charge pour envoyer des événements serveur à GA4, et il a ses pièges : il répond toujours 2xx, il a besoin du client_id du navigateur pour rattacher les sessions et il ne remplace pas le gtag pour la plupart des rapports. Voici comment bien l'utiliser."
+category: "integrations"
+translationGroupId: "ga4-measurement-protocol-eu"
+slug: "ga4-measurement-protocol-eu"
+topic: "pixel-platform-integrations"
+platforms: ["google-analytics"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Track envoie par défaut les requêtes Measurement Protocol à l'endpoint region1, afin que le trafic naisse et se termine dans l'UE ; l'api_secret a sa place dans le coffre-fort."
+  - "Les événements serveur ne sont rattachés aux sessions qu'avec le véritable client_id issu du cookie _ga, capturé sous consentement analytics ; sans lui, le nombre d'utilisateurs est gonflé."
+  - "L'endpoint de production répond toujours 2xx : le mode test valide donc chaque événement d'abord sur l'endpoint de débogage et ne le transmet qu'en l'absence de messages de validation."
+  - "La répartition pragmatique : gtag pour les pages vues et les interactions, Measurement Protocol pour l'achat de référence avec transaction_id, les remboursements et les événements backend, avec des champs de consentement dérivés des finalités du visiteur."
+tags: ["ga4", "measurement-protocol", "analytics", "ue"]
+author: "track-site-editorial"
+publishedAt: "2026-08-30"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Requête GA4 Measurement Protocol vers l'endpoint region1"
+sources:
+  - title: "Google Analytics — Measurement Protocol (GA4) reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+  - title: "Google Analytics — Validating events"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/validating-events"
+legalNotice: false
+---
+
+## L'endpoint et la variante UE
+
+`POST https://www.google-analytics.com/mp/collect?measurement_id=G-XXXX&api_secret=…` est l'endpoint de collecte documenté. Google documente aussi `https://region1.google-analytics.com/mp/collect` pour le trafic en provenance de l'UE ; Track utilise par défaut l'hôte region1, afin que les requêtes naissent et se terminent dans l'UE.
+
+Le `measurement_id` est public (il figure dans votre snippet gtag). L'`api_secret` se crée sous Administration → Flux de données → Codes secrets de l'API Measurement Protocol et a sa place dans le coffre-fort.
+
+## Le corps de la requête
+
+```json
+{
+  "client_id": "1234567890.1700000000",
+  "user_id": "u_42",
+  "timestamp_micros": 1767225600000000,
+  "non_personalized_ads": false,
+  "consent": { "ad_user_data": "GRANTED", "ad_personalization": "DENIED" },
+  "user_data": { "sha256_email_address": ["<hash>"] },
+  "events": [{ "name": "purchase", "params": { "transaction_id": "A1001", "value": 129.9, "currency": "EUR", "items": [{ "item_id": "SKU-1", "price": 99.9, "quantity": 1 }], "engagement_time_msec": 100 } }]
+}
+```
+
+Limites selon la référence : au plus 25 événements par requête, 25 paramètres par événement, des noms d'événements de 40 caractères maximum et un `timestamp_micros` qui ne remonte pas à plus de 72 heures. Les noms commençant par `google_`, `ga_` ou `firebase_` sont réservés.
+
+## client_id : ce que tout le monde oublie
+
+GA4 rattache les événements serveur aux sessions via `client_id`, la valeur stockée dans le cookie `_ga` (`GA1.1.<random>.<timestamp>` → `client_id = "<random>.<timestamp>"`). Sans le véritable client id, les événements serveur forment leurs propres utilisateurs orphelins et gonflent le nombre d'utilisateurs.
+
+Track lit le cookie `_ga` dans le navigateur dès que le consentement analytics est accordé, l'envoie avec chaque événement comme identifiant fournisseur et l'utilise comme `client_id` pour les livraisons Measurement Protocol. Lorsqu'aucune valeur `_ga` n'existe (sources purement serveur), il dérive un pseudo client id stable à partir de l'identifiant anonyme, afin que les événements soient au moins regroupés par visiteur.
+
+## Il dit toujours oui : validez sur l'endpoint de débogage
+
+L'endpoint de production renvoie 2xx pour tout ce qui est syntaxiquement acceptable. Le seul moyen de découvrir les problèmes sémantiques (types de paramètres inconnus, noms réservés, client id manquant) est l'endpoint de débogage `/debug/mp/collect`, qui répond avec des `validationMessages`. En mode test, Track envoie chaque événement d'abord à l'endpoint de débogage et ne le transmet que lorsque la liste est vide : un mapping défectueux échoue bruyamment dans l'assistant plutôt que silencieusement en production.
+
+## Ce que le Measurement Protocol ne peut pas faire
+
+- Il ne crée pas de sessions par lui-même ; les pages vues doivent venir du gtag dans le navigateur.
+- Il n'a aucune donnée de géolocalisation, d'appareil ou de campagne, sauf si vous les envoyez ; la plupart des équipes n'envoient que les achats, les remboursements et les événements backend.
+- Les rapports en temps réel ont besoin de `engagement_time_msec` (n'importe quelle valeur positive) pour compter l'utilisateur comme engagé.
+- L'attribution aux campagnes repose toujours sur la session navigateur à laquelle appartient le `client_id`.
+
+La répartition pragmatique : gtag pour les pages vues et les interactions, Measurement Protocol pour l'achat de référence avec `transaction_id` (GA4 déduplique les achats par identifiant de transaction), les remboursements et les événements backend.
+
+## Champs de consentement
+
+Envoyez `consent.ad_user_data` et `consent.ad_personalization` dérivés des finalités du visiteur, et définissez `non_personalized_ads: true` lorsque le consentement marketing manque. Le consentement analytics est indispensable pour que l'événement soit envoyé tout court : la destination GA4 a besoin, dans Track, de la finalité analytics, pas de la finalité marketing.
+
+## Checklist
+
+- [ ] ID de mesure dans la destination, code secret de l'API dans le coffre-fort
+- [ ] Client id `_ga` capturé avec le consentement analytics
+- [ ] Les achats portent un `transaction_id` ; achats navigateur et serveur le partagent
+- [ ] Validation de débogage réussie en mode test
+- [ ] Événements confirmés dans DebugView avec les paramètres attendus

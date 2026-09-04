@@ -1,0 +1,84 @@
+---
+title: "Migreren vanaf Google Tag Manager: een plan dat begint bij de inventaris en geen conversie mist"
+description: "Een stapsgewijze migratie van GTM-webcontainers naar Track — containerexport en een beoordeelde inventaris, tags, triggers en variabelen vertalen naar een trackingplan, parallel draaien met deduplicatie, per destination overschakelen, en wat bewust geen equivalent heeft."
+excerpt: "Een GTM-container verzamelt jarenlang tags die niemand durft te verwijderen. De migratie is hét moment om ze te inventariseren, de tags te behouden die in een trackingplan passen en de rest uit te faseren — zonder één dag aan gemiste conversies. Dit is het plan."
+category: "guides"
+translationGroupId: "migrating-from-gtm"
+slug: "migrating-from-gtm"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Begin met de containerexport en een beoordeelde inventaris: één rij per tag met leverancier, trigger, variabelen en een classificatie; er wordt niets automatisch uit aangemaakt."
+  - "Vertaal tags en triggers naar de events en destinations van een trackingplan met getypeerde properties, toestemmingsdoelen en geversioneerde mappings."
+  - "Draai beide systemen parallel met deduplicatie, per destination eerst alleen server-side, schakel daarna één destination tegelijk over en faseer de container uit."
+  - "Custom HTML-/JavaScript-tags, toestemmingsoverrides, tag-sequencing en DOM-scraping hebben bewust geen equivalent — die logica verhuist naar de code van de site zelf."
+tags: ["gtm", "migratie", "tag-manager", "trackingplan"]
+author: "track-site-editorial"
+publishedAt: "2026-08-16"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Migratiepad van een GTM-container naar een trackingplan"
+sources:
+  - title: "Google Tag Manager Help — Export and import containers"
+    url: "https://support.google.com/tagmanager/answer/6106997"
+legalNotice: false
+---
+
+## Stap 1: exporteren en inventariseren
+
+Exporteer de container (Beheer → Container exporteren). De JSON bevat elke tag, trigger, variabele en map. Bouw daaruit de inventaris — een spreadsheet volstaat — met één rij per tag: leverancier, tagtype, trigger, gelezen variabelen en een classificatie:
+
+- **Herkende leverancierstag** (GA4, Google Ads, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Reddit, X, Taboola, Outbrain, Criteo, affiliate-pixels) met een bijpassende destination-template.
+- **Data-layer-push**, gegroepeerd op eventnaam, met de variabelen die elke tag leest.
+- **Custom HTML-tag**, geclassificeerd als leverancierssnippet met een bekend equivalent, first-party-helper (scrolldiepte, formulier-listeners) of onbekend.
+- **Gepauzeerde tags en tags zonder recente activeringen** (de tagmetadata van GTM toont wanneer een tag voor het laatst is afgevuurd), gemarkeerd als kandidaten voor uitfasering.
+
+De inventaris is de bron van waarheid van de migratie. Er wordt niets automatisch uit aangemaakt; jij beoordeelt elke rij en beslist.
+
+## Stap 2: vertalen naar een trackingplan
+
+GTM denkt in tags en triggers; Track denkt in **events** en **destinations**. De vertaling:
+
+| GTM-concept | Track-concept |
+| --- | --- |
+| `dataLayer.push({event: 'purchase', ecommerce: {...}})` | `tsq.push(['track', 'purchase', {...}])` met het canonieke commerce-schema |
+| Trigger ‘Aangepaste gebeurtenis is gelijk aan purchase’ | het event zelf; destinations abonneren zich op eventnaam |
+| Trigger ‘Klik — Alle elementen’ met CSS-filter | een declaratieve klikregel (selector, eventnaam, toegestane properties) |
+| Data-layer-variabele | een property in het eventschema, getypeerd en gevalideerd |
+| Opzoektabel | een mappingtabel in de destination, geversioneerd en diffbaar |
+| Tag voor toestemmingsinitialisatie | de CMP-integratie; toestemming wordt gelezen, nooit gezet |
+| GA4-configuratie + event-tags | één GA4-destination met event-mappings, browser en server |
+| Google Ads-conversietag per actie | één Google Ads-destination met één mapping per conversieactie |
+
+Het plan bevat elk event met zijn properties, zijn toestemmingsdoel en de destinations die het voedt. Kritieke events worden gemarkeerd, zodat de health score ze in de gaten houdt.
+
+## Stap 3: parallel draaien met deduplicatie
+
+Zet GTM niet op dag één uit. Installeer de Track-SDK ernaast. De SDK observeert data-layer-pushes in GA4-vorm zonder iets uit te voeren, dus een container die al `purchase` met een `ecommerce`-object pusht, voedt beide systemen vanuit dezelfde push.
+
+Begin per destination in Track met **alleen server-side**, terwijl de GTM-browsertag blijft afvuren:
+
+- Bij Google Ads en GA4 dragen aankopen op beide paden dezelfde transactie-ID en dedupliceert de leverancier daarop.
+- Bij platformen die op event-ID dedupliceren (Meta, TikTok, Microsoft, Pinterest, Snapchat, Reddit) draai je het serverpad eerst in testmodus, vergelijk je de aantallen in de testweergave van de leverancier en schakel je daarna direct over — draai niet beide live met verschillende id's.
+
+De destination-monitor toont de acceptatie per destination; zodra die overeenkomt met de cijfers van de GTM-tag, is de browsertag overbodig.
+
+## Stap 4: per destination overschakelen
+
+Per destination, in deze volgorde: zet Track op hybride (eigen browsertemplate plus server), pauzeer de GTM-tag, volg het eventaantal van de leverancier twee dagen en verwijder daarna de GTM-tag. Eerst de analytics-destinations, dan de advertentie-destinations één voor één, en de affiliate-netwerken als laatste, omdat hun postbacks een click-id-store nodig hebben die voor het cookievenster is opgewarmd.
+
+## Stap 5: de container uitfaseren
+
+Zodra elke tag is gepauzeerd en de leverancierscijfers overeenkomen, verwijder je de GTM-snippet. Bewaar de geëxporteerde container in het migratiedossier; het auditlog laat zien wie wat wanneer heeft overgeschakeld.
+
+## Wat bewust geen equivalent heeft
+
+- **Custom HTML- en custom JavaScript-tags.** Track voert geen code uit die door de site is geschreven. Leverancierssnippets worden declaratieve templates; first-party-helpers worden declaratieve regels; al het andere is een beslissing die je expliciet neemt — meestal door de logica te verplaatsen naar de code van de site zelf, waar ze thuishoort.
+- **Toestemmingsoverrides.** Geen enkele tag kan zo worden ingesteld dat hij ongeacht de toestemming afvuurt.
+- **Tag-sequencing en activeringsprioriteiten.** Events worden op basis van beleid gerouteerd, niet in een race tegen elkaar uitgespeeld.
+- **Regex-gebaseerd scrapen van de pagina** naar variabelen. Properties komen uit de data layer of uit declaratieve regels, niet uit DOM-tekst.
+
+Markeer elk van deze gevallen in je inventaris, zodat je vóór de start weet hoeveel van de container echte tracking is en hoeveel er in de loop der tijd aan hulpconstructies is opgehoopt.

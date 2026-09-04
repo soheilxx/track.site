@@ -1,0 +1,70 @@
+---
+title: "TCF 2.2, GPP e Global Privacy Control: come un tag manager dovrebbe leggere i segnali di consenso"
+description: "Cosa esprimono la TC string dell'IAB TCF 2.2, la stringa della Global Privacy Platform e l'header Global Privacy Control, come si mappano su finalità come analytics e marketing e come Track li valuta evento per evento senza mai dare il consenso per scontato."
+excerpt: "Tre segnali, tre ambiti: TCF 2.2 per SEE e Regno Unito, GPP per le leggi degli stati USA e oltre, GPC come opt-out a livello di browser. Un router consapevole del consenso deve leggerli tutti e tre, risolvere i conflitti in modo conservativo e registrare cosa ha deciso. Ecco come funziona la mappatura."
+category: "privacy"
+translationGroupId: "tcf-2-2-gpp-gpc"
+slug: "tcf-2-2-gpp-gpc"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "advanced"
+takeaways:
+  - "TCF 2.2 codifica il consenso per finalità e per vendor per SEE e Regno Unito, GPP raggruppa sezioni regionali inclusi gli opt-out degli stati USA, e GPC è un opt-out a livello di browser senza dettaglio per finalità."
+  - "Track normalizza ogni segnale in necessary, analytics, marketing e personalization; una finalità è concessa solo quando un segnale la concede in modo esplicito, e vince il segnale più restrittivo."
+  - "L'SDK legge __tcfapi, __gpp e navigator.globalPrivacyControl, registra una voce di consenso su ogni evento e non imposta mai il consenso da solo: senza segnale vale solo necessary."
+  - "Le sorgenti server-side forniscono lo stato del consenso che hanno registrato; un evento senza informazioni sul consenso non raggiunge nessuna destinazione pubblicitaria, e il consenso al marketing non viene mai dedotto da un ordine."
+tags: ["tcf", "gpp", "gpc", "consenso"]
+author: "track-site-editorial"
+publishedAt: "2026-08-21"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Sorgenti dei segnali di consenso che confluiscono in una decisione per finalità"
+sources:
+  - title: "IAB Europe — TCF v2.2 technical specifications"
+    url: "https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md"
+  - title: "IAB Tech Lab — Global Privacy Platform"
+    url: "https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform"
+  - title: "Global Privacy Control — Specification"
+    url: "https://globalprivacycontrol.github.io/gpc-spec/"
+legalNotice: false
+---
+
+## I tre segnali
+
+**TCF 2.2** (IAB Europe): la CMP espone `__tcfapi` e una TC string. Codifica il consenso per finalità (finalità da 1 a 11), il consenso per vendor, i segnali di legittimo interesse e le funzionalità speciali. La versione 2.2 ha eliminato il legittimo interesse come base giuridica per le finalità da 3 a 6 (annunci e contenuti personalizzati), impone alle CMP di mostrare il numero di vendor e ha introdotto una cadenza obbligatoria di rinnovo del consenso. TCF 2.2 è un *framework* per i vendor presenti nella Global Vendor List; un tag manager first-party non è un vendor GVL e legge le finalità per governare il proprio routing.
+
+**GPP** (IAB Tech Lab): `__gpp` espone una stringa GPP composta da sezioni — la sezione TCF UE, la sezione TCF Canada, le sezioni nazionali USA e quelle dei singoli stati (California, Virginia, Colorado, Connecticut, Utah e altri). Ogni sezione USA codifica gli opt-out per vendita, condivisione e pubblicità mirata, più i flag per i dati sensibili.
+
+**GPC** (Global Privacy Control): un segnale a livello di browser — l'header di richiesta `Sec-GPC: 1` e `navigator.globalPrivacyControl === true`. In base al CPRA e a diverse leggi statali deve essere rispettato come opt-out dalla vendita o dalla condivisione. Non contiene alcun dettaglio per finalità.
+
+## Mappatura sulle finalità
+
+Track normalizza ogni segnale in quattro finalità: `necessary`, `analytics`, `marketing`, `personalization`. La mappatura è conservativa: una finalità è concessa solo quando il segnale la concede in modo esplicito:
+
+| Finalità | TCF 2.2 (`__tcfapi`) | Callback della CMP / chiamata consent dell'SDK | GPC |
+| --- | --- | --- | --- |
+| analytics | finalità 1 (archiviazione), 7 e 8 (misurazione) con consenso | `analytics` concessa | nessun effetto |
+| marketing | finalità 1–4 con consenso | `marketing` concessa | negata con `Sec-GPC: 1` o `navigator.globalPrivacyControl` |
+| personalization | finalità 5 e 6 con consenso | `personalization` concessa | negata quando GPC è attivo |
+| necessary | sempre | sempre | sempre |
+
+Quando sono presenti più segnali, vince il più restrittivo. Un visitatore con una TC string che concede tutto ma con il segnale GPC attivo si vede negare marketing e personalization. Le sezioni GPP degli stati USA non vengono interpretate finalità per finalità: per i visitatori statunitensi le finalità arrivano dal callback della CMP, e il segnale GPC — dal browser o dall'API GPP — viene rispettato come opt-out.
+
+## Cosa fa davvero l'SDK
+
+1. Al caricamento controlla `__tcfapi`, `__gpp` e `navigator.globalPrivacyControl`, si iscrive agli eventi di modifica del TCF e legge il segnale GPC esposto dall'API GPP.
+2. Per le CMP che non implementano il TCF, il sito passa le finalità tramite la chiamata consent dell'SDK; l'SDK le normalizza e ignora le finalità sconosciute.
+3. Ogni evento porta un record del consenso: le finalità concesse, la sorgente (TCF, GPP, l'integrazione della CMP, l'API o il server), la versione della policy, un timestamp, la regione quando è nota e il flag GPC. Il collector lo memorizza, il policy engine lo valuta per destinazione e l'export DSAR lo include.
+4. Quando il consenso cambia, gli eventi successivi usano il nuovo stato e gli identificatori legati a una finalità revocata vengono rimossi subito dallo storage.
+
+L'SDK non *imposta* mai il consenso. Non ha una chiamata “accetta tutto” e nessun valore predefinito “concesso” quando manca una CMP: senza segnale vale solo `necessary`, e l'integrazione del banner del consenso del sito è la via per concedere di più.
+
+## Sorgenti server-side
+
+Gli eventi provenienti da webhook e importazioni non hanno una CMP nel circuito. Il sistema che li invia fornisce lo stato del consenso che ha registrato per quella persona — alla registrazione, al checkout, sul lead — e il policy engine lo applica esattamente come per gli eventi browser. Un evento che arriva senza informazioni sul consenso porta solo la finalità necessary: viene memorizzato come dato first-party e non raggiunge nessuna destinazione pubblicitaria. Ciò che Track non fa mai è dare per scontato il consenso al marketing perché l'ordine è arrivato da uno shop.
+
+## Verifica
+
+La pagina del consenso nell'app mostra, per ogni sito, la CMP rilevata, la quota di sessioni con ciascuna finalità concessa, la quota con GPC attivo ed eventuali sessioni con segnali in conflitto. L'Event Debugger mostra il record del consenso su ogni evento e la decisione della policy per destinazione, così “perché questo acquisto non ha raggiunto Meta?” trova risposta con un clic.

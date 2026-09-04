@@ -1,0 +1,80 @@
+---
+title: "I 23 eventi standard: una tassonomia che si mappa in modo pulito su ogni piattaforma pubblicitaria"
+description: "Il catalogo canonico degli eventi di Track — eventi di engagement, auth, lead, commerce e subscription — con le proprietà che ciascuno porta con sé, le finalità del consenso che richiede per impostazione predefinita e come si traduce per Meta, Google, TikTok, LinkedIn e le altre piattaforme."
+excerpt: "I nomi di eventi personalizzati sono il punto in cui i tracking plan vanno a morire. Un vocabolario piccolo e fisso con proprietà tipizzate rende i mapping prevedibili, la validazione possibile e la traduzione per i vendor automatica. Ecco i 23 eventi e le regole che li accompagnano."
+category: "guides"
+translationGroupId: "event-taxonomy-standard-events"
+slug: "event-taxonomy-standard-events"
+topic: "getting-started"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "linkedin", "pinterest", "snapchat"]
+shopSystems: []
+contentType: "reference"
+level: "beginner"
+takeaways:
+  - "23 eventi standard in cinque categorie — engagement, auth, lead, commerce, subscription — seguono il vocabolario degli eventi consigliati di GA4 e portano con sé un envelope tipizzato e un blocco commerce."
+  - "Le categorie definiscono le finalità del consenso predefinite: gli eventi commerce, lead e subscription hanno bisogno della finalità marketing per raggiungere le destinazioni pubblicitarie."
+  - "Gli eventi personalizzati devono rispettare il pattern di denominazione ed essere dichiarati nel tracking plan; quelli non dichiarati vengono contati e segnalati, ma non consegnati alle destinazioni pubblicitarie."
+  - "Ogni connettore include un mapping predefinito modificabile verso i nomi evento del vendor, e quattro regole mantengono onesto il piano: un evento per azione, valori dal sistema sorgente, rimborsi come eventi, nomi in snake_case."
+tags: ["eventi", "tassonomia", "tracking-plan", "schema"]
+author: "track-site-editorial"
+publishedAt: "2026-08-14"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Catalogo degli eventi standard raggruppato per categoria"
+sources:
+  - title: "Google Analytics — Recommended events"
+    url: "https://support.google.com/analytics/answer/9267735"
+  - title: "Meta — Standard events"
+    url: "https://developers.facebook.com/docs/meta-pixel/reference"
+legalNotice: false
+---
+
+## Il catalogo
+
+| Categoria | Eventi | Finalità predefinite |
+| --- | --- | --- |
+| engagement | `page_view`, `view_content`, `search`, `download` | analytics |
+| auth | `sign_up`, `login` | analytics |
+| lead | `generate_lead`, `contact`, `book_appointment` | analytics, marketing |
+| commerce | `view_item_list`, `select_item`, `view_item`, `add_to_wishlist`, `add_to_cart`, `remove_from_cart`, `view_cart`, `begin_checkout`, `add_shipping_info`, `add_payment_info`, `purchase`, `refund` | analytics, marketing |
+| subscription | `subscribe`, `start_trial` | analytics, marketing |
+
+I nomi seguono il vocabolario degli eventi consigliati di GA4 dove ne esiste uno, perché è la forma di data layer più diffusa e l'SDK può osservare direttamente i push in stile GA4 nel `dataLayer`. Le categorie determinano le finalità del consenso predefinite: gli eventi commerce, lead e subscription sono segnali di conversione che le piattaforme pubblicitarie vogliono, quindi richiedono la finalità marketing per raggiungere una destinazione pubblicitaria; gli eventi di engagement e auth sono analytics per impostazione predefinita.
+
+## Proprietà
+
+Ogni evento porta con sé l'envelope: ID evento, timestamp, URL (con i click ID rimossi), referrer, titolo, record del consenso, sorgente e — quando il consenso lo permette — ID anonimo, ID sessione, ID utente e identificatori sottoposti a hash.
+
+Gli eventi commerce aggiungono un blocco `commerce` tipizzato: `currency`, `value`, `transaction_id`, `coupon`, `shipping`, `tax` e `items[]` con `item_id`, `item_name`, `price`, `quantity`, `item_category`, `item_brand`, `item_variant`. `refund` porta con sé il `transaction_id` originale e un valore negativo o parziale.
+
+Gli eventi lead e subscription usano un piccolo set di proprietà: `lead_type`, `form_id`, `plan`, `interval`, `trial_days`, `value` dove esiste un valore documentato.
+
+Tutto il resto va in `props`, che viene validato rispetto allo schema del sito: le chiavi sconosciute vengono segnalate come rilievi, il testo libero viene analizzato alla ricerca di dati personali e gli oggetti annidati vengono oscurati anziché inoltrati.
+
+## Eventi personalizzati
+
+I nomi personalizzati sono ammessi se corrispondono a `^[a-z][a-z0-9_]{2,39}$`, non collidono con un nome standard e sono dichiarati nel tracking plan. Gli eventi personalizzati non dichiarati vengono accettati, contati e segnalati come rilievi di schema, così che il piano possa essere aggiornato in modo deliberato; non vengono consegnati alle destinazioni pubblicitarie finché non sono mappati.
+
+## Traduzione per i vendor
+
+Poiché il vocabolario è fisso, ogni connettore include un mapping predefinito:
+
+| Canonico | Meta | Google Ads | GA4 | TikTok | LinkedIn | Pinterest | Snapchat |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `view_item` | ViewContent | — | view_item | ViewContent | — | page_visit | VIEW_CONTENT |
+| `add_to_cart` | AddToCart | — | add_to_cart | AddToCart | — | add_to_cart | ADD_CART |
+| `begin_checkout` | InitiateCheckout | — | begin_checkout | InitiateCheckout | — | — | START_CHECKOUT |
+| `purchase` | Purchase | azione di conversione | purchase | CompletePayment | regola di conversione | checkout | PURCHASE |
+| `generate_lead` | Lead | azione di conversione | generate_lead | SubmitForm | regola di conversione | lead | SIGN_UP |
+| `sign_up` | CompleteRegistration | azione di conversione | sign_up | CompleteRegistration | regola di conversione | signup | SIGN_UP |
+| `subscribe` | Subscribe | azione di conversione | — | Subscribe | regola di conversione | — | SUBSCRIBE |
+| `start_trial` | StartTrial | azione di conversione | — | StartTrial | regola di conversione | — | START_TRIAL |
+
+Un trattino significa che il vendor non ha un equivalente standard; puoi mappare su un evento vendor personalizzato o lasciare la riga disattivata. Ogni valore predefinito è modificabile per destinazione, e ogni modifica è versionata e compare nel diff di pubblicazione.
+
+## Regole che mantengono onesto il piano
+
+- Un evento per azione dell'utente. `purchase` scatta una volta per ordine, dalla sorgente autoritativa per quel sito (browser, webhook dello shop o server), con lo stesso ID evento o ID ordine su ogni percorso.
+- I valori arrivano dal sistema sorgente. Non esiste un valore predefinito; un valore non mappato è `null`, e un vendor che ne richiede uno rifiuta la riga in modo visibile.
+- I rimborsi sono eventi, non modifiche. Un `refund` fa riferimento alla transazione originale; il `purchase` originale non viene mai riscritto.
+- I nomi sono in snake case minuscolo. La formattazione del vendor (`CompletePayment`, `PURCHASE`) è compito del connettore.

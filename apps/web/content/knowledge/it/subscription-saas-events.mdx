@@ -1,0 +1,73 @@
+---
+title: "Eventi per SaaS e abbonamenti: trial, nuove sottoscrizioni, rinnovi e churn senza gonfiare i ricavi"
+description: "Come modellare un business in abbonamento con il vocabolario degli eventi standard — sign_up, start_trial, subscribe, purchase per i rinnovi, refund per le disdette — dove dovrebbe nascere ogni evento, quale valore inviare alle piattaforme pubblicitarie e come tenere i rinnovi fuori dalle metriche di acquisizione."
+excerpt: "Un funnel SaaS ha più fasi di uno shop e la maggior parte avviene sul server. Inviare un “purchase” a ogni rinnovo insegna alle piattaforme pubblicitarie a inseguire i clienti esistenti. Ecco un modello che tiene separate acquisizione, espansione e retention e dà comunque a ogni piattaforma ciò che può usare."
+category: "guides"
+translationGroupId: "subscription-saas-events"
+slug: "subscription-saas-events"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Modella il ciclo di vita con sign_up, start_trial, subscribe, purchase con flag di rinnovo o espansione, refund e login; il sistema di fatturazione è l'autorità per tutto ciò che riguarda il denaro."
+  - "I rinnovi non devono mai essere inviati come subscribe: mappa solo l'evento di acquisizione sulle azioni di conversione pubblicitarie, così le piattaforme non imparano a inseguire i clienti esistenti."
+  - "I valori restano onesti: l'importo della prima fattura per subscribe, al massimo costanti documentate per piano, il delta per l'espansione, importi negativi per i rimborsi."
+  - "Il consenso raccolto al momento della registrazione viaggia con il webhook di fatturazione; essere cliente non è un consenso, e gli ID di fattura o abbonamento come transaction_id assorbono i nuovi tentativi del webhook."
+tags: ["saas", "abbonamenti", "billing", "eventi"]
+author: "track-site-editorial"
+publishedAt: "2026-08-09"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ciclo di vita dell'abbonamento mappato sugli eventi standard"
+sources:
+  - title: "Stripe — Webhook events for subscriptions"
+    url: "https://docs.stripe.com/billing/subscriptions/webhooks"
+legalNotice: false
+---
+
+## Il ciclo di vita in eventi
+
+| Momento del ciclo di vita | Evento | Origine | Proprietà |
+| --- | --- | --- | --- |
+| Account creato | `sign_up` | browser (ibrido) | `method` |
+| Trial avviato | `start_trial` | server (webhook di fatturazione) | `plan`, `trial_days` |
+| Primo abbonamento a pagamento | `subscribe` | server (webhook di fatturazione) | `plan`, `interval`, `value`, `currency`, `transaction_id` |
+| Fattura di rinnovo pagata | `purchase` con `props.renewal: true` | server | `value`, `currency`, `transaction_id` |
+| Upgrade / espansione | `purchase` con `props.expansion: true` | server | `value` del delta |
+| Disdetta o rimborso | `refund` | server | `transaction_id` originale, `value` negativo |
+| Login | `login` | browser | — |
+
+Il sistema di fatturazione è l'autorità per tutto ciò che riguarda il denaro. Il browser può mostrare una pagina “abbonamento confermato”, ma l'evento che raggiunge le piattaforme pubblicitarie arriva dal webhook, con gli ID del sistema di fatturazione.
+
+## Perché i rinnovi non devono essere `subscribe`
+
+Le piattaforme pubblicitarie ottimizzano verso la conversione che invii. Se ogni rinnovo mensile arriva come nuovo abbonamento con un valore, la piattaforma impara che i clienti esistenti convertono bene e fa offerte per raggiungerli di nuovo. Tieni l'evento di **acquisizione** (`subscribe`, una volta per cliente) separato dalla **retention** (`purchase` con il flag di rinnovo) e mappa solo l'evento di acquisizione sulle azioni di conversione pubblicitarie. I rinnovi continuano a fluire verso l'analytics e verso il tuo reporting interno.
+
+## Valori per le piattaforme pubblicitarie
+
+- `subscribe`: l'importo della prima fattura è difendibile e semplice. Inviare una stima del lifetime value è consentito solo come costante **documentata** per piano nella mappatura della destinazione, visibile nel log di audit; mai una stima per singolo utente.
+- `start_trial`: nessun valore, oppure un valore atteso documentato per piano.
+- Espansione: il delta, non il nuovo totale.
+- `refund`: valore negativo dell'importo rimborsato; GA4 elabora i rimborsi tramite l'ID transazione, Google Ads tramite gli aggiustamenti delle conversioni, la maggior parte delle altre piattaforme li ignora — il connettore applica ciò che il fornitore supporta.
+
+## Identità tra dispositivi
+
+Un cliente SaaS si registra da desktop, paga da mobile, accede da ovunque. Chiama `identify` con il tuo ID utente e, con il consenso al marketing, l'e-mail con hash; gli eventi server portano lo stesso ID utente e lo stesso hash. È questo che permette alle piattaforme di abbinare un `subscribe` server-side al clic sull'annuncio avvenuto giorni prima su un altro dispositivo, entro le rispettive finestre di attribuzione.
+
+## Trial e consenso
+
+Il webhook di fatturazione porta con sé lo stato del consenso che il tuo sistema ha registrato al momento della registrazione, insieme all'ID utente. Il router applica quello stato: un utente che ha rifiutato il marketing alla registrazione genera solo eventi analytics, e un webhook privo di informazioni sul consenso non raggiunge nessuna destinazione pubblicitaria. Non dedurre il consenso dal fatto che qualcuno è diventato cliente: essere cliente non equivale a prestare il consenso alla misurazione pubblicitaria.
+
+## Deduplicazione tra i retry del sistema di fatturazione
+
+I sistemi di fatturazione ripetono l'invio dei webhook. Usa l'ID della fattura o dell'abbonamento come `transaction_id`; la fase di ingest contrassegna un secondo `subscribe` o `purchase` con lo stesso ID transazione come conversione duplicata, e le piattaforme che deduplicano sull'ID ordine uniscono ciò che è comunque passato.
+
+## Un reporting che resta onesto
+
+- Acquisizione: numero e valore dei `subscribe` per campagna, dalle piattaforme pubblicitarie e dai tuoi eventi.
+- Conversione del trial: `start_trial` → `subscribe` per piano, solo dai tuoi eventi.
+- Ricavi netti: `purchase` (tutti i flag) meno `refund`, dal sistema di fatturazione, riconciliati ogni mese con gli eventi.
+
+Se questi tre numeri divergono dai report del sistema di fatturazione stesso, la ripartizione per sorgente nella pagina degli eventi mostra quale percorso sta perdendo cosa.

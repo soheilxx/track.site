@@ -1,0 +1,86 @@
+---
+title: "Microsoft Advertising Conversions API: tag UET più eventi server con msclkid"
+description: "Come funziona la Microsoft Advertising Conversions API accanto al tag UET — l'endpoint degli eventi per ID del tag, la deduplicazione tramite eventId, msclkid e identificatori con hash, i limiti dei batch e la gestione degli errori riga per riga."
+excerpt: "La Conversions API (CAPI) di Microsoft accetta eventi server per ID del tag UET con un bearer token OAuth. Questa guida spiega il payload, come avviene la deduplicazione rispetto al tag JavaScript UET e che cosa significa ogni errore."
+category: "integrations"
+translationGroupId: "microsoft-conversions-api-uet"
+slug: "microsoft-conversions-api-uet"
+topic: "pixel-platform-integrations"
+platforms: ["microsoft"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "CAPI accetta eventi server per ID del tag UET su capi.uet.microsoft.com con un bearer token OAuth (scope msads.manage); gli obiettivi abbinano gli eventi server esattamente come gli eventi del tag."
+  - "continueOnValidationError fa sì che l'endpoint accetti le righe valide e segnali quelle non valide con il loro indice; Track marca quelle righe come non valide e ritenta solo 5xx e 429."
+  - "Passa lo stesso eventId e lo stesso nome evento sul tag UET e sull'API, così Microsoft conta la conversione una sola volta."
+  - "Il msclkid acquisito dopo il consenso al marketing è la chiave di abbinamento primaria, integrata da e-mail e telefono con hash; non esiste un flag di test, quindi assegna allo staging un ID del tag UET dedicato."
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Richiesta alla Microsoft Conversions API verso l'endpoint degli eventi UET"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) integration guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## Gli elementi
+
+- Un **tag UET** (Strumenti → Tag UET). Il suo ID numerico è pubblico e compare nello snippet JavaScript.
+- Un **obiettivo di conversione** di tipo «Evento» o «URL di destinazione» collegato a quel tag; gli eventi server vengono abbinati agli obiettivi tramite nome evento, categoria, etichetta e valore, esattamente come gli eventi del tag.
+- Un **token di accesso OAuth 2.0** per la Microsoft Advertising API (scope `msads.manage`) rilasciato all'account proprietario del tag. Track lo ottiene e lo rinnova tramite la connessione OAuth di Microsoft e lo conserva nel vault.
+
+## La richiesta
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` con `Authorization: Bearer <token>` e un array JSON di eventi:
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/thank-you",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Product", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` è espresso in millisecondi dall'epoch. `eventType` è `custom` per gli eventi di conversione e `pageLoad` per le visualizzazioni di pagina. Con `continueOnValidationError: true` l'endpoint accetta le righe valide e segnala quelle non valide con il loro indice; Track marca quelle righe come payload non valido e non le ritenta, mentre le risposte HTTP 5xx e 429 vengono ritentate con backoff.
+
+In una singola richiesta entrano fino a 1.000 eventi.
+
+## Deduplicazione con il tag UET
+
+Quando anche il tag JavaScript UET attiva l'evento, entrambi i percorsi devono condividere lo stesso `eventId` e lo stesso nome evento. Nel browser passi l'ID nei parametri dell'evento (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`); il server invia lo stesso valore in `eventId`. Microsoft conta così la conversione una sola volta. L'SDK di Track genera un ID per azione e lo passa sia al template UET sia al collector.
+
+## Identificatori
+
+- `msclkid` — il click ID che Microsoft aggiunge agli URL delle landing page. Acquisiscilo dopo il consenso al marketing e conservalo in modalità first-party; senza di esso gli eventi server possono essere abbinati solo tramite identificatori con hash.
+- `em` e `ph` — hash SHA-256 dell'e-mail e del numero di telefono normalizzati.
+- `anid` — l'ID pubblicitario Microsoft per il traffico da app.
+- `clientUserAgent` e `clientIpAddress` — consigliati per gli eventi web e disponibili dal collector quando la policy consente l'inoltro dell'IP.
+
+## Test
+
+L'API non ha un flag di test. Un evento di prova inviato dalla procedura guidata è un evento reale sull'ID del tag che hai configurato: assegna quindi all'ambiente di staging un ID del tag UET dedicato e riserva l'ID del tag di produzione alla produzione; la procedura guidata mostra in entrambi i casi la risposta riga per riga di Microsoft. Quando la destinazione esce dalla modalità di test, gli eventi arrivano all'ID del tag dell'ambiente di produzione.
+
+## Errori
+
+| Risposta | Significato | Gestione |
+| --- | --- | --- |
+| 401 | token scaduto o tenant errato | rinnovato automaticamente; riconnetti se il rinnovo fallisce |
+| 403 | l'account non ha accesso all'ID del tag | verifica la proprietà del tag |
+| 400 con dettagli per riga | valori di campo non validi | riga marcata come non valida; correggi la mappatura |
+| 429 | rate limit | ritentata con backoff |
+| 5xx | errore lato Microsoft | ritentata; circuit breaker se persiste |
+
+Ogni tentativo, incluse le righe rifiutate da Microsoft, è visibile nel monitor delle destinazioni con l'anteprima oscurata del payload.

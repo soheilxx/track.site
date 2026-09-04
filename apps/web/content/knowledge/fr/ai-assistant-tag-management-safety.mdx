@@ -1,0 +1,74 @@
+---
+title: "Un assistant IA qui ne peut pas casser votre tracking : outils typés, approbations et frontière du control plane"
+description: "Comment l'assistant de configuration de Track est conçu pour planifier et configurer sans jamais exécuter de code, inventer des données ou contourner le consentement — le contrat des outils, la validation côté serveur, les jetons d'approbation, la piste d'audit et ce que le modèle ne voit jamais."
+excerpt: "Laisser un modèle de langage toucher à un tracking en production semble imprudent, jusqu'à ce que l'on trace correctement la frontière : le modèle propose, des outils typés valident, des humains approuvent, et chaque étape est consignée. Voici l'architecture, et la liste de ce que l'assistant est structurellement incapable de faire."
+category: "product"
+translationGroupId: "ai-assistant-tag-management-safety"
+slug: "ai-assistant-tag-management-safety"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "L'assistant vit uniquement dans le control plane : il lit la configuration et les agrégats et propose des changements, tandis que le collecteur, le routeur et le worker n'appellent jamais de modèle."
+  - "Il agit via des outils typés, validés côté serveur avec contrôle des rôles ; publier, restaurer une version, mettre en pause et faire tourner des identifiants d'accès exigent un jeton d'approbation qu'un humain délivre pour ce diff précis."
+  - "Le modèle ne voit jamais les secrets, les événements bruts, les données personnelles, les autres tenants ni les API des fournisseurs, et il ne peut ni exécuter de code, ni accorder de consentement, ni inventer des valeurs, ni publier."
+  - "Chaque appel d'outil atterrit dans le journal d'audit : un changement effectué via l'assistant est indiscernable d'un changement effectué à la main."
+tags: ["ia", "assistant", "sécurité", "gouvernance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-15"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Frontière du control plane entre l'assistant et le pipeline d'événements"
+sources:
+  - title: "OpenAI — Function calling and structured outputs"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+legalNotice: false
+---
+
+## La frontière
+
+L'assistant vit entièrement dans le **control plane** (plan de contrôle) : il lit la configuration et les métriques agrégées, et propose des modifications de configuration. Il n'a aucun accès au **data plane** (plan de données) — le collecteur, le routeur et le worker n'appellent jamais de modèle, et aucune charge utile d'événement n'est jamais envoyée à un modèle. Que l'assistant soit activé ou non, les événements circulent exactement de la même manière.
+
+## Des outils, pas du texte
+
+Le modèle n'écrit pas la configuration. Il appelle des **outils typés** avec des arguments JSON validés sur le serveur contre un schéma :
+
+- En lecture seule, toujours disponibles : état de l'espace de travail et de la configuration, liste des intégrations, statut des destinations, santé récente des événements, état du consentement, schéma des événements, erreurs de livraison, comparaison de versions.
+- Brouillons : créer un brouillon d'intégration, créer ou mettre à jour un brouillon de mapping d'événements, définir les réglages d'une destination ou la politique de consentement dans le brouillon, valider le brouillon, préparer une publication.
+- Sous approbation : publier ou restaurer une version, mettre en pause ou activer une destination, déconnecter une intégration et faire tourner un identifiant d'accès exigent un **jeton d'approbation** que l'utilisateur délivre dans l'interface pour cette action précise.
+- Identifiants d'accès : l'outil d'identifiants sécurisés ouvre un formulaire dans lequel l'*utilisateur* saisit le secret ; le modèle ne reçoit que « identifiant d'accès enregistré ».
+
+Chaque outil vérifie le rôle de l'appelant (un lecteur ne peut pas rédiger de brouillon, un éditeur ne peut pas publier), valide les arguments et refuse tout ce qui sort de l'étape en cours de l'assistant de configuration. Le modèle peut appeler l'outil de mapping cent fois ; chaque appel passe par la même validation que le formulaire de l'interface, et le résultat est donc le même que si une personne avait cliqué.
+
+## Les approbations
+
+Rien ne part en production sans approbation. Une publication préparée produit un **diff** — le même diff que celui affiché par l'historique des versions — et l'utilisateur délivre dans l'interface un jeton d'approbation lié à ce diff, à cet utilisateur et à une courte durée de validité. Le jeton est consommé une seule fois ; si le brouillon a changé après son émission, il n'est plus valide. Le modèle ne peut ni générer, ni deviner, ni réutiliser des jetons d'approbation, parce qu'ils n'apparaissent jamais dans son contexte — il ne peut que transmettre celui que l'utilisateur vient d'accorder.
+
+## Ce que le modèle ne voit jamais
+
+- **Les secrets.** Les identifiants d'accès sont saisis par l'utilisateur dans un formulaire de coffre-fort et référencés par identifiant. Le modèle voit des types (« jeton d'accès présent »), jamais des valeurs.
+- **Les événements bruts ou les données personnelles.** Il lit des agrégats : décomptes, taux, composantes de santé, constats de schéma par nom de champ. Le débogueur d'événements est une interface pour les humains.
+- **Les autres tenants.** Le contexte des outils est lié à l'organisation de la session ; aucune lecture inter-tenants n'est possible.
+- **Les API des fournisseurs.** Les événements de test sont envoyés par le worker sur demande ; le modèle lit le résultat classifié.
+
+## Ce que l'assistant est structurellement incapable de faire
+
+- Exécuter du code sur votre site : il n'existe aucun type de tag « code personnalisé » à créer.
+- Accorder un consentement ou le contourner : le consentement est une donnée que le moteur de politique lit, pas un réglage que les outils exposent.
+- Inventer des valeurs, des identités ou des conversions : les outils n'acceptent que les champs définis par le schéma, et ce qui est inconnu reste `null`.
+- Publier : seul un humain disposant du droit de publication peut consommer un jeton d'approbation.
+- Modifier la facturation, supprimer des données ou changer la durée de conservation : ces actions n'ont aucun outil.
+
+## Modèles, clés et localisation des données
+
+L'assistant utilise l'API Responses d'OpenAI avec Structured Outputs et des outils définis côté serveur. Les noms de modèles sont configurés côté serveur et n'apparaissent jamais dans le code du navigateur. Les clés sont séparées par environnement, stockées hors du dépôt et limitées aux permissions minimales (lister les modèles et créer des réponses). Les organisations peuvent désactiver entièrement l'assistant dans les réglages ; ce basculement est audité.
+
+## La piste d'audit
+
+Chaque appel d'outil est écrit dans le journal d'audit avec l'acteur (identifiant utilisateur plus « via l'assistant »), les arguments tels que validés, le résultat et l'identifiant de requête. Un changement publié via l'assistant est indiscernable, dans l'historique, d'un changement effectué à la main — parce qu'au moment de sa mise en production, c'en était un.
+
+## Pourquoi cela reste utile
+
+La valeur de l'assistant n'est pas l'autonomie ; c'est qu'une configuration de destination en 19 étapes, avec ses particularités propres à chaque fournisseur, devient une conversation qui se termine par un diff relu. Le modèle se charge de lire la documentation et de rédiger le brouillon ; les garde-fous garantissent que le résultat est exactement ce que vous auriez configuré vous-même — en plus rapide.

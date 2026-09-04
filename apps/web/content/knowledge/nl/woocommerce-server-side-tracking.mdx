@@ -1,0 +1,74 @@
+---
+title: "WooCommerce-tracking met ondertekende orderwebhooks: browser-events, de purchase-datalayer en server-side waarheid"
+description: "Hoe de WooCommerce-plugin van Track het snippet installeert, op de bedankpagina een purchase in GA4-vorm naar de datalayer pusht en native WooCommerce-webhooks beheert die met HMAC-SHA256 zijn ondertekend — en hoe bestellingen, statussen en terugbetalingen worden gemapt op canonieke events."
+excerpt: "WooCommerce heeft al ondertekende webhooks en een REST-orderformaat. De plugin is bewust klein: snippet, datalayer op de bedankpagina en twee beheerde webhooks. Dit doet elk onderdeel, en zo wordt de orderstatus een purchase."
+category: "integrations"
+translationGroupId: "woocommerce-server-side-tracking"
+slug: "woocommerce-server-side-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["woocommerce"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "De plugin doet maar drie dingen: het snippet uitschrijven, op de bedankpagina een purchase in GA4-vorm naar de datalayer pushen en twee ondertekende order.created-/order.updated-webhooks beheren."
+  - "Elke aflevering wordt geverifieerd via de HMAC in X-WC-Webhook-Signature; de eerste ping wordt beantwoord zonder een event aan te maken."
+  - "De orderstatus stuurt de mapping: processing en completed worden één purchase met een deterministische event-ID, terugbetalingen worden één refund per regel, andere statussen worden genegeerd."
+  - "De server-purchase erft via de order-ID toestemming, anonieme ID, click-ID's en gehashte identifiers van de browser-purchase; zonder die bereikt hij nooit advertentie-destinations."
+tags: ["woocommerce", "wordpress", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-07"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Statusflow van een WooCommerce-order gemapt op purchase- en refund-events"
+sources:
+  - title: "WooCommerce — Webhooks"
+    url: "https://woocommerce.com/document/webhooks/"
+  - title: "WooCommerce REST API — Orders"
+    url: "https://woocommerce.github.io/woocommerce-rest-api-docs/#orders"
+legalNotice: false
+---
+
+## Wat de plugin doet
+
+`integrations/woocommerce/track-site` is een WordPress-plugin van één bestand (PHP 8.1+, WooCommerce 8+, compatibel met High-Performance Order Storage). Hij heeft drie verantwoordelijkheden en verder geen:
+
+1. **Snippet.** Schrijft de asynchrone Track-loader met jouw tracking-ID uit in `wp_head`; eigen SDK- en collector-hosts alleen wanneer je die instelt.
+2. **Purchase-datalayer.** Op de bedankpagina pusht hij een `purchase` in GA4-vorm naar `window.dataLayer` — transactie-ID en order-ID, waarde, valuta, belasting, verzendkosten, kortingscodes en orderregels — beveiligd met een order-metaflag zodat een herladen van de pagina niet twee keer pusht. De SDK observeert de push via een `data_layer`-trigger met de sleutel `purchase`; dit is het browserpad dat de toestemming en click-ID's van de bezoeker draagt.
+3. **Beheerde webhooks.** Bij het opslaan van de instellingen maakt of actualiseert hij twee native WooCommerce-webhooks, `order.created` en `order.updated`, met REST v3-payloads, gericht op de webhook-URL van je koppeling en ondertekend met het secret dat je invoert. Bij het deactiveren van de plugin worden ze weer verwijderd.
+
+Betaalgegevens reizen nooit mee: de orderrepresentatie van WooCommerce bevat factuur- en verzendgegevens, totalen en orderregels, geen kaartnummers. Wil je liever geen plugin installeren, dan kun je dezelfde twee webhooks handmatig aanmaken onder WooCommerce → Instellingen → Geavanceerd → Webhooks, met hetzelfde secret.
+
+## Verificatie
+
+WooCommerce ondertekent elke aflevering met `X-WC-Webhook-Signature`, de base64-gecodeerde HMAC-SHA256 van de ruwe body onder het webhook-secret. De collector berekent die opnieuw en vergelijkt in constante tijd. Wanneer een webhook wordt aangemaakt, stuurt WooCommerce eerst een form-encoded ping (`webhook_id=…`); de collector verifieert de handtekening daarvan en antwoordt *pong* zonder een event aan te maken, en de koppeling legt de ping vast als eerste topic.
+
+## Van orderstatus naar events
+
+WooCommerce vuurt `order.updated` bij elke wijziging, dus de mapping gaat uit van de status:
+
+| Orderstatus | Event |
+| --- | --- |
+| `processing`, `completed` | `purchase` (één keer; de event-ID is deterministisch per order) |
+| `refunded`, of elke status met regels in `refunds[]` | één `refund` per terugbetalingsregel, absoluut bedrag |
+| `pending`, `on-hold`, `cancelled`, `failed` | genegeerd |
+
+De purchase draagt het betaalmoment (`date_paid_gmt`) in plaats van het aanmaakmoment, de transactie-ID van de betaalprovider, valuta, totalen, belasting, verzendkosten, korting en de eerste kortingscode, orderregels op variatie-ID (of product-ID), en het e-mailadres, telefoonnummer, de naam, plaats, postcode en het land van het factuuradres als ruwe matchingdata die de router hasht. De klant-ID wordt `external_id`.
+
+## Koppelen aan de browser-purchase
+
+De webhook bevat geen toestemmingsinformatie. Komt hij binnen, dan zoekt de router een browser-purchase met dezelfde order-ID en laat hij het server-event diens toestemmingsrecord, anonieme ID, click-ID's en gehashte identifiers erven. Beide events worden gerouteerd; leveranciers ontvangen `purchase:<order id>` via beide paden en tellen één keer. Zonder browser-purchase is het serverrecord alleen operationeel en bereikt het nooit advertentie-destinations.
+
+Omdat de datalayer-push van de plugin en de webhook dezelfde order-ID gebruiken, gebeurt het koppelen automatisch; aan de kant van de shop hoeft er buiten de twee instellingen niets te worden geconfigureerd.
+
+## Instellen
+
+1. Site → Shopkoppeling → WooCommerce: shopdomein, opslaan; webhook-URL kopiëren; een secret kiezen en in de koppeling opslaan.
+2. Plugin installeren en activeren, Instellingen → Track openen, tracking-ID, webhook-URL en hetzelfde secret invoeren, opslaan. De pagina toont de twee beheerde webhooks.
+3. Plaats een testbestelling en zet die op *In behandeling* (processing). De debugger toont de browser-purchase uit de datalayer en de geverifieerde woocommerce-purchase met dezelfde order-ID.
+
+## Bekende beperkingen, gewoon benoemd
+
+- Handmatige statuswijzigingen in de admin vuren `order.updated` net als elke andere wijziging; de deterministische event-ID voorkomt een tweede purchase.
+- Een tweede gedeeltelijke terugbetaling op dezelfde order wordt in de conversietabel op order-ID gededupliceerd; de eerste terugbetaling wordt vastgelegd, latere zijn alleen in WooCommerce zichtbaar.
+- Abonnementsplugins die verlengingsorders aanmaken, produceren nieuwe order-ID's en dus nieuwe purchases; map verlengingen op een aparte conversieactie als je ze niet in je acquisitiecijfers wilt.

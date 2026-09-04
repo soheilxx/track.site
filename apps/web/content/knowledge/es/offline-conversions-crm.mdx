@@ -1,0 +1,79 @@
+---
+title: "Conversiones offline desde tu CRM: importaciones con la marca de tiempo original, identificadores con hash y valores honestos"
+description: "Cómo devolver los resultados del CRM — leads cualificados, operaciones cerradas, compras en tienda física — a Google Ads, Meta, LinkedIn, TikTok y Microsoft a través del origen de importación de Track, qué identificadores necesita cada plataforma y qué reglas de tiempo se aplican."
+excerpt: "Las conversiones más valiosas suelen ocurrir días después del clic y fuera del navegador. Importarlas correctamente significa conservar la hora original, emparejar por el identificador adecuado y no inventar nunca un valor. Este es el flujo de trabajo con las reglas por plataforma."
+category: "guides"
+translationGroupId: "offline-conversions-crm"
+slug: "offline-conversions-crm"
+topic: "attribution-analytics"
+platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Exporta una fila por resultado del CRM, envíala al endpoint de eventos de servidor con una clave de origen del CRM y se convierte en un evento canónico con la marca de tiempo original y el estado de consentimiento registrado."
+  - "Normaliza y aplica hash a los identificadores antes de enviarlos; las filas con identificadores en claro no pasan la validación, y un evento sin información de consentimiento no llega a ningún destino publicitario."
+  - "Cada plataforma tiene su propio mecanismo, su identificador obligatorio y sus reglas de tiempo; sube la hora en la que ocurrió el resultado, nunca la hora de la exportación."
+  - "Guarda los IDs de clic en el lead para un emparejamiento determinista, mantén los valores reales, como constantes documentadas o vacíos, y envía los resultados posteriores como eventos propios en lugar de duplicar el del navegador."
+tags: ["conversiones-offline", "crm", "importación", "atribución"]
+author: "track-site-editorial"
+publishedAt: "2026-08-23"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Importación CSV de conversiones del CRM mapeadas a eventos canónicos"
+sources:
+  - title: "Google Ads Help — About offline conversion imports"
+    url: "https://support.google.com/google-ads/answer/2998031"
+  - title: "Meta for Developers — Conversions API for offline events"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/app-events-offline-events"
+legalNotice: false
+---
+
+## El flujo de trabajo
+
+1. **Exporta** desde el CRM: una fila por resultado con la hora del resultado, los identificadores de que dispongas (correo electrónico, teléfono, ID de clic si está guardado en el lead, ID de pedido) y el valor.
+2. **Envía** las filas al endpoint de eventos de servidor con una clave de origen creada para el CRM. Cada fila se convierte en un evento canónico (`qualified_lead`, `purchase`, `refund`, `subscribe`) con `props.offline: true`, la marca de tiempo original y el estado de consentimiento que tu sistema registró para esa persona. Un script pequeño o el webhook saliente del CRM pueden hacerlo; el endpoint acepta lotes y responde con el número de eventos aceptados o con un error de validación que nombra el campo.
+3. **Normaliza y aplica hash antes de enviar**: correos electrónicos en minúsculas y sin espacios sobrantes, teléfonos convertidos a E.164 y después SHA-256. Las filas que llegan con identificadores en claro no pasan la validación; no se aplica hash a nada en tu nombre.
+4. **Enruta** exactamente igual que los eventos del navegador: el motor de políticas aplica, destino a destino, el estado de consentimiento que lleva el evento. Un evento sin información de consentimiento lleva solo la finalidad necesaria y no llega a ningún destino publicitario.
+5. **Entrega** a través de los mismos conectores, con las variantes offline de cada API.
+
+El depurador de eventos muestra cada evento importado con su origen, y el monitor de destinos muestra el estado de entrega por destino.
+
+## Por plataforma
+
+| Plataforma | Mecanismo | Identificador obligatorio | Reglas de tiempo |
+| --- | --- | --- | --- |
+| Google Ads | importación de conversiones de clics | `gclid`/`gbraid`/`wbraid` **o** correo electrónico/teléfono con hash (Enhanced Conversions for Leads) | después del clic, dentro de la ventana; no más antiguo que la ventana de conversión post-clic de la acción |
+| Meta | Conversions API con `action_source: physical_store` o `system_generated` | correo electrónico/teléfono con hash, `external_id`; `fbc` si está guardado | en un plazo de 62 días |
+| LinkedIn | Conversions API | correo electrónico con hash o `li_fat_id` | en un plazo de 90 días |
+| TikTok | Events API con `event_source: offline` y el ID de un conjunto de eventos offline | correo electrónico/teléfono con hash | en un plazo de 7 días para web, más largo para conjuntos offline |
+| Microsoft | Conversions API | `msclkid` o correo electrónico/teléfono con hash | dentro de la ventana del objetivo |
+| Redes de afiliación | postback con el ID de clic guardado | ID de clic de la red | según el programa |
+
+La marca de tiempo que subes debe ser la hora en la que el resultado **ocurrió**, no la hora en la que lo exportaste. Subir las operaciones de ayer con la marca de tiempo de hoy desplaza la atribución y puede dejar conversiones fuera de la ventana de clic.
+
+## Guarda el ID de clic en el lead
+
+Emparejar por ID de clic es más fiable que por correo electrónico con hash. Copia los parámetros de ID de clic de la URL de la landing page (`gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid`) en campos ocultos del formulario cuando se haya concedido el consentimiento de marketing, y guárdalos en el lead dentro del CRM. Más adelante, cuando el lead se cierre, la exportación llevará el ID de clic y el emparejamiento de la subida será determinista.
+
+## Valores: modélalos o déjalos vacíos
+
+Un lead cualificado no tiene valor de pedido. Opciones que siguen siendo honestas:
+
+- Deja el valor vacío; la optimización basada en recuentos sigue funcionando.
+- Usa un **valor esperado documentado** por fase del lead (por ejemplo, valor medio de la operación × tasa de cierre), fijado como constante en el mapeo del destino y visible en el registro de auditoría.
+- Sube el valor **real** de la operación cuando se cierre, como conversión aparte.
+
+Lo que Track no hará es inventar un valor: los valores sin mapear se quedan en `null`, y un mapeo que referencia una propiedad inexistente no pasa la validación en lugar de sustituirla por un valor por defecto.
+
+## Deduplicación con los eventos del navegador
+
+No envíes la fila «formulario enviado» del CRM como el mismo evento que el navegador ya envió; contarías dos veces salvo que el ID de evento viaje con el lead. Envía los resultados **posteriores** (`qualified_lead`, `purchase`) como eventos propios, mapeados a acciones de conversión o reglas separadas. En las compras que el navegador también vio, conserva el ID de pedido en ambos para que las plataformas que deduplican por ID de pedido los fusionen.
+
+## Lista de comprobación
+
+- [ ] La exportación contiene la hora del resultado en ISO 8601 con zona horaria
+- [ ] Identificadores normalizados antes del hash; columnas que ya llevan hash marcadas como tales
+- [ ] IDs de clic guardados en el lead al enviar el formulario
+- [ ] Valores reales, constantes documentadas o vacíos
+- [ ] Respuestas por lote revisadas: filas rechazadas corregidas, entrega por destino confirmada en el monitor de destinos

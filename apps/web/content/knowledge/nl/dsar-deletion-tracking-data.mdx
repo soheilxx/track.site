@@ -1,0 +1,77 @@
+---
+title: "Een verzoek van een betrokkene afhandelen in trackingdata: exporteren, verwijderen, beperken — en het bewijs leveren"
+description: "Hoe inzage- en verwijderverzoeken doorwerken in eventdata, click-ID's, toestemmingsregistraties en afleverlogs; hoe Track de betrokkene identificeert via een e-mailadres, gebruikers-ID of anonieme ID; wat de export bevat; en wat een verwijderjob bewust laat staan."
+excerpt: "Trackingdata zijn persoonsgegevens. Komt er een verzoek binnen, dan moet je elk record van die persoon vinden, overhandigen of binnen de termijn verwijderen — en bewijs bewaren dat je dat hebt gedaan, zonder een kopie te houden van wat je hebt verwijderd. Dit is de workflow, stap voor stap."
+category: "privacy"
+translationGroupId: "dsar-deletion-tracking-data"
+slug: "dsar-deletion-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Trackingrecords over een persoon omvatten events, click-ID's, toestemmingsregistraties, afleverpogingen, conversierecords en de kopieën die platformen bewaren."
+  - "De betrokkene wordt geïdentificeerd via de SHA-256-hash van het e-mailadres, een gebruikers-ID of een anonieme ID — nooit via het e-mailadres in platte tekst, want dat wordt niet opgeslagen; ‘geen records gevonden’ is een legitieme uitkomst."
+  - "Exporteren, verwijderen, beperken en rectificeren leveren elk een auditvermelding en een afsluitrapport met aantallen op, nooit de verwijderde inhoud; verzoeken krijgen een vervaldatum van 30 dagen."
+  - "Verwijdering laat bewust de auditvermelding, geaggregeerde statistieken en de als bewijs benodigde toestemmingsregistraties staan, en somt de platformen op die de beheerder apart moet benaderen."
+tags: ["dsar", "avg", "verwijdering", "export"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Levenscyclus van een verzoek van een betrokkene, van ontvangst tot afsluitrapport"
+sources:
+  - title: "GDPR Article 15 — Right of access"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "GDPR Article 17 — Right to erasure"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Welke trackingrecords over een persoon gaan
+
+Meer dan de meeste teams denken:
+
+- **Events** — elke paginaweergave, klik en conversie, gekoppeld aan een anonieme ID, sessie-ID en, na inloggen, gebruikers-ID; met gehashte identifiers (`em`, `ph`) wanneer de toestemming die toeliet.
+- **Click-ID's** — `gclid`, `fbc` en verwanten, first-party opgeslagen voor attributie.
+- **Toestemmingsregistraties** — de verleende doeleinden, de hash van de TC-string, tijdstempels; dit zijn persoonsgegevens *én* je bewijs van rechtmatige verwerking.
+- **Afleverpogingen** — wat naar welk platform is gestuurd, met de geredigeerde payload-preview.
+- **Conversierecords** en geïmporteerde CRM-uitkomsten.
+- **Kopieën bij platformen** — wat Meta, Google en de anderen hebben ontvangen; verwijdering daar is een apart verzoek aan elk platform.
+
+## De betrokkene identificeren
+
+Een verzoek komt meestal binnen met een e-mailadres. Track hasht het (kleine letters, getrimd, SHA-256) en doorzoekt events op de `em`-hash; het accepteert ook een gebruikers-ID uit jouw systeem of een anonieme ID die de persoon op de privacypagina kan aflezen. Het zoekt nooit op het e-mailadres in platte tekst, omdat e-mailadressen in platte tekst niet worden opgeslagen.
+
+Is er geen match, dan zegt het rapport dat — ‘geen records gevonden voor de opgegeven identifiers’ is een legitieme en veelvoorkomende uitkomst bij bezoekers die nooit toestemming hebben gegeven voor identifiers.
+
+## Soorten verzoeken
+
+| Soort | Wat Track doet |
+| --- | --- |
+| export / overdraagbaarheid | bouwt per site een JSON-rapport: events (naam, tijd, URL, toestemming, commercedata, click-ID's, bron), conversierecords; te downloaden vanuit het Privacy Center |
+| verwijderen | verwijdert de events, conversierecords en click-ID's van de betrokkene op elke site van de organisatie; schrijft per store een verwijderjob-vermelding met aantallen |
+| beperken / bezwaar | wordt vastgelegd; afgedwongen door het toestemmingsbeleid (toekomstige events voor de identifiers worden verworpen) en door de bewaartermijnen |
+| rectificeren | wordt vastgelegd; trackingdata worden niet veld voor veld gerectificeerd — de juiste waarde komt bij het volgende event uit het bronsysteem |
+
+Elke soort levert een **auditvermelding** op (wie heeft het verwerkt, wanneer, welke sites) en een **afsluitrapport** dat bij het verzoek wordt opgeslagen. Het rapport bevat aantallen, niet de verwijderde inhoud.
+
+## De termijn
+
+Verzoeken krijgen een vervaldatum van 30 dagen na ontvangst; het Privacy Center toont openstaande verzoeken met hun vervaldatum. Verlenging is een beslissing van de beheerder, geen standaard.
+
+## Wat verwijdering bewust laat staan
+
+- De **auditlog**-vermelding dat er een verwijdering heeft plaatsgevonden, met aantallen en het verzoek-ID — niet de identifiers.
+- Al berekende **geaggregeerde statistieken** (dagelijkse eventaantallen, health scores), die geen persoonsgegevens zijn.
+- **Toestemmingsregistraties** voor de bewaartermijn die nodig is om rechtmatige verwerking aan te tonen, met de identifiers verwijderd zodra de registratie daarvoor niet meer nodig is.
+- **Data bij platformen.** Het rapport somt elke destination op waaraan events van de betrokkene zijn afgeleverd, zodat de beheerder de bijbehorende verwijderverzoeken bij de platformen kan indienen; Track doet niet alsof het data verwijdert die het niet beheert.
+
+## Bewaartermijnen maken de meeste verzoeken kleiner
+
+Korte bewaartermijnen voor click-ID's, afleverpogingen en ruwe-data-archieven betekenen dat een groot deel van de data van een betrokkene al is verlopen wanneer een verzoek binnenkomt. De pagina met het bewaarbeleid toont de ingestelde termijnen per datasoort, en het exportrapport vermeldt welke termijnen van toepassing waren.
+
+## Hoe bezoekers je bereiken
+
+De openbare privacypagina noemt het kanaal voor verzoeken — het contactformulier of het adres in het colofon. De beheerder voert het verzoek in het Privacy Center in met de identifiers die de bezoeker heeft opgegeven; vanaf daar volgt het de wachtrij en de audittrail die hierboven zijn beschreven.

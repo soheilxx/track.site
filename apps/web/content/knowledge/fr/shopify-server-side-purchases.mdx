@@ -1,0 +1,70 @@
+---
+title: "Un tracking Shopify qui survit au checkout hébergé : web pixel, webhooks de commande vérifiés et appariement par numéro de commande"
+description: "Pourquoi un script de thème ne voit pas le checkout de Shopify, comment l'extension web pixel de Track et les webhooks orders/paid signés fonctionnent ensemble, ce que le collecteur vérifie, et comment l'achat serveur hérite du consentement et des identifiants de clic du client."
+excerpt: "Sur Shopify, le checkout appartient à Shopify, pas à vous. La configuration honnête, c'est un web pixel pour le côté navigateur et des webhooks de commande vérifiés pour la vérité, appariés par numéro de commande pour que le consentement soit respecté et que les fournisseurs comptent une seule fois."
+category: "integrations"
+translationGroupId: "shopify-server-side-purchases"
+slug: "shopify-server-side-purchases"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopify"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Shopify héberge le checkout, un script de thème ne peut donc pas voir l'achat ; l'extension web pixel couvre le côté navigateur et lit le consentement via la Customer Privacy API."
+  - "Les webhooks orders/paid et refunds/create sont vérifiés par signature HMAC-SHA256 et domaine de la boutique, puis deviennent des événements purchase et refund vérifiés à la source, avec des identifiants déterministes."
+  - "Le routeur apparie l'achat serveur à l'achat navigateur par numéro de commande, de sorte qu'il hérite de l'enregistrement de consentement, de l'identifiant anonyme, des identifiants de clic et des identifiants hachés."
+  - "Sans achat navigateur, l'enregistrement serveur reste opérationnel et n'atteint jamais les plateformes publicitaires — un client qui paie n'est pas présumé avoir consenti."
+tags: ["shopify", "web-pixels", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-08"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Web pixel Shopify et webhook de commande alimentant un seul enregistrement d'achat"
+sources:
+  - title: "Shopify — Web Pixels API"
+    url: "https://shopify.dev/docs/api/web-pixels-api"
+  - title: "Shopify — Webhooks: verify a webhook"
+    url: "https://shopify.dev/docs/apps/build/webhooks/subscribe/https#step-5-verify-the-webhook"
+legalNotice: false
+---
+
+## La contrainte
+
+Les pages de checkout et de remerciement de Shopify sont hébergées par Shopify. Un script placé dans `theme.liquid` s'exécute sur la vitrine, mais pas là ; une configuration limitée au thème rate donc l'achat ou s'appuie sur le champ obsolète des scripts supplémentaires. Deux éléments le remplacent :
+
+1. **Une extension web pixel** — du code isolé (sandbox) que Shopify exécute sur chaque page, checkout compris, avec accès aux événements clients standard et à la Customer Privacy API.
+2. **Des webhooks de commande** — Shopify envoie la commande à votre endpoint lorsqu'elle est payée, signée avec un secret que vous seul et Shopify connaissez.
+
+Track fournit les deux : `integrations/shopify/web-pixel` et un récepteur vérifié dans le collecteur.
+
+## Le web pixel
+
+Le pixel s'abonne à `page_viewed`, `product_viewed`, `product_added_to_cart`, `checkout_started`, `payment_info_submitted` et `checkout_completed`, les convertit en événements standard et les envoie à l'endpoint navigateur du collecteur. Il lit le consentement dans la Customer Privacy API de Shopify : `analyticsProcessingAllowed` devient la finalité analytics, `marketingAllowed` la finalité marketing, et une mise à jour `visitorConsentCollected` modifie les événements suivants. Rien n'est répliqué vers des balises fournisseurs depuis la sandbox ; les fournisseurs reçoivent les événements côté serveur via les destinations configurées.
+
+L'événement `checkout_completed` porte le numéro de commande Shopify. C'est cet identifiant qui rend l'étape suivante honnête.
+
+## Le webhook vérifié
+
+Dans l'administration Shopify, sous Paramètres → Notifications → Webhooks, vous créez `orders/paid` et `refunds/create` en les faisant pointer vers l'URL de webhook de la connexion — une URL propre à votre site, dotée d'un jeton impossible à deviner. Shopify signe chaque livraison avec `X-Shopify-Hmac-Sha256`, le HMAC-SHA256 en base64 du corps brut, calculé avec le secret de signature affiché sous la liste des webhooks. Vous stockez ce secret dans le coffre-fort de Track ; le collecteur recalcule le HMAC, le compare en temps constant et vérifie également `X-Shopify-Shop-Domain` par rapport au domaine connecté.
+
+Un `orders/paid` accepté devient un `purchase` avec `source: shopify` et `source_verified: true` : numéro de commande, devise, totaux, taxes, frais de livraison, code de réduction, lignes de commande avec identifiants de variante, ainsi que l'e-mail, le téléphone et l'adresse du client comme données de correspondance brutes que le routeur hache. `orders/create` n'est accepté que si la commande est déjà payée ; `refunds/create` devient un `refund` avec les montants des transactions remboursées. Les livraisons répétées produisent le même identifiant d'événement déterministe et sont écartées par le garde-fou de déduplication.
+
+## L'appariement par numéro de commande
+
+Le webhook ne sait rien du consentement. L'achat du pixel, si. Lorsque l'achat serveur arrive, le routeur cherche un achat navigateur portant le même numéro de commande dans les 30 derniers jours et, s'il en trouve un, l'événement serveur **hérite** de son enregistrement de consentement, de son identifiant anonyme, de ses identifiants de clic et de ses identifiants hachés, avec une provenance qui marque le consentement comme dérivé de l'événement navigateur. L'enregistrement serveur vérifié remplace alors l'observation navigateur dans la table des conversions, et les deux événements sont routés : les fournisseurs qui dédupliquent sur l'identifiant d'événement reçoivent `purchase:<numéro de commande>` par les deux chemins et comptent une seule fois.
+
+S'il n'existe aucun achat navigateur — le client a refusé, ou bloqué le pixel — l'achat serveur est stocké comme enregistrement opérationnel et n'atteint que les destinations qui n'exigent aucun consentement. Il n'est jamais envoyé aux plateformes publicitaires en partant du principe qu'un client qui paie a forcément consenti.
+
+## Mise en place
+
+1. Site → Connexion boutique → Shopify : saisissez `votre-boutique.myshopify.com`, enregistrez, copiez l'URL de webhook.
+2. Créez les deux webhooks dans l'administration Shopify, au format JSON ; copiez le secret de signature dans la connexion.
+3. Déployez l'extension web pixel avec votre identifiant de tracking (et un hôte de collecteur first-party si vous en utilisez un).
+4. Passez une commande de test. La connexion affiche *connectée* après le premier webhook vérifié ; le débogueur d'événements montre l'achat du pixel et l'achat shopify avec le même numéro de commande, et le moniteur des destinations une livraison par destination et par chemin.
+
+## Ce qu'il faut vérifier chaque mois
+
+- Les échecs de signature dans la dernière erreur de la connexion : un secret renouvelé dans Shopify sans mise à jour du coffre-fort.
+- Les commandes avec un achat serveur mais sans achat navigateur : la proportion vous indique combien de clients refusent ou bloquent, et c'est le plafond de l'attribution publicitaire.
+- La couverture des remboursements : `refunds/create` doit être abonné, sinon les valeurs côté fournisseur dérivent vers le haut.

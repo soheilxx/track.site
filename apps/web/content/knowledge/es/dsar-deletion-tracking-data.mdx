@@ -1,0 +1,77 @@
+---
+title: "Gestionar una solicitud de ejercicio de derechos sobre datos de tracking: exportar, suprimir, limitar y demostrarlo"
+description: "Cómo se aplican las solicitudes de acceso y supresión a los datos de eventos, los IDs de clic, los registros de consentimiento y los registros de entrega; cómo Track identifica al interesado a partir de un correo electrónico, un ID de usuario o un ID anónimo; qué contiene la exportación; y qué deja atrás a propósito un job de supresión."
+excerpt: "Los datos de tracking son datos personales. Cuando llega una solicitud, tienes que encontrar cada registro de la persona, entregarlo o eliminarlo dentro del plazo y conservar la prueba de que lo hiciste, sin guardar una copia de lo que suprimiste. Este es el flujo de trabajo, paso a paso."
+category: "privacy"
+translationGroupId: "dsar-deletion-tracking-data"
+slug: "dsar-deletion-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Los registros de tracking sobre una persona incluyen eventos, IDs de clic, registros de consentimiento, intentos de entrega, registros de conversión y las copias que conservan los proveedores."
+  - "El interesado se identifica por el hash SHA-256 del correo electrónico, un ID de usuario o un ID anónimo — nunca por el correo en claro, que no se almacena; «no se han encontrado registros» es un resultado legítimo."
+  - "Cada exportación, supresión, limitación y rectificación genera una entrada de auditoría y un informe de cierre con recuentos, nunca el contenido suprimido; las solicitudes llevan un plazo de 30 días."
+  - "La supresión conserva a propósito la entrada de auditoría, las estadísticas agregadas y los registros de consentimiento necesarios como prueba, y enumera los proveedores con los que el operador debe contactar por separado."
+tags: ["dsar", "rgpd", "supresión", "exportación"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ciclo de vida de una solicitud de ejercicio de derechos, desde la recepción hasta el informe de cierre"
+sources:
+  - title: "GDPR Article 15 — Right of access"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "GDPR Article 17 — Right to erasure"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Qué registros de tracking se refieren a una persona
+
+Más de los que la mayoría de los equipos suponen:
+
+- **Eventos** — cada página vista, clic y conversión, indexados por ID anónimo, ID de sesión y, tras iniciar sesión, ID de usuario; con identificadores con hash (`em`, `ph`) cuando el consentimiento lo permitió.
+- **ID de clic** — `gclid`, `fbc` y compañía, almacenados en first-party para la atribución.
+- **Registros de consentimiento** — las finalidades concedidas, el hash de la TC String, las marcas de tiempo; son datos personales *y* tu prueba de la licitud del tratamiento.
+- **Intentos de entrega** — qué se envió a qué proveedor, con la vista previa enmascarada del payload.
+- **Registros de conversión** y resultados importados del CRM.
+- **Copias en el lado del proveedor** — lo que Meta, Google y los demás recibieron; la supresión allí es una solicitud aparte a cada proveedor.
+
+## Identificar al interesado
+
+Una solicitud suele llegar con una dirección de correo electrónico. Track le aplica un hash (en minúsculas, sin espacios, SHA-256) y busca eventos por el hash `em`; también acepta un ID de usuario de tu sistema o un ID anónimo que la persona puede consultar en la página de privacidad. Nunca busca por el correo en claro, porque los correos en claro no se almacenan.
+
+Si no hay coincidencias, el informe lo dice: «no se han encontrado registros para los identificadores facilitados» es un resultado legítimo y frecuente en visitantes que nunca consintieron el uso de identificadores.
+
+## Tipos de solicitud
+
+| Tipo | Qué hace Track |
+| --- | --- |
+| exportación / portabilidad | genera un informe JSON por sitio: eventos (nombre, hora, URL, consentimiento, datos de commerce, IDs de clic, fuente) y registros de conversión; descargable desde el centro de privacidad |
+| supresión | suprime los eventos, los registros de conversión y los IDs de clic del interesado en todos los sitios de la organización; escribe una entrada de job de supresión por almacén con recuentos |
+| limitación / oposición | se registra; se aplica mediante la política de consentimiento (los eventos futuros de esos identificadores se descartan) y mediante la retención |
+| rectificación | se registra; los datos de tracking no se rectifican campo a campo: el valor correcto llega desde el sistema de origen con el siguiente evento |
+
+Cada tipo genera una **entrada de auditoría** (quién la tramitó, cuándo, en qué sitios) y un **informe de cierre** que se guarda junto con la solicitud. El informe contiene recuentos, no el contenido suprimido.
+
+## El plazo
+
+Las solicitudes llevan una fecha límite de 30 días desde la recepción; el centro de privacidad muestra las solicitudes abiertas con sus fechas límite. Las prórrogas son una decisión del operador, no un valor predeterminado.
+
+## Lo que la supresión deja atrás a propósito
+
+- La entrada del **registro de auditoría** que indica que hubo una supresión, con recuentos y el ID de la solicitud, no los identificadores.
+- Las **estadísticas agregadas** ya calculadas (recuentos diarios de eventos, Health Scores), que no son datos personales.
+- Los **registros de consentimiento** durante el periodo de retención necesario para demostrar la licitud del tratamiento, con los identificadores eliminados cuando el registro ya no se necesita para ese fin.
+- Los **datos en el lado del proveedor**. El informe enumera cada destino al que se entregaron eventos del interesado, para que el operador pueda presentar las solicitudes de supresión correspondientes a cada proveedor; Track no finge suprimir datos que no controla.
+
+## La retención reduce la mayoría de las solicitudes
+
+Unos periodos de retención cortos para los IDs de clic, los intentos de entrega y los archivos de datos sin procesar hacen que buena parte de los datos de un interesado ya hayan caducado cuando llega una solicitud. La página de la política de retención muestra los periodos configurados por tipo de datos, y el informe de exportación indica qué periodos se aplicaron.
+
+## Cómo te contactan los visitantes
+
+La página pública de privacidad indica el canal para las solicitudes: el formulario de contacto o la dirección del aviso legal. El operador introduce la solicitud en el centro de privacidad con los identificadores que facilitó el visitante; desde ahí sigue la cola y la pista de auditoría descritas más arriba.

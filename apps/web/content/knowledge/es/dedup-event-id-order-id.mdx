@@ -1,0 +1,82 @@
+---
+title: "Deduplicación que resiste la realidad: ID de evento, ID de pedido y qué clave usa realmente cada plataforma"
+description: "Una tabla plataforma por plataforma de las claves de deduplicación — Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Pinterest, Snapchat, Reddit, X, CM360 — y la estrategia de dos claves que mantiene honesto el tracking híbrido."
+excerpt: "El tracking híbrido envía la misma acción desde el navegador y desde el servidor. Que la plataforma la cuente una sola vez depende de la clave con la que deduplica. Esta es la tabla de referencia y la estrategia que hay detrás."
+category: "guides"
+translationGroupId: "dedup-event-id-order-id"
+slug: "dedup-event-id-order-id"
+topic: "server-side-tracking"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "linkedin", "pinterest", "snapchat", "reddit", "x", "google-marketing-platform"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Usa dos claves: un ID de evento generado una sola vez en el origen y entregado a cada vía, más el ID de pedido en cada evento de commerce."
+  - "Las plataformas fusionan con claves distintas — Meta, TikTok, Microsoft, LinkedIn y Pinterest con el ID de evento; Google Ads y GA4 con el ID de pedido o de transacción; Snapchat con un par coincidente; CM360 con el ordinal."
+  - "Las plataformas solo fusionan dentro de una ventana (Meta documenta unas 48 horas), así que las cualificaciones diferidas del CRM van en un evento de plataforma aparte, no como duplicado del evento del navegador."
+  - "Los reembolsos son eventos propios con el ID de pedido original; verifica la deduplicación en el depurador de eventos, en el monitor de destinos y en la interfaz de la plataforma."
+tags: ["deduplicación", "event-id", "order-id", "híbrido"]
+author: "track-site-editorial"
+publishedAt: "2026-08-29"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tabla de claves de deduplicación por plataforma publicitaria"
+sources:
+  - title: "Meta — Conversions API: deduplication"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events"
+  - title: "Microsoft Advertising — Conversions API (CAPI)"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+legalNotice: false
+---
+
+## Por qué dos claves
+
+Un **ID de evento** identifica una acción tal y como la han observado tus sistemas. Un **ID de pedido** identifica una transacción comercial. Fallan de maneras distintas:
+
+- Los IDs de evento se generan por observación. Si el navegador y el servidor observan la misma compra de forma independiente, solo comparten un ID si lo pasas deliberadamente de uno a otro.
+- Los IDs de pedido existen para compras y reembolsos, pero no para páginas vistas, leads o registros de cuenta.
+
+Una configuración robusta usa ambos: un ID de evento generado en el origen y entregado a cada vía, más el ID de pedido en cada evento de commerce. Las plataformas que deduplican por ID de evento fusionan la observación; las que deduplican por ID de pedido fusionan la transacción; una plataforma que admite ambos tiene doble seguridad.
+
+## La tabla de referencia
+
+| Plataforma | Campo del navegador | Campo del servidor | Fusiona por | Notas |
+| --- | --- | --- | --- | --- |
+| Meta | `eventID` (opción del píxel) | `event_id` | ID de evento + nombre del evento, ~48 h | `order_id` en `custom_data` es informativo |
+| Google Ads | `transaction_id` (gtag) | `orderId` (subida) | ID de pedido por acción de conversión | leads: usa acciones de conversión separadas |
+| GA4 | `transaction_id` | `transaction_id` | ID de transacción para `purchase` | el resto de eventos no se deduplican |
+| TikTok | `event_id` (opción de ttq) | `event_id` | ID de evento + nombre del evento | `order_id` en properties |
+| Microsoft | `event_id` (push de UET) | `eventId` | ID de evento + nombre del evento | el mismo ID de etiqueta UET en ambas vías |
+| LinkedIn | `event_id` (lintrk) | `eventId` | ID de evento | por regla de conversión |
+| Pinterest | `event_id` (pintrk) | `event_id` | ID de evento | `order_id` en custom_data |
+| Snapchat | `client_dedup_id` | `event_id` | par coincidente | dentro de la ventana de deduplicación |
+| Reddit | `conversionId` (rdt) | `conversion_id` | ID de conversión | |
+| X | `conversion_id` (twq) | `conversion_id` | ID de conversión | por ID de evento (tw-…) |
+| Campaign Manager 360 | `ordinal` / `u1` | `ordinal` | ordinal + actividad + usuario | marcas de tiempo dentro de 28 días |
+| Redes de afiliación | — | referencia de pedido | referencia de pedido | protección contra duplicados en el lado de la red |
+
+## Generar el ID
+
+Genera el ID **antes** de enviar nada, en el lugar donde la acción se conoce por primera vez. En el navegador, ese es el momento en que se ejecuta `tsq.push(["track", ...])`; Track asigna un ULID y lo usa tanto para la llamada al píxel de la plataforma como para la petición al collector. En las fuentes de servidor, el sistema de origen debería generar el ID o, en el caso de las compras, pasar el ID de pedido para que el router pueda derivar de él un ID de evento determinista.
+
+Un ID determinista para las compras (`hash(site, "purchase", order_id)`) tiene una propiedad muy práctica: un webhook reintentado de Shopify o una exportación duplicada del CRM producen el mismo ID, y la propia protección de deduplicación del worker lo descarta antes de la entrega.
+
+## Ventanas de tiempo
+
+Las plataformas solo fusionan dentro de una ventana: Meta documenta unas 48 horas y las demás son similares. Si tu evento de servidor llega días después (un lote del CRM), no se fusionará con el evento del navegador, sino que se contará además. Decide por tipo de evento:
+
+- Compras y otras conversiones inmediatas: híbrido con un ID compartido, ambas vías en cuestión de minutos.
+- Cualificaciones diferidas (un lead se convierte en oportunidad una semana después): un evento de plataforma o una acción de conversión **distintos**, no un duplicado del evento del navegador.
+
+## Reembolsos
+
+Los reembolsos son eventos propios. GA4 tiene un evento `refund` con `transaction_id`; Google Ads usa ajustes de conversiones (retractación/reformulación) con el ID de pedido como clave; Meta no tiene evento de reembolso, pero acepta valores negativos en conversiones personalizadas; la mayoría de las redes de afiliación aceptan un postback de anulación. Track emite `refund` con un valor negativo y el ID de pedido original, y deja que cada conector decida qué admite la plataforma.
+
+## Una verificación guiada por el depurador
+
+1. Compra algo en modo de prueba con el navegador abierto.
+2. En el depurador de eventos, localiza la compra del navegador y la compra del servidor: mismo ID de evento, mismo ID de pedido.
+3. Abre el monitor de destinos: un intento de entrega por vía, ambos aceptados.
+4. En la interfaz de la plataforma (Events Manager, Eventos de prueba, DebugView), confirma una conversión, no dos.
+
+Si el paso 4 muestra dos, el ID no viajó por una de las vías. La vista previa enmascarada del payload en el depurador muestra por cuál.

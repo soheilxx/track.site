@@ -1,0 +1,74 @@
+---
+title: "Tracking de WooCommerce con webhooks de pedido firmados: eventos del navegador, capa de datos de compra y verdad server-side"
+description: "Cómo el plugin de Track para WooCommerce instala el snippet, envía una compra con formato GA4 a la capa de datos en la página de agradecimiento y gestiona webhooks nativos de WooCommerce firmados con HMAC-SHA256 — y cómo pedidos, estados y reembolsos se asignan a eventos canónicos."
+excerpt: "WooCommerce ya tiene webhooks firmados y un formato REST para pedidos. El plugin es pequeño a propósito: snippet, capa de datos en la página de agradecimiento y dos webhooks gestionados. Esto es lo que hace cada parte y así se convierte el estado del pedido en una compra."
+category: "integrations"
+translationGroupId: "woocommerce-server-side-tracking"
+slug: "woocommerce-server-side-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["woocommerce"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "El plugin hace solo tres cosas: imprimir el snippet, enviar una compra con formato GA4 a la capa de datos en la página de agradecimiento y gestionar dos webhooks firmados order.created/order.updated."
+  - "Cada entrega se verifica con el HMAC de X-WC-Webhook-Signature; el ping inicial se responde sin crear ningún evento."
+  - "El estado del pedido dirige la asignación: processing y completed se convierten en una única compra con un ID de evento determinista, los reembolsos en un refund por entrada, y el resto de estados se ignoran."
+  - "La compra del servidor hereda por ID de pedido el consentimiento, el ID anónimo, los IDs de clic y los identificadores con hash de la compra del navegador; sin esta, nunca llega a los destinos publicitarios."
+tags: ["woocommerce", "wordpress", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-07"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Flujo de estados de pedido de WooCommerce asignado a eventos purchase y refund"
+sources:
+  - title: "WooCommerce — Webhooks"
+    url: "https://woocommerce.com/document/webhooks/"
+  - title: "WooCommerce REST API — Orders"
+    url: "https://woocommerce.github.io/woocommerce-rest-api-docs/#orders"
+legalNotice: false
+---
+
+## Qué hace el plugin
+
+`integrations/woocommerce/track-site` es un plugin de WordPress de un solo archivo (PHP 8.1+, WooCommerce 8+, compatible con el almacenamiento de pedidos de alto rendimiento). Tiene tres responsabilidades y ninguna más:
+
+1. **Snippet.** Imprime el loader asíncrono de Track con tu ID de tracking en `wp_head`; hosts personalizados para el SDK y el collector solo si los configuras.
+2. **Capa de datos de compra.** En la página de agradecimiento envía un `purchase` con formato GA4 a `window.dataLayer` — ID de transacción e ID de pedido, valor, moneda, impuestos, envío, códigos de cupón y líneas de pedido —, protegido por un flag en los metadatos del pedido para que una recarga de la página no lo envíe dos veces. El SDK observa el push mediante un disparador `data_layer` con la clave `purchase`; esta es la vía del navegador que lleva el consentimiento y los IDs de clic del visitante.
+3. **Webhooks gestionados.** Al guardar los ajustes crea o actualiza dos webhooks nativos de WooCommerce, `order.created` y `order.updated`, con payloads REST v3, apuntando a la URL de webhook de tu conexión y firmados con el secreto que introduces. Al desactivar el plugin se eliminan de nuevo.
+
+Los datos de pago nunca viajan: la representación del pedido de WooCommerce contiene datos de facturación y envío, totales y líneas, no números de tarjeta. Si prefieres no instalar un plugin, los mismos dos webhooks pueden crearse a mano en WooCommerce → Ajustes → Avanzado → Webhooks con el mismo secreto.
+
+## Verificación
+
+WooCommerce firma cada entrega con `X-WC-Webhook-Signature`, el HMAC-SHA256 en base64 del cuerpo sin procesar bajo el secreto del webhook. El collector lo recalcula y lo compara en tiempo constante. Cuando se crea un webhook, WooCommerce envía primero un ping codificado como formulario (`webhook_id=…`); el collector verifica su firma y responde *pong* sin crear ningún evento, y la conexión registra el ping como su primer topic.
+
+## Del estado del pedido a los eventos
+
+WooCommerce dispara `order.updated` en cada cambio, así que la asignación se basa en el estado:
+
+| Estado del pedido | Evento |
+| --- | --- |
+| `processing`, `completed` | `purchase` (una vez; el ID de evento es determinista por pedido) |
+| `refunded`, o cualquier estado con entradas en `refunds[]` | un `refund` por entrada de reembolso, importe en valor absoluto |
+| `pending`, `on-hold`, `cancelled`, `failed` | ignorados |
+
+La compra lleva la marca de tiempo del pago (`date_paid_gmt`) en lugar de la hora de creación, el ID de transacción de la pasarela, la moneda, los totales, impuestos, envío, descuento y el primer código de cupón, las líneas de pedido identificadas por ID de variación (o ID de producto), y el correo electrónico, teléfono, nombre, ciudad, código postal y país de facturación como datos de coincidencia sin procesar que el router convierte en hash. El ID de cliente se convierte en `external_id`.
+
+## Emparejamiento con la compra del navegador
+
+El webhook no tiene información de consentimiento. Cuando llega, el router busca una compra del navegador con el mismo ID de pedido y deja que el evento de servidor herede su registro de consentimiento, su ID anónimo, sus IDs de clic y sus identificadores con hash. Ambos eventos se enrutan; los proveedores reciben `purchase:<ID de pedido>` por ambas vías y lo cuentan una sola vez. Sin compra del navegador, el registro del servidor es solo operativo y nunca llega a los destinos publicitarios.
+
+Como el push del plugin a la capa de datos y el webhook usan el mismo ID de pedido, el emparejamiento es automático; en el lado de la tienda no hay que configurar nada más allá de los dos ajustes.
+
+## Configuración
+
+1. Sitio → Conexión de tienda → WooCommerce: dominio de la tienda, guardar; copia la URL del webhook; elige un secreto y guárdalo en la conexión.
+2. Instala y activa el plugin, abre Ajustes → Track, introduce el ID de tracking, la URL del webhook y el mismo secreto, y guarda. La página lista los dos webhooks gestionados.
+3. Haz un pedido de prueba y ponlo en *procesando*. El depurador muestra la compra del navegador procedente de la capa de datos y la compra verificada de woocommerce con el mismo ID de pedido.
+
+## Límites conocidos, dichos claramente
+
+- Los cambios manuales de estado en el administrador disparan `order.updated` como cualquier otro cambio; el ID de evento determinista evita una segunda compra.
+- Un segundo reembolso parcial del mismo pedido se deduplica por ID de pedido en la tabla de conversiones; el primer reembolso se registra, los posteriores solo son visibles en WooCommerce.
+- Los plugins de suscripciones que crean pedidos de renovación generan nuevos ID de pedido y, por tanto, nuevas compras; asigna las renovaciones a una acción de conversión separada si no quieres que entren en las métricas de adquisición.

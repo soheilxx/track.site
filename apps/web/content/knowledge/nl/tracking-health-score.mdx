@@ -1,0 +1,67 @@
+---
+title: "De Tracking Health Score uitgelegd: zes componenten, hun gewichten en wat ze beweegt"
+description: "Hoe Track de Health Score van 0 tot 100 berekent uit toestemmingsdekking, dekking van kritieke events, schemakwaliteit, duplicaatpercentage, afleversucces en liveness — met de exacte gewichten, wat 'nog geen data' scoort en wat je als eerste oplost wanneer het getal daalt."
+excerpt: "Eén getal is alleen nuttig als je het uit elkaar kunt halen. De Health Score is een gewogen som van zes meetbare componenten, elk met een detailregel in gewone taal. Dit is de formule en het playbook per component."
+category: "product"
+translationGroupId: "tracking-health-score"
+slug: "tracking-health-score"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "De score is een gewogen gemiddelde van zes componenten — toestemming 0,20, dekking 0,25, schema 0,15, dedup 0,10, aflevering 0,20, liveness 0,10 — en dezelfde functie voedt dashboard, assistent en alerts."
+  - "Componenten zonder data scoren een neutrale 50 met de detailregel 'Nog geen events'; liveness scoort 0 wanneer er nooit een browser-event is ontvangen, omdat dat het eerste is wat je moet oplossen."
+  - "Elke component heeft een typische oorzaak: ontbrekende CMP-integratie, kapotte kritieke events, schema- of PII-bevindingen, dubbel vurende tags, mislukte afleveringen of verlopen credentials, een verloren snippet."
+  - "De score is niet vergelijkbaar tussen sites met verschillende trackingplannen; gebruik hem om verandering op te merken en de componenten om de oorzaak te vinden."
+tags: ["health-score", "monitoring", "datakwaliteit", "alerts"]
+author: "track-site-editorial"
+publishedAt: "2026-08-18"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Health Score-meter met zes gewogen componenten"
+sources: []
+legalNotice: false
+---
+
+## De formule
+
+De score is een gewogen gemiddelde van zes componenten, elk gescoord van 0 tot 100:
+
+| Component | Gewicht | Bron | Score |
+| --- | --- | --- | --- |
+| Toestemming | 0,20 | aandeel geaccepteerde events met een expliciet toestemmingssignaal | aandeel × 100; 50 zolang er nog geen events zijn |
+| Dekking | 0,25 | geplande kritieke events die in het venster minstens één event hebben opgeleverd | gezien ÷ gepland × 100 |
+| Schema | 0,15 | aandeel events zonder schema- of PII-bevindingen | aandeel × 100; 50 zolang er nog geen events zijn |
+| Dedup | 0,10 | aandeel duplicaten onder de ontvangen events | 100 − duplicaataandeel × 400 (25% duplicaten is dus 0) |
+| Aflevering | 0,20 | aandeel geslaagde afleveringen, minus een aftrek voor credentials | succes × 100 − (ongezond ÷ totaal aantal integraties) × 50 |
+| Liveness | 0,10 | minuten sinds het laatste geaccepteerde browser-event | 100 onder 60 min, 70 onder 24 uur, 20 daarboven, 0 als nooit |
+
+`score = Σ(component × gewicht) ÷ Σ(gewicht)`, afgerond en begrensd op 0–100. Dezelfde functie voedt het dashboard, de alleen-lezen tools van de assistent en de alerting, zodat het getal dat je in het dashboard ziet hetzelfde getal is waarover de assistent redeneert.
+
+## Waarom 'nog geen data' 50 scoort en geen 0
+
+Een site die een uur geleden is aangemaakt, heeft geen toestemmingsdekking, geen schemabevindingen en geen afleveringen. Die als nul scoren zou elke nieuwe site kapot laten lijken; ze als perfect scoren zou echte problemen later verbergen. De neutrale 50 houdt het totaal informatief, terwijl de detailregel 'Nog geen events' zegt, zodat niemand het voor een meting aanziet. Liveness is de uitzondering: nooit een browser-event ontvangen hebben scoort 0, omdat *dat* het probleem is dat je als eerste moet oplossen.
+
+## Wat elke component beweegt
+
+**Toestemming (0,20).** Events zonder expliciet toestemmingsrecord betekenen meestal dat de CMP-integratie op sommige pagina's ontbreekt of dat de SDK laadt voordat de CMP antwoordt. Controleer de toestemmingspagina op pagina's met een lage signaaldekking.
+
+**Dekking (0,25).** Het trackingplan somt kritieke events op (`purchase`, `generate_lead`, `sign_up` …). Een kritiek event zonder één enkel voorkomen in het venster is óf kapot óf ten onrechte als kritiek gemarkeerd. De detailregel noemt de ontbrekende events.
+
+**Schema (0,15).** Bevindingen komen uit het eventschema (onbekende properties, verkeerde types) en de PII-scanner (e-mailadressen in URL's, telefoonnummers in properties). De datakwaliteitspagina groepeert bevindingen per veld, zodat één kapotte formulierhandler één fix is, niet honderd.
+
+**Dedup (0,10).** Duplicaten boven een paar procent betekenen dat dezelfde event-ID twee keer wordt verstuurd — meestal een tag die zowel bij `DOMContentLoaded` als bij een routewissel vuurt, of een webhook-replay zonder order-ID. De steile aftrek is bewust: duplicaten blazen elk stroomafwaarts getal op.
+
+**Aflevering (0,20).** Mislukte afleveringen worden gegroepeerd per destination en foutklasse. De aftrek voor credentials maakt een verlopen token ook bij weinig verkeer zichtbaar; het account opnieuw koppelen haalt hem direct weg.
+
+**Liveness (0,10).** Een site die een dag lang geen browser-events stuurt, is meestal zijn snippet kwijtgeraakt bij een deployment. De kill switch veroorzaakt dit ook, met opzet, en de detailregel zegt dat.
+
+## Issues
+
+Schemabevindingen en mislukte afleveringen worden als issues vastgelegd op de datakwaliteitspagina, met het aantal open en kritieke items naast de score. Een issue kan met een reden als opgelost of genegeerd worden gemarkeerd, en die wijziging wordt geauditeerd. De health-tool van de assistent leest dezelfde componenten en issues wanneer je hem vraagt een daling te verklaren; hij gokt niet.
+
+## Wat de score niet is
+
+De score is geen vanity metric en niet vergelijkbaar tussen sites met verschillende trackingplannen. Een landingspaginasite met twee kritieke events en een webshop met twaalf worden elk aan hun eigen plan afgemeten. Gebruik hem om verandering op te merken, en gebruik daarna de componenten om de oorzaak te vinden.

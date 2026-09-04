@@ -1,0 +1,70 @@
+---
+title: "Ondertekende configuratie: waarom de tagmanager een supply-chain-component is en hoe Ed25519 hem eerlijk houdt"
+description: "Een tagmanager levert code uit aan elke bezoeker van je site. Track behandelt dat als een supply chain: declaratieve templates in plaats van eigen scripts, met Ed25519 ondertekende configuratiebundles, een manifest met digest en key-ID, verificatie aan de clientkant en een versiegeschiedenis waarnaar je kunt terugrollen."
+excerpt: "Het gevaarlijkste aan een klassieke tagmanager is niet één specifieke tag, maar dat iedereen met toegang tot de container willekeurige JavaScript naar je bezoekers kan sturen. Zo neemt een declaratieve, ondertekende configuratie die mogelijkheid weg en houdt ze al het andere in stand."
+category: "product"
+translationGroupId: "signed-configuration-supply-chain"
+slug: "signed-configuration-supply-chain"
+topic: "product-updates"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "advanced"
+takeaways:
+  - "Een tagmanager levert code uit aan elke bezoeker, dus Track behandelt de uitlevering van configuratie als een supply chain met drie dreigingen: schadelijke wijzigingen door insiders, gemanipuleerde uitlevering en ongemerkte drift."
+  - "Declaratieve templates met getypeerde parameters vervangen custom HTML en JavaScript; een bundle is data, gevalideerd op server en client, zonder eval en zonder het laden van willekeurige scripts."
+  - "Gepubliceerde bundles zijn met Ed25519 ondertekend met een sleutel die de publicatieservice nooit verlaat; de SDK verifieert digest en handtekening met Web Crypto en verwerpt alles wat faalt."
+  - "Een vers opgehaald manifest draagt versie, digest, key-ID en de kill-switch-flag, en elke publicatie is een onveranderlijke, goedgekeurde, herleidbare versie waarnaar je kunt terugrollen."
+tags: ["beveiliging", "supply-chain", "ondertekening", "configuratie"]
+author: "track-site-editorial"
+publishedAt: "2026-08-12"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ondertekende configuratiebundle die door de SDK wordt geverifieerd vóór gebruik"
+sources:
+  - title: "RFC 8032 — Edwards-Curve Digital Signature Algorithm (EdDSA)"
+    url: "https://www.rfc-editor.org/rfc/rfc8032"
+  - title: "MDN — SubtleCrypto.verify()"
+    url: "https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/verify"
+legalNotice: false
+---
+
+## Het dreigingsmodel
+
+Er kunnen drie dingen misgaan met configuratie die aan browsers wordt uitgeleverd:
+
+1. **Iemand met legitieme toegang levert iets schadelijks uit** — een custom-HTML-tag die formulierdata wegsluist, een ‘tijdelijk’ script dat jaren blijft staan.
+2. **Het uitleverpad wordt gemanipuleerd** — een gecompromitteerde CDN-edge, een verkeerd geconfigureerde proxy, een man-in-the-middle op een vijandig netwerk.
+3. **Niemand kan zeggen wat er is veranderd** — de live configuratie drijft weg van wat is beoordeeld.
+
+## Declaratieve templates sluiten de eerste deur
+
+Track heeft geen tagtype voor custom HTML of custom JavaScript. Elke actie aan de browserkant is een **template** uit een vaste set (Meta-pixel, Google-tag, TikTok-pixel, UET, Insight Tag, enzovoort) met getypeerde parameters: ID's, eventmappings, toestemmingsdoelen. Een template kan geen code bevatten; het kiest een loader die de SDK al meelevert en vult identifiers in. De configuratiebundle is data, gevalideerd tegen een schema op de server en nog eens op de client. Er is geen `eval`, geen `new Function`, en niets in een bundle kan de SDK een script laten ophalen van een URL die het template niet al kent.
+
+Dat is een bewust verlies aan flexibiliteit. De migratiegids somt op wat geen equivalent heeft; het antwoord is altijd ‘zet die logica in de code van de site zelf, waar ze als code wordt beoordeeld’.
+
+## Ondertekening sluit de tweede
+
+Wanneer een versie wordt gepubliceerd, serialiseert de server de bundle canoniek, berekent de SHA-256-digest en ondertekent de bytes met een **Ed25519**-privésleutel die alleen op de publicatieservice bestaat. Het gepubliceerde artefact is `{ payload, digest, keyId, algorithm, signature }`.
+
+De SDK wordt geleverd met de publieke sleutels voor de key-ID's van de site. Voordat hij een bundle toepast, berekent hij de digest opnieuw, vergelijkt die met de ondertekende en verifieert de handtekening met Web Crypto (`SubtleCrypto.verify` met `Ed25519`). Een bundle die de verificatie niet doorstaat, wordt verworpen en de SDK houdt zijn laatst geverifieerde bundle uit de sessiecache — of draait helemaal zonder destinations, liever dan met een ongeverifieerde configuratie.
+
+Ondertekening vervangt TLS niet; ze beschermt tegen alles wat TLS niet afdekt, inclusief een gecompromitteerde edge die geldig ogende JSON over een geldig certificaat uitlevert.
+
+## Het manifest
+
+De loader haalt eerst een klein manifest op: tracking-ID, omgeving, versie, bundle-URL, digest, key-ID, publicatietijdstip en de **kill-switch**-flag. Het manifest wordt vers opgehaald; de bundle wordt in session storage gecachet op versie en digest. Dat is wat een kill switch of een rollback bij de volgende paginaweergave laat ingaan zonder de bundle zelf te hoeven cache-busten.
+
+## Versiebeheer sluit de derde
+
+Elke publicatie maakt een onveranderlijke versie aan met een diff ten opzichte van de voorganger, de actor, de goedkeuring die haar autoriseerde en de request-ID. De versiegeschiedenis toont precies wat bezoekers ontvangen, en een rollback publiceert een eerdere versie opnieuw als nieuwe versie — opnieuw ondertekend, opnieuw geauditeerd. Concepten en gepubliceerde versies delen nooit dezelfde opslag, zodat ‘wat is live’ één feit is en niet de toestand van een aantal schakelaars.
+
+## Sleutelbeheer
+
+- Ondertekeningssleutels worden per omgeving gegenereerd en verlaten de publicatieservice nooit; de privésleutel wordt nooit in de database opgeslagen.
+- Key-ID's maken rotatie mogelijk: er wordt een nieuwe sleutel toegevoegd, nieuwe versies worden daarmee ondertekend, de oude publieke sleutel blijft geldig voor verificatie totdat elke site opnieuw heeft gepubliceerd, en daarna wordt hij buiten gebruik gesteld.
+- De `key_id` op elk manifest vertelt je welke sleutel de live configuratie heeft ondertekend.
+
+## Wat dit betekent voor je securityreview
+
+Je kunt de tagmanager in één alinea aan een securityteam beschrijven: hij levert ondertekende, tegen een schema gevalideerde data aan een vaste SDK; hij kan geen door de site geschreven code uitvoeren; elke wijziging is geversioneerd, goedgekeurd en herleidbaar; en een compromittering van het uitleverpad kan het gedrag niet veranderen zonder de ondertekeningssleutel. De securitypagina linkt naar de huidige key-ID's en de verificatiebroncode van de SDK.

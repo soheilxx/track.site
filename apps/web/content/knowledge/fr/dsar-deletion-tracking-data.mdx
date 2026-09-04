@@ -1,0 +1,78 @@
+---
+title: "Traiter une demande d'exercice de droits sur les données de tracking : exporter, supprimer, limiter — et le prouver"
+description: "Comment les demandes d'accès et d'effacement s'appliquent aux données d'événements, aux identifiants de clic, aux enregistrements de consentement et aux journaux de livraison ; comment Track identifie la personne concernée à partir d'un e-mail, d'un identifiant utilisateur ou d'un identifiant anonyme ; ce que contient l'export ; et ce qu'un job de suppression laisse volontairement en place."
+excerpt: "Les données de tracking sont des données personnelles. Lorsqu'une demande arrive, vous devez retrouver chaque enregistrement concernant la personne, le lui remettre ou le supprimer dans le délai imparti, et conserver la preuve que vous l'avez fait — sans garder de copie de ce que vous avez supprimé. Voici le workflow, étape par étape."
+category: "privacy"
+translationGroupId: "dsar-deletion-tracking-data"
+slug: "dsar-deletion-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Les enregistrements de tracking relatifs à une personne comprennent les événements, les identifiants de clic, les enregistrements de consentement, les tentatives de livraison, les enregistrements de conversion et les copies détenues par les plateformes."
+  - "La personne concernée est identifiée par le hachage SHA-256 de l'e-mail, un identifiant utilisateur ou un identifiant anonyme — jamais par l'e-mail en clair, qui n'est pas stocké ; « aucun enregistrement trouvé » est un résultat légitime."
+  - "Export, suppression, limitation et rectification produisent chacun une entrée d'audit et un rapport de clôture avec des comptages, jamais le contenu supprimé ; les demandes portent une échéance de 30 jours."
+  - "La suppression conserve volontairement l'entrée d'audit, les statistiques agrégées et les enregistrements de consentement nécessaires comme preuve, et liste les plateformes que l'opérateur doit contacter séparément."
+tags: ["dsar", "rgpd", "suppression", "export"]
+author: "track-site-editorial"
+publishedAt: "2026-08-20"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Cycle de vie d'une demande d'exercice de droits, de la réception au rapport de clôture"
+sources:
+  - title: "GDPR Article 15 — Right of access"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2545-1-1"
+  - title: "GDPR Article 17 — Right to erasure"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e2606-1-1"
+legalNotice: true
+---
+
+## Quels enregistrements de tracking concernent une personne
+
+Plus que la plupart des équipes ne le supposent :
+
+- **Les événements** — chaque page vue, clic et conversion, indexés par identifiant anonyme, identifiant de session et, une fois la personne connectée, identifiant utilisateur ; avec des identifiants hachés (`em`, `ph`) lorsque le consentement les autorisait.
+- **Les identifiants de clic** — `gclid`, `fbc` et consorts, stockés en first-party pour l'attribution.
+- **Les enregistrements de consentement** — les finalités accordées, le hachage de la TC String, les horodatages ; ce sont des données personnelles *et* votre preuve de la licéité du traitement.
+- **Les tentatives de livraison** — ce qui a été envoyé à quelle plateforme, avec l'aperçu masqué du payload.
+- **Les enregistrements de conversion** et les résultats importés du CRM.
+- **Les copies côté plateforme** — ce que Meta, Google et les autres ont reçu ; la suppression y fait l'objet d'une demande distincte auprès de chaque plateforme.
+
+## Identifier la personne concernée
+
+Une demande arrive généralement avec une adresse e-mail. Track la hache (minuscules, espaces supprimés, SHA-256) et recherche les événements par le hachage `em` ; il accepte aussi un identifiant utilisateur issu de votre système ou un identifiant anonyme que la personne peut lire sur la page de confidentialité. Il ne recherche jamais par e-mail en clair, car les e-mails en clair ne sont pas stockés.
+
+Si rien ne correspond, le rapport le dit — « aucun enregistrement trouvé pour les identifiants fournis » est un résultat légitime et fréquent pour les visiteurs qui n'ont jamais consenti aux identifiants.
+
+## Types de demandes
+
+| Type | Ce que fait Track |
+| --- | --- |
+| export / portabilité | construit un rapport JSON par site : événements (nom, heure, URL, consentement, données commerce, identifiants de clic, source), enregistrements de conversion ; téléchargeable depuis le centre de confidentialité |
+| suppression | supprime les événements, les enregistrements de conversion et les identifiants de clic de la personne sur chaque site de l'organisation ; écrit une entrée de job de suppression par magasin de données, avec les comptages |
+| limitation / opposition | enregistrée ; appliquée par la politique de consentement (les événements futurs pour ces identifiants sont écartés) et par la conservation |
+| rectification | enregistrée ; les données de tracking ne sont pas rectifiées champ par champ — la valeur correcte provient du système source au prochain événement |
+
+Chaque type produit une **entrée d'audit** (qui l'a traitée, quand, sur quels sites) et un **rapport de clôture** stocké avec la demande. Le rapport contient des comptages, pas le contenu supprimé.
+
+## Le délai
+
+Les demandes portent une date d'échéance fixée à 30 jours à compter de la réception ; le centre de confidentialité liste les demandes ouvertes avec leur échéance. Prolonger le délai est une décision de l'opérateur, pas un réglage par défaut.
+
+## Ce que la suppression laisse volontairement en place
+
+- L'entrée du **journal d'audit** indiquant qu'une suppression a eu lieu, avec les comptages et l'identifiant de la demande — pas les identifiants de la personne.
+- Les **statistiques agrégées** déjà calculées (comptages d'événements quotidiens, Health Scores), qui ne sont pas des données personnelles.
+- Les **enregistrements de consentement** pendant la durée de conservation nécessaire pour démontrer la licéité du traitement, les identifiants étant retirés dès que l'enregistrement n'est plus nécessaire à cette fin.
+- Les **données côté plateforme**. Le rapport liste chaque destination à laquelle les événements de la personne ont été livrés, afin que l'opérateur puisse déposer les demandes de suppression correspondantes auprès des plateformes ; Track ne prétend pas supprimer des données qu'il ne contrôle pas.
+
+## La conservation réduit la plupart des demandes
+
+Des fenêtres de conservation courtes pour les identifiants de clic, les tentatives de livraison et les archives brutes signifient qu'une grande partie des données d'une personne a déjà expiré lorsqu'une demande arrive. La page de la politique de conservation affiche les fenêtres configurées par catégorie de données, et le rapport d'export précise quelles fenêtres se sont appliquées.
+
+## Comment les visiteurs vous joignent
+
+La page de confidentialité publique indique le canal pour les demandes — le formulaire de contact ou l'adresse figurant dans les mentions légales. L'opérateur saisit la demande dans le centre de confidentialité avec les identifiants fournis par le visiteur ; elle suit ensuite la file d'attente et la piste d'audit décrites ci-dessus.
+

@@ -1,0 +1,80 @@
+---
+title: "De 23 standaard-events: een taxonomie die netjes op elk advertentieplatform past"
+description: "De canonieke eventcatalogus van Track — engagement-, auth-, lead-, commerce- en subscription-events — met de properties die elk event meedraagt, de toestemmingsdoeleinden die het standaard nodig heeft en hoe het wordt vertaald naar Meta, Google, TikTok, LinkedIn en de rest."
+excerpt: "Eigen eventnamen zijn de plek waar trackingplannen sneuvelen. Een klein, vast vocabulaire met getypeerde properties maakt mappings voorspelbaar, validatie mogelijk en de vertaling naar platformen automatisch. Dit zijn de 23 events en de regels eromheen."
+category: "guides"
+translationGroupId: "event-taxonomy-standard-events"
+slug: "event-taxonomy-standard-events"
+topic: "getting-started"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "linkedin", "pinterest", "snapchat"]
+shopSystems: []
+contentType: "reference"
+level: "beginner"
+takeaways:
+  - "23 standaard-events in vijf categorieën — engagement, auth, lead, commerce, subscription — volgen het vocabulaire van de aanbevolen GA4-events en dragen een getypeerde envelop en een commerce-blok."
+  - "De categorieën bepalen de standaard toestemmingsdoeleinden: commerce-, lead- en subscription-events hebben het doeleinde marketing nodig om advertentie-destinations te bereiken."
+  - "Eigen events moeten aan het naampatroon voldoen en in het trackingplan zijn gedeclareerd; niet-gedeclareerde events worden geteld en gerapporteerd, maar niet aan advertentie-destinations afgeleverd."
+  - "Elke connector levert een bewerkbare standaardmapping naar de eventnamen van het platform, en vier regels houden het plan eerlijk: één event per actie, waarden uit het bronsysteem, terugbetalingen als events, snake_case-namen."
+tags: ["events", "taxonomie", "trackingplan", "schema"]
+author: "track-site-editorial"
+publishedAt: "2026-08-14"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Catalogus van standaard-events gegroepeerd per categorie"
+sources:
+  - title: "Google Analytics — Recommended events"
+    url: "https://support.google.com/analytics/answer/9267735"
+  - title: "Meta — Standard events"
+    url: "https://developers.facebook.com/docs/meta-pixel/reference"
+legalNotice: false
+---
+
+## De catalogus
+
+| Categorie | Events | Standaarddoeleinden |
+| --- | --- | --- |
+| engagement | `page_view`, `view_content`, `search`, `download` | analytics |
+| auth | `sign_up`, `login` | analytics |
+| lead | `generate_lead`, `contact`, `book_appointment` | analytics, marketing |
+| commerce | `view_item_list`, `select_item`, `view_item`, `add_to_wishlist`, `add_to_cart`, `remove_from_cart`, `view_cart`, `begin_checkout`, `add_shipping_info`, `add_payment_info`, `purchase`, `refund` | analytics, marketing |
+| subscription | `subscribe`, `start_trial` | analytics, marketing |
+
+De namen volgen het vocabulaire van de aanbevolen GA4-events waar dat bestaat, omdat het de meest geïmplementeerde datalayer-vorm is en de SDK GA4-achtige `dataLayer`-pushes rechtstreeks kan waarnemen. De categorieën bepalen de standaard toestemmingsdoeleinden: commerce-, lead- en subscription-events zijn conversiesignalen die advertentieplatformen willen hebben, dus ze vereisen het doeleinde marketing om een advertentie-destination te bereiken; engagement- en auth-events zijn standaard analytics.
+
+## Properties
+
+Elk event draagt de envelop mee: event-ID, tijdstempel, URL (met click-ID's eruit gehaald), referrer, titel, toestemmingsregistratie, bron en — als de toestemming dat toelaat — anonieme ID, sessie-ID, gebruikers-ID en gehashte identifiers.
+
+Commerce-events voegen een getypeerd `commerce`-blok toe: `currency`, `value`, `transaction_id`, `coupon`, `shipping`, `tax` en `items[]` met `item_id`, `item_name`, `price`, `quantity`, `item_category`, `item_brand`, `item_variant`. `refund` draagt de oorspronkelijke `transaction_id` en een negatieve of gedeeltelijke waarde.
+
+Lead- en subscription-events gebruiken een kleine set properties: `lead_type`, `form_id`, `plan`, `interval`, `trial_days`, `value` waar een gedocumenteerde waarde bestaat.
+
+Al het andere gaat in `props`, dat tegen het schema van de site wordt gevalideerd: onbekende sleutels worden als bevindingen gerapporteerd, vrije tekst wordt gescand op persoonsgegevens en geneste objecten worden geredigeerd in plaats van doorgestuurd.
+
+## Eigen events
+
+Eigen namen zijn toegestaan als ze voldoen aan `^[a-z][a-z0-9_]{2,39}$`, niet botsen met een standaardnaam en in het trackingplan zijn gedeclareerd. Niet-gedeclareerde eigen events worden geaccepteerd, geteld en als schemabevindingen gerapporteerd, zodat het plan bewust kan worden bijgewerkt; ze worden pas aan advertentie-destinations afgeleverd zodra ze zijn gemapt.
+
+## Vertaling naar platformen
+
+Omdat het vocabulaire vast is, levert elke connector een standaardmapping mee:
+
+| Canoniek | Meta | Google Ads | GA4 | TikTok | LinkedIn | Pinterest | Snapchat |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `view_item` | ViewContent | — | view_item | ViewContent | — | page_visit | VIEW_CONTENT |
+| `add_to_cart` | AddToCart | — | add_to_cart | AddToCart | — | add_to_cart | ADD_CART |
+| `begin_checkout` | InitiateCheckout | — | begin_checkout | InitiateCheckout | — | — | START_CHECKOUT |
+| `purchase` | Purchase | conversieactie | purchase | CompletePayment | conversieregel | checkout | PURCHASE |
+| `generate_lead` | Lead | conversieactie | generate_lead | SubmitForm | conversieregel | lead | SIGN_UP |
+| `sign_up` | CompleteRegistration | conversieactie | sign_up | CompleteRegistration | conversieregel | signup | SIGN_UP |
+| `subscribe` | Subscribe | conversieactie | — | Subscribe | conversieregel | — | SUBSCRIBE |
+| `start_trial` | StartTrial | conversieactie | — | StartTrial | conversieregel | — | START_TRIAL |
+
+Een streepje betekent dat het platform geen standaardequivalent heeft; je kunt naar een eigen platform-event mappen of de rij uitgeschakeld laten. Elke standaard is per destination bewerkbaar, en elke wijziging wordt geversioneerd en verschijnt in de publicatie-diff.
+
+## Regels die het plan eerlijk houden
+
+- Eén event per gebruikersactie. `purchase` vuurt één keer per bestelling, vanuit de bron die voor die site leidend is (browser, shopwebhook of server), met dezelfde event-ID of order-ID op elk pad.
+- Waarden komen uit het bronsysteem. Er is geen standaardwaarde; een niet-gemapte waarde is `null`, en een platform dat er een vereist, wijst de rij zichtbaar af.
+- Terugbetalingen zijn events, geen bewerkingen. Een `refund` verwijst naar de oorspronkelijke transactie; de oorspronkelijke `purchase` wordt nooit herschreven.
+- Namen zijn in kleine letters met underscores (snake_case). De schrijfwijze van het platform (`CompletePayment`, `PURCHASE`) is de zorg van de connector.

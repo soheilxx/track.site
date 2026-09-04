@@ -1,0 +1,67 @@
+---
+title: "Le Tracking Health Score expliqué : six composantes, leurs pondérations et ce qui les fait bouger"
+description: "Comment Track calcule le Health Score de 0 à 100 à partir de la couverture du consentement, de la couverture des événements critiques, de la qualité du schéma, du taux de doublons, du succès des livraisons et de la liveness — avec les pondérations exactes, la note attribuée à « pas encore de données » et ce qu'il faut corriger en premier quand le chiffre baisse."
+excerpt: "Un chiffre unique n'est utile que si l'on peut le décomposer. Le Health Score est une somme pondérée de six composantes mesurables, chacune accompagnée d'une ligne de détail en langage clair. Voici la formule et le playbook de chaque composante."
+category: "product"
+translationGroupId: "tracking-health-score"
+slug: "tracking-health-score"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Le score est une moyenne pondérée de six composantes — consentement 0,20, couverture 0,25, schéma 0,15, dédup 0,10, livraison 0,20, liveness 0,10 — et la même fonction alimente le tableau de bord, l'assistant et les alertes."
+  - "Les composantes sans données reçoivent un 50 neutre avec la ligne de détail « Aucun événement pour l'instant » ; la liveness vaut 0 si aucun événement navigateur n'a jamais été reçu, parce que c'est la première chose à corriger."
+  - "Chaque composante a une cause typique : intégration CMP manquante, événements critiques cassés, constats de schéma ou de données personnelles, tags qui se déclenchent deux fois, livraisons en échec ou identifiants d'accès expirés, snippet perdu."
+  - "Le score n'est pas comparable entre des sites aux plans de marquage différents ; utilisez-le pour repérer un changement et les composantes pour en trouver la cause."
+tags: ["health-score", "supervision", "qualité-des-données", "alertes"]
+author: "track-site-editorial"
+publishedAt: "2026-08-18"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Jauge du Health Score avec six composantes pondérées"
+sources: []
+legalNotice: false
+---
+
+## La formule
+
+Le score est une moyenne pondérée de six composantes, chacune notée de 0 à 100 :
+
+| Composante | Pondération | Source | Note |
+| --- | --- | --- | --- |
+| Consentement | 0,20 | part des événements acceptés portant un signal de consentement explicite | part × 100 ; 50 tant qu'il n'y a pas d'événements |
+| Couverture | 0,25 | événements critiques du plan ayant produit au moins un événement dans la fenêtre | observés ÷ planifiés × 100 |
+| Schéma | 0,15 | part des événements sans constat de schéma ni de données personnelles | part × 100 ; 50 tant qu'il n'y a pas d'événements |
+| Dédup | 0,10 | part de doublons parmi les événements reçus | 100 − part de doublons × 400 (25 % de doublons donnent donc 0) |
+| Livraison | 0,20 | part des livraisons réussies, moins une pénalité d'identifiants d'accès | succès × 100 − (défaillantes ÷ intégrations totales) × 50 |
+| Liveness | 0,10 | minutes écoulées depuis le dernier événement navigateur accepté | 100 sous 60 min, 70 sous 24 h, 20 au-delà, 0 si jamais reçu |
+
+`score = Σ(composante × pondération) ÷ Σ(pondération)`, arrondi et borné entre 0 et 100. La même fonction alimente le tableau de bord, les outils en lecture seule de l'assistant et les alertes : le chiffre que vous voyez dans le tableau de bord est celui sur lequel l'assistant raisonne.
+
+## Pourquoi « pas encore de données » vaut 50, et non 0
+
+Un site créé il y a une heure n'a ni couverture du consentement, ni constats de schéma, ni livraisons. Noter tout cela à zéro ferait passer chaque nouveau site pour cassé ; le noter comme parfait masquerait plus tard de vrais problèmes. Le 50 neutre garde le total informatif, tandis que la ligne de détail indique « Aucun événement pour l'instant » pour que personne ne le prenne pour une mesure. La liveness est l'exception : n'avoir jamais reçu d'événement navigateur vaut 0, parce que c'est précisément *le* problème à corriger en premier.
+
+## Ce qui fait bouger chaque composante
+
+**Consentement (0,20).** Des événements sans enregistrement de consentement explicite signifient généralement que l'intégration CMP manque sur certaines pages ou que le SDK se charge avant que la CMP ne réponde. Vérifiez sur la page de consentement les pages à faible couverture de signal.
+
+**Couverture (0,25).** Le plan de marquage liste les événements critiques (`purchase`, `generate_lead`, `sign_up` …). Un événement critique sans aucune occurrence dans la fenêtre est soit cassé, soit marqué critique à tort. La ligne de détail nomme les manquants.
+
+**Schéma (0,15).** Les constats proviennent du schéma d'événements (propriétés inconnues, types erronés) et du scanner de données personnelles (e-mails dans les URL, numéros de téléphone dans les propriétés). La page de qualité des données regroupe les constats par champ, de sorte qu'un seul gestionnaire de formulaire défectueux représente une correction, pas cent.
+
+**Dédup (0,10).** Des doublons au-delà de quelques pour cent signifient que le même identifiant d'événement est envoyé deux fois — typiquement un tag qui se déclenche à la fois sur `DOMContentLoaded` et au changement de route, ou un rejeu de webhook sans numéro de commande. La pénalité sévère est voulue : les doublons gonflent tous les chiffres en aval.
+
+**Livraison (0,20).** Les livraisons en échec sont regroupées par destination et par classe d'erreur. La pénalité d'identifiants d'accès rend un jeton expiré visible même quand le trafic est faible ; reconnecter le compte la supprime immédiatement.
+
+**Liveness (0,10).** Un site qui cesse d'envoyer des événements navigateur pendant une journée a généralement perdu son snippet lors d'un déploiement. Le kill switch produit le même effet, volontairement, et la ligne de détail le précise.
+
+## Anomalies
+
+Les constats de schéma et les livraisons en échec sont consignés comme anomalies sur la page de qualité des données, avec le nombre d'éléments ouverts et critiques à côté du score. Une anomalie peut être marquée résolue ou ignorée en indiquant un motif, et la modification est auditée. L'outil de santé de l'assistant lit les mêmes composantes et les mêmes anomalies lorsque vous lui demandez d'expliquer une baisse ; il ne devine pas.
+
+## Ce que le score n'est pas
+
+Ce n'est pas une métrique de vanité, et il n'est pas comparable entre des sites aux plans de marquage différents. Un site de pages d'atterrissage avec deux événements critiques et une boutique qui en compte douze sont mesurés à l'aune de leur propre plan. Utilisez-le pour repérer un changement, puis les composantes pour en trouver la cause.

@@ -1,0 +1,80 @@
+---
+title: "Tracking de la génération de leads en B2B : de l'envoi du formulaire à l'affaire gagnée, sans double comptage"
+description: "Un plan de tracking pour les sites B2B — événements generate_lead, contact et book_appointment, champs masqués pour les identifiants de clic, e-mails professionnels hachés, imports de leads qualifiés depuis le CRM et actions de conversion distinctes par étape — avec les règles de consentement qui s'appliquent à chacune d'elles."
+excerpt: "Les conversions B2B sont rares, précieuses et lentes. Le navigateur voit un formulaire ; le CRM voit l'affaire des semaines plus tard. Suivre les deux sans gonfler les chiffres suppose de séparer les étapes, de transporter les identifiants de clic jusqu'au CRM et d'importer les résultats avec leur date d'origine. Voici le plan."
+category: "guides"
+translationGroupId: "lead-gen-tracking-b2b"
+slug: "lead-gen-tracking-b2b"
+topic: "attribution-analytics"
+platforms: ["linkedin", "google-ads", "meta", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Chaque étape du funnel — formulaire envoyé, démo réservée, lead qualifié, affaire gagnée — est un événement à part entière et sa propre action ou règle de conversion ; c'est ce qui empêche le double comptage."
+  - "Déclenchez generate_lead à l'envoi réussi, n'appelez identify avec l'e-mail professionnel qu'après le consentement marketing, et copiez les identifiants de clic dans des champs de formulaire masqués enregistrés sur le lead."
+  - "Le CRM envoie qualified_lead avec les identifiants de clic d'origine, l'e-mail haché et l'horodatage de l'étape ; les affaires gagnées deviennent des purchase avec la valeur réelle, envoyés depuis le serveur."
+  - "Le consentement enregistré à l'envoi accompagne chaque import ultérieur : un lead qui a refusé le marketing n'est jamais importé vers les plateformes publicitaires, et les valeurs sont réelles ou des constantes documentées, jamais ajoutées après coup."
+tags: ["b2b", "génération-de-leads", "crm", "linkedin", "google-ads"]
+author: "track-site-editorial"
+publishedAt: "2026-08-10"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Funnel de leads B2B, de l'envoi du formulaire à l'affaire gagnée, avec les points de contact du tracking"
+sources:
+  - title: "Google Ads Help — Enhanced conversions for leads"
+    url: "https://support.google.com/google-ads/answer/11347292"
+legalNotice: false
+---
+
+## Les étapes, et l'événement de chacune
+
+| Étape | Où elle a lieu | Événement canonique | Envoyé par |
+| --- | --- | --- | --- |
+| Formulaire envoyé | navigateur | `generate_lead` (`lead_type`, `form_id`) | SDK, en hybride avec les pixels des fournisseurs |
+| Démo réservée | outil de réservation | `book_appointment` | SDK à la confirmation, ou webhook |
+| Demande de contact | navigateur | `contact` | SDK |
+| Qualifié marketing | marketing automation | `qualified_lead` (personnalisé, déclaré) | source serveur |
+| Qualifié ventes / opportunité | CRM | `qualified_lead` avec `stage` | source serveur |
+| Affaire gagnée | CRM | `purchase` avec `value`, `transaction_id` | source serveur |
+
+Chaque étape est un événement à part entière et, dans les plateformes publicitaires, sa propre action ou règle de conversion. C'est ce qui empêche le double comptage : rien n'est envoyé deux fois sous le même nom depuis deux sources.
+
+## Étape 1 : le formulaire
+
+- Déclenchez `generate_lead` à l'envoi **réussi**, pas au clic sur le bouton. Pour les formulaires AJAX, dans le callback de succès ; pour les redirections de page complète, sur la page de remerciement avec une protection contre les rechargements.
+- Incluez `form_id` et `lead_type` (`demo`, `whitepaper`, `contact`), aucun texte libre.
+- Appelez `identify` avec l'e-mail professionnel **après** le consentement marketing. Le SDK le hache avant qu'il ne quitte le navigateur et le joint en tant que `em` pour les plateformes qui font correspondre sur l'e-mail haché (Meta, LinkedIn, Google Enhanced Conversions for Leads, Microsoft, TikTok).
+
+## Étape 2 : transporter les identifiants de clic jusqu'au CRM
+
+Copiez les paramètres d'identifiant de clic de l'URL d'atterrissage — `gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid` — dans des champs de formulaire masqués lorsque le consentement marketing est accordé, et enregistrez-les sur la fiche du lead avec la page d'atterrissage et l'état du consentement au moment de l'envoi. Des semaines plus tard, ce sont eux qui permettent à un import de correspondre de façon déterministe au lieu de reposer sur le seul hachage de l'e-mail.
+
+## Étape 3 : les leads qualifiés depuis le CRM
+
+Lorsqu'un lead atteint une étape sur laquelle il vaut la peine d'optimiser, le CRM envoie un événement serveur : `qualified_lead` avec l'étape, les identifiants de clic d'origine, l'e-mail haché et l'**horodatage de l'étape**. Chaque plateforme le reçoit sur sa propre action de conversion :
+
+- Google Ads : `uploadClickConversions` avec `gclid` ou l'e-mail haché, action de conversion « Lead qualifié (CRM) ».
+- LinkedIn : Conversions API avec `SHA256_EMAIL` ou `li_fat_id`, règle « Lead qualifié », dans un délai de 90 jours.
+- Meta : Conversions API `Lead` avec `action_source: system_generated`, sur une conversion personnalisée distincte pour que le `Lead` du pixel reste séparé.
+- Microsoft : CAPI avec `msclkid` ou l'e-mail haché, objectif « Lead qualifié ».
+
+## Étape 4 : l'affaire gagnée en `purchase`
+
+La valeur de l'affaire est désormais réelle. Envoyez `purchase` avec `value`, `currency` et l'identifiant d'opportunité du CRM en `transaction_id`, depuis le serveur, avec la date de clôture comme heure de l'événement. Les plateformes qui prennent en charge les enchères basées sur la valeur reçoivent le montant réel ; les autres comptent tout de même la conversion.
+
+## Le consentement au fil des étapes
+
+- Le **formulaire** et son `generate_lead` ont besoin du consentement marketing pour les destinations publicitaires ; un consentement limité à l'analytics enregistre tout de même l'événement pour vos propres rapports.
+- Les **identifiants de clic** ne sont capturés qu'avec le consentement marketing. Sans lui, les imports d'étape depuis le CRM ne peuvent utiliser que l'e-mail haché, et seulement si la personne a consenti à cet usage lors de l'envoi — enregistrez l'état du consentement sur le lead.
+- Les **imports CRM** portent l'état du consentement que vous avez enregistré à l'envoi ; le moteur de règles route en conséquence, et un import sans information de consentement n'atteint aucune destination publicitaire. Un lead qui a refusé le marketing sur le formulaire n'est pas importé plus tard vers les plateformes publicitaires, aussi précieux soit-il.
+
+## Des valeurs sans les inventer
+
+Pour `qualified_lead`, n'envoyez aucune valeur, ou bien une valeur attendue **documentée** par étape, configurée comme constante dans le mapping de la destination. Pour `purchase`, envoyez la valeur réelle de l'affaire. N'ajoutez jamais après coup une valeur dans `generate_lead` ; les plateformes optimisent vers ce que vous leur envoyez, et un chiffre fabriqué optimise vers la fiction.
+
+## Ce qu'il faut regarder chaque semaine
+
+- Couverture du Health Score : `generate_lead` observé sur chaque identifiant de formulaire du plan.
+- Moniteur de destination : taux d'acceptation des imports par plateforme ; les erreurs `CLICK_NOT_FOUND` et hors fenêtre signalent des identifiants de clic manquants ou des imports tardifs.
+- Page de consentement : part des leads avec consentement marketing — le plafond de ce que les plateformes publicitaires pourront jamais voir.

@@ -1,0 +1,89 @@
+---
+title: "TikTok Events API 2.0: pixel più eventi server con ttclid, _ttp e un event_id condiviso"
+description: "Configurare insieme il TikTok Pixel e la Events API — token di accesso, codice pixel, il payload di /event/track/, chiavi di abbinamento, deduplicazione e codici evento di prova."
+excerpt: "La Events API 2.0 di TikTok riceve gli eventi web su /open_api/v1.3/event/track/. Questa guida spiega il payload, quali identificatori aumentano il tasso di abbinamento, come pixel e server deduplicano e come testare senza toccare i report."
+category: "integrations"
+translationGroupId: "tiktok-events-api-setup"
+slug: "tiktok-events-api-setup"
+topic: "pixel-platform-integrations"
+platforms: ["tiktok"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Ti servono il codice pixel pubblico come event_source_id, un token di accesso della Events API conservato nel vault e, facoltativamente, un codice evento di prova."
+  - "Gli eventi vanno a /open_api/v1.3/event/track/ con nomi in PascalCase; Track mappa gli eventi canonici per impostazione predefinita, per esempio purchase su CompletePayment."
+  - "Le chiavi di abbinamento in ordine di impatto sono ttclid (acquisito dopo il consenso al marketing), il valore del cookie _ttp, e-mail e telefono con hash e un external_id con hash."
+  - "TikTok deduplica pixel e API sull'event_id a parità di nome evento; in modalità di test ogni richiesta porta test_event_code e resta fuori dai report."
+tags: ["tiktok", "events-api", "ttclid", "deduplicazione"]
+author: "track-site-editorial"
+publishedAt: "2026-08-31"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Richiesta alla TikTok Events API con gli oggetti user e properties"
+sources:
+  - title: "TikTok Ads — Standard events and parameters"
+    url: "https://ads.tiktok.com/help/article/standard-events-parameters"
+  - title: "TikTok Ads — Get started with Events API"
+    url: "https://ads.tiktok.com/help/article/getting-started-events-api"
+legalNotice: false
+---
+
+## Cosa ti serve da TikTok Ads Manager
+
+- Il **codice pixel** (Events Manager → Eventi web → il tuo pixel). È pubblico e funge anche da `event_source_id` per l'API.
+- Un **token di accesso della Events API** (pixel → Impostazioni → Genera token di accesso). È un segreto e va nel vault, mai in un tag.
+- Facoltativamente un **codice evento di prova** dalla scheda Eventi di prova.
+
+## La richiesta
+
+`POST https://business-api.tiktok.com/open_api/v1.3/event/track/` con l'header `Access-Token: <token>` e un body come questo:
+
+```json
+{
+  "event_source": "web",
+  "event_source_id": "CABCDEFGHIJKLMNOPQRS",
+  "data": [{
+    "event": "CompletePayment",
+    "event_time": 1767225600,
+    "event_id": "01J9EXAMPLESOURCEEVENTID00",
+    "user": { "ttclid": "…", "ttp": "…", "email": "<sha256>", "phone": "<sha256>", "external_id": "<sha256>" },
+    "page": { "url": "https://shop.example/thank-you", "referrer": "https://shop.example/checkout" },
+    "properties": { "value": 129.9, "currency": "EUR", "content_type": "product", "contents": [{ "content_id": "SKU-1", "quantity": 1, "price": 99.9 }], "order_id": "A1001" }
+  }]
+}
+```
+
+Un `code: 0` nella risposta significa accettato. `event_time` è in secondi Unix; `event_source` può essere anche `offline` o `crm` per le sorgenti non web, con l'ID del set di eventi corrispondente.
+
+## Nomi degli eventi
+
+Gli eventi web standard di TikTok sono in PascalCase: `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `CompletePayment`, `PlaceAnOrder`, `CompleteRegistration`, `SubmitForm`, `Contact`, `Subscribe`, `StartTrial`, `Download`, `Search`, `Schedule`, `ClickButton`. Track mappa gli eventi canonici su questi per impostazione predefinita (`purchase → CompletePayment`, `generate_lead → SubmitForm`, `book_appointment → Schedule`) e ti permette di sovrascrivere la mappatura per destinazione.
+
+## Chiavi di abbinamento, in ordine di impatto
+
+1. `ttclid` — il click ID che TikTok aggiunge alle landing page. Acquisiscilo dopo il consenso al marketing, conservalo in first-party e invialo con ogni evento server entro la finestra di attribuzione.
+2. `ttp` — il valore del cookie `_ttp` impostato dal pixel. Identifica il browser presso TikTok senza dati personali.
+3. `email` e `phone` — con hash SHA-256 dopo la normalizzazione (e-mail in minuscolo, telefono in formato E.164).
+4. `external_id` — il tuo ID utente, con hash.
+
+Inviare `ttclid` e `ttp` dal percorso browser e l'e-mail con hash dal sistema degli ordini è la combinazione che massimizza il tasso di abbinamento.
+
+## Deduplicazione tra pixel e API
+
+TikTok deduplica sull'`event_id` quando lo stesso nome evento arriva sia dal pixel (`ttq.track('CompletePayment', {...}, { event_id })`) sia dall'API entro la finestra di deduplicazione. Genera un ID per azione e passalo a entrambi; l'SDK di Track lo fa automaticamente per ogni evento replicato.
+
+## Testare in sicurezza
+
+Inserisci il codice evento di prova di Events Manager nelle impostazioni della destinazione. Finché la destinazione è in modalità di test, ogni richiesta porta `test_event_code`; gli eventi compaiono sotto Eventi di prova e sono esclusi dai report. La procedura guidata invia un acquisto contrassegnato e mostra la risposta di TikTok, incluso il `request_id` che puoi citare al supporto di TikTok.
+
+## Codici di risposta da conoscere
+
+- `40001` — token di accesso non valido o mancante → ruota il token
+- `40002` / `40000` — errori nei parametri → controlla nomi degli eventi, timestamp e hashing
+- `40100` — rate limit → viene ritentato con backoff
+- HTTP 5xx — temporaneo → viene ritentato, circuit breaker se persiste
+
+## Limiti
+
+Fino a 1.000 eventi per richiesta, timestamp entro gli ultimi sette giorni, e il codice pixel deve appartenere all'account inserzionista che ha emesso il token. Gli eventi offline usano l'ID del set di eventi offline come `event_source_id` e `event_source: "offline"`.

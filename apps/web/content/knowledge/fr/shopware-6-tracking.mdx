@@ -1,0 +1,70 @@
+---
+title: "Shopware 6 : un tracking bien fait — une app avec webhooks signés, la transaction payée comme achat et le snippet Storefront"
+description: "Comment l'app Shopware de Track s'enregistre, quels événements de commande correspondent à purchase et refund, comment la shopware-shop-signature est vérifiée, pourquoi l'état de transaction payée vaut mieux que la commande passée, et où placer le snippet dans le thème."
+excerpt: "Le système d'apps de Shopware 6 vous donne des webhooks signés sans livrer de PHP dans la boutique. L'app Track s'abonne aux états de transaction payée et remboursée, le collecteur vérifie chaque livraison, et le snippet Storefront couvre le côté navigateur. Voici le parcours complet."
+category: "integrations"
+translationGroupId: "shopware-6-tracking"
+slug: "shopware-6-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopware"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "L'app Track est un manifeste, pas un plugin : Shopware envoie des webhooks signés, rien de Track ne s'exécute dans la boutique, et les identifiants d'accès API issus de l'enregistrement sont délibérément écartés."
+  - "Par défaut, l'état de transaction payée devient l'achat et l'état remboursée le remboursement ; les boutiques où la passation de commande est le moment significatif peuvent basculer la connexion sur les commandes passées."
+  - "Une devise manquante est remplacée par le réglage de la connexion ou signalée comme champ manquant, jamais devinée."
+  - "Le snippet Storefront dans base.html.twig crée l'achat navigateur dont l'achat serveur vérifié hérite le consentement par numéro de commande."
+tags: ["shopware", "app-system", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-06"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Enregistrement de l'app Shopware et flux des webhooks vers le collecteur"
+sources:
+  - title: "Shopware — App base guide"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/app-base-guide.html"
+  - title: "Shopware — Webhooks for apps"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/webhooks.html"
+legalNotice: false
+---
+
+## Pourquoi une app et non un plugin
+
+Un plugin Shopware, c'est du PHP qui s'exécute dans la boutique ; une app, c'est un manifeste qui indique à Shopware quelles URL appeler. Pour le tracking des commandes, l'app suffit : Shopware envoie des webhooks signés pour les événements auxquels vous vous abonnez, et rien de Track ne s'exécute dans la boutique. `integrations/shopware/manifest.xml` est ce manifeste.
+
+## Enregistrement
+
+Lors de `app:install`, Shopware appelle l'URL d'enregistrement de l'app avec `shop-id`, `shop-url` et un horodatage, signés dans l'en-tête `shopware-app-signature` avec le secret d'app du manifeste. Le collecteur vérifie la signature, répond par une preuve (HMAC-SHA256 sur l'identifiant de la boutique, son URL et le nom de l'app) et un secret de boutique, et Shopware confirme en envoyant des identifiants d'accès API à l'URL de confirmation. Track écarte délibérément ces identifiants : l'intégration ne fait que recevoir des webhooks et n'appelle jamais l'API de la boutique. Le secret que vous avez stocké dans la connexion sert à la fois de secret d'app et de secret de boutique, si bien que chaque webhook ultérieur est vérifié via `shopware-shop-signature`, le HMAC-SHA256 en hexadécimal du corps brut.
+
+## Quel événement devient quoi
+
+| Événement Shopware | Événement Track |
+| --- | --- |
+| `state_enter.order_transaction.state.paid` | `purchase` |
+| `state_enter.order_transaction.state.refunded` | `refund` (total de la commande) |
+| `checkout.order.placed` | `purchase` uniquement lorsque la connexion est réglée pour compter les commandes passées |
+
+Par défaut, c'est la **transaction payée** qui est comptée, pas la commande passée. Dans les boutiques en prépaiement ou sur facture, une commande peut rester impayée pendant des jours, voire ne jamais être payée ; la compter à la passation gonfle le chiffre d'affaires et apprend la mauvaise chose aux plateformes publicitaires. Les boutiques où la passation est le moment significatif (paiement à la livraison, facturation B2B) basculent la connexion sur *passée*.
+
+L'achat porte l'identifiant de commande, le numéro de commande comme identifiant de transaction, les montants total et net (la taxe étant leur différence), les frais de livraison, la devise, les lignes produits indexées par numéro de produit, ainsi que l'e-mail, le nom et la ville, le code postal et le pays de facturation du client comme données de correspondance brutes que le routeur hache. Les lignes de promotion et de livraison ne sont pas des produits et sont ignorées.
+
+## Devise
+
+Les événements `paid` et `refunded` portent la commande avec son association de devise dans les versions actuelles de Shopware. Si une version l'omet, la devise de repli de la connexion s'applique ; à défaut de l'une comme de l'autre, l'événement est stocké sans devise et le moniteur des destinations signale le champ manquant au lieu de deviner.
+
+## Le snippet Storefront
+
+Ajoutez le snippet standard dans le fichier `base.html.twig` de votre thème, dans le bloc `base_head`. Il couvre le Storefront et la page de fin de checkout, que Shopware rend lui-même, de sorte que l'achat navigateur — avec l'enregistrement de consentement et les identifiants de clic du visiteur — existe en parallèle du webhook. L'appariement par numéro de commande permet ensuite à l'achat serveur vérifié d'hériter de ce consentement ; sans achat navigateur, l'enregistrement serveur reste opérationnel et n'atteint aucune destination publicitaire.
+
+## Mise en place
+
+1. Site → Connexion boutique → Shopware 6 : domaine de la boutique, devise de repli, moment de l'achat ; stockez un secret (32 caractères aléatoires) ; copiez l'URL d'enregistrement.
+2. Placez le manifeste dans `custom/apps/TrackSite/manifest.xml`, remplacez l'identifiant de tracking, le jeton de chemin et le secret, puis exécutez `bin/console app:install --activate TrackSite`.
+3. Marquez la transaction d'une commande de test comme payée. La connexion signale l'enregistrement et le premier webhook ; le débogueur affiche l'achat shopware.
+
+## Limites
+
+- Un second remboursement partiel sur la même commande est dédupliqué par numéro de commande ; le premier est enregistré.
+- Les apps ne peuvent pas injecter elles-mêmes de scripts dans le Storefront ; le snippet est une modification du thème, documentée dans le README.
+- Les commandes modifiées dans l'administration après paiement ne renvoient pas l'événement payée ; les corrections de valeur se font dans votre propre reporting, pas chez les fournisseurs.

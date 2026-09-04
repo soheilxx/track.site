@@ -1,0 +1,70 @@
+---
+title: "Configurazione firmata: perché il tag manager è un componente della supply chain e come Ed25519 lo tiene onesto"
+description: "Un tag manager consegna codice a ogni visitatore del tuo sito. Track lo tratta come una supply chain: template dichiarativi al posto di script personalizzati, bundle di configurazione firmati con Ed25519, un manifest con digest e ID della chiave, verifica lato client e una cronologia delle versioni con rollback."
+excerpt: "La cosa più pericolosa di un tag manager classico non è un singolo tag: è che chiunque abbia accesso al contenitore può consegnare JavaScript arbitrario ai tuoi visitatori. Ecco come una configurazione dichiarativa e firmata elimina questa possibilità mantenendo tutto il resto."
+category: "product"
+translationGroupId: "signed-configuration-supply-chain"
+slug: "signed-configuration-supply-chain"
+topic: "product-updates"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "advanced"
+takeaways:
+  - "Un tag manager consegna codice a ogni visitatore, quindi Track tratta la distribuzione della configurazione come una supply chain con tre minacce: modifiche dannose da parte di chi ha accesso, distribuzione manomessa e deriva non tracciata."
+  - "Template dichiarativi con parametri tipizzati sostituiscono HTML e JavaScript personalizzati; un bundle è costituito da dati, validati sul server e sul client, senza eval e senza caricamento arbitrario di script."
+  - "I bundle pubblicati sono firmati con Ed25519 tramite una chiave che non lascia mai il servizio di pubblicazione; l'SDK verifica digest e firma con Web Crypto e scarta tutto ciò che non supera la verifica."
+  - "Un manifest appena scaricato porta versione, digest, ID della chiave e il flag del kill switch, e ogni pubblicazione è una versione immutabile, approvata e attribuibile che può essere ripristinata."
+tags: ["sicurezza", "supply-chain", "firma", "configurazione"]
+author: "track-site-editorial"
+publishedAt: "2026-08-12"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Bundle di configurazione firmato, verificato dall'SDK prima dell'uso"
+sources:
+  - title: "RFC 8032 — Edwards-Curve Digital Signature Algorithm (EdDSA)"
+    url: "https://www.rfc-editor.org/rfc/rfc8032"
+  - title: "MDN — SubtleCrypto.verify()"
+    url: "https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/verify"
+legalNotice: false
+---
+
+## Il modello delle minacce
+
+Tre cose possono andare storte con una configurazione consegnata ai browser:
+
+1. **Qualcuno con accesso legittimo consegna qualcosa di dannoso** — un tag HTML personalizzato che esfiltra i dati dei form, uno script «temporaneo» che resta per anni.
+2. **Il percorso di distribuzione viene manomesso** — un edge CDN compromesso, un proxy configurato male, un man-in-the-middle su una rete ostile.
+3. **Nessuno sa dire cosa è cambiato** — la configurazione live si allontana da ciò che era stato revisionato.
+
+## I template dichiarativi chiudono la prima porta
+
+Track non ha alcun tipo di tag HTML personalizzato o JavaScript personalizzato. Ogni azione lato browser è un **template** preso da un insieme fisso (pixel di Meta, tag Google, pixel di TikTok, UET, Insight Tag e così via) con parametri tipizzati: ID, mappature degli eventi, finalità del consenso. Un template non può contenere codice; seleziona un loader che l'SDK già include e compila gli identificatori. Il bundle di configurazione è costituito da dati, validati rispetto a uno schema sul server e di nuovo sul client. Non c'è `eval`, non c'è `new Function`, e nulla in un bundle può far scaricare all'SDK uno script da un URL che il template non conosce già.
+
+È una rinuncia deliberata alla flessibilità. La guida alla migrazione elenca ciò che non ha un equivalente; la risposta è sempre «metti quella logica nel codice del sito, dove viene revisionata come codice».
+
+## La firma chiude la seconda
+
+Quando una versione viene pubblicata, il server serializza il bundle in forma canonica, ne calcola il digest SHA-256 e firma i byte con una chiave privata **Ed25519** che esiste solo sul servizio di pubblicazione. L'artefatto pubblicato è `{ payload, digest, keyId, algorithm, signature }`.
+
+L'SDK include le chiavi pubbliche per gli ID chiave del sito. Prima di applicare un bundle ricalcola il digest, lo confronta con quello firmato e verifica la firma con Web Crypto (`SubtleCrypto.verify` con `Ed25519`). Un bundle che non supera la verifica viene scartato e l'SDK mantiene l'ultimo bundle verificato dalla cache di sessione — oppure gira senza alcuna destinazione, piuttosto che con una configurazione non verificata.
+
+La firma non sostituisce TLS; protegge da tutto ciò che TLS non copre, compreso un edge compromesso che serve JSON dall'aspetto valido su un certificato valido.
+
+## Il manifest
+
+Il loader scarica prima un piccolo manifest: tracking ID, ambiente, versione, URL del bundle, digest, ID della chiave, timestamp di pubblicazione e il flag del **kill switch**. Il manifest viene scaricato sempre fresco; il bundle viene messo in cache nel session storage per versione e digest. È questo che permette a un kill switch o a un rollback di avere effetto alla visualizzazione di pagina successiva senza dover invalidare la cache del bundle stesso.
+
+## Il versionamento chiude la terza
+
+Ogni pubblicazione crea una versione immutabile con un diff rispetto alla precedente, l'autore, l'approvazione che l'ha autorizzata e l'ID della richiesta. La cronologia delle versioni mostra esattamente cosa ricevono i visitatori, e il rollback ripubblica una versione precedente come nuova versione — firmata di nuovo, registrata di nuovo nell'audit log. Bozze e versioni pubblicate non condividono mai lo stesso storage, così «cosa è live» è un unico fatto, non lo stato di più interruttori.
+
+## Gestione delle chiavi
+
+- Le chiavi di firma vengono generate per ambiente e non lasciano mai il servizio di pubblicazione; la chiave privata non viene mai memorizzata nel database.
+- Gli ID delle chiavi permettono la rotazione: si aggiunge una nuova chiave, le nuove versioni vengono firmate con quella, la vecchia chiave pubblica resta valida per la verifica finché ogni sito non ha ripubblicato, poi viene ritirata.
+- Il `key_id` su ogni manifest ti dice quale chiave ha firmato la configurazione live.
+
+## Cosa significa per la tua revisione di sicurezza
+
+Puoi descrivere il tag manager a un team di sicurezza in un solo paragrafo: consegna dati firmati e validati rispetto a uno schema a un SDK fisso; non può eseguire codice scritto dal sito; ogni modifica è versionata, approvata e attribuibile; e una compromissione del percorso di distribuzione non può alterare il comportamento senza la chiave di firma. La pagina sulla sicurezza rimanda agli ID chiave correnti e al codice sorgente di verifica dell'SDK.

@@ -1,0 +1,104 @@
+---
+title: "Tracking server-side explicado: qué cambia de verdad cuando los eventos salen del navegador"
+description: "Una explicación en lenguaje claro del tracking server-side: qué es, qué no soluciona, cómo sigue aplicándose el consentimiento y cómo funciona la deduplicación con la etiqueta del navegador."
+excerpt: "El tracking server-side traslada la entrega de los eventos del navegador del visitante a tu propio router server-side. Esta guía explica qué cambia, qué sigue igual y dónde están los malentendidos más comunes."
+category: "guides"
+translationGroupId: "server-side-tracking-explained"
+slug: "server-side-tracking-explained"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "beginner"
+takeaways:
+  - "El tracking server-side traslada la entrega de los eventos a un servidor que tú controlas; el navegador sigue observando el comportamiento, leyendo el consentimiento y capturando los IDs de clic."
+  - "Mejora la fiabilidad, envía compras autoritativas desde el sistema de pedidos y te da control sobre cada payload, pero no cambia las reglas del consentimiento."
+  - "El consentimiento se evalúa dos veces, en el navegador y en el servidor, y los eventos previos al consentimiento se descartan en lugar de reenviarse."
+  - "En modo híbrido, un ID de evento por acción compartido por ambas vías, más el ID de pedido en las compras, es lo que permite a los proveedores contar una sola vez."
+featured: true
+tags: ["server-side", "fundamentos", "consentimiento", "deduplicación"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Diagrama de eventos que fluyen desde el navegador y el servidor a través de un router hacia las plataformas publicitarias"
+sources:
+  - title: "Meta — Conversions API: using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Google Analytics — Measurement Protocol reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+legalNotice: true
+---
+
+## La versión en una frase
+
+Tracking server-side significa que tu sitio web sigue registrando lo que hace un visitante, pero la *entrega* de esa información a las plataformas publicitarias y de analítica se hace desde un servidor que tú controlas, en lugar de desde un script que se ejecuta en el navegador del visitante.
+
+Ese único cambio tiene consecuencias para la fiabilidad, la calidad de los datos y la privacidad; algunas son buenas y otras se exageran con frecuencia. Este artículo separa las unas de las otras.
+
+## Qué se traslada y qué se queda
+
+| Se queda en el navegador | Se traslada al servidor |
+| --- | --- |
+| Observar clics, vistas de página y envíos de formularios | Dar formato a los eventos para cada proveedor |
+| Leer el estado del consentimiento desde tu CMP | Aplicar la política de consentimiento por segunda vez |
+| Capturar los IDs de clic (`gclid`, `fbclid`, `ttclid`, …) tras el consentimiento de marketing | Reintentar las entregas fallidas, circuit breaking, gestión de la cola de fallidos (dead-letter) |
+| Cargar las etiquetas de proveedor que aún quieras (modo híbrido) | Aplicar hash y normalizar los datos de coincidencia |
+| | Deduplicar con el ID de pedido |
+
+El navegador sigue necesitando un pequeño script —en Track es un único snippet de menos de 30 KB comprimido con gzip—, porque alguien tiene que observar el comportamiento y leer el consentimiento. Lo que eliminas es el montón de scripts de proveedores y el montón de peticiones de red específicas de cada proveedor.
+
+## Por qué lo hacen los equipos
+
+**Fiabilidad.** Los bloqueadores de anuncios, la protección antirrastreo y las redes móviles inestables descartan una parte de las peticiones del navegador. Una petición de servidor desde tu router a la Conversions API de Meta o al Measurement Protocol de Google no depende de que el dispositivo del visitante siga en la página.
+
+**Conversiones autoritativas.** El navegador ve una página de agradecimiento; tu servidor ve el pedido. Enviar las compras desde el sistema de pedidos (webhook de Shopify, hook de WooCommerce, exportación del CRM) da a las plataformas la transacción que ocurrió de verdad, incluidos los reembolsos posteriores.
+
+**Control.** Cada payload pasa por código que es tuyo. Puedes eliminar campos, bloquear datos personales, garantizar que el consentimiento inferido nunca se exporte y registrar una copia enmascarada de lo que se envió.
+
+## Por qué no sustituye al consentimiento
+
+El malentendido más común: «los datos pasan por mi servidor, así que las reglas del consentimiento no se aplican». Se aplican exactamente igual que antes. La cuestión legal es *si* puedes tratar y compartir los datos del visitante para una finalidad, no *qué máquina* los envía.
+
+Por eso una implementación correcta evalúa el consentimiento dos veces:
+
+1. En el navegador, antes de que se almacene nada o de que cargue cualquier etiqueta de proveedor.
+2. En el servidor, antes de cualquier entrega, usando la instantánea del consentimiento que viajó con el evento.
+
+Los eventos sin la finalidad requerida deben descartarse, no aparcarse y reenviarse cuando el consentimiento se otorgue más tarde. Reenviar el comportamiento previo al consentimiento es precisamente lo que las autoridades de protección de datos, como la AEPD, objetan de forma expresa.
+
+## Deduplicación: la parte en la que todo el mundo se equivoca al principio
+
+Si ejecutas el píxel del navegador *y* la API de servidor de la misma plataforma (modo híbrido), la plataforma recibe dos eventos por acción. Los proveedores deduplican con un ID de evento que ambas vías deben compartir:
+
+- Meta: el `event_id` de la Conversions API es igual al `eventID` de la llamada del píxel
+- TikTok: el `event_id` de la Events API es igual al `event_id` del píxel
+- Pinterest y Snapchat: `event_id` / `client_dedup_id`
+- Microsoft: el mismo `eventId` en la etiqueta UET y en la Conversions API
+- LinkedIn: `eventId`
+
+La regla práctica: genera un ID por evento en el origen y pásalo por todo el recorrido. Las compras llevan además el ID de pedido (`transaction_id` en GA4, `orderId` en Google Ads, `ordinal` en Campaign Manager), de modo que, aunque se pierda el evento del navegador, el proveedor puede seguir fusionando por el pedido.
+
+## Una arquitectura mínima que aguanta
+
+1. **Collector**: acepta lotes del navegador y del servidor, valida orígenes y claves de origen, aplica límites de tasa y entrega cada lote a una cola duradera *antes* de responder con 202.
+2. **Worker**: normaliza a un único esquema, busca datos personales, evalúa la política de consentimiento, almacena el evento, deduplica las conversiones por ID de pedido y genera un mensaje de entrega por destino.
+3. **Entrega**: mapea al payload del proveedor, lo valida, lo envía, clasifica la respuesta (autenticación, límite de tasa, payload no válido, temporal) y reintenta con backoff o aparca en una cola de fallidos (dead-letter).
+4. **Depurador**: muestra cada evento con su instantánea del consentimiento, la decisión de enrutado y el payload enmascarado del proveedor.
+
+Si falta cualquiera de ellos, tarde o temprano no podrás responder a la pregunta «¿por qué esta compra no aparece en la plataforma X?», que es la pregunta que decide si el proyecto se gana la confianza.
+
+## Lista de comprobación antes de pasar un destino a server-side
+
+- [ ] El consentimiento se evalúa en el navegador y en el servidor, sin reenvíos a posteriori
+- [ ] Un ID de evento por acción compartido por las vías del navegador y del servidor
+- [ ] ID de pedido en cada compra y cada reembolso
+- [ ] Datos de coincidencia (correo electrónico, teléfono) normalizados y con hash SHA-256 antes de salir de tus sistemas
+- [ ] IDs de clic capturados solo tras el consentimiento de marketing y reenviados únicamente a la plataforma a la que pertenecen
+- [ ] Un evento de prueba que llega a la vista de eventos de prueba del proveedor
+- [ ] Reintentos, una cola de fallidos (dead-letter) y una forma de reenviar
+- [ ] Periodos de retención para eventos, IDs de clic y registros de entrega
+
+## Qué esperar tras el cambio
+
+Los equipos suelen ver cómo el recuento de conversiones sube de forma apreciable en cuanto se añade la entrega desde el servidor: es el tráfico del navegador que antes se perdía, no clientes nuevos. Espera que las plataformas informen de métricas de *calidad de coincidencia de eventos*; mejoran con el correo electrónico y el teléfono con hash del sistema de pedidos. Y cuenta con unas semanas en las que las vías del navegador y del servidor funcionen en paralelo mientras comparas las cifras en el depurador.

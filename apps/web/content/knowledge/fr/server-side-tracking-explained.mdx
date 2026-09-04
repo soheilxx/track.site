@@ -1,0 +1,104 @@
+---
+title: "Le tracking côté serveur expliqué : ce qui change vraiment quand les événements quittent le navigateur"
+description: "Une explication en langage clair du tracking côté serveur : ce que c'est, ce que ça ne corrige pas, pourquoi le consentement s'applique toujours et comment fonctionne la déduplication avec la balise navigateur."
+excerpt: "Le tracking côté serveur déplace la livraison des événements du navigateur du visiteur vers votre propre routeur côté serveur. Ce guide explique ce qui change, ce qui reste identique et où se nichent les malentendus les plus fréquents."
+category: "guides"
+translationGroupId: "server-side-tracking-explained"
+slug: "server-side-tracking-explained"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "beginner"
+takeaways:
+  - "Le tracking côté serveur déplace la livraison des événements vers un serveur que vous contrôlez ; le navigateur continue d'observer le comportement, de lire le consentement et de capturer les identifiants de clic."
+  - "Il améliore la fiabilité, envoie des achats qui font foi depuis le système de commande et vous donne le contrôle de chaque payload — mais il ne change rien aux règles de consentement."
+  - "Le consentement est évalué deux fois, dans le navigateur et sur le serveur, et les événements antérieurs au consentement sont écartés plutôt que rejoués."
+  - "En mode hybride, un identifiant d'événement par action, partagé par les deux chemins, plus le numéro de commande sur les achats, est ce qui permet aux fournisseurs de compter une seule fois."
+featured: true
+tags: ["server-side", "fondamentaux", "consentement", "déduplication"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Schéma d'événements circulant du navigateur et du serveur vers les plateformes publicitaires via un routeur"
+sources:
+  - title: "Meta — Conversions API: using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Google Analytics — Measurement Protocol reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+legalNotice: true
+---
+
+## La version en une phrase
+
+Le tracking côté serveur signifie que votre site web continue d'enregistrer ce que fait un visiteur, mais que la *livraison* de ces informations aux plateformes publicitaires et d'analyse se fait depuis un serveur que vous contrôlez, et non depuis un script exécuté dans le navigateur du visiteur.
+
+Ce seul changement a des conséquences sur la fiabilité, la qualité des données et la protection de la vie privée — certaines bénéfiques, d'autres souvent exagérées. Cet article fait la part des deux.
+
+## Ce qui bouge, ce qui reste
+
+| Reste dans le navigateur | Passe côté serveur |
+| --- | --- |
+| Observer les clics, les pages vues, les envois de formulaires | Formater les événements pour chaque fournisseur |
+| Lire l'état du consentement depuis votre CMP | Appliquer une seconde fois la politique de consentement |
+| Capturer les identifiants de clic (`gclid`, `fbclid`, `ttclid`, …) après le consentement marketing | Réessayer les livraisons échouées, circuit breaker, gestion des dead-letters |
+| Charger les balises fournisseurs que vous souhaitez conserver (mode hybride) | Hacher et normaliser les données de correspondance |
+| | Dédupliquer sur le numéro de commande |
+
+Le navigateur a toujours besoin d'un petit script — chez Track, un seul snippet de moins de 30 Ko en gzip — parce que quelqu'un doit observer le comportement et lire le consentement. Ce dont vous vous débarrassez, c'est de la pile de scripts fournisseurs et de la pile de requêtes réseau propres à chaque fournisseur.
+
+## Pourquoi les équipes s'y mettent
+
+**Fiabilité.** Les bloqueurs de publicité, les protections anti-pistage et les réseaux mobiles instables font perdre une partie des requêtes navigateur. Une requête serveur de votre routeur vers la Conversions API de Meta ou le Measurement Protocol de Google ne dépend pas du fait que l'appareil du visiteur reste sur la page.
+
+**Des conversions qui font foi.** Le navigateur voit une page de remerciement ; votre serveur voit la commande. Envoyer les achats depuis le système de commande (webhook Shopify, hook WooCommerce, export CRM) fournit aux plateformes la transaction qui a réellement eu lieu, remboursements ultérieurs compris.
+
+**Contrôle.** Chaque payload passe par du code qui vous appartient. Vous pouvez retirer des champs, bloquer les données personnelles, garantir qu'un consentement déduit n'est jamais exporté et journaliser une copie masquée de ce qui a été envoyé.
+
+## Pourquoi il ne règle pas la question du consentement
+
+Le malentendu le plus fréquent : « les données passent par mon serveur, donc les règles de consentement ne s'appliquent pas ». Elles s'appliquent exactement comme avant. La question juridique est de savoir *si* vous pouvez traiter et partager les données du visiteur pour une finalité donnée, pas *quelle machine* les envoie.
+
+Une implémentation correcte évalue donc le consentement deux fois :
+
+1. Dans le navigateur, avant que quoi que ce soit ne soit stocké ou qu'une balise fournisseur ne se charge.
+2. Sur le serveur, avant toute livraison, à partir de l'instantané de consentement qui a voyagé avec l'événement.
+
+Les événements sans la finalité requise doivent être écartés, et non mis de côté puis rejoués une fois le consentement accordé plus tard. Rejouer un comportement antérieur au consentement est précisément ce à quoi les autorités de contrôle — la CNIL en France — s'opposent explicitement.
+
+## Déduplication : la partie que tout le monde rate au début
+
+Si vous faites tourner le pixel navigateur *et* l'API serveur d'une même plateforme (mode hybride), la plateforme reçoit deux événements par action. Les fournisseurs dédupliquent sur un identifiant d'événement que les deux chemins doivent partager :
+
+- Meta : `event_id` dans la Conversions API est égal à `eventID` dans l'appel du pixel
+- TikTok : `event_id` dans l'Events API est égal à l'`event_id` du pixel
+- Pinterest et Snapchat : `event_id` / `client_dedup_id`
+- Microsoft : le même `eventId` sur la balise UET et la Conversions API
+- LinkedIn : `eventId`
+
+La règle pratique : générez un identifiant par événement à la source et transmettez-le partout. Les achats portent en plus le numéro de commande (`transaction_id` dans GA4, `orderId` dans Google Ads, `ordinal` dans Campaign Manager), de sorte que même si l'événement navigateur a été perdu, le fournisseur peut encore fusionner sur la commande.
+
+## Une architecture minimale qui tient la route
+
+1. **Collecteur** — accepte les lots navigateur et serveur, valide les origines et les clés de source, applique des limites de débit et confie chaque lot à une file d'attente durable *avant* de répondre 202.
+2. **Worker** — normalise dans un schéma unique, recherche les données personnelles, évalue la politique de consentement, stocke l'événement, déduplique les conversions par numéro de commande et émet un message de livraison par destination.
+3. **Livraison** — transforme vers le payload du fournisseur, le valide, l'envoie, classe la réponse (authentification, limite de débit, payload invalide, erreur temporaire), réessaie avec un délai progressif ou met de côté dans une file dead-letter.
+4. **Débogueur** — affiche chaque événement avec son instantané de consentement, sa décision de routage et le payload fournisseur masqué.
+
+S'il manque l'un de ces éléments, vous finirez par être incapable de répondre à la question « pourquoi cet achat n'apparaît-il pas dans la plateforme X ? » — et c'est précisément cette question qui décide si l'on fait confiance au projet.
+
+## Liste de contrôle avant de basculer une destination côté serveur
+
+- [ ] Le consentement est évalué dans le navigateur et sur le serveur, sans rejeu a posteriori
+- [ ] Un identifiant d'événement par action, partagé par les chemins navigateur et serveur
+- [ ] Le numéro de commande sur chaque achat et chaque remboursement
+- [ ] Les données de correspondance (e-mail, téléphone) normalisées et hachées en SHA-256 avant de quitter vos systèmes
+- [ ] Les identifiants de clic capturés uniquement après le consentement marketing et transmis uniquement à la plateforme à laquelle ils appartiennent
+- [ ] Un événement de test qui arrive dans la vue des événements de test du fournisseur
+- [ ] Des réessais, une file dead-letter et un moyen de rejouer
+- [ ] Des durées de conservation pour les événements, les identifiants de clic et les journaux de livraison
+
+## À quoi s'attendre après la bascule
+
+Les équipes constatent généralement une hausse sensible du nombre de conversions une fois la livraison serveur ajoutée — c'est le trafic navigateur perdu jusque-là, pas de nouveaux clients. Attendez-vous à ce que les plateformes remontent des indicateurs de *qualité de correspondance des événements* ; ils s'améliorent avec l'e-mail et le téléphone hachés issus du système de commande. Et prévoyez quelques semaines pendant lesquelles les chemins navigateur et serveur tournent côte à côte, le temps de comparer les chiffres dans le débogueur.

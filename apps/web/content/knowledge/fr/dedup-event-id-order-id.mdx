@@ -1,0 +1,82 @@
+---
+title: "Une déduplication à l'épreuve du réel : identifiants d'événement, numéros de commande et la clé sur laquelle chaque plateforme s'appuie vraiment"
+description: "Un tableau des clés de déduplication plateforme par plateforme — Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Pinterest, Snapchat, Reddit, X, CM360 — et la stratégie à deux clés qui garde le tracking hybride honnête."
+excerpt: "Le tracking hybride envoie la même action depuis le navigateur et depuis le serveur. Que la plateforme la compte une seule fois dépend de la clé sur laquelle elle déduplique. Voici le tableau de référence et la stratégie qui le sous-tend."
+category: "guides"
+translationGroupId: "dedup-event-id-order-id"
+slug: "dedup-event-id-order-id"
+topic: "server-side-tracking"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "linkedin", "pinterest", "snapchat", "reddit", "x", "google-marketing-platform"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Utilisez deux clés : un identifiant d'événement généré une seule fois à la source et transmis à chaque chemin, plus le numéro de commande sur chaque événement commerce."
+  - "Les plateformes fusionnent sur des clés différentes — Meta, TikTok, Microsoft, LinkedIn et Pinterest sur l'identifiant d'événement, Google Ads et GA4 sur le numéro de commande ou de transaction, Snapchat sur une paire correspondante, CM360 sur l'ordinal."
+  - "Les plateformes ne fusionnent que dans une fenêtre donnée (Meta documente environ 48 heures) ; une qualification CRM tardive relève donc d'un événement plateforme distinct, pas d'un doublon de l'événement navigateur."
+  - "Les remboursements sont des événements à part entière portant le numéro de commande d'origine ; vérifiez la déduplication dans le débogueur d'événements, le moniteur des destinations et l'interface de la plateforme."
+tags: ["déduplication", "event-id", "order-id", "hybride"]
+author: "track-site-editorial"
+publishedAt: "2026-08-29"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tableau des clés de déduplication par plateforme publicitaire"
+sources:
+  - title: "Meta — Conversions API: deduplication"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events"
+  - title: "Microsoft Advertising — Conversions API (CAPI)"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+legalNotice: false
+---
+
+## Pourquoi deux clés
+
+Un **identifiant d'événement** identifie une action telle que vos systèmes l'ont observée. Un **numéro de commande** identifie une transaction commerciale. Ils échouent de manières différentes :
+
+- Les identifiants d'événement sont générés par observation. Si le navigateur et le serveur observent le même achat indépendamment l'un de l'autre, ils ne partagent un identifiant que si vous le transmettez délibérément de l'un à l'autre.
+- Les numéros de commande existent pour les achats et les remboursements, mais pas pour les pages vues, les leads ou les inscriptions.
+
+Une configuration robuste utilise les deux : un identifiant d'événement généré à la source et transmis à chaque chemin, plus le numéro de commande sur chaque événement commerce. Les plateformes qui dédupliquent sur l'identifiant d'événement fusionnent l'observation ; celles qui dédupliquent sur le numéro de commande fusionnent la transaction ; une plateforme qui prend en charge les deux bénéficie d'une double sécurité, ceinture et bretelles.
+
+## Le tableau de référence
+
+| Plateforme | Champ navigateur | Champ serveur | Fusion sur | Remarques |
+| --- | --- | --- | --- | --- |
+| Meta | `eventID` (option du pixel) | `event_id` | identifiant d'événement + nom d'événement, ~48 h | `order_id` dans `custom_data` est informatif |
+| Google Ads | `transaction_id` (gtag) | `orderId` (import) | numéro de commande par action de conversion | leads : utilisez des actions de conversion distinctes |
+| GA4 | `transaction_id` | `transaction_id` | identifiant de transaction pour `purchase` | les autres événements ne sont pas dédupliqués |
+| TikTok | `event_id` (option ttq) | `event_id` | identifiant d'événement + nom d'événement | `order_id` dans properties |
+| Microsoft | `event_id` (push UET) | `eventId` | identifiant d'événement + nom d'événement | même identifiant de tag UET sur les deux chemins |
+| LinkedIn | `event_id` (lintrk) | `eventId` | identifiant d'événement | par règle de conversion |
+| Pinterest | `event_id` (pintrk) | `event_id` | identifiant d'événement | `order_id` dans custom_data |
+| Snapchat | `client_dedup_id` | `event_id` | paire correspondante | dans la fenêtre de déduplication |
+| Reddit | `conversionId` (rdt) | `conversion_id` | identifiant de conversion | |
+| X | `conversion_id` (twq) | `conversion_id` | identifiant de conversion | par identifiant d'événement (tw-…) |
+| Campaign Manager 360 | `ordinal` / `u1` | `ordinal` | ordinal + activité + utilisateur | horodatages à moins de 28 jours d'écart |
+| Réseaux d'affiliation | — | référence de commande | référence de commande | protection contre les doublons côté réseau |
+
+## Générer l'identifiant
+
+Générez l'identifiant **avant** tout envoi, à l'endroit où l'action est connue en premier. Dans le navigateur, c'est le moment où `tsq.push(["track", ...])` s'exécute ; Track attribue un ULID et l'utilise aussi bien pour l'appel du pixel de la plateforme que pour la requête vers le collecteur. Pour les sources serveur, c'est le système source qui devrait générer l'identifiant — ou, pour les achats, transmettre le numéro de commande afin que le routeur puisse en dériver un identifiant d'événement déterministe.
+
+Un identifiant déterministe pour les achats (`hash(site, "purchase", order_id)`) a une propriété agréable : un webhook Shopify rejoué ou un export CRM en double produit le même identifiant, et la garde de déduplication du worker l'écarte avant la livraison.
+
+## Fenêtres temporelles
+
+Les plateformes ne fusionnent que dans une fenêtre donnée — Meta documente environ 48 heures, les autres sont du même ordre. Si votre événement serveur arrive plusieurs jours plus tard (un lot CRM), il ne sera pas fusionné avec l'événement navigateur ; il sera compté en plus. Choisissez par type d'événement :
+
+- Achats et autres conversions immédiates : hybride avec un identifiant partagé, les deux en quelques minutes.
+- Qualifications différées (un lead devient une opportunité une semaine plus tard) : un événement ou une action de conversion **différents** côté plateforme, pas un doublon de l'événement navigateur.
+
+## Remboursements
+
+Les remboursements sont des événements à part entière. GA4 dispose d'un événement `refund` avec `transaction_id` ; Google Ads utilise les ajustements de conversion (rétractation/reformulation) indexés sur le numéro de commande ; Meta n'a pas d'événement de remboursement mais accepte des valeurs négatives dans les conversions personnalisées ; la plupart des réseaux d'affiliation acceptent un postback d'annulation. Track émet `refund` avec une valeur négative et le numéro de commande d'origine, et laisse chaque connecteur décider de ce que la plateforme prend en charge.
+
+## Une vérification pilotée par le débogueur
+
+1. Effectuez un achat en mode test, navigateur ouvert.
+2. Dans le débogueur d'événements, retrouvez l'achat navigateur et l'achat serveur — même identifiant d'événement, même numéro de commande.
+3. Ouvrez le moniteur des destinations : une tentative de livraison par chemin, toutes deux acceptées.
+4. Dans l'interface de la plateforme (Events Manager, événements de test, DebugView), confirmez une seule conversion, pas deux.
+
+Si l'étape 4 en montre deux, l'identifiant n'a pas voyagé sur l'un des chemins. L'aperçu masqué du payload dans le débogueur indique lequel.

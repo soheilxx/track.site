@@ -1,0 +1,67 @@
+---
+title: "Bloqueadores de anuncios, ITP y pérdida de medición: qué falta realmente y qué se puede recuperar"
+description: "Una mirada serena a las tres fuentes de pérdida de medición —bloqueadores de contenido, protección antirrastreo del navegador y rechazo del consentimiento—: cuánto pesa cada una, cuál recupera una configuración first-party y server-side, y cuál no debe recuperar."
+excerpt: "Los equipos suelen meter «bloqueadores de anuncios» y «consentimiento» en el mismo saco de datos perdidos. Son problemas distintos, con soluciones distintas, y uno de ellos no es un problema que haya que resolver. Aquí explicamos cómo separarlos y qué puedes esperar de una configuración first-party."
+category: "guides"
+translationGroupId: "ad-blockers-itp-measurement"
+slug: "ad-blockers-itp-measurement"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Bloqueadores de contenido, protección antirrastreo del navegador y rechazo del consentimiento son tres pérdidas distintas con soluciones distintas, y el rechazo del consentimiento no es una pérdida que haya que corregir."
+  - "Mide tu propia brecha: compara las páginas vistas aceptadas por el collector con el recuento de la etiqueta del proveedor, lee la cuota de rechazo en la página de consentimiento y la proporción de visitantes recurrentes por navegador."
+  - "Una configuración first-party y server-side recupera los eventos con consentimiento que los bloqueadores basados en listas descartan, entrega desde el servidor las compras y los leads confirmados y reintenta ante caídas del proveedor."
+  - "No elimina el límite de Safari al almacenamiento escrito por script, no restaura un consentimiento rechazado, no inyecta píxeles bloqueados ni sustituye identificadores por fingerprinting."
+tags: ["bloqueadores-de-anuncios", "itp", "medición", "pérdida-de-datos"]
+author: "track-site-editorial"
+publishedAt: "2026-08-17"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Desglose de la pérdida de medición por causa"
+sources:
+  - title: "WebKit — Tracking Prevention Policy"
+    url: "https://webkit.org/tracking-prevention-policy/"
+  - title: "Mozilla — Enhanced Tracking Protection"
+    url: "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+legalNotice: false
+---
+
+## Tres pérdidas distintas
+
+**Los bloqueadores de contenido** (uBlock Origin, AdGuard, Brave Shields, bloqueadores a nivel de DNS) contrastan los nombres de host de las peticiones y las URL de los scripts con listas públicas. `connect.facebook.net`, `googletagmanager.com` y `analytics.google.com` están en esas listas; el subdominio propio de la página, no. El bloqueo ocurre antes de que se ejecute ningún código, así que nada en la página puede avisarte de que ha ocurrido: el visitante, sencillamente, no aparece.
+
+**La protección antirrastreo del navegador** (Safari ITP, Firefox ETP, Brave) no bloquea las peticiones a hosts first-party; limita el *estado*: las cookies de terceros se particionan o se bloquean, las cookies escritas por script caducan a los 7 días y las cookies establecidas a través de un CNAME hacia una dirección de terceros también quedan limitadas. El visitante aparece, pero como visitante nuevo con más frecuencia de la real.
+
+**El rechazo del consentimiento** es el visitante diciendo que no. Técnicamente no hay nada roto; los datos no deben recogerse. Una configuración que «recupera» esta pérdida no es medición, es una infracción.
+
+## Cuánto pesa cada una
+
+Varía según la audiencia. Los públicos técnicos y más jóvenes —en Alemania, por ejemplo— muestran tasas de bloqueadores de contenido muy por encima de la media global; la cuota de Safari determina los efectos de ITP; y las tasas de consentimiento dependen del diseño de la CMP y de la confianza que inspira el sitio. En lugar de citar medias del sector, mide las tuyas: compara las páginas vistas aceptadas por el collector (página de eventos, por origen) con el recuento de páginas vistas que la etiqueta del proveedor informa para el mismo periodo; la diferencia es tu pérdida por bloqueadores de contenido en el host de ese proveedor. La página de consentimiento te da directamente la cuota de rechazo, y la proporción de visitantes recurrentes por navegador en tu analítica muestra el efecto de ITP.
+
+## Qué recupera una configuración first-party y server-side
+
+- **Eventos con consentimiento que los bloqueadores basados en listas bloquean.** El SDK se carga desde tu subdominio y envía a tu collector; los bloqueadores no lo reconocen. El evento con consentimiento llega a tu collector y, desde ahí, a las API de servidor de los proveedores. La calidad de coincidencia depende de qué identificadores haya permitido el consentimiento.
+- **Entrega server-side de lo que el navegador no pudo enviar.** Las compras y los leads confirmados por la tienda o por el servidor se entregan aunque el píxel del proveedor nunca se haya cargado.
+- **Caídas del proveedor y fallos transitorios.** El worker reintenta; el navegador nunca lo hizo.
+
+Lo que no cambia: el ID anónimo lo escribe el SDK bajo consentimiento de analítica o de marketing, y Safari sigue limitando el almacenamiento escrito por script a siete días. El reconocimiento de visitantes recurrentes de Safari más allá de ese plazo sigue siendo limitado; Track no lo elude.
+
+## Qué no debe recuperar
+
+- **El consentimiento rechazado.** Sin IDs de clic, sin identificadores, sin destinos de marketing. El router lo aplica evento a evento; no es una configuración que se pueda desactivar.
+- **Los píxeles del proveedor bloqueados como tales.** Si el visitante bloquea `fbevents.js`, el lado navegador de Meta sigue bloqueado. La ruta de servidor recibe el evento con consentimiento —así está diseñado—, pero no inyecta el píxel por otra vía.
+- **Fingerprinting para sustituir identificadores.** No está implementado ni es configurable. Lo desconocido sigue siendo desconocido.
+
+## Leer con honestidad la «calidad de coincidencia» de los proveedores
+
+Los proveedores puntúan cuántos identificadores lleva cada evento de servidor. Tras pasar a server-side, la puntuación suele subir porque ahora se incluye el correo electrónico con hash del sistema de pedidos. Es una mejora real para las compras con consentimiento. No es una prueba de que se esté rastreando a más personas; la página de consentimiento muestra la misma cuota de rechazo que antes.
+
+## Pasos prácticos
+
+1. Coloca el collector y el SDK en un subdominio first-party (consulta la guía de dominios first-party).
+2. Envía las compras y los leads desde el servidor con el mismo ID de evento que el navegador.
+3. Compara los recuentos por navegador en la página de calidad de datos; la brecha debería reducirse en Chrome con bloqueadores y en Firefox, y el reconocimiento de visitantes recurrentes debería mejorar en Safari.
+4. Deja en paz la tasa de consentimiento, o mejórala con un banner más claro; nunca con tecnología.

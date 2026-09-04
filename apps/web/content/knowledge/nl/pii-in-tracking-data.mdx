@@ -1,0 +1,75 @@
+---
+title: "Persoonsgegevens in tracking-payloads: waar ze binnensijpelen, wat de scanner vangt en wat een event blokkeert"
+description: "De gebruikelijke manieren waarop e-mailadressen, telefoonnummers, kaartnummers en tokens in tracking-events belanden — URL's, paginatitels, formuliervelden, zoektermen — en hoe de PII-scanner van Track redigeert, rapporteert en bij kaarten en secrets blokkeert voordat er iets wordt opgeslagen of doorgestuurd."
+excerpt: "Niemand stuurt met opzet een creditcardnummer naar een analytics-tool. Het gebeurt via een URL-parameter, een paginatitel of een formulierveld met de naam ‘opmerking’. De scanner draait op elk event vóór opslag en vóór routing; dit is waar hij naar zoekt en wat hij doet als hij iets vindt."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Persoonsgegevens sijpelen binnen via URL's, paginatitels, referrers, formulier- en zoekvelden, geneste objecten en gepersonaliseerde artikelnamen."
+  - "De scanner draait vóór opslag en routing en kent zes soorten: e-mailadressen en telefoonnummers worden geredigeerd en gerapporteerd; kaartnummers, IBAN's, secrets en JWT's blokkeren het event volledig."
+  - "Gehashte e-mail en telefoon in user_data zijn bewuste matchingsleutels achter de marketingtoestemming; de scanner markeert ze niet, de policy-engine beslist per destination."
+  - "Bevindingen worden gegroepeerde issues op de datakwaliteitspagina met typische oplossingen; de schema-component van de health score herstelt zodra het lek is gedicht."
+tags: ["pii", "datakwaliteit", "redigeren", "beveiliging"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Eventvelden die vóór opslag op persoonsgegevens worden gescand"
+sources:
+  - title: "GDPR Article 25 — Data protection by design and by default"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Waar persoonsgegevens binnensijpelen
+
+- **URL's.** Links voor wachtwoordherstel, afmeldlinks en boekingsbevestigingen zetten e-mailadressen en tokens in de query string. Een paginaweergave legt de URL vast.
+- **Paginatitels.** ‘Bestelling #1234 voor anna.devries@example.com’ als `<title>` wordt de eventtitel.
+- **Referrers.** De URL van de vorige pagina, met alles van hierboven.
+- **Formulier- en zoekvelden.** Een zoekopdracht op de site naar een telefoonnummer, of een veld ‘bericht’ dat naar eventproperties wordt gespiegeld.
+- **Geneste objecten.** Een compleet formulierobject in `props` gepusht omdat het zo handig was.
+- **Artikelnamen.** Gepersonaliseerde producten (‘Mok voor Anna’) in commerce-items.
+
+## Waar de scanner naar zoekt
+
+De scanner draait na de normalisatie en vóór de policy-engine, over `title`, `url`, `referrer`, elke string in `props`, geneste objecten in `props` en de namen van commerce-items. Zes soorten:
+
+| Soort | Voorbeelden | Actie |
+| --- | --- | --- |
+| email | elk adres in RFC-vorm | geredigeerd, gerapporteerd |
+| phone | internationale en nationale notaties met 7 of meer cijfers | geredigeerd, gerapporteerd |
+| card | reeksen van 13–19 cijfers die de Luhn-controle doorstaan | geredigeerd, **event geblokkeerd** |
+| iban | landcode + controlecijfers + BBAN | geredigeerd, **event geblokkeerd** |
+| secret | API-keys en tokens met bekende prefixen, lange strings met hoge entropie in sleutelachtige velden | geredigeerd, **event geblokkeerd** |
+| jwt | drie base64url-segmenten gescheiden door punten | geredigeerd, **event geblokkeerd** |
+
+‘Geredigeerd’ betekent dat de match ter plekke door een markering wordt vervangen vóór opslag. Geneste objecten die een bevinding bevatten, worden volledig vervangen door `[redacted:nested]`, omdat gestructureerde data gedeeltelijk redigeren onbetrouwbaar is. ‘Geblokkeerd’ betekent dat het event niet wordt opgeslagen en niet wordt gerouteerd; een datakwaliteitsissue legt het veld en de soort vast, nooit de waarde.
+
+## Waarom kaarten en secrets blokkeren, maar e-mailadressen niet
+
+Een e-mailadres in een paginatitel is een datakwaliteitsprobleem met een juridische dimensie; het redigeren en jou vertellen waar het vandaan kwam, lost allebei op. Een kaartnummer of een bearer-token in een event is een incident: zelfs een geredigeerd event met zijn context opslaan zou een spoor achterlaten dat zegt ‘dit is hier, op dit tijdstip, in deze sessie gebeurd’, en het ergens naartoe doorsturen is uitgesloten. Blokkeren is de behoedzame keuze, en de bevinding vertelt je welke pagina of welk formulier je moet repareren.
+
+## Gehashte identifiers zijn iets anders
+
+Gehashte e-mail en telefoon in `user_data` zijn *bewuste* identifiers als matchingsleutels voor advertenties, aangeleverd via de `identify`-aanroep van de SDK of een serverbron, gehasht voordat ze de browser of de shop verlaten, en afgeschermd door het doel marketing. De scanner markeert ze niet; de policy-engine beslist per destination of ze mogen worden doorgestuurd.
+
+## De bevindingenloop
+
+Elke bevinding wordt een issue op de datakwaliteitspagina, gegroepeerd op veld en soort met een aantal en eerste/laatste waarneming. Typische oplossingen:
+
+- URL-parameters: verwijder tokens server-side vóór het renderen, of voeg de parameter toe aan de scrub-lijst van de site zodat de SDK hem vóór het versturen verwijdert.
+- Titels: render generieke titels op account- en bevestigingspagina's.
+- Formulieren: stuur alleen goedgekeurde velden naar `props`; nooit het hele formulierobject.
+- Zoeken: stuur het feit dat er is gezocht en het aantal resultaten, niet de zoekterm, tenzij de zoekterm productvocabulaire is.
+
+Een issue kan met een reden als opgelost of genegeerd worden gemarkeerd; negeren wordt geauditeerd.
+
+## Verificatie
+
+De schema-component van de health score is het aandeel events zonder bevindingen. Nadat je een lek hebt gedicht, herstelt de component binnen het venster; het tijdstip van de laatste waarneming beweegt niet meer. De event-debugger toont het geredigeerde event, zodat je kunt bevestigen dat de markering staat waar je hem verwacht.

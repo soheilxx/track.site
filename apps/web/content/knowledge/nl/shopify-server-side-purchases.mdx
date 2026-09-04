@@ -1,0 +1,70 @@
+---
+title: "Shopify-tracking die de gehoste checkout overleeft: webpixel, geverifieerde orderwebhooks en koppelen op order-ID"
+description: "Waarom een themascript de checkout van Shopify niet kan zien, hoe de Track-webpixel-extensie en ondertekende orders/paid-webhooks samenwerken, wat de collector verifieert en hoe de serveraankoop de toestemming en click-ID's van de klant overerft."
+excerpt: "Op Shopify is de checkout van Shopify, niet van jou. De eerlijke setup is een webpixel voor de browserkant en geverifieerde orderwebhooks voor de waarheid, gekoppeld op order-ID zodat de toestemming wordt gerespecteerd en leveranciers één keer tellen."
+category: "integrations"
+translationGroupId: "shopify-server-side-purchases"
+slug: "shopify-server-side-purchases"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopify"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Shopify host de checkout, dus een themascript kan de aankoop niet zien; de webpixel-extensie dekt de browserkant en leest de toestemming uit de Customer Privacy API."
+  - "orders/paid- en refunds/create-webhooks worden geverifieerd op HMAC-SHA256-handtekening en shopdomein en worden brongeverifieerde purchase- en refund-events met deterministische ID's."
+  - "De router koppelt de serveraankoop op order-ID aan de browseraankoop, zodat hij de toestemmingsregistratie, anonieme ID, click-ID's en gehashte identifiers overerft."
+  - "Zonder browseraankoop blijft het serverrecord operationeel en bereikt het nooit advertentieplatformen — van een betalende klant wordt niet aangenomen dat hij toestemming heeft gegeven."
+tags: ["shopify", "web-pixels", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-08"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Shopify-webpixel en orderwebhook die samen één aankooprecord voeden"
+sources:
+  - title: "Shopify — Web Pixels API"
+    url: "https://shopify.dev/docs/api/web-pixels-api"
+  - title: "Shopify — Webhooks: verify a webhook"
+    url: "https://shopify.dev/docs/apps/build/webhooks/subscribe/https#step-5-verify-the-webhook"
+legalNotice: false
+---
+
+## De beperking
+
+De checkout- en bedankpagina's van Shopify worden door Shopify gehost. Een script in `theme.liquid` draait op de storefront, maar niet daar, dus een setup met alleen een thema mist de aankoop of leunt op het uitgefaseerde veld voor aanvullende scripts. Twee dingen vervangen het:
+
+1. **Een webpixel-extensie** — gesandboxte code die Shopify op elke pagina uitvoert, inclusief de checkout, met toegang tot de standaard klantevents en de Customer Privacy API.
+2. **Orderwebhooks** — Shopify post de bestelling naar jouw endpoint zodra ze is betaald, ondertekend met een secret dat alleen jij en Shopify kennen.
+
+Track levert beide: `integrations/shopify/web-pixel` en een verifiërende ontvanger in de collector.
+
+## De webpixel
+
+De pixel abonneert zich op `page_viewed`, `product_viewed`, `product_added_to_cart`, `checkout_started`, `payment_info_submitted` en `checkout_completed`, mapt ze op de standaard-events en post ze naar het browser-endpoint van de collector. De toestemming leest hij uit de Customer Privacy API van Shopify: `analyticsProcessingAllowed` wordt het doel analytics, `marketingAllowed` het doel marketing, en een `visitorConsentCollected`-update wijzigt latere events. Vanuit de sandbox wordt niets naar leverancierstags gespiegeld; leveranciers ontvangen events server-side via de geconfigureerde destinations.
+
+Het event `checkout_completed` draagt de Shopify-order-ID. Die ID is wat de volgende stap eerlijk maakt.
+
+## De geverifieerde webhook
+
+In de Shopify-admin maak je onder Instellingen → Meldingen → Webhooks `orders/paid` en `refunds/create` aan, gericht op de webhook-URL van de verbinding — een URL die uniek is voor jouw site en een niet te raden token bevat. Shopify ondertekent elke aflevering met `X-Shopify-Hmac-Sha256`, de base64-gecodeerde HMAC-SHA256 van de ruwe body onder het signing secret dat onder de webhooklijst staat. Dat secret sla je op in de kluis van Track; de collector berekent de HMAC opnieuw, vergelijkt in constante tijd en controleert bovendien `X-Shopify-Shop-Domain` tegen het verbonden domein.
+
+Een geaccepteerde `orders/paid` wordt een `purchase` met `source: shopify` en `source_verified: true`: order-ID, valuta, totalen, belasting, verzendkosten, kortingscode, orderregels met variant-ID's, en het e-mailadres, telefoonnummer en adres van de klant als ruwe matchinggegevens die de router hasht. `orders/create` wordt alleen geaccepteerd als de bestelling al is betaald; `refunds/create` wordt een `refund` met de terugbetaalde transactiebedragen. Herhaalde afleveringen leiden tot dezelfde deterministische event-ID en worden door de dedup-guard verworpen.
+
+## Koppelen op order-ID
+
+De webhook weet niets van toestemming. De aankoop van de pixel wel. Wanneer de serveraankoop binnenkomt, zoekt de router een browseraankoop met dezelfde order-ID uit de afgelopen 30 dagen, en als hij die vindt, **erft** het server-event de toestemmingsregistratie, anonieme ID, click-ID's en gehashte identifiers ervan over, met een herkomstmarkering die de toestemming als afgeleid van het browser-event aanmerkt. Het geverifieerde serverrecord vervangt daarna de browserobservatie in de conversietabel, en beide events worden gerouteerd: leveranciers die op event-ID dedupliceren, ontvangen `purchase:<order id>` van beide paden en tellen één keer.
+
+Bestaat er geen browseraankoop — de klant heeft geweigerd of de pixel geblokkeerd — dan wordt de serveraankoop opgeslagen als operationeel record en bereikt hij alleen destinations die geen toestemming nodig hebben. Hij wordt nooit naar advertentieplatformen gestuurd op basis van de aanname dat een betalende klant wel toestemming zal hebben gegeven.
+
+## Instellen
+
+1. Site → Shopverbinding → Shopify: vul `jouw-shop.myshopify.com` in, sla op en kopieer de webhook-URL.
+2. Maak de twee webhooks aan in de Shopify-admin, in JSON-formaat; kopieer het signing secret naar de verbinding.
+3. Deploy de webpixel-extensie met je tracking-ID (en een first-party collectorhost als je die gebruikt).
+4. Plaats een testbestelling. De verbinding toont *verbonden* na de eerste geverifieerde webhook; de event-debugger toont de pixelaankoop en de shopify-aankoop met dezelfde order-ID, en de destination-monitor toont één aflevering per destination en pad.
+
+## Wat je maandelijks controleert
+
+- Handtekeningfouten in de laatste fout van de verbinding: een in Shopify geroteerd secret zonder dat de kluis is bijgewerkt.
+- Bestellingen met een serveraankoop maar zonder browseraankoop: het aandeel vertelt je hoeveel klanten weigeren of blokkeren, en het is het plafond voor advertentieattributie.
+- Dekking van terugbetalingen: op `refunds/create` moet een abonnement staan, anders drijven de waarden bij leveranciers omhoog.

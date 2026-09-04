@@ -1,0 +1,75 @@
+---
+title: "First-party-trackingdomeinen: verificatie, wat ITP nog steeds begrenst en wat een eigen domein niet oplost"
+description: "Waarom de collector en de SDK bereikbaar horen te zijn via een subdomein van je eigen site, hoe domeinverificatie en de CNAME-check werken, welke browserlimieten nog gelden voor cookies die via script worden gezet en wat je aan je Content Security Policy moet toevoegen."
+excerpt: "De tracker uitleveren via t.jouwdomein.nl in plaats van via een host van het platform houdt requests waarvoor toestemming is gegeven buiten blocklists en buiten de beperkingen voor cookies van derden. Dit is de setup, de limieten die Safari nog steeds afdwingt en de eerlijke lijst van wat een eigen domein niet verandert."
+category: "guides"
+translationGroupId: "first-party-tracking-domains"
+slug: "first-party-tracking-domains"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "advanced"
+takeaways:
+  - "Een trackingsubdomein van je eigen site houdt requests waarvoor toestemming is gegeven buiten blocklists en buiten de beperkingen voor cookies van derden, met maar één extra host in je CSP."
+  - "Het domein wordt pas actief na verificatie via een DNS-TXT-record, bestand of meta-tag plus een geslaagde CNAME-check; TLS wordt afgehandeld aan de edge van het platform."
+  - "De SDK schrijft _ts_id, _ts_sid en _ts_cid pas na de bijbehorende toestemming, en de limiet van 7 dagen die Safari oplegt aan via script geschreven opslag blijft gelden — het eigen domein beschermt de aflevering, niet de levensduur van identifiers."
+  - "Het herstelt geen geweigerde doeleinden, maakt pixels van platformen niet first-party en verbergt niets voor de bezoeker."
+tags: ["first-party", "cname", "itp", "cookies"]
+author: "track-site-editorial"
+publishedAt: "2026-08-24"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "DNS-record dat een trackingsubdomein naar de collector laat wijzen"
+sources:
+  - title: "WebKit — CNAME cloaking and bounce tracking defense"
+    url: "https://webkit.org/blog/11338/cname-cloaking-and-bounce-tracking-defense/"
+  - title: "MDN — Set-Cookie"
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie"
+legalNotice: false
+---
+
+## Wat een first-party-domein verandert
+
+Requests naar `t.shop.example` zijn same-site met `shop.example`. Daaruit volgen drie dingen:
+
+1. **Blocklists matchen niet.** De meeste contentblockers matchen op hostnaam; een subdomein van je eigen site staat daar niet op. Dit is geen omzeiling van een keuze van de gebruiker — de toestemmingsbeslissing blijft elk doeleinde bewaken — het voorkomt dat first-party requests waarvoor toestemming is gegeven als bijvangst worden geblokkeerd.
+2. **Beperkingen voor cookies van derden gelden niet.** Browsers die cookies van derden partitioneren of blokkeren, laten same-site-opslag met rust.
+3. **Je securitybeleid blijft strak.** Eén extra host in `script-src` en `connect-src`, geen wildcard-domeinen van platformen voor het collectorpad.
+
+## De setup
+
+- Voeg het domein toe in de site-instellingen. Track geeft een **verificatietoken** uit; toon aan dat je het domein beheert via een DNS-TXT-record, een bestand op het domein of een meta-tag. Het domein wordt pas actief nadat de verificatie is geslaagd, zodat niemand een domein dat niet van hem is naar jouw site kan laten wijzen.
+- Maak `t.shop.example` aan als **CNAME** naar de collectorhost die in de instellingen wordt getoond. De domeinpagina legt vast wanneer de CNAME-check voor het laatst is geslaagd.
+- **TLS** voor de trackinghost wordt afgehandeld door de edge van het platform zodra de CNAME resolvet.
+- Werk je **Content Security Policy** bij: `script-src` en `connect-src` hebben de trackinghost nodig. `unsafe-inline` is niet vereist, omdat de loader een extern script is.
+- De **SDK-loader** wordt daarna via de trackinghost uitgeleverd, samen met de ondertekende configuratie van de site.
+
+## Wat de SDK opslaat en wat ITP nog steeds begrenst
+
+Track schrijft drie dingen in de browser, elk pas na de bijbehorende toestemming:
+
+| Sleutel | Doel | Geschreven bij | Levensduur |
+| --- | --- | --- | --- |
+| `_ts_id` (cookie, gespiegeld in localStorage) | anonieme bezoekers-ID | toestemming voor analytics of marketing | tot 13 maanden, of de bewaartermijn van de site |
+| `_ts_sid` (session storage) | sessie-ID | toestemming voor analytics of marketing | 30 minuten, rollend |
+| `_ts_cid` (localStorage) | click-ID's uit de landings-URL | toestemming voor marketing | click-ID-TTL, standaard 90 dagen |
+
+Click-ID's uit de landings-URL worden in localStorage bewaard onder `_ts_cid`, alleen met toestemming voor marketing en alleen voor de click-ID-TTL van de site (standaard 90 dagen); ze worden aan elk later event van het bezoek gekoppeld en gewist zodra de toestemming voor marketing wordt ingetrokken.
+
+Beide identifiers worden door JavaScript geschreven. Safari's Intelligent Tracking Prevention begrenst **via script geschreven** cookies en opslag tot 7 dagen (24 uur wanneer de landings-URL een bekende trackingparameter bevatte), en een first-party-domein heft die limiet niet op. De collector zet geen cookies via HTTP-responses, dus een terugkerende Safari-bezoeker na meer dan een week is een nieuwe anonieme ID. Firefox en Brave passen vergelijkbare heuristieken toe; Chrome bewaart first-party opslag tot de volledige vervaldatum.
+
+De eerlijke samenvatting: het eigen domein beschermt de **aflevering van requests**; het verlengt niet de **levensduur van identifiers** in Safari.
+
+## Wat een first-party-domein niet oplost
+
+- Het herstelt geen doeleinden waarvoor toestemming is geweigerd. Zonder toestemming voor marketing wordt er geen click-ID vastgelegd en ontvangt geen enkele advertentie-destination events, ongeacht het domein.
+- Het maakt pixels van platformen niet first-party. `fbevents.js` laadt nog steeds van Meta en zet `_fbp`; alleen het collectorpad is van jou.
+- Het verbergt niets voor de bezoeker. De trackinghost, de bron van de SDK en de collector-endpoints zijn zichtbaar in de developer tools, en de privacypagina somt ze op.
+
+## Checklist
+
+- [ ] Domein geverifieerd (TXT, bestand of meta-tag) en CNAME-check geslaagd
+- [ ] CSP bijgewerkt voor `script-src` en `connect-src`
+- [ ] Snippet verwijst naar de trackinghost, niet naar de platformstandaard
+- [ ] Datakwaliteitspagina toont browser-events die van de nieuwe host binnenkomen

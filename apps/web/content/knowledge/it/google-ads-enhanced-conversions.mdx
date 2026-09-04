@@ -1,0 +1,97 @@
+---
+title: "Conversioni Google Ads dal server: conversioni da clic, Enhanced Conversions e i campi di consenso"
+description: "Come caricare conversioni da clic nell'API Google Ads con gclid o identificatori con hash, cosa devono contenere conversionDateTime e i campi di consenso, e come validateOnly tiene i test fuori dal reporting."
+excerpt: "L'API Google Ads accetta conversioni server-side tramite uploadClickConversions. Questa guida copre i campi obbligatori, le Enhanced Conversions for Leads con e-mail e telefono con hash, i flag di consenso e un flusso di test sicuro."
+category: "integrations"
+translationGroupId: "google-ads-enhanced-conversions"
+slug: "google-ads-enhanced-conversions"
+topic: "pixel-platform-integrations"
+platforms: ["google-ads"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Tag nel browser e upload via API fanno riferimento alla stessa azione di conversione; il percorso API rende possibili vendite offline, lead qualificati dal CRM e correzioni per rimborsi."
+  - "Ogni conversione da clic ha bisogno dell'azione di conversione, di un conversionDateTime con offset del fuso orario, di gclid/gbraid/wbraid o di identificatori utente con hash, e di flag di consenso derivati dalle finalità dell'evento."
+  - "Le Enhanced Conversions si aspettano lo SHA-256 di valori normalizzati — e-mail in minuscolo e senza spazi, senza i punti e i suffissi + degli indirizzi Gmail, telefono in E.164 — con userIdentifierSource FIRST_PARTY."
+  - "partialFailure segnala gli errori riga per riga e validateOnly tiene i test fuori dal reporting; deduplica gli acquisti con lo stesso ID ordine e tieni i lead su azioni di conversione separate."
+tags: ["google-ads", "enhanced-conversions", "gclid", "conversioni-offline"]
+author: "track-site-editorial"
+publishedAt: "2026-09-01"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Upload di una conversione da clic Google Ads con gclid ed e-mail con hash"
+sources:
+  - title: "Google Ads API — Upload click conversions"
+    url: "https://developers.google.com/google-ads/api/docs/conversions/upload-clicks"
+  - title: "Google Ads API — Release notes and versions"
+    url: "https://developers.google.com/google-ads/api/docs/release-notes"
+legalNotice: false
+---
+
+## Due percorsi, un'unica azione di conversione
+
+Google Ads misura le conversioni in due modi:
+
+1. **Tag Google nel browser** — `gtag('event', 'conversion', { send_to: 'AW-XXXX/label', value, currency, transaction_id })`, opzionalmente con Enhanced Conversions (`user_data` con e-mail, telefono e indirizzo sottoposti a hash dal tag).
+2. **Upload delle conversioni tramite l'API Google Ads** — `ConversionUploadService.UploadClickConversions`, inviato dal tuo server.
+
+Entrambi fanno riferimento alla stessa *azione di conversione*. Il percorso API è ciò che rende possibili vendite offline, lead qualificati dal CRM e correzioni per rimborsi, ed è il percorso che sopravvive alle richieste browser bloccate.
+
+## La richiesta di upload
+
+`POST https://googleads.googleapis.com/v25/customers/{customerId}:uploadClickConversions` con gli header `Authorization: Bearer <OAuth2>`, `developer-token` e, quando accedi all'account tramite un account amministratore, `login-customer-id`.
+
+Ogni `ClickConversion` ha bisogno di:
+
+- `conversionAction` — il nome risorsa `customers/{cid}/conversionActions/{id}`
+- `conversionDateTime` — `yyyy-mm-dd hh:mm:ss+|-hh:mm`, con un offset del fuso orario esplicito
+- almeno una chiave di attribuzione: `gclid`, `gbraid`, `wbraid` **oppure** `userIdentifiers` (Enhanced Conversions for Leads)
+- opzionalmente `conversionValue` con `currencyCode`, e `orderId` per la deduplicazione
+- `consent` con `adUserData` e `adPersonalization` impostati su `GRANTED` o `DENIED`
+
+Imposta `partialFailure: true` — l'API segnala così gli errori riga per riga invece di rifiutare l'intero batch — e usa `validateOnly: true` per i test. Un upload validate-only dimostra che credenziali, developer token e accesso al cliente funzionano, senza registrare nulla.
+
+## Enhanced Conversions: cosa sottoporre a hash
+
+Per `userIdentifiers` Google si aspetta lo SHA-256 di valori normalizzati:
+
+- e-mail: senza spazi iniziali e finali, in minuscolo; per gli indirizzi gmail.com e googlemail.com rimuovi i punti e i suffissi `+` prima dell'hash
+- telefono: E.164 (`+` e prefisso internazionale) prima dell'hash
+- nome, cognome, via: in minuscolo, senza spazi iniziali e finali, poi hash
+- città, provincia/stato, CAP, codice paese: testo in chiaro
+
+Ogni oggetto identificatore porta inoltre `userIdentifierSource: FIRST_PARTY`. Una riga può combinare più identificatori; Google fa il match su uno qualsiasi di essi.
+
+## Regole temporali che causano perdite silenziose
+
+- L'ora della conversione deve essere **successiva** al clic e rientrare nella finestra di conversione post-clic dell'azione di conversione. Caricare un acquisto con un timestamp precedente al clic restituisce `CONVERSION_PRECEDES_CLICK`.
+- I clic più recenti di qualche ora potrebbero non essere ancora abbinabili (`TOO_RECENT_CLICK`). Riprovare più tardi è il comportamento corretto; Track tratta questi casi come ritentabili.
+- Gli offset del fuso orario sono obbligatori. `2026-09-03 10:15:00` senza `+02:00` viene rifiutato.
+
+## I campi di consenso, in pratica, non sono opzionali
+
+Da Consent Mode v2 in poi, gli upload senza `consent.adUserData` per il traffico dal SEE vengono segnalati. Deriva i flag dalle finalità di consenso registrate con l'evento: marketing → `adUserData: GRANTED`; marketing + personalizzazione → `adPersonalization: GRANTED`; qualsiasi altro caso → `DENIED`. Non impostare mai "granted" per default solo perché il campo esiste.
+
+## Deduplicare con il tag nel browser
+
+Usa lo stesso `transaction_id` nel tag Google e come `orderId` nell'upload. Google deduplica le conversioni con lo stesso ID ordine per la stessa azione di conversione, così un acquisto visto sia dal tag sia dal server conta una volta sola. Per i lead senza ordine, tieni browser e server su azioni di conversione **diverse** (per esempio "Lead (tag)" e "Lead qualificato (CRM)") invece di provare a deduplicarli.
+
+## Un flusso di test che non inquina il reporting
+
+1. Collega l'account Google tramite OAuth e valida: Track invia un upload validate-only e segnala se developer token e ID cliente vengono accettati.
+2. Mappa `purchase` sull'ID dell'azione di conversione.
+3. Invia un evento di test nella procedura guidata. Finché la destinazione è in modalità test ogni upload usa `validateOnly: true`; la risposta conferma la struttura del payload.
+4. Disattiva la modalità test, invia un acquisto reale con un gclid fresco e controlla Conversioni → Diagnostica in Google Ads il giorno dopo.
+
+## Errori comuni, decodificati
+
+| Errore | Significato | Soluzione |
+| --- | --- | --- |
+| `UNAUTHENTICATED` | token OAuth non valido | ricollega l'account Google |
+| `PERMISSION_DENIED` / `USER_PERMISSION_DENIED` | nessun accesso all'ID cliente | controlla `login-customer-id` e l'accesso all'account |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | il token consente solo account di test | richiedi l'accesso di base |
+| `CLICK_NOT_FOUND` | gclid sconosciuto | il clic è troppo vecchio, di un altro account o malformato |
+| `INVALID_CONVERSION_ACTION_TYPE` | l'azione non è di tipo upload | crea un'azione di conversione con origine "Caricamento da clic" |
+
+Ognuno di questi errori compare con il suo codice nel debugger degli eventi, accanto al payload oscurato che lo ha prodotto.

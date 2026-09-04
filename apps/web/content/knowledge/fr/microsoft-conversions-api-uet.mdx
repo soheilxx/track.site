@@ -1,0 +1,86 @@
+---
+title: "Microsoft Advertising Conversions API : balise UET plus événements serveur avec msclkid"
+description: "Comment la Microsoft Advertising Conversions API fonctionne aux côtés de la balise UET — l'endpoint d'événements par identifiant de balise, la déduplication par eventId, msclkid et les identifiants hachés, les limites de lot et la gestion des erreurs ligne par ligne."
+excerpt: "La Conversions API (CAPI) de Microsoft accepte des événements serveur par identifiant de balise UET avec un jeton bearer OAuth. Ce guide explique le payload, la déduplication avec la balise JavaScript UET et la signification de chaque erreur."
+category: "integrations"
+translationGroupId: "microsoft-conversions-api-uet"
+slug: "microsoft-conversions-api-uet"
+topic: "pixel-platform-integrations"
+platforms: ["microsoft"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "CAPI accepte des événements serveur par identifiant de balise UET sur capi.uet.microsoft.com avec un jeton bearer OAuth (scope msads.manage) ; les objectifs font correspondre les événements serveur exactement comme les événements de balise."
+  - "continueOnValidationError fait accepter à l'endpoint les lignes valides et signaler les lignes invalides par leur index ; Track marque ces lignes comme invalides et ne réessaie que les 5xx et 429."
+  - "Transmettez le même eventId et le même nom d'événement sur la balise UET et sur l'API pour que Microsoft ne compte la conversion qu'une fois."
+  - "Le msclkid capturé après consentement marketing est la clé de correspondance principale, complétée par l'e-mail et le téléphone hachés ; il n'existe pas d'indicateur de test, donnez donc à la préproduction son propre identifiant de balise UET."
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Requête Microsoft Conversions API vers l'endpoint d'événements UET"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) integration guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## Les briques
+
+- Une **balise UET** (Outils → Balises UET). Son identifiant numérique est public et figure dans le snippet JavaScript.
+- Un **objectif de conversion** de type « Événement » ou « URL de destination » lié à cette balise ; les événements serveur sont mis en correspondance avec les objectifs par nom d'événement, catégorie, libellé et valeur, exactement comme les événements de balise.
+- Un **jeton d'accès OAuth 2.0** pour l'API Microsoft Advertising (scope `msads.manage`) délivré au compte propriétaire de la balise. Track l'obtient et le renouvelle via la connexion OAuth Microsoft et le conserve dans le coffre-fort.
+
+## La requête
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` avec `Authorization: Bearer <token>` et un tableau JSON d'événements :
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/thank-you",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Product", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` est exprimé en millisecondes depuis l'epoch. `eventType` vaut `custom` pour les événements de conversion et `pageLoad` pour les pages vues. Avec `continueOnValidationError: true`, l'endpoint accepte les lignes valides et signale les lignes invalides avec leur index ; Track marque ces lignes comme payload invalide et ne les réessaie pas, tandis que les réponses HTTP 5xx et 429 sont réessayées avec temporisation.
+
+Une requête peut contenir jusqu'à 1 000 événements.
+
+## Déduplication avec la balise UET
+
+Lorsque la balise JavaScript UET déclenche elle aussi l'événement, les deux chemins doivent partager le même `eventId` et le même nom d'événement. Dans le navigateur, transmettez l'identifiant dans les paramètres de l'événement (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`) ; le serveur envoie la même valeur dans `eventId`. Microsoft ne compte alors la conversion qu'une fois. Le SDK Track génère un identifiant par action et le transmet aussi bien au template UET qu'au collecteur.
+
+## Identifiants
+
+- `msclkid` — l'identifiant de clic que Microsoft ajoute aux URL des pages de destination. Capturez-le après consentement marketing et stockez-le en first-party ; sans lui, les événements serveur ne peuvent être mis en correspondance que par identifiants hachés.
+- `em` et `ph` — hachages SHA-256 de l'e-mail et du numéro de téléphone normalisés.
+- `anid` — l'identifiant publicitaire Microsoft pour le trafic applicatif.
+- `clientUserAgent` et `clientIpAddress` — recommandés pour les événements web et disponibles depuis le collecteur lorsque la politique autorise la transmission de l'adresse IP.
+
+## Tests
+
+L'API ne dispose d'aucun indicateur de test. Un événement de test envoyé depuis l'assistant est un événement réel sur l'identifiant de balise que vous avez configuré : donnez donc à l'environnement de préproduction (staging) son propre identifiant de balise UET et réservez l'identifiant de production à la production ; l'assistant affiche dans les deux cas la réponse ligne par ligne de Microsoft. Lorsque la destination quitte le mode test, c'est l'identifiant de balise de l'environnement de production qui reçoit les événements.
+
+## Erreurs
+
+| Réponse | Signification | Traitement |
+| --- | --- | --- |
+| 401 | jeton expiré ou mauvais tenant | renouvelé automatiquement ; reconnectez le compte si le renouvellement échoue |
+| 403 | le compte n'a pas accès à l'identifiant de balise | vérifiez la propriété de la balise |
+| 400 avec détails de ligne | valeurs de champ invalides | ligne marquée invalide ; corrigez le mapping |
+| 429 | limite de débit atteinte | réessayé avec temporisation |
+| 5xx | erreur côté Microsoft | réessayé ; circuit breaker si l'erreur persiste |
+
+Chaque tentative, y compris les lignes rejetées par Microsoft, est visible dans le moniteur des destinations avec l'aperçu masqué du payload.

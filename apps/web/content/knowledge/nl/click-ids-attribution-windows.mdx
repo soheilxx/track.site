@@ -1,0 +1,87 @@
+---
+title: "Click-id's en attributievensters: welke parameters je vastlegt, hoe lang je ze bewaart en waar je ze opslaat"
+description: "Een referentie van advertentie-click-ID's (gclid, gbraid, wbraid, dclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id, affiliate-id's), hoe toestemming het vastleggen ervan bepaalt, hoe attributievensters per platform verschillen en hoe first-party opslag zou moeten verlopen."
+excerpt: "Elk advertentieplatform stempelt een click-ID op de URL van de landingspagina. Die goed vastleggen is het verschil tussen een gematchte serverconversie en een anonieme. Deze referentie somt de parameters op, de toestemmingsregels en de bewaartermijn die bij het venster van elk platform past."
+category: "guides"
+translationGroupId: "click-ids-attribution-windows"
+slug: "click-ids-attribution-windows"
+topic: "attribution-analytics"
+platforms: ["google-ads", "google-marketing-platform", "microsoft", "meta", "tiktok", "linkedin", "reddit", "pinterest", "snapchat", "x", "taboola", "outbrain", "affiliate-postbacks"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Elk advertentieplatform stempelt zijn eigen click-ID op de landings-URL — gclid, msclkid, fbclid, ttclid, li_fat_id, rdt_cid, epik, ScCid, twclid, tblci, ob_click_id en de affiliate-id's — en elk voedt een specifiek serverveld."
+  - "Click-id's zijn persoonsgegevens met een advertentiedoel: de SDK legt ze alleen vast met marketingtoestemming en verwijdert ze uit URL's bij toestemming voor alleen analytics."
+  - "Attributievensters verschillen per platform; een conversie die buiten het venster wordt geüpload is geen API-fout, ze wordt simpelweg niet geattribueerd."
+  - "Id's staan first-party in _ts_cid voor de click-id-TTL van de site, worden gewist zodra marketingtoestemming wordt ingetrokken en worden vóór opslag uit page_location en referrer verwijderd."
+tags: ["click-ids", "attributie", "gclid", "toestemming"]
+author: "track-site-editorial"
+publishedAt: "2026-08-25"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tabel van advertentie-click-id-parameters en de bijbehorende platforms"
+sources:
+  - title: "Google Ads Help — About auto-tagging"
+    url: "https://support.google.com/google-ads/answer/3095550"
+  - title: "Meta for Developers — fbc and fbp parameters"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc"
+legalNotice: false
+---
+
+## De parameterlijst
+
+| Parameter | Platform | Serverveld dat hij voedt | Opmerkingen |
+| --- | --- | --- | --- |
+| `gclid` | Google Ads (zoeken, shopping, display) | `gclid` in click-conversion-uploads | bij iOS-appcampagnes vervangen door `gbraid`/`wbraid` |
+| `gbraid`, `wbraid` | Google Ads (iOS-privacyvarianten) | dezelfde upload, alternatieve velden | sluiten elkaar uit met gclid |
+| `dclid` | Campaign Manager 360 / DV360 | `dclid` in Floodlight offline conversions | |
+| `msclkid` | Microsoft Advertising | `userData.msclkid` | |
+| `fbclid` | Meta | `user_data.fbc` als `fb.1.<timestamp>.<fbclid>` | de pixel schrijft dezelfde waarde in `_fbc` |
+| `ttclid` | TikTok | `user.ttclid` | |
+| `li_fat_id` | LinkedIn | `LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID` | wordt ook door de Insight Tag gezet |
+| `rdt_cid` | Reddit | `click_id` | |
+| `epik` | Pinterest | `user_data.click_id` | |
+| `ScCid` | Snapchat | `user_data.sc_click_id` | hoofdlettergevoelig |
+| `twclid` | X | `twclid` | |
+| `tblci` | Taboola | `click-id` in de S2S-actie | verplicht; geen click-ID, geen conversie |
+| `ob_click_id` (`dicbo`) | Outbrain | `ob_click_id` | |
+| `irclickid` | Impact | `ClickId` in de postback | |
+| `cjevent` | CJ | `CJEVENT` | |
+| `awc` | Awin | `cks` | |
+| `tduid` | Tradedoubler | `tduid` | |
+| `clickref` / `pclickid` | Partnerize, generiek | preset-specifiek | |
+| `ranMID`/`ranSiteID` | Rakuten | preset-specifiek | |
+
+De SDK van Track herkent ze allemaal en legt elke ID onder zijn eigen naam vast op het event, zodat de connector van een platform precies de ID vindt die hij nodig heeft.
+
+## Toestemming bepaalt het vastleggen
+
+Een click-ID koppelt de sessie van een persoon aan een advertentieklik; het is een persoonsgegeven en dient een advertentiedoel. De SDK legt click-ID's daarom alleen vast wanneer het doel marketing is toegestaan. Komt de toestemming pas na het landen (de bezoeker klikt op de tweede pagina op ‘accepteren’), dan worden de ID's uit de landings-URL vastgelegd voor de events die op de toestemmingsbeslissing volgen — nooit daarvoor.
+
+Bij toestemming voor alleen analytics worden de ID's uit de URL verwijderd voordat die naar de collector gaat, zodat ze ook niet in paginaweergavedata terechtkomen.
+
+## Attributievensters verschillen
+
+Platforms tellen een conversie alleen als die binnen hun venster na de klik plaatsvindt. Gangbare standaardwaarden, allemaal instelbaar in de UI van het platform:
+
+- Google Ads: klikvenster van 30 dagen per conversieactie (1 tot 90 dagen)
+- Meta: 7 dagen klik, 1 dag view
+- Microsoft: 30 dagen klik (1 tot 90 dagen)
+- TikTok: 7 dagen klik, 1 dag view
+- LinkedIn: 30 dagen klik, 7 dagen view; API-uploads worden 90 dagen lang geaccepteerd
+- Pinterest: 30 dagen klik, 30 dagen engagement, 1 dag view
+- Snapchat: 28 dagen swipe-up, 1 dag view
+- Affiliatenetwerken: meestal 30 dagen, per programma ingesteld
+
+Een conversie buiten het venster uploaden is op API-niveau geen fout; ze wordt simpelweg niet geattribueerd. Het event telt nog steeds mee in je eigen rapportages.
+
+## Opslag en verval
+
+Click-id's die op de landingspagina zijn vastgelegd, worden first-party in de browser bewaard onder `_ts_cid` (localStorage), alleen zolang het doel marketing is toegestaan, voor de click-id-TTL van de site — standaard 90 dagen, een verstandige bovengrens gezien de langste vensters hierboven. Elk later event van het bezoek draagt ze mee, een nieuwere ID voor hetzelfde platform vervangt de oudere, en het intrekken van marketingtoestemming wist de opslag onmiddellijk. De limiet van 7 dagen die Safari hanteert voor door scripts weggeschreven opslag geldt ook voor deze opslag.
+
+Server-side events voor dezelfde bestelling krijgen ze wanneer de router een geverifieerde shopaankoop koppelt aan de browseraankoop met hetzelfde bestelnummer. In de eventopslag worden click-ID's na het bewaarvenster voor click-ID's verwijderd, en het DSAR-verwijderproces verwijdert ze samen met de overige data van de bezoeker.
+
+## Hygiëne van de landings-URL
+
+Click-id's op de landings-URL zijn nuttig; click-ID's in je analyticsrapporten zijn ruis en een privacyrisico. De collector verwijdert elke bekende click-ID uit `page_location` en `referrer` vóór opslag en vóór levering aan analytics-destinations, maar behoudt ze als aparte velden voor de advertentieconnectors die ze nodig hebben.

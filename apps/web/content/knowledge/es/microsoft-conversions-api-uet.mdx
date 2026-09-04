@@ -1,0 +1,86 @@
+---
+title: "Microsoft Advertising Conversions API: etiqueta UET más eventos de servidor con msclkid"
+description: "Cómo funciona la Microsoft Advertising Conversions API junto a la etiqueta UET — el endpoint de eventos por ID de etiqueta, la deduplicación por eventId, msclkid e identificadores con hash, los límites por lote y el tratamiento de errores fila a fila."
+excerpt: "La Conversions API (CAPI) de Microsoft acepta eventos de servidor por ID de etiqueta UET con un token bearer de OAuth. Esta guía explica el payload, cómo se deduplica frente a la etiqueta JavaScript de UET y qué significa cada error."
+category: "integrations"
+translationGroupId: "microsoft-conversions-api-uet"
+slug: "microsoft-conversions-api-uet"
+topic: "pixel-platform-integrations"
+platforms: ["microsoft"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "CAPI acepta eventos de servidor por ID de etiqueta UET en capi.uet.microsoft.com con un token bearer de OAuth (scope msads.manage); los objetivos emparejan los eventos de servidor igual que los eventos de la etiqueta."
+  - "continueOnValidationError hace que el endpoint acepte las filas válidas e informe de las no válidas por índice; Track marca esas filas como no válidas y solo reintenta los 5xx y 429."
+  - "Pasa el mismo eventId y el mismo nombre de evento en la etiqueta UET y en la API para que Microsoft cuente la conversión una sola vez."
+  - "El msclkid capturado tras el consentimiento de marketing es la clave de coincidencia principal, complementada con correo electrónico y teléfono con hash; no hay flag de prueba, así que da a staging su propio ID de etiqueta UET."
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Petición a la Microsoft Conversions API contra el endpoint de eventos de UET"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) integration guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## Las piezas
+
+- Una **etiqueta UET** (Herramientas → Etiquetas de UET). Su ID numérico es público y aparece en el snippet de JavaScript.
+- Un **objetivo de conversión** de tipo «Evento» o «URL de destino» vinculado a esa etiqueta; los eventos de servidor se emparejan con los objetivos por nombre de evento, categoría, label y valor, igual que los eventos de la etiqueta.
+- Un **token de acceso OAuth 2.0** para la Microsoft Advertising API (scope `msads.manage`) emitido para la cuenta propietaria de la etiqueta. Track lo obtiene y lo renueva a través de la conexión OAuth de Microsoft y lo guarda en el almacén cifrado.
+
+## La petición
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` con `Authorization: Bearer <token>` y un array JSON de eventos:
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/thank-you",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Product", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` son milisegundos desde epoch. `eventType` es `custom` para eventos de conversión y `pageLoad` para vistas de página. Con `continueOnValidationError: true`, el endpoint acepta las filas válidas e informa de las no válidas con su índice; Track marca esas filas como payload no válido y no las reintenta, mientras que las respuestas HTTP 5xx y 429 se reintentan con backoff.
+
+En una sola petición caben hasta 1.000 eventos.
+
+## Deduplicación con la etiqueta UET
+
+Si la etiqueta JavaScript de UET también dispara el evento, ambas vías deben compartir el mismo `eventId` y el mismo nombre de evento. En el navegador, pasa el ID en los parámetros del evento (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`); el servidor envía el mismo valor en `eventId`. Microsoft cuenta entonces la conversión una sola vez. El SDK de Track genera un ID por acción y lo pasa por igual a la plantilla de UET y al collector.
+
+## Identificadores
+
+- `msclkid` — el ID de clic que Microsoft añade a las URL de la landing page. Captúralo tras el consentimiento de marketing y guárdalo en first-party; sin él, los eventos de servidor solo pueden emparejarse mediante identificadores con hash.
+- `em` y `ph` — hashes SHA-256 del correo electrónico y del número de teléfono normalizados.
+- `anid` — el ID publicitario de Microsoft para tráfico de apps.
+- `clientUserAgent` y `clientIpAddress` — recomendados para eventos web y disponibles desde el collector cuando la política permite reenviar la IP.
+
+## Pruebas
+
+La API no tiene flag de prueba. Un evento de prueba enviado desde el asistente es un evento real en el ID de etiqueta que hayas configurado, así que da al entorno de staging su propio ID de etiqueta UET y reserva el ID de etiqueta de producción para producción; el asistente muestra la respuesta fila a fila de Microsoft en ambos casos. Cuando el destino sale del modo de prueba, el ID de etiqueta del entorno de producción recibe los eventos.
+
+## Errores
+
+| Respuesta | Significado | Tratamiento |
+| --- | --- | --- |
+| 401 | token caducado o tenant incorrecto | se renueva automáticamente; vuelve a conectar si la renovación falla |
+| 403 | la cuenta no tiene acceso al ID de etiqueta | comprueba la propiedad de la etiqueta |
+| 400 con detalles por fila | valores de campo no válidos | fila marcada como no válida; corrige el mapeo |
+| 429 | límite de frecuencia | se reintenta con backoff |
+| 5xx | error del lado de Microsoft | se reintenta; circuit breaker si persiste |
+
+Cada intento, incluidas las filas que Microsoft rechazó, se ve en el monitor de destinos con la vista previa enmascarada del payload.

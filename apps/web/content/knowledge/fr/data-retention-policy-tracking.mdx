@@ -1,0 +1,71 @@
+---
+title: "Une politique de conservation des données de tracking : neuf catégories de données, des durées par défaut raisonnables et la manière dont l'expiration est appliquée"
+description: "Quelles catégories de données de tracking existent, pourquoi chacune a une durée de vie différente, les fenêtres par défaut livrées avec Track, comment les redéfinir par organisation ou par site, et comment les jobs d'expiration prouvent qu'ils ont bien été exécutés."
+excerpt: "Tout conserver indéfiniment est la décision la plus coûteuse que vous puissiez prendre en matière de protection des données. Une politique de conservation nomme chaque catégorie de données, lui donne une raison d'exister et une date de fin. Voici les neuf catégories, les valeurs par défaut et leur application."
+category: "privacy"
+translationGroupId: "data-retention-policy-tracking"
+slug: "data-retention-policy-tracking"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Neuf catégories de données — événements, identifiants de clic, instantanés de consentement, tentatives de livraison, journal d'audit, transcriptions de chat, archive brute, enregistrements DSAR, hachages d'IP — reçoivent chacune une fenêtre par défaut assortie d'une justification."
+  - "Les fenêtres sont définies par organisation et peuvent être redéfinies par site pour les événements et les identifiants de clic ; la fenêtre applicable est celle du site, sinon celle de l'organisation, sinon la valeur par défaut."
+  - "Un job de conservation quotidien supprime les partitions expirées, retire les identifiants de clic des événements plus anciens et journalise le nombre de lignes supprimées par catégorie de données comme preuve."
+  - "La conservation n'est ni une anonymisation, ni la conservation pratiquée par les plateformes, ni un substitut au consentement."
+tags: ["conservation", "rgpd", "minimisation-des-données", "politique"]
+author: "track-site-editorial"
+publishedAt: "2026-08-19"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Fenêtres de conservation par catégorie de données sur une frise chronologique"
+sources:
+  - title: "GDPR Article 5 — Principles relating to processing of personal data"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e1807-1-1"
+  - title: "EDPB — Guidelines on data protection by design and by default"
+    url: "https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-42019-article-25-data-protection-design-and_en"
+legalNotice: true
+---
+
+## Les neuf catégories de données et leurs valeurs par défaut
+
+| Catégorie de données | Par défaut | Pourquoi cette durée |
+| --- | --- | --- |
+| events | 395 jours | treize mois permettent une comparaison d'une année sur l'autre avec un mois de chevauchement |
+| click_ids | 90 jours | la fenêtre d'attribution la plus longue couramment utilisée |
+| consent_snapshots | 1 095 jours | preuve de la licéité du traitement sur le délai de prescription que la plupart des opérateurs retiennent |
+| delivery_attempts | 90 jours | suffisant pour instruire les litiges avec les plateformes et le rapprochement mensuel |
+| audit_log | 730 jours | historique de configuration et d'accès sur deux cycles de revue annuels |
+| chat_transcripts | 30 jours | les conversations avec l'assistant IA sont opérationnelles, pas des archives |
+| raw_archive | 14 jours | tampon de rejeu pour les incidents ; contient des payloads non traités |
+| dsar_records | 1 095 jours | démontre que les demandes ont été traitées |
+| ip_hashes | 30 jours | détection des abus uniquement ; le sel est renouvelé, les hachages plus anciens sont de toute façon inutilisables |
+
+Chaque fenêtre est une valeur par défaut, pas une recommandation valable pour toutes les entreprises. Un commerçant avec une politique de retour de 14 jours peut ramener les tentatives de livraison à 30 jours ; une entreprise B2B avec des cycles de vente de neuf mois peut étendre les identifiants de clic à cette durée si les fenêtres de ses plateformes publicitaires vont réellement aussi loin. Étendre une fenêtre au-delà de la valeur par défaut est une décision à documenter dans votre registre des activités de traitement ; la modification elle-même est écrite dans le journal d'audit.
+
+## Périmètre et priorité
+
+La conservation est définie par organisation et peut être redéfinie par site pour les événements et les identifiants de clic ; les tentatives de livraison, le journal d'audit et les transcriptions de chat s'appliquent à toute l'organisation. La fenêtre applicable est la valeur du site si elle existe, sinon celle de l'organisation, sinon la valeur par défaut. Un raccourcissement prend effet à la prochaine exécution quotidienne ; un allongement ne s'applique qu'aux enregistrements pas encore expirés — rien ne ressuscite.
+
+## Application
+
+- Un **job de conservation** s'exécute une fois par jour. Pour les événements, il applique la fenêtre applicable par site et supprime les lignes plus anciennes ; le magasin d'événements est partitionné par mois, si bien que l'expiration consiste le plus souvent à supprimer une partition plutôt qu'à effacer des lignes une à une.
+- Une fois la fenêtre des identifiants de clic écoulée, **les identifiants de clic et les identifiants des plateformes sont retirés** des événements conservés par ailleurs, afin qu'un historique d'événements de treize mois ne transporte pas treize mois d'identifiants d'attribution.
+- Les tentatives de livraison, le journal d'audit et les transcriptions de chat sont supprimés par organisation, avec la fenêtre de l'organisation ; les clés de déduplication, les nonces et les points de contact d'attribution expirent selon leurs propres calendriers.
+- Chaque exécution **journalise le nombre de lignes supprimées** par catégorie de données ; le journal du worker est la preuve que l'expiration a bien eu lieu.
+- Les **sauvegardes** suivent les mêmes fenêtres, augmentées du cycle de sauvegarde ; la page Sécurité indique la durée de conservation des sauvegardes, pour que la durée de vie totale soit connue.
+
+## Ce que la conservation n'est pas
+
+- Ce n'est pas une anonymisation. Les agrégats calculés à partir des événements (comptages quotidiens, Health Scores, taux de passage dans l'entonnoir) sont conservés au-delà de la fenêtre des événements parce qu'ils ne contiennent aucune donnée personnelle ; la page de la politique les nomme explicitement.
+- Ce n'est pas la conservation pratiquée par les plateformes. Ce que Meta ou Google conservent relève de leurs conditions ; la page des sous-traitants ultérieurs renvoie vers la documentation de conservation de chaque plateforme.
+- Ce n'est pas un substitut au consentement. Conserver brièvement des données collectées sans base légale ne rend pas la collecte licite.
+
+## Mise en place
+
+1. Ouvrez Confidentialité → Conservation et confrontez les valeurs par défaut à vos besoins réels de reporting et d'attribution.
+2. Raccourcissez tout ce que vous ne pouvez pas justifier ; n'allongez qu'avec une justification écrite.
+3. Confirmez les redéfinitions par site pour les sites relevant d'autres juridictions ou d'autres modèles économiques.
+4. Consultez la page de statut après la première exécution planifiée ; les entrées du job constituent votre preuve.

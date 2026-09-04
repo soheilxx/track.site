@@ -1,0 +1,80 @@
+---
+title: "Tracking della lead generation per il B2B: dall'invio del form al deal chiuso senza doppio conteggio"
+description: "Un design di tracking per siti B2B — eventi generate_lead, contact e book_appointment, campi nascosti per i click ID, e-mail aziendali con hash, upload dei lead qualificati dal CRM e azioni di conversione separate per fase — con le regole di consenso che valgono a ogni passo."
+excerpt: "Le conversioni B2B sono poche, preziose e lente. Il browser vede un form; il CRM vede il deal settimane dopo. Tracciare entrambi senza gonfiare i numeri significa separare le fasi, portare i click ID nel CRM e caricare gli esiti con il loro orario originale. Questo è il design."
+category: "guides"
+translationGroupId: "lead-gen-tracking-b2b"
+slug: "lead-gen-tracking-b2b"
+topic: "attribution-analytics"
+platforms: ["linkedin", "google-ads", "meta", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Ogni fase del funnel — form inviato, demo prenotata, lead qualificato, chiuso vinto — è un evento a sé e un'azione di conversione o regola a sé: è questo che evita il doppio conteggio."
+  - "Attiva generate_lead all'invio riuscito, chiama identify con l'e-mail aziendale solo dopo il consenso marketing e copia i click ID in campi nascosti del form salvati sul lead."
+  - "Il CRM invia qualified_lead con i click ID originali, l'e-mail con hash e il timestamp della fase; i deal chiusi diventano purchase con il valore reale, inviato dal server."
+  - "Il consenso registrato all'invio viaggia con ogni upload successivo: un lead che ha rifiutato il marketing non viene mai caricato sulle piattaforme pubblicitarie, e i valori sono reali o costanti documentate, mai aggiunti a posteriori."
+tags: ["b2b", "lead-generation", "crm", "linkedin", "google-ads"]
+author: "track-site-editorial"
+publishedAt: "2026-08-10"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Funnel dei lead B2B dall'invio del form al deal chiuso, con i punti di contatto del tracking"
+sources:
+  - title: "Google Ads Help — Enhanced conversions for leads"
+    url: "https://support.google.com/google-ads/answer/11347292"
+legalNotice: false
+---
+
+## Le fasi e l'evento per ciascuna
+
+| Fase | Dove avviene | Evento canonico | Inviato da |
+| --- | --- | --- | --- |
+| Form inviato | browser | `generate_lead` (`lead_type`, `form_id`) | SDK, in modalità ibrida con i pixel dei vendor |
+| Demo prenotata | strumento di prenotazione | `book_appointment` | SDK alla conferma, o webhook |
+| Richiesta di contatto | browser | `contact` | SDK |
+| Qualificato dal marketing | marketing automation | `qualified_lead` (personalizzato, dichiarato) | sorgente server |
+| Qualificato dalle vendite / opportunità | CRM | `qualified_lead` con `stage` | sorgente server |
+| Chiuso vinto | CRM | `purchase` con `value`, `transaction_id` | sorgente server |
+
+Ogni fase è un evento a sé e, nelle piattaforme pubblicitarie, un'azione di conversione o regola a sé. È questo che evita il doppio conteggio: nulla viene inviato due volte con lo stesso nome da due sorgenti.
+
+## Passo 1: il form
+
+- Attiva `generate_lead` all'invio **riuscito**, non al clic sul pulsante. Per i form AJAX, nella callback di successo; per i redirect a pagina intera, sulla pagina di ringraziamento con una protezione contro i ricaricamenti.
+- Includi `form_id` e `lead_type` (`demo`, `whitepaper`, `contact`), niente testo libero.
+- Chiama `identify` con l'e-mail aziendale **dopo** il consenso marketing. L'SDK la sottopone a hash prima che lasci il browser e la allega come `em` per le piattaforme che fanno il match sull'e-mail con hash (Meta, LinkedIn, Google Enhanced Conversions for Leads, Microsoft, TikTok).
+
+## Passo 2: porta i click ID nel CRM
+
+Copia i parametri click ID dall'URL della landing page — `gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid` — in campi nascosti del form quando il consenso marketing è stato prestato, e salvali sul record del lead insieme alla landing page e allo stato del consenso al momento dell'invio. Settimane dopo, sono questi a far sì che un upload venga abbinato in modo deterministico invece di affidarsi al solo hash dell'e-mail.
+
+## Passo 3: i lead qualificati dal CRM
+
+Quando un lead raggiunge una fase per cui vale la pena ottimizzare, il CRM invia un evento server: `qualified_lead` con la fase, i click ID originali, l'e-mail con hash e il **timestamp della fase**. Ogni piattaforma lo riceve sulla propria azione di conversione:
+
+- Google Ads: `uploadClickConversions` con `gclid` o e-mail con hash, azione di conversione "Lead qualificato (CRM)".
+- LinkedIn: Conversions API con `SHA256_EMAIL` o `li_fat_id`, regola "Lead qualificato", entro 90 giorni.
+- Meta: Conversions API `Lead` con `action_source: system_generated`, su una conversione personalizzata separata, così il `Lead` del pixel resta distinto.
+- Microsoft: CAPI con `msclkid` o e-mail con hash, obiettivo "Lead qualificato".
+
+## Passo 4: il chiuso vinto come `purchase`
+
+Ora il valore del deal è reale. Invia `purchase` con `value`, `currency` e l'ID dell'opportunità CRM come `transaction_id`, dal server, con la data di chiusura come orario dell'evento. Le piattaforme che supportano le offerte basate sul valore ricevono la cifra effettiva; le altre contano comunque la conversione.
+
+## Il consenso lungo le fasi
+
+- Il **form** e il suo `generate_lead` hanno bisogno del consenso marketing per le destinazioni pubblicitarie; il solo consenso analytics registra comunque l'evento per il tuo reporting interno.
+- I **click ID** vengono acquisiti solo con il consenso marketing. Senza, gli upload dalle fasi CRM possono usare solo l'e-mail con hash, e solo se la persona ha acconsentito a quell'uso al momento dell'invio: registra lo stato del consenso sul lead.
+- Gli **upload dal CRM** portano con sé lo stato del consenso registrato all'invio; il policy engine instrada di conseguenza, e un upload senza informazioni sul consenso non raggiunge nessuna destinazione pubblicitaria. Un lead che ha rifiutato il marketing nel form non viene caricato sulle piattaforme pubblicitarie in seguito, per quanto prezioso sia.
+
+## Valori, senza inventarli
+
+Per `qualified_lead`, o non invii alcun valore oppure un valore atteso **documentato** per fase, configurato come costante nel mapping della destinazione. Per `purchase`, invia il valore reale del deal. Non aggiungere mai a posteriori un valore a `generate_lead`: le piattaforme ottimizzano verso qualunque cosa invii, e un numero inventato ottimizza verso la finzione.
+
+## Cosa guardare ogni settimana
+
+- Copertura dell'Health Score: `generate_lead` visto su ogni ID form del piano.
+- Monitor delle destinazioni: accettazione degli upload per piattaforma; gli errori `CLICK_NOT_FOUND` e fuori finestra indicano click ID mancanti o upload tardivi.
+- Pagina del consenso: quota di lead con consenso marketing — il tetto massimo di ciò che le piattaforme pubblicitarie potranno mai vedere.

@@ -1,0 +1,74 @@
+---
+title: "Un asistente de IA que no puede romper tu tracking: herramientas tipadas, aprobaciones y el límite del control plane"
+description: "Cómo está construido el asistente de configuración de Track para que pueda planificar y configurar, pero nunca ejecutar código, inventar datos ni saltarse el consentimiento: el contrato de herramientas, la validación en el servidor, los tokens de aprobación, el registro de auditoría y lo que el modelo nunca ve."
+excerpt: "Dejar que un modelo de lenguaje toque el tracking en producción suena temerario hasta que trazas bien el límite: el modelo propone, las herramientas tipadas validan, las personas aprueban y cada paso queda por escrito. Esta es la arquitectura y la lista de cosas que el asistente es estructuralmente incapaz de hacer."
+category: "product"
+translationGroupId: "ai-assistant-tag-management-safety"
+slug: "ai-assistant-tag-management-safety"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "El asistente vive solo en el control plane: lee configuración y agregados y propone cambios, mientras que el collector, el router y el worker nunca llaman a un modelo."
+  - "Actúa a través de herramientas tipadas validadas en el servidor con comprobación de roles; publicar, revertir, pausar y rotar credenciales exigen un token de aprobación que una persona emite para ese diff exacto."
+  - "El modelo nunca ve secretos, eventos en bruto, datos personales, otros tenants ni las API de los proveedores, y no puede ejecutar código, otorgar consentimiento, inventar valores ni publicar."
+  - "Cada llamada a una herramienta queda en el registro de auditoría, así que un cambio hecho a través del asistente es indistinguible de uno hecho a mano."
+tags: ["ia", "asistente", "seguridad", "gobernanza"]
+author: "track-site-editorial"
+publishedAt: "2026-08-15"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Límite del control plane entre el asistente y el pipeline de eventos"
+sources:
+  - title: "OpenAI — Function calling and structured outputs"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+legalNotice: false
+---
+
+## El límite
+
+El asistente vive por completo en el **control plane**: lee la configuración y las métricas agregadas y propone cambios de configuración. No tiene ningún camino hacia el **data plane**: el collector, el router y el worker nunca llaman a un modelo, y ningún payload de evento se envía jamás a uno. Esté el asistente activado o no, los eventos fluyen exactamente igual.
+
+## Herramientas, no texto
+
+El modelo no escribe configuración. Llama a **herramientas tipadas** con argumentos JSON que se validan contra un esquema en el servidor:
+
+- Solo lectura, siempre disponibles: estado del workspace y de la configuración, lista de integraciones, estado de los destinos, salud reciente de los eventos, estado del consentimiento, esquema de eventos, errores de entrega, comparación de versiones.
+- Borradores: crear un borrador de integración, crear o actualizar un borrador de mapeo de eventos, fijar en el borrador los ajustes de un destino o la política de consentimiento, validar el borrador, preparar una publicación.
+- Protegidas: publicar o revertir una versión, pausar o activar un destino, desconectar una integración y rotar una credencial exigen un **token de aprobación** que el usuario emite en la interfaz para esa acción concreta.
+- Credenciales: la herramienta de credenciales seguras abre un formulario para que el *usuario* introduzca el secreto; el modelo solo recibe «credencial guardada».
+
+Cada herramienta comprueba el rol de quien la llama (un usuario con rol de lectura no puede crear borradores; un editor no puede publicar), valida los argumentos y rechaza cualquier cosa fuera del paso actual del asistente. El modelo puede llamar cien veces a la herramienta de mapeo; cada llamada pasa por la misma validación que el formulario de la interfaz, así que el resultado es el mismo que si una persona hubiera hecho clic.
+
+## Aprobaciones
+
+Nada pasa a producción sin una aprobación. Una publicación preparada genera un **diff** —el mismo diff que muestra el historial de versiones— y el usuario concede en la interfaz un token de aprobación vinculado a ese diff, al usuario y a una caducidad corta. El token se consume una sola vez; si el borrador cambió después de emitirlo, deja de ser válido. El modelo no puede generar, adivinar ni reutilizar tokens de aprobación porque nunca aparecen en su contexto: solo puede transmitir el que el usuario acaba de conceder.
+
+## Lo que el modelo nunca ve
+
+- **Secretos.** Las credenciales las introduce el usuario en un formulario del almacén seguro y se referencian por ID. El modelo ve tipos («token de acceso presente»), nunca valores.
+- **Eventos en bruto ni datos personales.** Lee agregados: recuentos, tasas, componentes de salud, hallazgos del esquema por nombre de campo. El depurador de eventos es una interfaz para personas.
+- **Otros tenants.** El contexto de las herramientas está ligado a la organización de la sesión; no existe lectura entre tenants.
+- **Las API de los proveedores.** Los eventos de prueba los envía el worker cuando se le pide; el modelo lee el resultado clasificado.
+
+## Lo que el asistente es estructuralmente incapaz de hacer
+
+- Ejecutar código en tu sitio: no existe ningún tipo de etiqueta de código personalizado que pueda crear.
+- Otorgar consentimiento o sortearlo: el consentimiento es un dato que lee el motor de políticas, no un ajuste que expongan las herramientas.
+- Inventar valores, identidades o conversiones: las herramientas solo aceptan los campos que define el esquema, y lo desconocido se queda en `null`.
+- Publicar: solo una persona con permiso de publicación puede consumir un token de aprobación.
+- Cambiar la facturación, borrar datos o alterar la retención: esas acciones no tienen herramienta.
+
+## Modelos, claves y ubicación de los datos
+
+El asistente utiliza la Responses API de OpenAI con Structured Outputs y herramientas definidas en el servidor. Los nombres de los modelos se configuran en el servidor y nunca aparecen en el código del navegador. Las claves están separadas por entorno, se guardan fuera del repositorio y se limitan a los permisos mínimos (listar modelos y crear respuestas). Las organizaciones pueden desactivar el asistente por completo en los ajustes; ese interruptor queda auditado.
+
+## El registro de auditoría
+
+Cada llamada a una herramienta se escribe en el registro de auditoría con el actor (ID de usuario más «vía asistente»), los argumentos tal como se validaron, el resultado y el ID de la petición. Un cambio publicado a través del asistente es indistinguible en el historial de uno hecho a mano, porque, en el momento en que pasó a producción, lo era.
+
+## Por qué sigue siendo útil
+
+El valor del asistente no es la autonomía; es que una configuración de destino de 19 pasos, con las peculiaridades de cada proveedor, se convierte en una conversación que termina en un diff revisado. El modelo se encarga de leer la documentación y de redactar el borrador; las barreras de seguridad garantizan que el resultado sea exactamente lo que habrías configurado tú mismo, solo que más rápido.

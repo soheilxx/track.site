@@ -1,0 +1,84 @@
+---
+title: "Migrer depuis Google Tag Manager : un plan qui commence par l'inventaire et ne perd aucune conversion"
+description: "Une migration pas à pas des conteneurs web GTM vers Track — export du conteneur et inventaire vérifié, traduction des balises, déclencheurs et variables en un plan de tracking, fonctionnement en parallèle avec déduplication, bascule destination par destination, et ce qui n'a volontairement pas d'équivalent."
+excerpt: "Un conteneur GTM accumule des années de balises que personne n'ose supprimer. La migration est le moment de les inventorier, de garder celles qui correspondent à un plan de tracking et de retirer les autres — sans un seul jour de conversions manquantes. Voici le plan."
+category: "guides"
+translationGroupId: "migrating-from-gtm"
+slug: "migrating-from-gtm"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Commencez par l'export du conteneur et un inventaire vérifié : une ligne par balise avec fournisseur, déclencheur, variables et classification ; rien n'en est créé automatiquement."
+  - "Traduisez balises et déclencheurs en événements et destinations d'un plan de tracking, avec des propriétés typées, des finalités de consentement et des mappings versionnés."
+  - "Faites fonctionner les deux systèmes en parallèle avec déduplication, d'abord côté serveur uniquement par destination, puis basculez une destination à la fois et retirez le conteneur."
+  - "Les balises HTML/JavaScript personnalisées, les contournements du consentement, le séquencement des balises et l'extraction du DOM n'ont volontairement pas d'équivalent : cette logique passe dans le code du site lui-même."
+tags: ["gtm", "migration", "tag-manager", "plan-de-tracking"]
+author: "track-site-editorial"
+publishedAt: "2026-08-16"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Chemin de migration d'un conteneur GTM vers un plan de tracking"
+sources:
+  - title: "Google Tag Manager Help — Export and import containers"
+    url: "https://support.google.com/tagmanager/answer/6106997"
+legalNotice: false
+---
+
+## Étape 1 : exporter et inventorier
+
+Exportez le conteneur (Admin → Exporter le conteneur). Le JSON liste chaque balise, déclencheur, variable et dossier. Construisez l'inventaire à partir de là — un tableur suffit — avec une ligne par balise : fournisseur, type de balise, déclencheur, variables lues et une classification :
+
+- **Balise de fournisseur reconnue** (GA4, Google Ads, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Reddit, X, Taboola, Outbrain, Criteo, pixels d'affiliation) avec un template de destination correspondant.
+- **Push dans la couche de données (data layer)**, groupé par nom d'événement, avec les variables que chaque balise lit.
+- **Balise HTML personnalisée**, classée comme snippet de fournisseur avec un équivalent connu, utilitaire first-party (profondeur de défilement, écouteurs de formulaire) ou inconnue.
+- **Balises en pause et balises sans déclenchement récent** (les métadonnées de balise de GTM indiquent quand une balise s'est déclenchée pour la dernière fois), marquées comme candidates au retrait.
+
+L'inventaire est la source de vérité de la migration. Rien n'en est créé automatiquement ; vous vérifiez chaque ligne et vous décidez.
+
+## Étape 2 : traduire en plan de tracking
+
+GTM raisonne en balises et déclencheurs ; Track raisonne en **événements** et **destinations**. La traduction :
+
+| Concept GTM | Concept Track |
+| --- | --- |
+| `dataLayer.push({event: 'purchase', ecommerce: {...}})` | `tsq.push(['track', 'purchase', {...}])` avec le schéma commerce canonique |
+| Déclencheur « Événement personnalisé égal à purchase » | l'événement lui-même ; les destinations s'abonnent par nom d'événement |
+| Déclencheur « Clic — Tous les éléments » avec filtre CSS | une règle de clic déclarative (sélecteur, nom d'événement, propriétés autorisées) |
+| Variable de couche de données | une propriété du schéma d'événement, typée et validée |
+| Table de correspondance | une table de mapping dans la destination, versionnée et comparable |
+| Balise d'initialisation du consentement | l'intégration CMP ; le consentement est lu, jamais défini |
+| Balise de configuration GA4 + balises d'événement | une destination GA4 avec des mappings d'événements, navigateur et serveur |
+| Balise de conversion Google Ads par action | une destination Google Ads avec un mapping par action de conversion |
+
+Le plan liste chaque événement avec ses propriétés, sa finalité de consentement et les destinations qu'il alimente. Les événements critiques sont marqués pour que le Health Score les surveille.
+
+## Étape 3 : fonctionnement en parallèle avec déduplication
+
+Ne coupez pas GTM le premier jour. Installez le SDK Track à côté. Le SDK observe les pushes de couche de données au format GA4 sans rien exécuter, de sorte qu'un conteneur qui pousse déjà `purchase` avec un objet `ecommerce` alimente les deux systèmes à partir du même push.
+
+Pour chaque destination, commencez en **côté serveur uniquement** dans Track pendant que la balise navigateur GTM continue de se déclencher :
+
+- Pour Google Ads et GA4, les achats portent le même identifiant de transaction sur les deux chemins et la plateforme déduplique dessus.
+- Pour les plateformes qui dédupliquent sur l'identifiant d'événement (Meta, TikTok, Microsoft, Pinterest, Snapchat, Reddit), faites d'abord tourner le chemin serveur en mode test, comparez les volumes dans la vue de test de la plateforme, puis basculez directement — ne faites pas tourner les deux en production avec des identifiants différents.
+
+Le moniteur des destinations affiche l'acceptation par destination ; quand elle correspond aux chiffres de la balise GTM, la balise navigateur est redondante.
+
+## Étape 4 : basculer destination par destination
+
+Pour chaque destination, dans cet ordre : passez Track en hybride (son propre template navigateur plus le serveur), mettez la balise GTM en pause, surveillez le nombre d'événements de la plateforme pendant deux jours, puis supprimez la balise GTM. Les destinations analytics d'abord, les destinations publicitaires une à la fois, les réseaux d'affiliation en dernier parce que leurs postbacks ont besoin d'un stockage d'identifiants de clic déjà alimenté sur la durée de la fenêtre de cookie.
+
+## Étape 5 : retirer le conteneur
+
+Quand chaque balise est en pause et que les chiffres des plateformes concordent, retirez le snippet GTM. Conservez le conteneur exporté dans le dossier de migration ; le journal d'audit montre qui a basculé quoi et quand.
+
+## Ce qui n'a pas d'équivalent, volontairement
+
+- **Balises HTML personnalisées et JavaScript personnalisé.** Track n'exécute aucun code écrit par le site. Les snippets de fournisseur deviennent des templates déclaratifs ; les utilitaires first-party deviennent des règles déclaratives ; tout le reste est une décision à prendre explicitement, le plus souvent en déplaçant la logique dans le code du site, là où elle a sa place.
+- **Contournements du consentement.** Aucune balise ne peut être configurée pour se déclencher quel que soit le consentement.
+- **Séquencement des balises et priorités de déclenchement.** Les événements sont routés par politique, pas mis en concurrence.
+- **Extraction de la page par expressions régulières** vers des variables. Les propriétés viennent de la couche de données ou de règles déclaratives, pas du texte du DOM.
+
+Marquez chacun de ces cas dans votre inventaire pour savoir, avant de commencer, quelle part du conteneur relève d'un vrai tracking et quelle part n'est qu'un échafaudage accumulé.

@@ -1,0 +1,74 @@
+---
+title: "Een AI-assistent die je tracking niet kapot kan maken: getypeerde tools, goedkeuringen en de control-plane-grens"
+description: "Hoe de setup-assistent van Track is gebouwd zodat hij kan plannen en configureren, maar nooit code kan uitvoeren, data kan verzinnen of toestemming kan omzeilen — het toolcontract, server-side validatie, goedkeuringstokens, de audittrail en wat het model nooit te zien krijgt."
+excerpt: "Een taalmodel aan productie-tracking laten klinkt roekeloos, tot je de grens goed trekt: het model stelt voor, getypeerde tools valideren, mensen keuren goed, en elke stap wordt vastgelegd. Dit is de architectuur en de lijst van dingen die de assistent structureel niet kan."
+category: "product"
+translationGroupId: "ai-assistant-tag-management-safety"
+slug: "ai-assistant-tag-management-safety"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "De assistent leeft alleen in de control plane: hij leest configuratie en aggregaten en stelt wijzigingen voor, terwijl collector, router en worker nooit een model aanroepen."
+  - "Hij handelt via getypeerde, server-side gevalideerde tools met rolcontrole; publiceren, rollback, pauzeren en het roteren van credentials vereisen een goedkeuringstoken dat een mens voor precies die diff uitgeeft."
+  - "Het model ziet nooit secrets, ruwe events, persoonsgegevens, andere tenants of leveranciers-API's, en het kan geen code uitvoeren, geen toestemming geven, geen waarden verzinnen en niet publiceren."
+  - "Elke toolaanroep belandt in het auditlog, zodat een wijziging via de assistent niet te onderscheiden is van een handmatige."
+tags: ["ai", "assistent", "veiligheid", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-15"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Control-plane-grens tussen de assistent en de event-pipeline"
+sources:
+  - title: "OpenAI — Function calling and structured outputs"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+legalNotice: false
+---
+
+## De grens
+
+De assistent leeft volledig in de **control plane**: hij leest configuratie en geaggregeerde metrics en stelt configuratiewijzigingen voor. Hij heeft geen toegang tot de **data plane** — de collector, de router en de worker roepen nooit een model aan, en er wordt nooit een event-payload naar een model gestuurd. Of de assistent nu is ingeschakeld of niet, events stromen identiek.
+
+## Tools, geen tekst
+
+Het model schrijft geen configuratie. Het roept **getypeerde tools** aan met JSON-argumenten die op de server tegen een schema worden gevalideerd:
+
+- Alleen-lezen, altijd beschikbaar: workspace- en setupstatus, integratielijst, status van destinations, recente event-health, toestemmingsstatus, eventschema, leverfouten, versievergelijking.
+- Concepten: een conceptintegratie aanmaken, een concept-eventmapping toevoegen of bijwerken, destination-instellingen of het toestemmingsbeleid in het concept zetten, het concept valideren, een publicatie voorbereiden.
+- Beveiligd: een versie publiceren of terugdraaien, een destination pauzeren of activeren, een integratie loskoppelen en een credential roteren vereisen een **goedkeuringstoken** dat de gebruiker in de UI uitgeeft voor precies die actie.
+- Credentials: de tool voor veilige credentials opent een formulier waarin de *gebruiker* een secret invoert; het model ontvangt alleen ‘credential opgeslagen’.
+
+Elke tool controleert de rol van de aanroeper (een viewer kan geen concept maken, een editor kan niet publiceren), valideert de argumenten en weigert alles buiten de huidige stap van de wizard. Het model kan de mapping-tool honderd keer aanroepen; elke aanroep doorloopt dezelfde validatie als het UI-formulier, dus het resultaat is hetzelfde als wanneer iemand had geklikt.
+
+## Goedkeuringen
+
+Niets gaat live zonder goedkeuring. Een voorbereide publicatie produceert een **diff** — dezelfde diff die de versiegeschiedenis toont — en de gebruiker geeft in de UI een goedkeuringstoken uit, gebonden aan die diff, de gebruiker en een korte geldigheidsduur. Het token wordt één keer verbruikt; is het concept na de uitgifte gewijzigd, dan is het ongeldig. Het model kan goedkeuringstokens niet genereren, raden of hergebruiken, omdat ze nooit in zijn context verschijnen — het kan alleen het token doorgeven dat de gebruiker zojuist heeft verleend.
+
+## Wat het model nooit ziet
+
+- **Secrets.** Credentials voert de gebruiker in via een kluisformulier; ze worden via een ID gerefereerd. Het model ziet soorten (‘access token aanwezig’), nooit waarden.
+- **Ruwe events of persoonsgegevens.** Het leest aggregaten: aantallen, percentages, health-componenten, schemabevindingen per veldnaam. De event-debugger is een UI voor mensen.
+- **Andere tenants.** De toolcontext is gebonden aan de organisatie van de sessie; lezen over tenants heen is niet mogelijk.
+- **De leveranciers-API's.** Testevents worden op verzoek door de worker verstuurd; het model leest het geclassificeerde resultaat.
+
+## Wat de assistent structureel niet kan
+
+- Code uitvoeren op je site: er is geen custom-code-tagtype om aan te maken.
+- Toestemming geven of eromheen routeren: toestemming is data die de policy-engine leest, geen instelling die de tools blootstellen.
+- Waarden, identiteiten of conversies verzinnen: tools accepteren alleen velden die het schema definieert, en onbekend blijft `null`.
+- Publiceren: alleen een mens met publicatierechten kan een goedkeuringstoken verbruiken.
+- Facturering wijzigen, data verwijderen of de bewaartermijn aanpassen: voor die acties bestaat geen tool.
+
+## Modellen, sleutels en datalocatie
+
+De assistent gebruikt de OpenAI Responses API met structured outputs en server-side gedefinieerde tools. Modelnamen worden server-side geconfigureerd en verschijnen nooit in browsercode. Sleutels zijn per omgeving gescheiden, buiten de repository opgeslagen en beperkt tot de minimale rechten (modellen opvragen en responses aanmaken). Organisaties kunnen de assistent in de instellingen volledig uitschakelen; die schakelaar wordt geauditeerd.
+
+## De audittrail
+
+Elke toolaanroep wordt naar het auditlog geschreven met de actor (gebruikers-ID plus ‘via assistent’), de gevalideerde argumenten, het resultaat en de request-ID. Een via de assistent gepubliceerde wijziging is in de geschiedenis niet te onderscheiden van een handmatige — omdat ze dat, op het moment dat ze live ging, ook was.
+
+## Waarom dit toch nuttig is
+
+De waarde van de assistent zit niet in autonomie, maar in het feit dat een destination-setup van 19 stappen met leverancierspecifieke eigenaardigheden een gesprek wordt dat eindigt in een beoordeelde diff. Het model neemt het lezen van de documentatie en het opstellen voor zijn rekening; de vangrails zorgen ervoor dat het resultaat precies is wat je zelf zou hebben geconfigureerd — alleen sneller.

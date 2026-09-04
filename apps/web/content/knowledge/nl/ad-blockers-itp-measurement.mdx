@@ -1,0 +1,67 @@
+---
+title: "Adblockers, ITP en meetverlies: wat er echt ontbreekt en wat je kunt terughalen"
+description: "Een nuchtere kijk op de drie oorzaken van meetverlies — contentblockers, trackingpreventie in de browser en geweigerde toestemming — hoe groot elk daarvan is, welke een first-party server-side setup terughaalt en welke het juist niet mag terughalen."
+excerpt: "Teams gooien ‘adblockers’ en ‘toestemming’ vaak op één hoop als verloren data. Het zijn verschillende problemen met verschillende oplossingen, en een ervan is helemaal geen probleem dat je moet oplossen. Zo houd je ze uit elkaar, en dit mag je van een first-party setup verwachten."
+category: "guides"
+translationGroupId: "ad-blockers-itp-measurement"
+slug: "ad-blockers-itp-measurement"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Contentblockers, trackingpreventie in de browser en geweigerde toestemming zijn drie verschillende verliezen met verschillende oplossingen — en geweigerde toestemming is geen verlies dat je moet repareren."
+  - "Meet je eigen gat: vergelijk de geaccepteerde paginaweergaven van de collector met de telling van de tag van de leverancier, lees het weigeringspercentage af op de toestemmingspagina en bekijk het aandeel terugkerende bezoekers per browser."
+  - "Een first-party server-side setup haalt events met toestemming terug die lijstgebaseerde blockers laten vallen, levert bevestigde aankopen en leads vanaf de server en probeert het opnieuw bij storingen bij de leverancier."
+  - "Het neemt de limiet van Safari voor door scripts weggeschreven opslag niet weg, herstelt geen geweigerde toestemming, injecteert geen geblokkeerde pixels van leveranciers en vervangt identifiers niet door fingerprinting."
+tags: ["adblockers", "itp", "meting", "dataverlies"]
+author: "track-site-editorial"
+publishedAt: "2026-08-17"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Uitsplitsing van meetverlies naar oorzaak"
+sources:
+  - title: "WebKit — Tracking Prevention Policy"
+    url: "https://webkit.org/tracking-prevention-policy/"
+  - title: "Mozilla — Enhanced Tracking Protection"
+    url: "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+legalNotice: false
+---
+
+## Drie verschillende verliezen
+
+**Contentblockers** (uBlock Origin, AdGuard, Brave Shields, blockers op DNS-niveau) vergelijken hostnamen van requests en script-URL's met openbare lijsten. `connect.facebook.net`, `googletagmanager.com` en `analytics.google.com` staan op die lijsten; het eigen subdomein van de site niet. De blokkade vindt plaats voordat er code draait, dus niets op de pagina kan je vertellen dat het is gebeurd — de bezoeker verschijnt simpelweg niet.
+
+**Trackingpreventie in de browser** (Safari ITP, Firefox ETP, Brave) blokkeert geen requests naar first-party hosts; ze beperkt *state*: third-party cookies worden gepartitioneerd of geblokkeerd, door scripts geschreven cookies verlopen na 7 dagen, en cookies die via een CNAME naar een third-party adres worden gezet, worden eveneens begrensd. De bezoeker verschijnt wél, maar vaker als nieuwe bezoeker dan in werkelijkheid het geval is.
+
+**Geweigerde toestemming** is de bezoeker die nee zegt. Er is technisch niets kapot; de data mag niet worden verzameld. Een setup die dit verlies ‘terughaalt’, is geen meting maar een overtreding.
+
+## Hoe groot elk verlies is
+
+Dat verschilt per doelgroep. Technische en jongere doelgroepen laten — in Duitsland bijvoorbeeld — contentblocker-percentages zien die ruim boven het wereldwijde gemiddelde liggen; het Safari-aandeel bepaalt de ITP-effecten; toestemmingspercentages hangen af van het ontwerp van de CMP en het vertrouwen in de site. Meet liever je eigen cijfers dan branchegemiddelden te citeren: vergelijk de geaccepteerde paginaweergaven van de collector (events-pagina, per bron) met het aantal paginaweergaven dat de tag van de leverancier over dezelfde periode rapporteert — het gat is je contentblocker-verlies op de host van die leverancier. De toestemmingspagina geeft het weigeringspercentage direct, en het aandeel terugkerende bezoekers per browser in je analytics laat het ITP-effect zien.
+
+## Wat een first-party server-side setup terughaalt
+
+- **Events met toestemming die lijstgebaseerde blockers tegenhouden.** De SDK laadt vanaf jouw subdomein en post naar jouw collector; blockers matchen dat niet. Het event met toestemming bereikt je collector en van daaruit de server-API's van de leveranciers. De matchkwaliteit hangt af van welke identifiers de toestemming toeliet.
+- **Server-side levering van wat de browser niet kon versturen.** Aankopen en leads die door de shop of de server zijn bevestigd, worden geleverd, ook als de pixel van de leverancier nooit is geladen.
+- **Storingen en tijdelijke fouten bij de leverancier.** De worker probeert het opnieuw; de browser deed dat nooit.
+
+Wat er niet verandert: de anonieme ID wordt door de SDK geschreven onder analytics- of marketingtoestemming, en Safari begrenst door scripts weggeschreven opslag nog steeds op zeven dagen. Het herkennen van terugkerende Safari-bezoekers daarbuiten blijft beperkt; Track werkt daar niet omheen.
+
+## Wat het niet mag terughalen
+
+- **Geweigerde toestemming.** Geen click-ID's, geen identifiers, geen marketing-destinations. De router dwingt dit per event af; het is geen instelling die je kunt uitzetten.
+- **Geblokkeerde pixels van leveranciers als zodanig.** Blokkeert de bezoeker `fbevents.js`, dan blijft de browserkant van Meta geblokkeerd. Het serverpad ontvangt het event met toestemming — dat is het ontwerp — maar injecteert de pixel niet via een omweg.
+- **Fingerprinting als vervanging voor identifiers.** Niet geïmplementeerd, niet configureerbaar. Onbekend blijft onbekend.
+
+## De ‘Event Match Quality’ van leveranciers eerlijk lezen
+
+Leveranciers scoren hoeveel identifiers elk server-event meedraagt. Na de overstap naar server-side stijgt die score vaak, omdat het gehashte e-mailadres uit het bestelsysteem nu wordt meegestuurd. Dat is een echte verbetering voor aankopen met toestemming. Het is geen bewijs dat er meer mensen worden getrackt; de toestemmingspagina laat hetzelfde weigeringspercentage zien als voorheen.
+
+## Praktische stappen
+
+1. Zet de collector en de SDK op een first-party subdomein (zie de gids over first-party domeinen).
+2. Stuur aankopen en leads vanaf de server met dezelfde event-ID als de browser.
+3. Vergelijk de aantallen per browser op de datakwaliteitspagina; verwacht dat het gat kleiner wordt voor Chrome met blockers en voor Firefox, en dat de herkenning van terugkerende bezoekers op Safari verbetert.
+4. Laat het toestemmingspercentage met rust, of verbeter het met een duidelijkere banner — nooit met techniek.

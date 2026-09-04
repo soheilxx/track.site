@@ -1,0 +1,80 @@
+---
+title: "Leadgeneratie tracken voor B2B: van formulierverzending tot gewonnen deal zonder dubbel tellen"
+description: "Een trackingontwerp voor B2B-sites — generate_lead-, contact- en book_appointment-events, verborgen click-id-velden, gehashte zakelijke e-mailadressen, uploads van gekwalificeerde leads uit het CRM en aparte conversieacties per fase — met de toestemmingsregels die bij elke stap gelden."
+excerpt: "B2B-conversies zijn schaars, waardevol en traag. De browser ziet een formulier; het CRM ziet de deal weken later. Beide tracken zonder de cijfers op te blazen betekent fases scheiden, click-ID's meenemen naar het CRM en uitkomsten uploaden met hun oorspronkelijke tijdstip. Dit is het ontwerp."
+category: "guides"
+translationGroupId: "lead-gen-tracking-b2b"
+slug: "lead-gen-tracking-b2b"
+topic: "attribution-analytics"
+platforms: ["linkedin", "google-ads", "meta", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Elke funnelfase — formulier verzonden, demo geboekt, gekwalificeerde lead, gewonnen — is een eigen event en een eigen conversieactie of -regel; dat is wat dubbel tellen voorkomt."
+  - "Vuur generate_lead af bij een geslaagde verzending, roep identify met het zakelijke e-mailadres pas aan na marketingtoestemming en kopieer click-ID's naar verborgen formuliervelden die bij de lead worden opgeslagen."
+  - "Het CRM stuurt qualified_lead met de oorspronkelijke click-ID's, de gehashte e-mail en de tijdstempel van de fase; gewonnen deals worden een purchase met de echte waarde, verstuurd vanaf de server."
+  - "De toestemming die bij verzending is vastgelegd, reist mee met elke latere upload: een lead die marketing heeft geweigerd wordt nooit naar advertentieplatformen geüpload, en waarden zijn echt of gedocumenteerde constanten, nooit achteraf ingevuld."
+tags: ["b2b", "leadgeneratie", "crm", "linkedin", "google-ads"]
+author: "track-site-editorial"
+publishedAt: "2026-08-10"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "B2B-leadfunnel van formulierverzending tot gewonnen deal met tracking-contactpunten"
+sources:
+  - title: "Google Ads Help — Enhanced conversions for leads"
+    url: "https://support.google.com/google-ads/answer/11347292"
+legalNotice: false
+---
+
+## De fases, en het event voor elke fase
+
+| Fase | Waar het gebeurt | Canoniek event | Verstuurd door |
+| --- | --- | --- | --- |
+| Formulier verzonden | browser | `generate_lead` (`lead_type`, `form_id`) | SDK, hybride met leverancierspixels |
+| Demo geboekt | boekingstool | `book_appointment` | SDK bij bevestiging, of webhook |
+| Contactaanvraag | browser | `contact` | SDK |
+| Marketing-gekwalificeerd | marketingautomatisering | `qualified_lead` (custom, gedeclareerd) | serverbron |
+| Sales-gekwalificeerd / opportunity | CRM | `qualified_lead` met `stage` | serverbron |
+| Gewonnen | CRM | `purchase` met `value`, `transaction_id` | serverbron |
+
+Elke fase is een eigen event en, in de advertentieplatformen, een eigen conversieactie of -regel. Dat is wat dubbel tellen voorkomt: niets wordt twee keer onder dezelfde naam vanuit twee bronnen verstuurd.
+
+## Stap 1: het formulier
+
+- Vuur `generate_lead` af bij een **geslaagde** verzending, niet bij de klik op de knop. Bij AJAX-formulieren in de succes-callback; bij een volledige redirect op de bedankpagina, met een beveiliging tegen herladen.
+- Geef `form_id` en `lead_type` mee (`demo`, `whitepaper`, `contact`), geen vrije tekst.
+- Roep `identify` met het zakelijke e-mailadres **pas na** marketingtoestemming aan. De SDK hasht het voordat het de browser verlaat en voegt het als `em` toe voor de platforms die op gehashte e-mail matchen (Meta, LinkedIn, Google Enhanced Conversions for Leads, Microsoft, TikTok).
+
+## Stap 2: neem de click-ID's mee naar het CRM
+
+Kopieer de click-id-parameters uit de landings-URL — `gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid` — naar verborgen formuliervelden wanneer marketingtoestemming is gegeven, en sla ze op bij het leadrecord, samen met de landingspagina en de toestemmingsstatus op het moment van verzending. Weken later zijn dit de gegevens die een upload deterministisch laten matchen, in plaats van alleen op e-mailhashing te vertrouwen.
+
+## Stap 3: gekwalificeerde leads uit het CRM
+
+Zodra een lead een fase bereikt waarop optimaliseren de moeite waard is, stuurt het CRM een server-event: `qualified_lead` met de fase, de oorspronkelijke click-ID's, de gehashte e-mail en de **tijdstempel van de fase**. Elk platform ontvangt het op zijn eigen conversieactie:
+
+- Google Ads: `uploadClickConversions` met `gclid` of gehashte e-mail, conversieactie ‘Gekwalificeerde lead (CRM)’.
+- LinkedIn: Conversions API met `SHA256_EMAIL` of `li_fat_id`, regel ‘Gekwalificeerde lead’, binnen 90 dagen.
+- Meta: Conversions API `Lead` met `action_source: system_generated`, op een aparte custom conversion, zodat de pixel-`Lead` gescheiden blijft.
+- Microsoft: CAPI met `msclkid` of gehashte e-mail, doel ‘Gekwalificeerde lead’.
+
+## Stap 4: gewonnen als `purchase`
+
+De dealwaarde is nu echt. Stuur `purchase` met `value`, `currency` en de opportunity-ID uit het CRM als `transaction_id`, vanaf de server, met de sluitingsdatum als eventtijd. Platforms die waardegebaseerd bieden ondersteunen, krijgen het werkelijke bedrag; de andere tellen de conversie gewoon mee.
+
+## Toestemming over de fases heen
+
+- Het **formulier** en zijn `generate_lead` hebben marketingtoestemming nodig voor advertentie-destinations; met alleen analyticstoestemming wordt het event nog steeds vastgelegd voor je eigen rapportage.
+- **Click-id's** worden alleen met marketingtoestemming vastgelegd. Zonder die toestemming kunnen de uploads uit de CRM-fases alleen gehashte e-mail gebruiken, en alleen als de persoon bij verzending met dat gebruik heeft ingestemd — leg de toestemmingsstatus vast bij de lead.
+- **CRM-uploads** dragen de toestemmingsstatus die je bij verzending hebt vastgelegd; de policy-engine routeert dienovereenkomstig, en een upload zonder toestemmingsinformatie bereikt geen enkele advertentie-destination. Een lead die bij het formulier marketing heeft geweigerd, wordt later niet naar advertentieplatformen geüpload, hoe waardevol ook.
+
+## Waarden zonder ze te verzinnen
+
+Stuur voor `qualified_lead` óf geen waarde, óf een **gedocumenteerde** verwachte waarde per fase, als constante geconfigureerd in de destination-mapping. Stuur voor `purchase` de echte dealwaarde. Vul nooit achteraf een waarde in bij `generate_lead`; de platforms optimaliseren op wat je ook maar stuurt, en een verzonnen getal optimaliseert op fictie.
+
+## Waar je wekelijks naar kijkt
+
+- Dekking in de health score: `generate_lead` gezien op elke form-id in het plan.
+- Destination-monitor: acceptatie van uploads per platform; `CLICK_NOT_FOUND`- en buiten-het-venster-fouten wijzen op ontbrekende click-ID's of te late uploads.
+- Toestemmingspagina: aandeel leads met marketingtoestemming — het plafond van wat advertentieplatformen ooit kunnen zien.

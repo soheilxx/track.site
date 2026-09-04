@@ -1,0 +1,67 @@
+---
+title: "Il Tracking Health Score spiegato: sei componenti, i loro pesi e cosa li fa muovere"
+description: "Come Track calcola l'Health Score da 0 a 100 a partire da copertura del consenso, copertura degli eventi critici, qualità dello schema, tasso di duplicati, successo delle consegne e liveness — con i pesi esatti, come viene valutato “ancora nessun dato” e cosa sistemare per primo quando il numero scende."
+excerpt: "Un singolo numero è utile solo se puoi scomporlo. L'Health Score è una somma pesata di sei componenti misurabili, ciascuna con una riga di dettaglio in linguaggio chiaro. Ecco la formula e il playbook per ogni componente."
+category: "product"
+translationGroupId: "tracking-health-score"
+slug: "tracking-health-score"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Lo score è una media pesata di sei componenti — consenso 0,20, copertura 0,25, schema 0,15, dedup 0,10, consegna 0,20, liveness 0,10 — e la stessa funzione alimenta dashboard, assistente e avvisi."
+  - "Le componenti senza dati ricevono un 50 neutro con la riga di dettaglio “Ancora nessun evento”; la liveness vale 0 quando non è mai arrivato un evento browser, perché è la prima cosa da sistemare."
+  - "Ogni componente ha una causa tipica: integrazione della CMP mancante, eventi critici rotti, rilevamenti di schema o PII, tag che si attivano due volte, consegne fallite o credenziali scadute, uno snippet perso."
+  - "Lo score non è confrontabile tra siti con piani di tracciamento diversi; usalo per accorgerti dei cambiamenti e le componenti per trovare la causa."
+tags: ["health-score", "monitoraggio", "qualità-dei-dati", "avvisi"]
+author: "track-site-editorial"
+publishedAt: "2026-08-18"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Indicatore dell'Health Score con sei componenti pesate"
+sources: []
+legalNotice: false
+---
+
+## La formula
+
+Lo score è una media pesata di sei componenti, ciascuna valutata da 0 a 100:
+
+| Componente | Peso | Sorgente | Punteggio |
+| --- | --- | --- | --- |
+| Consenso | 0,20 | quota di eventi accettati che portano un segnale di consenso esplicito | quota × 100; 50 finché non ci sono eventi |
+| Copertura | 0,25 | eventi critici pianificati che hanno prodotto almeno un evento nella finestra | visti ÷ pianificati × 100 |
+| Schema | 0,15 | quota di eventi senza rilevamenti di schema o PII | quota × 100; 50 finché non ci sono eventi |
+| Dedup | 0,10 | quota di duplicati tra gli eventi ricevuti | 100 − quota di duplicati × 400 (quindi il 25% di duplicati vale 0) |
+| Consegna | 0,20 | quota di consegne riuscite, meno una penalità per le credenziali | successo × 100 − (non integre ÷ integrazioni totali) × 50 |
+| Liveness | 0,10 | minuti dall'ultimo evento browser accettato | 100 sotto i 60 min, 70 sotto le 24 h, 20 oltre, 0 se mai |
+
+`score = Σ(componente × peso) ÷ Σ(peso)`, arrotondato e limitato a 0–100. La stessa funzione alimenta la dashboard, gli strumenti in sola lettura dell'assistente e gli avvisi, quindi il numero che vedi nella dashboard è lo stesso su cui ragiona l'assistente.
+
+## Perché “ancora nessun dato” vale 50 e non 0
+
+Un sito creato un'ora fa non ha copertura del consenso, nessun rilevamento di schema e nessuna consegna. Valutare tutto questo con zero farebbe sembrare rotto ogni nuovo sito; valutarlo come perfetto nasconderebbe problemi reali più avanti. Il 50 neutro mantiene informativo il totale, mentre la riga di dettaglio dice “Ancora nessun evento” così nessuno lo scambia per una misurazione. La liveness è l'eccezione: non aver mai ricevuto un evento browser vale 0, perché *quello* è il problema da risolvere per primo.
+
+## Cosa fa muovere ogni componente
+
+**Consenso (0,20).** Gli eventi senza un record di consenso esplicito di solito significano che l'integrazione della CMP manca su alcune pagine o che l'SDK si carica prima che la CMP risponda. Controlla nella pagina del consenso le pagine con bassa copertura del segnale.
+
+**Copertura (0,25).** Il piano di tracciamento elenca gli eventi critici (`purchase`, `generate_lead`, `sign_up` …). Un evento critico con zero occorrenze nella finestra è rotto oppure contrassegnato come critico per errore. La riga di dettaglio indica quelli mancanti.
+
+**Schema (0,15).** I rilevamenti arrivano dallo schema degli eventi (proprietà sconosciute, tipi errati) e dallo scanner PII (e-mail negli URL, numeri di telefono nelle proprietà). La pagina della qualità dei dati raggruppa i rilevamenti per campo, così un singolo handler di form difettoso è una correzione, non cento.
+
+**Dedup (0,10).** Duplicati oltre qualche punto percentuale significano che lo stesso ID evento viene inviato due volte — tipicamente un tag che si attiva sia su `DOMContentLoaded` sia al cambio di route, oppure un replay di webhook senza ID ordine. La penalità ripida è voluta: i duplicati gonfiano ogni numero a valle.
+
+**Consegna (0,20).** Le consegne fallite sono raggruppate per destinazione e classe di errore. La penalità per le credenziali rende visibile un token scaduto anche con poco traffico; ricollegare l'account la rimuove subito.
+
+**Liveness (0,10).** Un sito che smette di inviare eventi browser per un giorno di solito ha perso lo snippet in un deployment. Anche il kill switch produce questo effetto, di proposito, e la riga di dettaglio lo dice.
+
+## Segnalazioni
+
+I rilevamenti di schema e le consegne fallite vengono registrati come segnalazioni nella pagina della qualità dei dati, con il conteggio delle voci aperte e critiche accanto allo score. Una segnalazione può essere contrassegnata come risolta o ignorata indicando una motivazione, e la modifica viene registrata nell'audit. Lo strumento health dell'assistente legge le stesse componenti e segnalazioni quando gli chiedi di spiegare un calo; non tira a indovinare.
+
+## Cosa lo score non è
+
+Non è una vanity metric e non è confrontabile tra siti con piani di tracciamento diversi. Un sito landing page con due eventi critici e uno shop con dodici sono misurati rispetto ai propri piani. Usalo per accorgerti dei cambiamenti, poi usa le componenti per trovare la causa.

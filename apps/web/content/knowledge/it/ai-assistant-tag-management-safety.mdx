@@ -1,0 +1,74 @@
+---
+title: "Un assistente AI che non può rompere il tuo tracking: tool tipizzati, approvazioni e il confine del control plane"
+description: "Come è costruito l'assistente di configurazione di Track perché possa pianificare e configurare ma mai eseguire codice, inventare dati o aggirare il consenso — il contratto dei tool, la validazione server-side, i token di approvazione, l'audit trail e ciò che il modello non vede mai."
+excerpt: "Lasciare che un modello linguistico tocchi il tracking in produzione sembra avventato, finché non tracci il confine nel modo giusto: il modello propone, i tool tipizzati validano, le persone approvano e ogni passaggio viene messo per iscritto. Questa è l'architettura, insieme all'elenco delle cose che l'assistente è strutturalmente incapace di fare."
+category: "product"
+translationGroupId: "ai-assistant-tag-management-safety"
+slug: "ai-assistant-tag-management-safety"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "L'assistente vive solo nel control plane: legge configurazione e aggregati e propone modifiche, mentre collector, router e worker non chiamano mai un modello."
+  - "Agisce tramite tool tipizzati validati lato server con controllo dei ruoli; pubblicazione, rollback, pausa e rotazione delle credenziali richiedono un token di approvazione che una persona emette per quel preciso diff."
+  - "Il modello non vede mai segreti, eventi grezzi, dati personali, altri tenant o API dei vendor, e non può eseguire codice, prestare il consenso, inventare valori o pubblicare."
+  - "Ogni chiamata a un tool finisce nell'audit log, quindi una modifica fatta tramite l'assistente è indistinguibile da una fatta a mano."
+tags: ["ai", "assistente", "sicurezza", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-15"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Confine del control plane tra l'assistente e la pipeline degli eventi"
+sources:
+  - title: "OpenAI — Function calling and structured outputs"
+    url: "https://platform.openai.com/docs/guides/function-calling"
+legalNotice: false
+---
+
+## Il confine
+
+L'assistente vive interamente nel **control plane**: legge la configurazione e le metriche aggregate e propone modifiche alla configurazione. Non ha alcun accesso al **data plane** — collector, router e worker non chiamano mai un modello, e nessun payload di evento viene mai inviato a un modello. Che l'assistente sia attivo o no, gli eventi scorrono in modo identico.
+
+## Tool, non testo
+
+Il modello non scrive configurazione. Chiama **tool tipizzati** con argomenti JSON validati sul server rispetto a uno schema:
+
+- In sola lettura, sempre disponibili: stato del workspace e della configurazione, elenco delle integrazioni, stato delle destinazioni, salute recente degli eventi, stato del consenso, schema degli eventi, errori di consegna, confronto tra versioni.
+- Bozze: creare la bozza di un'integrazione, inserire o aggiornare la bozza di una mappatura eventi, impostare nella bozza le impostazioni di una destinazione o la policy del consenso, validare la bozza, preparare una pubblicazione.
+- Protetti: pubblicare o ripristinare una versione, mettere in pausa o attivare una destinazione, scollegare un'integrazione e ruotare una credenziale richiedono un **token di approvazione** che l'utente emette nell'interfaccia per quella specifica azione.
+- Credenziali: il tool per le credenziali sicure apre un modulo in cui è l'*utente* a inserire il segreto; il modello riceve soltanto “credenziale salvata”.
+
+Ogni tool controlla il ruolo di chi lo chiama (un viewer non può creare bozze, un editor non può pubblicare), valida gli argomenti e rifiuta tutto ciò che è fuori dal passaggio corrente della procedura guidata. Il modello può chiamare il tool di mappatura cento volte; ogni chiamata passa dalla stessa validazione del modulo dell'interfaccia, quindi il risultato è lo stesso che si avrebbe se una persona avesse cliccato.
+
+## Approvazioni
+
+Niente va in produzione senza un'approvazione. Una pubblicazione preparata produce un **diff** — lo stesso diff che mostra la cronologia delle versioni — e l'utente concede nell'interfaccia un token di approvazione legato a quel diff, all'utente e a una scadenza breve. Il token viene consumato una sola volta; se la bozza è cambiata dopo l'emissione, non è più valido. Il modello non può generare, indovinare o riutilizzare i token di approvazione perché non compaiono mai nel suo contesto — può solo inoltrare quello che l'utente ha appena concesso.
+
+## Cosa il modello non vede mai
+
+- **Segreti.** Le credenziali vengono inserite dall'utente in un modulo del vault e referenziate per ID. Il modello vede i tipi (“access token presente”), mai i valori.
+- **Eventi grezzi o dati personali.** Legge aggregati: conteggi, tassi, componenti dello stato di salute, anomalie dello schema per nome di campo. L'Event Debugger è un'interfaccia per le persone.
+- **Altri tenant.** Il contesto dei tool è legato all'organizzazione della sessione; non esiste alcuna lettura cross-tenant.
+- **Le API dei vendor.** Gli eventi di test vengono inviati dal worker su richiesta; il modello legge il risultato classificato.
+
+## Cosa l'assistente è strutturalmente incapace di fare
+
+- Eseguire codice sul tuo sito: non esiste alcun tipo di tag con codice personalizzato da creare.
+- Prestare il consenso o aggirarlo: il consenso è un dato che il policy engine legge, non un'impostazione esposta dai tool.
+- Inventare valori, identità o conversioni: i tool accettano solo i campi definiti dallo schema, e ciò che è sconosciuto resta `null`.
+- Pubblicare: solo una persona con il permesso di pubblicazione può consumare un token di approvazione.
+- Modificare la fatturazione, cancellare dati o cambiare la conservazione: per queste azioni non esiste alcun tool.
+
+## Modelli, chiavi e ubicazione dei dati
+
+L'assistente usa la OpenAI Responses API con Structured Outputs e tool definiti lato server. I nomi dei modelli sono configurati lato server e non compaiono mai nel codice del browser. Le chiavi sono separate per ambiente, conservate fuori dal repository e limitate ai permessi minimi (elencare i modelli e creare response). Le organizzazioni possono disattivare completamente l'assistente nelle impostazioni; l'interruttore è sottoposto ad audit.
+
+## L'audit trail
+
+Ogni chiamata a un tool viene scritta nell'audit log con l'attore (ID utente più “via assistente”), gli argomenti così come validati, il risultato e l'ID della richiesta. Una modifica pubblicata tramite l'assistente è indistinguibile nella cronologia da una fatta a mano — perché, nel momento in cui è andata in produzione, lo era.
+
+## Perché è comunque utile
+
+Il valore dell'assistente non è l'autonomia; è che una configurazione di una destinazione in 19 passaggi, con le particolarità specifiche di ogni vendor, diventa una conversazione che termina in un diff revisionato. Il modello si occupa di leggere la documentazione e di preparare le bozze; i guardrail garantiscono che il risultato sia esattamente ciò che avresti configurato tu stesso, solo più in fretta.

@@ -1,0 +1,75 @@
+---
+title: "Dati personali nei payload di tracciamento: da dove entrano, cosa rileva lo scanner e cosa blocca un evento"
+description: "I modi più comuni in cui e-mail, numeri di telefono, numeri di carta e token finiscono negli eventi di tracciamento — URL, titoli di pagina, campi dei form, termini di ricerca — e come lo scanner PII di Track oscura, segnala e, per carte e segreti, blocca prima che qualcosa venga memorizzato o inoltrato."
+excerpt: "Nessuno invia di proposito un numero di carta di credito a uno strumento di analytics. Succede tramite un parametro URL, un titolo di pagina o un campo del form chiamato «commento». Lo scanner viene eseguito su ogni evento prima della memorizzazione e prima dell'instradamento; ecco cosa cerca e cosa fa quando trova qualcosa."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "I dati personali entrano da URL, titoli di pagina, referrer, campi dei form e di ricerca, oggetti annidati e nomi di articoli personalizzati."
+  - "Lo scanner viene eseguito prima della memorizzazione e dell'instradamento e conosce sei tipi: e-mail e numeri di telefono vengono oscurati e segnalati; numeri di carta, IBAN, segreti e JWT bloccano l'evento per intero."
+  - "E-mail e telefono con hash in user_data sono chiavi di abbinamento intenzionali subordinate al consenso al marketing; lo scanner non le segnala, il policy engine decide per ogni destinazione."
+  - "I rilevamenti diventano segnalazioni raggruppate nella pagina della qualità dei dati con le correzioni tipiche; la componente schema dell'Health Score si riprende una volta chiusa la falla."
+tags: ["pii", "qualità-dei-dati", "oscuramento", "sicurezza"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Campi degli eventi analizzati alla ricerca di dati personali prima della memorizzazione"
+sources:
+  - title: "GDPR Article 25 — Data protection by design and by default"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Da dove entrano i dati personali
+
+- **URL.** Link di reset della password, link di disiscrizione e conferme di prenotazione mettono indirizzi e-mail e token nelle query string. Una visualizzazione di pagina registra l'URL.
+- **Titoli di pagina.** «Ordine n. 1234 per anna.rossi@example.com» come `<title>` diventa il titolo dell'evento.
+- **Referrer.** L'URL della pagina precedente, con tutto quanto sopra.
+- **Campi dei form e di ricerca.** Una ricerca nel sito per un numero di telefono, o un campo «messaggio» copiato nelle proprietà dell'evento.
+- **Oggetti annidati.** Un intero oggetto form inserito in `props` perché era comodo.
+- **Nomi degli articoli.** Prodotti personalizzati («Tazza per Anna») negli articoli commerce.
+
+## Cosa cerca lo scanner
+
+Lo scanner viene eseguito dopo la normalizzazione e prima del policy engine, su `title`, `url`, `referrer`, ogni stringa in `props`, gli oggetti annidati in `props` e i nomi degli articoli commerce. Sei tipi:
+
+| Tipo | Esempi | Azione |
+| --- | --- | --- |
+| email | qualsiasi indirizzo in formato RFC | oscurato, segnalato |
+| phone | formati internazionali e nazionali con 7+ cifre | oscurato, segnalato |
+| card | sequenze di 13–19 cifre che superano il controllo di Luhn | oscurato, **evento bloccato** |
+| iban | codice paese + cifre di controllo + BBAN | oscurato, **evento bloccato** |
+| secret | chiavi API e token con prefissi noti, stringhe lunghe ad alta entropia in campi simili a chiavi | oscurato, **evento bloccato** |
+| jwt | tre segmenti base64url separati da punti | oscurato, **evento bloccato** |
+
+«Oscurato» significa che la corrispondenza viene sostituita sul posto da un marcatore prima della memorizzazione. Gli oggetti annidati che contengono un rilevamento vengono sostituiti per intero da `[redacted:nested]`, perché l'oscuramento parziale di dati strutturati è inaffidabile. «Bloccato» significa che l'evento non viene memorizzato né instradato; una segnalazione di qualità dei dati registra il campo e il tipo, mai il valore.
+
+## Perché carte e segreti bloccano e le e-mail no
+
+Un'e-mail in un titolo di pagina è un problema di qualità dei dati con una dimensione legale; oscurarla e dirti da dove è arrivata risolve entrambe le cose. Un numero di carta o un bearer token in un evento è un incidente: memorizzare anche solo un evento oscurato con il suo contesto lascerebbe una traccia che dice «questo è successo qui, in questo momento, in questa sessione», e inoltrarlo da qualsiasi parte è fuori discussione. Bloccare è la scelta prudente, e il rilevamento ti dice quale pagina o quale form correggere.
+
+## Gli identificatori con hash sono un'altra cosa
+
+E-mail e telefono con hash in `user_data` sono identificatori *intenzionali* usati come chiavi di abbinamento pubblicitarie, forniti tramite la chiamata `identify` dell'SDK o una sorgente server, sottoposti a hash prima di lasciare il browser o lo shop e subordinati alla finalità marketing. Lo scanner non li segnala; il policy engine decide per ogni destinazione se possono essere inoltrati.
+
+## Il ciclo dei rilevamenti
+
+Ogni rilevamento diventa una segnalazione nella pagina della qualità dei dati, raggruppata per campo e tipo con un conteggio e la prima/ultima occorrenza. Correzioni tipiche:
+
+- Parametri URL: rimuovi i token lato server prima del rendering, oppure aggiungi il parametro alla scrub list del sito, così l'SDK lo elimina prima dell'invio.
+- Titoli: usa titoli generici nelle pagine dell'account e di conferma.
+- Form: invia a `props` solo i campi in whitelist; mai l'intero oggetto form.
+- Ricerca: invia il fatto che una ricerca è avvenuta e il numero di risultati, non la query, a meno che la query non sia vocabolario di prodotto.
+
+Una segnalazione può essere contrassegnata come risolta o ignorata indicando un motivo; l'ignorare viene registrato nell'audit log.
+
+## Verifica
+
+La componente schema dell'Health Score è la quota di eventi senza rilevamenti. Dopo aver corretto una falla, la componente si riprende entro la finestra; il timestamp dell'ultima occorrenza della segnalazione smette di avanzare. L'Event Debugger mostra l'evento oscurato, così puoi confermare che il marcatore si trova dove ti aspetti.

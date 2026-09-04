@@ -1,0 +1,79 @@
+---
+title: "Offline conversies uit je CRM: uploads met het oorspronkelijke tijdstip, gehashte identifiers en eerlijke waarden"
+description: "Hoe je CRM-uitkomsten — gekwalificeerde leads, gesloten deals, aankopen in de winkel — via de importbron van Track terugspeelt naar Google Ads, Meta, LinkedIn, TikTok en Microsoft, welke identifiers elk platform nodig heeft en welke tijdregels gelden."
+excerpt: "De waardevolste conversies vinden vaak dagen na de klik plaats, buiten de browser. Ze goed importeren betekent: het oorspronkelijke tijdstip bewaren, matchen op de juiste identifier en nooit een waarde verzinnen. Dit is de workflow met de regels per platform."
+category: "guides"
+translationGroupId: "offline-conversions-crm"
+slug: "offline-conversions-crm"
+topic: "attribution-analytics"
+platforms: ["google-ads", "meta", "linkedin", "tiktok", "microsoft"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Exporteer één rij per CRM-uitkomst, stuur die met een CRM-source-key naar het server-event-endpoint, en ze wordt een canoniek event met het oorspronkelijke tijdstip en de vastgelegde toestemmingsstatus."
+  - "Normaliseer en hash identifiers vóór het versturen; rijen met identifiers in platte tekst falen op validatie, en een event zonder toestemmingsinformatie bereikt geen enkele advertentie-destination."
+  - "Elk platform heeft zijn eigen mechanisme, vereiste identifier en tijdregels; upload het tijdstip waarop de uitkomst plaatsvond, nooit het exporttijdstip."
+  - "Sla click-ID's op bij de lead voor deterministische matching, houd waarden echt, gedocumenteerde constanten of leeg, en stuur vervolguitkomsten als eigen events in plaats van het browser-event te dupliceren."
+tags: ["offline-conversies", "crm", "import", "attributie"]
+author: "track-site-editorial"
+publishedAt: "2026-08-23"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "CSV-import van CRM-conversies gemapt op canonieke events"
+sources:
+  - title: "Google Ads Help — About offline conversion imports"
+    url: "https://support.google.com/google-ads/answer/2998031"
+  - title: "Meta for Developers — Conversions API for offline events"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/app-events-offline-events"
+legalNotice: false
+---
+
+## De workflow
+
+1. **Exporteer** uit het CRM: één rij per uitkomst met het tijdstip van de uitkomst, de identifiers die je hebt (e-mailadres, telefoonnummer, click-ID als die bij de lead is opgeslagen, order-ID) en de waarde.
+2. **Verstuur** de rijen naar het server-event-endpoint met een source key die je voor het CRM hebt aangemaakt. Elke rij wordt een canoniek event (`qualified_lead`, `purchase`, `refund`, `subscribe`) met `props.offline: true`, het oorspronkelijke tijdstip en de toestemmingsstatus die jouw systeem voor die persoon heeft vastgelegd. Een klein script of de uitgaande webhook van het CRM kan dit doen; het endpoint accepteert batches en antwoordt met het aantal geaccepteerde events of een validatiefout die het veld benoemt.
+3. **Normaliseer en hash vóór het versturen**: e-mailadressen in kleine letters en getrimd, telefoonnummers omgezet naar E.164, daarna SHA-256. Rijen die met identifiers in platte tekst binnenkomen, falen op validatie; er wordt niets namens jou gehasht.
+4. **Routeer** precies zoals browser-events: de policy-engine past de toestemmingsstatus die het event meedraagt per destination toe. Een event zonder toestemmingsinformatie draagt alleen het doel ‘noodzakelijk’ en bereikt geen enkele advertentie-destination.
+5. **Lever af** via dezelfde connectoren, met de offline-varianten van elke API.
+
+De event-debugger toont elk geïmporteerd event met zijn bron, en de destination-monitor toont de afleverstatus per destination.
+
+## Per platform
+
+| Platform | Mechanisme | Vereiste identifier | Tijdregels |
+| --- | --- | --- | --- |
+| Google Ads | upload van klikconversies | `gclid`/`gbraid`/`wbraid` **of** gehashte e-mail/telefoon (Enhanced Conversions for Leads) | na de klik, binnen het venster; niet ouder dan het click-through-venster van de actie |
+| Meta | Conversions API met `action_source: physical_store` of `system_generated` | gehashte e-mail/telefoon, `external_id`; `fbc` indien opgeslagen | binnen 62 dagen |
+| LinkedIn | Conversions API | gehashte e-mail of `li_fat_id` | binnen 90 dagen |
+| TikTok | Events API met `event_source: offline` en een offline-event-set-id | gehashte e-mail/telefoon | binnen 7 dagen voor web, langer voor offline-sets |
+| Microsoft | Conversions API | `msclkid` of gehashte e-mail/telefoon | binnen het venster van het doel |
+| Affiliate-netwerken | postback met de opgeslagen click-ID | click-ID van het netwerk | per programma |
+
+Het tijdstip dat je uploadt, moet het moment zijn waarop de uitkomst **plaatsvond**, niet het moment waarop je hebt geëxporteerd. De deals van gisteren uploaden met het tijdstip van vandaag verschuift de attributie en kan conversies buiten het klikvenster plaatsen.
+
+## Sla de click-ID op bij de lead
+
+Matchen op click-ID is betrouwbaarder dan op gehashte e-mail. Kopieer de click-id-parameters uit de landings-URL (`gclid`, `msclkid`, `fbclid`, `li_fat_id`, `ttclid`) naar verborgen formuliervelden zodra marketingtoestemming is gegeven, en sla ze bij de lead op in het CRM. Wanneer de lead later wordt gesloten, draagt de export de click-ID mee en matcht de upload deterministisch.
+
+## Waarden: modelleren of leeg laten
+
+Een gekwalificeerde lead heeft geen orderwaarde. Opties die eerlijk blijven:
+
+- Laat de waarde leeg; optimalisatie op aantallen werkt nog steeds.
+- Gebruik een **gedocumenteerde verwachte waarde** per leadfase (bijvoorbeeld gemiddelde dealgrootte × sluitingspercentage), als constante ingesteld in de destination-mapping en zichtbaar in het auditlog.
+- Upload de **werkelijke** dealwaarde zodra de deal sluit, als aparte conversie.
+
+Wat Track niet doet, is een waarde verzinnen: niet-gemapte waarden blijven `null`, en een mapping die naar een ontbrekende property verwijst, faalt op validatie in plaats van een standaardwaarde in te vullen.
+
+## Deduplicatie met browser-events
+
+Stuur de CRM-rij ‘formulier verzonden’ niet als hetzelfde event dat de browser al heeft verstuurd; je zou dubbel tellen, tenzij de event-ID met de lead meereist. Stuur **vervolguitkomsten** (`qualified_lead`, `purchase`) als eigen events, gemapt op aparte conversieacties of regels. Voor aankopen die de browser ook heeft gezien, houd je de order-ID op beide, zodat platformen die op order-ID dedupliceren ze samenvoegen.
+
+## Checklist
+
+- [ ] Export bevat het tijdstip van de uitkomst in ISO 8601 met tijdzone
+- [ ] Identifiers genormaliseerd vóór het hashen; al gehashte kolommen als gehasht gemarkeerd
+- [ ] Click-id's bij het versturen van het formulier opgeslagen bij de lead
+- [ ] Waarden zijn echt, gedocumenteerde constanten of leeg
+- [ ] Batch-antwoorden beoordeeld: afgewezen rijen gecorrigeerd, aflevering per destination bevestigd in de destination-monitor

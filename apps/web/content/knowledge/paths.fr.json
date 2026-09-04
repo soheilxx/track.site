@@ -1,0 +1,56 @@
+[
+  {
+    "id": "server-side-foundations",
+    "title": "Le tracking côté serveur depuis les fondations",
+    "description": "Ce qui change lorsque les événements quittent le navigateur, le vocabulaire des événements standard, une migration sûre depuis GTM, la déduplication, le Tracking Health Score et les limites des domaines first-party.",
+    "groupIds": [
+      "server-side-tracking-explained",
+      "event-taxonomy-standard-events",
+      "migrating-from-gtm",
+      "dedup-event-id-order-id",
+      "tracking-health-score",
+      "ad-blockers-itp-measurement",
+      "first-party-tracking-domains"
+    ]
+  },
+  {
+    "id": "consent-and-privacy",
+    "title": "Un tracking conforme au consentement",
+    "description": "Consent Mode v2, données personnelles dans les payloads, durées de conservation, demandes des personnes concernées et lecture des signaux TCF 2.2, GPP et GPC.",
+    "groupIds": [
+      "consent-mode-v2-guide",
+      "pii-in-tracking-data",
+      "data-retention-policy-tracking",
+      "dsar-deletion-tracking-data",
+      "tcf-2-2-gpp-gpc"
+    ]
+  },
+  {
+    "id": "conversion-apis",
+    "title": "Les API de conversion plateforme par plateforme",
+    "description": "Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Reddit, Pinterest et Snapchat : payloads, clés de correspondance, déduplication avec le pixel et workflows de test sûrs.",
+    "groupIds": [
+      "meta-conversions-api-deduplication",
+      "google-ads-enhanced-conversions",
+      "ga4-measurement-protocol-eu",
+      "tiktok-events-api-setup",
+      "microsoft-conversions-api-uet",
+      "linkedin-conversions-api-b2b",
+      "reddit-pinterest-snapchat-capi"
+    ]
+  },
+  {
+    "id": "commerce-and-attribution",
+    "title": "Achats e-commerce et boucle d’attribution",
+    "description": "Achats vérifiés depuis Shopify, WooCommerce et Shopware, événements d’abonnement, identifiants de clic et fenêtres d’attribution, conversions hors ligne depuis le CRM et postbacks d’affiliation.",
+    "groupIds": [
+      "shopify-server-side-purchases",
+      "woocommerce-server-side-tracking",
+      "shopware-6-tracking",
+      "subscription-saas-events",
+      "click-ids-attribution-windows",
+      "offline-conversions-crm",
+      "affiliate-postbacks-s2s"
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+---
+title: "Microsoft Advertising Conversions API: UET-tag plus server-events met msclkid"
+description: "Hoe de Microsoft Advertising Conversions API naast de UET-tag werkt — het events-endpoint per tag-ID, deduplicatie via eventId, msclkid en gehashte identifiers, batchlimieten en foutafhandeling per rij."
+excerpt: "De Conversions API (CAPI) van Microsoft accepteert server-events per UET-tag-ID met een OAuth-bearer-token. Deze gids legt de payload uit, hoe er wordt gededupliceerd tegen de UET-JavaScript-tag en welke fouten wat betekenen."
+category: "integrations"
+translationGroupId: "microsoft-conversions-api-uet"
+slug: "microsoft-conversions-api-uet"
+topic: "pixel-platform-integrations"
+platforms: ["microsoft"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "CAPI accepteert server-events per UET-tag-ID op capi.uet.microsoft.com met een OAuth-bearer-token (scope msads.manage); doelen matchen server-events op dezelfde manier als tag-events."
+  - "Met continueOnValidationError accepteert het endpoint geldige rijen en meldt het ongeldige rijen met hun index; Track markeert die rijen als ongeldig en probeert alleen 5xx en 429 opnieuw."
+  - "Geef op de UET-tag en via de API dezelfde eventId en eventnaam mee, zodat Microsoft de conversie één keer telt."
+  - "De na marketingtoestemming vastgelegde msclkid is de primaire matchingsleutel, aangevuld met gehashte e-mail en telefoonnummer; er is geen testflag, dus geef staging een eigen UET-tag-ID."
+tags: ["microsoft-advertising", "uet", "conversions-api", "msclkid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-28"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Microsoft Conversions API-request naar het UET-events-endpoint"
+sources:
+  - title: "Microsoft Advertising — Conversions API (CAPI) integration guide"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+  - title: "Microsoft Advertising — Universal Event Tracking"
+    url: "https://help.ads.microsoft.com/#apex/ads/en/56681/2"
+legalNotice: false
+---
+
+## De bouwstenen
+
+- Een **UET-tag** (Tools → UET tags). De numerieke ID ervan is openbaar en staat in de JavaScript-snippet.
+- Een **conversiedoel** van het type ‘Event’ of ‘Destination URL’ dat aan die tag is gekoppeld; server-events worden op eventnaam, categorie, label en waarde tegen doelen gematcht, precies zoals tag-events.
+- Een **OAuth 2.0-access-token** voor de Microsoft Advertising API (scope `msads.manage`), uitgegeven aan het account dat eigenaar is van de tag. Track haalt het op en vernieuwt het via de Microsoft OAuth-koppeling en bewaart het in de kluis.
+
+## Het request
+
+`POST https://capi.uet.microsoft.com/v1/{tagId}/events` met `Authorization: Bearer <token>` en een JSON-array met events:
+
+```json
+{
+  "data": [{
+    "eventType": "custom",
+    "eventName": "purchase",
+    "eventId": "01J9EXAMPLESOURCEEVENTID00",
+    "eventTime": 1767225600000,
+    "eventSourceUrl": "https://shop.example/thank-you",
+    "userData": { "em": "<sha256>", "ph": "<sha256>", "msclkid": "…", "clientUserAgent": "…", "clientIpAddress": "…" },
+    "eventData": { "eventValue": 129.9, "eventCurrency": "EUR", "items": [{ "id": "SKU-1", "name": "Product", "price": 99.9, "quantity": 1 }] }
+  }],
+  "continueOnValidationError": true
+}
+```
+
+`eventTime` is in milliseconden sinds epoch. `eventType` is `custom` voor conversie-events en `pageLoad` voor paginaweergaven. Met `continueOnValidationError: true` accepteert het endpoint de geldige rijen en meldt het de ongeldige met hun index; Track markeert die rijen als ongeldige payload en probeert ze niet opnieuw, terwijl HTTP 5xx- en 429-antwoorden met backoff opnieuw worden geprobeerd.
+
+In één request passen maximaal 1.000 events.
+
+## Deduplicatie met de UET-tag
+
+Wanneer ook de UET-JavaScript-tag het event afvuurt, moeten beide paden dezelfde `eventId` en eventnaam delen. In de browser geef je de ID mee in de eventparameters (`window.uetq.push('event', 'purchase', { revenue_value: 129.9, currency: 'EUR', event_id: '…' })`); de server stuurt dezelfde waarde in `eventId`. Microsoft telt de conversie dan één keer. De SDK van Track genereert één id per actie en geeft die zowel aan de UET-template als aan de collector door.
+
+## Identifiers
+
+- `msclkid` — de click-ID die Microsoft aan landingspagina-URL's toevoegt. Leg hem vast na marketingtoestemming en sla hem first-party op; zonder msclkid kunnen server-events alleen via gehashte identifiers worden gematcht.
+- `em` en `ph` — SHA-256-hashes van het genormaliseerde e-mailadres en telefoonnummer.
+- `anid` — de Microsoft-advertentie-id voor app-verkeer.
+- `clientUserAgent` en `clientIpAddress` — aanbevolen voor web-events en beschikbaar vanuit de collector wanneer het beleid toestaat dat het IP-adres wordt doorgestuurd.
+
+## Testen
+
+De API heeft geen testflag. Een test-event dat je vanuit de wizard verstuurt, is een echt event op de tag-ID die je hebt geconfigureerd. Geef de stagingomgeving daarom een eigen UET-tag-ID en houd de productie-tag-ID voor productie; de wizard toont in beide gevallen het antwoord per rij van Microsoft. Zodra de destination de testmodus verlaat, ontvangt de tag-ID van de productieomgeving de events.
+
+## Fouten
+
+| Antwoord | Betekenis | Afhandeling |
+| --- | --- | --- |
+| 401 | token verlopen of verkeerde tenant | wordt automatisch vernieuwd; opnieuw koppelen als vernieuwen mislukt |
+| 403 | account heeft geen toegang tot de tag-ID | eigenaarschap van de tag controleren |
+| 400 met rijdetails | ongeldige veldwaarden | rij als ongeldig gemarkeerd; mapping corrigeren |
+| 429 | rate limit | opnieuw geprobeerd met backoff |
+| 5xx | fout aan de kant van Microsoft | opnieuw geprobeerd; circuit breaker bij aanhoudende fouten |
+
+Elke poging, inclusief de rijen die Microsoft heeft afgewezen, is zichtbaar in de destination-monitor met de geredigeerde payload-preview.

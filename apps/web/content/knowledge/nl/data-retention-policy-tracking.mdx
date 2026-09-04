@@ -1,0 +1,71 @@
+---
+title: "Een bewaarbeleid voor trackingdata: negen datasoorten, verstandige standaardtermijnen en hoe het verlopen wordt afgedwongen"
+description: "Welke soorten trackingdata er zijn, waarom elke soort een andere levensduur heeft, met welke standaardtermijnen Track wordt geleverd, hoe je ze per organisatie of site overschrijft en hoe de retentiejobs bewijzen dat ze hebben gedraaid."
+excerpt: "Alles voor altijd bewaren is de duurste privacybeslissing die je kunt nemen. Een bewaarbeleid benoemt elke datasoort, geeft haar een reden om te bestaan en een datum om te verdwijnen. Dit zijn de negen soorten, de standaardtermijnen en de handhaving."
+category: "privacy"
+translationGroupId: "data-retention-policy-tracking"
+slug: "data-retention-policy-tracking"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Negen datasoorten — events, click-ID's, toestemmingssnapshots, afleverpogingen, auditlog, chattranscripten, ruwe-data-archief, DSAR-records, IP-hashes — krijgen elk een eigen standaardtermijn met een onderbouwde reden."
+  - "Termijnen gelden per organisatie en zijn voor events en click-ID's per site te overschrijven; de effectieve termijn is de site-overschrijving, anders de organisatiewaarde, anders de standaard."
+  - "Een dagelijkse retentiejob verwijdert verlopen partities, haalt click-ID's uit oudere events en logt het aantal verwijderde rijen per datasoort als bewijs."
+  - "Bewaartermijnen zijn geen anonimisering, geen bewaartermijn van het platform en geen vervanging voor toestemming."
+tags: ["bewaartermijnen", "avg", "dataminimalisatie", "beleid"]
+author: "track-site-editorial"
+publishedAt: "2026-08-19"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Bewaartermijnen per datasoort op een tijdlijn"
+sources:
+  - title: "GDPR Article 5 — Principles relating to processing of personal data"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e1807-1-1"
+  - title: "EDPB — Guidelines on data protection by design and by default"
+    url: "https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-42019-article-25-data-protection-design-and_en"
+legalNotice: true
+---
+
+## De negen datasoorten en hun standaardtermijnen
+
+| Datasoort | Standaard | Waarom zo lang |
+| --- | --- | --- |
+| events | 395 dagen | dertien maanden maken een jaar-op-jaarvergelijking mogelijk met een maand overlap |
+| click_ids | 90 dagen | het langste attributievenster dat gangbaar is |
+| consent_snapshots | 1.095 dagen | bewijs van rechtmatige verwerking gedurende de verjaringstermijn die de meeste beheerders hanteren |
+| delivery_attempts | 90 dagen | genoeg om geschillen met platformen te onderzoeken en maandelijks af te stemmen |
+| audit_log | 730 dagen | configuratie- en toegangshistorie voor twee jaarlijkse reviewcycli |
+| chat_transcripts | 30 dagen | gesprekken met de AI-assistent zijn operationeel, geen dossiers |
+| raw_archive | 14 dagen | replay-buffer voor incidenten; bevat onverwerkte payloads |
+| dsar_records | 1.095 dagen | toont aan dat verzoeken zijn afgehandeld |
+| ip_hashes | 30 dagen | alleen voor misbruikdetectie; de salt roteert, dus oudere hashes zijn sowieso onbruikbaar |
+
+Elke termijn is een standaard, geen aanbeveling voor elk bedrijf. Een webwinkel met een retourtermijn van 14 dagen kan afleverpogingen inkorten tot 30 dagen; een B2B-bedrijf met salescycli van 9 maanden kan click-ID's tot die lengte verlengen als de vensters van zijn advertentieplatformen werkelijk zo ver reiken. Een termijn verlengen tot voorbij de standaard is een beslissing die je vastlegt in je register van verwerkingsactiviteiten; de wijziging zelf wordt naar het auditlog geschreven.
+
+## Reikwijdte en voorrang
+
+Bewaartermijnen worden per organisatie ingesteld en kunnen voor events en click-ID's per site worden overschreven; afleverpogingen, auditlog en chattranscripten gelden organisatiebreed. De effectieve termijn is de site-overschrijving als die bestaat, anders de organisatiewaarde, anders de standaard. Inkorten geldt vanaf de volgende dagelijkse run; verlengen geldt alleen voor records die nog niet zijn verlopen — er is geen wederopstanding.
+
+## Handhaving
+
+- Een **retentiejob** draait eenmaal per dag. Voor events past hij de effectieve termijn per site toe en verwijdert hij oudere rijen; de eventstore is per maand gepartitioneerd, dus het verlopen is meestal een partition drop in plaats van het verwijderen van losse rijen.
+- Na het click-ID-venster worden **click-ID's en platform-ID's verwijderd** uit events die verder bewaard blijven, zodat een eventhistorie van dertien maanden niet dertien maanden aan attributie-identifiers meedraagt.
+- Afleverpogingen, auditlog en chattranscripten worden per organisatie verwijderd met de termijn van die organisatie; dedup-sleutels, nonces en attributie-touchpoints verlopen volgens hun eigen schema.
+- Elke run **logt het aantal verwijderde rijen** per datasoort; het workerlog is het bewijs dat het verlopen is uitgevoerd.
+- **Back-ups** volgen dezelfde termijnen plus de back-upcyclus; de beveiligingspagina vermeldt de bewaartermijn van back-ups, zodat de totale levensduur bekend is.
+
+## Wat bewaartermijnen niet zijn
+
+- Geen anonimisering. Aggregaten die uit events zijn berekend (dagelijkse aantallen, health scores, funnelpercentages) worden langer bewaard dan de eventtermijn, omdat ze geen persoonsgegevens bevatten; de beleidspagina benoemt ze expliciet.
+- Geen bewaartermijn van het platform. Wat Meta of Google bewaren, volgt hun eigen voorwaarden; de subverwerkerspagina linkt naar de bewaardocumentatie van elk platform.
+- Geen vervanging voor toestemming. Een korte bewaartermijn voor data die zonder rechtsgrond is verzameld, maakt het verzamelen niet rechtmatig.
+
+## Instellen
+
+1. Open Privacy → Bewaartermijnen en toets de standaardtermijnen aan je werkelijke rapportage- en attributiebehoeften.
+2. Kort alles in wat je niet kunt onderbouwen; verleng alleen met een schriftelijke reden.
+3. Bevestig de site-overschrijvingen voor sites in andere rechtsgebieden of met andere businessmodellen.
+4. Controleer de statuspagina na de eerste geplande run; de jobvermeldingen zijn je bewijs.

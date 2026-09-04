@@ -1,0 +1,70 @@
+---
+title: "Tracking Shopware 6 fatto bene: un'app con webhook firmati, la transazione pagata come acquisto e lo snippet nella Storefront"
+description: "Come si registra l'app Shopware di Track, quali eventi dell'ordine vengono mappati su purchase e refund, come viene verificata la shopware-shop-signature, perché lo stato di transazione pagata batte l'ordine effettuato e dove va lo snippet nel tema."
+excerpt: "Il sistema di app di Shopware 6 ti dà webhook firmati senza portare PHP nello shop. L'app Track si iscrive agli stati di transazione pagata e rimborsata, il collector verifica ogni consegna e lo snippet nella Storefront copre il lato browser. Ecco l'intero percorso."
+category: "integrations"
+translationGroupId: "shopware-6-tracking"
+slug: "shopware-6-tracking"
+topic: "ecommerce-tracking"
+platforms: []
+shopSystems: ["shopware"]
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "L'app Track è un manifest, non un plugin: Shopware invia webhook firmati, nulla di Track viene eseguito nello shop e le credenziali API della registrazione vengono scartate di proposito."
+  - "Per impostazione predefinita lo stato di transazione pagata diventa l'acquisto e lo stato rimborsata il rimborso; gli shop in cui il momento significativo è l'effettuazione dell'ordine possono impostare la connessione sugli ordini effettuati."
+  - "Una valuta mancante ricade sull'impostazione della connessione oppure viene segnalata come campo mancante, invece di essere indovinata."
+  - "Lo snippet nella Storefront in base.html.twig crea l'acquisto browser il cui consenso viene ereditato, tramite l'ID ordine, dall'acquisto server verificato."
+tags: ["shopware", "app-system", "webhooks", "server-side"]
+author: "track-site-editorial"
+publishedAt: "2026-08-06"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Registrazione dell'app Shopware e flusso dei webhook verso il collector"
+sources:
+  - title: "Shopware — App base guide"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/app-base-guide.html"
+  - title: "Shopware — Webhooks for apps"
+    url: "https://developer.shopware.com/docs/guides/plugins/apps/webhooks.html"
+legalNotice: false
+---
+
+## Perché un'app e non un plugin
+
+Un plugin Shopware è PHP che gira dentro lo shop; un'app è un manifest che dice a Shopware quali URL chiamare. Per il tracking degli ordini l'app basta: Shopware invia webhook firmati per gli eventi a cui ti iscrivi, e nulla di Track viene eseguito nello shop. `integrations/shopware/manifest.xml` è quel manifest.
+
+## Registrazione
+
+All'`app:install` Shopware chiama l'URL di registrazione dell'app con `shop-id`, `shop-url` e un timestamp, firmati nell'header `shopware-app-signature` con l'app secret del manifest. Il collector verifica la firma, risponde con una proof (HMAC-SHA256 su ID dello shop, URL dello shop e nome dell'app) e uno shop secret, e Shopware conferma inviando le credenziali API all'URL di conferma. Track scarta di proposito quelle credenziali: l'integrazione riceve soltanto webhook e non chiama mai l'API dello shop. Lo stesso segreto che hai salvato nella connessione funge da app secret e da shop secret, così ogni webhook successivo viene verificato con `shopware-shop-signature`, l'HMAC-SHA256 in esadecimale del body grezzo.
+
+## Quali eventi diventano cosa
+
+| Evento Shopware | Evento Track |
+| --- | --- |
+| `state_enter.order_transaction.state.paid` | `purchase` |
+| `state_enter.order_transaction.state.refunded` | `refund` (totale dell'ordine) |
+| `checkout.order.placed` | `purchase` solo quando la connessione è impostata per contare gli ordini effettuati |
+
+Il comportamento predefinito conta la **transazione pagata**, non l'ordine effettuato. Negli shop con pagamento anticipato o su fattura un ordine può restare non pagato per giorni o non essere pagato mai; contarlo al momento dell'effettuazione gonfia il fatturato e insegna alle piattaforme pubblicitarie la cosa sbagliata. Gli shop in cui l'effettuazione è il momento significativo (pagamento alla consegna, fatturazione B2B) impostano la connessione su *effettuato*.
+
+L'acquisto porta l'ID ordine, il numero d'ordine come ID transazione, gli importi totale e netto (l'imposta come differenza), la spedizione, la valuta, le righe prodotto identificate dal numero di prodotto e l'e-mail, il nome e la città, il CAP e il paese di fatturazione del cliente dell'ordine come dati di abbinamento grezzi che il router sottopone a hash. Le righe di promozione e di spedizione non sono prodotti e vengono saltate.
+
+## Valuta
+
+Nelle versioni attuali di Shopware gli eventi `paid` e `refunded` portano l'ordine con la sua associazione alla valuta. Se una versione la omette, si applica la valuta di fallback della connessione; in mancanza di entrambe, l'evento viene memorizzato senza valuta e il monitor delle destinazioni segnala il campo mancante invece di tirare a indovinare.
+
+## Lo snippet nella Storefront
+
+Aggiungi lo snippet standard al file `base.html.twig` del tuo tema, nel blocco `base_head`. Copre la Storefront e la pagina di conclusione del checkout, che Shopware renderizza da sé, così l'acquisto browser — con il record del consenso e i click ID del visitatore — esiste accanto al webhook. L'abbinamento per ID ordine permette poi all'acquisto server verificato di ereditare quel consenso; senza un acquisto browser il record server resta operativo e non raggiunge alcuna destinazione pubblicitaria.
+
+## Configurazione
+
+1. Sito → Connessione shop → Shopware 6: dominio dello shop, valuta di fallback, momento dell'acquisto; salva un segreto (32 caratteri casuali); copia l'URL di registrazione.
+2. Metti il manifest in `custom/apps/TrackSite/manifest.xml`, sostituisci tracking ID, token del percorso e segreto, esegui `bin/console app:install --activate TrackSite`.
+3. Contrassegna come pagata la transazione di un ordine di prova. La connessione segnala la registrazione e il primo webhook; il debugger mostra l'acquisto shopware.
+
+## Limiti
+
+- Un secondo rimborso parziale sullo stesso ordine viene deduplicato per ID ordine; viene registrato il primo.
+- Le app non possono iniettare script nella Storefront da sole; lo snippet è una modifica al tema, documentata nel README.
+- Gli ordini modificati nell'admin dopo il pagamento non rinviano l'evento di pagamento; le correzioni di valore avvengono nel tuo reporting, non presso i fornitori.

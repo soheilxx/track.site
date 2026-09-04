@@ -1,0 +1,67 @@
+---
+title: "El Tracking Health Score explicado: seis componentes, sus pesos y qué los mueve"
+description: "Cómo calcula Track el health score de 0 a 100 a partir de la cobertura de consentimiento, la cobertura de eventos críticos, la calidad del esquema, la tasa de duplicados, el éxito de entrega y la liveness — con los pesos exactos, qué puntúa «todavía sin datos» y qué arreglar primero cuando la cifra cae."
+excerpt: "Una sola cifra solo es útil si puedes descomponerla. El health score es una suma ponderada de seis componentes medibles, cada uno con una línea de detalle en lenguaje claro. Esta es la fórmula y el playbook de cada componente."
+category: "product"
+translationGroupId: "tracking-health-score"
+slug: "tracking-health-score"
+topic: "ai-data-quality"
+platforms: []
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "El score es una media ponderada de seis componentes — consentimiento 0,20, cobertura 0,25, esquema 0,15, dedup 0,10, entrega 0,20, liveness 0,10 — y la misma función alimenta el panel, el asistente y las alertas."
+  - "Los componentes sin datos puntúan un 50 neutro con la línea de detalle «Todavía no hay eventos»; la liveness puntúa 0 cuando nunca se ha recibido un evento del navegador, porque eso es lo primero que hay que arreglar."
+  - "Cada componente tiene una causa típica: integración de la CMP ausente, eventos críticos rotos, hallazgos de esquema o PII, etiquetas que se disparan dos veces, entregas fallidas o credenciales caducadas, un snippet perdido."
+  - "El score no es comparable entre sitios con planes de tracking distintos; úsalo para detectar cambios y los componentes para encontrar la causa."
+tags: ["health-score", "monitorización", "calidad-de-datos", "alertas"]
+author: "track-site-editorial"
+publishedAt: "2026-08-18"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Indicador del health score con seis componentes ponderados"
+sources: []
+legalNotice: false
+---
+
+## La fórmula
+
+El score es una media ponderada de seis componentes, cada uno puntuado de 0 a 100:
+
+| Componente | Peso | Fuente | Puntuación |
+| --- | --- | --- | --- |
+| Consentimiento | 0,20 | proporción de eventos aceptados que llevan una señal de consentimiento explícita | proporción × 100; 50 mientras no haya eventos |
+| Cobertura | 0,25 | eventos críticos planificados que han producido al menos un evento en la ventana | vistos ÷ planificados × 100 |
+| Esquema | 0,15 | proporción de eventos sin hallazgos de esquema ni de PII | proporción × 100; 50 mientras no haya eventos |
+| Dedup | 0,10 | proporción de duplicados entre los eventos recibidos | 100 − proporción de duplicados × 400 (así, un 25% de duplicados da 0) |
+| Entrega | 0,20 | proporción de entregas correctas, menos una penalización por credenciales | éxito × 100 − (no saludables ÷ integraciones totales) × 50 |
+| Liveness | 0,10 | minutos desde el último evento de navegador aceptado | 100 por debajo de 60 min, 70 por debajo de 24 h, 20 más allá, 0 si nunca |
+
+`score = Σ(componente × peso) ÷ Σ(peso)`, redondeado y acotado a 0–100. La misma función alimenta el panel, las herramientas de solo lectura del asistente y las alertas, de modo que la cifra que ves en el panel es la misma sobre la que razona el asistente.
+
+## Por qué «todavía sin datos» puntúa 50 y no 0
+
+Un sitio creado hace una hora no tiene cobertura de consentimiento, ni hallazgos de esquema, ni entregas. Puntuar eso con cero haría que cada sitio nuevo pareciera roto; puntuarlo como perfecto ocultaría problemas reales más adelante. El 50 neutro mantiene el total informativo mientras la línea de detalle dice «Todavía no hay eventos», para que nadie lo confunda con una medición. La liveness es la excepción: no haber recibido nunca un evento del navegador puntúa 0, porque eso *es* el problema que hay que arreglar primero.
+
+## Qué mueve cada componente
+
+**Consentimiento (0,20).** Los eventos sin un registro de consentimiento explícito suelen significar que falta la integración de la CMP en algunas páginas o que el SDK carga antes de que la CMP responda. Revisa en la página de consentimiento las páginas con baja cobertura de señal.
+
+**Cobertura (0,25).** El plan de tracking enumera los eventos críticos (`purchase`, `generate_lead`, `sign_up` …). Un evento crítico con cero apariciones en la ventana está roto o marcado como crítico por error. La línea de detalle nombra los que faltan.
+
+**Esquema (0,15).** Los hallazgos proceden del esquema de eventos (propiedades desconocidas, tipos incorrectos) y del escáner de PII (correos electrónicos en URL, números de teléfono en propiedades). La página de calidad de datos agrupa los hallazgos por campo, de modo que un único manejador de formulario defectuoso es una corrección, no cien.
+
+**Dedup (0,10).** Duplicados por encima de un pequeño porcentaje significan que el mismo ID de evento se envía dos veces: normalmente una etiqueta que se dispara tanto en `DOMContentLoaded` como en el cambio de ruta, o un webhook reenviado sin ID de pedido. La penalización pronunciada es deliberada: los duplicados inflan todas las cifras posteriores.
+
+**Entrega (0,20).** Las entregas fallidas se agrupan por destino y clase de error. La penalización por credenciales hace visible un token caducado incluso con poco tráfico; volver a conectar la cuenta la elimina de inmediato.
+
+**Liveness (0,10).** Un sitio que deja de enviar eventos de navegador durante un día normalmente ha perdido su snippet en un despliegue. El kill switch también produce este efecto, a propósito, y la línea de detalle lo indica.
+
+## Incidencias
+
+Los hallazgos de esquema y las entregas fallidas se registran como incidencias en la página de calidad de datos, con el recuento de elementos abiertos y críticos junto al score. Una incidencia puede marcarse como resuelta o ignorada con un motivo, y el cambio queda auditado. La herramienta de salud del asistente lee los mismos componentes e incidencias cuando le pides que explique una caída; no adivina.
+
+## Qué no es el score
+
+No es una métrica de vanidad y no es comparable entre sitios con planes de tracking distintos. Un sitio de landing page con dos eventos críticos y una tienda con doce se miden contra sus propios planes. Úsalo para detectar cambios y, después, usa los componentes para encontrar la causa.

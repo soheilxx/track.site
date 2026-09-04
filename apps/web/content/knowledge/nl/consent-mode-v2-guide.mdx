@@ -1,0 +1,86 @@
+---
+title: "Consent Mode v2 zonder giswerk: doelen, signalen en wat een server-side router moet doen"
+description: "Welke toestemmingssignalen Google verwacht, hoe je ze afleidt uit toestemmingsdoelen in plaats van leverancierslijsten, waarom de ‘advanced’ modus een juridische beslissing vereist en hoe de serverkant de browser moet spiegelen."
+excerpt: "Consent Mode v2 voegt ad_user_data en ad_personalization toe aan de signalen die Google leest. Deze gids koppelt ze aan toestemmingsdoelen, legt het verschil uit tussen de basic en de advanced modus en laat zien hoe een server-side router beide paden consistent houdt."
+category: "consent"
+translationGroupId: "consent-mode-v2-guide"
+slug: "consent-mode-v2-guide"
+topic: "consent-privacy"
+platforms: ["google-ads", "google-analytics"]
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Consent Mode is een set granted/denied-flags die Google-tags lezen; het is geen CMP en maakt een banner niet compliant."
+  - "Leid analytics_storage, ad_storage, ad_user_data en ad_personalization af uit toestemmingsdoelen in plaats van uit leverancierslijsten."
+  - "De basic modus laadt niets vóór toestemming; de advanced modus stuurt cookieloze pings bij weigering en vereist een gedocumenteerde juridische beslissing, dus hij wordt nooit stilzwijgend ingeschakeld."
+  - "De server moet de browser spiegelen: elk event draagt een toestemmingssnapshot, uploads dragen de afgeleide toestemmingsvelden en events van vóór de toestemming worden verworpen, niet opnieuw afgespeeld."
+tags: ["consent-mode", "google", "doelen", "cmp"]
+author: "track-site-editorial"
+publishedAt: "2026-09-02"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Toestemmingsdoelen gekoppeld aan de signalen van Google Consent Mode"
+sources:
+  - title: "Google — Consent mode overview"
+    url: "https://developers.google.com/tag-platform/security/guides/consent"
+  - title: "IAB Europe — TCF v2.2 technical specification"
+    url: "https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework"
+legalNotice: true
+---
+
+## Wat Consent Mode eigenlijk is
+
+Consent Mode is een set flags die Google-tags lezen om te bepalen hoe ze zich gedragen: `analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization` (de laatste twee zijn toegevoegd in v2), plus `functionality_storage`, `personalization_storage` en `security_storage`. Elke flag is `granted` of `denied`. De flags worden gezet met `gtag('consent', 'default', {...})` voordat er een tag laadt, en bijgewerkt met `gtag('consent', 'update', {...})` zodra de bezoeker beslist.
+
+Het is geen consent management platform en het maakt een banner niet compliant. Het is de interface tussen jouw toestemmingsbeslissing en de tags van Google.
+
+## Koppel doelen, geen leveranciers
+
+De meeste implementaties gaan de mist in doordat ze een leverancierslijst aan de flags hangen. Een schoner model — het model dat Track gebruikt — leidt de flags af uit toestemmingsdoelen:
+
+| Doel | analytics_storage | ad_storage | ad_user_data | ad_personalization |
+| --- | --- | --- | --- | --- |
+| alleen noodzakelijk | denied | denied | denied | denied |
+| + analytics | granted | denied | denied | denied |
+| + marketing | granted* | granted | granted | denied |
+| + marketing + personalisatie | granted* | granted | granted | granted |
+
+\* alleen als analytics ook is toegestaan.
+
+`ad_user_data` gaat over het versturen van gebruikersdata naar Google voor advertenties — de flag die bepaalt of Enhanced Conversions en door gebruikers verstrekte data zijn toegestaan. `ad_personalization` gaat over gepersonaliseerde advertenties en remarketing. Door ze te splitsen kan een bezoeker meting accepteren zonder personalisatie te accepteren — precies het onderscheid waar toezichthouders zoals de Autoriteit Persoonsgegevens op letten.
+
+## Basic versus advanced
+
+**Basic** modus: er laadt niets van Google totdat de relevante flag is toegestaan. Geen cookieloze pings, geen input voor modellering. Simpel uit te leggen, makkelijk te verdedigen.
+
+**Advanced** modus: Google-tags laden direct en sturen cookieloze pings zolang toestemming is geweigerd, zodat Google later conversies kan modelleren. Of die pings acceptabel zijn, is een juridische beoordeling van jouw situatie, geen technische instelling. Track houdt daarom de basic modus als standaard en schakelt de advanced modus alleen in wanneer er een juridische beoordelingsnotitie bij het toestemmingsbeleid is opgeslagen — de assistent kan hem niet stilzwijgend omzetten.
+
+## De serverkant moet de browser spiegelen
+
+Server-side levering neemt dezelfde beslissing een tweede keer, en moet tot dezelfde conclusie komen. Concreet:
+
+- Het event draagt de toestemmingssnapshot (toegestane doelen, bron, beleidsversie, regio, GPC-flag) van het moment waarop het werd vastgelegd.
+- Click-conversion-uploads naar Google Ads bevatten `consent: { adUserData, adPersonalization }`, afgeleid uit die snapshot.
+- Requests naar het GA4 Measurement Protocol dragen `consent.ad_user_data` en `consent.ad_personalization`, en `non_personalized_ads` wanneer marketing niet is toegestaan.
+- Geen enkel event wordt in de wachtrij gezet voor latere levering ‘zodra de toestemming er is’. Gedrag van vóór de toestemming wordt verworpen.
+
+Als de browser ‘denied’ zegt en de server ‘granted’, liegt een van beide — meestal omdat de server een sessieflag leest die na het event is veranderd. Een snapshot per event maakt korte metten met die foutklasse.
+
+## Global Privacy Control en TCF
+
+GPC is een browsersignaal (`navigator.globalPrivacyControl`) dat sommige rechtsgebieden als opt-out beschouwen. Een veilige regel: als GPC is gezet, behandel marketing en personalisatie dan als geweigerd, ongeacht de banner — tenzij een bewust beleid voor een regio iets anders bepaalt.
+
+Onder TCF 2.2 worden doel 1 (opslag), doel 7 (advertentieprestaties meten), doel 8 (contentprestaties meten) en de toestemmingen per vendor op de vier flags afgebeeld; de TC-string wordt als bewijs bij de toestemmingssnapshot opgeslagen. Een CMP-adapter leest `__tcfapi`-events, zodat de tracker zonder eigen code wordt bijgewerkt.
+
+## Test het zoals een toezichthouder het zou doen
+
+1. Laad de site met een schoon profiel. Controleer dat er vóór de bannerbeslissing geen enkel Google-request wordt verstuurd (basic modus).
+2. Weiger alles. Controleer dat er buiten het toestemmingsrecord zelf niets wordt opgeslagen en dat de server niets voor analytics of marketing heeft ontvangen.
+3. Accepteer alleen analytics. Controleer dat GA4-events doorstromen met `ad_user_data: DENIED`.
+4. Accepteer alles en trek de toestemming daarna in. Controleer dat het volgende event wordt verworpen en dat er geen replay plaatsvindt.
+5. Lees de toestemmingssnapshot van een voorbeeld-event in de event-debugger — dit is het artefact dat je nodig hebt als iemand ernaar vraagt.
+
+## Waar de assistent helpt
+
+De setup-assistent registreert de CMP, stelt de doelkoppeling voor en schrijft de versie van het toestemmingsbeleid. Wat hij niet doet, is een standaard verzwakken: de advanced modus, opt-out-regio's of marketing zonder toestemming vereisen een expliciete menselijke beslissing met een notitie, en die beslissing wordt geauditeerd.

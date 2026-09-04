@@ -1,0 +1,97 @@
+---
+title: "Conversions Google Ads depuis le serveur : conversions par clic, Enhanced Conversions et champs de consentement"
+description: "Comment importer des conversions par clic dans l'API Google Ads avec un gclid ou des identifiants hachés, ce que doivent contenir conversionDateTime et les champs de consentement, et comment validateOnly tient les tests à l'écart des rapports."
+excerpt: "L'API Google Ads accepte les conversions côté serveur via uploadClickConversions. Ce guide couvre les champs obligatoires, les Enhanced Conversions for Leads avec e-mail et téléphone hachés, les indicateurs de consentement et un workflow de test sans risque."
+category: "integrations"
+translationGroupId: "google-ads-enhanced-conversions"
+slug: "google-ads-enhanced-conversions"
+topic: "pixel-platform-integrations"
+platforms: ["google-ads"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Balise navigateur et import via l'API se réfèrent à la même action de conversion ; la voie API rend possibles les ventes hors ligne, les leads qualifiés par le CRM et les corrections de remboursement."
+  - "Chaque conversion par clic a besoin de l'action de conversion, d'un conversionDateTime avec décalage de fuseau horaire, d'un gclid/gbraid/wbraid ou d'identifiants utilisateur hachés, et d'indicateurs de consentement dérivés des finalités de l'événement."
+  - "Les Enhanced Conversions attendent le SHA-256 de valeurs normalisées — e-mail en minuscules sans espaces superflus, points et suffixes plus retirés pour Gmail, téléphone au format E.164 — avec userIdentifierSource FIRST_PARTY."
+  - "partialFailure signale les erreurs ligne par ligne et validateOnly tient les tests à l'écart des rapports ; dédupliquez les achats portant le même identifiant de commande et gardez les leads sur des actions de conversion distinctes."
+tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
+author: "track-site-editorial"
+publishedAt: "2026-09-01"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Import de conversion par clic Google Ads avec gclid et e-mail haché"
+sources:
+  - title: "Google Ads API — Upload click conversions"
+    url: "https://developers.google.com/google-ads/api/docs/conversions/upload-clicks"
+  - title: "Google Ads API — Release notes and versions"
+    url: "https://developers.google.com/google-ads/api/docs/release-notes"
+legalNotice: false
+---
+
+## Deux voies, une seule action de conversion
+
+Google Ads mesure les conversions de deux manières :
+
+1. **Balise Google dans le navigateur** — `gtag('event', 'conversion', { send_to: 'AW-XXXX/label', value, currency, transaction_id })`, éventuellement avec les Enhanced Conversions (`user_data` avec e-mail, téléphone et adresse hachés par la balise).
+2. **Imports de conversions via l'API Google Ads** — `ConversionUploadService.UploadClickConversions`, envoyés depuis votre serveur.
+
+Les deux se réfèrent à la même *action de conversion*. La voie API est ce qui rend possibles les ventes hors ligne, les leads qualifiés par le CRM et les corrections de remboursement, et c'est celle qui survit aux requêtes navigateur bloquées.
+
+## La requête d'import
+
+`POST https://googleads.googleapis.com/v25/customers/{customerId}:uploadClickConversions` avec les en-têtes `Authorization: Bearer <OAuth2>`, `developer-token` et, lorsque vous accédez au compte via un compte administrateur, `login-customer-id`.
+
+Chaque `ClickConversion` a besoin de :
+
+- `conversionAction` — le nom de ressource `customers/{cid}/conversionActions/{id}`
+- `conversionDateTime` — `yyyy-mm-dd hh:mm:ss+|-hh:mm`, avec un décalage de fuseau horaire explicite
+- au moins une clé d'attribution : `gclid`, `gbraid`, `wbraid` **ou** `userIdentifiers` (Enhanced Conversions for Leads)
+- en option, `conversionValue` avec `currencyCode`, et `orderId` pour la déduplication
+- `consent` avec `adUserData` et `adPersonalization` définis sur `GRANTED` ou `DENIED`
+
+Définissez `partialFailure: true` — l'API signale alors les échecs ligne par ligne au lieu de rejeter le lot — et utilisez `validateOnly: true` pour les tests. Un import en validation seule prouve les identifiants d'accès, le jeton de développeur et l'accès au compte client sans rien enregistrer.
+
+## Enhanced Conversions : quoi hacher
+
+Pour `userIdentifiers`, Google attend le SHA-256 de valeurs normalisées :
+
+- e-mail : sans espaces superflus, en minuscules ; pour les adresses gmail.com et googlemail.com, retirez les points et les suffixes `+` avant le hachage
+- téléphone : format E.164 (`+` et indicatif du pays) avant le hachage
+- prénom, nom, rue : en minuscules, sans espaces superflus, puis hachés
+- ville, région, code postal, code pays : en clair
+
+Chaque objet identifiant porte aussi `userIdentifierSource: FIRST_PARTY`. Une ligne peut combiner plusieurs identifiants ; Google fait correspondre sur n'importe lequel d'entre eux.
+
+## Les règles de temporalité qui provoquent des pertes silencieuses
+
+- L'heure de conversion doit être **postérieure** au clic et comprise dans la fenêtre de conversion après clic de l'action de conversion. Importer un achat avec un horodatage antérieur au clic renvoie `CONVERSION_PRECEDES_CLICK`.
+- Les clics vieux de quelques heures seulement peuvent ne pas encore être appariables (`TOO_RECENT_CLICK`). Réessayer plus tard est le bon comportement ; Track traite ces cas comme réessayables.
+- Les décalages de fuseau horaire sont obligatoires. `2026-09-03 10:15:00` sans `+02:00` est rejeté.
+
+## Les champs de consentement ne sont pas optionnels en pratique
+
+Depuis Consent Mode v2, les imports sans `consent.adUserData` pour le trafic de l'EEE sont signalés. Dérivez les indicateurs des finalités de consentement enregistrées avec l'événement : marketing → `adUserData: GRANTED` ; marketing + personnalisation → `adPersonalization: GRANTED` ; tout le reste → `DENIED`. Ne mettez jamais « granted » par défaut au seul motif que le champ existe.
+
+## Dédupliquer avec la balise navigateur
+
+Utilisez le même `transaction_id` dans la balise Google et `orderId` dans l'import. Google déduplique les conversions portant le même identifiant de commande pour la même action de conversion, de sorte qu'un achat vu à la fois par la balise et par le serveur ne compte qu'une fois. Pour les leads sans commande, gardez navigateur et serveur sur des actions de conversion **différentes** (par exemple « Lead (balise) » et « Lead qualifié (CRM) ») plutôt que d'essayer de les dédupliquer.
+
+## Un workflow de test qui ne pollue pas les rapports
+
+1. Connectez le compte Google via OAuth et validez : Track envoie un import en validation seule et indique si le jeton de développeur et le numéro client sont acceptés.
+2. Mappez `purchase` sur l'identifiant de l'action de conversion.
+3. Envoyez un événement de test dans l'assistant. Tant que la destination est en mode test, chaque import utilise `validateOnly: true` ; la réponse confirme la structure du payload.
+4. Désactivez le mode test, envoyez un achat réel avec un gclid récent et vérifiez le lendemain Conversions → Diagnostic dans Google Ads.
+
+## Erreurs fréquentes, décodées
+
+| Erreur | Signification | Correction |
+| --- | --- | --- |
+| `UNAUTHENTICATED` | jeton OAuth invalide | reconnecter le compte Google |
+| `PERMISSION_DENIED` / `USER_PERMISSION_DENIED` | pas d'accès au numéro client | vérifier `login-customer-id` et l'accès au compte |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | le jeton n'autorise que les comptes test | demander l'accès de base |
+| `CLICK_NOT_FOUND` | gclid inconnu | clic trop ancien, issu d'un autre compte ou mal formé |
+| `INVALID_CONVERSION_ACTION_TYPE` | l'action n'est pas de type import | créer une action de conversion avec la source « Importer à partir de clics » |
+
+Chacune de ces erreurs apparaît avec son code dans le débogueur d'événements, à côté du payload masqué qui l'a produite.

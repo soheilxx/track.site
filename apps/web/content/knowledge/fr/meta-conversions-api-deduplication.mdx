@@ -1,0 +1,94 @@
+---
+title: "Meta Conversions API en pratique : event_id, données de correspondance hachées et codes d'événement test"
+description: "Comment faire fonctionner le pixel Meta et la Conversions API en parallèle sans double comptage — avec les champs exacts, les règles de hachage et le workflow d'événements test tirés de la documentation Meta."
+excerpt: "Meta ne compte un événement navigateur et un événement serveur comme un seul que si les deux portent le même event_id et le même event_name. Ce guide passe en revue le payload, les règles de hachage de user_data et la vérification des livraisons avec un code d'événement test."
+category: "integrations"
+translationGroupId: "meta-conversions-api-deduplication"
+slug: "meta-conversions-api-deduplication"
+topic: "pixel-platform-integrations"
+platforms: ["meta"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Meta ne fusionne un événement pixel et un événement serveur que s'ils partagent event_id et event_name dans la fenêtre de déduplication : générez l'identifiant une seule fois et transmettez-le aux deux chemins."
+  - "Les identifiants de user_data sont hachés en SHA-256 après normalisation ; fbc, fbp, l'adresse IP et le user agent restent en clair, et fbc/fbp ne sont capturés qu'après consentement marketing."
+  - "Le mode hybride donne à Meta l'union des clés de correspondance : e-mail et téléphone hachés issus du système de commande, plus fbp/fbc issus du navigateur."
+  - "Un test_event_code garde les achats de test dans l'onglet Événements de test et hors des rapports ; chaque tentative et chaque code d'erreur sont visibles dans le débogueur d'événements."
+tags: ["meta", "conversions-api", "déduplication", "hachage"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Payload Meta Conversions API avec event_id mis en évidence"
+sources:
+  - title: "Meta — Conversions API: Using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Meta — Customer information parameters (hashing)"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/customer-information-parameters"
+legalNotice: false
+---
+
+## L'endpoint en une ligne
+
+`POST https://graph.facebook.com/{version}/{pixel_id}/events` avec un jeton d'accès d'utilisateur système et un corps JSON contenant un tableau `data` d'événements. Track fixe la version de l'API Graph de manière centralisée (v25.0 au moment de la rédaction) et consigne la date de la dernière vérification de l'endpoint par rapport à la documentation Meta.
+
+## Les champs qui comptent
+
+Chaque objet événement porte :
+
+- `event_name` — `Purchase`, `Lead`, `AddToCart`, `InitiateCheckout`, `CompleteRegistration`, `Subscribe`, `StartTrial`, `Contact`, `Schedule`, `Search`, `ViewContent`, `PageView` ou un nom personnalisé
+- `event_time` — en secondes Unix, vieux de sept jours au plus
+- `event_id` — votre clé de déduplication
+- `event_source_url` — l'URL de la page
+- `action_source` — `website` pour les événements web
+- `user_data` — les données de correspondance (voir ci-dessous)
+- `custom_data` — `value`, `currency`, `content_ids`, `contents`, `order_id`, `num_items`
+
+Optionnel mais précieux en phase de test : `test_event_code` au niveau racine du corps. Les événements envoyés avec un code test apparaissent dans Events Manager → Événements de test et ne sont pas comptés dans les rapports.
+
+## Déduplication : même event_id, même event_name
+
+Meta fusionne un événement pixel et un événement serveur lorsque les deux partagent `event_id` **et** `event_name` et arrivent dans une fenêtre du même ordre de grandeur que l'événement lui-même (Meta documente 48 heures). Deux conséquences :
+
+1. Générez l'identifiant **une seule fois**, au moment où l'action se produit, et transmettez-le à la fois à l'appel du pixel (`fbq('track', 'Purchase', {...}, { eventID: id })`) et au payload serveur.
+2. Gardez des noms d'événement identiques sur les deux chemins. Un `Purchase` navigateur et un `purchase` serveur sont deux événements.
+
+Track le fait par construction : le SDK génère un identifiant d'événement source, réplique l'appel du pixel avec cet identifiant, et le worker envoie le même identifiant dans `event_id`.
+
+## user_data : quoi hacher et comment
+
+Meta exige un hachage SHA-256 des identifiants personnels après normalisation :
+
+| Champ | Normalisation avant hachage |
+| --- | --- |
+| `em` | espaces superflus retirés, minuscules |
+| `ph` | chiffres uniquement, indicatif du pays inclus, sans zéros initiaux ni signe plus |
+| `fn`, `ln` | minuscules, sans espaces superflus, lettres uniquement |
+| `ct` | minuscules, sans espaces ni ponctuation |
+| `zp` | minuscules, les cinq premiers chiffres pour les États-Unis |
+| `country` | code ISO à deux lettres, en minuscules |
+| `external_id` | tout identifiant stable, haché |
+
+Non hachés : `client_ip_address`, `client_user_agent`, `fbc`, `fbp`. La valeur `fbc` est construite à partir du paramètre d'URL `fbclid` sous la forme `fb.1.{timestamp}.{fbclid}` ; `fbp` est le cookie `_fbp` déposé par le pixel. Le SDK Track ne capture les deux qu'après consentement marketing et ne les transmet qu'à Meta.
+
+## Ce que récompense la « qualité de correspondance des événements »
+
+Meta note chaque événement selon le nombre de clés de correspondance reçues. Celles qui ont le plus d'effet sont l'e-mail haché, le téléphone haché, `fbp`/`fbc` et `external_id`. Les événements serveur issus d'un système de commande portent généralement l'e-mail et le téléphone ; les événements navigateur portent `fbp` et `fbc`. Envoyer les deux chemins avec le même `event_id` donne donc à Meta l'union des clés — la raison concrète pour laquelle le mode hybride surpasse chacun des deux chemins pris isolément.
+
+## Le workflow de test
+
+1. Dans Events Manager, ouvrez l'ensemble de données → **Événements de test** et copiez le code (par exemple `TEST12345`).
+2. Enregistrez-le dans les réglages de la destination ; Track ne l'ajoute que tant que la destination est en mode test.
+3. Envoyez un achat de test depuis l'assistant. Le worker le livre et affiche la réponse de Meta (`events_received: 1` et un `fbtrace_id`).
+4. Confirmez l'événement dans l'onglet Événements de test, avec les paramètres et les clés de correspondance attendus.
+5. Désactivez le mode test ; à partir de là, les événements comptent.
+
+## Les classes d'erreur que vous rencontrerez
+
+- **190 / OAuthException** — jeton invalide ou expiré : effectuez une rotation du jeton de l'utilisateur système
+- **100 avec le sous-code 2804** — paramètre invalide : le plus souvent un hachage mal formé ou un `action_source` manquant
+- **4 / 17 / 32 / 613** — limites de débit : Track temporise avec un jitter aléatoire et réessaie
+- **5xx** — temporaire : réessayé ; le circuit breaker met la destination en pause si l'erreur persiste
+
+Chaque tentative, y compris l'aperçu masqué du payload, est visible dans le débogueur d'événements — c'est là que vous commencez lorsqu'un achat manque.

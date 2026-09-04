@@ -1,0 +1,94 @@
+---
+title: "Meta Conversions API in de praktijk: event_id, gehashte matchinggegevens en test-event-codes"
+description: "Hoe je de Meta-pixel en de Conversions API naast elkaar draait zonder dubbel te tellen — met de exacte velden, hashingregels en de test-event-workflow uit de documentatie van Meta."
+excerpt: "Meta telt een browser-event en een server-event alleen als één wanneer beide dezelfde event_id en event_name dragen. Deze gids loopt de payload door, de hashingregels voor user_data en hoe je afleveringen controleert met een test-event-code."
+category: "integrations"
+translationGroupId: "meta-conversions-api-deduplication"
+slug: "meta-conversions-api-deduplication"
+topic: "pixel-platform-integrations"
+platforms: ["meta"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Meta voegt een pixel-event en een server-event alleen samen wanneer beide event_id en event_name delen binnen het dedup-venster; genereer de ID dus één keer en geef die aan beide paden mee."
+  - "Identifiers in user_data worden na normalisatie SHA-256-gehasht; fbc, fbp, IP-adres en user agent blijven ongehasht, en fbc/fbp worden pas na marketingtoestemming vastgelegd."
+  - "De hybride modus geeft Meta de vereniging van matchingsleutels — gehashte e-mail en telefoonnummer uit het ordersysteem plus fbp/fbc uit de browser."
+  - "Een test_event_code houdt testaankopen in het tabblad Test events en buiten de rapportage; elke poging en foutcode is zichtbaar in de event-debugger."
+tags: ["meta", "conversions-api", "deduplicatie", "hashing"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Meta Conversions API-payload met gemarkeerde event_id"
+sources:
+  - title: "Meta — Conversions API: Using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Meta — Customer information parameters (hashing)"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/customer-information-parameters"
+legalNotice: false
+---
+
+## Het endpoint in één regel
+
+`POST https://graph.facebook.com/{version}/{pixel_id}/events` met een system-user-access-token en een JSON-body die een `data`-array met events bevat. Track pint de Graph API-versie centraal vast (v25.0 op het moment van schrijven) en legt vast wanneer het endpoint voor het laatst is gecontroleerd tegen de documentatie van Meta.
+
+## De velden die ertoe doen
+
+Elk event-object bevat:
+
+- `event_name` — `Purchase`, `Lead`, `AddToCart`, `InitiateCheckout`, `CompleteRegistration`, `Subscribe`, `StartTrial`, `Contact`, `Schedule`, `Search`, `ViewContent`, `PageView` of een eigen naam
+- `event_time` — Unix-seconden, hooguit zeven dagen oud
+- `event_id` — jouw deduplicatiesleutel
+- `event_source_url` — de URL van de pagina
+- `action_source` — `website` voor web-events
+- `user_data` — matchinggegevens (zie hieronder)
+- `custom_data` — `value`, `currency`, `content_ids`, `contents`, `order_id`, `num_items`
+
+Optioneel, maar waardevol bij het testen: `test_event_code` op het hoogste niveau van de body. Events die met een testcode worden verstuurd, verschijnen in Events Manager → Test events en tellen niet mee in de rapportage.
+
+## Deduplicatie: dezelfde event_id, dezelfde event_name
+
+Meta voegt een pixel-event en een server-event samen wanneer beide `event_id` **én** `event_name` delen en binnen een beperkt tijdvenster binnenkomen (Meta documenteert 48 uur). Twee gevolgen:
+
+1. Genereer de ID **één keer**, op het moment dat de actie plaatsvindt, en geef die zowel aan de pixelaanroep (`fbq('track', 'Purchase', {...}, { eventID: id })`) als aan de server-payload mee.
+2. Houd de eventnamen op beide paden identiek. Een `Purchase` uit de browser en een `purchase` van de server zijn twee events.
+
+Bij Track zit dit in het ontwerp ingebakken: de SDK genereert een bron-event-ID, spiegelt de pixelaanroep met die ID, en de worker stuurt dezelfde ID mee in `event_id`.
+
+## user_data: wat je hasht en hoe
+
+Meta vereist SHA-256-hashing van persoonlijke identifiers na normalisatie:
+
+| Veld | Normalisatie vóór het hashen |
+| --- | --- |
+| `em` | trimmen, kleine letters |
+| `ph` | alleen cijfers, inclusief landcode, zonder voorloopnullen of plusteken |
+| `fn`, `ln` | kleine letters, getrimd, alleen letters |
+| `ct` | kleine letters, zonder spaties of leestekens |
+| `zp` | kleine letters, voor de VS de eerste vijf cijfers |
+| `country` | tweeletterige ISO-code, kleine letters |
+| `external_id` | elke stabiele ID, gehasht |
+
+Niet gehasht: `client_ip_address`, `client_user_agent`, `fbc`, `fbp`. De `fbc`-waarde wordt uit de URL-parameter `fbclid` opgebouwd als `fb.1.{timestamp}.{fbclid}`; `fbp` is de `_fbp`-cookie die de pixel zet. Beide worden door de Track-SDK pas na marketingtoestemming vastgelegd en uitsluitend naar Meta doorgestuurd.
+
+## Wat de ‘event match quality’ beloont
+
+Meta beoordeelt elk event op het aantal matchingsleutels dat het heeft ontvangen. Het grootste effect hebben gehashte e-mail, gehasht telefoonnummer, `fbp`/`fbc` en `external_id`. Server-events uit een ordersysteem dragen doorgaans e-mail en telefoonnummer; browser-events dragen `fbp` en `fbc`. Beide paden met dezelfde `event_id` versturen geeft Meta dus de vereniging van beide — de praktische reden waarom de hybride modus beter presteert dan elk pad afzonderlijk.
+
+## De testworkflow
+
+1. Open in Events Manager de dataset → **Test events** en kopieer de code (bijvoorbeeld `TEST12345`).
+2. Sla die op in de instellingen van de destination; Track voegt hem alleen toe zolang de destination in testmodus staat.
+3. Verstuur een testaankoop vanuit de wizard. De worker levert die af en toont het antwoord van Meta (`events_received: 1` en een `fbtrace_id`).
+4. Bevestig het event in het tabblad Test events met de verwachte parameters en matchingsleutels.
+5. Zet de testmodus uit; vanaf nu tellen events mee.
+
+## Foutklassen die je tegenkomt
+
+- **190 / OAuthException** — token ongeldig of verlopen: roteer het system-user-token
+- **100 met subcode 2804** — ongeldige parameter: meestal een verkeerd gevormde hash of een ontbrekende `action_source`
+- **4 / 17 / 32 / 613** — rate limits: Track wacht met jitter en probeert opnieuw
+- **5xx** — tijdelijk: wordt opnieuw geprobeerd; de circuit breaker pauzeert de destination als het aanhoudt
+
+Elke poging, inclusief de geredigeerde payload-preview, is zichtbaar in de event-debugger — en daar begin je wanneer een aankoop ontbreekt.

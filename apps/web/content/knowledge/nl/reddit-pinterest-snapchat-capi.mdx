@@ -1,0 +1,71 @@
+---
+title: "Reddit, Pinterest en Snapchat Conversions API's naast elkaar: click-ID's, testmodi en eventnamen"
+description: "Een compacte vergelijking van de Reddit Conversions API, Pinterest Conversions API en Snapchat Conversions API — endpoints, auth, click-ID's (rdt_cid, epik, ScCid), eventnamen, dedup-velden en testschakelaars."
+excerpt: "De drie socialplatformen van de ‘tweede golf’ bieden alle drie een server-side Conversions API naar het voorbeeld van Meta. Ze verschillen in click-ID, eventvocabulaire en in hoe je test zonder je rapportages te vervuilen. Dit is de vergelijking naast elkaar."
+category: "integrations"
+translationGroupId: "reddit-pinterest-snapchat-capi"
+slug: "reddit-pinterest-snapchat-capi"
+topic: "pixel-platform-integrations"
+platforms: ["reddit", "pinterest", "snapchat"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Alle drie de API's delen de vorm van Meta — eventnaam, tijdstempel, event-ID, gehashte gebruikersdata plus click-ID, custom data — maar verschillen in endpoint, auth, click-ID-parameter, eventvocabulaire en tijdstempelformaat."
+  - "De click-ID's zijn rdt_cid, epik en ScCid (hoofdlettergevoelig) en voeden elk een platformspecifiek veld; Pinterest heeft het meest last van een ontbrekende epik."
+  - "Testen verschilt: Reddit gebruikt test_mode in de body, Pinterest de queryparameter ?test=true, Snapchat wisselt /events om voor /validate."
+  - "Veelgemaakte fouten zijn verkeerde parameternamen, dubbel hashen, één pixeltoken delen over meerdere accounts en de testmodus in productie aan laten staan."
+tags: ["reddit", "pinterest", "snapchat", "conversions-api"]
+author: "track-site-editorial"
+publishedAt: "2026-08-26"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Vergelijkingstabel van de Conversions API's van Reddit, Pinterest en Snapchat"
+sources:
+  - title: "Reddit Ads — Conversions API"
+    url: "https://ads-api.reddit.com/docs/v3/"
+  - title: "Pinterest API — Conversions"
+    url: "https://developers.pinterest.com/docs/api/v5/events-create"
+  - title: "Snap — Conversions API"
+    url: "https://developers.snap.com/api/marketing-api/Conversions-API/GettingStarted"
+legalNotice: false
+---
+
+## De vorm die ze delen
+
+Alle drie accepteren een JSON-array van events, elk met een eventnaam, een tijdstempel, een event-ID voor deduplicatie, een `user`-/`user_data`-blok met gehashte e-mail en telefoonnummer plus de click-ID van het platform, en een custom-datablok met waarde, valuta, order-ID en inhoud. Alle drie willen SHA-256-hashes van e-mailadressen in kleine letters en telefoonnummers in E.164-formaat. Alle drie hebben een browserpixel die een first-party cookie zet en dezelfde event-ID accepteert, en alle drie attribueren het best wanneer de click-ID die op de landingspagina is vastgelegd met het server-event meereist.
+
+## Naast elkaar
+
+| | Reddit | Pinterest | Snapchat |
+| --- | --- | --- | --- |
+| Endpoint | `ads-api.reddit.com/api/v3/pixels/{pixel_id}/conversion_events` | `api.pinterest.com/v5/ad_accounts/{ad_account_id}/events` | `tr.snapchat.com/v3/{pixel_id}/events` |
+| Auth | Bearer-token (Reddit Ads-OAuth of Conversions-token) | Bearer-token met `ads:write` (conversion access token) | Bearer-token (CAPI-token uit Ads Manager) |
+| Click-ID-URL-parameter | `rdt_cid` | `epik` | `ScCid` |
+| Click-ID-veld | `click_id` | `user_data.click_id` | `user_data.sc_click_id` |
+| Browsercookie | `_rdt_uuid` | `_epik` | `_scid` → `user_data.sc_cookie1` |
+| Eventnaam aankoop | `Purchase` | `checkout` | `PURCHASE` |
+| Eventnaam lead | `Lead` | `lead` | `SIGN_UP` |
+| Dedup-veld | `event_metadata.conversion_id` | `event_id` | `event_id` (pixel: `client_dedup_id`) |
+| Tijdstempel | RFC 3339 `event_at` | Unix-seconden `event_time` | Unix-ms `event_time` |
+| Testschakelaar | `test_mode: true` in de body | queryparameter `?test=true` | endpoint `/validate` in plaats van `/events` |
+| Batchlimiet | 1.000 | 1.000 | 2.000 |
+
+## Reddit
+
+Het eventvocabulaire van Reddit is kort: `PageVisit`, `ViewContent`, `Search`, `AddToCart`, `AddToWishlist`, `Purchase`, `Lead`, `SignUp`, `Custom`. Waarden gaan in `event_metadata.value_decimal` met `currency` en `item_count`. De flag `test_mode` registreert het event in het tabblad Test van de Events Manager zonder het mee te tellen, wat het testevent van de setup-assistent veilig maakt. Een `conversion_id` in de metadata dedupliceert tegen de pixelaanroep `rdt('track', 'Purchase', { conversionId })`.
+
+## Pinterest
+
+Pinterest gebruikt eventnamen in kleine letters (`checkout`, `add_to_cart`, `lead`, `signup`, `page_visit`, `view_category`, `search`, `watch_video`, `custom`) en `action_source: web|app_android|app_ios|offline`. `user_data.em` en `ph` zijn arrays van hashes; `external_id` ook. De queryparameter `?test=true` valideert en geeft per event een resultaat terug zonder naar de rapportage te schrijven. Pinterest is het platform waar een ontbrekende `epik` het meest pijn doet, omdat de pixelcookie vaak wordt geblokkeerd; leg `epik` vast bij de landing.
+
+## Snapchat
+
+De v3-API van Snapchat spiegelt de veldnamen van Meta het nauwkeurigst (`action_source`, `user_data`, `custom_data`) en gebruikt eventnamen in hoofdletters: `PURCHASE`, `SAVE`, `START_CHECKOUT`, `ADD_CART`, `VIEW_CONTENT`, `ADD_BILLING`, `SIGN_UP`, `SEARCH`, `PAGE_VIEW`, `SUBSCRIBE`, `AD_CLICK`, `AD_VIEW`, `COMPLETE_TUTORIAL`, `LEVEL_COMPLETE`, `INVITE`, `LOGIN`, `SHARE`, `RESERVE`, `ACHIEVEMENT_UNLOCKED`, `SPENT_CREDITS`, `RATE`, `START_TRIAL`, `LIST_VIEW`, `APP_INSTALL`, `APP_OPEN`, `CUSTOM_EVENT_1..5`. Het endpoint `/validate` geeft dezelfde validatiefouten terug als het live-endpoint, maar registreert niets — de testmodus wisselt dus het pad om in plaats van een flag toe te voegen. Stuur `sc_click_id` uit de parameter `ScCid` en `sc_cookie1` uit de cookie `_scid` wanneer er marketingtoestemming is.
+
+## Veelgemaakte fouten
+
+- De click-ID uit de verkeerde parameternaam sturen (`ScCid` is hoofdlettergevoelig; die van Pinterest heet `epik`, niet `pin_click_id`).
+- Al gehashte waarden een tweede keer hashen wanneer het CRM hashes exporteert.
+- Hetzelfde pixeltoken over meerdere advertentieaccounts gebruiken — elk token is beperkt tot één pixel of account.
+- De testmodus in productie aan laten staan: Track toont een permanente banner op elke destination die nog in testmodus staat.

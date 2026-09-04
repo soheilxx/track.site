@@ -1,0 +1,77 @@
+---
+title: "Kill switch e playbook degli incidenti: fermare il tracking in pochi secondi, nell'ambito giusto, con una traccia verificabile"
+description: "Quattro ambiti di arresto — una destinazione, un sito, un'organizzazione, l'intera piattaforma — cosa fa ciascuno all'SDK browser, al collector e alla coda dei worker, quanto in fretta ha effetto, e il playbook per gli incidenti che lo richiedono."
+excerpt: "Ogni setup di tracking prima o poi deve fermarsi, in fretta: un mapping sbagliato invia i valori degli ordini all'account sbagliato, una questione legale va chiarita prima del prossimo evento, un vendor ha un'interruzione. Il kill switch esiste per quei momenti. Ecco cosa fa ogni ambito e quando usare quale."
+category: "product"
+translationGroupId: "kill-switch-incident-playbook"
+slug: "kill-switch-incident-playbook"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Quattro ambiti — destinazione, sito, organizzazione, piattaforma — fermano cose diverse: una destinazione in pausa continua a raccogliere, un sito in pausa scarta gli eventi e disattiva l'SDK alla visualizzazione di pagina successiva."
+  - "Worker e collector reagiscono immediatamente; il browser alla visualizzazione di pagina successiva, perché l'SDK scarica il manifest aggiornato a ogni caricamento."
+  - "Il kill switch non cancella mai gli eventi archiviati, non richiama le consegne riuscite e non modifica i dati lato vendor; ogni attivazione scrive una voce di audit distinta."
+  - "Dati sbagliati: metti in pausa la destinazione ed esegui il rollback; questione legale: metti in pausa il sito; interruzione del vendor: non fare nulla e lascia lavorare i retry; credenziali trapelate: ruotale; account compromesso: rimuovi il membro e verifica le sue pubblicazioni."
+tags: ["kill-switch", "incidenti", "operations", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-11"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ambiti del kill switch, dalla destinazione alla piattaforma"
+sources: []
+legalNotice: false
+---
+
+## Quattro ambiti
+
+| Ambito | Dove | Effetto |
+| --- | --- | --- |
+| Destinazione | pagina della destinazione, o lo strumento di pausa dell'assistente | il worker smette di consegnare a quella destinazione; il suo template browser viene rimosso al recupero successivo della configurazione; gli eventi vengono comunque raccolti e archiviati |
+| Sito | impostazioni del sito | il collector risponde `site_paused` e scarta gli eventi in arrivo; il flag `kill_switch` del manifest si attiva, così l'SDK si disattiva da solo alla visualizzazione di pagina successiva |
+| Organizzazione | impostazioni dell'organizzazione | come il sito, per ogni sito dell'organizzazione |
+| Piattaforma | flag di ambiente dell'operatore | il collector risponde 503 con motivo `kill_switch` a ogni richiesta; si usa solo per un incidente che riguarda l'intera piattaforma |
+
+Attivarne uno qualsiasi scrive una voce di audit con l'autore dell'azione e un'azione distinta (`site.kill_switch_on`, `org.kill_switch_on`), così la cronologia separa gli arresti di emergenza dalle modifiche ordinarie.
+
+## Quanto in fretta
+
+- **Worker**: immediatamente per le nuove consegne; i batch in corso si completano o falliscono da soli.
+- **Collector**: immediatamente, perché lo stato del sito viene letto a ogni richiesta da una cache di breve durata.
+- **Browser**: alla visualizzazione di pagina successiva. L'SDK scarica il piccolo manifest aggiornato a ogni caricamento e si ferma prima di inizializzare qualsiasi template vendor quando il flag è attivo; le pagine già caricate mantengono lo stato corrente fino alla navigazione successiva.
+
+Cosa il kill switch **non** fa: cancellare eventi già archiviati, richiamare consegne già riuscite o modificare dati lato vendor. Sono azioni separate, con procedure proprie.
+
+## Il playbook
+
+### Dati sbagliati vengono inviati a un vendor
+
+Sintomi: valori nella valuta sbagliata, ordini di test in produzione, l'ID pixel sbagliato. Passi:
+
+1. Metti in pausa la **destinazione** (non il sito). La raccolta continua, quindi non si perde nulla mentre indaghi.
+2. Apri il monitor della destinazione e il debugger degli eventi; trova la prima consegna errata e la versione di configurazione che l'ha introdotta.
+3. Esegui il rollback alla versione precedente, oppure correggi il mapping e pubblica.
+4. Togli la pausa. Le consegne accodate durante la pausa vengono inviate con la configurazione corretta.
+5. Nell'interfaccia del vendor, escludi o elimina le conversioni interessate se la piattaforma lo consente; annota l'ID della richiesta nel registro dell'incidente.
+
+### Una questione legale o di consenso va chiarita prima del prossimo evento
+
+Passi: attiva il kill switch del **sito**; non viene raccolto nulla di nuovo, l'SDK si disattiva da solo; la voce di audit registra l'orario dell'arresto. Indaga con la pagina del consenso e il debugger. Riprendi disattivando l'interruttore; l'SDK si riattiva alla visualizzazione di pagina successiva. Se la questione riguarda dati già raccolti, usa gli strumenti per le DSAR e la conservazione, non il kill switch.
+
+### Un vendor è fuori servizio
+
+Non fare nulla. Il worker classifica le risposte 5xx come temporanee, riprova con backoff e apre il circuit breaker per quella destinazione; gli eventi accodati vengono consegnati quando il vendor si riprende, entro la finestra di timestamp di ciascuna API. Mettere in pausa la destinazione ritarderebbe soltanto il recupero. Tieni d'occhio lo stato di salute della destinazione e il conteggio delle dead-letter.
+
+### Credenziali trapelate
+
+Passi: ruota la credenziale nel vault (quella vecchia la invalidi tu lato vendor, poi la sostituisci in Track); mettere in pausa la destinazione nel frattempo evita una raffica di errori di autenticazione. Il log di audit mostra chi ha letto o ruotato la credenziale; il valore in sé non è mai finito nei log.
+
+### Account del team compromesso
+
+Passi: rimuovi il membro (le sessioni vengono revocate), attiva il kill switch dell'**organizzazione** se non puoi escludere modifiche pubblicate, verifica nella cronologia delle versioni le pubblicazioni di quell'account, esegui il rollback dove serve, poi riprendi.
+
+## Fai le prove
+
+Il kill switch è veloce solo se chi è di turno sa dov'è. Metti il link alle impostazioni del sito e questo playbook nelle note di reperibilità, e fai una prova di pausa e ripresa su un sito di staging una volta a trimestre; il log di audit rende l'esercitazione verificabile.

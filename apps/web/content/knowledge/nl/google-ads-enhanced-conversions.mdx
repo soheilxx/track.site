@@ -1,0 +1,97 @@
+---
+title: "Google Ads-conversies vanaf de server: click conversions, Enhanced Conversions en de toestemmingsvelden"
+description: "Hoe je click conversions met gclid of gehashte identifiers uploadt naar de Google Ads API, wat conversionDateTime en de toestemmingsvelden moeten bevatten en hoe validateOnly tests buiten de rapportage houdt."
+excerpt: "De Google Ads API accepteert server-side conversies via uploadClickConversions. Deze gids behandelt de verplichte velden, Enhanced Conversions for Leads met gehashte e-mail en telefoonnummer, toestemmingsflags en een veilige testworkflow."
+category: "integrations"
+translationGroupId: "google-ads-enhanced-conversions"
+slug: "google-ads-enhanced-conversions"
+topic: "pixel-platform-integrations"
+platforms: ["google-ads"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Browsertag en API-upload verwijzen naar dezelfde conversieactie; de API-route maakt offline verkopen, CRM-gekwalificeerde leads en terugbetalingscorrecties mogelijk."
+  - "Elke click conversion heeft de conversieactie nodig, een conversionDateTime met tijdzone-offset, een gclid/gbraid/wbraid of gehashte gebruikersidentifiers, en toestemmingsflags afgeleid uit de doelen van het event."
+  - "Enhanced Conversions verwachten SHA-256 van genormaliseerde waarden — e-mail in kleine letters en getrimd, zonder Gmail-punten en plus-suffixen, telefoonnummer in E.164 — met userIdentifierSource FIRST_PARTY."
+  - "partialFailure rapporteert fouten per rij en validateOnly houdt tests buiten de rapportage; dedupliceer aankopen met dezelfde order-ID en houd leads op aparte conversieacties."
+tags: ["google-ads", "enhanced-conversions", "gclid", "offline-conversions"]
+author: "track-site-editorial"
+publishedAt: "2026-09-01"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Google Ads click-conversion-upload met gclid en gehashte e-mail"
+sources:
+  - title: "Google Ads API — Upload click conversions"
+    url: "https://developers.google.com/google-ads/api/docs/conversions/upload-clicks"
+  - title: "Google Ads API — Release notes and versions"
+    url: "https://developers.google.com/google-ads/api/docs/release-notes"
+legalNotice: false
+---
+
+## Twee routes, één conversieactie
+
+Google Ads meet conversies op twee manieren:
+
+1. **Google-tag in de browser** — `gtag('event', 'conversion', { send_to: 'AW-XXXX/label', value, currency, transaction_id })`, optioneel met Enhanced Conversions (`user_data` met e-mail, telefoonnummer en adres, gehasht door de tag).
+2. **Conversie-uploads via de Google Ads API** — `ConversionUploadService.UploadClickConversions`, verstuurd vanaf jouw server.
+
+Beide verwijzen naar dezelfde *conversieactie*. De API-route is wat offline verkopen, CRM-gekwalificeerde leads en terugbetalingscorrecties mogelijk maakt, en het is de route die geblokkeerde browserrequests overleeft.
+
+## Het uploadrequest
+
+`POST https://googleads.googleapis.com/v25/customers/{customerId}:uploadClickConversions` met de headers `Authorization: Bearer <OAuth2>`, `developer-token` en, wanneer je het account via een manageraccount benadert, `login-customer-id`.
+
+Elke `ClickConversion` heeft nodig:
+
+- `conversionAction` — de resourcenaam `customers/{cid}/conversionActions/{id}`
+- `conversionDateTime` — `yyyy-mm-dd hh:mm:ss+|-hh:mm`, met een expliciete tijdzone-offset
+- minstens één attributiesleutel: `gclid`, `gbraid`, `wbraid` **of** `userIdentifiers` (Enhanced Conversions for Leads)
+- optioneel `conversionValue` met `currencyCode`, en `orderId` voor deduplicatie
+- `consent` met `adUserData` en `adPersonalization` op `GRANTED` of `DENIED`
+
+Zet `partialFailure: true` — de API rapporteert fouten dan per rij in plaats van de hele batch af te wijzen — en gebruik `validateOnly: true` voor tests. Een validate-only-upload bewijst credentials, developer token en klanttoegang zonder iets vast te leggen.
+
+## Enhanced Conversions: wat je hasht
+
+Voor `userIdentifiers` verwacht Google SHA-256 van genormaliseerde waarden:
+
+- e-mail: getrimd, in kleine letters; bij gmail.com- en googlemail.com-adressen verwijder je punten en `+`-suffixen vóór het hashen
+- telefoonnummer: E.164 (`+` en landcode) vóór het hashen
+- voornaam, achternaam, straat: kleine letters, getrimd, daarna gehasht
+- plaats, staat/provincie, postcode, landcode: platte tekst
+
+Elk identifier-object draagt bovendien `userIdentifierSource: FIRST_PARTY`. Eén rij mag meerdere identifiers combineren; Google matcht op elk ervan.
+
+## Timingregels die stille missers veroorzaken
+
+- Het conversietijdstip moet **na** de klik liggen en binnen het klikvenster van de conversieactie. Een aankoop uploaden met een tijdstempel van vóór de klik levert `CONVERSION_PRECEDES_CLICK` op.
+- Klikken van slechts enkele uren oud zijn mogelijk nog niet te matchen (`TOO_RECENT_CLICK`). Later opnieuw proberen is het juiste gedrag; Track behandelt deze fouten als herhaalbaar.
+- Tijdzone-offsets zijn verplicht. `2026-09-03 10:15:00` zonder `+02:00` wordt afgewezen.
+
+## Toestemmingsvelden zijn in de praktijk niet optioneel
+
+Sinds Consent Mode v2 worden uploads zonder `consent.adUserData` voor EER-verkeer gemarkeerd. Leid de flags af uit de toestemmingsdoelen die bij het event zijn vastgelegd: marketing → `adUserData: GRANTED`; marketing + personalisatie → `adPersonalization: GRANTED`; al het andere → `DENIED`. Zet nooit standaard op granted alleen omdat het veld bestaat.
+
+## Dedupliceren met de browsertag
+
+Gebruik dezelfde `transaction_id` in de Google-tag en als `orderId` in de upload. Google dedupliceert conversies met dezelfde order-ID voor dezelfde conversieactie, zodat een aankoop die zowel de tag als de server ziet, één keer telt. Voor leads zonder bestelling houd je browser en server op **verschillende** conversieacties (bijvoorbeeld ‘Lead (tag)’ en ‘Gekwalificeerde lead (CRM)’) in plaats van ze te proberen te dedupliceren.
+
+## Een testworkflow die de rapportage niet vervuilt
+
+1. Verbind het Google-account via OAuth en valideer: Track stuurt een validate-only-upload en meldt of developer token en klant-ID worden geaccepteerd.
+2. Map `purchase` op de ID van de conversieactie.
+3. Stuur een testevent in de wizard. Zolang de destination in de testmodus staat, gebruikt elke upload `validateOnly: true`; het antwoord bevestigt de structuur van de payload.
+4. Zet de testmodus uit, stuur één echte aankoop met een verse gclid en controleer de volgende dag Conversies → Diagnose in Google Ads.
+
+## Veelvoorkomende fouten, ontcijferd
+
+| Fout | Betekenis | Oplossing |
+| --- | --- | --- |
+| `UNAUTHENTICATED` | OAuth-token ongeldig | het Google-account opnieuw verbinden |
+| `PERMISSION_DENIED` / `USER_PERMISSION_DENIED` | geen toegang tot de klant-ID | `login-customer-id` en accounttoegang controleren |
+| `DEVELOPER_TOKEN_NOT_APPROVED` | token staat alleen testaccounts toe | basistoegang aanvragen |
+| `CLICK_NOT_FOUND` | gclid onbekend | klik is te oud, komt uit een ander account of is misvormd |
+| `INVALID_CONVERSION_ACTION_TYPE` | actie is geen uploadtype | een conversieactie aanmaken met bron ‘Uploaden vanuit klikken’ |
+
+Elk van deze fouten verschijnt met zijn code in de event-debugger, naast de geredigeerde payload die hem veroorzaakte.

@@ -1,0 +1,89 @@
+---
+title: "TikTok Events API 2.0 : pixel et événements serveur avec ttclid, _ttp et un event_id partagé"
+description: "Configurer ensemble le pixel TikTok et l'Events API — jeton d'accès, code du pixel, la charge utile de /event/track/, clés de correspondance, déduplication et codes d'événements de test."
+excerpt: "L'Events API 2.0 de TikTok reçoit les événements web sur /open_api/v1.3/event/track/. Ce guide détaille la charge utile, les identifiants qui augmentent le taux de correspondance, la façon dont le pixel et le serveur dédupliquent, et comment tester sans toucher au reporting."
+category: "integrations"
+translationGroupId: "tiktok-events-api-setup"
+slug: "tiktok-events-api-setup"
+topic: "pixel-platform-integrations"
+platforms: ["tiktok"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Il vous faut le code public du pixel comme event_source_id, un jeton d'accès Events API conservé dans le coffre-fort et, en option, un code d'événement de test."
+  - "Les événements partent vers /open_api/v1.3/event/track/ avec des noms en PascalCase ; Track mappe les événements canoniques par défaut, par exemple purchase vers CompletePayment."
+  - "Les clés de correspondance, par ordre d'impact, sont ttclid (capturé après consentement marketing), la valeur du cookie _ttp, l'e-mail et le téléphone hachés, et un external_id haché."
+  - "TikTok déduplique le pixel et l'API sur event_id à nom d'événement identique ; en mode test, chaque requête porte test_event_code et reste hors du reporting."
+tags: ["tiktok", "events-api", "ttclid", "déduplication"]
+author: "track-site-editorial"
+publishedAt: "2026-08-31"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Requête TikTok Events API avec les objets user et properties"
+sources:
+  - title: "TikTok Ads — Standard events and parameters"
+    url: "https://ads.tiktok.com/help/article/standard-events-parameters"
+  - title: "TikTok Ads — Get started with Events API"
+    url: "https://ads.tiktok.com/help/article/getting-started-events-api"
+legalNotice: false
+---
+
+## Ce dont vous avez besoin dans TikTok Ads Manager
+
+- Le **code du pixel** (Gestionnaire d'événements → Événements web → votre pixel). Il est public et sert aussi d'`event_source_id` pour l'API.
+- Un **jeton d'accès Events API** (pixel → Paramètres → Générer un jeton d'accès). C'est un secret : sa place est dans le coffre-fort, jamais dans un tag.
+- En option, un **code d'événement de test** depuis l'onglet Événements de test.
+
+## La requête
+
+`POST https://business-api.tiktok.com/open_api/v1.3/event/track/` avec l'en-tête `Access-Token: <token>` et un corps de ce type :
+
+```json
+{
+  "event_source": "web",
+  "event_source_id": "CABCDEFGHIJKLMNOPQRS",
+  "data": [{
+    "event": "CompletePayment",
+    "event_time": 1767225600,
+    "event_id": "01J9EXAMPLESOURCEEVENTID00",
+    "user": { "ttclid": "…", "ttp": "…", "email": "<sha256>", "phone": "<sha256>", "external_id": "<sha256>" },
+    "page": { "url": "https://shop.example/thank-you", "referrer": "https://shop.example/checkout" },
+    "properties": { "value": 129.9, "currency": "EUR", "content_type": "product", "contents": [{ "content_id": "SKU-1", "quantity": 1, "price": 99.9 }], "order_id": "A1001" }
+  }]
+}
+```
+
+Un `code: 0` dans la réponse signifie que l'événement est accepté. `event_time` est exprimé en secondes Unix ; `event_source` peut aussi valoir `offline` ou `crm` pour les sources non web, avec l'identifiant de l'ensemble d'événements correspondant.
+
+## Noms d'événements
+
+Les événements web standard de TikTok sont en PascalCase : `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `CompletePayment`, `PlaceAnOrder`, `CompleteRegistration`, `SubmitForm`, `Contact`, `Subscribe`, `StartTrial`, `Download`, `Search`, `Schedule`, `ClickButton`. Track mappe les événements canoniques vers ces noms par défaut (`purchase → CompletePayment`, `generate_lead → SubmitForm`, `book_appointment → Schedule`) et vous laisse les remplacer destination par destination.
+
+## Clés de correspondance, par ordre d'impact
+
+1. `ttclid` — l'identifiant de clic que TikTok ajoute aux pages d'atterrissage. Capturez-le après consentement marketing, stockez-le en first-party et envoyez-le avec chaque événement serveur pendant la fenêtre d'attribution.
+2. `ttp` — la valeur du cookie `_ttp` déposé par le pixel. Il identifie le navigateur auprès de TikTok sans données personnelles.
+3. `email` et `phone` — hachés en SHA-256 après normalisation (e-mail en minuscules, téléphone au format E.164).
+4. `external_id` — votre propre identifiant utilisateur, haché.
+
+Envoyer `ttclid` et `ttp` depuis le chemin navigateur et l'e-mail haché depuis le système de commande est la combinaison qui maximise le taux de correspondance.
+
+## Déduplication entre pixel et API
+
+TikTok déduplique sur `event_id` lorsque le même nom d'événement arrive à la fois du pixel (`ttq.track('CompletePayment', {...}, { event_id })`) et de l'API dans la fenêtre de déduplication. Générez un seul identifiant par action et transmettez-le aux deux ; le SDK de Track le fait automatiquement pour chaque événement miroir.
+
+## Tester en toute sécurité
+
+Saisissez le code d'événement de test du Gestionnaire d'événements dans les paramètres de la destination. Tant que la destination est en mode test, chaque requête porte `test_event_code` ; les événements apparaissent sous Événements de test et sont exclus du reporting. L'assistant envoie un achat marqué et affiche la réponse de TikTok, y compris le `request_id` que vous pouvez communiquer au support TikTok.
+
+## Codes de réponse à connaître
+
+- `40001` — jeton d'accès invalide ou manquant → faites tourner le jeton
+- `40002` / `40000` — erreurs de paramètres → vérifiez les noms d'événements, les horodatages et le hachage
+- `40100` — limite de débit atteinte → nouvelle tentative avec backoff
+- HTTP 5xx — temporaire → nouvelle tentative, circuit breaker si l'erreur persiste
+
+## Limites
+
+Jusqu'à 1 000 événements par requête, des horodatages datant de sept jours au plus, et le code du pixel doit appartenir au compte annonceur qui a émis le jeton. Les événements hors ligne utilisent l'identifiant de l'ensemble d'événements hors ligne comme `event_source_id` et `event_source: "offline"`.

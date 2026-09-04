@@ -1,0 +1,82 @@
+---
+title: "Deduplicatie die de praktijk overleeft: event-ID's, order-ID's en waarop elk platform werkelijk dedupliceert"
+description: "Een tabel per platform met deduplicatiesleutels — Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Pinterest, Snapchat, Reddit, X, CM360 — en de tweesleutelstrategie die hybride tracking eerlijk houdt."
+excerpt: "Hybride tracking verstuurt dezelfde actie vanuit de browser én vanaf de server. Of het platform die één keer telt, hangt af van de sleutel waarop het dedupliceert. Dit is de referentietabel en de strategie erachter."
+category: "guides"
+translationGroupId: "dedup-event-id-order-id"
+slug: "dedup-event-id-order-id"
+topic: "server-side-tracking"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "linkedin", "pinterest", "snapchat", "reddit", "x", "google-marketing-platform"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Gebruik twee sleutels: een event-ID die één keer aan de bron wordt gegenereerd en aan elk pad wordt meegegeven, plus de order-ID op elk commerce-event."
+  - "Platformen voegen samen op verschillende sleutels — Meta, TikTok, Microsoft, LinkedIn en Pinterest op de event-ID, Google Ads en GA4 op de order- of transactie-ID, Snapchat op een bij elkaar horend paar, CM360 op de ordinal."
+  - "Platformen voegen alleen samen binnen een venster (Meta documenteert ongeveer 48 uur); vertraagde CRM-kwalificaties horen op een apart platform-event, niet als duplicaat van het browser-event."
+  - "Terugbetalingen zijn eigen events met de oorspronkelijke order-ID; controleer de deduplicatie in de event-debugger, de destination-monitor en de interface van het platform."
+tags: ["deduplicatie", "event-id", "order-id", "hybride"]
+author: "track-site-editorial"
+publishedAt: "2026-08-29"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tabel met deduplicatiesleutels per advertentieplatform"
+sources:
+  - title: "Meta — Conversions API: deduplication"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events"
+  - title: "Microsoft Advertising — Conversions API (CAPI)"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+legalNotice: false
+---
+
+## Waarom twee sleutels
+
+Een **event-ID** identificeert één actie zoals jouw systemen die hebben waargenomen. Een **order-ID** identificeert één zakelijke transactie. Ze falen op verschillende manieren:
+
+- Event-ID's worden per waarneming gegenereerd. Als de browser en de server dezelfde aankoop onafhankelijk van elkaar waarnemen, delen ze alleen een ID als je die bewust tussen beide doorgeeft.
+- Order-ID's bestaan voor aankopen en terugbetalingen, maar niet voor paginaweergaven, leads of registraties.
+
+Een robuuste setup gebruikt beide: één event-ID die aan de bron wordt gegenereerd en aan elk pad wordt meegegeven, plus de order-ID op elk commerce-event. Platformen die op de event-ID dedupliceren, voegen de waarneming samen; platformen die op de order-ID dedupliceren, voegen de transactie samen; een platform dat beide ondersteunt, krijgt dubbele zekerheid.
+
+## De referentietabel
+
+| Platform | Browserveld | Serverveld | Voegt samen op | Opmerkingen |
+| --- | --- | --- | --- | --- |
+| Meta | `eventID` (pixeloptie) | `event_id` | event-ID + eventnaam, ~48 uur | `order_id` in `custom_data` is informatief |
+| Google Ads | `transaction_id` (gtag) | `orderId` (upload) | order-ID per conversieactie | leads: gebruik aparte conversieacties |
+| GA4 | `transaction_id` | `transaction_id` | transactie-ID voor `purchase` | andere events worden niet gededupliceerd |
+| TikTok | `event_id` (ttq-optie) | `event_id` | event-ID + eventnaam | `order_id` in properties |
+| Microsoft | `event_id` (UET-push) | `eventId` | event-ID + eventnaam | dezelfde UET-tag-ID op beide paden |
+| LinkedIn | `event_id` (lintrk) | `eventId` | event-ID | per conversieregel |
+| Pinterest | `event_id` (pintrk) | `event_id` | event-ID | `order_id` in custom_data |
+| Snapchat | `client_dedup_id` | `event_id` | bij elkaar horend paar | binnen het dedup-venster |
+| Reddit | `conversionId` (rdt) | `conversion_id` | conversie-ID | |
+| X | `conversion_id` (twq) | `conversion_id` | conversie-ID | per event-ID (tw-…) |
+| Campaign Manager 360 | `ordinal` / `u1` | `ordinal` | ordinal + activiteit + gebruiker | tijdstempels binnen 28 dagen |
+| Affiliate-netwerken | — | orderreferentie | orderreferentie | duplicaatbescherming aan netwerkzijde |
+
+## De ID genereren
+
+Genereer de ID **voordat** er iets wordt verstuurd, op de plek waar de actie als eerste bekend is. In de browser is dat het moment waarop `tsq.push(["track", ...])` draait; Track kent een ULID toe en gebruikt die zowel voor de pixelaanroep van het platform als voor het collector-request. Bij serverbronnen hoort het bronsysteem de ID te genereren — of, bij aankopen, de order-ID door te geven zodat de router daaruit een deterministische event-ID kan afleiden.
+
+Een deterministische ID voor aankopen (`hash(site, "purchase", order_id)`) heeft een prettige eigenschap: een opnieuw verstuurde webhook van Shopify of een dubbele CRM-export levert dezelfde ID op, en de eigen dedup-guard van de worker verwerpt die vóór de aflevering.
+
+## Tijdvensters
+
+Platformen voegen alleen samen binnen een venster — Meta documenteert ongeveer 48 uur, andere platformen zitten daar in de buurt. Komt je server-event dagen later binnen (een CRM-batch), dan wordt het niet samengevoegd met het browser-event; het telt er extra bovenop. Kies per eventtype:
+
+- Aankopen en andere directe conversies: hybride met een gedeelde ID, beide binnen enkele minuten.
+- Vertraagde kwalificaties (een lead wordt een week later een opportunity): een **ander** platform-event of een andere conversieactie, geen duplicaat van het browser-event.
+
+## Terugbetalingen
+
+Terugbetalingen zijn eigen events. GA4 heeft een `refund`-event met `transaction_id`; Google Ads gebruikt conversieaanpassingen (intrekking/herwaardering) op basis van de order-ID; Meta heeft geen refund-event, maar accepteert negatieve waarden in custom conversions; de meeste affiliate-netwerken accepteren een storneringspostback. Track verstuurt `refund` met een negatieve waarde en de oorspronkelijke order-ID en laat elke connector bepalen wat het platform ondersteunt.
+
+## Verificatie via de debugger
+
+1. Koop iets in testmodus met de browser open.
+2. Zoek in de event-debugger de browseraankoop en de serveraankoop op — zelfde event-ID, zelfde order-ID.
+3. Open de destination-monitor: één afleverpoging per pad, beide geaccepteerd.
+4. Bevestig in de interface van het platform (Events Manager, Test events, DebugView) één conversie, niet twee.
+
+Toont stap 4 er twee, dan is de ID op een van de paden niet meegereisd. De geredigeerde payload-preview in de debugger laat zien op welk pad.

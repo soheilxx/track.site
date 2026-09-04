@@ -1,0 +1,82 @@
+---
+title: "Una deduplicazione che regge alla realtà: ID evento, ID ordine e su quale chiave si basa davvero ogni piattaforma"
+description: "Una tabella piattaforma per piattaforma delle chiavi di deduplicazione — Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Pinterest, Snapchat, Reddit, X, CM360 — e la strategia a due chiavi che mantiene onesto il tracking ibrido."
+excerpt: "Il tracking ibrido invia la stessa azione dal browser e dal server. Se la piattaforma la conta una sola volta dipende dalla chiave su cui deduplica. Ecco la tabella di riferimento e la strategia che c'è dietro."
+category: "guides"
+translationGroupId: "dedup-event-id-order-id"
+slug: "dedup-event-id-order-id"
+topic: "server-side-tracking"
+platforms: ["meta", "google-ads", "google-analytics", "tiktok", "microsoft", "linkedin", "pinterest", "snapchat", "reddit", "x", "google-marketing-platform"]
+shopSystems: []
+contentType: "reference"
+level: "intermediate"
+takeaways:
+  - "Usa due chiavi: un ID evento generato una sola volta alla sorgente e passato a ogni percorso, più l'ID ordine su ogni evento commerce."
+  - "Le piattaforme uniscono su chiavi diverse — Meta, TikTok, Microsoft, LinkedIn e Pinterest sull'ID evento, Google Ads e GA4 sull'ID ordine o transazione, Snapchat su una coppia corrispondente, CM360 sull'ordinal."
+  - "I vendor uniscono solo entro una finestra (Meta documenta circa 48 ore), quindi le qualificazioni CRM ritardate vanno su un evento vendor separato, non come duplicato di quello del browser."
+  - "I rimborsi sono eventi a sé con l'ID ordine originale; verifica la deduplicazione nel debugger degli eventi, nel monitor delle destinazioni e nell'interfaccia del vendor."
+tags: ["deduplicazione", "event-id", "order-id", "ibrido"]
+author: "track-site-editorial"
+publishedAt: "2026-08-29"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Tabella delle chiavi di deduplicazione per piattaforma pubblicitaria"
+sources:
+  - title: "Meta — Conversions API: deduplication"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/deduplicate-pixel-and-server-events"
+  - title: "Microsoft Advertising — Conversions API (CAPI)"
+    url: "https://learn.microsoft.com/en-us/advertising/guides/uet-conversion-api-integration?view=bingads-13"
+legalNotice: false
+---
+
+## Perché due chiavi
+
+Un **ID evento** identifica un'azione così come l'hanno osservata i tuoi sistemi. Un **ID ordine** identifica una transazione commerciale. Falliscono in modi diversi:
+
+- Gli ID evento vengono generati per ogni osservazione. Se browser e server osservano lo stesso acquisto in modo indipendente, condividono un ID solo se lo passi deliberatamente dall'uno all'altro.
+- Gli ID ordine esistono per acquisti e rimborsi, ma non per visualizzazioni di pagina, lead o registrazioni.
+
+Un setup robusto usa entrambi: un ID evento generato alla sorgente e passato a ogni percorso, più l'ID ordine su ogni evento commerce. Le piattaforme che deduplicano sull'ID evento uniscono l'osservazione; quelle che deduplicano sull'ID ordine uniscono la transazione; una piattaforma che supporta entrambi ha una doppia sicurezza.
+
+## La tabella di riferimento
+
+| Piattaforma | Campo browser | Campo server | Unisce su | Note |
+| --- | --- | --- | --- | --- |
+| Meta | `eventID` (opzione del pixel) | `event_id` | ID evento + nome evento, ~48 h | `order_id` in `custom_data` è informativo |
+| Google Ads | `transaction_id` (gtag) | `orderId` (upload) | ID ordine per azione di conversione | lead: usa azioni di conversione separate |
+| GA4 | `transaction_id` | `transaction_id` | ID transazione per `purchase` | gli altri eventi non vengono deduplicati |
+| TikTok | `event_id` (opzione ttq) | `event_id` | ID evento + nome evento | `order_id` in properties |
+| Microsoft | `event_id` (push UET) | `eventId` | ID evento + nome evento | stesso ID del tag UET su entrambi i percorsi |
+| LinkedIn | `event_id` (lintrk) | `eventId` | ID evento | per regola di conversione |
+| Pinterest | `event_id` (pintrk) | `event_id` | ID evento | `order_id` in custom_data |
+| Snapchat | `client_dedup_id` | `event_id` | coppia corrispondente | entro la finestra di deduplicazione |
+| Reddit | `conversionId` (rdt) | `conversion_id` | ID conversione | |
+| X | `conversion_id` (twq) | `conversion_id` | ID conversione | per ID evento (tw-…) |
+| Campaign Manager 360 | `ordinal` / `u1` | `ordinal` | ordinal + attività + utente | timestamp entro 28 giorni |
+| Network di affiliazione | — | riferimento ordine | riferimento ordine | protezione dai duplicati lato network |
+
+## Generare l'ID
+
+Genera l'ID **prima** che venga inviato qualsiasi cosa, nel punto in cui l'azione è nota per la prima volta. Nel browser è il momento in cui viene eseguito `tsq.push(["track", ...])`; Track assegna un ULID e lo usa sia per la chiamata al pixel del vendor sia per la richiesta al collector. Per le sorgenti server dovrebbe essere il sistema sorgente a generare l'ID — oppure, per gli acquisti, a passare l'ID ordine, così che il router possa derivarne un ID evento deterministico.
+
+Un ID deterministico per gli acquisti (`hash(site, "purchase", order_id)`) ha una proprietà piacevole: un webhook di Shopify ripetuto o un'esportazione CRM duplicata producono lo stesso ID, e la protezione anti-duplicati del worker lo scarta prima della consegna.
+
+## Finestre temporali
+
+I vendor uniscono solo entro una finestra — Meta documenta circa 48 ore, gli altri sono simili. Se il tuo evento server arriva giorni dopo (un batch CRM), non verrà unito all'evento del browser: verrà contato in aggiunta. Scegli per tipo di evento:
+
+- Acquisti e altre conversioni immediate: ibrido con un ID condiviso, entrambi entro pochi minuti.
+- Qualificazioni ritardate (un lead diventa un'opportunità una settimana dopo): un evento vendor o un'azione di conversione **diversi**, non un duplicato di quello del browser.
+
+## Rimborsi
+
+I rimborsi sono eventi a sé. GA4 ha un evento `refund` con `transaction_id`; Google Ads usa gli aggiustamenti delle conversioni (ritiro/rideterminazione) basati sull'ID ordine; Meta non ha un evento di rimborso ma accetta valori negativi nelle conversioni personalizzate; la maggior parte dei network di affiliazione accetta un postback di storno. Track emette `refund` con un valore negativo e l'ID ordine originale e lascia che ogni connettore decida cosa supporta il vendor.
+
+## Una verifica guidata dal debugger
+
+1. Acquista qualcosa in modalità test con il browser aperto.
+2. Nel debugger degli eventi trova l'acquisto del browser e l'acquisto del server — stesso ID evento, stesso ID ordine.
+3. Apri il monitor delle destinazioni: un tentativo di consegna per percorso, entrambi accettati.
+4. Nell'interfaccia del vendor (Events Manager, Test events, DebugView) conferma una conversione, non due.
+
+Se il passo 4 ne mostra due, l'ID non ha viaggiato lungo uno dei percorsi. L'anteprima del payload oscurato nel debugger mostra quale.

@@ -1,0 +1,73 @@
+---
+title: "Abonnements- en SaaS-events: trials, abonnementen, verlengingen en churn zonder opgeblazen omzet"
+description: "Hoe je een abonnementsbedrijf modelleert in het standaard eventvocabulaire — sign_up, start_trial, subscribe, purchase voor verlengingen, refund voor opzeggingen — waar elk event hoort te ontstaan, welke waarde je naar advertentieplatformen stuurt en hoe je verlengingen uit je acquisitiecijfers houdt."
+excerpt: "Een SaaS-funnel heeft meer stappen dan een webshop, en de meeste vinden plaats op de server. Wie voor elke verlenging een 'purchase' stuurt, leert advertentieplatformen om achter bestaande klanten aan te gaan. Dit model houdt acquisitie, uitbreiding en retentie uit elkaar en geeft elk platform toch wat het kan gebruiken."
+category: "guides"
+translationGroupId: "subscription-saas-events"
+slug: "subscription-saas-events"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Modelleer de levenscyclus met sign_up, start_trial, subscribe, purchase met een verlengings- of uitbreidingsflag, refund en login; het billingsysteem is de autoriteit voor alles waar geld in zit."
+  - "Verlengingen mogen nooit als subscribe worden verstuurd: koppel alleen het acquisitie-event aan conversieacties van advertentieplatformen, zodat platformen niet leren om achter bestaande klanten aan te gaan."
+  - "Waarden blijven eerlijk — het bedrag van de eerste factuur voor subscribe, hooguit gedocumenteerde constanten per plan, het verschil bij uitbreiding, negatieve bedragen bij terugbetalingen."
+  - "De toestemming die bij de registratie is vastgelegd reist mee met de billing-webhook; klant zijn is geen toestemming, en factuur- of abonnements-ID's als transaction_id vangen herhaalde webhooks op."
+tags: ["saas", "abonnement", "billing", "events"]
+author: "track-site-editorial"
+publishedAt: "2026-08-09"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Levenscyclus van een abonnement afgebeeld op standaard events"
+sources:
+  - title: "Stripe — Webhook events for subscriptions"
+    url: "https://docs.stripe.com/billing/subscriptions/webhooks"
+legalNotice: false
+---
+
+## De levenscyclus in events
+
+| Moment in de levenscyclus | Event | Oorsprong | Properties |
+| --- | --- | --- | --- |
+| Account aangemaakt | `sign_up` | browser (hybride) | `method` |
+| Trial gestart | `start_trial` | server (billing-webhook) | `plan`, `trial_days` |
+| Eerste betaalde abonnement | `subscribe` | server (billing-webhook) | `plan`, `interval`, `value`, `currency`, `transaction_id` |
+| Verlengingsfactuur betaald | `purchase` met `props.renewal: true` | server | `value`, `currency`, `transaction_id` |
+| Upgrade / uitbreiding | `purchase` met `props.expansion: true` | server | verschil als `value` |
+| Opzegging of terugbetaling | `refund` | server | oorspronkelijke `transaction_id`, negatieve `value` |
+| Login | `login` | browser | — |
+
+Het billingsysteem is de autoriteit voor alles waar geld in zit. De browser mag dan een pagina 'abonnement bevestigd' tonen, maar het event dat advertentieplatformen bereikt komt uit de webhook, met de ID's van het billingsysteem.
+
+## Waarom verlengingen geen `subscribe` mogen zijn
+
+Advertentieplatformen optimaliseren op de conversie die je verstuurt. Komt elke maandelijkse verlenging binnen als een nieuw abonnement met waarde, dan leert het platform dat bestaande klanten goed converteren en biedt het om hen opnieuw te bereiken. Houd het **acquisitie**-event (`subscribe`, één keer per klant) gescheiden van **retentie** (`purchase` met de verlengingsflag) en koppel alleen het acquisitie-event aan conversieacties van advertentieplatformen. Verlengingen stromen nog steeds naar analytics en naar je eigen rapportages.
+
+## Waarden voor advertentieplatformen
+
+- `subscribe`: het bedrag van de eerste factuur is verdedigbaar en eenvoudig. Een schatting van de lifetime value is alleen toegestaan als **gedocumenteerde** constante per plan in de destination-mapping, zichtbaar in de auditlog; nooit een gok per gebruiker.
+- `start_trial`: geen waarde, of een gedocumenteerde verwachte waarde per plan.
+- Uitbreiding: het verschil, niet het nieuwe totaal.
+- `refund`: de negatieve waarde van het terugbetaalde bedrag; GA4 verwerkt terugbetalingen op transactie-ID, Google Ads via conversieaanpassingen, de meeste andere platformen negeren ze — de connector past toe wat de leverancier ondersteunt.
+
+## Identiteit over apparaten heen
+
+Een SaaS-klant registreert zich op de desktop, betaalt op mobiel en logt overal in. Roep `identify` aan met je eigen gebruikers-ID en, onder marketingtoestemming, het gehashte e-mailadres; de server-events dragen dezelfde gebruikers-ID en dezelfde hash. Daardoor kunnen platformen een server-side `subscribe` koppelen aan de advertentieklik die dagen eerder op een ander apparaat plaatsvond — binnen hun attributievensters.
+
+## Trials en toestemming
+
+De billing-webhook draagt de toestemmingsstatus die jouw systeem bij de registratie heeft vastgelegd, samen met de gebruikers-ID. De router past die status toe: een gebruiker die marketing bij de registratie heeft geweigerd, produceert alleen analytics-events, en een webhook zonder toestemmingsinformatie bereikt helemaal geen advertentie-destination. Leid toestemming niet af uit het feit dat iemand klant is geworden; klant zijn is geen toestemming voor advertentiemeting.
+
+## Dedup bij herhaalde billing-webhooks
+
+Billingsystemen versturen webhooks opnieuw. Gebruik de factuur- of abonnements-ID als `transaction_id`; de ingest-fase markeert een tweede `subscribe` of `purchase` met dezelfde transactie-ID als dubbele conversie, en platformen die op order-ID dedupliceren voegen samen wat er toch doorheen is gekomen.
+
+## Rapportage die eerlijk blijft
+
+- Acquisitie: aantal en waarde van `subscribe` per campagne, uit de advertentieplatformen en uit je eigen events.
+- Trialconversie: `start_trial` → `subscribe` per plan, alleen uit je eigen events.
+- Netto-omzet: `purchase` (alle flags) minus `refund`, uit het billingsysteem, maandelijks afgestemd op de events.
+
+Wijken die drie cijfers ooit af van de eigen rapporten van het billingsysteem, dan laat de uitsplitsing per bron op de events-pagina zien welk pad wat mist.

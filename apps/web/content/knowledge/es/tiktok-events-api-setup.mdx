@@ -1,0 +1,89 @@
+---
+title: "TikTok Events API 2.0: píxel más eventos de servidor con ttclid, _ttp y un event_id compartido"
+description: "Cómo configurar juntos el píxel de TikTok y la Events API: token de acceso, código del píxel, el payload de /event/track/, claves de coincidencia, deduplicación y códigos de evento de prueba."
+excerpt: "La Events API 2.0 de TikTok recibe eventos web en /open_api/v1.3/event/track/. Esta guía explica el payload, qué identificadores elevan la tasa de coincidencia, cómo deduplican el píxel y el servidor y cómo probar sin tocar los informes."
+category: "integrations"
+translationGroupId: "tiktok-events-api-setup"
+slug: "tiktok-events-api-setup"
+topic: "pixel-platform-integrations"
+platforms: ["tiktok"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Necesitas el código público del píxel como event_source_id, un token de acceso de la Events API guardado en el almacén cifrado y, opcionalmente, un código de evento de prueba."
+  - "Los eventos van a /open_api/v1.3/event/track/ con nombres en PascalCase; Track asigna los eventos canónicos por defecto, por ejemplo purchase a CompletePayment."
+  - "Las claves de coincidencia, por orden de impacto, son ttclid (capturado tras el consentimiento de marketing), el valor de la cookie _ttp, el correo electrónico y el teléfono con hash, y un external_id con hash."
+  - "TikTok deduplica píxel y API por event_id con el mismo nombre de evento; en modo de prueba cada petición lleva test_event_code y se queda fuera de los informes."
+tags: ["tiktok", "events-api", "ttclid", "deduplicación"]
+author: "track-site-editorial"
+publishedAt: "2026-08-31"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Petición a la TikTok Events API con los objetos user y properties"
+sources:
+  - title: "TikTok Ads — Standard events and parameters"
+    url: "https://ads.tiktok.com/help/article/standard-events-parameters"
+  - title: "TikTok Ads — Get started with Events API"
+    url: "https://ads.tiktok.com/help/article/getting-started-events-api"
+legalNotice: false
+---
+
+## Qué necesitas de TikTok Ads Manager
+
+- El **código del píxel** (Events Manager → Eventos web → tu píxel). Es público y sirve además como `event_source_id` para la API.
+- Un **token de acceso de la Events API** (píxel → Configuración → Generar token de acceso). Es un secreto y va en el almacén cifrado, nunca en una etiqueta.
+- Opcionalmente, un **código de evento de prueba** de la pestaña Eventos de prueba.
+
+## La petición
+
+`POST https://business-api.tiktok.com/open_api/v1.3/event/track/` con la cabecera `Access-Token: <token>` y un cuerpo como este:
+
+```json
+{
+  "event_source": "web",
+  "event_source_id": "CABCDEFGHIJKLMNOPQRS",
+  "data": [{
+    "event": "CompletePayment",
+    "event_time": 1767225600,
+    "event_id": "01J9EXAMPLESOURCEEVENTID00",
+    "user": { "ttclid": "…", "ttp": "…", "email": "<sha256>", "phone": "<sha256>", "external_id": "<sha256>" },
+    "page": { "url": "https://shop.example/thank-you", "referrer": "https://shop.example/checkout" },
+    "properties": { "value": 129.9, "currency": "EUR", "content_type": "product", "contents": [{ "content_id": "SKU-1", "quantity": 1, "price": 99.9 }], "order_id": "A1001" }
+  }]
+}
+```
+
+Un `code: 0` en la respuesta significa aceptado. `event_time` va en segundos Unix; `event_source` también puede ser `offline` o `crm` para fuentes que no son web, con el ID del conjunto de eventos correspondiente.
+
+## Nombres de eventos
+
+Los eventos web estándar de TikTok están en PascalCase: `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `CompletePayment`, `PlaceAnOrder`, `CompleteRegistration`, `SubmitForm`, `Contact`, `Subscribe`, `StartTrial`, `Download`, `Search`, `Schedule`, `ClickButton`. Track asigna los eventos canónicos a estos por defecto (`purchase → CompletePayment`, `generate_lead → SubmitForm`, `book_appointment → Schedule`) y te permite sobrescribir la asignación por destino.
+
+## Claves de coincidencia, por orden de impacto
+
+1. `ttclid` — el ID de clic que TikTok añade a las landing pages. Captúralo tras el consentimiento de marketing, guárdalo como first-party y envíalo con cada evento de servidor dentro de la ventana de atribución.
+2. `ttp` — el valor de la cookie `_ttp` que establece el píxel. Identifica el navegador ante TikTok sin datos personales.
+3. `email` y `phone` — con hash SHA-256 tras la normalización (correo electrónico en minúsculas, teléfono en formato E.164).
+4. `external_id` — tu propio ID de usuario, con hash.
+
+Enviar `ttclid` y `ttp` desde la vía del navegador y el correo electrónico con hash desde el sistema de pedidos es la combinación que maximiza la tasa de coincidencia.
+
+## Deduplicación entre píxel y API
+
+TikTok deduplica por `event_id` cuando el mismo nombre de evento llega desde el píxel (`ttq.track('CompletePayment', {...}, { event_id })`) y desde la API dentro de la ventana de deduplicación. Genera un ID por acción y pásalo a ambos; el SDK de Track lo hace automáticamente con cada evento reflejado en ambas vías.
+
+## Probar sin riesgos
+
+Introduce el código de evento de prueba del Events Manager en la configuración del destino. Mientras el destino esté en modo de prueba, cada petición lleva `test_event_code`; los eventos aparecen en Eventos de prueba y quedan excluidos de los informes. El asistente envía una compra marcada y muestra la respuesta de TikTok, incluido el `request_id` que puedes citar al soporte de TikTok.
+
+## Códigos de respuesta que conviene conocer
+
+- `40001` — token de acceso no válido o ausente → rota el token
+- `40002` / `40000` — errores de parámetros → revisa nombres de eventos, marcas de tiempo y hashing
+- `40100` — límite de tasa → se reintenta con backoff
+- HTTP 5xx — temporal → se reintenta, circuit breaker si persiste
+
+## Límites
+
+Hasta 1.000 eventos por petición, marcas de tiempo dentro de los últimos siete días, y el código del píxel debe pertenecer a la cuenta de anunciante que emitió el token. Los eventos offline usan el ID del conjunto de eventos offline como `event_source_id` y `event_source: "offline"`.

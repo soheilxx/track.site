@@ -1,0 +1,84 @@
+---
+title: "Migrar desde Google Tag Manager: un plan que empieza por el inventario y no pierde conversiones"
+description: "Una migración paso a paso de contenedores web de GTM a Track — exportación del contenedor e inventario revisado, traducción de etiquetas, activadores y variables a un plan de tracking, ejecución en paralelo con deduplicación, cambio destino a destino y lo que no tiene equivalente por diseño."
+excerpt: "Un contenedor de GTM acumula años de etiquetas que nadie se atreve a borrar. Migrar es el momento de inventariarlas, conservar las que encajan en un plan de tracking y retirar el resto — sin un solo día de conversiones perdidas. Este es el plan."
+category: "guides"
+translationGroupId: "migrating-from-gtm"
+slug: "migrating-from-gtm"
+topic: "getting-started"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Empieza con la exportación del contenedor y un inventario revisado: una fila por etiqueta con proveedor, activador, variables y una clasificación; nada se crea a partir de él automáticamente."
+  - "Traduce etiquetas y activadores a los eventos y destinos de un plan de tracking con propiedades tipadas, finalidades de consentimiento y mapeos versionados."
+  - "Ejecuta ambos sistemas en paralelo con deduplicación, empezando solo server-side por destino, después cambia un destino cada vez y retira el contenedor."
+  - "Las etiquetas de HTML/JavaScript personalizado, las anulaciones de consentimiento, la secuenciación de etiquetas y la extracción del DOM no tienen equivalente por diseño: esa lógica pasa al propio código del sitio."
+tags: ["gtm", "migración", "tag-manager", "plan-de-tracking"]
+author: "track-site-editorial"
+publishedAt: "2026-08-16"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ruta de migración de un contenedor de GTM a un plan de tracking"
+sources:
+  - title: "Google Tag Manager Help — Export and import containers"
+    url: "https://support.google.com/tagmanager/answer/6106997"
+legalNotice: false
+---
+
+## Paso 1: exportar e inventariar
+
+Exporta el contenedor (Administrador → Exportar contenedor). El JSON enumera cada etiqueta, activador, variable y carpeta. Construye el inventario a partir de él — una hoja de cálculo basta — con una fila por etiqueta: proveedor, tipo de etiqueta, activador, variables que lee y una clasificación:
+
+- **Etiqueta de proveedor reconocida** (GA4, Google Ads, Meta, TikTok, LinkedIn, Microsoft, Pinterest, Snapchat, Reddit, X, Taboola, Outbrain, Criteo, píxeles de afiliación) con una plantilla de destino equivalente.
+- **Push a la capa de datos**, agrupado por nombre de evento, con las variables que lee cada etiqueta.
+- **Etiqueta de HTML personalizado**, clasificada como snippet de proveedor con equivalente conocido, ayudante first-party (profundidad de scroll, listeners de formularios) o desconocida.
+- **Etiquetas pausadas y etiquetas sin activaciones recientes** (los metadatos de etiqueta de GTM muestran cuándo se disparó por última vez), marcadas como candidatas a retirada.
+
+El inventario es la fuente de verdad de la migración. Nada se crea a partir de él automáticamente; revisas cada fila y decides.
+
+## Paso 2: traducir a un plan de tracking
+
+GTM piensa en etiquetas y activadores; Track piensa en **eventos** y **destinos**. La traducción:
+
+| Concepto en GTM | Concepto en Track |
+| --- | --- |
+| `dataLayer.push({event: 'purchase', ecommerce: {...}})` | `tsq.push(['track', 'purchase', {...}])` con el esquema canónico de comercio |
+| Activador «Evento personalizado igual a purchase» | el propio evento; los destinos se suscriben por nombre de evento |
+| Activador «Clic: todos los elementos» con filtro CSS | una regla de clic declarativa (selector, nombre de evento, propiedades permitidas) |
+| Variable de capa de datos | una propiedad del esquema de eventos, tipada y validada |
+| Tabla de consulta | una tabla de mapeo en el destino, versionada y comparable con diff |
+| Etiqueta de inicialización del consentimiento | la integración con la CMP; el consentimiento se lee, nunca se establece |
+| Configuración de GA4 + etiquetas de evento | un destino de GA4 con mapeos de eventos, navegador y servidor |
+| Etiqueta de conversión de Google Ads por acción | un destino de Google Ads con un mapeo por acción de conversión |
+
+El plan enumera cada evento con sus propiedades, su finalidad de consentimiento y los destinos que alimenta. Los eventos críticos se marcan para que el Health Score los vigile.
+
+## Paso 3: ejecución en paralelo con deduplicación
+
+No apagues GTM el primer día. Instala el SDK de Track junto a él. El SDK observa los pushes a la capa de datos con formato GA4 sin ejecutar nada, de modo que un contenedor que ya hace push de `purchase` con un objeto `ecommerce` alimenta ambos sistemas desde el mismo push.
+
+Para cada destino, empieza en Track **solo server-side** mientras la etiqueta de navegador de GTM sigue disparándose:
+
+- En Google Ads y GA4, las compras llevan el mismo ID de transacción en ambas vías y el proveedor deduplica por él.
+- En las plataformas que deduplican por ID de evento (Meta, TikTok, Microsoft, Pinterest, Snapchat, Reddit), ejecuta primero la vía del servidor en modo de prueba, compara los recuentos en la vista de prueba del proveedor y después cambia directamente — no ejecutes ambas en producción con IDs distintos.
+
+El monitor de destinos muestra la aceptación por destino; cuando coincide con las cifras de la etiqueta de GTM, la etiqueta de navegador es redundante.
+
+## Paso 4: cambiar destino a destino
+
+Para cada destino, en este orden: pasa Track a híbrido (su propia plantilla de navegador más servidor), pausa la etiqueta de GTM, observa el recuento de eventos del proveedor durante dos días y después elimina la etiqueta de GTM. Primero los destinos de analítica, luego los destinos publicitarios uno a uno y por último las redes de afiliación, porque sus postbacks necesitan que el almacén de IDs de clic esté cargado para la ventana de la cookie.
+
+## Paso 5: retirar el contenedor
+
+Cuando todas las etiquetas estén pausadas y los recuentos de los proveedores coincidan, elimina el snippet de GTM. Conserva el contenedor exportado en el expediente de la migración; el registro de auditoría muestra quién cambió qué y cuándo.
+
+## Lo que no tiene equivalente, a propósito
+
+- **Etiquetas de HTML personalizado y JavaScript personalizado.** Track no ejecuta código escrito por el sitio. Los snippets de proveedor se convierten en plantillas declarativas; los ayudantes first-party, en reglas declarativas; todo lo demás es una decisión que hay que tomar de forma explícita, normalmente trasladando la lógica al propio código del sitio, que es donde debe estar.
+- **Anulaciones de consentimiento.** Ninguna etiqueta puede configurarse para dispararse al margen del consentimiento.
+- **Secuenciación de etiquetas y prioridades de activación.** Los eventos se enrutan por política, no compiten entre sí.
+- **Extracción de la página mediante expresiones regulares** en variables. Las propiedades vienen de la capa de datos o de reglas declarativas, no del texto del DOM.
+
+Marca cada uno de estos casos en tu inventario para saber, antes de empezar, cuánto del contenedor es tracking real y cuánto es andamiaje acumulado.

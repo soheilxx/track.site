@@ -1,0 +1,74 @@
+---
+title: "Postbacks server-to-server de afiliación: un motor, catorce redes y qué firma cada una"
+description: "Cómo funcionan los postbacks S2S de afiliación de principio a fin —capturar el ID de clic de la red, guardarlo first-party, disparar el postback con la compra verificada, gestionar las anulaciones— con las particularidades de Awin, CJ, Impact, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, Adcell, Belboon, TUNE y Everflow."
+excerpt: "Todas las redes de afiliación quieren lo mismo en un sobre ligeramente distinto: el ID de clic que emitieron, la referencia del pedido, el importe y la moneda, enviados desde tu servidor cuando la venta es real. Esta guía explica el motor común y las diferencias de cada red."
+category: "integrations"
+translationGroupId: "affiliate-postbacks-s2s"
+slug: "affiliate-postbacks-s2s"
+topic: "pixel-platform-integrations"
+platforms: ["affiliate-postbacks"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Todas las redes siguen el mismo motor: capturar el ID de clic con consentimiento de marketing, confirmar la compra desde una fuente de confianza, disparar el postback firmado desde el servidor y conciliar las anulaciones."
+  - "Catorce presets —Awin, CJ, Impact, TradeTracker, Tradedoubler, Partnerize, Rakuten, Webgains, Digistore24, Adcell, Belboon, TUNE, Everflow y una plantilla personalizada— se diferencian en método, ID de clic, firma y gestión de anulaciones."
+  - "Los postbacks entrantes, como el IPN de Digistore24, se verifican por sitio y se convierten en eventos purchase o refund; las peticiones no verificadas se rechazan y se contabilizan en la salud del destino."
+  - "Un postback por referencia de pedido, más el código de descuento en el postback, evita pagar a dos publishers por la misma venta."
+tags: ["afiliación", "postback", "s2s", "awin", "cj", "impact"]
+author: "track-site-editorial"
+publishedAt: "2026-08-22"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Flujo de postback de afiliación desde la captura del ID de clic hasta el postback del servidor"
+sources:
+  - title: "Awin — Server to server tracking"
+    url: "https://wiki.awin.com/index.php/Advertiser_Tracking_Guide/Server_to_Server_Tracking"
+  - title: "Impact — Conversions API"
+    url: "https://integrations.impact.com/impact-brand/reference/conversions"
+legalNotice: false
+---
+
+## El motor común
+
+1. **Capturar.** El visitante aterriza con el parámetro de clic de la red (`awc`, `cjevent`, `irclickid`, `tduid`, `clickref` …). Con consentimiento de marketing, el SDK lo guarda first-party bajo el nombre de la red durante la ventana de cookies del programa (normalmente 30 días).
+2. **Confirmar.** La compra la confirma una fuente de confianza: un webhook verificado de la tienda, el sistema de pedidos o una compra en el navegador que la política marca como suficientemente fiable para la red.
+3. **Postback.** El worker renderiza la plantilla de postback de la red con el ID de clic, la referencia del pedido, el importe, la moneda, el código de descuento opcional y el desglose de artículos, la firma cuando hace falta y la envía desde el servidor.
+4. **Conciliar.** Las anulaciones (reembolsos, cancelaciones) disparan la llamada de anulación o de ajuste de la red con la misma referencia de pedido.
+
+Como el ID de clic se guarda first-party y el postback sale del servidor, los píxeles bloqueados y las cookies de terceros caducadas no hacen perder comisiones, y la red solo recibe pedidos reales y confirmados.
+
+## Particularidades de cada red
+
+| Red | Método | ID de clic | Autenticación / firma | Anulación |
+| --- | --- | --- | --- | --- |
+| Awin | GET `sread.php` | `awc` → `cks` | ninguna; flag `testmode` | vía API de Awin / validación manual |
+| CJ | GET `emjcd.com/u` | `cjevent` | `SIGNATURE` (clave enterprise) | correcciones vía API |
+| Impact | POST `Conversions` | `irclickid` → `ClickId` | Basic (SID de cuenta + token de autenticación) | modificaciones de conversión |
+| TradeTracker | GET `ts.tradetracker.net/?tt=…` | `ttref`/`tt` | ID de campaña + ID de producto | estado pendiente |
+| Tradedoubler | GET `tbs.tradedoubler.com/report` | `tduid` | `checksum=v04` + md5(secreto + pedido + valor) | ajuste de orderNumber |
+| Partnerize | endpoint de tracking GET/POST | `clickref` | ID de campaña; clave de API para actualizaciones | API de actualización de conversiones |
+| Rakuten | GET/XML | `ranMID`/`ranSiteID` | token | feed de correcciones |
+| Webgains | GET `track.webgains.com/transact` | `wgcampaignid`/`clickref` | ID de programa | vía API |
+| Digistore24 | IPN entrante | lado del vendedor | `sha_sign` (SHA-512 sobre los campos ordenados + passphrase) | eventos IPN `refund`/`chargeback` |
+| Adcell | GET `t.adcell.com/t/track` | `bid` | pid/eventid | actualización de estado |
+| Belboon | píxel de tracking GET | `bbcid` | clave de tracking | vía la red |
+| TUNE | GET `aff_sale` | `transaction_id` | `offer_id`/`goal_id`; token de seguridad opcional | ajuste |
+| Everflow | GET `sdk/conversion` | `transaction_id` | `nid` + `security_token` opcional | endpoint de ajuste |
+| Personalizado | plantilla GET/POST | a tu elección | ninguna / basic / bearer / query | plantilla |
+
+Estos presets son plantillas declarativas en Track; el asistente de configuración muestra la URL o el cuerpo renderizados con marcadores de posición antes de que actives nada, y los nombres de parámetro de arriba proceden de la documentación actual para anunciantes de cada red, enlazada en el texto de ayuda del destino.
+
+## Entrante: cuando la red te llama a ti
+
+Algunas plataformas te comunican la venta a ti (el IPN de Digistore24 o el postback de una red a tu propio endpoint). Track expone una URL entrante por sitio y preset. Verifica la petición —el `sha_sign` de Digistore24, un token secreto compartido en los presets genéricos— y la convierte en un evento `purchase` o `refund` verificado que pasa por el mismo router. Las peticiones no verificadas se rechazan y se contabilizan en la salud del destino.
+
+## Evitar comisiones duplicadas
+
+- Un postback por referencia de pedido: la fase de ingesta marca una segunda compra con el mismo ID de pedido como conversión duplicada, y cada entrega está indexada por el ID de evento, así que un webhook reenviado no dispara dos veces.
+- Las redes aplican su propia protección contra duplicados sobre la referencia del pedido; un segundo postback con la misma referencia se ignora o se marca.
+- Los códigos de descuento van en el postback (`vc`, `coupon`, `promo_code` según la red) para que la red pueda aplicar sus reglas de atribución por código en lugar de pagar a dos publishers.
+
+## Pruebas
+
+La mayoría de las redes ofrecen un flag de modo de prueba (`testmode=1` en Awin, cuentas de prueba en Impact, ofertas de prueba en TUNE). En el modo de prueba de Track, el parámetro de prueba del preset se establece automáticamente cuando existe; cuando no existe, el asistente envía a la red y muestra la respuesta, y tú validas la transacción en la interfaz de la red antes de poner el destino en producción.

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "server-side-foundations",
+    "title": "Tracking server-side desde los cimientos",
+    "description": "Qué cambia cuando los eventos salen del navegador, el vocabulario de eventos estándar, una migración segura desde GTM, la deduplicación, el Tracking Health Score y los límites de los dominios first-party.",
+    "groupIds": [
+      "server-side-tracking-explained",
+      "event-taxonomy-standard-events",
+      "migrating-from-gtm",
+      "dedup-event-id-order-id",
+      "tracking-health-score",
+      "ad-blockers-itp-measurement",
+      "first-party-tracking-domains"
+    ]
+  },
+  {
+    "id": "consent-and-privacy",
+    "title": "Tracking conforme al consentimiento",
+    "description": "Consent Mode v2, datos personales en los payloads, plazos de retención, solicitudes de los interesados y cómo se leen las señales de TCF 2.2, GPP y GPC.",
+    "groupIds": [
+      "consent-mode-v2-guide",
+      "pii-in-tracking-data",
+      "data-retention-policy-tracking",
+      "dsar-deletion-tracking-data",
+      "tcf-2-2-gpp-gpc"
+    ]
+  },
+  {
+    "id": "conversion-apis",
+    "title": "APIs de conversiones plataforma por plataforma",
+    "description": "Meta, Google Ads, GA4, TikTok, Microsoft, LinkedIn, Reddit, Pinterest y Snapchat: payloads, claves de matching, deduplicación con el píxel y flujos de prueba seguros.",
+    "groupIds": [
+      "meta-conversions-api-deduplication",
+      "google-ads-enhanced-conversions",
+      "ga4-measurement-protocol-eu",
+      "tiktok-events-api-setup",
+      "microsoft-conversions-api-uet",
+      "linkedin-conversions-api-b2b",
+      "reddit-pinterest-snapchat-capi"
+    ]
+  },
+  {
+    "id": "commerce-and-attribution",
+    "title": "Compras de tienda y el ciclo de atribución",
+    "description": "Compras verificadas desde Shopify, WooCommerce y Shopware, eventos de suscripción, IDs de clic y ventanas de atribución, conversiones offline desde el CRM y postbacks de afiliación.",
+    "groupIds": [
+      "shopify-server-side-purchases",
+      "woocommerce-server-side-tracking",
+      "shopware-6-tracking",
+      "subscription-saas-events",
+      "click-ids-attribution-windows",
+      "offline-conversions-crm",
+      "affiliate-postbacks-s2s"
+    ]
+  }
+]

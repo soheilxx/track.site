@@ -1,0 +1,77 @@
+---
+title: "De kill switch en het incident-playbook: tracking in seconden stoppen, op het juiste niveau, met een audittrail"
+description: "Vier niveaus van stoppen — een destination, een site, een organisatie, het hele platform — wat elk niveau doet met de browser-SDK, de collector en de worker-wachtrij, hoe snel het ingaat, en het playbook voor de incidenten die erom vragen."
+excerpt: "Elke trackingsetup moet ooit een keer snel stoppen: een verkeerde mapping stuurt orderwaarden naar het verkeerde account, een juridische vraag moet vóór het volgende event beantwoord worden, een leverancier heeft een storing. Voor die momenten bestaat de kill switch. Dit doet elk niveau, en wanneer je welk niveau gebruikt."
+category: "product"
+translationGroupId: "kill-switch-incident-playbook"
+slug: "kill-switch-incident-playbook"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Vier niveaus — destination, site, organisatie, platform — stoppen verschillende dingen: een gepauzeerde destination blijft verzamelen, een gepauzeerde site verwerpt events en schakelt de SDK bij de volgende paginaweergave uit."
+  - "Worker en collector reageren onmiddellijk; de browser reageert bij de volgende paginaweergave, omdat de SDK het manifest bij elke keer laden opnieuw ophaalt."
+  - "De kill switch verwijdert nooit opgeslagen events, roept geen geslaagde leveringen terug en wijzigt geen data aan de kant van de leverancier; elke activering schrijft een eigen auditvermelding."
+  - "Verkeerde data: destination pauzeren en terugdraaien; juridische vraag: site pauzeren; storing bij een leverancier: niets doen en de retries hun werk laten doen; gelekte credentials: roteren; gecompromitteerd account: het lid verwijderen en zijn publicaties controleren."
+tags: ["kill-switch", "incident", "beheer", "governance"]
+author: "track-site-editorial"
+publishedAt: "2026-08-11"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Niveaus van de kill switch, van destination tot platform"
+sources: []
+legalNotice: false
+---
+
+## Vier niveaus
+
+| Niveau | Waar | Effect |
+| --- | --- | --- |
+| Destination | de destination-pagina, of de pauzeertool van de assistent | de worker stopt met leveren aan die destination; het browsertemplate ervoor wordt bij de volgende configuratie-ophaling verwijderd; events worden nog steeds verzameld en opgeslagen |
+| Site | site-instellingen | de collector antwoordt met `site_paused` en verwerpt binnenkomende events; de `kill_switch`-flag in het manifest gaat aan, zodat de SDK zichzelf bij de volgende paginaweergave uitschakelt |
+| Organisatie | organisatie-instellingen | hetzelfde als site, voor elke site van de organisatie |
+| Platform | omgevingsflag van de operator | de collector antwoordt op elk request met 503 en reden `kill_switch`; alleen voor een platformbreed incident |
+
+Wanneer je een van deze niveaus inschakelt, wordt een auditvermelding geschreven met de actor en een eigen actie (`site.kill_switch_on`, `org.kill_switch_on`), zodat de geschiedenis noodstops onderscheidt van gewone bewerkingen.
+
+## Hoe snel
+
+- **Worker**: onmiddellijk voor nieuwe leveringen; batches die al onderweg zijn, worden afgerond of falen op eigen kracht.
+- **Collector**: onmiddellijk, omdat de sitestatus per request uit een kortlevende cache wordt gelezen.
+- **Browser**: bij de volgende paginaweergave. De SDK haalt het kleine manifest bij elke keer laden opnieuw op en stopt vóór het initialiseren van welk leverancierstemplate dan ook zodra de flag aanstaat; pagina's die al geladen zijn, behouden hun huidige toestand tot de volgende navigatie.
+
+Wat de kill switch **niet** doet: al opgeslagen events verwijderen, leveringen terugroepen die al geslaagd zijn, of data aan de kant van de leverancier wijzigen. Dat zijn aparte acties met eigen procedures.
+
+## Het playbook
+
+### Er gaat verkeerde data naar een leverancier
+
+Symptomen: waarden in de verkeerde valuta, testbestellingen in productie, de verkeerde pixel-ID. Stappen:
+
+1. Pauzeer de **destination** (niet de site). Het verzamelen gaat door, dus er gaat niets verloren terwijl je onderzoek doet.
+2. Open de destination-monitor en de event-debugger; zoek de eerste foute levering en de configuratieversie die haar heeft geïntroduceerd.
+3. Draai terug naar de vorige versie, of corrigeer de mapping en publiceer.
+4. Hef de pauze op. Leveringen die tijdens de pauze in de wachtrij stonden, worden met de gecorrigeerde configuratie verstuurd.
+5. Sluit de betrokken conversies uit of verwijder ze in de UI van de leverancier, als het platform dat toestaat; noteer de request-ID in het incidentverslag.
+
+### Een juridische of toestemmingsvraag moet vóór het volgende event beantwoord worden
+
+Stappen: schakel de kill switch van de **site** in; er wordt niets nieuws verzameld, de SDK schakelt zichzelf uit en de auditvermelding voorziet de stop van een tijdstempel. Onderzoek de kwestie met de toestemmingspagina en de debugger. Hervat door de switch weer uit te zetten; de SDK schakelt zichzelf bij de volgende paginaweergave weer in. Gaat de vraag over al verzamelde data, gebruik dan de DSAR- en bewaartools, niet de kill switch.
+
+### Een leverancier heeft een storing
+
+Doe niets. De worker classificeert 5xx-antwoorden als tijdelijk, probeert het opnieuw met backoff en opent de circuit breaker voor die destination; events in de wachtrij worden geleverd zodra de leverancier hersteld is, binnen het tijdstempelvenster van elke API. De destination pauzeren zou het herstel alleen maar vertragen. Houd de health van de destination en het aantal dead letters in de gaten.
+
+### Credentials gelekt
+
+Stappen: roteer de credential in de kluis (de oude maak jij ongeldig aan de kant van de leverancier, daarna vervang je hem in Track); de destination tussendoor pauzeren voorkomt een stortvloed aan authenticatiefouten. Het auditlog laat zien wie de credential heeft gelezen of geroteerd; de waarde zelf is nooit gelogd.
+
+### Gecompromitteerd teamaccount
+
+Stappen: verwijder het lid (sessies worden ingetrokken), schakel de kill switch van de **organisatie** in als je gepubliceerde wijzigingen niet kunt uitsluiten, controleer de versiegeschiedenis op publicaties van dat account, draai terug waar nodig en hervat daarna.
+
+## Oefen het
+
+De kill switch is alleen snel als de mensen die on-call staan weten waar hij zit. Zet de link naar de site-instellingen en dit playbook in de on-call-notities en oefen eens per kwartaal het pauzeren en hervatten op een stagingsite; het auditlog maakt de oefening controleerbaar.

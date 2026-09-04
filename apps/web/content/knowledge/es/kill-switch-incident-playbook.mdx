@@ -1,0 +1,77 @@
+---
+title: "El kill switch y el playbook de incidentes: detener el tracking en segundos, en el ámbito correcto y dejando constancia"
+description: "Cuatro ámbitos de parada —un destino, un sitio, una organización, toda la plataforma—, qué hace cada uno con el SDK del navegador, el collector y la cola de workers, con qué rapidez surte efecto y el playbook para los incidentes que lo requieren."
+excerpt: "Todo montaje de tracking necesita detenerse en algún momento, y rápido: un mapeo erróneo envía valores de pedido a la cuenta equivocada, una cuestión legal debe resolverse antes del siguiente evento, un proveedor sufre una caída. El kill switch existe para esos momentos. Esto es lo que hace cada ámbito y cuándo usar cuál."
+category: "product"
+translationGroupId: "kill-switch-incident-playbook"
+slug: "kill-switch-incident-playbook"
+topic: "troubleshooting"
+platforms: []
+shopSystems: []
+contentType: "guide"
+level: "intermediate"
+takeaways:
+  - "Cuatro ámbitos —destino, sitio, organización, plataforma— detienen cosas distintas: un destino en pausa sigue recogiendo eventos, un sitio en pausa los descarta y desactiva el SDK en la siguiente vista de página."
+  - "El worker y el collector reaccionan de inmediato; el navegador, en la siguiente vista de página, porque el SDK descarga el manifiesto de nuevo en cada carga."
+  - "El kill switch nunca borra eventos almacenados, no retira entregas ya realizadas ni cambia datos en el lado del proveedor; cada activación escribe una entrada de auditoría propia."
+  - "Datos erróneos: pausa el destino y revierte; cuestión legal: pausa el sitio; caída del proveedor: no hagas nada y deja actuar a los reintentos; credenciales filtradas: rótalas; cuenta comprometida: elimina al miembro y revisa sus publicaciones."
+tags: ["kill-switch", "incidentes", "operaciones", "gobernanza"]
+author: "track-site-editorial"
+publishedAt: "2026-08-11"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Ámbitos del kill switch, del destino a la plataforma"
+sources: []
+legalNotice: false
+---
+
+## Cuatro ámbitos
+
+| Ámbito | Dónde | Efecto |
+| --- | --- | --- |
+| Destino | página del destino, o la herramienta de pausa del asistente | el worker deja de entregar a ese destino; su plantilla de navegador se retira en la siguiente descarga de la configuración; los eventos se siguen recogiendo y almacenando |
+| Sitio | ajustes del sitio | el collector responde `site_paused` y descarta los eventos entrantes; el indicador `kill_switch` del manifiesto se activa, así que el SDK se desactiva a sí mismo en la siguiente vista de página |
+| Organización | ajustes de la organización | igual que el sitio, para todos los sitios de la organización |
+| Plataforma | indicador de entorno del operador | el collector responde 503 con el motivo `kill_switch` a todas las peticiones; solo se usa en un incidente que afecte a toda la plataforma |
+
+Activar cualquiera de ellos escribe una entrada de auditoría con el actor y una acción propia (`site.kill_switch_on`, `org.kill_switch_on`), de modo que el historial separa las paradas de emergencia de las ediciones ordinarias.
+
+## Con qué rapidez
+
+- **Worker**: de inmediato para las nuevas entregas; los lotes en curso se completan o fallan por sí solos.
+- **Collector**: de inmediato, porque el estado del sitio se lee en cada petición desde una caché de vida corta.
+- **Navegador**: en la siguiente vista de página. El SDK descarga el pequeño manifiesto de nuevo en cada carga y se detiene antes de inicializar cualquier plantilla de proveedor cuando el indicador está activado; las páginas ya cargadas mantienen su estado actual hasta la siguiente navegación.
+
+Lo que el kill switch **no** hace: borrar eventos ya almacenados, retirar entregas que ya tuvieron éxito ni cambiar datos en el lado del proveedor. Esas son acciones separadas con sus propios procedimientos.
+
+## El playbook
+
+### Se están enviando datos erróneos a un proveedor
+
+Síntomas: valores en la moneda equivocada, pedidos de prueba en producción, un ID de píxel incorrecto. Pasos:
+
+1. Pausa el **destino** (no el sitio). La recogida continúa, así que no se pierde nada mientras investigas.
+2. Abre el monitor del destino y el depurador de eventos; localiza la primera entrega errónea y la versión de configuración que la introdujo.
+3. Revierte a la versión anterior, o corrige el mapeo y publica.
+4. Quita la pausa. Las entregas que se encolaron durante la pausa se envían con la configuración corregida.
+5. En la interfaz del proveedor, excluye o elimina las conversiones afectadas si la plataforma lo permite; anota el ID de la petición en el registro del incidente.
+
+### Una cuestión legal o de consentimiento debe resolverse antes del siguiente evento
+
+Pasos: activa el kill switch del **sitio**; no se recoge nada nuevo, el SDK se desactiva a sí mismo y la entrada de auditoría deja constancia de la hora de la parada. Investiga con la página de consentimiento y el depurador. Reanuda desactivando el interruptor; el SDK vuelve a activarse en la siguiente vista de página. Si la cuestión afecta a datos ya recogidos, usa las herramientas de DSAR y de retención, no el kill switch.
+
+### Un proveedor está caído
+
+No hagas nada. El worker clasifica las respuestas 5xx como temporales, reintenta con backoff y abre el circuit breaker de ese destino; los eventos encolados se entregan cuando el proveedor se recupera, dentro de la ventana de marcas de tiempo de cada API. Pausar el destino solo retrasaría la recuperación. Vigila la salud del destino y el recuento de la cola de fallidos (dead-letter).
+
+### Credenciales filtradas
+
+Pasos: rota la credencial en el almacén cifrado (la antigua la invalidas tú en el lado del proveedor y después la sustituyes en Track); pausar el destino entre medias evita una ráfaga de fallos de autenticación. El registro de auditoría muestra quién leyó o rotó la credencial; el valor en sí nunca se registró.
+
+### Cuenta de un miembro del equipo comprometida
+
+Pasos: elimina al miembro (sus sesiones se revocan), activa el kill switch de la **organización** si no puedes descartar cambios publicados, revisa el historial de versiones en busca de publicaciones de esa cuenta, revierte lo que haga falta y después reanuda.
+
+## Ensáyalo
+
+El kill switch solo es rápido si las personas de guardia saben dónde está. Incluye el enlace a los ajustes del sitio y este playbook en las notas de guardia, y practica una pausa y reanudación en un sitio de staging una vez por trimestre; el registro de auditoría hace que el simulacro sea verificable.

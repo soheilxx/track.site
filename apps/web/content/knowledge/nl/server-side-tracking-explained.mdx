@@ -1,0 +1,104 @@
+---
+title: "Server-side tracking uitgelegd: wat er werkelijk verandert wanneer events de browser verlaten"
+description: "Een begrijpelijke uitleg van server-side tracking: wat het is, wat het niet oplost, waarom toestemming nog steeds geldt en hoe deduplicatie met de browsertag werkt."
+excerpt: "Server-side tracking verplaatst de aflevering van events van de browser van de bezoeker naar je eigen server-side router. Deze gids legt uit wat er verandert, wat hetzelfde blijft en waar de gangbare misverstanden zitten."
+category: "guides"
+translationGroupId: "server-side-tracking-explained"
+slug: "server-side-tracking-explained"
+topic: "server-side-tracking"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "beginner"
+takeaways:
+  - "Server-side tracking verplaatst de aflevering van events naar een server die jij beheert; de browser observeert nog steeds gedrag, leest de toestemming en legt click-ID's vast."
+  - "Het verbetert de betrouwbaarheid, verstuurt gezaghebbende aankopen vanuit het bestelsysteem en geeft je controle over elke payload — maar het verandert niets aan de toestemmingsregels."
+  - "Toestemming wordt twee keer beoordeeld, in de browser en op de server, en events van vóór de toestemming worden verworpen in plaats van opnieuw afgespeeld."
+  - "In de hybride modus zorgen één event-ID per actie die beide paden delen, plus de order-ID op aankopen, ervoor dat leveranciers één keer tellen."
+featured: true
+tags: ["server-side", "basisprincipes", "toestemming", "deduplicatie"]
+author: "track-site-editorial"
+publishedAt: "2026-09-03"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Diagram van events die vanuit de browser en de server via een router naar advertentieplatformen stromen"
+sources:
+  - title: "Meta — Conversions API: using the API"
+    url: "https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api"
+  - title: "Google Analytics — Measurement Protocol reference"
+    url: "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference"
+legalNotice: true
+---
+
+## De versie in één zin
+
+Server-side tracking betekent dat je website nog steeds registreert wat een bezoeker doet, maar dat de *aflevering* van die informatie aan advertentie- en analyticsplatformen plaatsvindt vanaf een server die jij beheert, in plaats van vanuit een script dat in de browser van de bezoeker draait.
+
+Die ene verandering heeft gevolgen voor betrouwbaarheid, datakwaliteit en privacy — sommige goed, sommige stelselmatig overdreven. Dit artikel houdt die twee uit elkaar.
+
+## Wat verhuist, wat blijft
+
+| Blijft in de browser | Verhuist naar de server |
+| --- | --- |
+| Klikken, paginaweergaven en formulierverzendingen observeren | Events opmaken voor elke leverancier |
+| De toestemmingsstatus uit je CMP lezen | Het toestemmingsbeleid een tweede keer toepassen |
+| Click-ID's (`gclid`, `fbclid`, `ttclid`, …) vastleggen na marketingtoestemming | Mislukte afleveringen opnieuw proberen, circuit breaking, dead-letter-afhandeling |
+| Leverancierstags laden die je nog wilt (hybride modus) | Matchinggegevens hashen en normaliseren |
+| | Dedupliceren op order-ID |
+
+De browser heeft nog steeds een klein script nodig — bij Track is dat één snippet van minder dan 30 KB gzip — omdat iemand het gedrag moet observeren en de toestemming moet lezen. Wat je kwijtraakt, is de stapel leveranciersscripts en de stapel leveranciersspecifieke netwerkrequests.
+
+## Waarom teams dit doen
+
+**Betrouwbaarheid.** Adblockers, trackingpreventie en haperende mobiele netwerken laten een deel van de browserrequests vallen. Een serverrequest van jouw router naar de Conversions API van Meta of het Measurement Protocol van Google hangt er niet van af of het apparaat van de bezoeker op de pagina blijft.
+
+**Gezaghebbende conversies.** De browser ziet een bedankpagina; jouw server ziet de bestelling. Aankopen versturen vanuit het bestelsysteem (Shopify-webhook, WooCommerce-hook, CRM-export) geeft de platformen de transactie die daadwerkelijk heeft plaatsgevonden — inclusief latere terugbetalingen.
+
+**Controle.** Elke payload loopt door code die van jou is. Je kunt velden strippen, persoonsgegevens blokkeren, afdwingen dat afgeleide toestemming nooit wordt geëxporteerd en een geredigeerde kopie loggen van wat er is verstuurd.
+
+## Waarom het toestemming niet oplost
+
+Het meest voorkomende misverstand: ‘de data loopt via mijn server, dus de toestemmingsregels gelden niet’. Ze gelden precies zoals daarvoor. De juridische vraag is *of* je de gegevens van de bezoeker voor een doel mag verwerken en delen, niet *welke machine* ze verstuurt.
+
+Een correcte implementatie beoordeelt toestemming daarom twee keer:
+
+1. In de browser, voordat er iets wordt opgeslagen of een leverancierstag laadt.
+2. Op de server, vóór elke aflevering, op basis van de toestemmingssnapshot die met het event is meegereisd.
+
+Events zonder het vereiste doel moeten worden verworpen — niet geparkeerd en opnieuw afgespeeld nadat later alsnog toestemming is gegeven. Het opnieuw afspelen van gedrag van vóór de toestemming is precies waar toezichthouders zoals de Autoriteit Persoonsgegevens uitdrukkelijk bezwaar tegen maken.
+
+## Deduplicatie: het onderdeel dat iedereen in het begin fout doet
+
+Als je voor hetzelfde platform de browserpixel *én* de server-API gebruikt (hybride modus), ontvangt het platform twee events per actie. Leveranciers dedupliceren op een event-ID die beide paden moeten delen:
+
+- Meta: `event_id` in de Conversions API is gelijk aan `eventID` in de pixelaanroep
+- TikTok: `event_id` in de Events API is gelijk aan de `event_id` van de pixel
+- Pinterest en Snapchat: `event_id` / `client_dedup_id`
+- Microsoft: dezelfde `eventId` op de UET-tag en de Conversions API
+- LinkedIn: `eventId`
+
+De praktische regel: genereer één ID per event aan de bron en geef die overal aan door. Aankopen dragen daarnaast de order-ID (`transaction_id` in GA4, `orderId` in Google Ads, `ordinal` in Campaign Manager), zodat de leverancier ook op de bestelling kan samenvoegen als het browser-event verloren is gegaan.
+
+## Een minimale architectuur die standhoudt
+
+1. **Collector** — accepteert browser- en serverbatches, valideert origins en source keys, past rate limits toe en geeft elke batch door aan een persistente wachtrij *voordat* hij met 202 antwoordt.
+2. **Worker** — normaliseert naar één schema, scant op persoonsgegevens, beoordeelt het toestemmingsbeleid, slaat het event op, dedupliceert conversies op order-ID en stuurt per destination één afleverbericht uit.
+3. **Aflevering** — mapt naar de payload van de leverancier, valideert die, verstuurt, classificeert het antwoord (auth, rate-limited, ongeldige payload, tijdelijk), probeert opnieuw met backoff of parkeert in een dead-letter-queue.
+4. **Debugger** — toont elk event met zijn toestemmingssnapshot, routeringsbeslissing en de geredigeerde payload van de leverancier.
+
+Ontbreekt een van deze onderdelen, dan kun je op een gegeven moment de vraag ‘waarom is deze aankoop niet in platform X verschenen?’ niet beantwoorden — en dat is precies de vraag die bepaalt of het project wordt vertrouwd.
+
+## Checklist voordat je een destination omzet naar server-side
+
+- [ ] Toestemming wordt in de browser en op de server beoordeeld, zonder replay achteraf
+- [ ] Eén event-ID per actie, gedeeld door het browser- en het serverpad
+- [ ] Order-ID op elke aankoop en terugbetaling
+- [ ] Matchinggegevens (e-mail, telefoon) genormaliseerd en SHA-256-gehasht voordat ze je systemen verlaten
+- [ ] Click-ID's alleen vastgelegd na marketingtoestemming en alleen doorgestuurd naar het platform waar ze bij horen
+- [ ] Een testevent dat aankomt in de testevents-weergave van de leverancier
+- [ ] Retries, een dead-letter-queue en een manier om te replayen
+- [ ] Bewaartermijnen voor events, click-ID's en afleverlogs
+
+## Wat je na de overstap kunt verwachten
+
+Teams zien de conversieaantallen meestal met een merkbaar aandeel stijgen zodra de serveraflevering is toegevoegd — dat is het eerder verloren browserverkeer, geen nieuwe klanten. Verwacht dat de platformen cijfers over de *Event Match Quality* rapporteren; die verbeteren met gehashte e-mail en telefoonnummer uit het bestelsysteem. En reken op een paar weken waarin het browser- en het serverpad naast elkaar draaien terwijl je de cijfers in de debugger vergelijkt.

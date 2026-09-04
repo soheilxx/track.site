@@ -1,0 +1,89 @@
+---
+title: "TikTok Events API 2.0: pixel plus server-events met ttclid, _ttp en een gedeelde event_id"
+description: "TikTok Pixel en de Events API samen instellen — access token, pixelcode, de /event/track/-payload, matchingsleutels, deduplicatie en test event codes."
+excerpt: "De Events API 2.0 van TikTok ontvangt webevents op /open_api/v1.3/event/track/. Deze gids legt de payload uit, welke identifiers het matchpercentage verhogen, hoe pixel en server dedupliceren en hoe je test zonder de rapportage te raken."
+category: "integrations"
+translationGroupId: "tiktok-events-api-setup"
+slug: "tiktok-events-api-setup"
+topic: "pixel-platform-integrations"
+platforms: ["tiktok"]
+shopSystems: []
+contentType: "tutorial"
+level: "intermediate"
+takeaways:
+  - "Je hebt de openbare pixelcode nodig als event_source_id, een access token voor de Events API dat in de kluis wordt bewaard, en optioneel een test event code."
+  - "Events gaan naar /open_api/v1.3/event/track/ met namen in PascalCase; Track mapt canonieke events standaard, bijvoorbeeld purchase naar CompletePayment."
+  - "Matchingsleutels in volgorde van impact zijn ttclid (vastgelegd na marketingtoestemming), de waarde van de _ttp-cookie, gehasht e-mailadres en telefoonnummer, en een gehashte external_id."
+  - "TikTok dedupliceert pixel en API op event_id bij dezelfde eventnaam; in testmodus draagt elk request test_event_code en blijft het buiten de rapportage."
+tags: ["tiktok", "events-api", "ttclid", "deduplicatie"]
+author: "track-site-editorial"
+publishedAt: "2026-08-31"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "TikTok Events API-request met user- en properties-objecten"
+sources:
+  - title: "TikTok Ads — Standard events and parameters"
+    url: "https://ads.tiktok.com/help/article/standard-events-parameters"
+  - title: "TikTok Ads — Get started with Events API"
+    url: "https://ads.tiktok.com/help/article/getting-started-events-api"
+legalNotice: false
+---
+
+## Wat je nodig hebt uit TikTok Ads Manager
+
+- De **pixelcode** (Events Manager → Web Events → jouw pixel). Die is openbaar en dient tegelijk als `event_source_id` voor de API.
+- Een **access token voor de Events API** (pixel → Settings → Generate Access Token). Dat is een geheim en hoort in de kluis, nooit in een tag.
+- Optioneel een **test event code** uit het tabblad Test Events.
+
+## Het request
+
+`POST https://business-api.tiktok.com/open_api/v1.3/event/track/` met de header `Access-Token: <token>` en een body zoals:
+
+```json
+{
+  "event_source": "web",
+  "event_source_id": "CABCDEFGHIJKLMNOPQRS",
+  "data": [{
+    "event": "CompletePayment",
+    "event_time": 1767225600,
+    "event_id": "01J9EXAMPLESOURCEEVENTID00",
+    "user": { "ttclid": "…", "ttp": "…", "email": "<sha256>", "phone": "<sha256>", "external_id": "<sha256>" },
+    "page": { "url": "https://shop.example/thank-you", "referrer": "https://shop.example/checkout" },
+    "properties": { "value": 129.9, "currency": "EUR", "content_type": "product", "contents": [{ "content_id": "SKU-1", "quantity": 1, "price": 99.9 }], "order_id": "A1001" }
+  }]
+}
+```
+
+Een `code: 0` in het antwoord betekent geaccepteerd. `event_time` is in Unix-seconden; `event_source` kan voor niet-webbronnen ook `offline` of `crm` zijn, met de ID van de bijbehorende event set.
+
+## Eventnamen
+
+De standaard webevents van TikTok zijn in PascalCase: `ViewContent`, `AddToCart`, `AddToWishlist`, `InitiateCheckout`, `AddPaymentInfo`, `CompletePayment`, `PlaceAnOrder`, `CompleteRegistration`, `SubmitForm`, `Contact`, `Subscribe`, `StartTrial`, `Download`, `Search`, `Schedule`, `ClickButton`. Track mapt de canonieke events daar standaard op (`purchase → CompletePayment`, `generate_lead → SubmitForm`, `book_appointment → Schedule`) en laat je dat per destination overschrijven.
+
+## Matchingsleutels, in volgorde van impact
+
+1. `ttclid` — de click-ID die TikTok aan landingspagina's toevoegt. Leg hem vast na marketingtoestemming, sla hem first-party op en stuur hem mee met elk server-event binnen het attributievenster.
+2. `ttp` — de waarde van de `_ttp`-cookie die de pixel zet. Die identificeert de browser bij TikTok zonder persoonsgegevens.
+3. `email` en `phone` — SHA-256-gehasht na normalisatie (e-mailadres in kleine letters, telefoonnummer in E.164).
+4. `external_id` — je eigen gebruikers-ID, gehasht.
+
+`ttclid` en `ttp` uit het browserpad plus het gehashte e-mailadres uit het bestelsysteem is de combinatie met het hoogste matchpercentage.
+
+## Deduplicatie tussen pixel en API
+
+TikTok dedupliceert op `event_id` wanneer dezelfde eventnaam zowel van de pixel (`ttq.track('CompletePayment', {...}, { event_id })`) als van de API binnen het dedup-venster binnenkomt. Genereer één ID per actie en geef die aan beide mee; de SDK van Track doet dat automatisch voor elk gespiegeld event.
+
+## Veilig testen
+
+Zet de test event code uit Events Manager in de instellingen van de destination. Zolang de destination in testmodus staat, draagt elk request `test_event_code`; events verschijnen onder Test Events en blijven buiten de rapportage. De wizard verstuurt een gemarkeerde aankoop en toont het antwoord van TikTok, inclusief de `request_id` die je aan de support van TikTok kunt doorgeven.
+
+## Responscodes die je moet kennen
+
+- `40001` — access token ongeldig of ontbreekt → token roteren
+- `40002` / `40000` — parameterfouten → eventnamen, tijdstempels en hashing controleren
+- `40100` — ratelimiet bereikt → wordt met backoff opnieuw geprobeerd
+- HTTP 5xx — tijdelijk → wordt opnieuw geprobeerd, circuit breaker als het aanhoudt
+
+## Limieten
+
+Maximaal 1.000 events per request, tijdstempels binnen de laatste zeven dagen, en de pixelcode moet horen bij het advertentieaccount dat het token heeft uitgegeven. Offline events gebruiken de ID van de offline event set als `event_source_id` en `event_source: "offline"`.

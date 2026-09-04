@@ -1,0 +1,70 @@
+---
+title: "TCF 2.2, GPP en Global Privacy Control: hoe een tag manager toestemmingssignalen hoort te lezen"
+description: "Wat de TC-string van het IAB TCF 2.2, de Global Privacy Platform-string en de Global Privacy Control-header elk uitdrukken, hoe ze worden gemapt op doeleinden als analytics en marketing, en hoe Track ze per event beoordeelt zonder ooit toestemming aan te nemen."
+excerpt: "Drie signalen, drie werkingsgebieden: TCF 2.2 voor de EER en het VK, GPP voor Amerikaanse staatswetten en daarbuiten, GPC als opt-out op browserniveau. Een toestemmingsbewuste router moet alle drie lezen, conflicten conservatief oplossen en vastleggen wat hij heeft besloten. Zo werkt de mapping."
+category: "privacy"
+translationGroupId: "tcf-2-2-gpp-gpc"
+slug: "tcf-2-2-gpp-gpc"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "advanced"
+takeaways:
+  - "TCF 2.2 codeert toestemming per doel en per vendor voor de EER en het VK, GPP bundelt regionale secties inclusief opt-outs van Amerikaanse staten, en GPC is een opt-out op browserniveau zonder details per doel."
+  - "Track normaliseert elk signaal naar necessary, analytics, marketing en personalization; een doel geldt alleen als verleend wanneer een signaal het uitdrukkelijk verleent, en het meest restrictieve signaal wint."
+  - "De SDK leest __tcfapi, __gpp en navigator.globalPrivacyControl, legt op elk event een toestemmingsrecord vast en zet nooit zelf toestemming — zonder signaal geldt alleen necessary."
+  - "Server-side bronnen leveren de toestemmingsstatus mee die ze hebben vastgelegd; een event zonder toestemmingsinformatie bereikt geen enkele advertentie-destination, en marketingtoestemming wordt nooit afgeleid uit een bestelling."
+tags: ["tcf", "gpp", "gpc", "toestemming"]
+author: "track-site-editorial"
+publishedAt: "2026-08-21"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Bronnen van toestemmingssignalen die uitmonden in een beslissing per doel"
+sources:
+  - title: "IAB Europe — TCF v2.2 technical specifications"
+    url: "https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md"
+  - title: "IAB Tech Lab — Global Privacy Platform"
+    url: "https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform"
+  - title: "Global Privacy Control — Specification"
+    url: "https://globalprivacycontrol.github.io/gpc-spec/"
+legalNotice: false
+---
+
+## De drie signalen
+
+**TCF 2.2** (IAB Europe): de CMP stelt `__tcfapi` en een TC-string beschikbaar. Die codeert toestemming per doel (doeleinden 1 tot en met 11), toestemming per vendor, signalen voor gerechtvaardigd belang en special features. Versie 2.2 schrapte gerechtvaardigd belang als rechtsgrond voor de doeleinden 3 tot en met 6 (gepersonaliseerde advertenties en content), verplicht CMP's om het aantal vendors te tonen en introduceerde een verplichte cadans om opnieuw toestemming te vragen. TCF 2.2 is een *framework* voor vendors op de Global Vendor List; een first-party tag manager is geen GVL-vendor en leest de doeleinden om zijn eigen routering te sturen.
+
+**GPP** (IAB Tech Lab): `__gpp` stelt een GPP-string beschikbaar die uit secties bestaat — de TCF EU-sectie, de TCF Canada-sectie, Amerikaanse nationale en staatssecties (Californië, Virginia, Colorado, Connecticut, Utah en andere). Elke Amerikaanse sectie codeert opt-outs voor verkoop, delen en gerichte advertenties, plus flags voor gevoelige gegevens.
+
+**GPC** (Global Privacy Control): een signaal op browserniveau — de request-header `Sec-GPC: 1` en `navigator.globalPrivacyControl === true`. Onder de CPRA en verschillende staatswetten moet het worden gerespecteerd als opt-out voor verkoop of delen. Het bevat geen details per doel.
+
+## Mapping naar doeleinden
+
+Track normaliseert elk signaal naar vier doeleinden: `necessary`, `analytics`, `marketing`, `personalization`. De mapping is conservatief — een doel geldt alleen als verleend wanneer het signaal het uitdrukkelijk verleent:
+
+| Doel | TCF 2.2 (`__tcfapi`) | CMP-callback / toestemmingsaanroep van de SDK | GPC |
+| --- | --- | --- | --- |
+| analytics | toestemming voor doeleinden 1 (opslag), 7 en 8 (meting) | `analytics` verleend | geen invloed |
+| marketing | toestemming voor doeleinden 1–4 | `marketing` verleend | geweigerd bij `Sec-GPC: 1` of `navigator.globalPrivacyControl` |
+| personalization | toestemming voor doeleinden 5 en 6 | `personalization` verleend | geweigerd wanneer GPC is gezet |
+| necessary | altijd | altijd | altijd |
+
+Zijn er meerdere signalen aanwezig, dan wint het meest restrictieve. Een bezoeker met een TC-string die alles verleent maar met een gezet GPC-signaal, krijgt marketing en personalization geweigerd. De Amerikaanse staatssecties van GPP worden niet doel voor doel geïnterpreteerd: voor Amerikaanse bezoekers komen de doeleinden uit de CMP-callback, en het GPC-signaal — uit de browser of uit de GPP-API — wordt gerespecteerd als opt-out.
+
+## Wat de SDK werkelijk doet
+
+1. Bij het laden controleert hij op `__tcfapi`, `__gpp` en `navigator.globalPrivacyControl`, abonneert hij zich op TCF-wijzigingsevents en leest hij het GPC-signaal dat de GPP-API beschikbaar stelt.
+2. Voor CMP's die geen TCF implementeren, geeft de site de doeleinden door via de toestemmingsaanroep van de SDK; de SDK normaliseert ze en negeert onbekende doeleinden.
+3. Elk event draagt een toestemmingsrecord: de verleende doeleinden, de bron (TCF, GPP, de CMP-integratie, de API of de server), de policy-versie, een tijdstempel, de regio als die bekend is en de GPC-flag. De collector slaat het op, de policy-engine beoordeelt het per destination, en de DSAR-export bevat het.
+4. Verandert de toestemming, dan gebruiken volgende events de nieuwe status en worden identifiers die aan een ingetrokken doel zijn gekoppeld direct uit de opslag verwijderd.
+
+De SDK *zet* nooit toestemming. Hij heeft geen 'alles accepteren'-aanroep en geen standaardwaarde 'verleend' wanneer een CMP ontbreekt: zonder signaal geldt alleen `necessary`, en de integratie van de eigen cookiebanner van de site is de manier om meer te verlenen.
+
+## Server-side bronnen
+
+Events uit webhooks en imports hebben geen CMP in de keten. Het systeem dat ze verstuurt, levert de toestemmingsstatus mee die het voor die persoon heeft vastgelegd — bij de registratie, in de checkout, op de lead — en de policy-engine past die precies zo toe als bij browser-events. Een event dat zonder toestemmingsinformatie binnenkomt, draagt alleen het doel necessary: het wordt opgeslagen als first-party data en bereikt geen enkele advertentie-destination. Wat Track nooit doet, is marketingtoestemming aannemen omdat de bestelling uit een webshop kwam.
+
+## Verificatie
+
+De toestemmingspagina in de app toont per site de gedetecteerde CMP, het aandeel sessies waarin elk doel is verleend, het aandeel met een gezet GPC-signaal en alle sessies waarin signalen elkaar tegenspraken. De event-debugger toont het toestemmingsrecord op elk event en de policy-beslissing per destination, zodat 'waarom heeft deze aankoop Meta niet bereikt?' met één klik beantwoord is.

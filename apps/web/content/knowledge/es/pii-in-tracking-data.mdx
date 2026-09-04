@@ -1,0 +1,75 @@
+---
+title: "Datos personales en los payloads de tracking: por dónde se cuelan, qué detecta el escáner y qué bloquea un evento"
+description: "Las vías habituales por las que correos electrónicos, números de teléfono, números de tarjeta y tokens acaban en los eventos de tracking — URL, títulos de página, campos de formulario, términos de búsqueda — y cómo el escáner de PII de Track enmascara, notifica y, en el caso de tarjetas y secretos, bloquea antes de que nada se almacene o se reenvíe."
+excerpt: "Nadie envía a propósito un número de tarjeta de crédito a una herramienta de analítica. Ocurre a través de un parámetro de URL, un título de página o un campo de formulario llamado «comentario». El escáner se ejecuta en cada evento antes del almacenamiento y antes del enrutado; esto es lo que busca y lo que hace cuando encuentra algo."
+category: "privacy"
+translationGroupId: "pii-in-tracking-data"
+slug: "pii-in-tracking-data"
+topic: "consent-privacy"
+platforms: []
+shopSystems: []
+contentType: "explainer"
+level: "intermediate"
+takeaways:
+  - "Los datos personales se cuelan a través de URL, títulos de página, referrers, campos de formulario y de búsqueda, objetos anidados y nombres de artículo personalizados."
+  - "El escáner se ejecuta antes del almacenamiento y del enrutado y conoce seis tipos: los correos electrónicos y los números de teléfono se enmascaran y se notifican; los números de tarjeta, los IBAN, los secretos y los JWT bloquean el evento por completo."
+  - "El correo electrónico y el teléfono con hash en user_data son claves de coincidencia intencionadas condicionadas al consentimiento de marketing; el escáner no las señala, el motor de políticas decide por destino."
+  - "Los hallazgos se convierten en incidencias agrupadas en la página de calidad de datos con correcciones típicas; el componente de esquema del Health Score se recupera en cuanto se cierra la fuga."
+tags: ["pii", "calidad-de-datos", "enmascaramiento", "seguridad"]
+author: "track-site-editorial"
+publishedAt: "2026-08-13"
+reviewedAt: "2026-09-04"
+status: "published"
+coverAlt: "Campos de evento escaneados en busca de datos personales antes del almacenamiento"
+sources:
+  - title: "GDPR Article 25 — Data protection by design and by default"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj#d1e3063-1-1"
+legalNotice: false
+---
+
+## Por dónde se cuelan los datos personales
+
+- **URL.** Los enlaces de restablecimiento de contraseña, los enlaces para darse de baja y las confirmaciones de reserva colocan direcciones de correo electrónico y tokens en la query string. Una vista de página registra la URL.
+- **Títulos de página.** «Pedido n.º 1234 de ana.garcia@example.com» como `<title>` se convierte en el título del evento.
+- **Referrers.** La URL de la página anterior, con todo lo anterior.
+- **Campos de formulario y de búsqueda.** Una búsqueda en el sitio de un número de teléfono, o un campo «mensaje» reflejado en las propiedades del evento.
+- **Objetos anidados.** Un objeto de formulario entero metido en `props` porque era cómodo.
+- **Nombres de artículo.** Productos personalizados («Taza para Ana») en los artículos de comercio.
+
+## Qué busca el escáner
+
+El escáner se ejecuta después de la normalización y antes del motor de políticas, sobre `title`, `url`, `referrer`, cada cadena de `props`, los objetos anidados de `props` y los nombres de artículo de comercio. Seis tipos:
+
+| Tipo | Ejemplos | Acción |
+| --- | --- | --- |
+| email | cualquier dirección con forma RFC | enmascarado, notificado |
+| phone | formatos internacionales y nacionales con 7 o más dígitos | enmascarado, notificado |
+| card | secuencias de 13 a 19 dígitos que superan la comprobación de Luhn | enmascarado, **evento bloqueado** |
+| iban | código de país + dígitos de control + BBAN | enmascarado, **evento bloqueado** |
+| secret | claves de API y tokens con prefijos conocidos, cadenas largas de alta entropía en campos de tipo clave | enmascarado, **evento bloqueado** |
+| jwt | tres segmentos base64url separados por puntos | enmascarado, **evento bloqueado** |
+
+«Enmascarado» significa que la coincidencia se sustituye in situ por un marcador antes del almacenamiento. Los objetos anidados que contienen un hallazgo se sustituyen por completo por `[redacted:nested]`, porque el enmascaramiento parcial de datos estructurados no es fiable. «Bloqueado» significa que el evento no se almacena ni se enruta; una incidencia de calidad de datos registra el campo y el tipo, nunca el valor.
+
+## Por qué las tarjetas y los secretos bloquean y los correos electrónicos no
+
+Un correo electrónico en un título de página es un problema de calidad de datos con una dimensión legal; enmascararlo y decirte de dónde vino resuelve ambas cosas. Un número de tarjeta o un token bearer en un evento es un incidente: almacenar incluso un evento enmascarado con su contexto dejaría un rastro que dice «esto ocurrió aquí, a esta hora, en esta sesión», y reenviarlo a cualquier sitio queda descartado. Bloquear es la opción conservadora, y el hallazgo te dice qué página o formulario corregir.
+
+## Los identificadores con hash son otra cosa
+
+El correo electrónico y el teléfono con hash en `user_data` son identificadores *intencionados* que sirven como claves de coincidencia publicitaria: se entregan mediante la llamada `identify` del SDK o un origen de servidor, se les aplica hash antes de salir del navegador o de la tienda y están condicionados a la finalidad de marketing. El escáner no los señala; el motor de políticas decide por destino si pueden reenviarse.
+
+## El ciclo de hallazgos
+
+Cada hallazgo se convierte en una incidencia en la página de calidad de datos, agrupada por campo y tipo con un recuento y la primera y la última vez que se vio. Correcciones típicas:
+
+- Parámetros de URL: elimina los tokens en el servidor antes de renderizar, o añade el parámetro a la lista de limpieza (scrub list) del sitio para que el SDK lo elimine antes de enviar.
+- Títulos: renderiza títulos genéricos en las páginas de cuenta y de confirmación.
+- Formularios: envía a `props` solo los campos de una lista de permitidos; nunca el objeto de formulario entero.
+- Búsqueda: envía el hecho de que hubo una búsqueda y el número de resultados, no la consulta, salvo que la consulta sea vocabulario de producto.
+
+Una incidencia puede marcarse como resuelta o ignorada con un motivo; ignorar queda auditado.
+
+## Verificación
+
+El componente de esquema del Health Score es la proporción de eventos sin hallazgos. Tras corregir una fuga, el componente se recupera dentro de la ventana; la marca de tiempo de la última vez vista deja de moverse. El depurador de eventos muestra el evento enmascarado para que puedas confirmar que el marcador está donde esperas.
