@@ -34,6 +34,12 @@ export const workerEnvSchema = baseEnvSchema.extend({
   LINKEDIN_CLIENT_ID: envString(),
   LINKEDIN_CLIENT_SECRET: envString(),
   CONFIG_CACHE_TTL_MS: envInt(15_000, 1_000, 300_000),
+  /**
+   * Signing key of the `scheduled-publish` job (same variables as the web app). Without it a due draft
+   * is refused with `schedule_error = signing_key_missing` and shown as such in the release center.
+   */
+  CONFIG_SIGNING_PRIVATE_KEY: envString(),
+  CONFIG_SIGNING_KEY_ID: envString(),
 });
 export type WorkerEnv = z.infer<typeof workerEnvSchema>;
 

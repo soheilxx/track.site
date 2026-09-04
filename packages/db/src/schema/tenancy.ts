@@ -146,6 +146,30 @@ export const nonces = pgTable(
   (t) => [index("nonces_expires_idx").on(t.expiresAt)],
 );
 
+/**
+ * Change types an organization can put behind a four-eyes approval (Team & Access, supplement §5
+ * Pro entitlements "Freigabeprozesse, Vier-Augen-Prinzip"). The keys are stable identifiers that the
+ * Releases, Destinations, Consent and Team modules look up before they execute the change; labels
+ * live in the dashboard catalogs.
+ */
+export const APPROVAL_CHANGE_TYPES = ["config_publish", "config_rollback", "consent_publish", "credential_change", "destination_pause", "member_role_change", "kill_switch"] as const;
+export type ApprovalChangeType = (typeof APPROVAL_CHANGE_TYPES)[number];
+
+/**
+ * Approval requirements stored in `organization_settings.approval_policy` (migration 0012). An
+ * empty object means "nothing configured": no change type requires a second person. The requester
+ * of a change never counts as its approver; `approverRoles` always includes OWNER.
+ */
+export interface ApprovalPolicy {
+  /** change types that need a second, different member with an approver role before they run */
+  fourEyes: Partial<Record<ApprovalChangeType, boolean>>;
+  /** roles allowed to approve (OWNER is implied) */
+  approverRoles: string[];
+  /** ISO timestamp and user id of the last change; null until first configured */
+  updatedAt: string | null;
+  updatedBy: string | null;
+}
+
 export const orgSettings = pgTable("organization_settings", {
   organizationId: uuid("organization_id")
     .primaryKey()
@@ -161,5 +185,37 @@ export const orgSettings = pgTable("organization_settings", {
   usageOveragePolicy: text("usage_overage_policy").$type<OveragePolicy>().notNull().default("pause"),
   /** monthly overage cost limit in cents for the `cost_limit` policy; null = not set */
   usageCostLimitCents: bigint("usage_cost_limit_cents", { mode: "number" }),
+  /** four-eyes approval requirements per change type (Team & Access, migration 0012); `{}` = nothing configured */
+  approvalPolicy: jsonb("approval_policy").$type<Partial<ApprovalPolicy>>().notNull().default({}),
   ...timestamps(),
 });
+
+export const APPROVAL_REQUEST_STATUSES = ["pending", "applied", "rejected", "withdrawn", "expired"] as const;
+export type ApprovalRequestStatus = (typeof APPROVAL_REQUEST_STATUSES)[number];
+
+/**
+ * Four-eyes requests (migration 0012): a change that the organization's approval policy puts behind a
+ * second person is stored here instead of being executed. A different member with an approver role
+ * applies or rejects it; the requester can withdraw it. `payload` is the redacted description of the
+ * change the applying module needs (for `member_role_change`: `{ role }`); `expiresAt` is set on
+ * creation and evaluated on read (no job). Tenant table: `organization_id` + RLS policy.
+ */
+export const approvalRequests = pgTable(
+  "approval_requests",
+  {
+    id: id(),
+    organizationId: orgRef(),
+    changeType: text("change_type").$type<ApprovalChangeType>().notNull(),
+    targetType: text("target_type").notNull(),
+    targetId: text("target_id").notNull(),
+    payload: jsonb("payload").$type<Record<string, unknown>>().notNull().default({}),
+    requestedBy: uuid("requested_by").notNull(),
+    status: text("status").$type<ApprovalRequestStatus>().notNull().default("pending"),
+    decidedBy: uuid("decided_by"),
+    decidedAt: tz("decided_at"),
+    decisionNote: text("decision_note"),
+    expiresAt: tz("expires_at").notNull(),
+    ...timestamps(),
+  },
+  (t) => [index("approval_requests_org_idx").on(t.organizationId), index("approval_requests_org_status_idx").on(t.organizationId, t.status, t.createdAt)],
+);

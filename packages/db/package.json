@@ -19,6 +19,7 @@
     "generate": "drizzle-kit generate",
     "migrate": "tsx src/cli/migrate.ts",
     "migrate:check": "drizzle-kit check && tsx src/cli/migrate-check.ts",
+    "schema:check": "tsx src/cli/schema-check.ts",
     "seed": "tsx src/cli/seed.ts",
     "studio": "drizzle-kit studio"
   },

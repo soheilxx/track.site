@@ -43,6 +43,48 @@
       "when": 1788482645756,
       "tag": "0005_knowledge_feedback",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788509443957,
+      "tag": "0006_workspace_preferences",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788509444957,
+      "tag": "0007_event_lineage",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788509445957,
+      "tag": "0008_destination_health",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788509446957,
+      "tag": "0009_revenue_reconciliation",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788509447957,
+      "tag": "0010_release_approvals",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788509448957,
+      "tag": "0012_team_policies",
+      "breakpoints": true
     }
   ]
 }

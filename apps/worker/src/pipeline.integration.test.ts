@@ -179,7 +179,8 @@ describe("vertical slice: ingest -> store -> route -> deliver", () => {
       ],
     };
     const stats = await processIngestMessage(ctx, msg);
-    expect(stats.accepted).toBe(2);
+    // the second server record of the same order is a duplicate conversion: not accepted, never billed
+    expect(stats.accepted).toBe(1);
     expect(stats.dropped.duplicate_conversion).toBe(1);
     const conv = await t.pool.query(`SELECT count(*)::int AS n FROM conversion_records WHERE site_id = $1 AND order_id = 'ORD-1'`, [siteId]);
     expect(conv.rows[0].n).toBe(1);

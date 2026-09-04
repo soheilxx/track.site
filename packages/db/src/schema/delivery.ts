@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { createdAt, tz } from "./_helpers.ts";
+import { doublePrecision, index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { createdAt, id, tz } from "./_helpers.ts";
 import { integrations } from "./config.ts";
 import { orgRef, sites } from "./tenancy.ts";
 
@@ -71,6 +71,56 @@ export const deadLetterReferences = pgTable(
     replayedAt: tz("replayed_at"),
   },
   (t) => [index("dead_letter_refs_org_idx").on(t.organizationId), index("dead_letter_refs_queue_idx").on(t.queue)],
+);
+
+/**
+ * Latest health measurement per destination (Destination Health Center, migration 0008). Written by
+ * the worker job `destination-health` (apps/worker/src/jobs/destination-health.ts) from
+ * `delivery_attempts` and from the queue tables the dashboard role cannot read (`queue_messages` and
+ * `queue_dead_letters` are revoked from tracksite_app). One row per integration, upserted on every run;
+ * the dashboard reads it under RLS, shows a missing row as "not measured" and marks a row stale when
+ * `computed_at` is older than the job interval allows. Counters cover the trailing `window_minutes`;
+ * `last_success_at` looks back 90 days. Tenant table: organization_id + RLS policy.
+ */
+export const destinationHealthSnapshots = pgTable(
+  "destination_health_snapshots",
+  {
+    id: id(),
+    organizationId: orgRef(),
+    siteId: uuid("site_id")
+      .notNull()
+      .references(() => sites.id, { onDelete: "cascade" }),
+    integrationId: uuid("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    computedAt: tz("computed_at").notNull().defaultNow(),
+    windowMinutes: integer("window_minutes").notNull().default(1440),
+    attemptsTotal: integer("attempts_total").notNull().default(0),
+    attemptsSuccess: integer("attempts_success").notNull().default(0),
+    attemptsFailed: integer("attempts_failed").notNull().default(0),
+    attemptsRetry: integer("attempts_retry").notNull().default(0),
+    attemptsSkipped: integer("attempts_skipped").notNull().default(0),
+    attemptsRateLimited: integer("attempts_rate_limited").notNull().default(0),
+    attemptsAuthFailed: integer("attempts_auth_failed").notNull().default(0),
+    /** (failed + retry) / (success + failed + retry) within the window; null without attempts */
+    errorRate: doublePrecision("error_rate"),
+    queueReady: integer("queue_ready"),
+    queueScheduled: integer("queue_scheduled"),
+    queueInFlight: integer("queue_in_flight"),
+    queueOldestAvailableAt: tz("queue_oldest_available_at"),
+    queueDead: integer("queue_dead"),
+    lastSuccessAt: tz("last_success_at"),
+    lastFailureAt: tz("last_failure_at"),
+    lastErrorClass: text("last_error_class"),
+    lastErrorCode: text("last_error_code"),
+    /** copied from delivery_attempts.error_message (truncated to 500 chars by the worker; the dashboard redacts it before display) */
+    lastErrorMessage: text("last_error_message"),
+    lastErrorHttpStatus: integer("last_error_http_status"),
+    lastRateLimitAt: tz("last_rate_limit_at"),
+    /** wait the vendor imposed on the last rate-limited attempt (next_retry_at - started_at) */
+    lastRateLimitWaitMs: integer("last_rate_limit_wait_ms"),
+  },
+  (t) => [uniqueIndex("destination_health_integration_uq").on(t.integrationId), index("destination_health_org_idx").on(t.organizationId), index("destination_health_site_idx").on(t.siteId)],
 );
 
 /** Transactional outbox for control-plane events (publish, credential rotation, deletion jobs). */

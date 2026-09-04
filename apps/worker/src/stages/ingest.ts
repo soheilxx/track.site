@@ -12,6 +12,7 @@ import {
 import { applyStrip, clickIdsForDestination, consentSnapshotHash, evaluateDispatch, evaluatePersistence, scanEventForPii, snapshotFromConsent, type ConnectorType } from "@track-site/policy";
 import { QUEUES, type EnqueueInput } from "@track-site/queue";
 import type { WorkerContext } from "../context.ts";
+import { writeLineage, type LineageRecord } from "./lineage.ts";
 
 export interface IngestStats {
   received: number;
@@ -29,6 +30,11 @@ export interface IngestStats {
  * Events blocked by consent or PII are never persisted; they are only counted. Usage follows the
  * catalogue's billable-event rules: one ledger row per accepted event, none for test-mode
  * environments, duplicates (event id or order id) or retries of an already-ledgered event.
+ *
+ * Every step additionally records a lineage row (`event_lineage`, migration 0007) — captured,
+ * accepted, normalized, policy, deduplicated, routed — with the outcome and reason, so the Live Event
+ * Explorer can show why an event was stored, blocked, deduplicated or routed. Lineage rows of events
+ * that are not persisted carry no identifiers or payload fields.
  */
 export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessage): Promise<IngestStats> {
   const stats: IngestStats = { received: msg.events.length, accepted: 0, billable: 0, duplicates: 0, routed: 0, dropped: {} };
@@ -45,35 +51,63 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
   const enabledEvents = runtime.bundle ? new Set(runtime.bundle.events.filter((e) => e.enabled).map((e) => e.name)) : null;
   const toStore: CanonicalEvent[] = [];
 
+  const lineage: LineageRecord[] = [];
+  const batchSource = msg.kind === "browser_batch" ? "browser" : "server";
+  type Trace = Pick<LineageRecord, "eventId" | "sourceEventId" | "eventName" | "source">;
+  const trace = (base: Trace, row: Pick<LineageRecord, "stage" | "outcome" | "occurredAt"> & Partial<Pick<LineageRecord, "reason" | "integrationId" | "detail">>) =>
+    lineage.push({ organizationId: msg.site.organization_id, siteId: msg.site.site_id, environmentId: msg.site.environment_id, batchId: msg.message_id, ...base, ...row });
+  const traceOf = (e: CanonicalEvent): Trace => ({ eventId: e.event_id, sourceEventId: e.source_event_id, eventName: e.name, source: e.source });
+
   for (const incoming of msg.events) {
     const r = msg.kind === "browser_batch" ? normalizeBrowserEvent(incoming as never, normCtx) : normalizeServerEvent(incoming as never, normCtx);
+    const incomingId = typeof (incoming as { id?: unknown }).id === "string" ? (incoming as { id: string }).id : null;
+    const base: Trace = r.ok ? traceOf(r.event) : { eventId: incomingId ?? newUlid(), sourceEventId: incomingId, eventName: typeof incoming.name === "string" && incoming.name ? incoming.name : "unknown", source: batchSource };
+    trace(base, { stage: "captured", outcome: "ok", occurredAt: serverTs, detail: { kind: msg.kind } });
     if (!r.ok) {
       drop(r.reason);
+      trace(base, { stage: "accepted", outcome: "rejected", reason: r.reason, occurredAt: ctx.now() });
       continue;
     }
     let event = r.event;
     if (msg.kind === "browser_batch" && msg.is_bot_hint) {
       drop("bot");
+      trace(base, { stage: "accepted", outcome: "rejected", reason: "bot", occurredAt: ctx.now() });
       continue;
     }
+    trace(base, { stage: "accepted", outcome: "ok", occurredAt: ctx.now() });
+    let planned: boolean | null = enabledEvents ? enabledEvents.has(event.name) : null;
     if (enabledEvents && !enabledEvents.has(event.name) && event.is_standard === false) {
       // unknown custom event: accept but flag for the data-quality inbox (handled by aggregates)
       event.provenance.name = { ...event.provenance.name!, source: `${event.source}:unplanned` };
+      planned = false;
     }
+    let adoptedBrowserContext = false;
     if (msg.kind === "server_batch" && (event.name === "purchase" || event.name === "refund") && event.commerce?.order_id && !event.consent.granted.some((p) => p !== "necessary")) {
       // server-side order without a consent record: inherit the consent and identity the browser recorded for the same order
       const browser = await ctx.eventStore.findConversionEvent(event.site_id, event.commerce.order_id, "purchase", "browser", new Date(serverTs.getTime() - 30 * 86_400_000));
-      if (browser) event = adoptBrowserContext(event, browser, serverTs);
+      if (browser) {
+        event = adoptBrowserContext(event, browser, serverTs);
+        adoptedBrowserContext = true;
+      }
     }
+    trace(base, { stage: "normalized", outcome: "ok", occurredAt: ctx.now(), detail: { is_standard: event.is_standard, category: event.category, planned, adopted_browser_context: adoptedBrowserContext, warnings: r.warnings } });
     const pii = scanEventForPii(event);
     if (pii.blocked) {
       drop("pii_blocked");
+      trace(base, { stage: "policy", outcome: "blocked", reason: "pii_blocked", occurredAt: ctx.now(), detail: { findings: pii.findings.map((f) => f.kind) } });
       continue;
     }
     event = pii.event;
     const decision = evaluatePersistence(event, runtime.policy);
     if (!decision.allow) {
       drop(decision.reason);
+      trace(base, {
+        stage: "policy",
+        outcome: "blocked",
+        reason: decision.reason,
+        occurredAt: ctx.now(),
+        detail: { purpose_required: decision.purposeRequired, purposes_granted: decision.purposesGranted, consent_source: event.consent.source, region: event.consent.region, gpc: event.consent.gpc, policy_version: runtime.policy.version },
+      });
       continue;
     }
     event = applyStrip(event, decision.strippedFields);
@@ -81,11 +115,18 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
     event.processing_state = "policy_passed";
     event.is_billable = isBillableEvent({ accepted: true, testMode: runtime.testMode });
     event.config_version = runtime.configVersion ?? event.config_version;
+    trace(base, {
+      stage: "policy",
+      outcome: "ok",
+      occurredAt: ctx.now(),
+      detail: { purposes_granted: decision.purposesGranted, stripped_fields: decision.strippedFields, pii_redacted: pii.findings.map((f) => f.kind), consent_source: event.consent.source, region: event.consent.region, gpc: event.consent.gpc, policy_version: runtime.policy.version, test_mode: runtime.testMode, billable: event.is_billable, config_version: event.config_version },
+    });
     toStore.push(event);
   }
 
   if (toStore.length === 0) {
     await recordAggregates(ctx, msg, stats);
+    await writeLineage(ctx, lineage);
     return stats;
   }
 
@@ -110,6 +151,10 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
   const dupSet = new Set(inserted.duplicateEventIds);
   const stored = toStore.filter((e) => !dupSet.has(e.event_id));
   stats.accepted = stored.length;
+  for (const e of toStore) {
+    if (dupSet.has(e.event_id)) trace(traceOf(e), { stage: "deduplicated", outcome: "duplicate", reason: "duplicate_event", occurredAt: ctx.now(), detail: { key: "source_event_id" } });
+  }
+  const conversionDuplicates = new Set<string>();
 
   const deliveries: EnqueueInput<DeliveryMessage>[] = [];
   const client2 = await ctx.pool.connect();
@@ -138,6 +183,8 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
           stats.accepted--;
           stats.duplicates++;
           stats.dropped.duplicate_conversion = (stats.dropped.duplicate_conversion ?? 0) + 1;
+          conversionDuplicates.add(e.event_id);
+          trace(traceOf(e), { stage: "deduplicated", outcome: "duplicate", reason: "duplicate_conversion", occurredAt: ctx.now(), detail: { key: "order_id", prior_source: prior.source, prior_verified: prior.source_verified } });
           continue;
         } else if (e.source_verified && !prior.source_verified) {
           // a verified server/shop record supersedes the browser observation; both events are routed and
@@ -151,7 +198,13 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
             e.commerce.value ?? null,
             e.commerce.currency ?? null,
           ]);
+          trace(traceOf(e), { stage: "deduplicated", outcome: "unique", reason: "verified_supersedes_browser", occurredAt: ctx.now(), detail: { key: "order_id", prior_source: prior.source } });
+        } else {
+          trace(traceOf(e), { stage: "deduplicated", outcome: "unique", reason: "cross_path_pair", occurredAt: ctx.now(), detail: { key: "order_id", prior_source: prior.source } });
         }
+      }
+      if (!conversionDuplicates.has(e.event_id) && !lineage.some((l) => l.eventId === e.event_id && l.stage === "deduplicated")) {
+        trace(traceOf(e), { stage: "deduplicated", outcome: "unique", occurredAt: ctx.now(), detail: { key: "source_event_id" } });
       }
       if (e.is_billable) {
         // the unique (event_id, kind) index makes a retry of an already-ledgered event a no-op: counted exactly once
@@ -163,12 +216,27 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
       }
       // fan-out to destinations from the active bundle (server + hybrid mode)
       let routedTo = 0;
-      for (const dest of runtime.bundle?.destinations ?? []) {
-        if (!dest.enabled || dest.mode === "browser") continue;
+      const notRouted: Array<{ integration_id: string; reason: string }> = [];
+      const destinations = runtime.bundle?.destinations ?? [];
+      for (const dest of destinations) {
+        if (!dest.enabled) {
+          notRouted.push({ integration_id: dest.id, reason: "destination_disabled" });
+          continue;
+        }
+        if (dest.mode === "browser") {
+          notRouted.push({ integration_id: dest.id, reason: "browser_only" });
+          continue;
+        }
         const mapping = dest.mappings.find((m) => m.enabled && m.event === e.name);
-        if (!mapping) continue;
+        if (!mapping) {
+          notRouted.push({ integration_id: dest.id, reason: "no_mapping" });
+          continue;
+        }
         const integration = runtime.integrations.get(dest.id);
-        if (!integration) continue;
+        if (!integration) {
+          notRouted.push({ integration_id: dest.id, reason: "integration_missing" });
+          continue;
+        }
         const decision = evaluateDispatch(
           e,
           { connectorType: dest.type as ConnectorType, status: integration.status, requiredPurpose: dest.purpose },
@@ -180,6 +248,7 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
              VALUES ($1,$2,$3,$4,$5,$6,$7,0,'skipped','policy_blocked',$8, now()) ON CONFLICT DO NOTHING`,
             [newUlid(), e.organization_id, e.site_id, e.event_id, e.name, dest.id, dest.type, decision.reason],
           );
+          trace(traceOf(e), { stage: "routed", outcome: "skipped", reason: decision.reason, integrationId: dest.id, occurredAt: ctx.now(), detail: { connector_type: dest.type, purpose_required: decision.purposeRequired, purposes_granted: decision.purposesGranted, destination_status: integration.status } });
           continue;
         }
         const clickIds = clickIdsForDestination(e, dest.type as ConnectorType, ctx.now());
@@ -200,11 +269,15 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
           partitionKey: msg.site.partition_key,
           dedupKey: `${e.event_id}:${dest.id}`,
         });
+        trace(traceOf(e), { stage: "routed", outcome: "ok", integrationId: dest.id, occurredAt: ctx.now(), detail: { connector_type: dest.type, vendor_event: mapping.vendor_event, mode: dest.mode, test_mode: dest.test_mode || integration.testMode || runtime.testMode, queue: QUEUES.destination(dest.type) } });
         routedTo++;
       }
       if (routedTo > 0) {
         await ctx.eventStore.updateState(e.site_id, e.event_id, "routed", null);
         stats.routed++;
+      } else {
+        const reason = !runtime.bundle ? "no_config" : destinations.length === 0 ? "no_destinations" : notRouted.length === destinations.length ? "no_mapping" : "policy_blocked";
+        trace(traceOf(e), { stage: "routed", outcome: "none", reason, occurredAt: ctx.now(), detail: { config_version: runtime.configVersion, not_routed: notRouted.slice(0, 50) } });
       }
     }
     await client2.query("COMMIT");
@@ -224,6 +297,7 @@ export async function processIngestMessage(ctx: WorkerContext, msg: IngestMessag
   for (const [type, list] of byType) await ctx.queue.enqueue(QUEUES.destination(type), list);
 
   await recordAggregates(ctx, msg, stats);
+  await writeLineage(ctx, lineage);
   return stats;
 }
 

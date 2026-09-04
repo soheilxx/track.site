@@ -1,4 +1,6 @@
+import { sql } from "drizzle-orm";
 import { boolean, index, integer, jsonb, pgEnum, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { canonicalJson, sha256Hex } from "@track-site/core";
 import { createdAt, id, timestamps, tz } from "./_helpers.ts";
 import { environments, orgRef, sites } from "./tenancy.ts";
 
@@ -163,10 +165,43 @@ export const configDrafts = pgTable(
     lint: jsonb("lint").$type<{ errors: unknown[]; warnings: unknown[]; checkedAt: string } | null>(),
     status: configDraftStatusEnum("status").notNull().default("open"),
     createdBy: uuid("created_by"),
+    /**
+     * Scheduled publication (Change & Release Center, migration 0010). The release center sets
+     * `scheduled_at` after the same checks a manual publish runs (lint, four-eyes); the worker job
+     * `scheduled-publish` claims due drafts (`schedule_attempted_at`), refuses a draft whose bundle no
+     * longer matches `schedule_digest` and records why in `schedule_error` — nothing is published twice
+     * and nothing is published that nobody reviewed in this form.
+     */
+    scheduledAt: tz("scheduled_at"),
+    scheduledBy: uuid("scheduled_by"),
+    scheduleDigest: text("schedule_digest"),
+    /** the `config_approvals` row that satisfied the four-eyes rule when scheduling (null = not required) */
+    scheduleApprovalId: uuid("schedule_approval_id"),
+    scheduleAttemptedAt: tz("schedule_attempted_at"),
+    scheduleError: text("schedule_error"),
     ...timestamps(),
   },
-  (t) => [index("config_drafts_site_env_idx").on(t.siteId, t.environmentId), index("config_drafts_org_idx").on(t.organizationId)],
+  (t) => [
+    index("config_drafts_site_env_idx").on(t.siteId, t.environmentId),
+    index("config_drafts_org_idx").on(t.organizationId),
+    index("config_drafts_scheduled_idx")
+      .on(t.scheduledAt)
+      .where(sql`scheduled_at IS NOT NULL AND status = 'open'`),
+  ],
 );
+
+/**
+ * Content digest of a configuration bundle without its `version` / `created_at` stamps: the same
+ * configuration yields the same digest however often it was re-saved. The release center stores it
+ * on approval requests and scheduled drafts; a draft whose digest changed since is treated as a new
+ * change (approval stale, schedule refused). Shared by the web app and the worker.
+ */
+export function configBundleDigest(bundle: Record<string, unknown>): string {
+  const rest = { ...bundle };
+  delete rest.version;
+  delete rest.created_at;
+  return sha256Hex(canonicalJson(rest));
+}
 
 /** Immutable, signed config versions. */
 export const configVersions = pgTable(
@@ -219,4 +254,54 @@ export const configPublications = pgTable(
     supersededAt: tz("superseded_at"),
   },
   (t) => [index("config_publications_env_active_idx").on(t.environmentId, t.isActive), index("config_publications_org_idx").on(t.organizationId)],
+);
+
+export const CONFIG_APPROVAL_KINDS = ["publish", "rollback"] as const;
+export type ConfigApprovalKind = (typeof CONFIG_APPROVAL_KINDS)[number];
+export const CONFIG_APPROVAL_DECISIONS = ["pending", "approved", "rejected", "withdrawn"] as const;
+export type ConfigApprovalDecision = (typeof CONFIG_APPROVAL_DECISIONS)[number];
+
+/** What an approval request was about, frozen at request time so the approver and the audit see the reviewed change. */
+export interface ConfigApprovalSummary {
+  baseVersion: number | null;
+  nextVersion: number;
+  /** readable change summaries (`DiffEntry.summary`, max 50) */
+  changes: string[];
+}
+
+/**
+ * Four-eyes approvals of the Change & Release Center (migration 0010). A member with `config.draft`
+ * requests a review of an open draft; a different member with `config.publish` approves or rejects
+ * it with a reason. `bundle_digest` is the draft content at request time: the approval only counts
+ * for exactly that content (see `configBundleDigest`). `critical` and `critical_reasons` record the
+ * rule-based classification the requester saw. Every decision is audited. Tenant table:
+ * organization_id, org index, RLS policy for tracksite_app.
+ */
+export const configApprovals = pgTable(
+  "config_approvals",
+  {
+    id: id(),
+    organizationId: orgRef(),
+    siteId: uuid("site_id")
+      .notNull()
+      .references(() => sites.id, { onDelete: "cascade" }),
+    environmentId: uuid("environment_id")
+      .notNull()
+      .references(() => environments.id, { onDelete: "cascade" }),
+    kind: text("kind").$type<ConfigApprovalKind>().notNull().default("publish"),
+    draftId: uuid("draft_id").references(() => configDrafts.id, { onDelete: "cascade" }),
+    versionId: uuid("version_id").references(() => configVersions.id, { onDelete: "set null" }),
+    bundleDigest: text("bundle_digest").notNull(),
+    critical: boolean("critical").notNull().default(false),
+    criticalReasons: jsonb("critical_reasons").$type<string[]>().notNull().default([]),
+    summary: jsonb("summary").$type<ConfigApprovalSummary>().notNull(),
+    requestedBy: uuid("requested_by").notNull(),
+    requestNote: text("request_note"),
+    approverId: uuid("approver_id"),
+    decision: text("decision").$type<ConfigApprovalDecision>().notNull().default("pending"),
+    reason: text("reason"),
+    decidedAt: tz("decided_at"),
+    ...timestamps(),
+  },
+  (t) => [index("config_approvals_draft_idx").on(t.draftId, t.decision), index("config_approvals_env_created_idx").on(t.environmentId, t.createdAt), index("config_approvals_org_idx").on(t.organizationId)],
 );

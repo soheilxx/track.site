@@ -7,6 +7,7 @@ import { AccessTokenCache, getConnector, isRetryable, OAUTH_PROVIDERS, refreshAc
 const tokenCache = new AccessTokenCache();
 import type { QueueMessage } from "@track-site/queue";
 import type { WorkerContext } from "../context.ts";
+import { writeLineage, type LineageRecord } from "./lineage.ts";
 
 const breakers = new Map<string, CircuitBreaker>();
 function breakerFor(integrationId: string): CircuitBreaker {
@@ -41,10 +42,34 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
     await ctx.queue.ack(message);
     return "skipped";
   }
+  // lineage row per attempt outcome (event_lineage, migration 0007); best effort, never blocks delivery
+  const trace = (outcome: LineageRecord["outcome"], reason: string | null, detail: Record<string, unknown>) =>
+    writeLineage(ctx, [
+      {
+        organizationId: msg.organization_id,
+        siteId: msg.site_id,
+        environmentId: event.environment_id,
+        eventId: event.event_id,
+        sourceEventId: event.source_event_id,
+        batchId: null,
+        eventName: event.name,
+        source: event.source,
+        stage: "delivered",
+        outcome,
+        reason,
+        integrationId: msg.integration_id,
+        detail: { connector_type: msg.connector_type, attempt: message.attempts, ...detail },
+        occurredAt: ctx.now(),
+      },
+    ]);
+  // the event's own environment decides test mode as well: a staging/test event is never delivered live,
+  // even when the delivery runtime was resolved for the site's default (production) environment
+  const eventTestMode = await environmentTestMode(ctx, event.environment_id);
   const decision = evaluateDispatch(event, { connectorType: dest.type as ConnectorType, status: integration.status, requiredPurpose: dest.purpose }, runtime.policy);
   if (!decision.allow) {
     await recordAttempt(ctx, msg, message.attempts, { status: "skipped", errorClass: "policy_blocked", errorCode: decision.reason, message: null, httpStatus: null, durationMs: 0, preview: null, responseExcerpt: null, vendorEventId: null });
     await ctx.eventStore.markDelivery(msg.site_id, msg.event_id, { integrationId: msg.integration_id, status: "skipped", attempts: message.attempts, at: ctx.now().toISOString() });
+    await trace("skipped", decision.reason, { error_class: "policy_blocked", purpose_required: decision.purposeRequired, purposes_granted: decision.purposesGranted });
     await ctx.queue.ack(message);
     return "skipped";
   }
@@ -55,16 +80,18 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
   }
   const mapping = dest.mappings.find((m) => m.enabled && m.event === event.name);
   if (!mapping) {
+    await trace("skipped", "no_mapping", {});
     await ctx.queue.ack(message);
     return "skipped";
   }
+  const testMode = integration.testMode || runtime.testMode || eventTestMode;
   const connectorCtx: ConnectorContext = {
     organizationId: msg.organization_id,
     siteId: msg.site_id,
     integrationId: msg.integration_id,
     publicConfig: integration.publicConfig,
     settings: integration.settings,
-    testMode: integration.testMode || runtime.testMode,
+    testMode,
     getCredential: async (kind) => {
       if (!ctx.vault) return null;
       const res = await ctx.pool.query<{ ciphertext: string }>(
@@ -111,6 +138,7 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
   const clickIds = clickIdsForDestination(event, dest.type as ConnectorType, ctx.now());
   const payload = connector.mapEvent({ event, clickIds, dedupId: vendorDedupId(event) }, { event: mapping.event, vendorEvent: mapping.vendor_event, enabled: mapping.enabled, fieldMap: (mapping.field_map as Record<string, unknown> | null) ?? null }, connectorCtx);
   if (!payload) {
+    await trace("skipped", "not_mappable", { test_mode: testMode });
     await ctx.queue.ack(message);
     return "skipped";
   }
@@ -118,6 +146,7 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
   if (!validation.ok) {
     await recordAttempt(ctx, msg, message.attempts, { status: "failed", errorClass: "invalid_payload", errorCode: "validation", message: validation.errors.join("; ").slice(0, 500), httpStatus: null, durationMs: 0, preview: payload.preview, responseExcerpt: null, vendorEventId: null });
     await ctx.eventStore.markDelivery(msg.site_id, msg.event_id, { integrationId: msg.integration_id, status: "failed", attempts: message.attempts, at: ctx.now().toISOString() });
+    await trace("failed", "validation", { error_class: "invalid_payload", errors: validation.errors.slice(0, 5), test_mode: testMode });
     await ctx.queue.ack(message);
     return "failed";
   }
@@ -136,10 +165,12 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
     vendorEventId: r.vendorEventId,
     nextRetryAt: status === "retry" ? new Date(ctx.now().getTime() + retryDelay(message.attempts, r)) : null,
   });
+  const outcomeDetail = { error_class: r.errorClass, error_code: r.errorCode, http_status: r.httpStatus, duration_ms: r.durationMs, vendor_event_id: r.vendorEventId, test_mode: testMode };
   if (r.ok) {
     breaker.recordSuccess();
     await ctx.eventStore.markDelivery(msg.site_id, msg.event_id, { integrationId: msg.integration_id, status: "delivered", attempts: message.attempts, at: ctx.now().toISOString() });
     await bumpAggregate(ctx, msg, event.name, event.source, "delivered");
+    await trace("delivered", null, outcomeDetail);
     await ctx.queue.ack(message);
     return "delivered";
   }
@@ -154,7 +185,9 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
     ctx.configs.invalidate(msg.site_id);
   }
   if (status === "retry") {
-    await ctx.queue.nack(message, { delayMs: retryDelay(message.attempts, r), error: r.errorCode ?? r.errorClass });
+    const delayMs = retryDelay(message.attempts, r);
+    await trace("retry", r.errorCode ?? r.errorClass, { ...outcomeDetail, next_retry_at: new Date(ctx.now().getTime() + delayMs).toISOString() });
+    await ctx.queue.nack(message, { delayMs, error: r.errorCode ?? r.errorClass });
     return "retry";
   }
   await ctx.eventStore.markDelivery(msg.site_id, msg.event_id, { integrationId: msg.integration_id, status: "failed", attempts: message.attempts, at: ctx.now().toISOString() });
@@ -165,10 +198,23 @@ export async function processDeliveryMessage(ctx: WorkerContext, message: QueueM
       `INSERT INTO dead_letter_references (id, organization_id, site_id, queue, event_id, integration_id, reason) VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT DO NOTHING`,
       [message.id, msg.organization_id, msg.site_id, message.queue, msg.event_id, msg.integration_id, `${r.errorClass}:${r.errorCode ?? ""}`.slice(0, 200)],
     );
+    await trace("dead", r.errorCode ?? r.errorClass, { ...outcomeDetail, dead_letter_id: message.id });
     return "dead";
   }
+  await trace("failed", r.errorCode ?? r.errorClass, outcomeDetail);
   await ctx.queue.ack(message);
   return "failed";
+}
+
+const envTestModeCache = new Map<string, { value: boolean; at: number }>();
+/** `test_mode` of the environment an event was captured in (cached for a minute). */
+async function environmentTestMode(ctx: WorkerContext, environmentId: string): Promise<boolean> {
+  const cached = envTestModeCache.get(environmentId);
+  if (cached && ctx.now().getTime() - cached.at < 60_000) return cached.value;
+  const res = await ctx.pool.query<{ test_mode: boolean }>(`SELECT test_mode FROM environments WHERE id = $1`, [environmentId]);
+  const value = res.rows[0]?.test_mode ?? false;
+  envTestModeCache.set(environmentId, { value, at: ctx.now().getTime() });
+  return value;
 }
 
 function retryDelay(attempt: number, r: DispatchResult): number {
