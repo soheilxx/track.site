@@ -175,7 +175,36 @@
       "save": "Salva",
       "saved": "Salvato.",
       "error": "Qualcosa è andato storto.",
-      "readOnly": "Il tuo ruolo può solo visualizzare queste impostazioni."
+      "readOnly": "Il tuo ruolo può solo visualizzare queste impostazioni.",
+      "alertsText": "Gli avvisi via e-mail, webhook e Slack, le regole di avviso e la modalità incidente (mettere in pausa una destinazione o un ambiente) hanno una pagina dedicata.",
+      "openAlerts": "Apri Avvisi e modalità incidente",
+      "aiMotion": {
+        "title": "Movimento dell'IA",
+        "intro": "Quanto si muove il pannello di Track AI. La tua impostazione personale per questa organizzazione; si applicherà anche al Living AI Core quando sarà disponibile.",
+        "legend": "Movimento dell'IA",
+        "options": {
+          "system": {
+            "label": "Predefinito di sistema",
+            "description": "Segue il tuo sistema operativo: movimento completo normalmente, ridotto o statico quando il sistema richiede meno movimento."
+          },
+          "full": {
+            "label": "Completo",
+            "description": "Movimento ambientale calmo del nucleo IA e transizioni brevi."
+          },
+          "reduced": {
+            "label": "Ridotto",
+            "description": "Nessun movimento ambientale continuo; solo brevi transizioni di stato."
+          },
+          "off": {
+            "label": "Disattivato",
+            "description": "Nessun movimento. Gli stati sono mostrati solo con colore, testo e icone."
+          }
+        },
+        "save": "Salva impostazione del movimento",
+        "saving": "Salvataggio…",
+        "saved": "Impostazione del movimento salvata.",
+        "error": "L'impostazione non è stata salvata. Riprova."
+      }
     },
     "billing": {
       "title": "Fatturazione",

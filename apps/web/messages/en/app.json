@@ -175,7 +175,36 @@
       "save": "Save",
       "saved": "Saved.",
       "error": "Something went wrong.",
-      "readOnly": "Your role can view these settings only."
+      "readOnly": "Your role can view these settings only.",
+      "alertsText": "E-mail, webhook and Slack alerts, alert rules and Incident Mode (pause one destination or one environment) live on their own page.",
+      "openAlerts": "Open Alerts & Incident Mode",
+      "aiMotion": {
+        "title": "AI motion",
+        "intro": "How much the Track AI panel moves. Your personal setting for this organization; it also applies to the Living AI Core once it ships.",
+        "legend": "AI motion",
+        "options": {
+          "system": {
+            "label": "System default",
+            "description": "Follows your operating system: full motion normally, reduced or static when your system asks for reduced motion."
+          },
+          "full": {
+            "label": "Full",
+            "description": "Calm ambient motion of the AI core and short transitions."
+          },
+          "reduced": {
+            "label": "Reduced",
+            "description": "No continuous ambient motion; only short state transitions."
+          },
+          "off": {
+            "label": "Off",
+            "description": "No motion at all. States are shown with colour, text and icons only."
+          }
+        },
+        "save": "Save motion setting",
+        "saving": "Saving…",
+        "saved": "Motion setting saved.",
+        "error": "The setting could not be saved. Please try again."
+      }
     },
     "billing": {
       "title": "Billing",

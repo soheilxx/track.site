@@ -175,7 +175,36 @@
       "save": "Opslaan",
       "saved": "Opgeslagen.",
       "error": "Er is iets misgegaan.",
-      "readOnly": "Je rol kan deze instellingen alleen bekijken."
+      "readOnly": "Je rol kan deze instellingen alleen bekijken.",
+      "alertsText": "E-mail-, webhook- en Slack-meldingen, meldingsregels en de incidentmodus (één bestemming of één omgeving pauzeren) hebben een eigen pagina.",
+      "openAlerts": "Meldingen & incidentmodus openen",
+      "aiMotion": {
+        "title": "AI-beweging",
+        "intro": "Hoeveel het Track AI-paneel beweegt. Je persoonlijke instelling voor deze organisatie; die geldt ook voor de Living AI Core zodra die beschikbaar is.",
+        "legend": "AI-beweging",
+        "options": {
+          "system": {
+            "label": "Systeemstandaard",
+            "description": "Volgt je besturingssysteem: normaal volledige beweging, verminderd of statisch wanneer je systeem om minder beweging vraagt."
+          },
+          "full": {
+            "label": "Volledig",
+            "description": "Rustige omgevingsbeweging van de AI-kern en korte overgangen."
+          },
+          "reduced": {
+            "label": "Verminderd",
+            "description": "Geen doorlopende omgevingsbeweging; alleen korte statusovergangen."
+          },
+          "off": {
+            "label": "Uit",
+            "description": "Helemaal geen beweging. Statussen worden alleen met kleur, tekst en pictogrammen getoond."
+          }
+        },
+        "save": "Bewegingsinstelling opslaan",
+        "saving": "Opslaan…",
+        "saved": "Bewegingsinstelling opgeslagen.",
+        "error": "De instelling kon niet worden opgeslagen. Probeer het opnieuw."
+      }
     },
     "billing": {
       "title": "Facturering",

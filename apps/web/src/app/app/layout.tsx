@@ -9,6 +9,7 @@ import { ThemeScript } from "@/components/theme-script";
 import { loadMessages } from "@/i18n/request";
 import { LOCALE_COOKIE, isLocale, routing } from "@/i18n/routing";
 import { aiConfigured } from "@/server/ai/context";
+import { readAiMotion } from "@/server/preferences";
 import { getOrgContext, getSession, listMemberships } from "@/server/session";
 import { activeSite, paletteDestinations } from "@/server/workspace";
 import { fontClassName } from "../fonts";
@@ -44,25 +45,76 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   const path = (await headers()).get("x-invoke-path") ?? "";
   const cookieLocale = (await cookies()).get(LOCALE_COOKIE)?.value;
   // auth pages live under the locale prefix: go there directly instead of via the /login → /en/login redirect
-  if (!session) redirect(`/${isLocale(cookieLocale) ? cookieLocale : routing.defaultLocale}/login?next=${encodeURIComponent(path || "/app")}`);
-  const locale = isLocale(session.user.locale) ? session.user.locale : isLocale(cookieLocale) ? cookieLocale : routing.defaultLocale;
+  if (!session)
+    redirect(
+      `/${isLocale(cookieLocale) ? cookieLocale : routing.defaultLocale}/login?next=${encodeURIComponent(path || "/app")}`,
+    );
+  const locale = isLocale(session.user.locale)
+    ? session.user.locale
+    : isLocale(cookieLocale)
+      ? cookieLocale
+      : routing.defaultLocale;
   const messages = await loadMessages(locale);
   const ctx = await getOrgContext();
-  const [workspace, organizations, destinations] = ctx ? await Promise.all([activeSite(ctx), listMemberships(), paletteDestinations(ctx.organization.id)]) : [null, [], []];
-  const environment = workspace?.environment ? { id: workspace.environment.id, kind: workspace.environment.kind, name: workspace.environment.name, testMode: workspace.environment.testMode } : null;
+  const [workspace, organizations, destinations, aiMotion] = ctx
+    ? await Promise.all([
+        activeSite(ctx),
+        listMemberships(),
+        paletteDestinations(ctx.organization.id),
+        readAiMotion(ctx),
+      ])
+    : [null, [], [], "system" as const];
+  const environment = workspace?.environment
+    ? {
+        id: workspace.environment.id,
+        kind: workspace.environment.kind,
+        name: workspace.environment.name,
+        testMode: workspace.environment.testMode,
+      }
+    : null;
   return (
-    <html lang={locale} suppressHydrationWarning className={fontClassName} data-dashboard="">
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={fontClassName}
+      data-dashboard=""
+      data-ai-motion={aiMotion}
+    >
       <head>
         <ThemeScript />
       </head>
       <body className="bg-ground text-ink antialiased" data-dashboard="">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AssistantProvider sites={workspace?.sites ?? []} activeSiteId={workspace?.site?.id ?? null} environment={environment} aiEnabled={aiConfigured()} locale={locale}>
+          <AssistantProvider
+            sites={workspace?.sites ?? []}
+            activeSiteId={workspace?.site?.id ?? null}
+            environment={environment}
+            aiEnabled={aiConfigured()}
+            locale={locale}
+          >
             <AppShell
               user={{ name: session.user.name, email: session.user.email }}
-              organization={ctx ? { id: ctx.organization.id, name: ctx.organization.name, slug: ctx.organization.slug, role: ctx.role } : null}
+              organization={
+                ctx
+                  ? {
+                      id: ctx.organization.id,
+                      name: ctx.organization.name,
+                      slug: ctx.organization.slug,
+                      role: ctx.role,
+                    }
+                  : null
+              }
               organizations={organizations}
-              workspace={workspace ? { sites: workspace.sites, site: workspace.site, environments: workspace.environments, environment: workspace.environment } : null}
+              workspace={
+                workspace
+                  ? {
+                      sites: workspace.sites,
+                      site: workspace.site,
+                      environments: workspace.environments,
+                      environment: workspace.environment,
+                    }
+                  : null
+              }
               destinations={destinations}
               locale={locale}
             >

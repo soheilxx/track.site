@@ -1,0 +1,391 @@
+{
+  "alerts": {
+    "nav": "Meldingen & incidentmodus",
+    "settingsSubnav": {
+      "label": "Onderdelen van de instellingen",
+      "general": "Algemeen",
+      "alerts": "Meldingen & incidentmodus"
+    },
+    "title": "Meldingen & incidentmodus",
+    "intro": "E-mail-, webhook- en Slack-meldingen voor eventdalingen, storingen bij leveranciers, verlopende inloggegevens, toestemmingsfouten, wachtrijvertraging en ongewone conversieafwijkingen — elke minuut beoordeeld op basis van gemeten gegevens. De incidentmodus pauzeert één bestemming of één omgeving terwijl al het andere doorloopt. Elke actie wordt vastgelegd in het auditlog.",
+    "readOnly": "Je rol kan deze pagina bekijken; kanalen, regels en de incidentmodus wijzigen vereist de organisatie- of integratiemachtiging.",
+    "migrationMissing": "Meldingen niet beschikbaar",
+    "migrationMissingText": "De meldingstabellen (migratie 0013) zijn niet toegepast op deze database. De incidentmodus werkt; kanalen, regels en geschiedenis zijn beschikbaar zodra de migratie is uitgevoerd.",
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "save": "Opslaan",
+      "saving": "Opslaan…",
+      "working": "Bezig…",
+      "delete": "Verwijderen",
+      "edit": "Bewerken",
+      "enable": "Inschakelen",
+      "disable": "Uitschakelen",
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld",
+      "allSites": "Alle sites",
+      "never": "nooit",
+      "site": "Site"
+    },
+    "errors": {
+      "forbidden": "Je rol mag dat niet doen.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Dat item bestaat niet meer.",
+      "vault_missing": "De geheimenkluis is niet geconfigureerd voor deze omgeving (KMS-instellingen); webhook- en Slack-URL's kunnen niet worden opgeslagen.",
+      "signing": "De ondertekeningssleutel voor configuraties is niet geconfigureerd op deze server, dus er kan geen versie worden gepubliceerd.",
+      "unchanged": "Niets te wijzigen — het staat al in die toestand.",
+      "lint": "De actieve configuratie doorstaat de validatie niet; publiceer eerst een gecorrigeerde versie vanuit het releasecentrum.",
+      "approval_required": "Je goedkeuringsbeleid vereist een tweede persoon voor deze wijziging. Vraag goedkeuring aan onder Team & toegang.",
+      "in_use": "Dit item wordt nog door een regel gebruikt.",
+      "invalid_email": "Voer een geldig e-mailadres in.",
+      "invalid_url": "Voer een geldige URL in.",
+      "insecure_url": "Alleen https-URL's worden geaccepteerd.",
+      "credentials_in_url": "Verwijder gebruikersnaam en wachtwoord uit de URL.",
+      "private_host": "Lokale of privéhosts worden niet geaccepteerd.",
+      "not_slack": "Inkomende Slack-webhooks staan op hooks.slack.com.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    },
+    "fieldErrors": {
+      "required": "Verplicht.",
+      "invalid": "Ongeldige waarde.",
+      "number": "Voer een getal in.",
+      "integer": "Voer een geheel getal in.",
+      "range": "Buiten het toegestane bereik ({min}–{max}).",
+      "short": "Minimaal 8 tekens."
+    },
+    "kinds": {
+      "event_drop": {
+        "label": "Eventdaling",
+        "description": "De geaccepteerde events van de laatste uren zakken onder het gemiddelde van hetzelfde venster in de laatste vier weken."
+      },
+      "vendor_outage": {
+        "label": "Storing bij leverancier",
+        "description": "Een bestemming weigert leveringen (foutpercentage in het 24-uursvenster) of staat in de foutstatus."
+      },
+      "credential_expiry": {
+        "label": "Verlopende inloggegevens",
+        "description": "Opgeslagen inloggegevens verlopen binnenkort of zijn verlopen; een OAuth-verbinding is niet meer verbonden."
+      },
+      "consent_errors": {
+        "label": "Toestemmingsfouten",
+        "description": "Te veel events worden geblokkeerd wegens ontbrekende of geweigerde toestemming."
+      },
+      "queue_lag": {
+        "label": "Wachtrijvertraging",
+        "description": "Het oudste wachtende event van een bestemming heeft langer gewacht dan toegestaan."
+      },
+      "conversion_anomaly": {
+        "label": "Conversieafwijking",
+        "description": "Conversies wijken in beide richtingen af van de referentie van vier weken."
+      }
+    },
+    "severity": { "info": "Info", "warning": "Waarschuwing", "critical": "Kritiek" },
+    "channelKinds": { "email": "E-mail", "webhook": "Webhook", "slack": "Slack" },
+    "incident": {
+      "title": "Incidentmodus",
+      "intro": "Stop één stroom zonder de rest te stoppen: pauzeer één bestemming (events worden nog steeds verzameld en elders geleverd) of pauzeer de browsertracking van één omgeving door een ondertekende configuratie met de noodschakelaar aan te publiceren. Server-side events, de andere omgevingen en alle bestemmingen lopen door.",
+      "context": "Doelen van {site}",
+      "switchSiteHint": "Wissel van site in de werkruimtekiezer.",
+      "noSite": "Nog geen site",
+      "noSiteText": "Maak eerst een site aan — bestemmingen en omgevingen horen bij een site.",
+      "createSite": "Site aanmaken",
+      "readOnly": "Pauzeren en hervatten vereist de integratiemachtiging (bestemmingen) en de noodschakelaarmachtiging (omgevingen).",
+      "destinations": {
+        "title": "Bestemmingen",
+        "empty": "Geen bestemmingen voor {site}",
+        "emptyText": "Koppel eerst een bestemming. Concepten worden hier niet getoond.",
+        "manage": "Destination Health Center",
+        "testMode": "Testmodus",
+        "pausedSince": "gepauzeerd {when}",
+        "pause": "Pauzeren",
+        "resume": "Hervatten",
+        "pauseTitle": "Leveringen aan {name} pauzeren?",
+        "pauseText": "Events worden nog steeds verzameld en aan alle andere bestemmingen geleverd. Events voor deze bestemming worden tijdens de pauze overgeslagen — ze worden niet in de wachtrij gezet voor later. Je kunt op elk moment hervatten. De actie wordt vastgelegd in het auditlog.",
+        "pauseConfirm": "Bestemming pauzeren",
+        "resumeTitle": "Leveringen aan {name} hervatten?",
+        "resumeText": "Track controleert eerst de inloggegevens. Leveringen worden alleen hervat als de leverancier de opgeslagen inloggegevens accepteert; anders blijft de bestemming losgekoppeld en wordt de reden hier getoond.",
+        "resumeConfirm": "Controleren en hervatten",
+        "paused": "Bestemming gepauzeerd.",
+        "resumed": "Bestemming hervat.",
+        "notResumed": "Niet hervat: de controle van de inloggegevens is mislukt.",
+        "statusNow": "Status nu: {status}",
+        "status": {
+          "not_connected": "Niet verbonden",
+          "connected": "Verbonden",
+          "paused": "Gepauzeerd",
+          "error": "Fout",
+          "draft": "Concept"
+        }
+      },
+      "environments": {
+        "title": "Omgevingen (noodschakelaar van de configuratie)",
+        "empty": "Geen omgevingen",
+        "kind": { "production": "Productie", "staging": "Staging", "development": "Test" },
+        "testMode": "Testmodus",
+        "live": "Live: v{version}",
+        "noVersion": "Nog niets gepubliceerd",
+        "state": {
+          "active": "Browsertracking actief",
+          "paused": "Browsertracking gepauzeerd",
+          "none": "Geen actieve configuratie",
+          "unknown": "Actieve configuratie onleesbaar"
+        },
+        "signingMissing": "De ondertekeningssleutel voor configuraties is niet geconfigureerd op deze server; de noodschakelaar van de omgeving kan geen versie publiceren.",
+        "pause": "Omgeving pauzeren",
+        "resume": "Omgeving hervatten",
+        "pauseTitle": "Browsertracking in {name} pauzeren?",
+        "pauseText": "Track publiceert een nieuwe ondertekende configuratieversie met de noodschakelaar aan. Browsers stoppen bij hun volgende configuratie-ophaling (binnen ongeveer een minuut) met het verzenden van events voor deze omgeving; server-side events, andere omgevingen en alle bestemmingen lopen door. Het openstaande concept blijft onaangeroerd. Je kunt op elk moment hervatten. De actie wordt vastgelegd in het auditlog.",
+        "pauseConfirm": "Noodschakelaar publiceren",
+        "resumeTitle": "Browsertracking in {name} hervatten?",
+        "resumeText": "Track publiceert een nieuwe ondertekende configuratieversie met de noodschakelaar uit, afgeleid van de actieve versie. Browsers hervatten bij hun volgende configuratie-ophaling.",
+        "resumeConfirm": "Publiceren en hervatten",
+        "paused": "Noodschakelaar gepubliceerd als v{version}. Browsertracking pauzeert bij de volgende configuratie-ophaling.",
+        "resumed": "Browsertracking hervat met v{version}.",
+        "openReleases": "Releases openen"
+      }
+    },
+    "channels": {
+      "title": "Meldingskanalen",
+      "intro": "Waar meldingen worden bezorgd. E-mailadressen worden opgeslagen zoals ingevoerd; webhook- en Slack-URL's en het ondertekeningsgeheim van de webhook worden versleuteld en nooit meer getoond.",
+      "add": "Kanaal toevoegen",
+      "empty": "Nog geen kanalen",
+      "emptyText": "Voeg een e-mailadres, een webhook of een inkomende Slack-webhook toe. Regels melden alleen via kanalen; zonder kanaal verschijnen meldingen alleen in de geschiedenis.",
+      "columns": {
+        "name": "Naam",
+        "kind": "Type",
+        "target": "Doel",
+        "locale": "Taal",
+        "status": "Status",
+        "lastTest": "Laatste test",
+        "actions": "Acties"
+      },
+      "caption": "Meldingskanalen met type, doel, taal, status en het resultaat van de laatste test",
+      "usedBy": "{count, plural, =0 {door geen enkele regel gebruikt} one {gebruikt door # regel} other {gebruikt door # regels}}",
+      "encrypted": "Versleuteld opgeslagen",
+      "signed": "ondertekend",
+      "test": "Test versturen",
+      "testing": "Test wordt verstuurd…",
+      "testSent": "Testmelding verstuurd ({transport}).",
+      "testFailed": "Test mislukt: {reason}",
+      "testReason": {
+        "vault_missing": "geheimenkluis niet geconfigureerd",
+        "decrypt_failed": "opgeslagen URL kon niet worden ontsleuteld (sleutel geroteerd?)",
+        "target_missing": "geen doel opgeslagen",
+        "timeout": "geen antwoord binnen 10 seconden",
+        "rejected": "het eindpunt heeft het verzoek geweigerd",
+        "mail_failed": "het mailtransport is mislukt",
+        "generic": "verzoek mislukt"
+      },
+      "lastTestOk": "Verstuurd {when}",
+      "lastTestFailed": "Mislukt {when}",
+      "neverTested": "Nooit getest",
+      "deleteTitle": "Kanaal {name} verwijderen?",
+      "deleteText": "Regels die dit kanaal gebruiken, lopen zonder het kanaal door. Eerdere leveringen blijven in de geschiedenis. Dit kan niet ongedaan worden gemaakt.",
+      "deleteConfirm": "Kanaal verwijderen",
+      "created": "Kanaal aangemaakt.",
+      "updated": "Kanaal bijgewerkt.",
+      "deleted": "Kanaal verwijderd.",
+      "enabledMsg": "Kanaal ingeschakeld.",
+      "disabledMsg": "Kanaal uitgeschakeld.",
+      "form": {
+        "createTitle": "Kanaal toevoegen",
+        "editTitle": "Kanaal {name} bewerken",
+        "kind": "Type",
+        "kindHint": {
+          "email": "E-mail in platte tekst in de gekozen taal.",
+          "webhook": "HTTPS-POST met een JSON-body; met een geheim draagt elk verzoek een HMAC-SHA256-handtekening in de header X-Track-Signature (t=…,n=…,v1=…).",
+          "slack": "Inkomende Slack-webhook (hooks.slack.com) met Block Kit-blokken."
+        },
+        "name": "Naam",
+        "namePlaceholder": "bijv. E-mail bereikbaarheidsdienst",
+        "targetEmail": "E-mailadres",
+        "targetWebhook": "Webhook-URL (https)",
+        "targetSlack": "URL van de inkomende Slack-webhook",
+        "targetKeep": "Laat leeg om de opgeslagen URL te behouden.",
+        "secret": "Ondertekeningsgeheim",
+        "secretHint": "Optioneel, minimaal 8 tekens. Wordt gebruikt om elk verzoek te ondertekenen; wordt nooit meer getoond.",
+        "secretKeep": "Laat leeg om het opgeslagen geheim te behouden.",
+        "locale": "Taal van de meldingen",
+        "submitCreate": "Kanaal toevoegen",
+        "submitEdit": "Wijzigingen opslaan"
+      }
+    },
+    "rules": {
+      "title": "Meldingsregels",
+      "intro": "Wat te bewaken, voor welke site, met welke drempels en via welke kanalen. Regels worden elke minuut door de worker beoordeeld; na een melding blijft een regel stil gedurende zijn wachttijd.",
+      "add": "Regel toevoegen",
+      "empty": "Nog geen regels",
+      "emptyText": "Voeg een regel toe voor eventdalingen, storingen bij leveranciers, verlopende inloggegevens, toestemmingsfouten, wachtrijvertraging of conversieafwijkingen. Zonder regel wordt er niets gemeld.",
+      "columns": {
+        "name": "Regel",
+        "kind": "Type",
+        "scope": "Bereik",
+        "threshold": "Voorwaarde",
+        "channels": "Kanalen",
+        "status": "Status",
+        "lastEvaluated": "Laatst beoordeeld",
+        "actions": "Acties"
+      },
+      "caption": "Meldingsregels met type, bereik, voorwaarde, kanalen, status en laatste beoordeling",
+      "historyOnly": "Alleen geschiedenis (geen kanaal)",
+      "neverEvaluated": "Nog niet beoordeeld — de workertaak draait elke minuut.",
+      "evaluated": "Beoordeeld {when}",
+      "cooldown": "Wachttijd {minutes} min",
+      "deleteTitle": "Regel {name} verwijderen?",
+      "deleteText": "Eerdere meldingen van deze regel blijven in de geschiedenis. Dit kan niet ongedaan worden gemaakt.",
+      "deleteConfirm": "Regel verwijderen",
+      "created": "Regel aangemaakt.",
+      "updated": "Regel bijgewerkt.",
+      "deleted": "Regel verwijderd.",
+      "enabledMsg": "Regel ingeschakeld.",
+      "disabledMsg": "Regel uitgeschakeld.",
+      "form": {
+        "createTitle": "Regel toevoegen",
+        "editTitle": "Regel {name} bewerken",
+        "kind": "Type",
+        "kindFixed": "Het type van een bestaande regel kan niet worden gewijzigd; voeg in plaats daarvan een nieuwe regel toe.",
+        "name": "Naam",
+        "namePlaceholder": "bijv. Productie-aankopen",
+        "site": "Site",
+        "allSites": "Alle sites van de organisatie",
+        "thresholds": "Voorwaarde",
+        "channels": "Kanalen",
+        "channelsHint": "Zonder kanaal wordt de melding alleen in de geschiedenis vastgelegd.",
+        "noChannels": "Nog geen kanalen — voeg er hierboven een toe.",
+        "cooldown": "Wachttijd (minuten)",
+        "cooldownHint": "Na een melding blijft de regel per onderwerp zo lang stil ({min}–{max}).",
+        "enabled": "Regel ingeschakeld",
+        "previewLabel": "In gewone taal",
+        "submitCreate": "Regel toevoegen",
+        "submitEdit": "Wijzigingen opslaan",
+        "fields": {
+          "dropPercent": "Daling (%)",
+          "windowMinutes": "Venster (minuten)",
+          "minBaseline": "Minimale referentie (events)",
+          "errorRatePercent": "Foutpercentage (%)",
+          "minAttempts": "Minimaal aantal pogingen",
+          "daysBefore": "Dagen vóór verloop",
+          "minEvents": "Minimaal aantal events",
+          "lagSeconds": "Vertraging (seconden)",
+          "deviationPercent": "Afwijking (%)"
+        }
+      },
+      "preview": {
+        "event_drop": "Melding wanneer de geaccepteerde events van de laatste {windowMinutes} minuten minstens {dropPercent} % onder het gemiddelde van hetzelfde venster in de laatste vier weken liggen — alleen als dat gemiddelde minstens {minBaseline} events is.",
+        "vendor_outage": "Melding wanneer een bestemming in de laatste 24 uur minstens {errorRatePercent} % van minstens {minAttempts} leverpogingen heeft geweigerd, of in de foutstatus staat.",
+        "credential_expiry": "Melding wanneer inloggegevens binnen {daysBefore} dagen verlopen of zijn verlopen, of een OAuth-verbinding niet meer verbonden is.",
+        "consent_errors": "Melding wanneer minstens {errorRatePercent} % van de in de laatste {windowMinutes} minuten ontvangen events om toestemmingsredenen is geblokkeerd — pas vanaf {minEvents} events.",
+        "queue_lag": "Melding wanneer het oudste wachtende event van een bestemming langer dan {lagSeconds} seconden ({lagMinutes} minuten) heeft gewacht.",
+        "conversion_anomaly": "Melding wanneer de conversies van de laatste {windowMinutes} minuten minstens {deviationPercent} % afwijken van het gemiddelde van hetzelfde venster in de laatste vier weken — alleen als dat gemiddelde minstens {minBaseline} conversies is."
+      }
+    },
+    "history": {
+      "title": "Meldingsgeschiedenis",
+      "intro": "Elke geactiveerde melding met ernst, de gemeten feiten erachter, de levering per kanaal en de afhandeling. Meldingen worden vanzelf opgelost wanneer de voorwaarde verdwijnt, of handmatig.",
+      "empty": "Nog geen meldingen",
+      "emptyText": "Er is niets afgegaan. Meldingen verschijnen hier zodra aan de voorwaarde van een regel is voldaan — de worker beoordeelt elke minuut.",
+      "emptyFiltered": "Geen meldingen voldoen aan de filters",
+      "emptyFilteredText": "Zet de filters terug om alle meldingen te zien.",
+      "count": "{count, plural, one {# melding} other {# meldingen}}",
+      "openCount": "{count, plural, =0 {geen open meldingen} one {# open melding} other {# open meldingen}}",
+      "linked": "Melding uit de meldingslink",
+      "filters": {
+        "label": "Meldingen filteren",
+        "severity": "Ernst",
+        "state": "Status",
+        "kind": "Type",
+        "all": "Alle",
+        "open": "Open",
+        "resolved": "Opgelost",
+        "apply": "Filters toepassen",
+        "reset": "Terugzetten"
+      },
+      "columns": {
+        "when": "Geactiveerd",
+        "severity": "Ernst",
+        "alert": "Melding",
+        "site": "Site",
+        "delivery": "Levering",
+        "state": "Status",
+        "actions": "Acties"
+      },
+      "caption": "Meldingsgeschiedenis met ernst, feiten, leveringsresultaat en afhandeling",
+      "state": {
+        "open": "Open",
+        "resolvedAuto": "Opgelost {when} (voorwaarde verdwenen)",
+        "resolvedUser": "Opgelost {when} door een lid"
+      },
+      "rule": "Regel: {name}",
+      "ruleDeleted": "Regel verwijderd",
+      "resolve": "Markeren als opgelost",
+      "resolving": "Oplossen…",
+      "resolved": "Gemarkeerd als opgelost.",
+      "details": "Details",
+      "showDetails": "Details van melding {title} tonen",
+      "delivery": {
+        "none": "Geen kanaal",
+        "sent": "Verstuurd",
+        "failed": "Mislukt",
+        "skipped": "Overgeslagen",
+        "channelMissing": "kanaal verwijderd",
+        "notified": "Gemeld {when}",
+        "notNotified": "Niet gemeld"
+      },
+      "titles": {
+        "event_drop": "Eventvolume is {drop_percent} % gedaald",
+        "vendor_outage": "Leveringen aan {integration_name} mislukken",
+        "credential_expiry": "Inloggegevens van {integration_name}: {state}",
+        "consent_errors": "{rate_percent} % van de events geblokkeerd door toestemming",
+        "queue_lag": "Leveringswachtrij van {integration_name} loopt achter",
+        "conversion_anomaly": "Conversies {deviation_percent} % {direction}"
+      },
+      "words": {
+        "expired": "verlopen",
+        "expiring": "verloopt binnenkort",
+        "disconnected": "losgekoppeld",
+        "drop": "gedaald",
+        "spike": "gestegen"
+      },
+      "facts": {
+        "window_minutes": "Venster (min)",
+        "observed": "Waargenomen",
+        "expected": "Verwacht",
+        "drop_percent": "Daling (%)",
+        "deviation_percent": "Afwijking (%)",
+        "threshold_percent": "Drempel (%)",
+        "threshold_days": "Drempel (dagen)",
+        "threshold_seconds": "Drempel (s)",
+        "baseline_weeks": "Referentieweken",
+        "received": "Ontvangen",
+        "consent_dropped": "Geblokkeerd door toestemming",
+        "rate_percent": "Percentage (%)",
+        "integration_name": "Bestemming",
+        "connector_type": "Connector",
+        "status": "Status",
+        "error_rate_percent": "Foutpercentage (%)",
+        "attempts": "Pogingen",
+        "last_error_class": "Laatste foutklasse",
+        "credential_kind": "Inloggegevens",
+        "days_left": "Resterende dagen",
+        "expires_at": "Verloopt",
+        "lag_seconds": "Vertraging (s)",
+        "queue_ready": "Wachtende events",
+        "direction": "Richting",
+        "state": "Status"
+      },
+      "pagination": {
+        "nav": "Pagina's van de meldingsgeschiedenis",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {page}"
+      }
+    },
+    "test": {
+      "title": "Testmelding van Track",
+      "summary": "Dit is een test van het meldingskanaal '{channel}'. Er is geen regel afgegaan; er is niets te doen.",
+      "subject": "[Track-melding] Test: {title}",
+      "body": "{summary}\n\nMeldingsinstellingen openen: {url}\n\n— Track",
+      "labels": { "severity": "Ernst", "site": "Site", "open": "Meldingsinstellingen openen" }
+    }
+  }
+}

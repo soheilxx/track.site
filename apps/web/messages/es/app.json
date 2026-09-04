@@ -175,7 +175,36 @@
       "save": "Guardar",
       "saved": "Guardado.",
       "error": "Algo ha salido mal.",
-      "readOnly": "Tu rol solo puede ver estos ajustes."
+      "readOnly": "Tu rol solo puede ver estos ajustes.",
+      "alertsText": "Las alertas por correo, webhook y Slack, las reglas de alerta y el modo incidente (pausar un destino o un entorno) tienen su propia página.",
+      "openAlerts": "Abrir Alertas y modo incidente",
+      "aiMotion": {
+        "title": "Movimiento de la IA",
+        "intro": "Cuánto se mueve el panel de Track AI. Tu ajuste personal para esta organización; también se aplicará al Living AI Core cuando esté disponible.",
+        "legend": "Movimiento de la IA",
+        "options": {
+          "system": {
+            "label": "Predeterminado del sistema",
+            "description": "Sigue a tu sistema operativo: movimiento completo normalmente, reducido o estático cuando tu sistema pide menos movimiento."
+          },
+          "full": {
+            "label": "Completo",
+            "description": "Movimiento ambiental tranquilo del núcleo de IA y transiciones breves."
+          },
+          "reduced": {
+            "label": "Reducido",
+            "description": "Sin movimiento ambiental continuo; solo transiciones breves de estado."
+          },
+          "off": {
+            "label": "Desactivado",
+            "description": "Ningún movimiento. Los estados se muestran solo con color, texto e iconos."
+          }
+        },
+        "save": "Guardar ajuste de movimiento",
+        "saving": "Guardando…",
+        "saved": "Ajuste de movimiento guardado.",
+        "error": "No se pudo guardar el ajuste. Inténtalo de nuevo."
+      }
     },
     "billing": {
       "title": "Facturación",

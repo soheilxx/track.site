@@ -35,3 +35,5 @@ registerNamespace("releases");
 registerNamespace("billing-usage");
 
 registerNamespace("team");
+
+registerNamespace("alerts");

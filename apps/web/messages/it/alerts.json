@@ -1,0 +1,395 @@
+{
+  "alerts": {
+    "nav": "Avvisi e modalità incidente",
+    "settingsSubnav": {
+      "label": "Sezioni delle impostazioni",
+      "general": "Generale",
+      "alerts": "Avvisi e modalità incidente"
+    },
+    "title": "Avvisi e modalità incidente",
+    "intro": "Avvisi via e-mail, webhook e Slack per cali di eventi, guasti dei fornitori, scadenza delle credenziali, errori di consenso, ritardi della coda e scostamenti insoliti delle conversioni — valutati ogni minuto da dati misurati. La modalità incidente mette in pausa una destinazione o un ambiente mentre tutto il resto continua a funzionare. Ogni azione viene registrata nell'audit.",
+    "readOnly": "Il tuo ruolo può visualizzare questa pagina; modificare canali, regole e modalità incidente richiede il permesso di organizzazione o di integrazioni.",
+    "migrationMissing": "Avvisi non disponibili",
+    "migrationMissingText": "Le tabelle degli avvisi (migrazione 0013) non sono applicate a questo database. La modalità incidente funziona; canali, regole e cronologia saranno disponibili dopo la migrazione.",
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "working": "In corso…",
+      "delete": "Elimina",
+      "edit": "Modifica",
+      "enable": "Attiva",
+      "disable": "Disattiva",
+      "enabled": "Attivo",
+      "disabled": "Disattivato",
+      "allSites": "Tutti i siti",
+      "never": "mai",
+      "site": "Sito"
+    },
+    "errors": {
+      "forbidden": "Il tuo ruolo non può farlo.",
+      "invalid": "Controlla i campi evidenziati.",
+      "not_found": "Questa voce non esiste più.",
+      "vault_missing": "Il vault dei segreti non è configurato per questo ambiente (impostazioni KMS); gli URL di webhook e Slack non possono essere salvati.",
+      "signing": "La chiave di firma delle configurazioni non è configurata su questo server, quindi non è possibile pubblicare alcuna versione.",
+      "unchanged": "Niente da cambiare: è già in questo stato.",
+      "lint": "La configurazione attiva non supera la validazione; pubblica prima una versione corretta dal centro rilasci.",
+      "approval_required": "La tua policy di approvazione richiede una seconda persona per questa modifica. Richiedi l'approvazione in Team e accesso.",
+      "in_use": "Questa voce è ancora usata da una regola.",
+      "invalid_email": "Inserisci un indirizzo e-mail valido.",
+      "invalid_url": "Inserisci un URL valido.",
+      "insecure_url": "Sono accettati solo URL https.",
+      "credentials_in_url": "Rimuovi nome utente e password dall'URL.",
+      "private_host": "Host locali o privati non sono accettati.",
+      "not_slack": "I webhook in entrata di Slack si trovano su hooks.slack.com.",
+      "generic": "Non ha funzionato. Riprova."
+    },
+    "fieldErrors": {
+      "required": "Obbligatorio.",
+      "invalid": "Valore non valido.",
+      "number": "Inserisci un numero.",
+      "integer": "Inserisci un numero intero.",
+      "range": "Fuori dall'intervallo consentito ({min}–{max}).",
+      "short": "Almeno 8 caratteri."
+    },
+    "kinds": {
+      "event_drop": {
+        "label": "Calo di eventi",
+        "description": "Gli eventi accettati delle ultime ore scendono sotto la media della stessa finestra nelle ultime quattro settimane."
+      },
+      "vendor_outage": {
+        "label": "Guasto del fornitore",
+        "description": "Una destinazione rifiuta le consegne (tasso di errore nella finestra di 24 h) o è in stato di errore."
+      },
+      "credential_expiry": {
+        "label": "Scadenza credenziale",
+        "description": "Una credenziale salvata scade a breve o è scaduta; una connessione OAuth non è più connessa."
+      },
+      "consent_errors": {
+        "label": "Errori di consenso",
+        "description": "Troppi eventi vengono bloccati per consenso mancante o negato."
+      },
+      "queue_lag": {
+        "label": "Ritardo della coda",
+        "description": "L'evento più vecchio in coda di una destinazione ha atteso più del consentito."
+      },
+      "conversion_anomaly": {
+        "label": "Anomalia delle conversioni",
+        "description": "Le conversioni si discostano dalla baseline di quattro settimane in entrambe le direzioni."
+      }
+    },
+    "severity": { "info": "Info", "warning": "Avvertimento", "critical": "Critico" },
+    "channelKinds": { "email": "E-mail", "webhook": "Webhook", "slack": "Slack" },
+    "incident": {
+      "title": "Modalità incidente",
+      "intro": "Ferma un flusso senza fermare il resto: metti in pausa una sola destinazione (gli eventi continuano a essere raccolti e consegnati altrove) o il tracciamento nel browser di un ambiente pubblicando una configurazione firmata con l'interruttore di emergenza attivo. Gli eventi lato server, gli altri ambienti e tutte le destinazioni continuano.",
+      "context": "Obiettivi di {site}",
+      "switchSiteHint": "Cambia sito nel selettore dell'area di lavoro.",
+      "noSite": "Ancora nessun sito",
+      "noSiteText": "Crea prima un sito: destinazioni e ambienti appartengono a un sito.",
+      "createSite": "Crea sito",
+      "readOnly": "Mettere in pausa e riprendere richiede il permesso di integrazioni (destinazioni) e il permesso dell'interruttore di emergenza (ambienti).",
+      "destinations": {
+        "title": "Destinazioni",
+        "empty": "Nessuna destinazione per {site}",
+        "emptyText": "Collega prima una destinazione. Le bozze non sono mostrate qui.",
+        "manage": "Centro salute destinazioni",
+        "testMode": "Modalità test",
+        "pausedSince": "in pausa {when}",
+        "pause": "Metti in pausa",
+        "resume": "Riprendi",
+        "pauseTitle": "Mettere in pausa le consegne a {name}?",
+        "pauseText": "Gli eventi continuano a essere raccolti e consegnati a tutte le altre destinazioni. Gli eventi per questa destinazione vengono saltati durante la pausa e non vengono messi in coda per dopo. Puoi riprendere in qualsiasi momento. L'azione viene registrata nell'audit.",
+        "pauseConfirm": "Metti in pausa la destinazione",
+        "resumeTitle": "Riprendere le consegne a {name}?",
+        "resumeText": "Track verifica prima le credenziali. Le consegne riprendono solo se il fornitore accetta le credenziali salvate; altrimenti la destinazione resta disconnessa e il motivo viene mostrato qui.",
+        "resumeConfirm": "Verifica e riprendi",
+        "paused": "Destinazione in pausa.",
+        "resumed": "Destinazione ripresa.",
+        "notResumed": "Non ripresa: la verifica delle credenziali è fallita.",
+        "statusNow": "Stato attuale: {status}",
+        "status": {
+          "not_connected": "Non connessa",
+          "connected": "Connessa",
+          "paused": "In pausa",
+          "error": "Errore",
+          "draft": "Bozza"
+        }
+      },
+      "environments": {
+        "title": "Ambienti (interruttore di emergenza della configurazione)",
+        "empty": "Nessun ambiente",
+        "kind": { "production": "Produzione", "staging": "Staging", "development": "Test" },
+        "testMode": "Modalità test",
+        "live": "Attiva: v{version}",
+        "noVersion": "Ancora nulla pubblicato",
+        "state": {
+          "active": "Tracciamento nel browser attivo",
+          "paused": "Tracciamento nel browser in pausa",
+          "none": "Nessuna configurazione attiva",
+          "unknown": "Configurazione attiva illeggibile"
+        },
+        "signingMissing": "La chiave di firma delle configurazioni non è configurata su questo server; l'interruttore di emergenza dell'ambiente non può pubblicare una versione.",
+        "pause": "Metti in pausa l'ambiente",
+        "resume": "Riprendi l'ambiente",
+        "pauseTitle": "Mettere in pausa il tracciamento nel browser in {name}?",
+        "pauseText": "Track pubblica una nuova versione firmata della configurazione con l'interruttore di emergenza attivo. I browser smettono di inviare eventi per questo ambiente al prossimo recupero della configurazione (entro circa un minuto); gli eventi lato server, gli altri ambienti e tutte le destinazioni continuano. La bozza aperta non viene toccata. Puoi riprendere in qualsiasi momento. L'azione viene registrata nell'audit.",
+        "pauseConfirm": "Pubblica l'interruttore di emergenza",
+        "resumeTitle": "Riprendere il tracciamento nel browser in {name}?",
+        "resumeText": "Track pubblica una nuova versione firmata della configurazione con l'interruttore di emergenza disattivato, derivata dalla versione attiva. I browser riprendono al prossimo recupero della configurazione.",
+        "resumeConfirm": "Pubblica e riprendi",
+        "paused": "Interruttore di emergenza pubblicato come v{version}. Il tracciamento nel browser si ferma al prossimo recupero della configurazione.",
+        "resumed": "Tracciamento nel browser ripreso con la v{version}.",
+        "openReleases": "Apri i rilasci"
+      }
+    },
+    "channels": {
+      "title": "Canali di notifica",
+      "intro": "Dove vengono consegnati gli avvisi. Gli indirizzi e-mail vengono salvati come inseriti; gli URL di webhook e Slack e il segreto di firma del webhook vengono cifrati e non vengono più mostrati.",
+      "add": "Aggiungi canale",
+      "empty": "Ancora nessun canale",
+      "emptyText": "Aggiungi un indirizzo e-mail, un webhook o un webhook in entrata di Slack. Le regole notificano solo tramite canali; senza un canale gli avvisi compaiono solo nella cronologia.",
+      "columns": {
+        "name": "Nome",
+        "kind": "Tipo",
+        "target": "Destinazione",
+        "locale": "Lingua",
+        "status": "Stato",
+        "lastTest": "Ultimo test",
+        "actions": "Azioni"
+      },
+      "caption": "Canali di notifica con tipo, destinazione, lingua, stato e risultato dell'ultimo test",
+      "usedBy": "{count, plural, =0 {non usato da alcuna regola} one {usato da # regola} other {usato da # regole}}",
+      "encrypted": "Salvato cifrato",
+      "signed": "firmato",
+      "test": "Invia test",
+      "testing": "Invio del test…",
+      "testSent": "Notifica di prova inviata ({transport}).",
+      "testFailed": "Test fallito: {reason}",
+      "testReason": {
+        "vault_missing": "vault dei segreti non configurato",
+        "decrypt_failed": "l'URL salvato non è stato decifrato (chiave ruotata?)",
+        "target_missing": "nessuna destinazione salvata",
+        "timeout": "nessuna risposta entro 10 secondi",
+        "rejected": "l'endpoint ha rifiutato la richiesta",
+        "mail_failed": "il trasporto della posta è fallito",
+        "generic": "richiesta fallita"
+      },
+      "lastTestOk": "Inviato {when}",
+      "lastTestFailed": "Fallito {when}",
+      "neverTested": "Mai testato",
+      "deleteTitle": "Eliminare il canale {name}?",
+      "deleteText": "Le regole che usano questo canale continuano senza di esso. Le consegne passate restano nella cronologia. L'operazione non può essere annullata.",
+      "deleteConfirm": "Elimina canale",
+      "created": "Canale creato.",
+      "updated": "Canale aggiornato.",
+      "deleted": "Canale eliminato.",
+      "enabledMsg": "Canale attivato.",
+      "disabledMsg": "Canale disattivato.",
+      "form": {
+        "createTitle": "Aggiungi canale",
+        "editTitle": "Modifica il canale {name}",
+        "kind": "Tipo",
+        "kindHint": {
+          "email": "E-mail in testo semplice nella lingua scelta.",
+          "webhook": "POST HTTPS con corpo JSON; con un segreto ogni richiesta porta una firma HMAC-SHA256 nell'header X-Track-Signature (t=…,n=…,v1=…).",
+          "slack": "Webhook in entrata di Slack (hooks.slack.com) con blocchi Block Kit."
+        },
+        "name": "Nome",
+        "namePlaceholder": "es. E-mail di reperibilità",
+        "targetEmail": "Indirizzo e-mail",
+        "targetWebhook": "URL del webhook (https)",
+        "targetSlack": "URL del webhook in entrata di Slack",
+        "targetKeep": "Lascia vuoto per conservare l'URL salvato.",
+        "secret": "Segreto di firma",
+        "secretHint": "Facoltativo, almeno 8 caratteri. Serve a firmare ogni richiesta; non viene più mostrato.",
+        "secretKeep": "Lascia vuoto per conservare il segreto salvato.",
+        "locale": "Lingua delle notifiche",
+        "submitCreate": "Aggiungi canale",
+        "submitEdit": "Salva le modifiche"
+      }
+    },
+    "rules": {
+      "title": "Regole di avviso",
+      "intro": "Cosa monitorare, per quale sito, con quali soglie e tramite quali canali. Le regole vengono valutate ogni minuto dal worker; dopo una notifica una regola resta silenziosa per il suo periodo di attesa.",
+      "add": "Aggiungi regola",
+      "empty": "Ancora nessuna regola",
+      "emptyText": "Aggiungi una regola per cali di eventi, guasti dei fornitori, scadenza delle credenziali, errori di consenso, ritardi della coda o anomalie delle conversioni. Senza una regola non viene segnalato nulla.",
+      "columns": {
+        "name": "Regola",
+        "kind": "Tipo",
+        "scope": "Ambito",
+        "threshold": "Condizione",
+        "channels": "Canali",
+        "status": "Stato",
+        "lastEvaluated": "Ultima valutazione",
+        "actions": "Azioni"
+      },
+      "caption": "Regole di avviso con tipo, ambito, condizione, canali, stato e ultima valutazione",
+      "historyOnly": "Solo cronologia (nessun canale)",
+      "neverEvaluated": "Non ancora valutata: il job del worker gira ogni minuto.",
+      "evaluated": "Valutata {when}",
+      "cooldown": "Attesa {minutes} min",
+      "deleteTitle": "Eliminare la regola {name}?",
+      "deleteText": "Gli avvisi passati di questa regola restano nella cronologia. L'operazione non può essere annullata.",
+      "deleteConfirm": "Elimina regola",
+      "created": "Regola creata.",
+      "updated": "Regola aggiornata.",
+      "deleted": "Regola eliminata.",
+      "enabledMsg": "Regola attivata.",
+      "disabledMsg": "Regola disattivata.",
+      "form": {
+        "createTitle": "Aggiungi regola",
+        "editTitle": "Modifica la regola {name}",
+        "kind": "Tipo",
+        "kindFixed": "Il tipo di una regola esistente non può cambiare; aggiungi invece una nuova regola.",
+        "name": "Nome",
+        "namePlaceholder": "es. Acquisti in produzione",
+        "site": "Sito",
+        "allSites": "Tutti i siti dell'organizzazione",
+        "thresholds": "Condizione",
+        "channels": "Canali",
+        "channelsHint": "Senza un canale l'avviso viene registrato solo nella cronologia.",
+        "noChannels": "Ancora nessun canale: aggiungine uno sopra.",
+        "cooldown": "Periodo di attesa (minuti)",
+        "cooldownHint": "Dopo una notifica la regola resta silenziosa per questo tempo per ciascun soggetto ({min}–{max}).",
+        "enabled": "Regola attiva",
+        "previewLabel": "In parole semplici",
+        "submitCreate": "Aggiungi regola",
+        "submitEdit": "Salva le modifiche",
+        "fields": {
+          "dropPercent": "Calo (%)",
+          "windowMinutes": "Finestra (minuti)",
+          "minBaseline": "Baseline minima (eventi)",
+          "errorRatePercent": "Tasso di errore (%)",
+          "minAttempts": "Tentativi minimi",
+          "daysBefore": "Giorni prima della scadenza",
+          "minEvents": "Eventi minimi",
+          "lagSeconds": "Ritardo (secondi)",
+          "deviationPercent": "Scostamento (%)"
+        }
+      },
+      "preview": {
+        "event_drop": "Avviso quando gli eventi accettati degli ultimi {windowMinutes} minuti sono almeno il {dropPercent} % sotto la media della stessa finestra nelle ultime quattro settimane — solo se quella media è di almeno {minBaseline} eventi.",
+        "vendor_outage": "Avviso quando una destinazione ha rifiutato almeno il {errorRatePercent} % di almeno {minAttempts} tentativi di consegna nelle ultime 24 ore, oppure è in stato di errore.",
+        "credential_expiry": "Avviso quando una credenziale scade entro {daysBefore} giorni o è scaduta, oppure una connessione OAuth non è più connessa.",
+        "consent_errors": "Avviso quando almeno il {errorRatePercent} % degli eventi ricevuti negli ultimi {windowMinutes} minuti è stato bloccato per motivi di consenso — solo a partire da {minEvents} eventi.",
+        "queue_lag": "Avviso quando l'evento più vecchio in coda di una destinazione ha atteso più di {lagSeconds} secondi ({lagMinutes} minuti).",
+        "conversion_anomaly": "Avviso quando le conversioni degli ultimi {windowMinutes} minuti si discostano di almeno il {deviationPercent} % dalla media della stessa finestra nelle ultime quattro settimane — solo se quella media è di almeno {minBaseline} conversioni."
+      }
+    },
+    "history": {
+      "title": "Cronologia degli avvisi",
+      "intro": "Ogni avviso scattato con gravità, i fatti misurati alla base, la consegna per canale e la sua risoluzione. Gli avvisi si risolvono da soli quando la condizione cessa, oppure manualmente.",
+      "empty": "Ancora nessun avviso",
+      "emptyText": "Non è scattato nulla. Gli avvisi compaiono qui quando la condizione di una regola è soddisfatta: il worker valuta ogni minuto.",
+      "emptyFiltered": "Nessun avviso corrisponde ai filtri",
+      "emptyFilteredText": "Reimposta i filtri per vedere tutti gli avvisi.",
+      "count": "{count, plural, one {# avviso} other {# avvisi}}",
+      "openCount": "{count, plural, =0 {nessun avviso aperto} one {# avviso aperto} other {# avvisi aperti}}",
+      "linked": "Avviso dal link della notifica",
+      "filters": {
+        "label": "Filtra gli avvisi",
+        "severity": "Gravità",
+        "state": "Stato",
+        "kind": "Tipo",
+        "all": "Tutti",
+        "open": "Aperti",
+        "resolved": "Risolti",
+        "apply": "Applica i filtri",
+        "reset": "Reimposta"
+      },
+      "columns": {
+        "when": "Scattato",
+        "severity": "Gravità",
+        "alert": "Avviso",
+        "site": "Sito",
+        "delivery": "Consegna",
+        "state": "Stato",
+        "actions": "Azioni"
+      },
+      "caption": "Cronologia degli avvisi con gravità, fatti, esito della consegna e risoluzione",
+      "state": {
+        "open": "Aperto",
+        "resolvedAuto": "Risolto {when} (condizione cessata)",
+        "resolvedUser": "Risolto {when} da un membro"
+      },
+      "rule": "Regola: {name}",
+      "ruleDeleted": "Regola eliminata",
+      "resolve": "Segna come risolto",
+      "resolving": "Risoluzione…",
+      "resolved": "Segnato come risolto.",
+      "details": "Dettagli",
+      "showDetails": "Mostra i dettagli dell'avviso {title}",
+      "delivery": {
+        "none": "Nessun canale",
+        "sent": "Inviato",
+        "failed": "Fallito",
+        "skipped": "Saltato",
+        "channelMissing": "canale rimosso",
+        "notified": "Notificato {when}",
+        "notNotified": "Non notificato"
+      },
+      "titles": {
+        "event_drop": "Il volume di eventi è calato del {drop_percent} %",
+        "vendor_outage": "Le consegne a {integration_name} stanno fallendo",
+        "credential_expiry": "Credenziale di {integration_name}: {state}",
+        "consent_errors": "{rate_percent} % degli eventi bloccati dal consenso",
+        "queue_lag": "La coda di consegna di {integration_name} è in ritardo",
+        "conversion_anomaly": "Conversioni {direction} del {deviation_percent} %"
+      },
+      "words": {
+        "expired": "scaduta",
+        "expiring": "in scadenza",
+        "disconnected": "disconnessa",
+        "drop": "calate",
+        "spike": "aumentate"
+      },
+      "facts": {
+        "window_minutes": "Finestra (min)",
+        "observed": "Osservato",
+        "expected": "Atteso",
+        "drop_percent": "Calo (%)",
+        "deviation_percent": "Scostamento (%)",
+        "threshold_percent": "Soglia (%)",
+        "threshold_days": "Soglia (giorni)",
+        "threshold_seconds": "Soglia (s)",
+        "baseline_weeks": "Settimane di baseline",
+        "received": "Ricevuti",
+        "consent_dropped": "Bloccati dal consenso",
+        "rate_percent": "Tasso (%)",
+        "integration_name": "Destinazione",
+        "connector_type": "Connettore",
+        "status": "Stato",
+        "error_rate_percent": "Tasso di errore (%)",
+        "attempts": "Tentativi",
+        "last_error_class": "Ultima classe di errore",
+        "credential_kind": "Credenziale",
+        "days_left": "Giorni rimanenti",
+        "expires_at": "Scade",
+        "lag_seconds": "Ritardo (s)",
+        "queue_ready": "Eventi in coda",
+        "direction": "Direzione",
+        "state": "Stato"
+      },
+      "pagination": {
+        "nav": "Pagine della cronologia degli avvisi",
+        "previous": "Pagina precedente",
+        "next": "Pagina successiva",
+        "page": "Pagina {page}"
+      }
+    },
+    "test": {
+      "title": "Notifica di prova da Track",
+      "summary": "Questa è una prova del canale di notifica «{channel}». Nessuna regola è scattata; non c'è nulla da fare.",
+      "subject": "[Avviso Track] Prova: {title}",
+      "body": "{summary}\n\nApri le impostazioni degli avvisi: {url}\n\n— Track",
+      "labels": {
+        "severity": "Gravità",
+        "site": "Sito",
+        "open": "Apri le impostazioni degli avvisi"
+      }
+    }
+  }
+}

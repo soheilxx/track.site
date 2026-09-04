@@ -1,0 +1,391 @@
+{
+  "alerts": {
+    "nav": "Alerts & Incident Mode",
+    "settingsSubnav": {
+      "label": "Settings sections",
+      "general": "General",
+      "alerts": "Alerts & Incident Mode"
+    },
+    "title": "Alerts & Incident Mode",
+    "intro": "E-mail, webhook and Slack alerts for event drops, vendor outages, credential expiry, consent errors, queue lag and unusual conversion deviations — evaluated every minute from measured data. Incident Mode pauses one destination or one environment while everything else keeps running. Every action is audited.",
+    "readOnly": "Your role can view this page; changing channels, rules and Incident Mode needs the organization or integrations permission.",
+    "migrationMissing": "Alerts unavailable",
+    "migrationMissingText": "The alert tables (migration 0013) are not applied to this database. Incident Mode works; channels, rules and history are unavailable until the migration runs.",
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save",
+      "saving": "Saving…",
+      "working": "Working…",
+      "delete": "Delete",
+      "edit": "Edit",
+      "enable": "Enable",
+      "disable": "Disable",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "allSites": "All sites",
+      "never": "never",
+      "site": "Site"
+    },
+    "errors": {
+      "forbidden": "Your role is not allowed to do that.",
+      "invalid": "Please check the highlighted fields.",
+      "not_found": "That entry no longer exists.",
+      "vault_missing": "The secret vault is not configured for this environment (KMS settings); webhook and Slack URLs cannot be stored.",
+      "signing": "The configuration signing key is not configured on this server, so no version can be published.",
+      "unchanged": "Nothing to change — it is already in that state.",
+      "lint": "The live configuration fails validation; publish a corrected version from the release center first.",
+      "approval_required": "Your approval policy requires a second person for this change. Ask for approval in Team & Access.",
+      "in_use": "This entry is still used by a rule.",
+      "invalid_email": "Enter a valid e-mail address.",
+      "invalid_url": "Enter a valid URL.",
+      "insecure_url": "Only https URLs are accepted.",
+      "credentials_in_url": "Remove the user name and password from the URL.",
+      "private_host": "Local or private hosts are not accepted.",
+      "not_slack": "Slack incoming webhooks live on hooks.slack.com.",
+      "generic": "That did not work. Please try again."
+    },
+    "fieldErrors": {
+      "required": "Required.",
+      "invalid": "Invalid value.",
+      "number": "Enter a number.",
+      "integer": "Enter a whole number.",
+      "range": "Outside the allowed range ({min}–{max}).",
+      "short": "At least 8 characters."
+    },
+    "kinds": {
+      "event_drop": {
+        "label": "Event drop",
+        "description": "Accepted events of the last hours fall below the average of the same window over the last four weeks."
+      },
+      "vendor_outage": {
+        "label": "Vendor outage",
+        "description": "A destination rejects deliveries (error rate over the 24 h window) or is in error state."
+      },
+      "credential_expiry": {
+        "label": "Credential expiry",
+        "description": "A stored credential expires soon or has expired; an OAuth connection is no longer connected."
+      },
+      "consent_errors": {
+        "label": "Consent errors",
+        "description": "Too many events are blocked for missing or denied consent."
+      },
+      "queue_lag": {
+        "label": "Queue lag",
+        "description": "The oldest queued event of a destination has waited longer than allowed."
+      },
+      "conversion_anomaly": {
+        "label": "Conversion anomaly",
+        "description": "Conversions deviate from the four-week baseline in either direction."
+      }
+    },
+    "severity": { "info": "Info", "warning": "Warning", "critical": "Critical" },
+    "channelKinds": { "email": "E-mail", "webhook": "Webhook", "slack": "Slack" },
+    "incident": {
+      "title": "Incident Mode",
+      "intro": "Stop one flow without stopping the rest: pause a single destination (events keep being collected and delivered elsewhere) or pause the browser tracking of one environment by publishing a signed configuration with the kill switch on. Server-side events, the other environments and every destination continue.",
+      "context": "Targets of {site}",
+      "switchSiteHint": "Change the site in the workspace switcher.",
+      "noSite": "No site yet",
+      "noSiteText": "Create a site first — destinations and environments belong to a site.",
+      "createSite": "Create site",
+      "readOnly": "Pausing and resuming needs the integrations permission (destinations) and the kill-switch permission (environments).",
+      "destinations": {
+        "title": "Destinations",
+        "empty": "No destinations for {site}",
+        "emptyText": "Connect a destination first. Draft destinations are not shown here.",
+        "manage": "Destination Health Center",
+        "testMode": "Test mode",
+        "pausedSince": "paused {when}",
+        "pause": "Pause",
+        "resume": "Resume",
+        "pauseTitle": "Pause deliveries to {name}?",
+        "pauseText": "Events keep being collected and delivered to every other destination. Events for this destination are skipped while it is paused — they are not queued for later. You can resume at any time. The action is audited.",
+        "pauseConfirm": "Pause destination",
+        "resumeTitle": "Resume deliveries to {name}?",
+        "resumeText": "Track runs a credential check first. Deliveries resume only if the vendor accepts the stored credentials; otherwise the destination stays disconnected and the reason is shown here.",
+        "resumeConfirm": "Check and resume",
+        "paused": "Destination paused.",
+        "resumed": "Destination resumed.",
+        "notResumed": "Not resumed: the credential check failed.",
+        "statusNow": "Status now: {status}",
+        "status": {
+          "not_connected": "Not connected",
+          "connected": "Connected",
+          "paused": "Paused",
+          "error": "Error",
+          "draft": "Draft"
+        }
+      },
+      "environments": {
+        "title": "Environments (config kill switch)",
+        "empty": "No environments",
+        "kind": { "production": "Production", "staging": "Staging", "development": "Test" },
+        "testMode": "Test mode",
+        "live": "Live: v{version}",
+        "noVersion": "Nothing published yet",
+        "state": {
+          "active": "Browser tracking active",
+          "paused": "Browser tracking paused",
+          "none": "No live configuration",
+          "unknown": "Live configuration unreadable"
+        },
+        "signingMissing": "The configuration signing key is not configured on this server; the environment kill switch cannot publish a version.",
+        "pause": "Pause environment",
+        "resume": "Resume environment",
+        "pauseTitle": "Pause browser tracking in {name}?",
+        "pauseText": "Track publishes a new signed configuration version with the kill switch on. Browsers stop sending events for this environment with their next configuration fetch (within about a minute); server-side events, other environments and every destination keep running. The open draft is not touched. You can resume at any time. The action is audited.",
+        "pauseConfirm": "Publish kill switch",
+        "resumeTitle": "Resume browser tracking in {name}?",
+        "resumeText": "Track publishes a new signed configuration version with the kill switch off, derived from the live version. Browsers resume with their next configuration fetch.",
+        "resumeConfirm": "Publish and resume",
+        "paused": "Kill switch published as v{version}. Browser tracking pauses with the next configuration fetch.",
+        "resumed": "Browser tracking resumed with v{version}.",
+        "openReleases": "Open Releases"
+      }
+    },
+    "channels": {
+      "title": "Notification channels",
+      "intro": "Where alerts are delivered. E-mail addresses are stored as entered; webhook and Slack URLs and the webhook signing secret are encrypted and never shown again.",
+      "add": "Add channel",
+      "empty": "No channels yet",
+      "emptyText": "Add an e-mail address, a webhook or a Slack incoming webhook. Rules only notify through channels; without one, alerts appear in the history only.",
+      "columns": {
+        "name": "Name",
+        "kind": "Type",
+        "target": "Target",
+        "locale": "Language",
+        "status": "Status",
+        "lastTest": "Last test",
+        "actions": "Actions"
+      },
+      "caption": "Notification channels with type, target, language, status and the last test result",
+      "usedBy": "{count, plural, =0 {not used by any rule} one {used by # rule} other {used by # rules}}",
+      "encrypted": "Stored encrypted",
+      "signed": "signed",
+      "test": "Send test",
+      "testing": "Sending test…",
+      "testSent": "Test notification sent ({transport}).",
+      "testFailed": "Test failed: {reason}",
+      "testReason": {
+        "vault_missing": "secret vault not configured",
+        "decrypt_failed": "stored URL could not be decrypted (key rotated?)",
+        "target_missing": "no target stored",
+        "timeout": "no response within 10 seconds",
+        "rejected": "the endpoint rejected the request",
+        "mail_failed": "the mail transport failed",
+        "generic": "request failed"
+      },
+      "lastTestOk": "Sent {when}",
+      "lastTestFailed": "Failed {when}",
+      "neverTested": "Never tested",
+      "deleteTitle": "Delete channel {name}?",
+      "deleteText": "Rules that use this channel keep running without it. Past deliveries stay in the history. This cannot be undone.",
+      "deleteConfirm": "Delete channel",
+      "created": "Channel created.",
+      "updated": "Channel updated.",
+      "deleted": "Channel deleted.",
+      "enabledMsg": "Channel enabled.",
+      "disabledMsg": "Channel disabled.",
+      "form": {
+        "createTitle": "Add channel",
+        "editTitle": "Edit channel {name}",
+        "kind": "Type",
+        "kindHint": {
+          "email": "Plain-text e-mail in the language you choose.",
+          "webhook": "HTTPS POST with a JSON body; with a secret, every request carries an HMAC-SHA256 signature in the X-Track-Signature header (t=…,n=…,v1=…).",
+          "slack": "Slack incoming webhook (hooks.slack.com) with Block Kit blocks."
+        },
+        "name": "Name",
+        "namePlaceholder": "e.g. On-call e-mail",
+        "targetEmail": "E-mail address",
+        "targetWebhook": "Webhook URL (https)",
+        "targetSlack": "Slack incoming webhook URL",
+        "targetKeep": "Leave empty to keep the stored URL.",
+        "secret": "Signing secret",
+        "secretHint": "Optional, at least 8 characters. Used to sign every request; never shown again.",
+        "secretKeep": "Leave empty to keep the stored secret.",
+        "locale": "Language of notifications",
+        "submitCreate": "Add channel",
+        "submitEdit": "Save changes"
+      }
+    },
+    "rules": {
+      "title": "Alert rules",
+      "intro": "What to watch, for which site, with which thresholds and through which channels. Rules are evaluated every minute by the worker; after a notification a rule stays quiet for its cooldown.",
+      "add": "Add rule",
+      "empty": "No rules yet",
+      "emptyText": "Add a rule for event drops, vendor outages, credential expiry, consent errors, queue lag or conversion anomalies. Nothing is alerted until a rule exists.",
+      "columns": {
+        "name": "Rule",
+        "kind": "Kind",
+        "scope": "Scope",
+        "threshold": "Condition",
+        "channels": "Channels",
+        "status": "Status",
+        "lastEvaluated": "Last evaluated",
+        "actions": "Actions"
+      },
+      "caption": "Alert rules with kind, scope, condition, channels, status and last evaluation",
+      "historyOnly": "History only (no channel)",
+      "neverEvaluated": "Not evaluated yet — the worker job runs every minute.",
+      "evaluated": "Evaluated {when}",
+      "cooldown": "Cooldown {minutes} min",
+      "deleteTitle": "Delete rule {name}?",
+      "deleteText": "Past alerts of this rule stay in the history. This cannot be undone.",
+      "deleteConfirm": "Delete rule",
+      "created": "Rule created.",
+      "updated": "Rule updated.",
+      "deleted": "Rule deleted.",
+      "enabledMsg": "Rule enabled.",
+      "disabledMsg": "Rule disabled.",
+      "form": {
+        "createTitle": "Add rule",
+        "editTitle": "Edit rule {name}",
+        "kind": "Kind",
+        "kindFixed": "The kind of an existing rule cannot change; add a new rule instead.",
+        "name": "Name",
+        "namePlaceholder": "e.g. Production purchases",
+        "site": "Site",
+        "allSites": "All sites of the organization",
+        "thresholds": "Condition",
+        "channels": "Channels",
+        "channelsHint": "Without a channel the alert is recorded in the history only.",
+        "noChannels": "No channels yet — add one above.",
+        "cooldown": "Cooldown (minutes)",
+        "cooldownHint": "After a notification the rule stays quiet for this long per subject ({min}–{max}).",
+        "enabled": "Rule enabled",
+        "previewLabel": "In plain language",
+        "submitCreate": "Add rule",
+        "submitEdit": "Save changes",
+        "fields": {
+          "dropPercent": "Drop (%)",
+          "windowMinutes": "Window (minutes)",
+          "minBaseline": "Minimum baseline (events)",
+          "errorRatePercent": "Error rate (%)",
+          "minAttempts": "Minimum attempts",
+          "daysBefore": "Days before expiry",
+          "minEvents": "Minimum events",
+          "lagSeconds": "Lag (seconds)",
+          "deviationPercent": "Deviation (%)"
+        }
+      },
+      "preview": {
+        "event_drop": "Alert when the accepted events of the last {windowMinutes} minutes are at least {dropPercent} % below the average of the same window over the last four weeks — only when that average is at least {minBaseline} events.",
+        "vendor_outage": "Alert when a destination rejected at least {errorRatePercent} % of at least {minAttempts} delivery attempts in the last 24 hours, or is in error state.",
+        "credential_expiry": "Alert when a credential expires within {daysBefore} days or has expired, or an OAuth connection is no longer connected.",
+        "consent_errors": "Alert when at least {errorRatePercent} % of the events received in the last {windowMinutes} minutes were blocked for consent reasons — only after at least {minEvents} events.",
+        "queue_lag": "Alert when the oldest queued event of a destination has waited longer than {lagSeconds} seconds ({lagMinutes} minutes).",
+        "conversion_anomaly": "Alert when the conversions of the last {windowMinutes} minutes deviate by at least {deviationPercent} % from the average of the same window over the last four weeks — only when that average is at least {minBaseline} conversions."
+      }
+    },
+    "history": {
+      "title": "Alert history",
+      "intro": "Every triggered alert with severity, the measured facts behind it, the delivery per channel and its resolution. Alerts resolve on their own when the condition clears, or by hand.",
+      "empty": "No alerts yet",
+      "emptyText": "Nothing has triggered. Alerts appear here once a rule's condition is met — the worker evaluates every minute.",
+      "emptyFiltered": "No alerts match the filters",
+      "emptyFilteredText": "Reset the filters to see every alert.",
+      "count": "{count, plural, one {# alert} other {# alerts}}",
+      "openCount": "{count, plural, =0 {no open alerts} one {# open alert} other {# open alerts}}",
+      "linked": "Alert from the notification link",
+      "filters": {
+        "label": "Filter alerts",
+        "severity": "Severity",
+        "state": "State",
+        "kind": "Kind",
+        "all": "All",
+        "open": "Open",
+        "resolved": "Resolved",
+        "apply": "Apply filters",
+        "reset": "Reset"
+      },
+      "columns": {
+        "when": "Triggered",
+        "severity": "Severity",
+        "alert": "Alert",
+        "site": "Site",
+        "delivery": "Delivery",
+        "state": "State",
+        "actions": "Actions"
+      },
+      "caption": "Alert history with severity, facts, delivery outcome and resolution",
+      "state": {
+        "open": "Open",
+        "resolvedAuto": "Resolved {when} (condition cleared)",
+        "resolvedUser": "Resolved {when} by a member"
+      },
+      "rule": "Rule: {name}",
+      "ruleDeleted": "Rule deleted",
+      "resolve": "Mark resolved",
+      "resolving": "Resolving…",
+      "resolved": "Marked as resolved.",
+      "details": "Details",
+      "showDetails": "Show details of alert {title}",
+      "delivery": {
+        "none": "No channel",
+        "sent": "Sent",
+        "failed": "Failed",
+        "skipped": "Skipped",
+        "channelMissing": "channel removed",
+        "notified": "Notified {when}",
+        "notNotified": "Not notified"
+      },
+      "titles": {
+        "event_drop": "Event volume dropped {drop_percent} %",
+        "vendor_outage": "Deliveries to {integration_name} are failing",
+        "credential_expiry": "Credential of {integration_name}: {state}",
+        "consent_errors": "{rate_percent} % of events blocked by consent",
+        "queue_lag": "Delivery queue of {integration_name} is behind",
+        "conversion_anomaly": "Conversions {direction} {deviation_percent} %"
+      },
+      "words": {
+        "expired": "expired",
+        "expiring": "expiring",
+        "disconnected": "disconnected",
+        "drop": "dropped",
+        "spike": "rose"
+      },
+      "facts": {
+        "window_minutes": "Window (min)",
+        "observed": "Observed",
+        "expected": "Expected",
+        "drop_percent": "Drop (%)",
+        "deviation_percent": "Deviation (%)",
+        "threshold_percent": "Threshold (%)",
+        "threshold_days": "Threshold (days)",
+        "threshold_seconds": "Threshold (s)",
+        "baseline_weeks": "Baseline weeks",
+        "received": "Received",
+        "consent_dropped": "Consent-blocked",
+        "rate_percent": "Rate (%)",
+        "integration_name": "Destination",
+        "connector_type": "Connector",
+        "status": "Status",
+        "error_rate_percent": "Error rate (%)",
+        "attempts": "Attempts",
+        "last_error_class": "Last error class",
+        "credential_kind": "Credential",
+        "days_left": "Days left",
+        "expires_at": "Expires",
+        "lag_seconds": "Lag (s)",
+        "queue_ready": "Queued events",
+        "direction": "Direction",
+        "state": "State"
+      },
+      "pagination": {
+        "nav": "Alert history pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "page": "Page {page}"
+      }
+    },
+    "test": {
+      "title": "Test notification from Track",
+      "summary": "This is a test of the notification channel \"{channel}\". No rule fired; nothing needs your attention.",
+      "subject": "[Track alert] Test: {title}",
+      "body": "{summary}\n\nOpen the alert settings: {url}\n\n— Track",
+      "labels": { "severity": "Severity", "site": "Site", "open": "Open the alert settings" }
+    }
+  }
+}

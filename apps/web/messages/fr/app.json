@@ -175,7 +175,36 @@
       "save": "Enregistrer",
       "saved": "Enregistré.",
       "error": "Une erreur s’est produite.",
-      "readOnly": "Votre rôle permet uniquement de consulter ces paramètres."
+      "readOnly": "Votre rôle permet uniquement de consulter ces paramètres.",
+      "alertsText": "Les alertes par e-mail, webhook et Slack, les règles d'alerte et le mode incident (mettre en pause une destination ou un environnement) ont leur propre page.",
+      "openAlerts": "Ouvrir Alertes & mode incident",
+      "aiMotion": {
+        "title": "Mouvement de l'IA",
+        "intro": "Dans quelle mesure le panneau Track AI bouge. Votre réglage personnel pour cette organisation ; il s'appliquera aussi au Living AI Core dès sa mise en service.",
+        "legend": "Mouvement de l'IA",
+        "options": {
+          "system": {
+            "label": "Réglage du système",
+            "description": "Suit votre système d'exploitation : mouvement complet normalement, réduit ou statique lorsque votre système demande une animation réduite."
+          },
+          "full": {
+            "label": "Complet",
+            "description": "Mouvement ambiant apaisé du cœur IA et transitions courtes."
+          },
+          "reduced": {
+            "label": "Réduit",
+            "description": "Pas de mouvement ambiant continu ; uniquement de courtes transitions d'état."
+          },
+          "off": {
+            "label": "Désactivé",
+            "description": "Aucun mouvement. Les états sont indiqués uniquement par la couleur, le texte et les icônes."
+          }
+        },
+        "save": "Enregistrer le réglage du mouvement",
+        "saving": "Enregistrement…",
+        "saved": "Réglage du mouvement enregistré.",
+        "error": "Le réglage n'a pas pu être enregistré. Veuillez réessayer."
+      }
     },
     "billing": {
       "title": "Facturation",

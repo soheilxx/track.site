@@ -175,7 +175,36 @@
       "save": "Speichern",
       "saved": "Gespeichert.",
       "error": "Etwas ist schiefgelaufen.",
-      "readOnly": "Deine Rolle kann diese Einstellungen nur ansehen."
+      "readOnly": "Deine Rolle kann diese Einstellungen nur ansehen.",
+      "alertsText": "E-Mail-, Webhook- und Slack-Alarme, Alarmregeln und der Incident Mode (eine Destination oder eine Umgebung pausieren) haben eine eigene Seite.",
+      "openAlerts": "Alarme & Incident Mode öffnen",
+      "aiMotion": {
+        "title": "KI-Bewegung",
+        "intro": "Wie stark sich das Track-AI-Panel bewegt. Deine persönliche Einstellung für diese Organisation; sie gilt auch für den Living AI Core, sobald er verfügbar ist.",
+        "legend": "KI-Bewegung",
+        "options": {
+          "system": {
+            "label": "Systemstandard",
+            "description": "Folgt deinem Betriebssystem: normal volle Bewegung, reduziert oder statisch, wenn dein System reduzierte Bewegung verlangt."
+          },
+          "full": {
+            "label": "Voll",
+            "description": "Ruhige Ambient-Bewegung des AI Core und kurze Übergänge."
+          },
+          "reduced": {
+            "label": "Reduziert",
+            "description": "Keine kontinuierliche Ambient-Bewegung; nur kurze Zustandsübergänge."
+          },
+          "off": {
+            "label": "Aus",
+            "description": "Gar keine Bewegung. Zustände werden nur über Farbe, Text und Icons dargestellt."
+          }
+        },
+        "save": "Bewegungseinstellung speichern",
+        "saving": "Wird gespeichert…",
+        "saved": "Bewegungseinstellung gespeichert.",
+        "error": "Die Einstellung konnte nicht gespeichert werden. Bitte versuche es erneut."
+      }
     },
     "billing": {
       "title": "Abrechnung",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T04:55:39.750Z",
+  "generatedAt": "2026-09-04T10:02:24.992Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -19,11 +19,22 @@
   ],
   "reference": {
     "messages": {
-      "app": 331,
+      "alerts": 323,
+      "app": 330,
       "auth": 71,
+      "billing-usage": 175,
       "chat": 68,
+      "command-center": 273,
       "common": 77,
-      "destinations": 121
+      "consent": 315,
+      "data-quality": 250,
+      "destinations": 121,
+      "destinations-health": 187,
+      "events": 426,
+      "insights": 232,
+      "releases": 350,
+      "shell": 139,
+      "team": 283
     },
     "copyModules": [
       "AUTH_COPY",
@@ -69,6 +80,11 @@
         "messages": {
           "gaps": 0,
           "namespaces": {
+            "alerts": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "app": {
               "file": true,
               "missing": [],
@@ -79,7 +95,17 @@
               "missing": [],
               "extra": []
             },
+            "billing-usage": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "command-center": {
               "file": true,
               "missing": [],
               "extra": []
@@ -89,7 +115,47 @@
               "missing": [],
               "extra": []
             },
+            "consent": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "data-quality": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "events": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "team": {
               "file": true,
               "missing": [],
               "extra": []
@@ -153,6 +219,11 @@
         "messages": {
           "gaps": 0,
           "namespaces": {
+            "alerts": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "app": {
               "file": true,
               "missing": [],
@@ -163,7 +234,17 @@
               "missing": [],
               "extra": []
             },
+            "billing-usage": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "command-center": {
               "file": true,
               "missing": [],
               "extra": []
@@ -173,7 +254,47 @@
               "missing": [],
               "extra": []
             },
+            "consent": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "data-quality": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "events": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "team": {
               "file": true,
               "missing": [],
               "extra": []
@@ -237,6 +358,11 @@
         "messages": {
           "gaps": 0,
           "namespaces": {
+            "alerts": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "app": {
               "file": true,
               "missing": [],
@@ -247,7 +373,17 @@
               "missing": [],
               "extra": []
             },
+            "billing-usage": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "command-center": {
               "file": true,
               "missing": [],
               "extra": []
@@ -257,7 +393,47 @@
               "missing": [],
               "extra": []
             },
+            "consent": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "data-quality": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "events": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "team": {
               "file": true,
               "missing": [],
               "extra": []
@@ -321,6 +497,11 @@
         "messages": {
           "gaps": 0,
           "namespaces": {
+            "alerts": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "app": {
               "file": true,
               "missing": [],
@@ -331,7 +512,17 @@
               "missing": [],
               "extra": []
             },
+            "billing-usage": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "command-center": {
               "file": true,
               "missing": [],
               "extra": []
@@ -341,7 +532,47 @@
               "missing": [],
               "extra": []
             },
+            "consent": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "data-quality": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "events": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "team": {
               "file": true,
               "missing": [],
               "extra": []
@@ -405,6 +636,11 @@
         "messages": {
           "gaps": 0,
           "namespaces": {
+            "alerts": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "app": {
               "file": true,
               "missing": [],
@@ -415,7 +651,17 @@
               "missing": [],
               "extra": []
             },
+            "billing-usage": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "command-center": {
               "file": true,
               "missing": [],
               "extra": []
@@ -425,7 +671,47 @@
               "missing": [],
               "extra": []
             },
+            "consent": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "data-quality": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "events": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "team": {
               "file": true,
               "missing": [],
               "extra": []

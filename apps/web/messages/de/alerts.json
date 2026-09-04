@@ -1,0 +1,391 @@
+{
+  "alerts": {
+    "nav": "Alarme & Incident Mode",
+    "settingsSubnav": {
+      "label": "Bereiche der Einstellungen",
+      "general": "Allgemein",
+      "alerts": "Alarme & Incident Mode"
+    },
+    "title": "Alarme & Incident Mode",
+    "intro": "E-Mail-, Webhook- und Slack-Alarme für Eventdrops, Vendorausfälle, Credentialablauf, Consentfehler, Queue-Lag und ungewöhnliche Conversionabweichungen — jede Minute aus gemessenen Daten ausgewertet. Der Incident Mode pausiert eine Destination oder eine Umgebung, während alles andere weiterläuft. Jede Aktion wird auditiert.",
+    "readOnly": "Deine Rolle kann diese Seite ansehen; Kanäle, Regeln und Incident Mode zu ändern erfordert die Organisations- bzw. Integrationsberechtigung.",
+    "migrationMissing": "Alarme nicht verfügbar",
+    "migrationMissingText": "Die Alarmtabellen (Migration 0013) sind auf dieser Datenbank nicht angewendet. Der Incident Mode funktioniert; Kanäle, Regeln und Verlauf sind erst nach der Migration verfügbar.",
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "working": "Wird ausgeführt…",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "enabled": "Aktiv",
+      "disabled": "Deaktiviert",
+      "allSites": "Alle Sites",
+      "never": "nie",
+      "site": "Site"
+    },
+    "errors": {
+      "forbidden": "Deine Rolle darf das nicht.",
+      "invalid": "Bitte prüfe die markierten Felder.",
+      "not_found": "Dieser Eintrag existiert nicht mehr.",
+      "vault_missing": "Der Secret-Vault ist für diese Umgebung nicht konfiguriert (KMS-Einstellungen); Webhook- und Slack-URLs können nicht gespeichert werden.",
+      "signing": "Der Signaturschlüssel für Konfigurationen ist auf diesem Server nicht konfiguriert, daher kann keine Version veröffentlicht werden.",
+      "unchanged": "Nichts zu ändern — der Zustand ist bereits so.",
+      "lint": "Die Live-Konfiguration besteht die Validierung nicht; veröffentliche zuerst eine korrigierte Version im Release Center.",
+      "approval_required": "Deine Freigaberichtlinie verlangt für diese Änderung eine zweite Person. Fordere die Freigabe unter Team & Zugriff an.",
+      "in_use": "Dieser Eintrag wird noch von einer Regel verwendet.",
+      "invalid_email": "Gib eine gültige E-Mail-Adresse ein.",
+      "invalid_url": "Gib eine gültige URL ein.",
+      "insecure_url": "Nur https-URLs werden akzeptiert.",
+      "credentials_in_url": "Entferne Benutzername und Passwort aus der URL.",
+      "private_host": "Lokale oder private Hosts werden nicht akzeptiert.",
+      "not_slack": "Slack Incoming Webhooks liegen auf hooks.slack.com.",
+      "generic": "Das hat nicht geklappt. Bitte versuche es erneut."
+    },
+    "fieldErrors": {
+      "required": "Pflichtfeld.",
+      "invalid": "Ungültiger Wert.",
+      "number": "Gib eine Zahl ein.",
+      "integer": "Gib eine ganze Zahl ein.",
+      "range": "Außerhalb des erlaubten Bereichs ({min}–{max}).",
+      "short": "Mindestens 8 Zeichen."
+    },
+    "kinds": {
+      "event_drop": {
+        "label": "Eventdrop",
+        "description": "Die akzeptierten Events der letzten Stunden fallen unter den Durchschnitt desselben Zeitfensters der letzten vier Wochen."
+      },
+      "vendor_outage": {
+        "label": "Vendorausfall",
+        "description": "Eine Destination lehnt Zustellungen ab (Fehlerquote im 24-h-Fenster) oder ist im Fehlerzustand."
+      },
+      "credential_expiry": {
+        "label": "Credentialablauf",
+        "description": "Gespeicherte Zugangsdaten laufen bald ab oder sind abgelaufen; eine OAuth-Verbindung ist nicht mehr verbunden."
+      },
+      "consent_errors": {
+        "label": "Consentfehler",
+        "description": "Zu viele Events werden wegen fehlender oder verweigerter Einwilligung blockiert."
+      },
+      "queue_lag": {
+        "label": "Queue-Lag",
+        "description": "Das älteste wartende Event einer Destination wartet länger als erlaubt."
+      },
+      "conversion_anomaly": {
+        "label": "Conversion-Anomalie",
+        "description": "Conversions weichen in eine der beiden Richtungen von der Vier-Wochen-Baseline ab."
+      }
+    },
+    "severity": { "info": "Info", "warning": "Warnung", "critical": "Kritisch" },
+    "channelKinds": { "email": "E-Mail", "webhook": "Webhook", "slack": "Slack" },
+    "incident": {
+      "title": "Incident Mode",
+      "intro": "Einen Datenfluss stoppen, ohne den Rest zu stoppen: Pausiere eine einzelne Destination (Events werden weiter erfasst und an alle anderen zugestellt) oder das Browser-Tracking einer Umgebung, indem eine signierte Konfiguration mit aktivem Kill-Switch veröffentlicht wird. Serverseitige Events, die anderen Umgebungen und jede Destination laufen weiter.",
+      "context": "Ziele von {site}",
+      "switchSiteHint": "Wechsle die Site im Workspace-Umschalter.",
+      "noSite": "Noch keine Site",
+      "noSiteText": "Lege zuerst eine Site an — Destinationen und Umgebungen gehören zu einer Site.",
+      "createSite": "Site erstellen",
+      "readOnly": "Pausieren und Fortsetzen erfordert die Integrationsberechtigung (Destinationen) und die Kill-Switch-Berechtigung (Umgebungen).",
+      "destinations": {
+        "title": "Destinationen",
+        "empty": "Keine Destinationen für {site}",
+        "emptyText": "Verbinde zuerst eine Destination. Entwürfe werden hier nicht angezeigt.",
+        "manage": "Destination Health Center",
+        "testMode": "Testmodus",
+        "pausedSince": "pausiert {when}",
+        "pause": "Pausieren",
+        "resume": "Fortsetzen",
+        "pauseTitle": "Zustellungen an {name} pausieren?",
+        "pauseText": "Events werden weiterhin erfasst und an alle anderen Destinationen zugestellt. Events für diese Destination werden während der Pause übersprungen — sie werden nicht für später aufbewahrt. Du kannst jederzeit fortsetzen. Die Aktion wird auditiert.",
+        "pauseConfirm": "Destination pausieren",
+        "resumeTitle": "Zustellungen an {name} fortsetzen?",
+        "resumeText": "Track prüft zuerst die Zugangsdaten. Zustellungen werden nur fortgesetzt, wenn der Anbieter die gespeicherten Zugangsdaten akzeptiert; andernfalls bleibt die Destination getrennt und der Grund wird hier angezeigt.",
+        "resumeConfirm": "Prüfen und fortsetzen",
+        "paused": "Destination pausiert.",
+        "resumed": "Destination fortgesetzt.",
+        "notResumed": "Nicht fortgesetzt: Die Prüfung der Zugangsdaten ist fehlgeschlagen.",
+        "statusNow": "Status jetzt: {status}",
+        "status": {
+          "not_connected": "Nicht verbunden",
+          "connected": "Verbunden",
+          "paused": "Pausiert",
+          "error": "Fehler",
+          "draft": "Entwurf"
+        }
+      },
+      "environments": {
+        "title": "Umgebungen (Konfigurations-Kill-Switch)",
+        "empty": "Keine Umgebungen",
+        "kind": { "production": "Produktion", "staging": "Staging", "development": "Test" },
+        "testMode": "Testmodus",
+        "live": "Live: v{version}",
+        "noVersion": "Noch nichts veröffentlicht",
+        "state": {
+          "active": "Browser-Tracking aktiv",
+          "paused": "Browser-Tracking pausiert",
+          "none": "Keine Live-Konfiguration",
+          "unknown": "Live-Konfiguration nicht lesbar"
+        },
+        "signingMissing": "Der Signaturschlüssel für Konfigurationen ist auf diesem Server nicht konfiguriert; der Kill-Switch der Umgebung kann keine Version veröffentlichen.",
+        "pause": "Umgebung pausieren",
+        "resume": "Umgebung fortsetzen",
+        "pauseTitle": "Browser-Tracking in {name} pausieren?",
+        "pauseText": "Track veröffentlicht eine neue signierte Konfigurationsversion mit aktivem Kill-Switch. Browser senden für diese Umgebung ab dem nächsten Konfigurationsabruf (innerhalb von etwa einer Minute) keine Events mehr; serverseitige Events, andere Umgebungen und jede Destination laufen weiter. Der offene Entwurf wird nicht angefasst. Du kannst jederzeit fortsetzen. Die Aktion wird auditiert.",
+        "pauseConfirm": "Kill-Switch veröffentlichen",
+        "resumeTitle": "Browser-Tracking in {name} fortsetzen?",
+        "resumeText": "Track veröffentlicht eine neue signierte Konfigurationsversion mit deaktiviertem Kill-Switch, abgeleitet von der Live-Version. Browser setzen mit dem nächsten Konfigurationsabruf fort.",
+        "resumeConfirm": "Veröffentlichen und fortsetzen",
+        "paused": "Kill-Switch als v{version} veröffentlicht. Das Browser-Tracking pausiert mit dem nächsten Konfigurationsabruf.",
+        "resumed": "Browser-Tracking mit v{version} fortgesetzt.",
+        "openReleases": "Releases öffnen"
+      }
+    },
+    "channels": {
+      "title": "Benachrichtigungskanäle",
+      "intro": "Wohin Alarme zugestellt werden. E-Mail-Adressen werden wie eingegeben gespeichert; Webhook- und Slack-URLs sowie das Webhook-Signatur-Secret werden verschlüsselt und nie wieder angezeigt.",
+      "add": "Kanal hinzufügen",
+      "empty": "Noch keine Kanäle",
+      "emptyText": "Füge eine E-Mail-Adresse, einen Webhook oder einen Slack Incoming Webhook hinzu. Regeln benachrichtigen nur über Kanäle; ohne Kanal erscheinen Alarme nur im Verlauf.",
+      "columns": {
+        "name": "Name",
+        "kind": "Typ",
+        "target": "Ziel",
+        "locale": "Sprache",
+        "status": "Status",
+        "lastTest": "Letzter Test",
+        "actions": "Aktionen"
+      },
+      "caption": "Benachrichtigungskanäle mit Typ, Ziel, Sprache, Status und letztem Testergebnis",
+      "usedBy": "{count, plural, =0 {von keiner Regel verwendet} one {von # Regel verwendet} other {von # Regeln verwendet}}",
+      "encrypted": "Verschlüsselt gespeichert",
+      "signed": "signiert",
+      "test": "Test senden",
+      "testing": "Test wird gesendet…",
+      "testSent": "Testbenachrichtigung gesendet ({transport}).",
+      "testFailed": "Test fehlgeschlagen: {reason}",
+      "testReason": {
+        "vault_missing": "Secret-Vault nicht konfiguriert",
+        "decrypt_failed": "gespeicherte URL konnte nicht entschlüsselt werden (Schlüssel rotiert?)",
+        "target_missing": "kein Ziel gespeichert",
+        "timeout": "keine Antwort innerhalb von 10 Sekunden",
+        "rejected": "der Endpunkt hat die Anfrage abgelehnt",
+        "mail_failed": "der Mailtransport ist fehlgeschlagen",
+        "generic": "Anfrage fehlgeschlagen"
+      },
+      "lastTestOk": "Gesendet {when}",
+      "lastTestFailed": "Fehlgeschlagen {when}",
+      "neverTested": "Nie getestet",
+      "deleteTitle": "Kanal {name} löschen?",
+      "deleteText": "Regeln, die diesen Kanal nutzen, laufen ohne ihn weiter. Vergangene Zustellungen bleiben im Verlauf. Das lässt sich nicht rückgängig machen.",
+      "deleteConfirm": "Kanal löschen",
+      "created": "Kanal erstellt.",
+      "updated": "Kanal aktualisiert.",
+      "deleted": "Kanal gelöscht.",
+      "enabledMsg": "Kanal aktiviert.",
+      "disabledMsg": "Kanal deaktiviert.",
+      "form": {
+        "createTitle": "Kanal hinzufügen",
+        "editTitle": "Kanal {name} bearbeiten",
+        "kind": "Typ",
+        "kindHint": {
+          "email": "Text-E-Mail in der gewählten Sprache.",
+          "webhook": "HTTPS-POST mit JSON-Body; mit Secret trägt jede Anfrage eine HMAC-SHA256-Signatur im Header X-Track-Signature (t=…,n=…,v1=…).",
+          "slack": "Slack Incoming Webhook (hooks.slack.com) mit Block-Kit-Blöcken."
+        },
+        "name": "Name",
+        "namePlaceholder": "z. B. Bereitschafts-E-Mail",
+        "targetEmail": "E-Mail-Adresse",
+        "targetWebhook": "Webhook-URL (https)",
+        "targetSlack": "Slack-Incoming-Webhook-URL",
+        "targetKeep": "Leer lassen, um die gespeicherte URL zu behalten.",
+        "secret": "Signatur-Secret",
+        "secretHint": "Optional, mindestens 8 Zeichen. Signiert jede Anfrage; wird nie wieder angezeigt.",
+        "secretKeep": "Leer lassen, um das gespeicherte Secret zu behalten.",
+        "locale": "Sprache der Benachrichtigungen",
+        "submitCreate": "Kanal hinzufügen",
+        "submitEdit": "Änderungen speichern"
+      }
+    },
+    "rules": {
+      "title": "Alarmregeln",
+      "intro": "Was überwacht wird, für welche Site, mit welchen Schwellen und über welche Kanäle. Regeln werden jede Minute vom Worker ausgewertet; nach einer Benachrichtigung bleibt eine Regel für ihre Cooldown-Zeit still.",
+      "add": "Regel hinzufügen",
+      "empty": "Noch keine Regeln",
+      "emptyText": "Füge eine Regel für Eventdrops, Vendorausfälle, Credentialablauf, Consentfehler, Queue-Lag oder Conversion-Anomalien hinzu. Ohne Regel wird nichts alarmiert.",
+      "columns": {
+        "name": "Regel",
+        "kind": "Art",
+        "scope": "Geltungsbereich",
+        "threshold": "Bedingung",
+        "channels": "Kanäle",
+        "status": "Status",
+        "lastEvaluated": "Zuletzt ausgewertet",
+        "actions": "Aktionen"
+      },
+      "caption": "Alarmregeln mit Art, Geltungsbereich, Bedingung, Kanälen, Status und letzter Auswertung",
+      "historyOnly": "Nur Verlauf (kein Kanal)",
+      "neverEvaluated": "Noch nicht ausgewertet — der Worker-Job läuft jede Minute.",
+      "evaluated": "Ausgewertet {when}",
+      "cooldown": "Cooldown {minutes} Min.",
+      "deleteTitle": "Regel {name} löschen?",
+      "deleteText": "Vergangene Alarme dieser Regel bleiben im Verlauf. Das lässt sich nicht rückgängig machen.",
+      "deleteConfirm": "Regel löschen",
+      "created": "Regel erstellt.",
+      "updated": "Regel aktualisiert.",
+      "deleted": "Regel gelöscht.",
+      "enabledMsg": "Regel aktiviert.",
+      "disabledMsg": "Regel deaktiviert.",
+      "form": {
+        "createTitle": "Regel hinzufügen",
+        "editTitle": "Regel {name} bearbeiten",
+        "kind": "Art",
+        "kindFixed": "Die Art einer bestehenden Regel kann nicht geändert werden; lege stattdessen eine neue Regel an.",
+        "name": "Name",
+        "namePlaceholder": "z. B. Produktions-Käufe",
+        "site": "Site",
+        "allSites": "Alle Sites der Organisation",
+        "thresholds": "Bedingung",
+        "channels": "Kanäle",
+        "channelsHint": "Ohne Kanal wird der Alarm nur im Verlauf aufgezeichnet.",
+        "noChannels": "Noch keine Kanäle — füge oben einen hinzu.",
+        "cooldown": "Cooldown (Minuten)",
+        "cooldownHint": "Nach einer Benachrichtigung bleibt die Regel pro Betreff so lange still ({min}–{max}).",
+        "enabled": "Regel aktiv",
+        "previewLabel": "Im Klartext",
+        "submitCreate": "Regel hinzufügen",
+        "submitEdit": "Änderungen speichern",
+        "fields": {
+          "dropPercent": "Rückgang (%)",
+          "windowMinutes": "Zeitfenster (Minuten)",
+          "minBaseline": "Mindest-Baseline (Events)",
+          "errorRatePercent": "Fehlerquote (%)",
+          "minAttempts": "Mindestversuche",
+          "daysBefore": "Tage vor Ablauf",
+          "minEvents": "Mindestevents",
+          "lagSeconds": "Verzögerung (Sekunden)",
+          "deviationPercent": "Abweichung (%)"
+        }
+      },
+      "preview": {
+        "event_drop": "Alarm, wenn die akzeptierten Events der letzten {windowMinutes} Minuten mindestens {dropPercent} % unter dem Durchschnitt desselben Zeitfensters der letzten vier Wochen liegen — nur, wenn dieser Durchschnitt mindestens {minBaseline} Events beträgt.",
+        "vendor_outage": "Alarm, wenn eine Destination in den letzten 24 Stunden mindestens {errorRatePercent} % von mindestens {minAttempts} Zustellversuchen abgelehnt hat oder im Fehlerzustand ist.",
+        "credential_expiry": "Alarm, wenn Zugangsdaten innerhalb von {daysBefore} Tagen ablaufen oder abgelaufen sind oder eine OAuth-Verbindung nicht mehr verbunden ist.",
+        "consent_errors": "Alarm, wenn mindestens {errorRatePercent} % der in den letzten {windowMinutes} Minuten empfangenen Events aus Consent-Gründen blockiert wurden — erst ab mindestens {minEvents} Events.",
+        "queue_lag": "Alarm, wenn das älteste wartende Event einer Destination länger als {lagSeconds} Sekunden ({lagMinutes} Minuten) gewartet hat.",
+        "conversion_anomaly": "Alarm, wenn die Conversions der letzten {windowMinutes} Minuten um mindestens {deviationPercent} % vom Durchschnitt desselben Zeitfensters der letzten vier Wochen abweichen — nur, wenn dieser Durchschnitt mindestens {minBaseline} Conversions beträgt."
+      }
+    },
+    "history": {
+      "title": "Alarmverlauf",
+      "intro": "Jeder ausgelöste Alarm mit Schweregrad, den gemessenen Fakten dahinter, der Zustellung pro Kanal und seiner Auflösung. Alarme lösen sich von selbst auf, wenn die Bedingung wegfällt, oder von Hand.",
+      "empty": "Noch keine Alarme",
+      "emptyText": "Es hat nichts ausgelöst. Alarme erscheinen hier, sobald die Bedingung einer Regel erfüllt ist — der Worker wertet jede Minute aus.",
+      "emptyFiltered": "Keine Alarme passen zu den Filtern",
+      "emptyFilteredText": "Setze die Filter zurück, um alle Alarme zu sehen.",
+      "count": "{count, plural, one {# Alarm} other {# Alarme}}",
+      "openCount": "{count, plural, =0 {keine offenen Alarme} one {# offener Alarm} other {# offene Alarme}}",
+      "linked": "Alarm aus dem Benachrichtigungslink",
+      "filters": {
+        "label": "Alarme filtern",
+        "severity": "Schweregrad",
+        "state": "Zustand",
+        "kind": "Art",
+        "all": "Alle",
+        "open": "Offen",
+        "resolved": "Aufgelöst",
+        "apply": "Filter anwenden",
+        "reset": "Zurücksetzen"
+      },
+      "columns": {
+        "when": "Ausgelöst",
+        "severity": "Schweregrad",
+        "alert": "Alarm",
+        "site": "Site",
+        "delivery": "Zustellung",
+        "state": "Zustand",
+        "actions": "Aktionen"
+      },
+      "caption": "Alarmverlauf mit Schweregrad, Fakten, Zustellergebnis und Auflösung",
+      "state": {
+        "open": "Offen",
+        "resolvedAuto": "Aufgelöst {when} (Bedingung weggefallen)",
+        "resolvedUser": "Aufgelöst {when} durch ein Mitglied"
+      },
+      "rule": "Regel: {name}",
+      "ruleDeleted": "Regel gelöscht",
+      "resolve": "Als aufgelöst markieren",
+      "resolving": "Wird aufgelöst…",
+      "resolved": "Als aufgelöst markiert.",
+      "details": "Details",
+      "showDetails": "Details zum Alarm {title} anzeigen",
+      "delivery": {
+        "none": "Kein Kanal",
+        "sent": "Gesendet",
+        "failed": "Fehlgeschlagen",
+        "skipped": "Übersprungen",
+        "channelMissing": "Kanal entfernt",
+        "notified": "Benachrichtigt {when}",
+        "notNotified": "Nicht benachrichtigt"
+      },
+      "titles": {
+        "event_drop": "Eventvolumen um {drop_percent} % gesunken",
+        "vendor_outage": "Zustellungen an {integration_name} schlagen fehl",
+        "credential_expiry": "Zugangsdaten von {integration_name}: {state}",
+        "consent_errors": "{rate_percent} % der Events durch Consent blockiert",
+        "queue_lag": "Zustellwarteschlange von {integration_name} hängt nach",
+        "conversion_anomaly": "Conversions um {deviation_percent} % {direction}"
+      },
+      "words": {
+        "expired": "abgelaufen",
+        "expiring": "läuft bald ab",
+        "disconnected": "getrennt",
+        "drop": "gesunken",
+        "spike": "gestiegen"
+      },
+      "facts": {
+        "window_minutes": "Zeitfenster (Min.)",
+        "observed": "Beobachtet",
+        "expected": "Erwartet",
+        "drop_percent": "Rückgang (%)",
+        "deviation_percent": "Abweichung (%)",
+        "threshold_percent": "Schwelle (%)",
+        "threshold_days": "Schwelle (Tage)",
+        "threshold_seconds": "Schwelle (s)",
+        "baseline_weeks": "Baseline-Wochen",
+        "received": "Empfangen",
+        "consent_dropped": "Durch Consent blockiert",
+        "rate_percent": "Quote (%)",
+        "integration_name": "Destination",
+        "connector_type": "Connector",
+        "status": "Status",
+        "error_rate_percent": "Fehlerquote (%)",
+        "attempts": "Versuche",
+        "last_error_class": "Letzte Fehlerklasse",
+        "credential_kind": "Zugangsdaten",
+        "days_left": "Verbleibende Tage",
+        "expires_at": "Läuft ab",
+        "lag_seconds": "Verzögerung (s)",
+        "queue_ready": "Wartende Events",
+        "direction": "Richtung",
+        "state": "Zustand"
+      },
+      "pagination": {
+        "nav": "Seiten des Alarmverlaufs",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {page}"
+      }
+    },
+    "test": {
+      "title": "Testbenachrichtigung von Track",
+      "summary": "Dies ist ein Test des Benachrichtigungskanals „{channel}“. Keine Regel hat ausgelöst; es ist nichts zu tun.",
+      "subject": "[Track-Alarm] Test: {title}",
+      "body": "{summary}\n\nAlarmeinstellungen öffnen: {url}\n\n— Track",
+      "labels": { "severity": "Schweregrad", "site": "Site", "open": "Alarmeinstellungen öffnen" }
+    }
+  }
+}

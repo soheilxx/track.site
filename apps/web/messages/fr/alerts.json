@@ -1,0 +1,391 @@
+{
+  "alerts": {
+    "nav": "Alertes & mode incident",
+    "settingsSubnav": {
+      "label": "Sections des paramètres",
+      "general": "Général",
+      "alerts": "Alertes & mode incident"
+    },
+    "title": "Alertes & mode incident",
+    "intro": "Alertes par e-mail, webhook et Slack pour les chutes d'événements, pannes de fournisseurs, expirations d'identifiants, erreurs de consentement, retards de file d'attente et écarts de conversion inhabituels — évaluées chaque minute à partir de données mesurées. Le mode incident met en pause une destination ou un environnement pendant que tout le reste continue. Chaque action est auditée.",
+    "readOnly": "Votre rôle permet de consulter cette page ; modifier les canaux, les règles et le mode incident requiert la permission d'organisation ou d'intégrations.",
+    "migrationMissing": "Alertes indisponibles",
+    "migrationMissingText": "Les tables d'alertes (migration 0013) ne sont pas appliquées à cette base de données. Le mode incident fonctionne ; les canaux, règles et l'historique seront disponibles après la migration.",
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "working": "En cours…",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "enabled": "Activé",
+      "disabled": "Désactivé",
+      "allSites": "Tous les sites",
+      "never": "jamais",
+      "site": "Site"
+    },
+    "errors": {
+      "forbidden": "Votre rôle ne permet pas cette action.",
+      "invalid": "Veuillez vérifier les champs signalés.",
+      "not_found": "Cette entrée n'existe plus.",
+      "vault_missing": "Le coffre à secrets n'est pas configuré pour cet environnement (paramètres KMS) ; les URL de webhook et Slack ne peuvent pas être enregistrées.",
+      "signing": "La clé de signature des configurations n'est pas configurée sur ce serveur ; aucune version ne peut être publiée.",
+      "unchanged": "Rien à changer — l'état est déjà celui-ci.",
+      "lint": "La configuration en production échoue à la validation ; publiez d'abord une version corrigée depuis le centre de publication.",
+      "approval_required": "Votre politique d'approbation exige une seconde personne pour ce changement. Demandez l'approbation dans Équipe & accès.",
+      "in_use": "Cette entrée est encore utilisée par une règle.",
+      "invalid_email": "Saisissez une adresse e-mail valide.",
+      "invalid_url": "Saisissez une URL valide.",
+      "insecure_url": "Seules les URL https sont acceptées.",
+      "credentials_in_url": "Retirez le nom d'utilisateur et le mot de passe de l'URL.",
+      "private_host": "Les hôtes locaux ou privés ne sont pas acceptés.",
+      "not_slack": "Les webhooks entrants Slack sont hébergés sur hooks.slack.com.",
+      "generic": "Cela n'a pas fonctionné. Veuillez réessayer."
+    },
+    "fieldErrors": {
+      "required": "Obligatoire.",
+      "invalid": "Valeur invalide.",
+      "number": "Saisissez un nombre.",
+      "integer": "Saisissez un nombre entier.",
+      "range": "Hors de la plage autorisée ({min}–{max}).",
+      "short": "Au moins 8 caractères."
+    },
+    "kinds": {
+      "event_drop": {
+        "label": "Chute d'événements",
+        "description": "Les événements acceptés des dernières heures passent sous la moyenne de la même fenêtre sur les quatre dernières semaines."
+      },
+      "vendor_outage": {
+        "label": "Panne de fournisseur",
+        "description": "Une destination rejette les envois (taux d'erreur sur la fenêtre de 24 h) ou est en état d'erreur."
+      },
+      "credential_expiry": {
+        "label": "Expiration d'identifiant",
+        "description": "Un identifiant enregistré expire bientôt ou a expiré ; une connexion OAuth n'est plus connectée."
+      },
+      "consent_errors": {
+        "label": "Erreurs de consentement",
+        "description": "Trop d'événements sont bloqués faute de consentement ou en raison d'un refus."
+      },
+      "queue_lag": {
+        "label": "Retard de file d'attente",
+        "description": "Le plus ancien événement en attente d'une destination a patienté plus longtemps qu'autorisé."
+      },
+      "conversion_anomaly": {
+        "label": "Anomalie de conversion",
+        "description": "Les conversions s'écartent de la référence sur quatre semaines, à la hausse ou à la baisse."
+      }
+    },
+    "severity": { "info": "Info", "warning": "Avertissement", "critical": "Critique" },
+    "channelKinds": { "email": "E-mail", "webhook": "Webhook", "slack": "Slack" },
+    "incident": {
+      "title": "Mode incident",
+      "intro": "Arrêter un flux sans arrêter le reste : mettez en pause une seule destination (les événements continuent d'être collectés et envoyés ailleurs) ou le suivi navigateur d'un environnement en publiant une configuration signée avec le coupe-circuit activé. Les événements côté serveur, les autres environnements et toutes les destinations continuent.",
+      "context": "Cibles de {site}",
+      "switchSiteHint": "Changez de site dans le sélecteur d'espace de travail.",
+      "noSite": "Aucun site pour l'instant",
+      "noSiteText": "Créez d'abord un site — les destinations et les environnements appartiennent à un site.",
+      "createSite": "Créer un site",
+      "readOnly": "Mettre en pause et reprendre requiert la permission d'intégrations (destinations) et la permission de coupe-circuit (environnements).",
+      "destinations": {
+        "title": "Destinations",
+        "empty": "Aucune destination pour {site}",
+        "emptyText": "Connectez d'abord une destination. Les brouillons ne sont pas affichés ici.",
+        "manage": "Centre de santé des destinations",
+        "testMode": "Mode test",
+        "pausedSince": "en pause {when}",
+        "pause": "Mettre en pause",
+        "resume": "Reprendre",
+        "pauseTitle": "Mettre en pause les envois vers {name} ?",
+        "pauseText": "Les événements continuent d'être collectés et envoyés à toutes les autres destinations. Les événements de cette destination sont ignorés pendant la pause — ils ne sont pas mis en file d'attente. Vous pouvez reprendre à tout moment. L'action est auditée.",
+        "pauseConfirm": "Mettre la destination en pause",
+        "resumeTitle": "Reprendre les envois vers {name} ?",
+        "resumeText": "Track vérifie d'abord les identifiants. Les envois reprennent uniquement si le fournisseur accepte les identifiants enregistrés ; sinon la destination reste déconnectée et la raison est affichée ici.",
+        "resumeConfirm": "Vérifier et reprendre",
+        "paused": "Destination mise en pause.",
+        "resumed": "Destination reprise.",
+        "notResumed": "Non reprise : la vérification des identifiants a échoué.",
+        "statusNow": "Statut actuel : {status}",
+        "status": {
+          "not_connected": "Non connectée",
+          "connected": "Connectée",
+          "paused": "En pause",
+          "error": "Erreur",
+          "draft": "Brouillon"
+        }
+      },
+      "environments": {
+        "title": "Environnements (coupe-circuit de configuration)",
+        "empty": "Aucun environnement",
+        "kind": { "production": "Production", "staging": "Préproduction", "development": "Test" },
+        "testMode": "Mode test",
+        "live": "En ligne : v{version}",
+        "noVersion": "Rien de publié pour l'instant",
+        "state": {
+          "active": "Suivi navigateur actif",
+          "paused": "Suivi navigateur en pause",
+          "none": "Aucune configuration en ligne",
+          "unknown": "Configuration en ligne illisible"
+        },
+        "signingMissing": "La clé de signature des configurations n'est pas configurée sur ce serveur ; le coupe-circuit d'environnement ne peut pas publier de version.",
+        "pause": "Mettre l'environnement en pause",
+        "resume": "Reprendre l'environnement",
+        "pauseTitle": "Mettre en pause le suivi navigateur dans {name} ?",
+        "pauseText": "Track publie une nouvelle version de configuration signée avec le coupe-circuit activé. Les navigateurs cessent d'envoyer des événements pour cet environnement dès leur prochaine récupération de configuration (en une minute environ) ; les événements côté serveur, les autres environnements et toutes les destinations continuent. Le brouillon ouvert n'est pas modifié. Vous pouvez reprendre à tout moment. L'action est auditée.",
+        "pauseConfirm": "Publier le coupe-circuit",
+        "resumeTitle": "Reprendre le suivi navigateur dans {name} ?",
+        "resumeText": "Track publie une nouvelle version de configuration signée avec le coupe-circuit désactivé, dérivée de la version en ligne. Les navigateurs reprennent à leur prochaine récupération de configuration.",
+        "resumeConfirm": "Publier et reprendre",
+        "paused": "Coupe-circuit publié en v{version}. Le suivi navigateur s'arrête à la prochaine récupération de configuration.",
+        "resumed": "Suivi navigateur repris avec la v{version}.",
+        "openReleases": "Ouvrir les publications"
+      }
+    },
+    "channels": {
+      "title": "Canaux de notification",
+      "intro": "Où les alertes sont envoyées. Les adresses e-mail sont enregistrées telles quelles ; les URL de webhook et Slack ainsi que le secret de signature du webhook sont chiffrés et ne sont plus jamais affichés.",
+      "add": "Ajouter un canal",
+      "empty": "Aucun canal pour l'instant",
+      "emptyText": "Ajoutez une adresse e-mail, un webhook ou un webhook entrant Slack. Les règles ne notifient que par des canaux ; sans canal, les alertes n'apparaissent que dans l'historique.",
+      "columns": {
+        "name": "Nom",
+        "kind": "Type",
+        "target": "Cible",
+        "locale": "Langue",
+        "status": "Statut",
+        "lastTest": "Dernier test",
+        "actions": "Actions"
+      },
+      "caption": "Canaux de notification avec type, cible, langue, statut et résultat du dernier test",
+      "usedBy": "{count, plural, =0 {utilisé par aucune règle} one {utilisé par # règle} other {utilisé par # règles}}",
+      "encrypted": "Enregistré chiffré",
+      "signed": "signé",
+      "test": "Envoyer un test",
+      "testing": "Envoi du test…",
+      "testSent": "Notification de test envoyée ({transport}).",
+      "testFailed": "Échec du test : {reason}",
+      "testReason": {
+        "vault_missing": "coffre à secrets non configuré",
+        "decrypt_failed": "l'URL enregistrée n'a pas pu être déchiffrée (clé renouvelée ?)",
+        "target_missing": "aucune cible enregistrée",
+        "timeout": "aucune réponse en 10 secondes",
+        "rejected": "le point de terminaison a rejeté la requête",
+        "mail_failed": "le transport de courrier a échoué",
+        "generic": "requête échouée"
+      },
+      "lastTestOk": "Envoyé {when}",
+      "lastTestFailed": "Échoué {when}",
+      "neverTested": "Jamais testé",
+      "deleteTitle": "Supprimer le canal {name} ?",
+      "deleteText": "Les règles qui utilisent ce canal continuent sans lui. Les envois passés restent dans l'historique. Cette action est irréversible.",
+      "deleteConfirm": "Supprimer le canal",
+      "created": "Canal créé.",
+      "updated": "Canal mis à jour.",
+      "deleted": "Canal supprimé.",
+      "enabledMsg": "Canal activé.",
+      "disabledMsg": "Canal désactivé.",
+      "form": {
+        "createTitle": "Ajouter un canal",
+        "editTitle": "Modifier le canal {name}",
+        "kind": "Type",
+        "kindHint": {
+          "email": "E-mail en texte brut dans la langue choisie.",
+          "webhook": "POST HTTPS avec un corps JSON ; avec un secret, chaque requête porte une signature HMAC-SHA256 dans l'en-tête X-Track-Signature (t=…,n=…,v1=…).",
+          "slack": "Webhook entrant Slack (hooks.slack.com) avec des blocs Block Kit."
+        },
+        "name": "Nom",
+        "namePlaceholder": "ex. E-mail d'astreinte",
+        "targetEmail": "Adresse e-mail",
+        "targetWebhook": "URL du webhook (https)",
+        "targetSlack": "URL du webhook entrant Slack",
+        "targetKeep": "Laissez vide pour conserver l'URL enregistrée.",
+        "secret": "Secret de signature",
+        "secretHint": "Facultatif, au moins 8 caractères. Sert à signer chaque requête ; ne sera plus jamais affiché.",
+        "secretKeep": "Laissez vide pour conserver le secret enregistré.",
+        "locale": "Langue des notifications",
+        "submitCreate": "Ajouter le canal",
+        "submitEdit": "Enregistrer les modifications"
+      }
+    },
+    "rules": {
+      "title": "Règles d'alerte",
+      "intro": "Quoi surveiller, pour quel site, avec quels seuils et par quels canaux. Les règles sont évaluées chaque minute par le worker ; après une notification, une règle reste silencieuse pendant son délai de répit.",
+      "add": "Ajouter une règle",
+      "empty": "Aucune règle pour l'instant",
+      "emptyText": "Ajoutez une règle pour les chutes d'événements, pannes de fournisseurs, expirations d'identifiants, erreurs de consentement, retards de file d'attente ou anomalies de conversion. Rien n'est signalé tant qu'aucune règle n'existe.",
+      "columns": {
+        "name": "Règle",
+        "kind": "Type",
+        "scope": "Portée",
+        "threshold": "Condition",
+        "channels": "Canaux",
+        "status": "Statut",
+        "lastEvaluated": "Dernière évaluation",
+        "actions": "Actions"
+      },
+      "caption": "Règles d'alerte avec type, portée, condition, canaux, statut et dernière évaluation",
+      "historyOnly": "Historique seulement (aucun canal)",
+      "neverEvaluated": "Pas encore évaluée — la tâche du worker s'exécute chaque minute.",
+      "evaluated": "Évaluée {when}",
+      "cooldown": "Répit {minutes} min",
+      "deleteTitle": "Supprimer la règle {name} ?",
+      "deleteText": "Les alertes passées de cette règle restent dans l'historique. Cette action est irréversible.",
+      "deleteConfirm": "Supprimer la règle",
+      "created": "Règle créée.",
+      "updated": "Règle mise à jour.",
+      "deleted": "Règle supprimée.",
+      "enabledMsg": "Règle activée.",
+      "disabledMsg": "Règle désactivée.",
+      "form": {
+        "createTitle": "Ajouter une règle",
+        "editTitle": "Modifier la règle {name}",
+        "kind": "Type",
+        "kindFixed": "Le type d'une règle existante ne peut pas changer ; ajoutez plutôt une nouvelle règle.",
+        "name": "Nom",
+        "namePlaceholder": "ex. Achats en production",
+        "site": "Site",
+        "allSites": "Tous les sites de l'organisation",
+        "thresholds": "Condition",
+        "channels": "Canaux",
+        "channelsHint": "Sans canal, l'alerte n'est enregistrée que dans l'historique.",
+        "noChannels": "Aucun canal pour l'instant — ajoutez-en un ci-dessus.",
+        "cooldown": "Délai de répit (minutes)",
+        "cooldownHint": "Après une notification, la règle reste silencieuse aussi longtemps par sujet ({min}–{max}).",
+        "enabled": "Règle activée",
+        "previewLabel": "En clair",
+        "submitCreate": "Ajouter la règle",
+        "submitEdit": "Enregistrer les modifications",
+        "fields": {
+          "dropPercent": "Chute (%)",
+          "windowMinutes": "Fenêtre (minutes)",
+          "minBaseline": "Référence minimale (événements)",
+          "errorRatePercent": "Taux d'erreur (%)",
+          "minAttempts": "Tentatives minimales",
+          "daysBefore": "Jours avant expiration",
+          "minEvents": "Événements minimaux",
+          "lagSeconds": "Retard (secondes)",
+          "deviationPercent": "Écart (%)"
+        }
+      },
+      "preview": {
+        "event_drop": "Alerte lorsque les événements acceptés des {windowMinutes} dernières minutes sont d'au moins {dropPercent} % inférieurs à la moyenne de la même fenêtre sur les quatre dernières semaines — seulement si cette moyenne atteint au moins {minBaseline} événements.",
+        "vendor_outage": "Alerte lorsqu'une destination a rejeté au moins {errorRatePercent} % d'au moins {minAttempts} tentatives d'envoi au cours des dernières 24 heures, ou est en état d'erreur.",
+        "credential_expiry": "Alerte lorsqu'un identifiant expire dans les {daysBefore} jours ou a expiré, ou lorsqu'une connexion OAuth n'est plus connectée.",
+        "consent_errors": "Alerte lorsqu'au moins {errorRatePercent} % des événements reçus au cours des {windowMinutes} dernières minutes ont été bloqués pour des raisons de consentement — seulement à partir de {minEvents} événements.",
+        "queue_lag": "Alerte lorsque le plus ancien événement en attente d'une destination a patienté plus de {lagSeconds} secondes ({lagMinutes} minutes).",
+        "conversion_anomaly": "Alerte lorsque les conversions des {windowMinutes} dernières minutes s'écartent d'au moins {deviationPercent} % de la moyenne de la même fenêtre sur les quatre dernières semaines — seulement si cette moyenne atteint au moins {minBaseline} conversions."
+      }
+    },
+    "history": {
+      "title": "Historique des alertes",
+      "intro": "Chaque alerte déclenchée avec sa gravité, les faits mesurés qui la sous-tendent, l'envoi par canal et sa résolution. Les alertes se résolvent d'elles-mêmes lorsque la condition disparaît, ou manuellement.",
+      "empty": "Aucune alerte pour l'instant",
+      "emptyText": "Rien ne s'est déclenché. Les alertes apparaissent ici dès que la condition d'une règle est remplie — le worker évalue chaque minute.",
+      "emptyFiltered": "Aucune alerte ne correspond aux filtres",
+      "emptyFilteredText": "Réinitialisez les filtres pour voir toutes les alertes.",
+      "count": "{count, plural, one {# alerte} other {# alertes}}",
+      "openCount": "{count, plural, =0 {aucune alerte ouverte} one {# alerte ouverte} other {# alertes ouvertes}}",
+      "linked": "Alerte issue du lien de notification",
+      "filters": {
+        "label": "Filtrer les alertes",
+        "severity": "Gravité",
+        "state": "État",
+        "kind": "Type",
+        "all": "Toutes",
+        "open": "Ouvertes",
+        "resolved": "Résolues",
+        "apply": "Appliquer les filtres",
+        "reset": "Réinitialiser"
+      },
+      "columns": {
+        "when": "Déclenchée",
+        "severity": "Gravité",
+        "alert": "Alerte",
+        "site": "Site",
+        "delivery": "Envoi",
+        "state": "État",
+        "actions": "Actions"
+      },
+      "caption": "Historique des alertes avec gravité, faits, résultat d'envoi et résolution",
+      "state": {
+        "open": "Ouverte",
+        "resolvedAuto": "Résolue {when} (condition disparue)",
+        "resolvedUser": "Résolue {when} par un membre"
+      },
+      "rule": "Règle : {name}",
+      "ruleDeleted": "Règle supprimée",
+      "resolve": "Marquer comme résolue",
+      "resolving": "Résolution…",
+      "resolved": "Marquée comme résolue.",
+      "details": "Détails",
+      "showDetails": "Afficher les détails de l'alerte {title}",
+      "delivery": {
+        "none": "Aucun canal",
+        "sent": "Envoyé",
+        "failed": "Échoué",
+        "skipped": "Ignoré",
+        "channelMissing": "canal supprimé",
+        "notified": "Notifié {when}",
+        "notNotified": "Non notifié"
+      },
+      "titles": {
+        "event_drop": "Le volume d'événements a chuté de {drop_percent} %",
+        "vendor_outage": "Les envois vers {integration_name} échouent",
+        "credential_expiry": "Identifiant de {integration_name} : {state}",
+        "consent_errors": "{rate_percent} % des événements bloqués par le consentement",
+        "queue_lag": "La file d'envoi de {integration_name} est en retard",
+        "conversion_anomaly": "Les conversions ont {direction} de {deviation_percent} %"
+      },
+      "words": {
+        "expired": "expiré",
+        "expiring": "expire bientôt",
+        "disconnected": "déconnecté",
+        "drop": "chuté",
+        "spike": "augmenté"
+      },
+      "facts": {
+        "window_minutes": "Fenêtre (min)",
+        "observed": "Observé",
+        "expected": "Attendu",
+        "drop_percent": "Chute (%)",
+        "deviation_percent": "Écart (%)",
+        "threshold_percent": "Seuil (%)",
+        "threshold_days": "Seuil (jours)",
+        "threshold_seconds": "Seuil (s)",
+        "baseline_weeks": "Semaines de référence",
+        "received": "Reçus",
+        "consent_dropped": "Bloqués par le consentement",
+        "rate_percent": "Taux (%)",
+        "integration_name": "Destination",
+        "connector_type": "Connecteur",
+        "status": "Statut",
+        "error_rate_percent": "Taux d'erreur (%)",
+        "attempts": "Tentatives",
+        "last_error_class": "Dernière classe d'erreur",
+        "credential_kind": "Identifiant",
+        "days_left": "Jours restants",
+        "expires_at": "Expire le",
+        "lag_seconds": "Retard (s)",
+        "queue_ready": "Événements en attente",
+        "direction": "Direction",
+        "state": "État"
+      },
+      "pagination": {
+        "nav": "Pages de l'historique des alertes",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {page}"
+      }
+    },
+    "test": {
+      "title": "Notification de test de Track",
+      "summary": "Ceci est un test du canal de notification « {channel} ». Aucune règle ne s'est déclenchée ; rien ne requiert votre attention.",
+      "subject": "[Alerte Track] Test : {title}",
+      "body": "{summary}\n\nOuvrir les paramètres d'alerte : {url}\n\n— Track",
+      "labels": { "severity": "Gravité", "site": "Site", "open": "Ouvrir les paramètres d'alerte" }
+    }
+  }
+}
