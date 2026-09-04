@@ -32,8 +32,10 @@ function binDir() {
     }
   }
   // last resort: pnpm's virtual store (works even when neither package exposes package.json via exports)
-  const store = path.join(root, "node_modules", ".pnpm");
-  if (existsSync(store)) {
+  // the runtime is NOT a workspace dependency (its build scripts would fail the Vercel install):
+  // install it once with `pnpm --dir .local/tools --ignore-workspace add embedded-postgres@18.4.0-beta.17`
+  for (const store of [path.join(root, ".local", "tools", "node_modules", ".pnpm"), path.join(root, "node_modules", ".pnpm")]) {
+    if (!existsSync(store)) continue;
     for (const dir of readdirSync(store)) {
       if (!dir.startsWith("@embedded-postgres+")) continue;
       const inner = path.join(store, dir, "node_modules", "@embedded-postgres");
@@ -55,7 +57,7 @@ function binDir() {
     }
   }
   {
-    console.error(`Missing ${names.join(" or ")}. Install once: pnpm add -D -w embedded-postgres@18.4.0-beta.17`);
+    console.error(`Missing ${names.join(" or ")}. Install once: pnpm --dir .local/tools --ignore-workspace add embedded-postgres@18.4.0-beta.17`);
     process.exit(1);
   }
 }

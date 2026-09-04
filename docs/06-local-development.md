@@ -25,6 +25,7 @@ docker compose -f infra/docker-compose.yml up -d postgres
 Embedded Postgres (no Docker; used on the Windows build machine):
 
 ```bash
+pnpm --dir .local/tools --ignore-workspace add embedded-postgres@18.4.0-beta.17   # once; the runtime is deliberately not a workspace dependency (its build scripts would fail the Vercel install)
 node scripts/local-postgres.mjs start   # Postgres 18 on 127.0.0.1:54330, data in .local/pgdata
 node scripts/local-postgres.mjs stop
 ```
