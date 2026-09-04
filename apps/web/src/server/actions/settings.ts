@@ -1,5 +1,6 @@
 "use server";
 
+import { ALL_LOCALES } from "@/i18n/routing";
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
