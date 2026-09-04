@@ -1,4 +1,5 @@
 import type { WorkerContext } from "../context.ts";
+import { ALERTS_INTERVAL_MS, runAlerts } from "./alerts.ts";
 import { DESTINATION_HEALTH_INTERVAL_MS, snapshotDestinationHealth } from "./destination-health.ts";
 import { relayOutbox } from "./outbox.ts";
 import { DATA_QUALITY_INTERVAL_MS, runDataQualityJobs } from "./reconciliation.ts";
@@ -30,17 +31,35 @@ export interface JobsHandle {
  * several workers; inside one process a tick is skipped while the previous run of the same job is still
  * going, so a slow scan never piles up.
  */
-export const JOB_SCHEDULE: ReadonlyArray<{ name: string; intervalMs: number; run: (ctx: WorkerContext) => Promise<unknown> }> = [
+export const JOB_SCHEDULE: ReadonlyArray<{
+  name: string;
+  intervalMs: number;
+  run: (ctx: WorkerContext) => Promise<unknown>;
+}> = [
   { name: "outbox", intervalMs: 5_000, run: (ctx) => relayOutbox(ctx) },
   { name: "usage", intervalMs: 60_000, run: (ctx) => checkUsageLimits(ctx) },
   { name: "partitions", intervalMs: 6 * 60 * 60_000, run: (ctx) => ensureEventPartitions(ctx) },
   { name: "retention", intervalMs: 24 * 60 * 60_000, run: (ctx) => runRetention(ctx) },
   // Destination Health Center: per-destination attempt counters + queue backlog snapshot (migration 0008).
-  { name: "destination-health", intervalMs: DESTINATION_HEALTH_INTERVAL_MS, run: (ctx) => snapshotDestinationHealth(ctx) },
+  {
+    name: "destination-health",
+    intervalMs: DESTINATION_HEALTH_INTERVAL_MS,
+    run: (ctx) => snapshotDestinationHealth(ctx),
+  },
   // Signal Gap & Revenue Leak Detector + Data Quality Inbox scan (migration 0009).
-  { name: "data-quality", intervalMs: DATA_QUALITY_INTERVAL_MS, run: (ctx) => runDataQualityJobs(ctx) },
+  {
+    name: "data-quality",
+    intervalMs: DATA_QUALITY_INTERVAL_MS,
+    run: (ctx) => runDataQualityJobs(ctx),
+  },
   // Change & Release Center: publishes drafts whose scheduled time is due (migration 0010).
-  { name: "scheduled-publish", intervalMs: SCHEDULED_PUBLISH_INTERVAL_MS, run: (ctx) => runScheduledPublications(ctx) },
+  {
+    name: "scheduled-publish",
+    intervalMs: SCHEDULED_PUBLISH_INTERVAL_MS,
+    run: (ctx) => runScheduledPublications(ctx),
+  },
+  // Alerts & Incident Mode: evaluates alert rules against aggregates, health snapshots and credentials, notifies channels (migration 0013).
+  { name: "alerts", intervalMs: ALERTS_INTERVAL_MS, run: (ctx) => runAlerts(ctx) },
 ];
 
 /** Lightweight in-process scheduler over `JOB_SCHEDULE`; the first tick of every job runs immediately. */
@@ -48,7 +67,17 @@ export function runScheduledJobs(ctx: WorkerContext): JobsHandle {
   const timers: NodeJS.Timeout[] = [];
   const statuses: JobStatus[] = [];
   for (const job of JOB_SCHEDULE) {
-    const status: JobStatus = { name: job.name, intervalMs: job.intervalMs, runs: 0, failures: 0, running: false, lastStartedAt: null, lastFinishedAt: null, lastDurationMs: null, lastError: null };
+    const status: JobStatus = {
+      name: job.name,
+      intervalMs: job.intervalMs,
+      runs: 0,
+      failures: 0,
+      running: false,
+      lastStartedAt: null,
+      lastFinishedAt: null,
+      lastDurationMs: null,
+      lastError: null,
+    };
     statuses.push(status);
     const tick = async () => {
       if (status.running) {

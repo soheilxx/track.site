@@ -53,6 +53,7 @@ export function Checkbox({ className, label, description, indeterminate = false,
   const autoId = useId();
   const inputId = id ?? autoId;
   const descId = description ? `${inputId}-desc` : undefined;
+  const labelId = label ? `${inputId}-label` : undefined;
   // Mixed state goes through the IDL property (ARIA in HTML forbids aria-checked on a native checkbox).
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -61,12 +62,12 @@ export function Checkbox({ className, label, description, indeterminate = false,
   return (
     <label htmlFor={inputId} className={cn("flex min-h-11 cursor-pointer items-start gap-3 py-2 text-sm text-ink has-disabled:cursor-not-allowed has-disabled:opacity-60", className)}>
       <span className="relative mt-0.5 inline-flex size-5 shrink-0 items-center justify-center">
-        <input ref={ref} id={inputId} type="checkbox" className={cn(boxBase, "rounded-[6px]")} aria-describedby={descId} disabled={disabled} {...stateAttrs(state)} {...props} />
+        <input ref={ref} id={inputId} type="checkbox" className={cn(boxBase, "rounded-[6px]")} aria-labelledby={labelId} aria-describedby={descId} disabled={disabled} {...stateAttrs(state)} {...props} />
         {indeterminate ? <Minus className="pointer-events-none absolute size-3.5 text-on-primary opacity-0 peer-checked:opacity-100" aria-hidden="true" strokeWidth={3} /> : <Check className="pointer-events-none absolute size-3.5 text-on-primary opacity-0 peer-checked:opacity-100" aria-hidden="true" strokeWidth={3} />}
       </span>
       {label || description ? (
         <span className="min-w-0">
-          {label ? <span className="block font-medium">{label}</span> : null}
+          {label ? <span id={labelId} className="block font-medium">{label}</span> : null}
           {description ? (
             <span id={descId} className="block text-ink-3">
               {description}
@@ -89,15 +90,16 @@ export function Radio({ className, label, description, state, id, disabled, ...p
   const autoId = useId();
   const inputId = id ?? autoId;
   const descId = description ? `${inputId}-desc` : undefined;
+  const labelId = label ? `${inputId}-label` : undefined;
   return (
     <label htmlFor={inputId} className={cn("flex min-h-11 cursor-pointer items-start gap-3 py-2 text-sm text-ink has-disabled:cursor-not-allowed has-disabled:opacity-60", className)}>
       <span className="relative mt-0.5 inline-flex size-5 shrink-0 items-center justify-center">
-        <input id={inputId} type="radio" className={cn(boxBase, "rounded-full checked:bg-surface")} aria-describedby={descId} disabled={disabled} {...stateAttrs(state)} {...props} />
+        <input id={inputId} type="radio" className={cn(boxBase, "rounded-full checked:bg-surface")} aria-labelledby={labelId} aria-describedby={descId} disabled={disabled} {...stateAttrs(state)} {...props} />
         <span className="pointer-events-none absolute size-2.5 rounded-full bg-primary opacity-0 peer-checked:opacity-100" aria-hidden="true" />
       </span>
       {label || description ? (
         <span className="min-w-0">
-          {label ? <span className="block font-medium">{label}</span> : null}
+          {label ? <span id={labelId} className="block font-medium">{label}</span> : null}
           {description ? (
             <span id={descId} className="block text-ink-3">
               {description}

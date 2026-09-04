@@ -13,3 +13,4 @@ export * from "./commerce.ts";
 export * from "./knowledge.ts";
 export * from "./workspace.ts";
 export * from "./lineage.ts";
+export * from "./alerts.ts";

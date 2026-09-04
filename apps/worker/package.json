@@ -25,7 +25,8 @@
     "@track-site/queue": "workspace:*",
     "pg": "^8.23.0",
     "zod": "^4.5.4",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "nodemailer": "^9.1.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
@@ -33,6 +34,7 @@
     "tsup": "^8.5.1",
     "tsx": "^4.23.13",
     "vitest": "^4.1.11",
-    "drizzle-orm": "^0.45.2"
+    "drizzle-orm": "^0.45.2",
+    "@types/nodemailer": "^8.0.1"
   }
 }
