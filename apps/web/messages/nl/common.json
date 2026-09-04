@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "defaultTitle": "Track – AI-first tagmanager en server-side event router",
+    "defaultDescription": "Eén snippet, een AI-setupassistent en een server-side event router die toestemming respecteert. First-party events, gededupliceerde conversies en transparante aflevering aan elk advertentie- en analyticsplatform."
+  },
+  "nav": {
+    "brandHome": "Track – startpagina",
+    "features": "Functies",
+    "integrations": "Integraties",
+    "howItWorks": "Zo werkt het",
+    "pricing": "Prijzen",
+    "docs": "Docs",
+    "trackingKnowledge": "Tracking Knowledge",
+    "login": "Inloggen",
+    "signup": "Gratis starten",
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "language": "Taal",
+    "skipToContent": "Naar de inhoud"
+  },
+  "footer": {
+    "tagline": "AI-first tagmanager, server-side event router die toestemming respecteert en first-party event layer.",
+    "region": "EU-dataregio als standaard. Verwerker volgens art. 28 AVG.",
+    "rights": "Alle rechten voorbehouden.",
+    "legalNote": "Juridische pagina's zijn bedoeld als informatie, niet als juridisch advies.",
+    "columns": { "product": "Product", "integrations": "Integraties", "trust": "Vertrouwen", "company": "Bedrijf" },
+    "links": {
+      "features": "Functies",
+      "howItWorks": "Zo werkt het",
+      "integrations": "Alle integraties",
+      "pricing": "Prijzen",
+      "docs": "Documentatie",
+      "meta": "Meta Pixel + CAPI",
+      "ga4": "Google Analytics 4",
+      "googleAds": "Google Ads",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware 6",
+      "security": "Beveiliging",
+      "privacy": "Privacy",
+      "dataProcessing": "Gegevensverwerking (verwerkersovereenkomst)",
+      "subprocessors": "Subverwerkers",
+      "terms": "Voorwaarden",
+      "imprint": "Colofon",
+      "trackingKnowledge": "Tracking Knowledge",
+      "contact": "Contact",
+      "demo": "Plan een demo",
+      "support": "Support",
+      "status": "Status"
+    }
+  },
+  "home": {
+    "eyebrow": "AI-first tagmanager",
+    "title": "Eén snippet. Elk platform. Toestemming ingebouwd.",
+    "subtitle": "Plak één asynchroon script, vertel de assistent wat je site doet en krijg geverifieerde first-party events die server-side naar Meta, Google, TikTok, LinkedIn en 15 andere destinations worden gerouteerd – gededupliceerd en alleen met toestemming.",
+    "cta": "Start met je domein",
+    "ctaSecondary": "Bekijk hoe het werkt",
+    "domainPlaceholder": "jouwshop.nl",
+    "domainLabel": "Je website",
+    "domainHelp": "We maken je site aan, geven je een openbare tracking-ID van zes tekens en begeleiden je in de chat bij de rest.",
+    "trust": {
+      "eu": "EU-dataregio",
+      "consent": "Strikte opt-in consent engine",
+      "signed": "Ondertekende, geversioneerde configuraties",
+      "noCode": "Geen custom HTML of JavaScript"
+    },
+    "problemTitle": "Tagmanagers zijn gebouwd voor experts. De jouwe zou er geen nodig moeten hebben.",
+    "problemText": "Client-side pixels verliezen events, server-side setups hebben engineers nodig en toestemming is meestal een banner in plaats van een technische regel. Track maakt daar één begeleide setup van, met een event router die privacy afdwingt voordat er iets wordt opgeslagen of verzonden.",
+    "steps": {
+      "title": "Zo werkt het",
+      "items": [
+        { "title": "Installeer één snippet", "text": "Voeg de asynchrone tracker toe met je site-ID van zes tekens. Geen layoutverschuiving, geen invloed op de checkout, fail-safe als er iets misgaat." },
+        { "title": "Beantwoord een paar vragen", "text": "De assistent herkent je platform, stelt een meetplan voor en koppelt destinations met gevalideerde invoer en veilige credential-kaarten." },
+        { "title": "Testen, controleren, publiceren", "text": "Elke wijziging is een ondertekende configuratieversie met een leesbare diff. Publiceren gebeurt pas na jouw bevestiging. Terugdraaien met één klik." },
+        { "title": "Zie events binnenkomen", "text": "Live Event Debugger, afleverstatus per destination, deduplicatie en een Tracking Health Score die je vertelt wat je als volgende moet oplossen." }
+      ]
+    },
+    "features": {
+      "title": "Gebouwd als data-, toestemmings- en routeringslaag, niet als de zoveelste scriptcontainer",
+      "items": [
+        { "title": "First-party event layer", "text": "Canonieke events met herkomst van browser tot destination. Onbekend blijft onbekend; er wordt niets verzonnen." },
+        { "title": "Toestemming als policy engine", "text": "Strikte EU-standaarden, Consent Mode v2, TCF, GPP, GPC en de gangbare CMP's. Server-side omzeilt nooit een ontbrekende toestemming." },
+        { "title": "Server-side router", "text": "Durable queue, isolatie per destination, retries met backoff, dead-letter replay en idempotente conversies." },
+        { "title": "AI-setupassistent", "text": "Strikt getypeerde tools, concepten, diffs en expliciete goedkeuring. Het model raakt de event pipeline nooit aan." },
+        { "title": "Deduplicatie op commerce-niveau", "text": "Dezelfde event-ID in browser en server, ordernummers als source of truth, geen dubbele conversies bij replay." },
+        { "title": "Transparante diagnostiek", "text": "Payload-previews met gemaskeerde secrets, redenen voor drops, afleverfouten en een Data Quality Inbox." }
+      ]
+    },
+    "integrations": {
+      "title": "Destinations in de eerste release",
+      "text": "Browsertag plus server-side API voor elk platform dat er een aanbiedt, met gedeelde event-ID's voor deduplicatie.",
+      "all": "Alle integraties"
+    },
+    "security": {
+      "title": "Privacy wordt technisch afgedwongen",
+      "items": [
+        "Row-level security isoleert elke tenant in de database",
+        "Envelope-versleutelde toegangsgegevens; secrets komen nooit in de chat, de logs of het model",
+        "Ondertekende, onveranderlijke configbundels, geverifieerd in de browser",
+        "Geen fingerprinting, geen omzeiling van toestemming, geen synthetische conversies"
+      ]
+    },
+    "finalCta": {
+      "title": "Klaar voor geverifieerde events binnen enkele minuten?",
+      "text": "Maak je site aan, plak de snippet en laat de assistent de rest doen.",
+      "cta": "Maak je site aan"
+    }
+  },
+  "notFound": {
+    "title": "Pagina niet gevonden",
+    "text": "De pagina die je zoekt bestaat niet of is verplaatst.",
+    "home": "Terug naar home"
+  },
+  "error": {
+    "title": "Er is iets misgegaan",
+    "text": "De fout is geregistreerd. Probeer het opnieuw.",
+    "retry": "Opnieuw proberen"
+  }
+}

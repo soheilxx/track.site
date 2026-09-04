@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "defaultTitle": "Track – tag manager AI-first e router di eventi server-side",
+    "defaultDescription": "Un solo snippet, un assistente AI per il setup e un router di eventi server-side basato sul consenso. Eventi first-party, conversioni deduplicate e consegna trasparente a ogni piattaforma pubblicitaria e di analisi."
+  },
+  "nav": {
+    "brandHome": "Track – home",
+    "features": "Funzionalità",
+    "integrations": "Integrazioni",
+    "howItWorks": "Come funziona",
+    "pricing": "Prezzi",
+    "docs": "Docs",
+    "trackingKnowledge": "Tracking Knowledge",
+    "login": "Accedi",
+    "signup": "Inizia gratis",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu",
+    "language": "Lingua",
+    "skipToContent": "Vai al contenuto"
+  },
+  "footer": {
+    "tagline": "Tag manager AI-first, router di eventi server-side basato sul consenso e layer di eventi first-party.",
+    "region": "Regione dati UE per impostazione predefinita. Responsabile del trattamento ai sensi dell’art. 28 GDPR.",
+    "rights": "Tutti i diritti riservati.",
+    "legalNote": "Le pagine legali sono fornite a scopo informativo e non costituiscono consulenza legale.",
+    "columns": { "product": "Prodotto", "integrations": "Integrazioni", "trust": "Affidabilità", "company": "Azienda" },
+    "links": {
+      "features": "Funzionalità",
+      "howItWorks": "Come funziona",
+      "integrations": "Tutte le integrazioni",
+      "pricing": "Prezzi",
+      "docs": "Documentazione",
+      "meta": "Meta Pixel + CAPI",
+      "ga4": "Google Analytics 4",
+      "googleAds": "Google Ads",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware 6",
+      "security": "Sicurezza",
+      "privacy": "Privacy",
+      "dataProcessing": "Trattamento dei dati (DPA)",
+      "subprocessors": "Sub-responsabili",
+      "terms": "Termini",
+      "imprint": "Note legali",
+      "trackingKnowledge": "Tracking Knowledge",
+      "contact": "Contatti",
+      "demo": "Prenota una demo",
+      "support": "Supporto",
+      "status": "Stato"
+    }
+  },
+  "home": {
+    "eyebrow": "Tag manager AI-first",
+    "title": "Un solo snippet. Ogni piattaforma. Consenso integrato.",
+    "subtitle": "Incolla un solo script asincrono, spiega all’assistente cosa fa il tuo sito e ottieni eventi first-party verificati, instradati server-side a Meta, Google, TikTok, LinkedIn e altre 15 destinazioni, deduplicati e vincolati al consenso.",
+    "cta": "Inizia con il tuo dominio",
+    "ctaSecondary": "Scopri come funziona",
+    "domainPlaceholder": "tuoshop.it",
+    "domainLabel": "Il tuo sito web",
+    "domainHelp": "Creiamo il tuo sito, un ID di tracking pubblico a sei caratteri e ti guidiamo nel resto via chat.",
+    "trust": {
+      "eu": "Regione dati UE",
+      "consent": "Consent Engine con opt-in rigoroso",
+      "signed": "Configurazioni firmate e versionate",
+      "noCode": "Nessun HTML o JavaScript personalizzato"
+    },
+    "problemTitle": "I tag manager sono nati per gli esperti. Il tuo non dovrebbe averne bisogno.",
+    "problemText": "I pixel lato client perdono eventi, i setup server-side richiedono sviluppatori e il consenso è di solito un banner, non una regola tecnica. Track trasforma tutto questo in un unico setup guidato con un router di eventi che applica la privacy prima che qualsiasi cosa venga salvata o inviata.",
+    "steps": {
+      "title": "Come funziona",
+      "items": [
+        { "title": "Installa un solo snippet", "text": "Aggiungi il tracker asincrono con l’ID del tuo sito a sei caratteri. Nessun layout shift, nessun impatto sul checkout, fail-safe se qualcosa non va." },
+        { "title": "Rispondi a poche domande", "text": "L’assistente rileva la tua piattaforma, propone un piano di misurazione e collega le destinazioni con input validati e schede credenziali sicure." },
+        { "title": "Testa, rivedi, pubblica", "text": "Ogni modifica è una versione di configurazione firmata con un diff leggibile. Pubblichi solo dopo la tua conferma. Rollback con un clic." },
+        { "title": "Guarda gli eventi scorrere", "text": "Live Event Debugger, stato di consegna per destinazione, deduplicazione e un Tracking Health Score che ti dice cosa sistemare dopo." }
+      ]
+    },
+    "features": {
+      "title": "Costruito come layer di dati, consenso e routing, non come l’ennesimo contenitore di script",
+      "items": [
+        { "title": "Layer di eventi first-party", "text": "Eventi canonici con lineage dal browser alla destinazione. Ciò che è sconosciuto resta sconosciuto; niente viene inventato." },
+        { "title": "Il consenso come policy engine", "text": "Impostazioni predefinite UE rigorose, Consent Mode v2, TCF, GPP, GPC e i CMP più diffusi. Il server-side non aggira mai un consenso mancante." },
+        { "title": "Router server-side", "text": "Coda durevole, isolamento per destinazione, retry con backoff, replay della dead letter e conversioni idempotenti." },
+        { "title": "Assistente AI per il setup", "text": "Strumenti strettamente tipizzati, bozze, diff e approvazione esplicita. Il modello non tocca mai la pipeline degli eventi." },
+        { "title": "Deduplicazione di livello commerce", "text": "Stesso event ID nel browser e sul server, ID ordine come fonte di verità, nessuna conversione doppia in caso di replay." },
+        { "title": "Diagnostica trasparente", "text": "Anteprime dei payload con secret oscurati, motivi di scarto, errori di consegna e Data Quality Inbox." }
+      ]
+    },
+    "integrations": {
+      "title": "Destinazioni incluse nella prima release",
+      "text": "Tag browser più API server-side per ogni piattaforma che ne offre una, con event ID condivisi per la deduplicazione.",
+      "all": "Tutte le integrazioni"
+    },
+    "security": {
+      "title": "La privacy viene applicata a livello tecnico",
+      "items": [
+        "La row-level security isola ogni tenant nel database",
+        "Credenziali con envelope encryption; i secret non entrano mai in chat, log o nel modello",
+        "Bundle di configurazione firmati e immutabili, verificati nel browser",
+        "Nessun fingerprinting, nessun aggiramento del consenso, nessuna conversione sintetica"
+      ]
+    },
+    "finalCta": {
+      "title": "Vuoi eventi verificati in pochi minuti?",
+      "text": "Crea il tuo sito, incolla lo snippet e lascia che l’assistente faccia il resto.",
+      "cta": "Crea il tuo sito"
+    }
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "text": "La pagina che cerchi non esiste o è stata spostata.",
+    "home": "Torna alla home"
+  },
+  "error": {
+    "title": "Qualcosa è andato storto",
+    "text": "L’errore è stato registrato. Riprova.",
+    "retry": "Riprova"
+  }
+}

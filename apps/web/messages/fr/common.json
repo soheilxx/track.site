@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "defaultTitle": "Track – Tag manager AI-first et routeur d’événements côté serveur",
+    "defaultDescription": "Un seul snippet, un assistant IA pour la configuration et un routeur d’événements côté serveur qui respecte le consentement. Événements first-party, conversions dédupliquées et livraison transparente vers chaque plateforme publicitaire et d’analyse."
+  },
+  "nav": {
+    "brandHome": "Track – accueil",
+    "features": "Fonctionnalités",
+    "integrations": "Intégrations",
+    "howItWorks": "Comment ça fonctionne",
+    "pricing": "Tarifs",
+    "docs": "Docs",
+    "trackingKnowledge": "Tracking Knowledge",
+    "login": "Se connecter",
+    "signup": "Commencer gratuitement",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "language": "Langue",
+    "skipToContent": "Aller au contenu"
+  },
+  "footer": {
+    "tagline": "Tag manager AI-first, routeur d’événements côté serveur respectueux du consentement et couche d’événements first-party.",
+    "region": "Région de données UE par défaut. Sous-traitant au sens de l’art. 28 du RGPD.",
+    "rights": "Tous droits réservés.",
+    "legalNote": "Les pages juridiques sont fournies à titre d’information et ne constituent pas un conseil juridique.",
+    "columns": { "product": "Produit", "integrations": "Intégrations", "trust": "Confiance", "company": "Entreprise" },
+    "links": {
+      "features": "Fonctionnalités",
+      "howItWorks": "Comment ça fonctionne",
+      "integrations": "Toutes les intégrations",
+      "pricing": "Tarifs",
+      "docs": "Documentation",
+      "meta": "Meta Pixel + CAPI",
+      "ga4": "Google Analytics 4",
+      "googleAds": "Google Ads",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware 6",
+      "security": "Sécurité",
+      "privacy": "Confidentialité",
+      "dataProcessing": "Traitement des données (DPA)",
+      "subprocessors": "Sous-traitants ultérieurs",
+      "terms": "Conditions générales",
+      "imprint": "Mentions légales",
+      "trackingKnowledge": "Tracking Knowledge",
+      "contact": "Contact",
+      "demo": "Réserver une démo",
+      "support": "Support",
+      "status": "Statut"
+    }
+  },
+  "home": {
+    "eyebrow": "Tag manager AI-first",
+    "title": "Un snippet. Toutes les plateformes. Le consentement intégré.",
+    "subtitle": "Collez un script asynchrone, expliquez à l’assistant ce que fait votre site et obtenez des événements first-party vérifiés, routés côté serveur vers Meta, Google, TikTok, LinkedIn et 15 autres destinations, dédupliqués et conditionnés au consentement.",
+    "cta": "Commencer avec votre domaine",
+    "ctaSecondary": "Voir comment ça fonctionne",
+    "domainPlaceholder": "votreboutique.fr",
+    "domainLabel": "Votre site web",
+    "domainHelp": "Nous créons votre site et un ID de tracking public à six caractères, puis nous vous guidons pour la suite dans le chat.",
+    "trust": {
+      "eu": "Région de données UE",
+      "consent": "Moteur de consentement en opt-in strict",
+      "signed": "Configurations signées et versionnées",
+      "noCode": "Aucun HTML ni JavaScript personnalisé"
+    },
+    "problemTitle": "Les tag managers ont été conçus pour les experts. Le vôtre ne devrait pas en exiger un.",
+    "problemText": "Les pixels côté client perdent des événements, les configurations côté serveur exigent des ingénieurs, et le consentement se résume souvent à un bandeau plutôt qu’à une règle technique. Track transforme tout cela en une configuration guidée, avec un routeur d’événements qui applique la protection des données avant tout stockage ou envoi.",
+    "steps": {
+      "title": "Comment ça fonctionne",
+      "items": [
+        { "title": "Installez un snippet", "text": "Ajoutez le tracker asynchrone avec votre ID de site à six caractères. Aucun décalage de mise en page, aucun impact sur le checkout, fail-safe en cas de problème." },
+        { "title": "Répondez à quelques questions", "text": "L’assistant détecte votre plateforme, propose un plan de mesure et connecte les destinations avec des saisies validées et des cartes d’identifiants sécurisées." },
+        { "title": "Testez, vérifiez, publiez", "text": "Chaque modification est une version de configuration signée avec un diff lisible. La publication n’a lieu qu’après votre confirmation. Retour arrière en un clic." },
+        { "title": "Regardez les événements circuler", "text": "Live Event Debugger, statut de livraison par destination, déduplication et un Tracking Health Score qui vous indique quoi corriger ensuite." }
+      ]
+    },
+    "features": {
+      "title": "Conçu comme une couche de données, de consentement et de routage, pas comme un énième conteneur de scripts",
+      "items": [
+        { "title": "Couche d’événements first-party", "text": "Des événements canoniques avec traçabilité du navigateur jusqu’à la destination. L’inconnu reste inconnu ; rien n’est inventé." },
+        { "title": "Le consentement comme moteur de règles", "text": "Réglages UE stricts par défaut, Consent Mode v2, TCF, GPP, GPC et les CMP courantes. Le côté serveur ne contourne jamais un consentement manquant." },
+        { "title": "Routeur côté serveur", "text": "File d’attente durable, isolation par destination, nouvelles tentatives avec backoff, rejeu des dead-letters et conversions idempotentes." },
+        { "title": "Assistant IA de configuration", "text": "Outils strictement typés, brouillons, diffs et validation explicite. Le modèle ne touche jamais au pipeline d’événements." },
+        { "title": "Déduplication de niveau e-commerce", "text": "Même ID d’événement dans le navigateur et sur le serveur, numéros de commande comme source de vérité, aucune conversion en double lors d’un rejeu." },
+        { "title": "Diagnostics transparents", "text": "Aperçus des payloads avec secrets masqués, motifs de rejet, erreurs de livraison et Data Quality Inbox." }
+      ]
+    },
+    "integrations": {
+      "title": "Destinations incluses dès la première version",
+      "text": "Tag navigateur plus API côté serveur pour chaque plateforme qui en propose une, avec des ID d’événement partagés pour la déduplication.",
+      "all": "Toutes les intégrations"
+    },
+    "security": {
+      "title": "La protection des données est appliquée techniquement",
+      "items": [
+        "La Row-Level Security isole chaque organisation dans la base de données",
+        "Identifiants chiffrés par enveloppe ; les secrets n’entrent jamais dans le chat, les logs ou le modèle",
+        "Bundles de configuration signés et immuables, vérifiés dans le navigateur",
+        "Pas de fingerprinting, pas de contournement du consentement, pas de conversions artificielles"
+      ]
+    },
+    "finalCta": {
+      "title": "Prêt pour des événements vérifiés en quelques minutes ?",
+      "text": "Créez votre site, collez le snippet et laissez l’assistant faire le reste.",
+      "cta": "Créer votre site"
+    }
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "text": "La page que vous cherchez n’existe pas ou a été déplacée.",
+    "home": "Retour à l’accueil"
+  },
+  "error": {
+    "title": "Une erreur s’est produite",
+    "text": "L’erreur a été enregistrée. Veuillez réessayer.",
+    "retry": "Réessayer"
+  }
+}
