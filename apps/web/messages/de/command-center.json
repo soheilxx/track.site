@@ -1,0 +1,381 @@
+{
+  "commandCenter": {
+    "title": "Command Center",
+    "intro": "Zuerst, was deine Aufmerksamkeit braucht, dann der gemessene Zustand deiner Site: Events, Consent, Destinations, Zustellungen, Queue und Planverbrauch.",
+    "context": {
+      "site": "Site",
+      "environment": "Umgebung",
+      "trackingId": "Tracking-ID",
+      "measuredAt": "Gemessen {time}",
+      "measuredAtAbsolute": "Gemessen um {time}",
+      "noEnvironment": "Keine Umgebung",
+      "timezone": "Zeiten in {timezone}"
+    },
+    "header": {
+      "openAiSetup": "KI-Setup öffnen",
+      "openEvents": "Events öffnen",
+      "openSite": "Site-Details"
+    },
+    "noSite": {
+      "title": "Noch keine Site",
+      "text": "Erstelle deine erste Site, um eine Tracking-ID zu erhalten. Das Command Center misst danach alles aus den eigenen Daten dieser Site.",
+      "createSite": "Site erstellen"
+    },
+    "loading": "Command Center wird geladen…",
+    "partial": {
+      "title": "Einige Messwerte sind nicht verfügbar",
+      "text": "Diese Werte konnten gerade nicht gemessen werden und werden als nicht verfügbar angezeigt: {list}. An ihrer Stelle wird nichts geschätzt."
+    },
+    "state": {
+      "measured": "Gemessen",
+      "empty": "Noch keine Daten",
+      "stale": "Veraltet",
+      "unavailable": "Nicht verfügbar",
+      "not_measurable": "Nicht messbar"
+    },
+    "measurements": {
+      "siteStatus": "Site-Status",
+      "domain": "Domain",
+      "config": "Konfiguration",
+      "lastEvents": "letztes Event",
+      "recentEvents": "letzte Events",
+      "health": "Health Score",
+      "consent": "Consent-Abdeckung",
+      "destinations": "Destinations",
+      "duplicates": "Duplikatrate",
+      "delivery": "Zustellfehler",
+      "queue": "Queue-Verzögerung",
+      "usage": "Planverbrauch",
+      "issues": "Datenqualitätsprobleme",
+      "flow": "Event-Fluss",
+      "deliveryHistory": "Zustellverlauf"
+    },
+    "severity": {
+      "critical": "Kritisch",
+      "warn": "Warnung",
+      "info": "Empfehlung"
+    },
+    "priority": {
+      "heading": "Prioritäten",
+      "nextAction": "Nächste Aktion",
+      "attention": "Braucht Aufmerksamkeit",
+      "attentionCount": "{n, plural, =0 {Keine weiteren Probleme} one {# weiteres Problem} other {# weitere Probleme}}",
+      "attentionEmpty": "Keine weiteren Probleme aus den {n} durchgeführten Prüfungen.",
+      "howDecided": "Warum diese Aktion",
+      "rulesIntro": "Aktionen entstehen aus festen Regeln in fester Reihenfolge: zuerst kritisch, dann Warnungen, dann Empfehlungen; innerhalb einer Stufe gewinnt die frühere Regel. Eine Regel greift nur auf gemessene Werte – nichts wird geschätzt.",
+      "ruleLabel": "Regel",
+      "measuredLabel": "Gemessen {time}",
+      "none": {
+        "title": "Gerade keine Aktion nötig",
+        "text": "{checked} Prüfungen liefen um {time}, keine hat ein Problem gefunden.",
+        "checkedTitle": "Durchgeführte Prüfungen",
+        "skippedTitle": "Prüfungen, die nicht laufen konnten",
+        "skippedReason": "{check} — {reason}"
+      },
+      "skipped": {
+        "unavailable": "Messwert nicht verfügbar",
+        "not_measurable": "in dieser Umgebung nicht messbar",
+        "empty": "noch keine Daten"
+      }
+    },
+    "checks": {
+      "site_paused": "Site pausiert oder Kill Switch",
+      "usage_hard_limit": "Hartes Planlimit",
+      "no_config": "Aktive Konfiguration",
+      "no_events": "Erstes Event empfangen",
+      "credentials": "Destination-Zugangsdaten",
+      "dead_letters": "Dead-Letter-Zustellungen",
+      "delivery_failures": "Zustellfehlerquote",
+      "critical_issues": "Kritische Datenqualitätsprobleme",
+      "usage_soft_limit": "Planlimit bei 90 %",
+      "destination_errors": "Destinations im Fehlerzustand",
+      "silence": "Event-Stille",
+      "no_consent_policy": "Veröffentlichte Consent-Richtlinie",
+      "consent_coverage": "Anteil expliziter Consent-Signale",
+      "duplicates": "Duplikatrate",
+      "queue_lag": "Queue-Verzögerung",
+      "warning_issues": "Datenqualitätswarnungen",
+      "usage_warning": "Planlimit bei 70 %",
+      "domain_unverified": "Domain-Verifizierung",
+      "no_destinations": "Erste Destination"
+    },
+    "actions": {
+      "site_paused": {
+        "title": "Tracking für {site} fortsetzen",
+        "why": "{reason, select, kill_switch {Der Kill Switch ist aktiv: eingehende Events werden abgewiesen, bis er ausgeschaltet wird.} other {Die Site ist pausiert: eingehende Events werden abgewiesen, bis sie fortgesetzt wird.}}",
+        "cta": "Site öffnen",
+        "rule": "Greift, wenn der Site-Status „pausiert“ ist oder der Kill Switch aktiv ist."
+      },
+      "usage_hard_limit": {
+        "title": "Planlimit erreicht — Verarbeitung pausiert",
+        "why": "{used} von {limit} abrechenbaren Events wurden in {period} gezählt, und das harte Limit wurde unter der Mehrverbrauchsregel „{policy}“ erreicht. Events werden erst wieder verarbeitet, wenn du upgradest oder Mehrverbrauch erlaubst.",
+        "cta": "Abrechnung öffnen",
+        "rule": "Greift, wenn die aktuelle Verbrauchsperiode einen Zeitstempel für das harte Limit trägt."
+      },
+      "no_config": {
+        "title": "Konfiguration für {environment} veröffentlichen",
+        "why": "In der Umgebung {environment} ist keine Konfigurationsversion aktiv, das Snippet hat also nichts zu laden und kein Event wird angenommen.",
+        "cta": "KI-Setup öffnen",
+        "rule": "Greift, wenn die aktive Umgebung keine aktive Konfigurationsversion hat."
+      },
+      "no_events": {
+        "title": "Snippet installieren und ein erstes Event senden",
+        "why": "In {environment} ist eine Konfiguration live, aber für diese Umgebung hat Track noch kein Event erreicht (Tracking-ID {trackingId}).",
+        "cta": "Snippet anzeigen",
+        "rule": "Greift, wenn eine Konfiguration aktiv ist und der Event-Store kein Event für die Umgebung enthält."
+      },
+      "credentials": {
+        "title": "{count, plural, one {Zugangsdaten von {destination} reparieren} other {Zugangsdaten für # Destinations reparieren}}",
+        "why": "{kind, select, expired {Die Zugangsdaten von {destination} sind abgelaufen} expiring {Zugangsdaten von {destination} laufen innerhalb von {days} Tagen ab} oauth {Die OAuth-Verbindung von {destination} ist nicht mehr verbunden} other {Die letzte Gesundheitsprüfung von {destination} hat einen Fehler bei den Zugangsdaten gemeldet}}; Zustellungen dorthin schlagen fehl oder werden bald fehlschlagen.",
+        "cta": "Destination öffnen",
+        "rule": "Greift, wenn eine verbundene Destination abgelaufene Zugangsdaten, innerhalb von {days} Tagen ablaufende Zugangsdaten, eine getrennte OAuth-Verbindung oder eine fehlgeschlagene Prüfung der Zugangsdaten hat."
+      },
+      "dead_letters": {
+        "title": "{count, plural, one {# Dead-Letter-Zustellung erneut senden} other {# Dead-Letter-Zustellungen erneut senden}}",
+        "why": "{count, plural, one {# Zustellung hat} other {# Zustellungen haben}} alle Wiederholungen ausgeschöpft und wird ohne erneutes Senden nicht mehr zugestellt.",
+        "cta": "Destinations öffnen",
+        "rule": "Greift, wenn für die Site nicht erneut gesendete Dead-Letter-Referenzen existieren."
+      },
+      "delivery_failures": {
+        "title": "Zustellfehler untersuchen",
+        "why": "{failed} von {attempts} Zustellergebnissen der letzten {hours} Stunden waren Fehler ({pct}); der Schwellenwert liegt bei {thresholdPct}. Häufigste Fehlerklasse: {errorClass}.",
+        "cta": "Destinations öffnen",
+        "rule": "Greift ab {minAttempts} Ergebnissen in {hours} Stunden bei einem Fehleranteil von mindestens {thresholdPct}; kritisch ab {criticalPct}."
+      },
+      "critical_issues": {
+        "title": "{count, plural, one {# kritisches Datenqualitätsproblem beheben} other {# kritische Datenqualitätsprobleme beheben}}",
+        "why": "Zuletzt: {summary}",
+        "cta": "Datenqualität öffnen",
+        "rule": "Greift, wenn offene Probleme mit dem Schweregrad „kritisch“ existieren."
+      },
+      "usage_soft_limit": {
+        "title": "Planlimit fast erreicht",
+        "why": "{pct} des Planlimits sind verbraucht ({used} von {limit} abrechenbaren Events in {period}). Über 100 % gilt die Mehrverbrauchsregel „{policy}“.",
+        "cta": "Plan und Mehrverbrauch prüfen",
+        "rule": "Greift ab {thresholdPct} des monatlichen Event-Limits."
+      },
+      "destination_errors": {
+        "title": "{count, plural, one {Destination {name} prüfen} other {# Destinations mit Fehlern prüfen}}",
+        "why": "{count, plural, one {{name} ist im Fehlerzustand} other {{name} und # weitere sind im Fehlerzustand}}; Zustellungen dorthin werden nicht versucht.",
+        "cta": "Destinations öffnen",
+        "rule": "Greift, wenn eine Destination den Status „Fehler“ hat."
+      },
+      "silence": {
+        "title": "Seit {hours} Stunden keine Events",
+        "why": "Das letzte Event in {environment} kam {lastAt} an; der Schwellenwert liegt bei {threshold} Stunden. Prüfe Snippet, Domain und Consent-Banner.",
+        "cta": "Events öffnen",
+        "rule": "Greift, wenn die Produktionsumgebung früher Events empfangen hat, aber keines innerhalb von {threshold} Stunden."
+      },
+      "no_consent_policy": {
+        "title": "Consent-Richtlinie veröffentlichen",
+        "why": "{status, select, none {Für diese Site existiert keine Consent-Richtlinie} other {Die Consent-Richtlinie ist noch im Zustand „{status}“}}, daher werden Regionsregeln und Zwecke nicht durchgesetzt.",
+        "cta": "Consent & Datenschutz öffnen",
+        "rule": "Greift, wenn die Site keine veröffentlichte Consent-Richtlinie hat."
+      },
+      "consent_coverage": {
+        "title": "Consent-Integration prüfen",
+        "why": "Nur {pct} von {events} Events trugen ein explizites Consent-Signal; der Schwellenwert liegt bei {thresholdPct}. Events im Standardzustand können für Marketing-Destinations blockiert werden.",
+        "cta": "Consent & Datenschutz öffnen",
+        "rule": "Greift ab {minEvents} Events, wenn der Anteil expliziter Signale unter {thresholdPct} liegt."
+      },
+      "duplicates": {
+        "title": "Doppelte Events reduzieren",
+        "why": "{deduplicated} von {received} in den letzten {hours} Stunden empfangenen Events waren Duplikate ({pct}); der Schwellenwert liegt bei {thresholdPct}.",
+        "cta": "Events öffnen",
+        "rule": "Greift ab {minReceived} empfangenen Events in {hours} Stunden bei einer Duplikatrate von mindestens {thresholdPct}."
+      },
+      "queue_lag": {
+        "title": "Zustellungen verzögern sich um {minutes} Minuten",
+        "why": "Die älteste wartende Nachricht liegt seit {seconds} Sekunden in der Queue ({pending} wartend); der Schwellenwert liegt bei {thresholdMinutes} Minuten.",
+        "cta": "Destinations öffnen",
+        "rule": "Greift, wenn die älteste bereite Nachricht deiner Organisation {thresholdMinutes} Minuten oder länger gewartet hat."
+      },
+      "warning_issues": {
+        "title": "{count, plural, one {# Datenqualitätswarnung prüfen} other {# Datenqualitätswarnungen prüfen}}",
+        "why": "Offene Warnungen bedeuten meist fehlende Parameter oder ungeplante Events.",
+        "cta": "Datenqualität öffnen",
+        "rule": "Greift, wenn offene Probleme mit dem Schweregrad „Warnung“ existieren."
+      },
+      "usage_warning": {
+        "title": "{pct} des Planlimits verbraucht",
+        "why": "{used} von {limit} abrechenbaren Events in {period}. Plane voraus, bevor {nextPct} erreicht sind.",
+        "cta": "Abrechnung öffnen",
+        "rule": "Greift ab {thresholdPct} und unter {nextPct} des monatlichen Event-Limits."
+      },
+      "domain_unverified": {
+        "title": "{hostname} verifizieren",
+        "why": "Die Domain ist noch nicht verifiziert. Die Verifizierung belegt die Inhaberschaft und schaltet First-Party-Zustelloptionen frei.",
+        "cta": "Site öffnen",
+        "rule": "Greift, wenn die primäre Domain der Site keinen Verifizierungszeitstempel hat."
+      },
+      "no_destinations": {
+        "title": "Erste Destination verbinden",
+        "why": "Events kommen an, aber es ist keine Destination konfiguriert, also wird nichts zugestellt.",
+        "cta": "Destination hinzufügen",
+        "rule": "Greift, wenn Events existieren und die Site keine Destination hat."
+      }
+    },
+    "strip": {
+      "heading": "Status",
+      "help": "{term} erklären",
+      "siteStatus": {
+        "label": "Site",
+        "help": "Ob die Site Events annimmt. Eine pausierte Site und der Kill Switch weisen alles bereits am Edge ab.",
+        "active": "Aktiv",
+        "paused": "Pausiert",
+        "deleted": "Gelöscht",
+        "killSwitch": "Kill Switch aktiv"
+      },
+      "config": {
+        "label": "Konfiguration",
+        "help": "Die signierte Konfigurationsversion, die das Snippet in dieser Umgebung lädt.",
+        "version": "Version {version}",
+        "published": "Veröffentlicht {time}",
+        "none": "Nicht veröffentlicht"
+      },
+      "lastEvents": {
+        "label": "Letztes Event",
+        "help": "Wann das letzte Browser- und Server-Event für diese Umgebung Track erreicht hat.",
+        "browser": "Browser: {time}",
+        "server": "Server: {time}",
+        "never": "nie",
+        "none": "Noch keine Events"
+      },
+      "health": {
+        "label": "Health Score",
+        "help": "Tracking Health Score von 0 bis 100, vom Worker berechnet aus Consent, Abdeckung, Schema, Duplikaten, Zustellung und Aktivität.",
+        "value": "{score}/100",
+        "computed": "Berechnet {time}",
+        "none": "Noch nicht berechnet"
+      },
+      "consent": {
+        "label": "Consent-Abdeckung",
+        "help": "Anteil der angenommenen Events, deren Consent aus einem expliziten Signal (CMP, API, TCF, GPP, GPC) statt aus dem Standardzustand stammt.",
+        "value": "{pct} explizit",
+        "events": "{n, plural, one {# Event} other {# Events}}",
+        "marketing": "{pct} mit Marketing-Consent",
+        "policy": "Richtlinie: {status}",
+        "status": {
+          "draft": "Entwurf",
+          "published": "veröffentlicht",
+          "archived": "archiviert"
+        },
+        "noPolicy": "Keine Richtlinie",
+        "none": "Noch keine Events mit Consent"
+      },
+      "destinations": {
+        "label": "Destinations",
+        "help": "Verbundene Destinations dieser Site und etwaige Probleme mit Zugangsdaten oder OAuth.",
+        "value": "{connected} von {total} verbunden",
+        "errors": "{n, plural, one {# mit Fehlern} other {# mit Fehlern}}",
+        "credentials": "{n, plural, one {# Problem mit Zugangsdaten} other {# Probleme mit Zugangsdaten}}",
+        "lastSuccess": "Letzte Zustellung {time}",
+        "none": "Noch keine"
+      },
+      "duplicates": {
+        "label": "Duplikatrate",
+        "help": "Events, die die Ingest-Stufe in den letzten 24 Stunden als Wiederholung eines bereits angenommenen Events erkannt hat.",
+        "value": "{pct}",
+        "detail": "{deduplicated} von {received} empfangenen (24 h)",
+        "none": "Keine Events in 24 h"
+      },
+      "delivery": {
+        "label": "Zustellfehler",
+        "help": "Fehlgeschlagene und als Dead Letter abgelegte Zustellergebnisse der letzten 24 Stunden.",
+        "value": "{failed} von {attempts}",
+        "rate": "{pct} fehlgeschlagen (24 h)",
+        "deadLetters": "{n, plural, one {# Dead Letter} other {# Dead Letters}}",
+        "topError": "Am häufigsten: {errorClass}",
+        "none": "Keine Ergebnisse in 24 h"
+      },
+      "queue": {
+        "label": "Queue-Verzögerung",
+        "help": "Wie lange die älteste Nachricht in den Zustell-Queues deiner Organisation auf einen Worker wartet.",
+        "value": "{duration}",
+        "noBacklog": "Kein Rückstand",
+        "pending": "{n, plural, one {# Nachricht wartet} other {# Nachrichten warten}}",
+        "inFlight": "{n, plural, one {# in Bearbeitung} other {# in Bearbeitung}}",
+        "notMeasurable": "Mit dem aktuellen Queue-Treiber nicht messbar"
+      },
+      "usage": {
+        "label": "Planverbrauch",
+        "help": "Abrechenbare Events der aktuellen Periode gegenüber dem monatlichen Limit deines Plans.",
+        "value": "{used} von {limit}",
+        "noLimit": "{used} Events, keine feste Obergrenze",
+        "pct": "{pct} des Plans {plan} in {period}",
+        "hardLimit": "Hartes Limit erreicht",
+        "softLimit": "Limit erreicht",
+        "policy": "Mehrverbrauch: {policy}",
+        "policies": {
+          "allow": "Mehrverbrauch erlauben",
+          "cost_limit": "Kostenlimit",
+          "pause": "pausieren"
+        }
+      }
+    },
+    "charts": {
+      "heading": "Letzte 24 Stunden und letzte 7 Tage",
+      "showTable": "Als Tabelle anzeigen",
+      "flow": {
+        "title": "Event-Fluss",
+        "window": "Letzte 24 Stunden, pro Stunde",
+        "caption": "Angenommene, deduplizierte und verworfene Events pro Stunde in den letzten 24 Stunden",
+        "accepted": "Angenommen",
+        "deduplicated": "Dedupliziert",
+        "dropped": "Verworfen",
+        "received": "Empfangen",
+        "hour": "Stunde",
+        "empty": "In den letzten 24 Stunden wurden keine Events aufgezeichnet."
+      },
+      "delivery": {
+        "title": "Zustellergebnisse",
+        "window": "Letzte 7 Tage, pro Tag (UTC)",
+        "caption": "Zugestellte, fehlgeschlagene und als Dead Letter abgelegte Zustellversuche pro Tag in den letzten 7 Tagen",
+        "success": "Zugestellt",
+        "failed": "Fehlgeschlagen",
+        "dead": "Dead Letter",
+        "day": "Tag",
+        "empty": "Keine Zustellversuche in den letzten 7 Tagen."
+      }
+    },
+    "recentEvents": {
+      "title": "Letzte verifizierte Events",
+      "intro": "Die neuesten angenommenen Events dieser Umgebung mit Consent, Verarbeitungsstatus und Zustellungen. Payloads werden hier nie angezeigt.",
+      "caption": "Zuletzt angenommene Events",
+      "columns": {
+        "time": "Zeit",
+        "event": "Event",
+        "source": "Quelle",
+        "consent": "Consent",
+        "state": "Status",
+        "deliveries": "Zustellungen",
+        "lineage": "Lineage"
+      },
+      "verified": "Verifiziert",
+      "unverified": "Nicht verifiziert",
+      "necessaryOnly": "Nur notwendig",
+      "consentSource": "über {source}",
+      "test": "Test",
+      "deliveries": "{delivered} von {total} zugestellt",
+      "noDeliveries": "Nicht geroutet",
+      "openLineage": "Lineage öffnen",
+      "state": {
+        "policy_passed": "Angenommen",
+        "stored": "Gespeichert",
+        "routed": "Geroutet",
+        "delivered": "Zugestellt",
+        "received": "Empfangen"
+      },
+      "empty": {
+        "title": "Noch keine angenommenen Events",
+        "text": "Sobald das Snippet oder eine Server-Integration Events sendet, erscheinen hier die zuletzt angenommenen mit Consent, Status und Zustellungen.",
+        "installSnippet": "Snippet anzeigen",
+        "publishConfig": "Konfiguration veröffentlichen",
+        "openEvents": "Events öffnen"
+      }
+    },
+    "footer": {
+      "note": "Jede Zahl auf dieser Seite wird aus den Tabellen von {site} ({environment}) gelesen. Unbekannt bleibt unbekannt: nichts wird geschätzt oder ergänzt."
+    }
+  }
+}

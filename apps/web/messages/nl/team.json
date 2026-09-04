@@ -1,0 +1,363 @@
+{
+  "team": {
+    "module": {
+      "nav": {
+        "label": "Team & toegang",
+        "overview": "Overzicht",
+        "audit": "Auditlog"
+      }
+    },
+    "overview": {
+      "title": "Team & toegang",
+      "intro": "Leden, rollen en uitnodigingen van deze organisatie, de rechten achter elke rol, vier-ogenvereisten en het auditlog. Elke rol wordt op de server afgedwongen bij elke actie en elke tool-aanroep van de assistent.",
+      "openAudit": "Auditlog openen"
+    },
+    "summary": {
+      "plan": "Plan",
+      "seats": "Plekken",
+      "seatsUsed": "{used} van {cap}",
+      "seatsNoCap": "{used}, geen vaste limiet",
+      "seatsPending": "{count} openstaand",
+      "twoFactor": "Tweestapsverificatie",
+      "twoFactorShare": "{enabled} van {total} leden",
+      "fourEyes": "Vier ogen",
+      "fourEyesNotInPlan": "Niet in plan",
+      "fourEyesActive": "{count} wijzigingstypen",
+      "fourEyesNone": "Niet ingesteld",
+      "openRequests": "{count} open"
+    },
+    "members": {
+      "title": "Leden",
+      "caption": "Leden van de organisatie met rol en status van tweestapsverificatie",
+      "member": "Lid",
+      "role": "Rol",
+      "twoFactor": "Tweestapsverificatie",
+      "twoFactorOn": "Ingeschakeld",
+      "twoFactorOff": "Niet ingeschakeld",
+      "joined": "Lid sinds",
+      "actions": "Acties",
+      "you": "jij",
+      "roleSelect": "Rol van {name}",
+      "save": "Rol opslaan",
+      "permissions": "Rechten",
+      "remove": "Verwijderen",
+      "fourEyesHint": "Rolwijzigingen hebben een tweede persoon nodig: opslaan maakt een goedkeuringsverzoek aan in plaats van de rol direct te wijzigen.",
+      "ownerDialog": {
+        "title": "Owner-rol wijzigen?",
+        "description": "Owners mogen alles, inclusief facturatie, verwijdering en overdracht van eigendom. Bevestig de wijziging voor {name} van {from} naar {to}.",
+        "confirm": "Rol wijzigen"
+      },
+      "removeDialog": {
+        "title": "{name} verwijderen?",
+        "description": "{email} verliest direct de toegang tot deze organisatie. Sites, destinations en gegevens blijven behouden. De verwijdering wordt vastgelegd in het auditlog.",
+        "confirm": "Lid verwijderen"
+      }
+    },
+    "permissionsSheet": {
+      "title": "Rechten van {name}",
+      "description": "Rol {role}. Rechten volgen uit de rol en worden op de server gecontroleerd bij elke actie en elke tool-aanroep van de assistent.",
+      "granted": "{granted} van {total} rechten toegekend",
+      "yes": "Toegekend",
+      "no": "Niet toegekend"
+    },
+    "invite": {
+      "title": "Lid uitnodigen",
+      "text": "De uitnodiging wordt per e-mail verstuurd en verloopt na 7 dagen. Ze telt als plek totdat ze wordt geaccepteerd of ingetrokken.",
+      "email": "E-mail",
+      "role": "Rol",
+      "send": "Uitnodiging versturen",
+      "seatLimitTitle": "Alle plekken zijn bezet",
+      "seatLimit": "Je {plan}-plan bevat {cap} plekken (leden plus openstaande uitnodigingen). Verwijder een lid, trek een uitnodiging in of kies een groter plan.",
+      "comparePlans": "Plannen vergelijken"
+    },
+    "pending": {
+      "title": "Openstaande uitnodigingen",
+      "empty": "Geen openstaande uitnodigingen.",
+      "invitedBy": "uitgenodigd door {name}",
+      "expires": "verloopt op {date}",
+      "expired": "Verlopen",
+      "resend": "Opnieuw versturen",
+      "cancel": "Intrekken"
+    },
+    "roles": {
+      "title": "Rollen en rechten",
+      "intro": "Zes rollen, één keer gedefinieerd en door de server afgedwongen. De matrix laat precies zien welk recht elke rol heeft; het rechtenoverzicht van een lid toont hetzelfde voor die persoon.",
+      "customRolesHint": "Eigen rolmodellen naast deze zes rollen maken deel uit van het Enterprise-plan.",
+      "matrixSummary": "Volledige rechtenmatrix tonen",
+      "matrixCaption": "Rechten per rol",
+      "permission": "Recht",
+      "granted": "Toegekend",
+      "notGranted": "Niet toegekend",
+      "labels": {
+        "OWNER": "Owner",
+        "ADMIN": "Admin",
+        "DEVELOPER": "Developer",
+        "ANALYST": "Analyst",
+        "BILLING": "Billing",
+        "READ_ONLY": "Alleen lezen"
+      },
+      "descriptions": {
+        "OWNER": "Alles, inclusief facturatie, verwijdering en overdracht van eigendom. Altijd goedkeurder.",
+        "ADMIN": "Beheert sites, destinations, toestemming, team, verzoeken van betrokkenen en instellingen; mag publiceren.",
+        "DEVELOPER": "Configureert sites, destinations en inloggegevens, publiceert configuraties en draait ze terug.",
+        "ANALYST": "Leest events, gezondheid en configuratie, exporteert events en gebruikt de assistent alleen-lezen.",
+        "BILLING": "Leest alles en beheert het abonnement en de facturen.",
+        "READ_ONLY": "Alleen bekijken; geen wijzigingen, geen exports."
+      },
+      "areas": {
+        "org": "Organisatie",
+        "members": "Team",
+        "sites": "Sites",
+        "domains": "Domeinen",
+        "events": "Events",
+        "config": "Configuratie",
+        "integrations": "Destinations",
+        "credentials": "Inloggegevens",
+        "consent": "Toestemming",
+        "privacy": "Privacy",
+        "ai": "Track AI",
+        "billing": "Facturatie",
+        "audit": "Audit",
+        "kill_switch": "Kill switch"
+      },
+      "permissions": {
+        "org_read": "Organisatie bekijken",
+        "org_update": "Organisatie-instellingen wijzigen",
+        "org_delete": "Organisatie verwijderen",
+        "members_read": "Leden bekijken",
+        "members_invite": "Leden uitnodigen",
+        "members_update": "Rollen van leden wijzigen",
+        "members_remove": "Leden verwijderen",
+        "sites_read": "Sites bekijken",
+        "sites_create": "Sites aanmaken",
+        "sites_update": "Sites wijzigen",
+        "sites_delete": "Sites verwijderen",
+        "domains_verify": "Domeinen verifiëren",
+        "events_read": "Events bekijken",
+        "events_export": "Events exporteren",
+        "config_read": "Configuraties bekijken",
+        "config_draft": "Configuratieconcepten bewerken",
+        "config_publish": "Configuraties publiceren",
+        "config_rollback": "Configuraties terugdraaien",
+        "integrations_read": "Destinations bekijken",
+        "integrations_manage": "Destinations beheren",
+        "credentials_write": "Inloggegevens opslaan",
+        "credentials_rotate": "Inloggegevens roteren",
+        "consent_read": "Toestemmingsbeleid bekijken",
+        "consent_manage": "Toestemmingsbeleid beheren",
+        "privacy_dsar": "Verzoeken van betrokkenen afhandelen",
+        "privacy_retention": "Bewaartermijnen wijzigen",
+        "ai_chat": "Chatten met Track AI",
+        "ai_write_tools": "Track AI wijzigingen laten voorbereiden",
+        "billing_read": "Facturatie bekijken",
+        "billing_manage": "Abonnement beheren",
+        "audit_read": "Auditlog bekijken",
+        "kill_switch_manage": "Kill switches bedienen"
+      }
+    },
+    "approvals": {
+      "title": "Goedkeuringsvereisten",
+      "intro": "Zet risicovolle wijzigingen achter een tweede paar ogen. Een wijziging van een geselecteerd type wordt als verzoek opgeslagen en pas uitgevoerd nadat een ander lid met goedkeuringsrechten ze toepast.",
+      "notInPlanTitle": "Niet inbegrepen in {plan}",
+      "notInPlan": "Goedkeuringsworkflows en het vier-ogenprincipe maken deel uit van het Pro-plan. In je huidige plan wordt hier niets afgedwongen; de lijst laat zien wat Pro toevoegt.",
+      "storedInactive": "Er zijn vereisten uit een eerder plan opgeslagen. Ze blijven bewaard, maar worden pas afgedwongen als het plan goedkeuringsworkflows bevat.",
+      "notPersisted": "De opslag voor goedkeuringsvereisten is nog niet beschikbaar (migratie 0012_team_policies in afwachting). Er wordt niets afgedwongen.",
+      "comparePlans": "Plannen vergelijken",
+      "readOnly": "Je rol kan deze vereisten alleen bekijken.",
+      "changeTypesLegend": "Wijzigingen die een tweede persoon vereisen",
+      "approversLegend": "Wie mag goedkeuren",
+      "ownerAlways": "Owners mogen altijd goedkeuren.",
+      "requesterNote": "Geldt voor iedereen, ook Owners: niemand keurt zijn eigen verzoek goed.",
+      "enforcementNote": "Rolwijzigingen worden hier in Team & toegang afgedwongen. De overige wijzigingstypen worden afgedwongen door de module die ze uitvoert (Releases, Destinations, Toestemming & privacy, Instellingen) via ditzelfde beleid; hun verzoeken verschijnen in de lijst hierboven en kunnen hier worden afgewezen.",
+      "save": "Vereisten opslaan",
+      "updated": "Laatst gewijzigd op {date} door {name}",
+      "neverUpdated": "Nog niet ingesteld.",
+      "relaxDialog": {
+        "title": "Goedkeuringsvereisten versoepelen?",
+        "description": "De volgende wijzigingen verminderen de bescherming. Ze gelden direct en worden vastgelegd in het auditlog.",
+        "confirm": "Toch opslaan"
+      },
+      "changes": {
+        "relaxed": "{type} heeft geen tweede persoon meer nodig",
+        "approverAdded": "{role} mag vanaf nu goedkeuren"
+      },
+      "types": {
+        "config_publish": {
+          "label": "Configuratie publiceren",
+          "description": "Een nieuwe trackingconfiguratie gaat live voor een site-omgeving."
+        },
+        "config_rollback": {
+          "label": "Configuratie terugdraaien",
+          "description": "Een eerdere versie vervangt de actieve configuratie."
+        },
+        "consent_publish": {
+          "label": "Toestemmingsbeleid publiceren",
+          "description": "Een nieuwe beleidsversie stuurt de consent engine voor elk nieuw event."
+        },
+        "credential_change": {
+          "label": "Inloggegevens wijzigen",
+          "description": "Opslaan, roteren of intrekken van inloggegevens van een destination."
+        },
+        "destination_pause": {
+          "label": "Destination pauzeren",
+          "description": "Leveringen aan een destination stoppen terwijl de rest doorloopt."
+        },
+        "member_role_change": {
+          "label": "Rol van een lid wijzigen",
+          "description": "Een lid krijgt een andere rol, inclusief Owner."
+        },
+        "kill_switch": {
+          "label": "Kill switch",
+          "description": "Stopt verzameling en levering voor een site of de hele organisatie."
+        }
+      }
+    },
+    "requests": {
+      "title": "Open goedkeuringen",
+      "intro": "Wijzigingen die wachten op een tweede persoon. Verzoeken verlopen na 7 dagen zonder beslissing.",
+      "empty": "Geen open verzoeken.",
+      "recent": "Recente beslissingen",
+      "recentEmpty": "Nog geen beslissingen.",
+      "target": "Doel",
+      "change": "Wijziging",
+      "roleChange": "{from} → {to}",
+      "requestedBy": "aangevraagd door {name}",
+      "requestedAt": "op {date}",
+      "expiresAt": "verloopt op {date}",
+      "former": "voormalig lid",
+      "decidedIn": "Deze wijziging wordt vanuit de eigen module toegepast; hier kan ze alleen worden afgewezen.",
+      "approve": "Wijziging toepassen",
+      "reject": "Afwijzen",
+      "withdraw": "Intrekken",
+      "note": "Notitie (optioneel)",
+      "status": {
+        "pending": "Openstaand",
+        "applied": "Toegepast",
+        "rejected": "Afgewezen",
+        "withdrawn": "Ingetrokken",
+        "expired": "Verlopen"
+      },
+      "decidedBy": "{status} door {name} op {date}",
+      "approveDialog": {
+        "title": "Deze wijziging toepassen?",
+        "description": "Je treedt op als tweede persoon. De wijziging wordt direct uitgevoerd en met jouw naam vastgelegd.",
+        "confirm": "Toepassen"
+      },
+      "rejectDialog": {
+        "title": "Dit verzoek afwijzen?",
+        "description": "De aanvrager ziet de afwijzing en je notitie.",
+        "confirm": "Afwijzen"
+      }
+    },
+    "audit": {
+      "title": "Auditlog",
+      "intro": "Elke vastgelegde wijziging in deze organisatie: wie deed wat, wanneer, op welk doel. Waarden worden geredigeerd getoond; vermeldingen kunnen nooit worden bewerkt of verwijderd.",
+      "noPermission": "Je rol kan het auditlog niet bekijken",
+      "noPermissionText": "Vraag een Owner of Admin om de rol Analyst, Developer of Admin.",
+      "windowLimited": "Je ziet de laatste {days} dagen in je {plan}-plan. Het Pro-plan bewaart de volledige geschiedenis.",
+      "windowFull": "Volledige geschiedenis; vermeldingen worden {days} dagen bewaard.",
+      "comparePlans": "Plannen vergelijken",
+      "filters": {
+        "legend": "Filters",
+        "category": "Categorie",
+        "actor": "Actor",
+        "target": "Doeltype",
+        "search": "Zoeken",
+        "searchPlaceholder": "Actie, doel of request-id",
+        "from": "Van",
+        "to": "Tot",
+        "apply": "Filters toepassen",
+        "reset": "Herstellen",
+        "all": "Alle",
+        "everyone": "Alle actoren",
+        "system": "Systeemtaken",
+        "agent": "Track AI (namens een lid)",
+        "source_key": "Server-source-keys"
+      },
+      "categories": {
+        "team": "Team",
+        "organization": "Organisatie",
+        "sites": "Sites",
+        "config": "Configuratie",
+        "consent": "Toestemming",
+        "destinations": "Destinations",
+        "credentials": "Inloggegevens",
+        "privacy": "Privacy",
+        "billing": "Facturatie",
+        "ai": "Track AI",
+        "other": "Overig"
+      },
+      "count": "{count} vermeldingen",
+      "countFiltered": "{count} vermeldingen voldoen aan de filters",
+      "caption": "Auditvermeldingen, nieuwste eerst",
+      "when": "Wanneer",
+      "actor": "Actor",
+      "action": "Actie",
+      "target": "Doel",
+      "details": "Details",
+      "showDetails": "Details tonen ({count})",
+      "noDetails": "Geen details",
+      "diff": "Wijziging",
+      "metadata": "Metadata",
+      "truncated": "Verdere waarden weggelaten.",
+      "redacted": "Persoonsgegevens en geheimen worden geredigeerd voordat een vermelding wordt opgeslagen en opnieuw bij het tonen.",
+      "requestId": "Request",
+      "actorKind": {
+        "user": "Lid",
+        "agent": "Track AI",
+        "system": "Systeem",
+        "source_key": "Source-key",
+        "unknown": "Onbekend"
+      },
+      "formerMember": "Voormalig lid",
+      "empty": "Nog niets vastgelegd",
+      "emptyText": "Vermeldingen verschijnen zodra iemand iets wijzigt in deze organisatie.",
+      "emptyFiltered": "Geen vermeldingen voldoen aan deze filters",
+      "emptyFilteredText": "Verruim de periode of herstel de filters.",
+      "pagination": {
+        "nav": "Pagina’s van het auditlog",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {page}"
+      }
+    },
+    "notices": {
+      "invited": "Uitnodiging verstuurd.",
+      "resent": "Uitnodiging opnieuw verstuurd.",
+      "cancelled": "Uitnodiging ingetrokken.",
+      "roleUpdated": "Rol gewijzigd.",
+      "roleRequested": "De rolwijziging is ter goedkeuring ingediend. Een ander lid met goedkeuringsrechten moet ze toepassen.",
+      "removed": "Lid verwijderd.",
+      "policySaved": "Goedkeuringsvereisten opgeslagen.",
+      "policyUnchanged": "Niets gewijzigd.",
+      "requestApplied": "Wijziging toegepast.",
+      "requestRejected": "Verzoek afgewezen.",
+      "requestWithdrawn": "Verzoek ingetrokken."
+    },
+    "errors": {
+      "generic": "Er is iets misgegaan.",
+      "email": "Voer een geldig e-mailadres in.",
+      "forbidden": "Je rol mag dit niet.",
+      "notFound": "Niet gevonden. Laad de pagina opnieuw.",
+      "self": "Je kunt je eigen lidmaatschap niet wijzigen.",
+      "sameRole": "Het lid heeft deze rol al.",
+      "confirmOwner": "Wijzigingen aan de Owner-rol vereisen een bevestiging.",
+      "lastOwner": "De laatste Owner kan niet worden gedegradeerd of verwijderd.",
+      "requestExists": "Voor dit lid staat al een goedkeuringsverzoek open.",
+      "confirmRequired": "Bevestig eerst de actie.",
+      "alreadyMember": "Deze persoon is al lid.",
+      "alreadyInvited": "Voor dit e-mailadres staat al een uitnodiging open. Verstuur ze opnieuw vanuit de lijst.",
+      "seatLimit": "Alle plekken van je plan zijn bezet.",
+      "notInPlan": "Goedkeuringsworkflows maken geen deel uit van je plan.",
+      "notPersisted": "De opslag voor goedkeuringsvereisten is nog niet beschikbaar.",
+      "confirmRelax": "Het versoepelen van de vereisten vereist een bevestiging.",
+      "notPending": "Dit verzoek staat niet meer open.",
+      "selfApproval": "Je kunt je eigen verzoek niet goedkeuren.",
+      "notAppliedHere": "Dit wijzigingstype wordt vanuit de eigen module toegepast."
+    },
+    "common": {
+      "close": "Sluiten",
+      "cancel": "Annuleren"
+    }
+  }
+}

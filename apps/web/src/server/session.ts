@@ -52,6 +52,29 @@ export const getSession = cache(async (): Promise<{ user: SessionUser; activeOrg
   };
 });
 
+export interface MembershipSummary {
+  id: string;
+  name: string;
+  slug: string;
+  role: OrgRole;
+}
+
+/**
+ * Every organization the signed-in user belongs to (for the workspace switcher). Deduplicated per
+ * request; an unknown stored role is shown as READ_ONLY, exactly as `getOrgContext` treats it.
+ */
+export const listMemberships = cache(async (): Promise<MembershipSummary[]> => {
+  const s = await getSession();
+  if (!s) return [];
+  const rows = await db()
+    .select({ id: member.organizationId, role: member.role, name: organization.name, slug: organization.slug })
+    .from(member)
+    .innerJoin(organization, eq(organization.id, member.organizationId))
+    .where(eq(member.userId, s.user.id))
+    .orderBy(organization.name);
+  return rows.map((r) => ({ id: r.id, name: r.name, slug: r.slug, role: isOrgRole(r.role) ? r.role : "READ_ONLY" }));
+});
+
 export async function requireUser(): Promise<SessionUser> {
   const s = await getSession();
   if (!s) redirect("/login");

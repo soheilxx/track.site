@@ -1,0 +1,183 @@
+{
+  "shell": {
+    "skipToContent": "Aller au contenu",
+    "brandHome": "Track – Command Center",
+    "nav": {
+      "label": "Tableau de bord",
+      "menuTitle": "Navigation",
+      "commandCenter": "Command Center",
+      "aiSetup": "Configuration IA",
+      "events": "Événements",
+      "destinations": "Destinations",
+      "dataQuality": "Qualité des données",
+      "consent": "Consentement et confidentialité",
+      "insights": "Insights",
+      "releases": "Releases",
+      "team": "Équipe et accès",
+      "billing": "Facturation",
+      "settings": "Paramètres",
+      "sites": "Sites",
+      "openMenu": "Ouvrir la navigation",
+      "closeMenu": "Fermer la navigation"
+    },
+    "workspace": {
+      "label": "Espace de travail",
+      "organization": "Organisation",
+      "site": "Site",
+      "noOrganization": "Aucune organisation pour l’instant",
+      "noSite": "Aucun site pour l’instant",
+      "createSite": "Créer un site",
+      "manageSites": "Gérer les sites",
+      "switchOrganization": "Changer d’organisation",
+      "switchSite": "Changer de site",
+      "current": "Actuel",
+      "trackingId": "ID de tracking",
+      "trackingIdHelp": "Identifiant public à six caractères du site. Ce n’est pas un secret et il ne change jamais.",
+      "siteStatus": {
+        "active": "Actif",
+        "paused": "En pause",
+        "deleted": "Supprimé"
+      },
+      "switching": "Changement en cours…",
+      "switchFailed": "Impossible de changer d’espace de travail. Veuillez réessayer.",
+      "contextSwitched": "Espace de travail basculé vers {site}."
+    },
+    "environment": {
+      "label": "Environnement",
+      "kind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "none": "Aucun environnement",
+      "testMode": "Mode test",
+      "live": "En direct",
+      "help": {
+        "production": "Environnement de production : les événements acceptés sont livrés à vos destinations et comptent dans votre forfait.",
+        "staging": "Staging : les événements sont marqués comme événements de test, envoyés aux points de terminaison de test lorsque la plateforme le permet et jamais facturés.",
+        "development": "Environnement de test pour les vérifications locales : les événements sont marqués comme événements de test et jamais facturés."
+      },
+      "switch": "Changer d’environnement"
+    },
+    "palette": {
+      "trigger": "Rechercher ou aller à…",
+      "title": "Palette de commandes",
+      "description": "Naviguer, changer de site, ouvrir des destinations ou lancer une action.",
+      "placeholder": "Saisissez une commande ou une recherche…",
+      "empty": "Aucun résultat.",
+      "close": "Fermer",
+      "groups": {
+        "navigation": "Navigation",
+        "modules": "Modules",
+        "sites": "Sites",
+        "destinations": "Destinations",
+        "actions": "Actions"
+      },
+      "switchTo": "Passer à {site}",
+      "actions": {
+        "createSite": "Créer un site",
+        "manageSites": "Gérer les sites",
+        "openAssistant": "Ouvrir Track AI",
+        "closeAssistant": "Fermer Track AI",
+        "logout": "Se déconnecter"
+      },
+      "modules": {
+        "eventsMatrix": "Event Coverage Matrix",
+        "eventsExplorer": "Live Event Explorer",
+        "eventsTestLab": "Live Test Lab",
+        "revenueLeaks": "Signaux manquants & fuites de revenus",
+        "consentSimulator": "Simulateur d’impact du consentement",
+        "attribution": "Attribution & santé des click IDs",
+        "audiences": "Audiences",
+        "usage": "Usage & Cost Guard",
+        "audit": "Journal d’audit"
+      }
+    },
+    "assistant": {
+      "title": "Track AI",
+      "subtitle": "Configuration et diagnostic de votre site",
+      "region": "Panneau Track AI",
+      "launcher": "Track AI",
+      "open": "Ouvrir Track AI",
+      "close": "Fermer Track AI",
+      "minimise": "Réduire Track AI",
+      "resize": "Redimensionner le panneau Track AI",
+      "width": "{px} pixels de large",
+      "context": "Site : {site}",
+      "environment": "Environnement : {environment}",
+      "noSite": "Track AI a besoin d’un site sur lequel travailler.",
+      "noSiteAction": "Créer un site",
+      "newMessages": "Afficher les nouveaux messages",
+      "showEarlier": "Afficher {n} messages précédents",
+      "composerHint": "Entrée envoie, Maj+Entrée ajoute une ligne.",
+      "loading": "Chargement de Track AI…",
+      "contextSwitched": "Track AI travaille maintenant sur {site}.",
+      "expertMode": "Mode expert",
+      "chatMode": "Chat",
+      "step": "Étape {step}",
+      "toolStatus": {
+        "running": "en cours",
+        "ok": "terminé",
+        "error": "échoué"
+      }
+    },
+    "user": {
+      "menu": "Menu du compte",
+      "account": "Compte",
+      "signedInAs": "Connecté en tant que",
+      "role": "Rôle",
+      "logout": "Se déconnecter"
+    },
+    "roles": {
+      "OWNER": "Propriétaire",
+      "ADMIN": "Admin",
+      "DEVELOPER": "Développeur",
+      "ANALYST": "Analyste",
+      "BILLING": "Facturation",
+      "READ_ONLY": "Lecture seule"
+    },
+    "notFound": {
+      "title": "Page introuvable",
+      "text": "Cette page n’existe pas dans votre espace de travail ou a été déplacée.",
+      "back": "Retour au Command Center"
+    },
+    "error": {
+      "title": "Une erreur s’est produite",
+      "text": "L’erreur a été enregistrée. Réessayez ou revenez au Command Center.",
+      "retry": "Réessayer",
+      "back": "Command Center"
+    },
+    "pages": {
+      "aiSetup": {
+        "title": "Configuration IA",
+        "intro": "Configuration guidée de votre site : détection de la plateforme, installation du snippet, consentement, destinations, plan d’événements, test et publication. Track AI discute avec vous dans le panneau latéral ; cette page est le formulaire pas à pas avec les mêmes vérifications et brouillons.",
+        "siteContext": "Configuration de {site}",
+        "noSite": "Aucun site pour l’instant",
+        "noSiteText": "Créez votre premier site pour obtenir un ID de tracking et démarrer la configuration guidée.",
+        "createSite": "Créer un site",
+        "openAssistant": "Ouvrir Track AI",
+        "step": "Étape actuelle : {step}",
+        "progress": "{pct} % terminé"
+      },
+      "insights": {
+        "title": "Insights",
+        "intro": "Attribution et santé des click IDs : quels click IDs sont capturés, combien de temps ils vivent, d’où ils viennent et s’ils atteignent vos destinations — séparés en faits observés, indices modélisés et inconnues.",
+        "status": "En préparation",
+        "text": "Ce module est en cours de construction. Rien n’est encore mesuré ici, donc aucun chiffre n’est affiché. En attendant, le module Événements liste les événements acceptés et rejetés de votre site.",
+        "next": "Ouvrir les événements"
+      },
+      "releases": {
+        "title": "Releases",
+        "intro": "Change & Release Center : brouillons, test, staging et production, diffs de configuration lisibles, approbations, publication planifiée et rollback en un clic.",
+        "status": "En préparation",
+        "text": "Le workflow de release est en cours de construction. En attendant, la publication passe par l’étape de revue de la configuration IA, et la page du site affiche la version en ligne.",
+        "activeVersion": "Configuration active de {site} : version {version}",
+        "noVersion": "Rien n’a encore été publié pour {site}.",
+        "noSite": "Créez un site pour publier une configuration.",
+        "next": "Ouvrir le site",
+        "nextSetup": "Ouvrir la configuration IA",
+        "createSite": "Créer un site"
+      }
+    }
+  }
+}

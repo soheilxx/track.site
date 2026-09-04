@@ -1,0 +1,245 @@
+{
+  "billingUsage": {
+    "subnav": {
+      "label": "Facturatiesecties",
+      "overview": "Overzicht",
+      "usage": "Verbruik & kostenbewaking"
+    },
+    "title": "Usage & Cost Guard",
+    "intro": "Factureerbare events van de huidige periode, een prognose tot het einde van de periode, meerverbruik in eventpakketten, ongewone belasting ten opzichte van de basislijn van 4 weken en je expliciete keuze wat er bij de limiet gebeurt. Elk cijfer komt uit het verbruiksregister en de periodetellers; niets wordt stilzwijgend geschat.",
+    "comparePlans": "Plannen vergelijken",
+    "context": {
+      "plan": "Plan {name}",
+      "period": "Periode {from} – {to} (UTC)",
+      "updated": "Tellers bijgewerkt op {at}",
+      "noCounters": "Nog geen periodetellers",
+      "ledger": "Laatste registervermelding op {at}",
+      "stale": "Tellers lopen achter op het register"
+    },
+    "alerts": {
+      "hardLimitTitle": "Limiet bereikt — verwerking gemarkeerd voor pauze",
+      "hardLimitText": "De verbruikscontrole heeft deze periode op {at} gemarkeerd onder het beleid ‘{policy}’. Wijzig het beleid hieronder of wissel van plan in het overzicht; de markering wordt direct opnieuw beoordeeld zodra je opslaat.",
+      "softLimitTitle": "Maandelijkse eventlimiet bereikt",
+      "softLimitAllow": "Events boven de limiet worden als eventpakketten gefactureerd omdat meerverbruik is toegestaan.",
+      "softLimitCostLimit": "Events boven de limiet worden als eventpakketten gefactureerd tot je maandelijkse kostenlimiet van {limit}; boven {pauseAt} events pauzeert de verwerking.",
+      "softLimitPause": "De verwerking pauzeert bij {pauseAt} events ({grace} % speling boven de limiet), tenzij je meerverbruik toestaat of van plan wisselt.",
+      "staleTitle": "Periodetellers lopen achter op het register",
+      "staleText": "Het register bevat events die nieuwer zijn dan de laatste tellerupdate ({updated}). De tellers halen de achterstand in bij de volgende ingestierun; de daggrafiek bevat de nieuwere events al.",
+      "ledgerOnlyTitle": "Geteld uit het register",
+      "ledgerOnlyText": "De periodetellers zijn nog niet geschreven, dus het factureerbare cijfer is de som van de registerregels van deze periode.",
+      "noLimitTitle": "Geen vaste eventlimiet in dit plan",
+      "noLimitText": "Meerverbruik, drempels en de pauzeoptie zijn niet van toepassing; het volume is contractueel afgesproken."
+    },
+    "empty": {
+      "title": "Nog geen factureerbare events in deze periode",
+      "text": "Het verbruiksregister heeft geen regels voor {period}. Events verschijnen hier zodra de ingestie ze accepteert; testmodus-events, duplicaten en retries tellen nooit mee.",
+      "action": "Events openen"
+    },
+    "stats": {
+      "billable": {
+        "label": "Factureerbare events",
+        "ofLimit": "{pct} van {limit}",
+        "noLimit": "Geen vaste limiet",
+        "sourcePeriod": "Uit de periodetellers",
+        "sourceLedger": "Uit het register"
+      },
+      "forecast": {
+        "label": "Prognose aan het einde van de periode",
+        "hint": "Lineair op basis van {from} – {to} · {rate} per dag",
+        "noBasis": "Geen registerregels in de laatste 7 dagen — gelijk aan de telling van vandaag",
+        "ofLimit": "{pct} van de limiet",
+        "above": "{events} boven de limiet"
+      },
+      "overage": {
+        "label": "Meerverbruik nu",
+        "none": "Geen",
+        "packs": "{packs} × {packEvents} events · {cost}",
+        "events": "{events} boven de limiet",
+        "contractual": "Contractueel — geen pakket voor dit plan",
+        "forecast": "Prognose aan het einde van de periode: {packs} pakketten · {cost}",
+        "forecastNone": "Prognose aan het einde van de periode: geen"
+      },
+      "load": {
+        "label": "Belasting t.o.v. basislijn van 4 weken",
+        "elevated": "Verhoogd",
+        "normal": "Normaal",
+        "reduced": "Verlaagd",
+        "unknown": "Onbekend",
+        "deviation": "{deviation} · {recent} vs. {baseline} per dag",
+        "noBaseline": "Nog geen basislijn — {from} – {to} bevat geen events",
+        "peak": "Drukste dag {day}: {events}"
+      }
+    },
+    "meter": {
+      "title": "Limiet en waarschuwingsdrempels",
+      "intro": "Factureerbare events van deze periode tegenover de maandelijkse limiet van het plan. Waarschuwingen worden door de verbruikscontrole vastgelegd bij 70, 90 en 100 %; de verwachte datums komen uit de 7-daagse prognose.",
+      "used": "gebruikt",
+      "limit": "Limiet",
+      "valueText": "{used} van {limit} ({pct})",
+      "exceeded": "Overschreden met {events}",
+      "thresholds": {
+        "title": "Waarschuwingsdrempels",
+        "threshold": "{pct} %",
+        "events": "{events} events",
+        "reached": "Bereikt — waarschuwing vastgelegd op {at}",
+        "reachedPending": "Bereikt — de waarschuwing wordt bij de volgende verbruikscontrole vastgelegd",
+        "expected": "Verwacht op {at} · nog {remaining}",
+        "notExpected": "Niet verwacht in deze periode · nog {remaining}"
+      },
+      "pauseAt": "De verwerking pauzeert bij {events} events ({pct} van de limiet).",
+      "neverPauses": "Onder het huidige beleid pauzeert de verwerking nooit; meerverbruik wordt als eventpakketten gefactureerd.",
+      "hardLimitAt": "Gemarkeerd op {at}."
+    },
+    "chart": {
+      "title": "Factureerbare events per dag",
+      "intro": "UTC-dagen van {from} tot {to}: de basislijn van 4 weken, de 7 volledige dagen waarover de prognose wordt gemiddeld, en vandaag tot nu toe. De prognose is een projectie en wordt niet getekend.",
+      "aria": "Staafdiagram van factureerbare events over {days} dagen: {recent} in de laatste 7 volledige dagen, {baseline} in de basislijn van 4 weken daarvoor, {today} vandaag tot nu toe.",
+      "legend": {
+        "baseline": "Basislijn {from} – {to}",
+        "recent": "Laatste 7 dagen {from} – {to}",
+        "today": "Vandaag (gedeeltelijk)"
+      },
+      "details": "Dagwaarden tonen",
+      "day": "Dag",
+      "events": "Factureerbare events",
+      "window": {
+        "label": "Venster",
+        "baseline": "Basislijn",
+        "recent": "Laatste 7 dagen",
+        "today": "Vandaag"
+      },
+      "empty": "Geen factureerbare events in dit venster."
+    },
+    "policy": {
+      "title": "Wat er bij de limiet gebeurt",
+      "intro": "Meerverbruik wordt nooit vanzelf geactiveerd. Jij kiest of extra events als pakketten worden gefactureerd, of een maandelijkse kostenlimiet ze begrenst, of dat de verwerking na de respijtperiode pauzeert. De verbruikscontrole past je keuze bij elke run toe en elke wijziging wordt geauditeerd.",
+      "current": "Huidig beleid:",
+      "legend": "Meerverbruiksbeleid",
+      "readOnly": "Je rol kan het beleid bekijken maar niet wijzigen.",
+      "options": {
+        "allow": {
+          "label": "Meerverbruik toestaan",
+          "description": "Events boven de limiet worden als eventpakketten tegen de lijstprijs gefactureerd. De verwerking pauzeert nooit."
+        },
+        "cost_limit": {
+          "label": "Maandelijkse kostenlimiet",
+          "description": "Eventpakketten worden gefactureerd tot het bedrag dat je instelt; zodra de benodigde pakketten meer zouden kosten, pauzeert de verwerking voor de rest van de periode."
+        },
+        "pause": {
+          "label": "Pauzeren bij de limiet",
+          "description": "De verwerking loopt door tijdens een respijtmarge boven de limiet en pauzeert daarna voor de rest van de periode. Er wordt nooit een pakket gefactureerd."
+        }
+      },
+      "notes": {
+        "cost_limit_unset": "Geen bedrag ingesteld — gedraagt zich als ‘Pauzeren bij de limiet’.",
+        "no_pack": "Geen pakket voor dit plan — gedraagt zich als ‘Pauzeren bij de limiet’."
+      },
+      "costLimit": {
+        "label": "Maandelijkse kostenlimiet (hele euro's)",
+        "hint": "{packs} pakketten van {events} events à {price} per stuk passen in deze limiet.",
+        "hintPack": "Pakketten van {events} events kosten {price} per stuk.",
+        "noPack": "Dit plan heeft geen eventpakket; een kostenlimiet kan geen meerverbruik kopen.",
+        "invalid": "Voer een heel bedrag in tussen {min} en {max}."
+      },
+      "consequence": {
+        "allow": "Elke {events} events boven de limiet worden als één pakket van {price} gefactureerd, zonder bovengrens.",
+        "costLimit": "Tot {limit} per maand betaalt {packs} pakketten ({events} events boven de limiet). Boven {pauseAt} factureerbare events pauzeert de verwerking.",
+        "costLimitUnset": "Voer een bedrag in om te zien hoeveel pakketten het dekt.",
+        "pause": "De verwerking pauzeert bij {pauseAt} factureerbare events ({grace} % boven de limiet). Er wordt geen pakket gefactureerd.",
+        "noLimit": "Dit plan heeft geen vaste eventlimiet, dus het beleid heeft pas effect zodra een plan met limiet geldt.",
+        "noPack": "Dit plan heeft geen eventpakket, dus meerverbruik kan niet worden gekocht; de verwerking pauzeert na de respijtperiode."
+      },
+      "save": "Beleid opslaan",
+      "unchanged": "Geen wijziging om op te slaan.",
+      "confirm": {
+        "title": "Meerverbruiksbeleid bevestigen",
+        "text": "Het beleid geldt direct voor de huidige periode: de pauzemarkering wordt bij het opslaan opnieuw beoordeeld en de verbruikscontrole past bij elke run dezelfde regel toe.",
+        "acknowledge": "Ik begrijp dat events boven de limiet als eventpakketten tegen de lijstprijs worden gefactureerd.",
+        "cancel": "Annuleren",
+        "confirm": "Beleid opslaan",
+        "working": "Opslaan…",
+        "close": "Sluiten"
+      },
+      "saved": "Beleid opgeslagen.",
+      "savedPaused": "Beleid opgeslagen. Onder dit beleid is de huidige periode als gepauzeerd gemarkeerd.",
+      "savedNotPaused": "Beleid opgeslagen. De huidige periode is niet gepauzeerd.",
+      "errors": {
+        "invalid": "De keuze kon niet worden opgeslagen: controleer de kostenlimiet.",
+        "forbidden": "Je rol kan het facturatiebeleid niet wijzigen.",
+        "generic": "Er is iets misgegaan. Er is niets gewijzigd."
+      }
+    },
+    "comparison": {
+      "title": "Eventpakket of volgend plan?",
+      "intro": "Voor de prognose van {events} factureerbare events per maand, tegen lijstprijzen uit de catalogus per {period}.",
+      "introNoBasis": "Voor {events} factureerbare events per maand (telling van vandaag — nog geen 7-daags tempo), tegen lijstprijzen uit de catalogus per {period}.",
+      "columns": {
+        "option": "Optie",
+        "base": "Planprijs / {period}",
+        "included": "Inbegrepen / maand",
+        "overage": "Meerverbruik / maand",
+        "overageCost": "Pakketkosten / {period}",
+        "total": "Totaal / {period}"
+      },
+      "current": "Huidig plan",
+      "cheapest": "Goedkoopst",
+      "packs": "{events} → {packs} pakketten",
+      "contractual": "{events} boven wat pakketten dekken",
+      "noOverage": "Geen",
+      "stay": "Bij {plan} blijven met eventpakketten is voor dit volume de goedkopere optie.",
+      "upgradeHint": "{plan} zou voor dit volume {savings} minder per {period} kosten.",
+      "noneCheapest": "Geen enkele optie kan voor dit volume vanuit de catalogus worden geprijsd.",
+      "noSilent": "Track wisselt nooit uit zichzelf van plan en koopt nooit ongevraagd pakketten.",
+      "contractualNote": "Dit plan heeft geen lijstprijs; meerverbruik is contractueel afgesproken.",
+      "none": "Niets te vergelijken.",
+      "choosePlan": "Plannen vergelijken",
+      "taxNote": "Lijstprijzen exclusief btw; het bedrag op je factuur komt van Stripe.",
+      "per": {
+        "monthly": "maand",
+        "yearly": "jaar"
+      }
+    },
+    "sites": {
+      "title": "Factureerbare events per site",
+      "intro": "Registerregels van deze periode per site. Verbruik wordt per organisatie gemeten; de actieve site is gemarkeerd.",
+      "site": "Site",
+      "trackingId": "Tracking-ID",
+      "events": "Factureerbare events",
+      "share": "Aandeel",
+      "active": "Actieve site",
+      "empty": "Geen registerregels voor deze periode."
+    },
+    "rules": {
+      "title": "Wat telt als factureerbaar event",
+      "intro": "Een event wordt precies één keer geteld wanneer de ingestie het accepteert; doorsturen naar meerdere destinations verhoogt het verbruik nooit. Nooit geteld worden:"
+    },
+    "overview": {
+      "guard": {
+        "title": "Verbruik & kostenbewaking",
+        "text": "Prognose, meerverbruik, ongewone belasting en je keuze wat er bij de limiet gebeurt.",
+        "open": "Kostenbewaking openen",
+        "policy": "Beleid",
+        "forecast": "Prognose aan het einde van de periode",
+        "forecastNoBasis": "nog geen 7-daags tempo",
+        "thresholds": "{reached} van {total} waarschuwingsdrempels bereikt",
+        "noLimit": "Geen vaste eventlimiet in dit plan",
+        "paused": "Gemarkeerd als gepauzeerd"
+      },
+      "history": {
+        "caption": "Factureerbare, geaccepteerde, weggevallen en gededupliceerde events per periode"
+      },
+      "plans": "Plannen",
+      "status": {
+        "none": "Geen abonnement",
+        "trialing": "Proefperiode",
+        "active": "Actief",
+        "past_due": "Betaling achterstallig",
+        "canceled": "Opgezegd",
+        "unpaid": "Onbetaald",
+        "incomplete": "Onvolledig",
+        "incomplete_expired": "Onvolledig (verlopen)",
+        "paused": "Gepauzeerd"
+      }
+    }
+  }
+}

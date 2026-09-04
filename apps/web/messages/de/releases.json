@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center: was pro Umgebung live ist, der Entwurf in Vorbereitung, lesbare Konfigurations-Diffs, Vier-Augen-Freigaben, geplante Veröffentlichung und One-Click-Rollback. Jede Aktion wird auditiert.",
+    "siteContext": "Entwürfe, Versionen und die Impact-Vorschau beziehen sich auf {site}",
+    "switchSiteHint": "Die Site wechselst du im Workspace-Umschalter.",
+    "noSite": "Noch keine Site",
+    "noSiteText": "Lege deine erste Site an, um eine Tracking-Konfiguration zu veröffentlichen.",
+    "createSite": "Site anlegen",
+    "close": "Schließen",
+    "cancel": "Abbrechen",
+    "unknownUser": "Unbekanntes Mitglied",
+    "system": "Geplante Veröffentlichung",
+    "migrationMissing": "Release-Daten nicht verfügbar",
+    "migrationMissingText": "Die Tabellen für Freigaben und Zeitplanung (Migration 0010) sind auf dieser Datenbank nicht angewendet. Veröffentlichte Versionen werden angezeigt; Entwürfe, Freigaben und Zeitpläne nicht.",
+    "loading": "Releases werden geladen",
+    "links": {
+      "aiSetup": "AI Setup öffnen",
+      "destinations": "Destinations öffnen",
+      "dataQuality": "Data Quality Inbox öffnen",
+      "explorer": "Live Event Explorer öffnen",
+      "testLab": "Live Test Lab öffnen"
+    },
+    "environment": {
+      "kind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Testmodus",
+      "navLabel": "Umgebungen"
+    },
+    "strip": {
+      "active": "Live-Version",
+      "noActive": "Noch nichts veröffentlicht",
+      "version": "v{version}",
+      "publishedAgo": "veröffentlicht {time}",
+      "restored": "per Rollback wiederhergestellt",
+      "draft": "Entwurf",
+      "noDraft": "Kein offener Entwurf",
+      "draftChanges": "{count, plural, =0 {keine Änderungen} one {# Änderung} other {# Änderungen}}",
+      "lintErrors": "{count, plural, one {# blockierendes Problem} other {# blockierende Probleme}}",
+      "scheduled": "Geplant für {time}",
+      "scheduleFailed": "Geplante Veröffentlichung fehlgeschlagen",
+      "approvalsPending": "{count, plural, one {# Freigabe ausstehend} other {# Freigaben ausstehend}}",
+      "versions": "{count, plural, =0 {keine Versionen} one {# Version} other {# Versionen}}"
+    },
+    "draft": {
+      "title": "Entwurf für {environment}",
+      "intro": "Der offene Entwurf wird beim Veröffentlichen zur Version {version}. Änderungen entstehen im AI Setup, unter Destinations und in der Data Quality Inbox; diese Seite prüft, gibt frei, plant und veröffentlicht sie.",
+      "empty": "Kein offener Entwurf in {environment}",
+      "emptyText": "Es wartet nichts auf die Veröffentlichung. Bereite eine Änderung im AI Setup vor, verbinde eine Destination oder übernimm einen Fix aus der Data Quality Inbox — der Entwurf erscheint hier zur Prüfung.",
+      "basedOn": "Basiert auf v{version}",
+      "initial": "Erste Version für diese Umgebung",
+      "author": "Vorbereitet von {name}",
+      "updated": "Letzte Änderung {time}",
+      "invalid": "Beschädigter Entwurf",
+      "invalidText": "Der Entwurf entspricht nicht dem Konfigurationsschema und kann nicht veröffentlicht werden. Verwirf ihn und bereite die Änderung erneut vor.",
+      "lint": {
+        "ok": "Prüfungen bestanden",
+        "errors": "{count, plural, one {# blockierendes Problem} other {# blockierende Probleme}}",
+        "warnings": "{count, plural, one {# Warnung} other {# Warnungen}}",
+        "errorsTitle": "Blockierende Probleme",
+        "warningsTitle": "Warnungen",
+        "explain": "Blockierende Probleme stammen aus dem Konfigurations-Lint (Policy, öffentliche IDs, JSONLogic). Warnungen blockieren die Veröffentlichung nicht."
+      },
+      "changesTitle": "Änderungen",
+      "noChanges": "Der Entwurf ist identisch mit der Live-Version.",
+      "criticalTitle": "Kritische Änderung",
+      "criticalText": "Diese Änderung betrifft Consent, ein kritisches Event, eine Destination oder den Kill Switch in Production. Es gilt die Vier-Augen-Freigabe.",
+      "signalsTitle": "Kritische Signale",
+      "signalsInfo": "In {environment} sind diese Signale informativ; die Vier-Augen-Freigabe gilt für Production.",
+      "schedule": {
+        "title": "Geplante Veröffentlichung",
+        "at": "Wird veröffentlicht {time}",
+        "by": "geplant von {name}",
+        "pendingWorker": "Der Worker veröffentlicht innerhalb einer Minute nach dem geplanten Zeitpunkt.",
+        "failed": "Die geplante Veröffentlichung wurde abgelehnt: {reason}",
+        "attemptedAt": "versucht {time}",
+        "cancel": "Zeitplan aufheben",
+        "reasons": {
+          "signing_key_missing": "der Worker hat keinen Signaturschlüssel für Konfigurationen",
+          "draft_not_open": "der Entwurf war nicht mehr offen",
+          "draft_changed": "der Entwurf wurde nach der Planung geändert",
+          "approval_invalid": "die hinterlegte Freigabe war nicht mehr gültig",
+          "lint_failed": "der Konfigurations-Lint ist fehlgeschlagen",
+          "publish_failed": "die Veröffentlichung ist fehlgeschlagen"
+        }
+      },
+      "evidence": {
+        "title": "Testbelege",
+        "intro": "Live-Test-Lab-Läufe seit dem Öffnen dieses Entwurfs. Führe vor der Veröffentlichung in Production eine Journey in der Testumgebung aus.",
+        "empty": "Kein Testlauf seit dem Öffnen des Entwurfs.",
+        "unavailable": "Testläufe sind nicht verfügbar (Migration 0007 nicht angewendet).",
+        "steps": "{count, plural, one {# Schritt} other {# Schritte}}",
+        "open": "Lauf öffnen"
+      }
+    },
+    "fourEyes": {
+      "title": "Vier-Augen-Freigabe",
+      "state": {
+        "not_required": "Für diese Änderung nicht erforderlich.",
+        "single_publisher": "Nicht verfügbar: Du bist das einzige Mitglied, das veröffentlichen kann. Das Release wird als Einzelfreigabe protokolliert.",
+        "satisfied": "Freigegeben von {name} {time}.",
+        "pending": "Wartet auf ein zweites Mitglied: angefragt von {name} {time}.",
+        "stale": "Die letzte Freigabe bezieht sich auf einen älteren Stand des Entwurfs. Fordere eine neue Prüfung an.",
+        "rejected": "Die letzte Anfrage wurde abgelehnt. Ändere den Entwurf und fordere eine neue Prüfung an.",
+        "missing": "Ein zweites Mitglied mit Veröffentlichungsrecht muss diese Änderung freigeben, bevor sie veröffentlicht oder geplant werden kann."
+      },
+      "publishers": "{count, plural, one {# Mitglied kann veröffentlichen} other {# Mitglieder können veröffentlichen}}",
+      "request": "Freigabe anfragen",
+      "requestNote": "Hinweis für die prüfende Person (optional)",
+      "requestDialogTitle": "Freigabe für v{version} anfragen",
+      "requestDialogText": "Ein zweites Mitglied mit Veröffentlichungsrecht prüft die Änderungszusammenfassung unten und gibt sie frei oder lehnt sie ab. Die Anfrage bezieht sich auf den Entwurf in seinem jetzigen Stand; weitere Änderungen brauchen eine neue Anfrage.",
+      "approve": "Freigeben",
+      "reject": "Ablehnen",
+      "withdraw": "Anfrage zurückziehen",
+      "decideDialogTitle": "v{version} prüfen",
+      "decideDialogText": "Du gibst genau die unten aufgeführten Änderungen frei oder lehnst sie ab. Eine Ablehnung braucht eine Begründung; die Entscheidung wird auditiert.",
+      "reason": "Begründung",
+      "reasonHint": "Pflicht bei Ablehnung, optional bei Freigabe.",
+      "ownRequest": "Du hast diese Prüfung angefragt; ein anderes Mitglied muss entscheiden.",
+      "history": "Freigabeverlauf",
+      "decision": {
+        "pending": "Ausstehend",
+        "approved": "Freigegeben",
+        "rejected": "Abgelehnt",
+        "withdrawn": "Zurückgezogen"
+      },
+      "current": "aktueller Entwurf",
+      "outdated": "älterer Entwurfsstand",
+      "requestedBy": "angefragt von {name} {time}",
+      "decidedBy": "{decision} von {name} {time}",
+      "note": "Hinweis: {note}",
+      "reasonGiven": "Begründung: {reason}",
+      "reasons": {
+        "critical_event": "Ein kritisches Event stoppt oder ändert seinen Trigger",
+        "consent_weaker": "Consent wird schwächer (Regionsmodus, Advanced Consent Mode oder Global Privacy Control)",
+        "destination_purpose_weaker": "Eine Destination braucht weniger Consent als zuvor",
+        "destination_stopped": "Eine Destination erhält keine Events mehr",
+        "marketing_destination_added": "Eine Werbe-Destination beginnt, Events zu erhalten",
+        "kill_switch": "Der Kill Switch ändert sich",
+        "allowed_hosts_reduced": "Verifizierte Hosts werden entfernt"
+      }
+    },
+    "actions": {
+      "publish": "Jetzt veröffentlichen",
+      "schedule": "Planen",
+      "discard": "Entwurf verwerfen",
+      "rollback": "Auf diese Version zurückrollen",
+      "publishDialogTitle": "v{version} in {environment} veröffentlichen",
+      "publishDialogText": "Der Entwurf wird zu einer signierten, unveränderlichen Version und ist für SDK und Worker innerhalb von etwa einer Minute live. Das lässt sich nicht rückgängig machen, ein Rollback auf eine frühere Version ist aber ein Klick.",
+      "publishConfirm": "v{version} veröffentlichen",
+      "singleAcknowledge": "Ich bestätige diese kritische Änderung allein; in dieser Organisation kann kein zweites Mitglied freigeben.",
+      "scheduleDialogTitle": "v{version} für {environment} planen",
+      "scheduleDialogText": "Der Worker veröffentlicht den Entwurf zum gewählten Zeitpunkt. Er lehnt die Veröffentlichung ab, wenn sich der Entwurf nach der Planung ändert oder die Freigabe ungültig wird; den Grund siehst du hier.",
+      "scheduleAt": "Veröffentlichen am",
+      "scheduleHint": "Zwischen {min} Minuten und {max} Tagen ab jetzt, in deiner lokalen Zeit.",
+      "scheduleConfirm": "Veröffentlichung planen",
+      "discardDialogTitle": "Entwurf v{version} verwerfen?",
+      "discardDialogText": "Der Entwurf wird archiviert, ausstehende Freigabeanfragen werden zurückgezogen und ein Zeitplan wird entfernt. Der Live-Traffic ist nicht betroffen.",
+      "discardConfirm": "Verwerfen",
+      "rollbackDialogTitle": "{environment} auf v{version} zurückrollen?",
+      "rollbackDialogText": "Die aktuell live geschaltete Version v{active} wird innerhalb von etwa einer Minute durch v{version} ersetzt. Der offene Entwurf bleibt unberührt; der Rollback wird auditiert.",
+      "rollbackDialogNoActive": "In {environment} ist nichts live; v{version} wird innerhalb von etwa einer Minute zur Live-Version. Der Rollback wird auditiert.",
+      "rollbackConfirm": "Auf v{version} zurückrollen",
+      "publishedOk": "Version {version} ist veröffentlicht.",
+      "scheduledOk": "Der Entwurf ist geplant.",
+      "scheduleCancelledOk": "Der Zeitplan wurde entfernt.",
+      "discardedOk": "Der Entwurf wurde verworfen.",
+      "rolledBackOk": "Version {version} ist wieder live.",
+      "requestedOk": "Freigabe angefragt.",
+      "decidedOk": "Entscheidung gespeichert.",
+      "withdrawnOk": "Anfrage zurückgezogen."
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+      "invalid": "Die Anfrage war ungültig.",
+      "forbidden": "Du hast keine Berechtigung für diese Aktion.",
+      "not_found": "Der Entwurf oder die Version existiert nicht mehr.",
+      "not_open": "Der Entwurf ist nicht mehr offen.",
+      "lint": "Der Entwurf hat blockierende Probleme; behebe sie vor der Veröffentlichung.",
+      "approval_required": "Diese kritische Änderung braucht zuerst eine Vier-Augen-Freigabe.",
+      "approval_pending": "Eine Freigabeanfrage ist bereits ausstehend.",
+      "approval_rejected": "Die letzte Freigabeanfrage wurde abgelehnt; ändere den Entwurf und fordere eine neue Prüfung an.",
+      "acknowledge_required": "Bestätige die Einzelfreigabe, um fortzufahren.",
+      "self_approval": "Du kannst deine eigene Anfrage nicht freigeben.",
+      "stale": "Der Entwurf hat sich seit der Anfrage geändert; er braucht eine neue Anfrage.",
+      "reason_required": "Eine Ablehnung braucht eine Begründung (mindestens 3 Zeichen).",
+      "signing": "Veröffentlichen ist auf diesem Deployment nicht konfiguriert (kein Signaturschlüssel für Konfigurationen).",
+      "schedule_invalid": "Gib ein gültiges Datum mit Uhrzeit ein.",
+      "schedule_too_soon": "Wähle einen Zeitpunkt mindestens {min} Minuten ab jetzt.",
+      "schedule_too_far": "Wähle einen Zeitpunkt innerhalb der nächsten {max} Tage.",
+      "already_active": "Diese Version ist bereits live."
+    },
+    "changes": {
+      "area": {
+        "settings": "Einstellungen",
+        "consent": "Consent",
+        "events": "Events",
+        "destinations": "Destinations",
+        "site": "Site",
+        "other": "Sonstiges"
+      },
+      "op": {
+        "add": "hinzugefügt",
+        "remove": "entfernt",
+        "change": "geändert"
+      },
+      "before": "vorher",
+      "after": "nachher",
+      "none": "keiner",
+      "unknownDestination": "Destination {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "Was die Veröffentlichung dieses Entwurfs ändert, abgeleitet aus dem Diff und aus gemessenen Daten der letzten {days} Tage in {environment}. Volumen sind Messungen, keine Prognosen; eine fehlende Messung bleibt unbekannt.",
+      "generatedAt": "Berechnet {time}",
+      "events": {
+        "title": "Betroffene Events",
+        "empty": "Keine Event-Änderungen.",
+        "event": "Event",
+        "change": "Änderung",
+        "accepted": "Akzeptiert ({days} T)",
+        "delivered": "Zugestellt ({days} T)",
+        "issues": "Offene Issues",
+        "destinations": "Destinations danach",
+        "critical": "kritisch",
+        "notMeasured": "nicht gemessen",
+        "caption": "Events, die der Entwurf hinzufügt, entfernt, aktiviert, deaktiviert oder ändert",
+        "kind": {
+          "added": "hinzugefügt",
+          "removed": "entfernt",
+          "enabled": "aktiviert",
+          "disabled": "deaktiviert",
+          "changed": "geändert"
+        }
+      },
+      "destinations": {
+        "title": "Betroffene Destinations",
+        "empty": "Keine Destination-Änderungen.",
+        "destination": "Destination",
+        "change": "Änderung",
+        "purpose": "Consent-Zweck",
+        "events": "Zugeordnete Events",
+        "health": "Health",
+        "status": "Status",
+        "noHealth": "nicht gemessen",
+        "healthText": "{success} zugestellt · {errorRate} % Fehler ({hours} h)",
+        "stale": "veraltet",
+        "caption": "Destinations, die der Entwurf hinzufügt, entfernt, aktiviert, deaktiviert oder ändert",
+        "kind": {
+          "added": "hinzugefügt",
+          "removed": "entfernt",
+          "enabled": "aktiviert",
+          "disabled": "deaktiviert",
+          "changed": "geändert"
+        },
+        "statusLabel": {
+          "draft": "Entwurf",
+          "not_connected": "nicht verbunden",
+          "connected": "verbunden",
+          "paused": "pausiert",
+          "error": "Fehler",
+          "unknown": "kein Destination-Datensatz"
+        }
+      },
+      "consent": {
+        "title": "Consent-Zwecke",
+        "purposes": "Zwecke danach: {purposes}",
+        "added": "hinzugefügt: {purposes}",
+        "removed": "entfernt: {purposes}",
+        "regionMode": "Standard-Regionsmodus: {before} → {after}",
+        "consentMode": "Consent Mode: {before} → {after}",
+        "gpc": "Global Privacy Control: {before} → {after}",
+        "clickIdTtl": "Click-ID-Lebensdauer: {before} → {after} Tage",
+        "weaker": "Weniger restriktiv als die Live-Version",
+        "unchanged": "Keine Consent-Änderungen.",
+        "respected": "beachtet",
+        "ignored": "ignoriert",
+        "none": "keiner",
+        "purpose": {
+          "necessary": "Unbedingt erforderlich",
+          "analytics": "Analyse",
+          "marketing": "Marketing",
+          "personalization": "Personalisierung"
+        },
+        "regionModes": {
+          "strict_opt_in": "Striktes Opt-in",
+          "opt_out": "Opt-out",
+          "notice_only": "Nur Hinweis"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Geschätztes Volumen",
+        "baseline": "Events, die aktiv bleiben",
+        "baselineHint": "akzeptiert in den letzten {days} Tagen",
+        "removed": "Events, die stoppen",
+        "unmeasured": "{count, plural, one {# aktives Event ohne Messung} other {# aktive Events ohne Messung}}: {events}",
+        "billable": "Abrechenbar",
+        "empty": "In den letzten {days} Tagen wurden für diese Umgebung keine Events gemessen — das Volumen nach der Änderung ist unbekannt.",
+        "unavailable": "Aggregate sind auf dieser Datenbank nicht verfügbar.",
+        "stale": "Letztes Aggregat {time}; neuere Events sind möglicherweise noch nicht gezählt.",
+        "lastBucket": "Letztes Aggregat {time}"
+      },
+      "plan": {
+        "title": "Planlimits",
+        "plan": "Plan {plan}",
+        "limit": "{limit} Events pro Monat",
+        "noLimit": "Keine feste Event-Obergrenze in diesem Plan",
+        "used": "{used} abrechenbare Events in {period} verbraucht ({share} %)",
+        "usedUnknown": "Für {period} ist noch kein Verbrauch erfasst",
+        "projected": "Gemessene Basis ≈ {projected} Events pro Monat ({share} % des Limits)",
+        "projectedUnknown": "Ohne gemessene Basis keine Projektion",
+        "threshold": "Die gemessene Basis überschreitet bereits die {threshold}-%-Warnschwelle des Plans.",
+        "billing": "Billing öffnen"
+      },
+      "dq": {
+        "title": "Erwartete Datenqualitätswirkung",
+        "intro": "Regelbasiert; jede Zeile nennt die Regel, die ausgelöst hat. Das ist keine Garantie: Die Pipeline misst die tatsächliche Wirkung nach der Veröffentlichung.",
+        "tone": {
+          "ok": "Unbedenklich",
+          "warn": "Warnung",
+          "bad": "Blockierend",
+          "info": "Hinweis"
+        },
+        "no_changes": "Der Entwurf ändert die Live-Konfiguration nicht.",
+        "critical_event_stopped": "Kritisches Event {event} stoppt: {measured, select, yes {{accepted} akzeptierte Events im Zeitfenster} other {keine Messung}} werden nicht mehr erfasst.",
+        "event_removed_open_issues": "{event} stoppt mit {issues, plural, one {# offenem Datenqualitäts-Issue} other {# offenen Datenqualitäts-Issues}}; das Stoppen des Events löst sie nicht.",
+        "destination_stopped": "{destination} erhält keine Events mehr ({measured, select, yes {{delivered} Zustellungen im Health-Zeitfenster} other {keine Health-Messung}}).",
+        "destination_failing_stopped": "{destination} stoppt; {errorRate} % der letzten Zustellungen sind fehlgeschlagen, diese Fehler enden damit.",
+        "destination_no_mappings": "{destination} ist aktiviert, hat aber keine Event-Zuordnungen und erhält nichts.",
+        "conversion_browser_only": "{event} ist nur browserseitig; ohne serververifizierte Quelle sind Dubletten und fehlende Werte wahrscheinlich.",
+        "conversion_without_authoritative_source": "{event} geht ohne serververifizierte Quelle an Werbe-Destinations (blockierend).",
+        "mapping_unknown_event": "{destination} ordnet {event} zu, das nicht definiert ist.",
+        "consent_weaker": "Consent wird schwächer: Mehr Events können vor einem expliziten Signal verarbeitet werden, wo die Regions-Policy das erlaubt.",
+        "kill_switch_on": "Der Kill Switch stoppt jede Erfassung in dieser Umgebung.",
+        "kill_switch_off": "Der Kill Switch wird gelöst; die Erfassung läuft wieder.",
+        "allowed_hosts_reduced": "Events von {hosts} werden nach der Veröffentlichung abgelehnt.",
+        "new_event_unmeasured": "{event} ist neu; Volumen und Qualität sind unbekannt, bis Events eintreffen.",
+        "lint_errors": "{count, plural, one {# blockierendes Lint-Problem verhindert} other {# blockierende Lint-Probleme verhindern}} die Veröffentlichung.",
+        "no_rule_fired": "Für diese Änderung hat keine Regel ausgelöst. Prüfe die Wirkung nach der Veröffentlichung im Live Event Explorer."
+      }
+    },
+    "history": {
+      "title": "Versionsverlauf",
+      "intro": "Jede veröffentlichte Version von {environment}, neueste zuerst. Versionen sind unveränderlich und signiert; ein Rollback aktiviert eine frühere Version erneut.",
+      "empty": "Noch nichts veröffentlicht",
+      "emptyText": "Die erste Version erscheint hier, sobald ein Entwurf veröffentlicht wird.",
+      "caption": "Veröffentlichte Konfigurationsversionen",
+      "version": "Version",
+      "status": "Status",
+      "summary": "Zusammenfassung",
+      "author": "Autor",
+      "published": "Veröffentlicht",
+      "changes": "Änderungen",
+      "open": "Öffnen",
+      "statusLabel": {
+        "active": "Live",
+        "superseded": "Abgelöst"
+      },
+      "rolledBack": "zurückgerollt",
+      "restored": "wiederhergestellt",
+      "scheduled": "geplant",
+      "approved": "Vier-Augen",
+      "initial": "Erstkonfiguration"
+    },
+    "version": {
+      "breadcrumbLabel": "Navigationspfad",
+      "back": "Releases",
+      "title": "Version {version}",
+      "notFound": "Version nicht gefunden",
+      "notFoundText": "Die Version existiert für die aktive Site nicht. Wechsle die Site im Workspace-Umschalter oder gehe zurück zu den Releases.",
+      "status": {
+        "active": "Live",
+        "superseded": "Abgelöst"
+      },
+      "activeNow": "v{version} ist live",
+      "createdBy": "Veröffentlicht von {name} {time}",
+      "createdBySystem": "Planmäßig veröffentlicht {time}",
+      "previous": "Diff gegenüber v{version}",
+      "first": "Erste Version: jeder Eintrag ist neu",
+      "signed": "Signiert mit Schlüssel {keyId} · Digest {digest}",
+      "facts": {
+        "title": "Konfiguration",
+        "events": "{count, plural, one {# aktives Event} other {# aktive Events}} ({critical} kritisch)",
+        "destinations": "Destinations: {names}",
+        "noDestinations": "Keine aktiven Destinations",
+        "consent": "Consent: {mode}, Consent Mode {consentMode}, GPC {gpc}",
+        "clickIds": "Click-ID-Lebensdauer {days} Tage",
+        "hosts": "Hosts: {hosts}",
+        "noHosts": "Keine erlaubten Hosts",
+        "killSwitch": "Kill Switch aktiv"
+      },
+      "publications": {
+        "title": "Veröffentlichungsverlauf",
+        "publish": "Veröffentlicht",
+        "rollback": "Per Rollback von v{from} wiederhergestellt",
+        "rollbackUnknown": "Per Rollback wiederhergestellt",
+        "by": "von {name}",
+        "active": "jetzt live",
+        "superseded": "abgelöst {time}",
+        "withApproval": "mit Vier-Augen-Freigabe"
+      },
+      "approvals": {
+        "title": "Freigaben",
+        "empty": "Keine Freigabeanfrage für diese Version."
+      },
+      "evidence": {
+        "title": "Testbelege",
+        "intro": "Live-Test-Lab-Läufe zwischen Entwurf und Veröffentlichung sowie das, was die Pipeline danach mit dieser Version beobachtet hat.",
+        "runsEmpty": "Kein Testlauf, während der Entwurf offen war.",
+        "observed": "{count, plural, =0 {Kein Event mit dieser Version gespeichert} one {# Event mit dieser Version gespeichert} other {# Events mit dieser Version gespeichert}} seit {since}",
+        "observedRange": "erstes {first}, letztes {last}",
+        "observedUnavailable": "Event-Beobachtungen sind nicht verfügbar."
+      },
+      "signals": {
+        "title": "Kritische Signale dieser Version",
+        "none": "Kein kritisches Signal gegenüber der Vorversion."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "ausstehend",
+        "sent": "gesendet",
+        "rejected": "abgelehnt",
+        "failed": "fehlgeschlagen"
+      }
+    }
+  }
+}

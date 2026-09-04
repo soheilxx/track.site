@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center: wat per omgeving live is, het concept in voorbereiding, leesbare configuratie-diffs, vier-ogen-goedkeuringen, geplande publicatie en rollback met één klik. Elke actie wordt geauditeerd.",
+    "siteContext": "Concepten, versies en de impactvoorvertoning hebben betrekking op {site}",
+    "switchSiteHint": "Wissel van site in de workspace-schakelaar.",
+    "noSite": "Nog geen site",
+    "noSiteText": "Maak je eerste site aan om een trackingconfiguratie te publiceren.",
+    "createSite": "Site aanmaken",
+    "close": "Sluiten",
+    "cancel": "Annuleren",
+    "unknownUser": "Onbekend lid",
+    "system": "Geplande publicatie",
+    "migrationMissing": "Releasegegevens niet beschikbaar",
+    "migrationMissingText": "De tabellen voor goedkeuringen en planning (migratie 0010) zijn niet toegepast op deze database. Gepubliceerde versies worden getoond; concepten, goedkeuringen en planningen niet.",
+    "loading": "Releases laden",
+    "links": {
+      "aiSetup": "AI Setup openen",
+      "destinations": "Bestemmingen openen",
+      "dataQuality": "Data Quality Inbox openen",
+      "explorer": "Live Event Explorer openen",
+      "testLab": "Live Test Lab openen"
+    },
+    "environment": {
+      "kind": {
+        "production": "Productie",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Testmodus",
+      "navLabel": "Omgevingen"
+    },
+    "strip": {
+      "active": "Live versie",
+      "noActive": "Nog niets gepubliceerd",
+      "version": "v{version}",
+      "publishedAgo": "gepubliceerd {time}",
+      "restored": "hersteld via rollback",
+      "draft": "Concept",
+      "noDraft": "Geen open concept",
+      "draftChanges": "{count, plural, =0 {geen wijzigingen} one {# wijziging} other {# wijzigingen}}",
+      "lintErrors": "{count, plural, one {# blokkerend probleem} other {# blokkerende problemen}}",
+      "scheduled": "Gepland voor {time}",
+      "scheduleFailed": "Geplande publicatie mislukt",
+      "approvalsPending": "{count, plural, one {# goedkeuring in afwachting} other {# goedkeuringen in afwachting}}",
+      "versions": "{count, plural, =0 {geen versies} one {# versie} other {# versies}}"
+    },
+    "draft": {
+      "title": "Concept voor {environment}",
+      "intro": "Het open concept wordt bij publicatie versie {version}. Wijzigingen worden voorbereid in AI Setup, bij Bestemmingen en in de Data Quality Inbox; deze pagina beoordeelt, keurt goed, plant en publiceert ze.",
+      "empty": "Geen open concept in {environment}",
+      "emptyText": "Er wacht niets op publicatie. Bereid een wijziging voor in AI Setup, koppel een bestemming of accepteer een fix uit de Data Quality Inbox — het concept verschijnt hier ter beoordeling.",
+      "basedOn": "Gebaseerd op v{version}",
+      "initial": "Eerste versie voor deze omgeving",
+      "author": "Voorbereid door {name}",
+      "updated": "Laatste wijziging {time}",
+      "invalid": "Beschadigd concept",
+      "invalidText": "Het concept voldoet niet aan het configuratieschema en kan niet worden gepubliceerd. Verwijder het en bereid de wijziging opnieuw voor.",
+      "lint": {
+        "ok": "Controles geslaagd",
+        "errors": "{count, plural, one {# blokkerend probleem} other {# blokkerende problemen}}",
+        "warnings": "{count, plural, one {# waarschuwing} other {# waarschuwingen}}",
+        "errorsTitle": "Blokkerende problemen",
+        "warningsTitle": "Waarschuwingen",
+        "explain": "Blokkerende problemen komen uit de configuratie-lint (policy, publieke id’s, JSONLogic). Waarschuwingen blokkeren de publicatie niet."
+      },
+      "changesTitle": "Wijzigingen",
+      "noChanges": "Het concept is identiek aan de live versie.",
+      "criticalTitle": "Kritieke wijziging",
+      "criticalText": "Deze wijziging raakt consent, een kritiek event, een bestemming of de kill switch in productie. Vier-ogen-goedkeuring is van toepassing.",
+      "signalsTitle": "Kritieke signalen",
+      "signalsInfo": "In {environment} zijn deze signalen informatief; vier-ogen-goedkeuring geldt voor productie.",
+      "schedule": {
+        "title": "Geplande publicatie",
+        "at": "Publiceert {time}",
+        "by": "gepland door {name}",
+        "pendingWorker": "De worker publiceert binnen een minuut na het geplande tijdstip.",
+        "failed": "De geplande publicatie is geweigerd: {reason}",
+        "attemptedAt": "geprobeerd {time}",
+        "cancel": "Planning annuleren",
+        "reasons": {
+          "signing_key_missing": "de worker heeft geen ondertekeningssleutel voor configuraties",
+          "draft_not_open": "het concept was niet meer open",
+          "draft_changed": "het concept is gewijzigd na het plannen",
+          "approval_invalid": "de vastgelegde goedkeuring was niet meer geldig",
+          "lint_failed": "de configuratie-lint is mislukt",
+          "publish_failed": "de publicatie is mislukt"
+        }
+      },
+      "evidence": {
+        "title": "Testbewijs",
+        "intro": "Live-Test-Lab-runs sinds dit concept is geopend. Voer een journey uit in de testomgeving voordat je naar productie publiceert.",
+        "empty": "Geen testrun sinds het concept is geopend.",
+        "unavailable": "Testruns zijn niet beschikbaar (migratie 0007 niet toegepast).",
+        "steps": "{count, plural, one {# stap} other {# stappen}}",
+        "open": "Run openen"
+      }
+    },
+    "fourEyes": {
+      "title": "Vier-ogen-goedkeuring",
+      "state": {
+        "not_required": "Niet vereist voor deze wijziging.",
+        "single_publisher": "Niet beschikbaar: je bent het enige lid dat kan publiceren. De release wordt vastgelegd als release door één persoon.",
+        "satisfied": "Goedgekeurd door {name} {time}.",
+        "pending": "Wacht op een tweede lid: aangevraagd door {name} {time}.",
+        "stale": "De laatste goedkeuring heeft betrekking op een oudere staat van het concept. Vraag een nieuwe beoordeling aan.",
+        "rejected": "De laatste aanvraag is afgewezen. Wijzig het concept en vraag een nieuwe beoordeling aan.",
+        "missing": "Een tweede lid met publicatierechten moet deze wijziging goedkeuren voordat ze gepubliceerd of gepland kan worden."
+      },
+      "publishers": "{count, plural, one {# lid kan publiceren} other {# leden kunnen publiceren}}",
+      "request": "Goedkeuring aanvragen",
+      "requestNote": "Notitie voor de beoordelaar (optioneel)",
+      "requestDialogTitle": "Goedkeuring aanvragen voor v{version}",
+      "requestDialogText": "Een tweede lid met publicatierechten beoordeelt de wijzigingssamenvatting hieronder en keurt die goed of af. De aanvraag betreft het concept zoals het nu is; latere bewerkingen vragen om een nieuwe aanvraag.",
+      "approve": "Goedkeuren",
+      "reject": "Afwijzen",
+      "withdraw": "Aanvraag intrekken",
+      "decideDialogTitle": "v{version} beoordelen",
+      "decideDialogText": "Je keurt precies de hieronder vermelde wijzigingen goed of af. Een afwijzing vereist een reden; de beslissing wordt geauditeerd.",
+      "reason": "Reden",
+      "reasonHint": "Verplicht bij afwijzing, optioneel bij goedkeuring.",
+      "ownRequest": "Je hebt deze beoordeling zelf aangevraagd; een ander lid moet beslissen.",
+      "history": "Goedkeuringsgeschiedenis",
+      "decision": {
+        "pending": "In afwachting",
+        "approved": "Goedgekeurd",
+        "rejected": "Afgewezen",
+        "withdrawn": "Ingetrokken"
+      },
+      "current": "huidig concept",
+      "outdated": "oudere conceptstaat",
+      "requestedBy": "aangevraagd door {name} {time}",
+      "decidedBy": "{decision} door {name} {time}",
+      "note": "Notitie: {note}",
+      "reasonGiven": "Reden: {reason}",
+      "reasons": {
+        "critical_event": "Een kritiek event stopt of wijzigt zijn trigger",
+        "consent_weaker": "Consent wordt zwakker (regiomodus, advanced consent mode of Global Privacy Control)",
+        "destination_purpose_weaker": "Een bestemming heeft minder consent nodig dan voorheen",
+        "destination_stopped": "Een bestemming ontvangt geen events meer",
+        "marketing_destination_added": "Een advertentiebestemming begint events te ontvangen",
+        "kill_switch": "De kill switch verandert",
+        "allowed_hosts_reduced": "Geverifieerde hosts worden verwijderd"
+      }
+    },
+    "actions": {
+      "publish": "Nu publiceren",
+      "schedule": "Plannen",
+      "discard": "Concept verwijderen",
+      "rollback": "Terug naar deze versie",
+      "publishDialogTitle": "v{version} publiceren naar {environment}",
+      "publishDialogText": "Het concept wordt een ondertekende, onveranderlijke versie en is binnen ongeveer een minuut live voor de SDK en de worker. Dit kan niet ongedaan worden gemaakt, maar een rollback naar een eerdere versie is één klik.",
+      "publishConfirm": "v{version} publiceren",
+      "singleAcknowledge": "Ik bevestig deze kritieke wijziging alleen; in deze organisatie kan geen tweede lid goedkeuren.",
+      "scheduleDialogTitle": "v{version} plannen voor {environment}",
+      "scheduleDialogText": "De worker publiceert het concept op het gekozen tijdstip. Hij weigert te publiceren als het concept na het plannen wijzigt of de goedkeuring ongeldig wordt; de reden zie je hier.",
+      "scheduleAt": "Publiceren op",
+      "scheduleHint": "Tussen {min} minuten en {max} dagen vanaf nu, in je lokale tijd.",
+      "scheduleConfirm": "Publicatie plannen",
+      "discardDialogTitle": "Concept v{version} verwijderen?",
+      "discardDialogText": "Het concept wordt gearchiveerd, openstaande goedkeuringsaanvragen worden ingetrokken en een planning wordt verwijderd. Live verkeer wordt niet beïnvloed.",
+      "discardConfirm": "Verwijderen",
+      "rollbackDialogTitle": "{environment} terugzetten naar v{version}?",
+      "rollbackDialogText": "De nu live versie v{active} wordt binnen ongeveer een minuut vervangen door v{version}. Het open concept blijft onaangeroerd; de rollback wordt geauditeerd.",
+      "rollbackDialogNoActive": "Er is niets live in {environment}; v{version} wordt binnen ongeveer een minuut de live versie. De rollback wordt geauditeerd.",
+      "rollbackConfirm": "Terug naar v{version}",
+      "publishedOk": "Versie {version} is gepubliceerd.",
+      "scheduledOk": "Het concept is gepland.",
+      "scheduleCancelledOk": "De planning is verwijderd.",
+      "discardedOk": "Het concept is verwijderd.",
+      "rolledBackOk": "Versie {version} is weer live.",
+      "requestedOk": "Goedkeuring aangevraagd.",
+      "decidedOk": "Beslissing vastgelegd.",
+      "withdrawnOk": "Aanvraag ingetrokken."
+    },
+    "errors": {
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "invalid": "Het verzoek was ongeldig.",
+      "forbidden": "Je hebt geen toestemming voor deze actie.",
+      "not_found": "Het concept of de versie bestaat niet meer.",
+      "not_open": "Het concept is niet meer open.",
+      "lint": "Het concept heeft blokkerende problemen; los ze op voordat je publiceert.",
+      "approval_required": "Deze kritieke wijziging heeft eerst een vier-ogen-goedkeuring nodig.",
+      "approval_pending": "Er staat al een goedkeuringsaanvraag open.",
+      "approval_rejected": "De laatste goedkeuringsaanvraag is afgewezen; wijzig het concept en vraag een nieuwe beoordeling aan.",
+      "acknowledge_required": "Bevestig de release door één persoon om door te gaan.",
+      "self_approval": "Je kunt je eigen aanvraag niet goedkeuren.",
+      "stale": "Het concept is gewijzigd sinds de aanvraag; er is een nieuwe aanvraag nodig.",
+      "reason_required": "Een afwijzing vereist een reden (minimaal 3 tekens).",
+      "signing": "Publiceren is op deze deployment niet geconfigureerd (geen ondertekeningssleutel voor configuraties).",
+      "schedule_invalid": "Voer een geldige datum en tijd in.",
+      "schedule_too_soon": "Kies een tijdstip minimaal {min} minuten vanaf nu.",
+      "schedule_too_far": "Kies een tijdstip binnen de komende {max} dagen.",
+      "already_active": "Deze versie is al live."
+    },
+    "changes": {
+      "area": {
+        "settings": "Instellingen",
+        "consent": "Consent",
+        "events": "Events",
+        "destinations": "Bestemmingen",
+        "site": "Site",
+        "other": "Overig"
+      },
+      "op": {
+        "add": "toegevoegd",
+        "remove": "verwijderd",
+        "change": "gewijzigd"
+      },
+      "before": "voor",
+      "after": "na",
+      "none": "geen",
+      "unknownDestination": "Bestemming {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "Wat het publiceren van dit concept verandert, afgeleid uit de diff en uit gemeten gegevens van de afgelopen {days} dagen in {environment}. Volumes zijn metingen, geen prognoses; een ontbrekende meting blijft onbekend.",
+      "generatedAt": "Berekend {time}",
+      "events": {
+        "title": "Betrokken events",
+        "empty": "Geen eventwijzigingen.",
+        "event": "Event",
+        "change": "Wijziging",
+        "accepted": "Geaccepteerd ({days} d)",
+        "delivered": "Afgeleverd ({days} d)",
+        "issues": "Open issues",
+        "destinations": "Bestemmingen daarna",
+        "critical": "kritiek",
+        "notMeasured": "niet gemeten",
+        "caption": "Events die het concept toevoegt, verwijdert, inschakelt, uitschakelt of wijzigt",
+        "kind": {
+          "added": "toegevoegd",
+          "removed": "verwijderd",
+          "enabled": "ingeschakeld",
+          "disabled": "uitgeschakeld",
+          "changed": "gewijzigd"
+        }
+      },
+      "destinations": {
+        "title": "Betrokken bestemmingen",
+        "empty": "Geen bestemmingswijzigingen.",
+        "destination": "Bestemming",
+        "change": "Wijziging",
+        "purpose": "Consentdoel",
+        "events": "Gekoppelde events",
+        "health": "Gezondheid",
+        "status": "Status",
+        "noHealth": "niet gemeten",
+        "healthText": "{success} afgeleverd · {errorRate} % fouten ({hours} u)",
+        "stale": "verouderd",
+        "caption": "Bestemmingen die het concept toevoegt, verwijdert, inschakelt, uitschakelt of wijzigt",
+        "kind": {
+          "added": "toegevoegd",
+          "removed": "verwijderd",
+          "enabled": "ingeschakeld",
+          "disabled": "uitgeschakeld",
+          "changed": "gewijzigd"
+        },
+        "statusLabel": {
+          "draft": "concept",
+          "not_connected": "niet gekoppeld",
+          "connected": "gekoppeld",
+          "paused": "gepauzeerd",
+          "error": "fout",
+          "unknown": "geen bestemmingsrecord"
+        }
+      },
+      "consent": {
+        "title": "Consentdoelen",
+        "purposes": "Doelen daarna: {purposes}",
+        "added": "toegevoegd: {purposes}",
+        "removed": "verwijderd: {purposes}",
+        "regionMode": "Standaard regiomodus: {before} → {after}",
+        "consentMode": "Consent mode: {before} → {after}",
+        "gpc": "Global Privacy Control: {before} → {after}",
+        "clickIdTtl": "Levensduur click-ID’s: {before} → {after} dagen",
+        "weaker": "Minder restrictief dan de live versie",
+        "unchanged": "Geen consentwijzigingen.",
+        "respected": "gerespecteerd",
+        "ignored": "genegeerd",
+        "none": "geen",
+        "purpose": {
+          "necessary": "Strikt noodzakelijk",
+          "analytics": "Analyse",
+          "marketing": "Marketing",
+          "personalization": "Personalisatie"
+        },
+        "regionModes": {
+          "strict_opt_in": "Strikte opt-in",
+          "opt_out": "Opt-out",
+          "notice_only": "Alleen melding"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Geschat volume",
+        "baseline": "Events die ingeschakeld blijven",
+        "baselineHint": "geaccepteerd in de afgelopen {days} dagen",
+        "removed": "Events die stoppen",
+        "unmeasured": "{count, plural, one {# ingeschakeld event zonder meting} other {# ingeschakelde events zonder meting}}: {events}",
+        "billable": "Factureerbaar",
+        "empty": "Geen events gemeten in de afgelopen {days} dagen voor deze omgeving — het volume na de wijziging is onbekend.",
+        "unavailable": "Aggregaten zijn niet beschikbaar op deze database.",
+        "stale": "Laatste aggregaat {time}; nieuwere events zijn mogelijk nog niet geteld.",
+        "lastBucket": "Laatste aggregaat {time}"
+      },
+      "plan": {
+        "title": "Planlimieten",
+        "plan": "Plan {plan}",
+        "limit": "{limit} events per maand",
+        "noLimit": "Geen vaste eventlimiet in dit plan",
+        "used": "{used} factureerbare events verbruikt in {period} ({share} %)",
+        "usedUnknown": "Nog geen verbruik vastgelegd voor {period}",
+        "projected": "Gemeten basis ≈ {projected} events per maand ({share} % van de limiet)",
+        "projectedUnknown": "Geen projectie zonder gemeten basis",
+        "threshold": "De gemeten basis overschrijdt al de waarschuwingsdrempel van {threshold} % van het plan.",
+        "billing": "Facturering openen"
+      },
+      "dq": {
+        "title": "Verwacht effect op datakwaliteit",
+        "intro": "Regelgebaseerd; elke regel noemt de regel die is afgegaan. Dit is geen garantie: de pipeline meet het werkelijke effect na publicatie.",
+        "tone": {
+          "ok": "Geen risico",
+          "warn": "Waarschuwing",
+          "bad": "Blokkerend",
+          "info": "Opmerking"
+        },
+        "no_changes": "Het concept wijzigt de live configuratie niet.",
+        "critical_event_stopped": "Kritiek event {event} stopt: {measured, select, yes {{accepted} geaccepteerde events in het venster} other {geen meting}} worden niet meer vastgelegd.",
+        "event_removed_open_issues": "{event} stopt met {issues, plural, one {# open datakwaliteitsissue} other {# open datakwaliteitsissues}}; het stoppen van het event lost ze niet op.",
+        "destination_stopped": "{destination} ontvangt geen events meer ({measured, select, yes {{delivered} afleveringen in het gezondheidsvenster} other {geen gezondheidsmeting}}).",
+        "destination_failing_stopped": "{destination} stopt; {errorRate} % van de recente afleveringen mislukte, dus die fouten stoppen ermee.",
+        "destination_no_mappings": "{destination} is ingeschakeld zonder eventkoppelingen en ontvangt niets.",
+        "conversion_browser_only": "{event} is alleen browser-side; zonder servergeverifieerde bron zijn duplicaten en ontbrekende waarden waarschijnlijk.",
+        "conversion_without_authoritative_source": "{event} gaat naar advertentiebestemmingen zonder servergeverifieerde bron (blokkerend).",
+        "mapping_unknown_event": "{destination} koppelt {event}, dat niet gedefinieerd is.",
+        "consent_weaker": "Consent wordt zwakker: meer events kunnen vóór een expliciet signaal worden verwerkt waar de regiopolicy dat toestaat.",
+        "kill_switch_on": "De kill switch stopt alle verzameling voor deze omgeving.",
+        "kill_switch_off": "De kill switch wordt losgelaten; de verzameling hervat.",
+        "allowed_hosts_reduced": "Events van {hosts} worden na publicatie geweigerd.",
+        "new_event_unmeasured": "{event} is nieuw; volume en kwaliteit zijn onbekend totdat events binnenkomen.",
+        "lint_errors": "{count, plural, one {# blokkerend lintprobleem verhindert} other {# blokkerende lintproblemen verhinderen}} de publicatie.",
+        "no_rule_fired": "Er is geen regel afgegaan voor deze wijziging. Controleer het effect na publicatie in de Live Event Explorer."
+      }
+    },
+    "history": {
+      "title": "Versiegeschiedenis",
+      "intro": "Elke gepubliceerde versie van {environment}, nieuwste eerst. Versies zijn onveranderlijk en ondertekend; een rollback activeert een eerdere versie opnieuw.",
+      "empty": "Nog niets gepubliceerd",
+      "emptyText": "De eerste versie verschijnt hier zodra een concept is gepubliceerd.",
+      "caption": "Gepubliceerde configuratieversies",
+      "version": "Versie",
+      "status": "Status",
+      "summary": "Samenvatting",
+      "author": "Auteur",
+      "published": "Gepubliceerd",
+      "changes": "Wijzigingen",
+      "open": "Openen",
+      "statusLabel": {
+        "active": "Live",
+        "superseded": "Vervangen"
+      },
+      "rolledBack": "teruggedraaid",
+      "restored": "hersteld",
+      "scheduled": "gepland",
+      "approved": "vier ogen",
+      "initial": "Initiële configuratie"
+    },
+    "version": {
+      "breadcrumbLabel": "Kruimelpad",
+      "back": "Releases",
+      "title": "Versie {version}",
+      "notFound": "Versie niet gevonden",
+      "notFoundText": "De versie bestaat niet voor de actieve site. Wissel van site in de workspace-schakelaar of ga terug naar de releases.",
+      "status": {
+        "active": "Live",
+        "superseded": "Vervangen"
+      },
+      "activeNow": "v{version} is live",
+      "createdBy": "Gepubliceerd door {name} {time}",
+      "createdBySystem": "Volgens planning gepubliceerd {time}",
+      "previous": "Diff ten opzichte van v{version}",
+      "first": "Eerste versie: elke regel is nieuw",
+      "signed": "Ondertekend met sleutel {keyId} · digest {digest}",
+      "facts": {
+        "title": "Configuratie",
+        "events": "{count, plural, one {# ingeschakeld event} other {# ingeschakelde events}} ({critical} kritiek)",
+        "destinations": "Bestemmingen: {names}",
+        "noDestinations": "Geen ingeschakelde bestemmingen",
+        "consent": "Consent: {mode}, consent mode {consentMode}, GPC {gpc}",
+        "clickIds": "Levensduur click-ID’s {days} dagen",
+        "hosts": "Hosts: {hosts}",
+        "noHosts": "Geen toegestane hosts",
+        "killSwitch": "Kill switch aan"
+      },
+      "publications": {
+        "title": "Publicatiegeschiedenis",
+        "publish": "Gepubliceerd",
+        "rollback": "Hersteld via rollback vanaf v{from}",
+        "rollbackUnknown": "Hersteld via rollback",
+        "by": "door {name}",
+        "active": "nu live",
+        "superseded": "vervangen {time}",
+        "withApproval": "met vier-ogen-goedkeuring"
+      },
+      "approvals": {
+        "title": "Goedkeuringen",
+        "empty": "Geen goedkeuringsaanvraag voor deze versie."
+      },
+      "evidence": {
+        "title": "Testbewijs",
+        "intro": "Live-Test-Lab-runs tussen het concept en de publicatie, en wat de pipeline daarna met deze versie heeft waargenomen.",
+        "runsEmpty": "Geen testrun vastgelegd terwijl het concept open stond.",
+        "observed": "{count, plural, =0 {Geen event opgeslagen met deze versie} one {# event opgeslagen met deze versie} other {# events opgeslagen met deze versie}} sinds {since}",
+        "observedRange": "eerste {first}, laatste {last}",
+        "observedUnavailable": "Eventwaarnemingen zijn niet beschikbaar."
+      },
+      "signals": {
+        "title": "Kritieke signalen van deze versie",
+        "none": "Geen kritiek signaal ten opzichte van de vorige versie."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "in afwachting",
+        "sent": "verzonden",
+        "rejected": "geweigerd",
+        "failed": "mislukt"
+      }
+    }
+  }
+}

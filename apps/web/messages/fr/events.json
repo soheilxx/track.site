@@ -1,0 +1,556 @@
+{
+  "events": {
+    "nav": {
+      "label": "Module Events",
+      "overview": "Vue d’ensemble",
+      "coverage": "Matrice de couverture",
+      "explorer": "Explorateur live",
+      "testLab": "Test lab"
+    },
+    "module": {
+      "title": "Events",
+      "noSite": "Pas encore de site",
+      "noSiteText": "Créez votre premier site pour recevoir des événements, vérifier leur couverture et suivre leur lignage.",
+      "createSite": "Créer un site",
+      "noEnvironment": "Ce site n’a pas encore d’environnement.",
+      "environment": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      }
+    },
+    "common": {
+      "yes": "oui",
+      "no": "non",
+      "never": "jamais",
+      "unknown": "inconnu",
+      "lastUpdated": "Dernière mise à jour {time}",
+      "refresh": "Actualiser",
+      "error": "Les données n’ont pas pu être chargées. Réessayez.",
+      "testEvent": "test",
+      "verified": "vérifié",
+      "open": "Ouvrir",
+      "actions": "Actions",
+      "close": "Fermer"
+    },
+    "windows": {
+      "1h": "Dernière heure",
+      "24h": "Dernières 24 heures",
+      "7d": "7 derniers jours",
+      "30d": "30 derniers jours"
+    },
+    "sources": {
+      "all": "Toutes les sources",
+      "browser": "Navigateur",
+      "server": "Serveur",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware",
+      "webhook": "Webhook",
+      "legacy-import": "Import"
+    },
+    "states": {
+      "captured": "Capturé",
+      "accepted": "Accepté",
+      "normalized": "Normalisé",
+      "policy_passed": "Stocké",
+      "policy_blocked": "Bloqué par la policy",
+      "deduplicated": "Dédupliqué",
+      "routed": "Routé",
+      "delivered": "Livré",
+      "rejected": "Rejeté",
+      "imported": "Importé"
+    },
+    "stages": {
+      "captured": "Capturé",
+      "accepted": "Accepté",
+      "normalized": "Normalisé",
+      "policy": "Policy",
+      "deduplicated": "Dédupliqué",
+      "routed": "Routé",
+      "delivered": "Livré",
+      "rejected": "Terminé"
+    },
+    "outcomes": {
+      "ok": "OK",
+      "rejected": "rejeté",
+      "blocked": "bloqué",
+      "unique": "unique",
+      "duplicate": "doublon",
+      "none": "non routé",
+      "skipped": "ignoré",
+      "delivered": "livré",
+      "retry": "nouvel essai",
+      "failed": "échoué",
+      "dead": "abandonné",
+      "pending": "en attente",
+      "unknown": "inconnu"
+    },
+    "reasons": {
+      "consent_missing": "Aucun signal de consentement n’a été enregistré, l’événement n’a donc pas été stocké.",
+      "consent_denied": "Le visiteur n’a pas accordé la finalité nécessaire à cet événement.",
+      "gpc_opt_out": "Global Privacy Control est actif : pas de marketing ni de personnalisation.",
+      "purpose_not_granted": "La finalité requise par cette destination n’a pas été accordée.",
+      "inferred_data_not_exportable": "Les valeurs inférées ne doivent jamais atteindre une plateforme publicitaire.",
+      "destination_paused": "La destination est en pause ou non connectée.",
+      "pii_blocked": "L’événement contenait un secret, une carte ou un IBAN et a été rejeté.",
+      "bot": "La requête ressemblait à un bot.",
+      "duplicate_event": "Le même identifiant d’événement a déjà été reçu.",
+      "duplicate_conversion": "Cette commande a déjà été signalée sur le même chemin.",
+      "verified_supersedes_browser": "Un enregistrement serveur vérifié a remplacé l’observation navigateur de cette commande.",
+      "cross_path_pair": "La commande a aussi été vue sur l’autre chemin ; les deux sont conservées et dédupliquées par le fournisseur.",
+      "invalid_event_name": "Le nom de l’événement n’est pas valide.",
+      "timestamp_out_of_window": "L’horodatage client est trop éloigné de l’heure serveur.",
+      "invalid_url": "L’URL de la page n’est pas valide.",
+      "no_config": "Aucune configuration n’est publiée pour cet environnement, rien n’est donc routé.",
+      "no_destinations": "La configuration publiée n’a aucune destination.",
+      "no_mapping": "Aucune destination ne mappe cet événement.",
+      "policy_blocked": "Chaque destination mappée a été bloquée par la policy de consentement.",
+      "destination_disabled": "La destination est désactivée dans la configuration.",
+      "browser_only": "La destination fonctionne uniquement dans le navigateur.",
+      "integration_missing": "La destination n’existe plus.",
+      "validation": "La charge utile fournisseur a échoué à la validation.",
+      "not_mappable": "Le connecteur n’a produit aucune charge utile pour cet événement.",
+      "destination_missing": "L’intégration ou sa configuration n’existe plus.",
+      "circuit_open": "La destination est temporairement en pause après des échecs répétés.",
+      "temporary": "Erreur fournisseur temporaire",
+      "permanent": "Erreur fournisseur permanente",
+      "rate_limited": "Le fournisseur a limité la requête.",
+      "auth": "Le fournisseur a rejeté les identifiants.",
+      "credential_expired": "L’identifiant est manquant ou expiré.",
+      "invalid_payload": "Le fournisseur a rejeté la charge utile.",
+      "timeout": "Le fournisseur n’a pas répondu à temps.",
+      "unreachable": "Le collecteur n’a pas pu être joint.",
+      "ingest_host_not_configured": "Aucun hôte de collecteur n’est configuré."
+    },
+    "detailKeys": {
+      "purposes_granted": "finalités accordées",
+      "purpose_required": "finalité requise",
+      "stripped_fields": "champs retirés",
+      "pii_redacted": "masqué",
+      "consent_source": "source du consentement",
+      "region": "région",
+      "gpc": "GPC",
+      "policy_version": "policy",
+      "config_version": "version de config",
+      "test_mode": "mode test",
+      "billable": "facturable",
+      "planned": "dans le plan d’événements",
+      "adopted_browser_context": "contexte navigateur repris",
+      "connector_type": "connecteur",
+      "vendor_event": "événement fournisseur",
+      "mode": "mode",
+      "http_status": "HTTP",
+      "duration_ms": "durée (ms)",
+      "error_class": "classe d’erreur",
+      "attempt": "tentative",
+      "next_retry_at": "prochain essai",
+      "key": "clé de dédup",
+      "prior_source": "source précédente",
+      "findings": "détections",
+      "warnings": "avertissements",
+      "destination_status": "état de la destination",
+      "not_routed": "destinations non routées"
+    },
+    "overview": {
+      "title": "Events",
+      "intro": "Ce que l’environnement actif a reçu, stocké, dédupliqué et livré, où le pipeline bloque, et les trois outils pour vérifier la couverture, inspecter le lignage et lancer des tests contrôlés.",
+      "day": {
+        "title": "Pipeline",
+        "window": "dernières 24 heures · agrégats horaires",
+        "received": "Reçus",
+        "accepted": "Stockés",
+        "dropped": "Écartés",
+        "deduplicated": "Dédupliqués",
+        "delivered": "Livrés",
+        "failed": "Livraison échouée"
+      },
+      "noDay": "Aucun événement n’a été traité au cours des dernières 24 heures, il n’y a donc aucun chiffre à afficher.",
+      "droppedReasons": "Motifs de rejet",
+      "sources": {
+        "title": "Sources"
+      },
+      "lastBrowser": "Dernier événement navigateur",
+      "lastServer": "Dernier événement serveur",
+      "noEventsYet": "Aucun événement n’a encore atteint cet environnement.",
+      "install": "Installer le snippet",
+      "pipeline": {
+        "title": "Santé du pipeline"
+      },
+      "deadLetters": "Livraisons abandonnées",
+      "deadLettersHint": "Livraisons que le worker a abandonnées après des erreurs fournisseur répétées. Elles restent jusqu’à être rejouées depuis le Destination Health Center.",
+      "lineage": "Enregistrement du lignage",
+      "lineageOn": "actif",
+      "lineageOff": "indisponible",
+      "lineageOffText": "La table de lignage (migration 0007) n’est pas encore appliquée. D’ici là, l’explorateur déduit les étapes de l’état stocké, sans horodatage par étape.",
+      "modules": {
+        "title": "Outils",
+        "coverage": {
+          "title": "Event Coverage Matrix",
+          "text": "Chaque événement pertinent face à la source navigateur, la source serveur, le consentement, les paramètres obligatoires, la qualité des données et les destinations — avec l’action de réparation par cellule."
+        },
+        "explorer": {
+          "title": "Live Event Explorer",
+          "text": "Événements navigateur et serveur avec leur lignage complet : capturé, accepté, normalisé, policy, dédupliqué, routé, livré ou rejeté. Charges utiles masquées, réponses fournisseur et motifs de rejet en langage clair."
+        },
+        "testLab": {
+          "title": "Live Test Lab",
+          "text": "Parcours guidés PageView, Lead, AddToCart, Checkout et Purchase via le vrai collecteur dans l’environnement de test — décision de consentement, déduplication, routage et vraie réponse de test de chaque destination."
+        }
+      },
+      "byEvent": "Par événement",
+      "byEventWindow": "7 derniers jours",
+      "empty": "Aucun événement au cours des 7 derniers jours.",
+      "emptyText": "Installez le snippet ou envoyez un parcours de test ; les compteurs acceptés et écartés par événement apparaîtront ici.",
+      "columns": {
+        "event": "Événement",
+        "sources": "Sources",
+        "received": "Reçus",
+        "accepted": "Stockés",
+        "dropped": "Écartés",
+        "delivered": "Livrés",
+        "failed": "Échoués",
+        "lastSeen": "Dernière vue"
+      }
+    },
+    "coverage": {
+      "title": "Event Coverage Matrix",
+      "intro": "Les événements pertinents en lignes — issus du plan d’événements, des définitions et de l’observation — face aux sources, au consentement, aux paramètres obligatoires, à la qualité des données et aux destinations de l’environnement actif. Chaque cellule montre son état, la dernière heure et la prochaine étape de réparation.",
+      "configVersion": "Configuration v{version}",
+      "noConfig": "Aucune configuration publiée",
+      "generatedAt": "calculé {time}",
+      "noPlanTitle": "Pas encore de plan d’événements",
+      "noPlanText": "Cet environnement n’a ni configuration publiée ni définitions d’événements. Les lignes ci-dessous ne proviennent que des événements observés ; lancez l’AI Setup pour définir les événements qui comptent.",
+      "empty": "Rien à couvrir pour l’instant",
+      "emptyText": "Aucun plan d’événements, aucune définition et aucun événement observé au cours des 7 derniers jours.",
+      "emptyAction": "Ouvrir l’AI Setup",
+      "caption": "Couverture des {days} derniers jours par événement",
+      "columns": {
+        "event": "Événement",
+        "browser": "Source navigateur",
+        "server": "Source serveur",
+        "consent": "Consentement",
+        "params": "Paramètres obligatoires",
+        "quality": "Qualité des données",
+        "destinations": "Destinations"
+      },
+      "statuses": {
+        "ok": "OK",
+        "warn": "Attention",
+        "bad": "Manquant",
+        "info": "Remarque",
+        "none": "Non attendu",
+        "unknown": "Non mesuré"
+      },
+      "legend": "Légende",
+      "legendText": {
+        "ok": "mesuré et sain",
+        "warn": "obsolète, partiel ou avec des échecs",
+        "bad": "attendu mais manquant ou en échec",
+        "info": "fonctionne comme configuré, à surveiller",
+        "none": "non applicable à cet événement",
+        "unknown": "pas encore de mesure"
+      },
+      "messages": {
+        "fresh": "Vu au cours des dernières 24 heures.",
+        "stale": "Vu dans la fenêtre, mais pas au cours des dernières 24 heures.",
+        "missing": "Attendu pour cet événement, rien reçu dans la fenêtre.",
+        "notExpected": "Cette source n’est pas configurée pour l’événement.",
+        "noData": "Aucun événement dans la fenêtre.",
+        "consentClean": "Aucun événement bloqué par le consentement ; aucune livraison ignorée.",
+        "consentBlocked": "{blocked} des {received} événements reçus bloqués par le consentement ; {skipped} livraisons ignorées.",
+        "consentSkipped": "{skipped} livraisons ignorées car une finalité n’était pas accordée.",
+        "noRequired": "Aucun paramètre obligatoire pour cet événement.",
+        "noSamples": "Aucun événement stocké à vérifier.",
+        "paramsComplete": "Tous les paramètres obligatoires sont présents dans les {sampled} derniers événements.",
+        "paramsMissing": "Manquant dans certains des {sampled} derniers événements : {missing}.",
+        "noIssues": "Aucun problème de qualité des données ouvert.",
+        "openIssues": "{open} problèmes ouverts, {critical} critiques.",
+        "noDestinations": "Aucune destination configurée pour ce site.",
+        "notMapped": "Aucune destination ne mappe cet événement.",
+        "mapped": "{n} destinations"
+      },
+      "lastAt": "Dernier : {time}",
+      "actions": {
+        "installSnippet": "Vérifier le snippet",
+        "openSetup": "Corriger dans l’AI Setup",
+        "createSourceKey": "Créer une clé source",
+        "openShop": "Connecter la boutique",
+        "openConsent": "Ouvrir Consent & Privacy",
+        "openDataQuality": "Ouvrir la boîte Data Quality",
+        "openDestination": "Ouvrir la destination",
+        "addDestination": "Ajouter une destination",
+        "mapEvent": "Mapper l’événement",
+        "openExplorer": "Inspecter dans l’explorateur"
+      },
+      "critical": "critique",
+      "custom": "personnalisé",
+      "origin": {
+        "definition": "définition d’événement",
+        "plan": "plan publié",
+        "observed": "observé"
+      },
+      "required": "Obligatoire : {params}",
+      "destination": {
+        "counts": "{delivered} livrés · {failed} échoués · {skipped} ignorés",
+        "lastDelivered": "dernière livraison {time}",
+        "lastFailed": "dernier échec {time}"
+      }
+    },
+    "explorer": {
+      "title": "Live Event Explorer",
+      "intro": "Chaque événement navigateur et serveur de l’environnement actif avec son lignage complet. Les charges utiles sont masquées, les identifiants anonymisés ; les réponses fournisseur et les motifs de rejet sont affichés en langage clair. La liste se rafraîchit tant que la page est ouverte.",
+      "filters": {
+        "label": "Filtres",
+        "event": "Nom de l’événement",
+        "source": "Source",
+        "status": "État",
+        "window": "Fenêtre temporelle",
+        "apply": "Appliquer",
+        "reset": "Réinitialiser"
+      },
+      "statuses": {
+        "all": "Tous",
+        "stored": "Stockés",
+        "routed": "Routés",
+        "delivered": "Livrés",
+        "failed": "Livraison échouée",
+        "deduplicated": "Dédupliqués",
+        "rejected": "Rejetés"
+      },
+      "polling": {
+        "auto": "Actualisation automatique toutes les {seconds} s"
+      },
+      "stale": "L’espace de travail a changé dans un autre onglet. Rechargez la page pour voir le site actif.",
+      "lineageOff": "Enregistrement du lignage indisponible",
+      "lineageOffText": "La migration 0007 n’est pas appliquée : les étapes sont déduites de l’état stocké et les événements rejetés avant stockage ne sont pas listés.",
+      "list": {
+        "title": "Événements",
+        "count": "{n} événements",
+        "empty": "Aucun événement ne correspond.",
+        "emptyText": "Élargissez la fenêtre temporelle, réinitialisez les filtres ou envoyez un parcours de test depuis le test lab.",
+        "loadMore": "Charger des événements plus anciens",
+        "columns": {
+          "time": "Heure",
+          "event": "Événement",
+          "source": "Source",
+          "status": "État",
+          "deliveries": "Livraisons"
+        },
+        "deliveries": "{delivered} livrés · {failed} échoués · {skipped} ignorés · {pending} en attente"
+      },
+      "rejected": {
+        "title": "Rejetés avant stockage",
+        "text": "Événements écartés par le pipeline sans être stockés : invalides, bot, sans consentement ou avec des données personnelles. Seuls le nom, la source, l’étape et le motif sont enregistrés.",
+        "empty": "Rien n’a été rejeté dans la fenêtre.",
+        "columns": {
+          "stage": "Étape",
+          "reason": "Motif"
+        }
+      },
+      "workspaceBanner": {
+        "text": "Ce lien appartient à un autre site ({site}).",
+        "switch": "Passer à {site}"
+      },
+      "detail": {
+        "title": "Détail de l’événement",
+        "select": "Sélectionnez un événement pour voir son lignage, la décision de consentement, le routage et les réponses fournisseur.",
+        "notFound": "Cet événement n’appartient pas au site actif ou a été supprimé par la rétention.",
+        "timeline": "Lignage",
+        "derivedOnly": "Aucune ligne de lignage n’a été enregistrée pour cet événement ; les étapes sont déduites de l’état stocké.",
+        "summary": "Événement",
+        "attempts": "Tentatives de livraison",
+        "noAttempts": "Aucune tentative de livraison pour cet événement.",
+        "related": "Événements corrélés",
+        "noRelated": "Aucun autre événement ne partage cet identifiant de commande ou cette session.",
+        "relatedVia": {
+          "order_id": "même commande",
+          "session": "même session"
+        },
+        "noTimeline": "Aucune étape enregistrée pour l’instant.",
+        "noTime": "pas d’horodatage",
+        "derivedHint": "déduit de l’état stocké",
+        "redactionNote": "Le texte libre est masqué, les identifiants sont anonymisés, les données utilisateur hachées ne sont listées que par champ.",
+        "hashed": "{n} champs hachés : {fields}",
+        "noUserData": "aucune",
+        "strippedIdentity": "aucun identifiant (retiré par la policy de consentement)",
+        "identityKind": {
+          "anonymous": "anonyme",
+          "session": "session",
+          "user": "utilisateur"
+        },
+        "attempt": "Tentative {n}",
+        "http": "HTTP {status}",
+        "duration": "{ms} ms",
+        "nextRetry": "Prochain essai {time}",
+        "vendorEventId": "Identifiant d’événement fournisseur",
+        "payload": "Charge utile fournisseur masquée",
+        "response": "Réponse fournisseur",
+        "attemptStatus": {
+          "pending": "en attente",
+          "success": "livré",
+          "retry": "nouvel essai",
+          "failed": "échoué",
+          "dead": "abandonné",
+          "skipped": "ignoré"
+        },
+        "fields": {
+          "eventId": "Identifiant d’événement",
+          "sourceEventId": "Identifiant source",
+          "captured": "Capturé",
+          "clientTime": "Heure client",
+          "source": "Source",
+          "configVersion": "config v{version}",
+          "noConfig": "sans config",
+          "state": "État",
+          "consent": "Consentement",
+          "noPurposes": "aucune finalité",
+          "consentSource": "source",
+          "region": "région",
+          "policyVersion": "policy",
+          "clickIds": "Click ids",
+          "vendorIds": "Identifiants fournisseur",
+          "page": "Page",
+          "title": "Titre",
+          "referrer": "Référent",
+          "utm": "UTM",
+          "commerce": "Commerce",
+          "commerceValue": "commande {orderId} · {value} {currency} · {items} articles",
+          "userData": "Données utilisateur",
+          "identity": "Identité",
+          "device": "Appareil",
+          "billable": "Facturable",
+          "bot": "bot",
+          "provenance": "Provenance",
+          "props": "Propriétés (masquées)"
+        }
+      }
+    },
+    "testLab": {
+      "title": "Live Test Lab",
+      "intro": "Parcours de test guidés via le vrai collecteur dans l’environnement en mode test de ce site. Chaque exécution envoie des événements de test contrôlés avec une clé éphémère, est auditée et montre la décision de consentement, la déduplication, la charge utile masquée, le routage et la vraie réponse de test de chaque destination.",
+      "unavailable": "Test lab indisponible",
+      "unavailableText": "La migration 0007 n’est pas appliquée, les exécutions ne peuvent donc pas être enregistrées.",
+      "environment": {
+        "none": "Aucun environnement de test",
+        "noneText": "Ce site n’a aucun environnement en mode test. Les exécutions ont besoin d’un environnement staging ou test pour que rien n’atteigne les destinations de production.",
+        "sending": "Les événements de test vont vers {environment} ({kind}, mode test) via {host}."
+      },
+      "permission": "Lancer un parcours requiert le rôle Developer ou supérieur. Vous pouvez consulter les exécutions passées.",
+      "journeys": {
+        "label": "Parcours",
+        "page_view": {
+          "title": "PageView",
+          "text": "Une vue de page. Vérifie la capture, le consentement et le routage de l’événement de base."
+        },
+        "lead": {
+          "title": "Lead",
+          "text": "Vue de page et envoi d’un formulaire de lead."
+        },
+        "add_to_cart": {
+          "title": "AddToCart",
+          "text": "Vue de page, vue produit et ajout au panier d’un article de test."
+        },
+        "checkout": {
+          "title": "Checkout",
+          "text": "Vue de page, vue produit, ajout au panier et début de checkout."
+        },
+        "purchase": {
+          "title": "Purchase",
+          "text": "Vue de page, checkout et un achat avec un identifiant de commande de test — envoyé deux fois pour montrer la déduplication des commandes."
+        }
+      },
+      "steps": {
+        "page_view": "Vue de page",
+        "view_item": "Vue produit",
+        "add_to_cart": "Ajout au panier",
+        "begin_checkout": "Début de checkout",
+        "generate_lead": "Lead",
+        "purchase": "Achat",
+        "duplicate_purchase": "Même commande à nouveau"
+      },
+      "consent": {
+        "label": "État de consentement du visiteur de test",
+        "all": {
+          "title": "Analytics et marketing accordés",
+          "text": "Les événements sont stockés avec identifiants et peuvent atteindre chaque destination mappée."
+        },
+        "analytics": {
+          "title": "Analytics uniquement",
+          "text": "Les événements sont stockés ; les destinations publicitaires sont ignorées par la policy."
+        },
+        "none": {
+          "title": "Aucun signal de consentement",
+          "text": "Les événements non opérationnels sont rejetés avant stockage ; un achat est stocké sans identifiants."
+        }
+      },
+      "run": "Lancer le parcours",
+      "confirm": {
+        "title": "Envoyer des événements de test ?",
+        "text": "Les événements passent par le vrai collecteur et le vrai pipeline de l’environnement de test.",
+        "events": "{n} événements",
+        "journey": "Parcours",
+        "environment": "Environnement",
+        "consent": "Consentement",
+        "collector": "Collecteur",
+        "nothingProduction": "Rien n’atteint une destination de production : les événements sont marqués comme tests, ne sont jamais facturés et les destinations ne les reçoivent qu’en mode test. L’exécution et la clé éphémère sont auditées.",
+        "cancel": "Annuler",
+        "confirm": "Envoyer les événements de test"
+      },
+      "notes": {
+        "audited": "Chaque exécution crée une clé source éphémère pour l’environnement de test (valide deux minutes, révoquée juste après la requête) et une entrée d’audit."
+      },
+      "errors": {
+        "invalid": "La requête n’était pas valide.",
+        "forbidden": "Vous n’avez pas la permission de lancer des parcours de test.",
+        "not_found": "Le site n’a pas été trouvé dans cette organisation.",
+        "no_test_environment": "Ce site n’a aucun environnement en mode test.",
+        "unavailable": "Le test lab est indisponible (migration manquante ou hôte de collecteur non configuré).",
+        "collector": "Le collecteur a rejeté le lot.",
+        "unreachable": "Le collecteur n’a pas pu être joint. Le collecteur est-il lancé ?",
+        "generic": "L’exécution n’a pas pu démarrer."
+      },
+      "collector": {
+        "status": "Le collecteur a répondu HTTP {status}",
+        "reason": "Motif : {reason}",
+        "accepted": "Le collecteur a accepté le lot (HTTP {status}). La timeline ci-dessous se remplit au fur et à mesure du traitement par le worker."
+      },
+      "timeline": {
+        "title": "Timeline",
+        "none": "Lancez un parcours pour voir sa timeline ici.",
+        "complete": "terminé",
+        "incomplete": "en cours",
+        "waiting": "En attente du worker",
+        "waitingText": "Le collecteur a accepté le lot ; les étapes apparaissent dès que le worker le traite.",
+        "workerHint": "Aucun traitement enregistré",
+        "workerHintText": "Le lot a été accepté il y a plus de 90 secondes mais aucune étape n’a été enregistrée. Vérifiez que le worker tourne et que la migration 0007 est appliquée, puis actualisez.",
+        "step": "Étape {n}",
+        "pending": "en attente",
+        "pendingText": "Pas encore traité.",
+        "billable": "non facturé (mode test)",
+        "notBillable": "non facturé (mode test)",
+        "consentDecision": "Consentement enregistré",
+        "identity": "Identifiants",
+        "autoRefresh": "actualisation toutes les 2 s"
+      },
+      "runs": {
+        "title": "Exécutions passées",
+        "empty": "Aucune exécution pour l’instant.",
+        "columns": {
+          "time": "Heure",
+          "journey": "Parcours",
+          "consent": "Consentement",
+          "status": "État",
+          "collector": "Collecteur"
+        },
+        "status": {
+          "pending": "en attente",
+          "sent": "envoyé",
+          "rejected": "rejeté par le collecteur",
+          "failed": "échoué"
+        },
+        "open": "Ouvrir"
+      }
+    }
+  }
+}

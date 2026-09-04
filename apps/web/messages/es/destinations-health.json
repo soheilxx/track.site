@@ -1,0 +1,239 @@
+{
+  "destinationsHealth": {
+    "title": "Destination Health Center",
+    "intro": "Caducidad de credenciales y OAuth, versiones de API, límites de frecuencia, tasa de errores, cola pendiente y última entrega correcta de cada destino, medidos a partir de intentos de entrega reales. Diagnostica o pausa un destino sin detener la ingesta ni los demás.",
+    "scope": {
+      "label": "Ámbito",
+      "thisSite": "Este sitio",
+      "allSites": "Todos los sitios",
+      "siteColumn": "Sitio"
+    },
+    "add": "Añadir destino",
+    "edit": "Editar",
+    "editHint": "Abre el asistente de configuración de este destino.",
+    "noSites": "Aún no hay sitios",
+    "noSitesText": "Crea primero un sitio: los destinos pertenecen a un sitio.",
+    "createSite": "Crear sitio",
+    "empty": "No hay destinos para {site}",
+    "emptyAll": "Aún no hay destinos",
+    "emptyText": "Añade una plataforma publicitaria, una herramienta de analítica, una red de afiliados o un webhook. El estado se mide a partir de intentos de entrega reales, nunca se estima.",
+    "showAllSites": "Mostrar todos los sitios",
+    "summary": {
+      "total": "Destinos",
+      "critical": "Requieren acción",
+      "warning": "Avisos",
+      "healthy": "Correctos",
+      "healthyHint": "conectados, sin incidencias abiertas",
+      "paused": "Pausados"
+    },
+    "attention": {
+      "title": "Atender primero",
+      "none": "Ninguna incidencia abierta en los datos medidos."
+    },
+    "filter": {
+      "label": "Filtrar destinos",
+      "all": "Todos",
+      "attention": "Requieren acción",
+      "paused": "Pausados",
+      "healthy": "Correctos"
+    },
+    "columns": {
+      "destination": "Destino",
+      "status": "Estado",
+      "health": "Salud",
+      "credentials": "Credenciales",
+      "deliveries": "Entregas {hours} h",
+      "queue": "Cola",
+      "lastSuccess": "Último éxito",
+      "actions": "Acciones"
+    },
+    "table": {
+      "caption": "Destinos con su salud medida, credenciales, entregas y cola pendiente",
+      "testMode": "Modo de prueba",
+      "apiVersion": "API {version}",
+      "showDetails": "Mostrar detalles de {name}",
+      "hideDetails": "Ocultar detalles de {name}",
+      "details": "Detalles"
+    },
+    "status": {
+      "draft": "Borrador",
+      "not_connected": "No conectado",
+      "connected": "Conectado",
+      "paused": "Pausado",
+      "error": "Error"
+    },
+    "health": {
+      "healthy": "Correcto",
+      "degraded": "Degradado",
+      "unhealthy": "Con fallos",
+      "not_connected": "No conectado",
+      "unknown": "Sin comprobar",
+      "checkedAt": "Comprobado {when}",
+      "neverChecked": "Nunca comprobado"
+    },
+    "credentials": {
+      "title": "Credenciales guardadas",
+      "none": "Ninguna guardada",
+      "no_expiry": "Sin caducidad informada",
+      "ok": "Válida, caduca {when}",
+      "expiring": "Caduca {when}",
+      "expired": "Caducada {when}",
+      "inactive": "Inactiva",
+      "missing": "Faltan: {kinds}",
+      "lastValidated": "Última validación {when}",
+      "neverValidated": "Nunca validada",
+      "kind": "Tipo",
+      "label": "Etiqueta",
+      "statusLabel": "Estado",
+      "expires": "Caduca",
+      "validated": "Validada",
+      "last4": "termina en {last4}",
+      "status": {
+        "active": "Activa",
+        "rotated": "Rotada",
+        "revoked": "Revocada",
+        "expired": "Caducada"
+      }
+    },
+    "oauth": {
+      "title": "Conexión OAuth",
+      "provider": "Proveedor",
+      "account": "Cuenta",
+      "accountUnknown": "Cuenta no informada",
+      "requestedScopes": "Ámbitos solicitados",
+      "grantedScopes": "Ámbitos concedidos",
+      "grantedUnknown": "No informados por el proveedor",
+      "accessExpires": "El token de acceso caduca {when}",
+      "accessExpiresUnknown": "Caducidad del token de acceso no informada",
+      "refreshHint": "Los tokens de acceso se renuevan automáticamente a partir del token de actualización guardado."
+    },
+    "api": {
+      "title": "API del proveedor",
+      "version": "Versión de API {version}",
+      "verified": "Documentación verificada el {date}",
+      "sunset": "La versión se retira el {date} (en {days} días)",
+      "sunsetPassed": "La fecha de retirada {date} ya ha pasado",
+      "noSunset": "Sin retirada anunciada",
+      "docs": "Documentación del proveedor"
+    },
+    "deliveries": {
+      "title": "Entregas (últimas {hours} h)",
+      "summary": "{success} entregadas · {failed} fallidas · {retry} en reintento",
+      "skipped": "{count} omitidas por consentimiento o pausa",
+      "none": "Sin intentos en las últimas {hours} h",
+      "errorRate": "{rate} de los intentos fallaron",
+      "errorRateNone": "Tasa de errores no medible sin intentos"
+    },
+    "rateLimit": {
+      "title": "Límites de frecuencia",
+      "none": "Ningún límite de frecuencia alcanzado en las últimas {hours} h",
+      "count": "{count} limitados por frecuencia en las últimas {hours} h",
+      "lastWait": "El proveedor pidió esperar {wait}",
+      "lastAt": "Último {when}"
+    },
+    "queue": {
+      "title": "Cola pendiente",
+      "notMeasured": "Aún sin medir",
+      "notMeasuredHint": "La tarea destination-health del worker aún no ha informado sobre este destino.",
+      "stale": "Obsoleto: medido {when}",
+      "measuredAt": "Medido {when}",
+      "ready": "{count} listos",
+      "scheduled": "{count} reintentos programados",
+      "inFlight": "{count} en curso",
+      "empty": "Cola vacía",
+      "lag": "El más antiguo espera desde hace {duration}",
+      "dead": "{count} en la cola de mensajes fallidos"
+    },
+    "freshness": {
+      "missingTitle": "Cola pendiente aún sin medir",
+      "missingText": "La tarea destination-health del worker aún no ha escrito una instantánea para {count} destinos. Las entregas, credenciales y versiones de API de esta página son en vivo; los valores de la cola aparecerán cuando la tarea se haya ejecutado.",
+      "staleTitle": "Los valores de la cola están obsoletos",
+      "staleText": "La última instantánea del worker es de {when}. Las entregas, credenciales y versiones de API son en vivo."
+    },
+    "lastSuccess": {
+      "never": "Nunca"
+    },
+    "issues": {
+      "credential_expired": "Una credencial ha caducado: el proveedor rechazará las entregas.",
+      "auth_failures": "El proveedor rechazó las credenciales en {count} intentos.",
+      "status_error": "El destino está en estado de error.",
+      "health_unhealthy": "La última comprobación de salud falló.",
+      "credential_missing": "Faltan credenciales obligatorias: {kinds}.",
+      "credential_expiring": "Una credencial caduca {when}.",
+      "health_degraded": "La última comprobación de salud informó de un servicio degradado.",
+      "rate_limited": "El proveedor limitó por frecuencia {count} intentos.",
+      "high_error_rate": "{rate} de los intentos fallaron.",
+      "queue_lag": "Hay mensajes esperando desde hace {duration}.",
+      "dead_letters": "{count} eventos no pudieron entregarse y están en la cola de mensajes fallidos.",
+      "api_sunset": "La versión de API {version} se retira en {days} días.",
+      "not_connected": "El destino no está conectado; no se entrega nada.",
+      "paused": "Pausado {when}; los eventos de este destino se omiten.",
+      "draft": "Configuración sin terminar: abre el asistente.",
+      "no_delivery_yet": "Aún no hay ninguna entrega correcta."
+    },
+    "reasons": {
+      "credentials_rejected": "El proveedor rechazó las credenciales",
+      "credential_missing": "Credencial ausente o revocada",
+      "credential_expired": "Credencial caducada",
+      "rate_limited": "Límite de frecuencia del proveedor alcanzado",
+      "invalid_payload": "Carga rechazada por la validación",
+      "consent_missing": "Omitido: consentimiento obligatorio no concedido",
+      "destination_paused": "Omitido: destino pausado",
+      "gpc_opt_out": "Omitido: exclusión Global Privacy Control",
+      "policy_blocked": "Omitido por la política",
+      "vendor_timeout": "El proveedor no respondió a tiempo",
+      "vendor_temporary": "Error temporal del proveedor",
+      "vendor_rejected": "El proveedor rechazó la solicitud",
+      "destination_missing": "El destino ya no está en la configuración publicada",
+      "unknown": "Error desconocido"
+    },
+    "failures": {
+      "title": "Fallos recientes (7 días)",
+      "none": "Sin intentos fallidos en los últimos 7 días.",
+      "attempt": "Intento {n}",
+      "http": "HTTP {status}",
+      "willRetry": "se reintentará",
+      "redacted": "Mensaje del proveedor (redactado)"
+    },
+    "actions": {
+      "diagnose": "Diagnosticar",
+      "diagnosing": "Diagnosticando…",
+      "diagnoseHint": "Ejecuta la validación de credenciales y la comprobación de salud del conector con los secretos guardados y registra el resultado.",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "pauseTitle": "¿Pausar las entregas a {name}?",
+      "pauseText": "Los eventos se siguen recopilando y entregando a todos los demás destinos. Los eventos de este destino se omiten mientras esté pausado; no se guardan para más tarde. Puedes reanudar en cualquier momento.",
+      "pauseConfirm": "Pausar destino",
+      "resumeTitle": "¿Reanudar las entregas a {name}?",
+      "resumeText": "Track comprueba primero las credenciales. Las entregas solo se reanudan si el proveedor acepta las credenciales guardadas; de lo contrario, el destino sigue desconectado y el motivo se muestra aquí.",
+      "resumeConfirm": "Comprobar y reanudar",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "working": "En curso…",
+      "readOnly": "Tu rol puede ver esta página; diagnosticar, pausar y reanudar requieren el permiso de integraciones."
+    },
+    "results": {
+      "diagnoseOk": "El proveedor aceptó las credenciales.",
+      "diagnoseFailed": "El proveedor rechazó las credenciales.",
+      "diagnoseNotConnected": "Aún no hay credenciales que comprobar.",
+      "resumed": "Reanudado: las entregas continúan.",
+      "notResumed": "No reanudado: el proveedor no aceptó las credenciales.",
+      "paused": "Pausado. Los eventos de este destino se omiten.",
+      "statusNow": "Estado actual: {status}",
+      "healthNow": "Salud: {health}",
+      "error": {
+        "forbidden": "No tienes permiso para hacer esto.",
+        "not_found": "Destino no encontrado.",
+        "invalid": "Esta acción no es posible en el estado actual del destino.",
+        "connector_unavailable": "Este conector no está disponible en esta plataforma.",
+        "vault_missing": "El almacén de credenciales no está configurado; los secretos guardados no se pueden leer.",
+        "timeout": "El proveedor no respondió en 25 segundos.",
+        "failed": "La comprobación no se pudo completar.",
+        "generic": "Algo ha fallado. Inténtalo de nuevo."
+      }
+    },
+    "time": {
+      "unknown": "desconocido"
+    }
+  }
+}

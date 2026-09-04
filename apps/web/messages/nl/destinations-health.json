@@ -1,0 +1,239 @@
+{
+  "destinationsHealth": {
+    "title": "Destination Health Center",
+    "intro": "Verloop van credentials en OAuth, API-versies, rate limits, foutpercentage, wachtrijachterstand en de laatste geslaagde levering van elke bestemming — gemeten uit echte leverpogingen. Diagnosticeer of pauzeer één bestemming zonder de ingestie of de andere bestemmingen te stoppen.",
+    "scope": {
+      "label": "Bereik",
+      "thisSite": "Deze site",
+      "allSites": "Alle sites",
+      "siteColumn": "Site"
+    },
+    "add": "Bestemming toevoegen",
+    "edit": "Bewerken",
+    "editHint": "Opent de installatiewizard van deze bestemming.",
+    "noSites": "Nog geen site",
+    "noSitesText": "Maak eerst een site aan — bestemmingen horen bij een site.",
+    "createSite": "Site aanmaken",
+    "empty": "Geen bestemmingen voor {site}",
+    "emptyAll": "Nog geen bestemmingen",
+    "emptyText": "Voeg een advertentieplatform, analysetool, affiliatenetwerk of webhook toe. De status wordt gemeten uit echte leverpogingen, nooit geschat.",
+    "showAllSites": "Alle sites tonen",
+    "summary": {
+      "total": "Bestemmingen",
+      "critical": "Actie nodig",
+      "warning": "Waarschuwingen",
+      "healthy": "Gezond",
+      "healthyHint": "verbonden, geen open probleem",
+      "paused": "Gepauzeerd"
+    },
+    "attention": {
+      "title": "Eerst aandacht nodig",
+      "none": "Geen open probleem in de gemeten gegevens."
+    },
+    "filter": {
+      "label": "Bestemmingen filteren",
+      "all": "Alle",
+      "attention": "Actie nodig",
+      "paused": "Gepauzeerd",
+      "healthy": "Gezond"
+    },
+    "columns": {
+      "destination": "Bestemming",
+      "status": "Status",
+      "health": "Gezondheid",
+      "credentials": "Credentials",
+      "deliveries": "Leveringen {hours} u",
+      "queue": "Wachtrij",
+      "lastSuccess": "Laatste succes",
+      "actions": "Acties"
+    },
+    "table": {
+      "caption": "Bestemmingen met hun gemeten gezondheid, credentials, leveringen en wachtrijachterstand",
+      "testMode": "Testmodus",
+      "apiVersion": "API {version}",
+      "showDetails": "Details van {name} tonen",
+      "hideDetails": "Details van {name} verbergen",
+      "details": "Details"
+    },
+    "status": {
+      "draft": "Concept",
+      "not_connected": "Niet verbonden",
+      "connected": "Verbonden",
+      "paused": "Gepauzeerd",
+      "error": "Fout"
+    },
+    "health": {
+      "healthy": "Gezond",
+      "degraded": "Verminderd",
+      "unhealthy": "Verstoord",
+      "not_connected": "Niet verbonden",
+      "unknown": "Niet gecontroleerd",
+      "checkedAt": "Gecontroleerd {when}",
+      "neverChecked": "Nooit gecontroleerd"
+    },
+    "credentials": {
+      "title": "Opgeslagen credentials",
+      "none": "Geen opgeslagen",
+      "no_expiry": "Geen vervaldatum gemeld",
+      "ok": "Geldig, verloopt {when}",
+      "expiring": "Verloopt {when}",
+      "expired": "Verlopen {when}",
+      "inactive": "Inactief",
+      "missing": "Ontbreekt: {kinds}",
+      "lastValidated": "Laatst gevalideerd {when}",
+      "neverValidated": "Nooit gevalideerd",
+      "kind": "Soort",
+      "label": "Label",
+      "statusLabel": "Status",
+      "expires": "Verloopt",
+      "validated": "Gevalideerd",
+      "last4": "eindigt op {last4}",
+      "status": {
+        "active": "Actief",
+        "rotated": "Geroteerd",
+        "revoked": "Ingetrokken",
+        "expired": "Verlopen"
+      }
+    },
+    "oauth": {
+      "title": "OAuth-verbinding",
+      "provider": "Provider",
+      "account": "Account",
+      "accountUnknown": "Account niet gemeld",
+      "requestedScopes": "Aangevraagde scopes",
+      "grantedScopes": "Verleende scopes",
+      "grantedUnknown": "Niet gemeld door de leverancier",
+      "accessExpires": "Toegangstoken verloopt {when}",
+      "accessExpiresUnknown": "Verloop van het toegangstoken niet gemeld",
+      "refreshHint": "Toegangstokens worden automatisch vernieuwd met het opgeslagen refresh-token."
+    },
+    "api": {
+      "title": "API van de leverancier",
+      "version": "API-versie {version}",
+      "verified": "Documentatie geverifieerd op {date}",
+      "sunset": "Versie wordt uitgefaseerd op {date} (over {days} dagen)",
+      "sunsetPassed": "Uitfaseringsdatum {date} is verstreken",
+      "noSunset": "Geen uitfasering aangekondigd",
+      "docs": "Documentatie van de leverancier"
+    },
+    "deliveries": {
+      "title": "Leveringen (laatste {hours} u)",
+      "summary": "{success} geleverd · {failed} mislukt · {retry} in nieuwe poging",
+      "skipped": "{count} overgeslagen door toestemming of pauze",
+      "none": "Geen pogingen in de laatste {hours} u",
+      "errorRate": "{rate} van de pogingen is mislukt",
+      "errorRateNone": "Foutpercentage niet meetbaar zonder pogingen"
+    },
+    "rateLimit": {
+      "title": "Rate limits",
+      "none": "Geen rate limit bereikt in de laatste {hours} u",
+      "count": "{count} rate-limited in de laatste {hours} u",
+      "lastWait": "Leverancier vroeg {wait} te wachten",
+      "lastAt": "Laatste {when}"
+    },
+    "queue": {
+      "title": "Wachtrijachterstand",
+      "notMeasured": "Nog niet gemeten",
+      "notMeasuredHint": "De destination-health-taak van de worker heeft voor deze bestemming nog niet gerapporteerd.",
+      "stale": "Verouderd — gemeten {when}",
+      "measuredAt": "Gemeten {when}",
+      "ready": "{count} gereed",
+      "scheduled": "{count} geplande nieuwe pogingen",
+      "inFlight": "{count} in behandeling",
+      "empty": "Wachtrij leeg",
+      "lag": "Oudste wacht al {duration}",
+      "dead": "{count} in de dead-letter-wachtrij"
+    },
+    "freshness": {
+      "missingTitle": "Wachtrijachterstand nog niet gemeten",
+      "missingText": "De destination-health-taak van de worker heeft voor {count} bestemmingen nog geen snapshot geschreven. Leveringen, credentials en API-versies op deze pagina zijn live; wachtrijwaarden verschijnen zodra de taak is uitgevoerd.",
+      "staleTitle": "Wachtrijwaarden zijn verouderd",
+      "staleText": "De laatste worker-snapshot dateert van {when}. Leveringen, credentials en API-versies zijn live."
+    },
+    "lastSuccess": {
+      "never": "Nooit"
+    },
+    "issues": {
+      "credential_expired": "Een credential is verlopen — de leverancier zal leveringen weigeren.",
+      "auth_failures": "De leverancier weigerde de credentials bij {count} pogingen.",
+      "status_error": "De bestemming staat in de foutstatus.",
+      "health_unhealthy": "De laatste gezondheidscontrole is mislukt.",
+      "credential_missing": "Vereiste credentials ontbreken: {kinds}.",
+      "credential_expiring": "Een credential verloopt {when}.",
+      "health_degraded": "De laatste gezondheidscontrole meldde een verminderde dienst.",
+      "rate_limited": "De leverancier heeft {count} pogingen rate-limited.",
+      "high_error_rate": "{rate} van de pogingen is mislukt.",
+      "queue_lag": "Berichten wachten al {duration}.",
+      "dead_letters": "{count} events konden niet worden geleverd en staan in de dead-letter-wachtrij.",
+      "api_sunset": "API-versie {version} wordt over {days} dagen uitgefaseerd.",
+      "not_connected": "De bestemming is niet verbonden; er wordt niets geleverd.",
+      "paused": "Gepauzeerd {when}; events voor deze bestemming worden overgeslagen.",
+      "draft": "Installatie niet afgerond — open de wizard.",
+      "no_delivery_yet": "Nog geen geslaagde levering."
+    },
+    "reasons": {
+      "credentials_rejected": "Leverancier weigerde de credentials",
+      "credential_missing": "Credential ontbreekt of is ingetrokken",
+      "credential_expired": "Credential verlopen",
+      "rate_limited": "Rate limit van de leverancier bereikt",
+      "invalid_payload": "Payload afgewezen door validatie",
+      "consent_missing": "Overgeslagen: vereiste toestemming niet gegeven",
+      "destination_paused": "Overgeslagen: bestemming gepauzeerd",
+      "gpc_opt_out": "Overgeslagen: Global Privacy Control-opt-out",
+      "policy_blocked": "Overgeslagen door beleid",
+      "vendor_timeout": "Leverancier antwoordde niet op tijd",
+      "vendor_temporary": "Tijdelijke fout bij de leverancier",
+      "vendor_rejected": "Leverancier weigerde het verzoek",
+      "destination_missing": "Bestemming staat niet meer in de gepubliceerde configuratie",
+      "unknown": "Onbekende fout"
+    },
+    "failures": {
+      "title": "Recente fouten (7 dagen)",
+      "none": "Geen mislukte pogingen in de laatste 7 dagen.",
+      "attempt": "Poging {n}",
+      "http": "HTTP {status}",
+      "willRetry": "wordt opnieuw geprobeerd",
+      "redacted": "Bericht van de leverancier (geredigeerd)"
+    },
+    "actions": {
+      "diagnose": "Diagnosticeren",
+      "diagnosing": "Diagnose loopt…",
+      "diagnoseHint": "Voert de credentialvalidatie en de gezondheidscontrole van de connector uit met de opgeslagen geheimen en legt het resultaat vast.",
+      "pause": "Pauzeren",
+      "resume": "Hervatten",
+      "pauseTitle": "Leveringen aan {name} pauzeren?",
+      "pauseText": "Events worden nog steeds verzameld en aan alle andere bestemmingen geleverd. Events voor deze bestemming worden tijdens de pauze overgeslagen — ze worden niet bewaard voor later. Je kunt op elk moment hervatten.",
+      "pauseConfirm": "Bestemming pauzeren",
+      "resumeTitle": "Leveringen aan {name} hervatten?",
+      "resumeText": "Track controleert eerst de credentials. Leveringen worden alleen hervat als de leverancier de opgeslagen credentials accepteert; anders blijft de bestemming ontkoppeld en wordt de reden hier getoond.",
+      "resumeConfirm": "Controleren en hervatten",
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "readOnly": "Je rol kan deze pagina bekijken; diagnosticeren, pauzeren en hervatten vereisen de integratierechten."
+    },
+    "results": {
+      "diagnoseOk": "Leverancier accepteerde de credentials.",
+      "diagnoseFailed": "Leverancier weigerde de credentials.",
+      "diagnoseNotConnected": "Nog geen credentials om te controleren.",
+      "resumed": "Hervat — leveringen gaan door.",
+      "notResumed": "Niet hervat — de leverancier accepteerde de credentials niet.",
+      "paused": "Gepauzeerd. Events voor deze bestemming worden overgeslagen.",
+      "statusNow": "Status nu: {status}",
+      "healthNow": "Gezondheid: {health}",
+      "error": {
+        "forbidden": "Je hebt hiervoor geen toestemming.",
+        "not_found": "Bestemming niet gevonden.",
+        "invalid": "Deze actie is niet mogelijk in de huidige status van de bestemming.",
+        "connector_unavailable": "Deze connector is niet beschikbaar op dit platform.",
+        "vault_missing": "De credentialopslag is niet geconfigureerd; opgeslagen geheimen kunnen niet worden gelezen.",
+        "timeout": "De leverancier antwoordde niet binnen 25 seconden.",
+        "failed": "De controle kon niet worden voltooid.",
+        "generic": "Er is iets misgegaan. Probeer het opnieuw."
+      }
+    },
+    "time": {
+      "unknown": "onbekend"
+    }
+  }
+}

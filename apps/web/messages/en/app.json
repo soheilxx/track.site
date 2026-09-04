@@ -1,25 +1,5 @@
 {
   "app": {
-    "nav": {
-      "overview": "Overview",
-      "aiSetup": "AI Setup",
-      "sites": "Sites",
-      "events": "Events",
-      "debugger": "Event Debugger",
-      "destinations": "Destinations",
-      "dataQuality": "Data Quality",
-      "consent": "Consent & Privacy",
-      "audiences": "Audiences",
-      "team": "Team",
-      "billing": "Billing",
-      "settings": "Settings",
-      "openMenu": "Open navigation",
-      "closeMenu": "Close navigation",
-      "account": "Account",
-      "logout": "Log out",
-      "switchOrg": "Switch organization",
-      "expertMode": "Expert mode"
-    },
     "overview": {
       "title": "Overview",
       "welcome": "Welcome back, {name}",
@@ -79,7 +59,7 @@
       "lastServerEvent": "Last server event",
       "never": "never",
       "openSetup": "Open AI setup",
-      "openDebugger": "Open event debugger",
+      "openDebugger": "Open Live Event Explorer",
       "openShop": "Shop connection"
     },
     "common": {

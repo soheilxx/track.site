@@ -1,0 +1,245 @@
+{
+  "billingUsage": {
+    "subnav": {
+      "label": "Abrechnungsbereiche",
+      "overview": "Übersicht",
+      "usage": "Verbrauch & Kostenschutz"
+    },
+    "title": "Usage & Cost Guard",
+    "intro": "Abrechenbare Events der aktuellen Periode, eine Prognose bis zum Periodenende, Mehrverbrauch in Eventpaketen, ungewöhnliche Last gegenüber der 4-Wochen-Basislinie und deine ausdrückliche Entscheidung, was am Limit passiert. Jede Zahl stammt aus dem Usage Ledger und den Periodenzählern; nichts wird stillschweigend geschätzt.",
+    "comparePlans": "Tarife vergleichen",
+    "context": {
+      "plan": "Tarif {name}",
+      "period": "Periode {from} – {to} (UTC)",
+      "updated": "Zähler aktualisiert {at}",
+      "noCounters": "Noch keine Periodenzähler",
+      "ledger": "Letzter Ledger-Eintrag {at}",
+      "stale": "Zähler hinter dem Ledger"
+    },
+    "alerts": {
+      "hardLimitTitle": "Limit erreicht — Verarbeitung zum Pausieren markiert",
+      "hardLimitText": "Die Verbrauchsprüfung hat diese Periode am {at} unter der Richtlinie „{policy}“ markiert. Ändere die Richtlinie unten oder wechsle den Tarif in der Übersicht; die Markierung wird beim Speichern sofort neu bewertet.",
+      "softLimitTitle": "Monatliches Eventlimit erreicht",
+      "softLimitAllow": "Events über dem Limit werden als Eventpakete berechnet, weil Mehrverbrauch erlaubt ist.",
+      "softLimitCostLimit": "Events über dem Limit werden als Eventpakete bis zu deinem monatlichen Kostenlimit von {limit} berechnet; ab {pauseAt} Events pausiert die Verarbeitung.",
+      "softLimitPause": "Die Verarbeitung pausiert bei {pauseAt} Events ({grace} % Kulanz über dem Limit), sofern du keinen Mehrverbrauch erlaubst oder den Tarif wechselst.",
+      "staleTitle": "Periodenzähler liegen hinter dem Ledger",
+      "staleText": "Das Ledger enthält Events, die neuer sind als die letzte Zähleraktualisierung ({updated}). Die Zähler holen beim nächsten Ingestion-Lauf auf; das Tagesdiagramm enthält die neueren Events bereits.",
+      "ledgerOnlyTitle": "Aus dem Ledger gezählt",
+      "ledgerOnlyText": "Die Periodenzähler wurden noch nicht geschrieben; die abrechenbare Zahl ist daher die Summe der Ledger-Zeilen dieser Periode.",
+      "noLimitTitle": "Kein festes Eventlimit in diesem Tarif",
+      "noLimitText": "Mehrverbrauch, Schwellen und die Pausenoption gelten nicht; das Volumen ist vertraglich vereinbart."
+    },
+    "empty": {
+      "title": "Noch keine abrechenbaren Events in dieser Periode",
+      "text": "Das Usage Ledger enthält keine Zeilen für {period}. Events erscheinen hier, sobald die Ingestion sie annimmt; Testmodus-Events, Duplikate und Retries zählen nie.",
+      "action": "Events öffnen"
+    },
+    "stats": {
+      "billable": {
+        "label": "Abrechenbare Events",
+        "ofLimit": "{pct} von {limit}",
+        "noLimit": "Kein festes Limit",
+        "sourcePeriod": "Aus den Periodenzählern",
+        "sourceLedger": "Aus dem Ledger"
+      },
+      "forecast": {
+        "label": "Prognose zum Periodenende",
+        "hint": "Linear aus {from} – {to} · {rate} pro Tag",
+        "noBasis": "Keine Ledger-Zeilen in den letzten 7 Tagen — entspricht dem heutigen Stand",
+        "ofLimit": "{pct} des Limits",
+        "above": "{events} über dem Limit"
+      },
+      "overage": {
+        "label": "Mehrverbrauch aktuell",
+        "none": "Keiner",
+        "packs": "{packs} × {packEvents} Events · {cost}",
+        "events": "{events} über dem Limit",
+        "contractual": "Vertraglich — kein Paket für diesen Tarif",
+        "forecast": "Prognose zum Periodenende: {packs} Pakete · {cost}",
+        "forecastNone": "Prognose zum Periodenende: keiner"
+      },
+      "load": {
+        "label": "Last vs. 4-Wochen-Basislinie",
+        "elevated": "Erhöht",
+        "normal": "Normal",
+        "reduced": "Verringert",
+        "unknown": "Unbekannt",
+        "deviation": "{deviation} · {recent} vs. {baseline} pro Tag",
+        "noBaseline": "Noch keine Basislinie — {from} – {to} enthält keine Events",
+        "peak": "Stärkster Tag {day}: {events}"
+      }
+    },
+    "meter": {
+      "title": "Limit und Warnschwellen",
+      "intro": "Abrechenbare Events dieser Periode gegenüber dem monatlichen Limit des Tarifs. Warnungen werden von der Verbrauchsprüfung bei 70, 90 und 100 % gestempelt; die erwarteten Termine stammen aus der 7-Tage-Prognose.",
+      "used": "verbraucht",
+      "limit": "Limit",
+      "valueText": "{used} von {limit} ({pct})",
+      "exceeded": "Überschritten um {events}",
+      "thresholds": {
+        "title": "Warnschwellen",
+        "threshold": "{pct} %",
+        "events": "{events} Events",
+        "reached": "Erreicht — Warnung gestempelt {at}",
+        "reachedPending": "Erreicht — die Warnung wird bei der nächsten Verbrauchsprüfung gestempelt",
+        "expected": "Erwartet {at} · noch {remaining}",
+        "notExpected": "In dieser Periode nicht erwartet · noch {remaining}"
+      },
+      "pauseAt": "Die Verarbeitung pausiert bei {events} Events ({pct} des Limits).",
+      "neverPauses": "Unter der aktuellen Richtlinie pausiert die Verarbeitung nie; Mehrverbrauch wird als Eventpakete berechnet.",
+      "hardLimitAt": "Markiert {at}."
+    },
+    "chart": {
+      "title": "Abrechenbare Events pro Tag",
+      "intro": "UTC-Tage von {from} bis {to}: die 4-Wochen-Basislinie, die 7 vollständigen Tage, über die die Prognose gemittelt wird, und der heutige Tag bis jetzt. Die Prognose ist eine Hochrechnung und wird nicht gezeichnet.",
+      "aria": "Balkendiagramm der abrechenbaren Events über {days} Tage: {recent} in den letzten 7 vollständigen Tagen, {baseline} in der 4-Wochen-Basislinie davor, {today} heute bisher.",
+      "legend": {
+        "baseline": "Basislinie {from} – {to}",
+        "recent": "Letzte 7 Tage {from} – {to}",
+        "today": "Heute (unvollständig)"
+      },
+      "details": "Tageswerte anzeigen",
+      "day": "Tag",
+      "events": "Abrechenbare Events",
+      "window": {
+        "label": "Fenster",
+        "baseline": "Basislinie",
+        "recent": "Letzte 7 Tage",
+        "today": "Heute"
+      },
+      "empty": "Keine abrechenbaren Events in diesem Fenster."
+    },
+    "policy": {
+      "title": "Was am Limit passiert",
+      "intro": "Mehrverbrauch wird nie von selbst aktiviert. Du entscheidest, ob zusätzliche Events als Pakete berechnet werden, ob ein monatliches Kostenlimit sie deckelt oder ob die Verarbeitung nach der Kulanzphase pausiert. Die Verbrauchsprüfung wendet deine Wahl bei jedem Lauf an; jede Änderung wird auditiert.",
+      "current": "Aktuelle Richtlinie:",
+      "legend": "Mehrverbrauchsrichtlinie",
+      "readOnly": "Deine Rolle kann die Richtlinie sehen, aber nicht ändern.",
+      "options": {
+        "allow": {
+          "label": "Mehrverbrauch erlauben",
+          "description": "Events über dem Limit werden als Eventpakete zum Listenpreis berechnet. Die Verarbeitung pausiert nie."
+        },
+        "cost_limit": {
+          "label": "Monatliches Kostenlimit",
+          "description": "Eventpakete werden bis zu dem von dir festgelegten Betrag berechnet; sobald die benötigten Pakete mehr kosten würden, pausiert die Verarbeitung für den Rest der Periode."
+        },
+        "pause": {
+          "label": "Am Limit pausieren",
+          "description": "Die Verarbeitung läuft durch eine Kulanzphase über dem Limit weiter und pausiert dann für den Rest der Periode. Es wird nie ein Paket berechnet."
+        }
+      },
+      "notes": {
+        "cost_limit_unset": "Kein Betrag festgelegt — verhält sich wie „Am Limit pausieren“.",
+        "no_pack": "Kein Paket für diesen Tarif — verhält sich wie „Am Limit pausieren“."
+      },
+      "costLimit": {
+        "label": "Monatliches Kostenlimit (ganze Euro)",
+        "hint": "{packs} Pakete zu je {events} Events für {price} passen in dieses Limit.",
+        "hintPack": "Pakete zu {events} Events kosten je {price}.",
+        "noPack": "Dieser Tarif hat kein Eventpaket; ein Kostenlimit kann keinen Mehrverbrauch kaufen.",
+        "invalid": "Gib einen ganzen Betrag zwischen {min} und {max} ein."
+      },
+      "consequence": {
+        "allow": "Je {events} Events über dem Limit werden als ein Paket zu {price} berechnet, ohne Obergrenze.",
+        "costLimit": "Bis zu {limit} pro Monat bezahlen {packs} Pakete ({events} Events über dem Limit). Ab {pauseAt} abrechenbaren Events pausiert die Verarbeitung.",
+        "costLimitUnset": "Gib einen Betrag ein, um zu sehen, wie viele Pakete er bezahlt.",
+        "pause": "Die Verarbeitung pausiert bei {pauseAt} abrechenbaren Events ({grace} % über dem Limit). Es wird kein Paket berechnet.",
+        "noLimit": "Dieser Tarif hat kein festes Eventlimit; die Richtlinie wirkt erst, wenn ein Tarif mit Limit gilt.",
+        "noPack": "Dieser Tarif hat kein Eventpaket, Mehrverbrauch kann also nicht gekauft werden; die Verarbeitung pausiert nach der Kulanzphase."
+      },
+      "save": "Richtlinie speichern",
+      "unchanged": "Keine Änderung zu speichern.",
+      "confirm": {
+        "title": "Mehrverbrauchsrichtlinie bestätigen",
+        "text": "Die Richtlinie gilt sofort für die aktuelle Periode: Die Pausenmarkierung wird beim Speichern neu bewertet, und die Verbrauchsprüfung wendet bei jedem Lauf dieselbe Regel an.",
+        "acknowledge": "Ich verstehe, dass Events über dem Limit als Eventpakete zum Listenpreis berechnet werden.",
+        "cancel": "Abbrechen",
+        "confirm": "Richtlinie speichern",
+        "working": "Wird gespeichert…",
+        "close": "Schließen"
+      },
+      "saved": "Richtlinie gespeichert.",
+      "savedPaused": "Richtlinie gespeichert. Unter dieser Richtlinie ist die aktuelle Periode als pausiert markiert.",
+      "savedNotPaused": "Richtlinie gespeichert. Die aktuelle Periode ist nicht pausiert.",
+      "errors": {
+        "invalid": "Die Auswahl konnte nicht gespeichert werden: Prüfe das Kostenlimit.",
+        "forbidden": "Deine Rolle kann die Abrechnungsrichtlinie nicht ändern.",
+        "generic": "Etwas ist schiefgelaufen. Es wurde nichts geändert."
+      }
+    },
+    "comparison": {
+      "title": "Eventpaket oder nächster Tarif?",
+      "intro": "Für die Prognose von {events} abrechenbaren Events pro Monat, zu Listenpreisen des Katalogs pro {period}.",
+      "introNoBasis": "Für {events} abrechenbare Events pro Monat (heutiger Stand — noch keine 7-Tage-Rate), zu Listenpreisen des Katalogs pro {period}.",
+      "columns": {
+        "option": "Option",
+        "base": "Tarifpreis / {period}",
+        "included": "Inklusive / Monat",
+        "overage": "Mehrverbrauch / Monat",
+        "overageCost": "Paketkosten / {period}",
+        "total": "Gesamt / {period}"
+      },
+      "current": "Aktueller Tarif",
+      "cheapest": "Günstigste Option",
+      "packs": "{events} → {packs} Pakete",
+      "contractual": "{events} über dem, was Pakete abdecken",
+      "noOverage": "Keiner",
+      "stay": "Bei {plan} mit Eventpaketen zu bleiben ist für dieses Volumen die günstigere Option.",
+      "upgradeHint": "{plan} wäre für dieses Volumen um {savings} pro {period} günstiger.",
+      "noneCheapest": "Für dieses Volumen lässt sich aus dem Katalog keine Option bepreisen.",
+      "noSilent": "Track wechselt deinen Tarif nie von selbst und kauft keine Pakete ungefragt.",
+      "contractualNote": "Dieser Tarif hat keinen Listenpreis; Mehrverbrauch ist vertraglich vereinbart.",
+      "none": "Nichts zu vergleichen.",
+      "choosePlan": "Tarife vergleichen",
+      "taxNote": "Listenpreise ohne Umsatzsteuer; der Betrag auf deiner Rechnung stammt von Stripe.",
+      "per": {
+        "monthly": "Monat",
+        "yearly": "Jahr"
+      }
+    },
+    "sites": {
+      "title": "Abrechenbare Events pro Site",
+      "intro": "Ledger-Zeilen dieser Periode nach Site. Der Verbrauch wird pro Organisation gemessen; die aktive Site ist hervorgehoben.",
+      "site": "Site",
+      "trackingId": "Tracking-ID",
+      "events": "Abrechenbare Events",
+      "share": "Anteil",
+      "active": "Aktive Site",
+      "empty": "Keine Ledger-Zeilen für diese Periode."
+    },
+    "rules": {
+      "title": "Was als abrechenbares Event zählt",
+      "intro": "Ein Event wird genau einmal gezählt, wenn die Ingestion es annimmt; die Weiterleitung an mehrere Destinations erhöht den Verbrauch nie. Nie gezählt werden:"
+    },
+    "overview": {
+      "guard": {
+        "title": "Verbrauch & Kostenschutz",
+        "text": "Prognose, Mehrverbrauch, ungewöhnliche Last und deine Entscheidung, was am Limit passiert.",
+        "open": "Kostenschutz öffnen",
+        "policy": "Richtlinie",
+        "forecast": "Prognose zum Periodenende",
+        "forecastNoBasis": "noch keine 7-Tage-Rate",
+        "thresholds": "{reached} von {total} Warnschwellen erreicht",
+        "noLimit": "Kein festes Eventlimit in diesem Tarif",
+        "paused": "Als pausiert markiert"
+      },
+      "history": {
+        "caption": "Abrechenbare, akzeptierte, verworfene und deduplizierte Events pro Periode"
+      },
+      "plans": "Tarife",
+      "status": {
+        "none": "Kein Abonnement",
+        "trialing": "Testphase",
+        "active": "Aktiv",
+        "past_due": "Zahlung überfällig",
+        "canceled": "Gekündigt",
+        "unpaid": "Unbezahlt",
+        "incomplete": "Unvollständig",
+        "incomplete_expired": "Unvollständig (abgelaufen)",
+        "paused": "Pausiert"
+      }
+    }
+  }
+}

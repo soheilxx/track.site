@@ -1,0 +1,326 @@
+{
+  "dataQuality": {
+    "title": "Data Quality",
+    "intro": "Measured tracking problems of your site, ranked by impact: missing required fields, schema errors, invalid values, duplicates, currency and value problems, event drops, conversion spikes and revenue leaks — each with its evidence and, where the configuration can fix it, a reviewable draft.",
+    "siteContext": "Site: {site}",
+    "noSite": "No site yet",
+    "noSiteText": "Create your first site to get a tracking ID; the quality scan starts with the first events.",
+    "createSite": "Create site",
+    "nav": {
+      "label": "Data quality sections",
+      "inbox": "Inbox",
+      "leaks": "Signal gaps & revenue leaks"
+    },
+    "summary": {
+      "open": "Open issues",
+      "critical": "Critical",
+      "acknowledged": "Acknowledged",
+      "mutedCount": "{n} muted",
+      "lastScan": "Last scan",
+      "lastScanNever": "The quality scan has not run for this site yet — nothing has been measured.",
+      "lastObserved": "Newest observation {date}",
+      "staleScan": "The last quality scan ran on {date}, more than a day ago. The inbox may be behind the live data.",
+      "notMeasured": "Not measured yet"
+    },
+    "filters": {
+      "statusLabel": "Filter by status",
+      "categoryLabel": "Filter by category",
+      "all": "All",
+      "status": {
+        "open": "Open",
+        "acknowledged": "Acknowledged",
+        "resolved": "Resolved",
+        "muted": "Muted"
+      },
+      "category": {
+        "required_fields": "Required fields",
+        "schema": "Schema",
+        "values": "Values & currency",
+        "duplicates": "Duplicates",
+        "drops": "Event drops",
+        "spikes": "Conversion spikes",
+        "revenue": "Signal gaps & revenue",
+        "usage": "Plan usage",
+        "delivery": "Delivery",
+        "other": "Other"
+      },
+      "categoryHelp": {
+        "required_fields": "Events that arrived without a field the standard event requires (order ID, currency, value).",
+        "schema": "Events outside the published event plan or with an unexpected shape.",
+        "values": "Values that are zero or negative, or currencies that differ from the site currency.",
+        "duplicates": "The same order reported twice by the same path; duplicates are dropped and never billed.",
+        "drops": "Events rejected at ingest or a sudden fall in the volume of a critical event.",
+        "spikes": "Conversions far above the daily average — worth verifying before ad platforms optimise on them.",
+        "revenue": "Verified orders or leads that did not reach a destination, or were never captured in the browser.",
+        "usage": "Warnings about the monthly event limit of your plan.",
+        "delivery": "Failures while delivering events to destinations.",
+        "other": "Issues without a specific category."
+      }
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "status": {
+      "open": "Open",
+      "acknowledged": "Acknowledged",
+      "resolved": "Resolved",
+      "muted": "Muted"
+    },
+    "empty": {
+      "title": "No issues in this view",
+      "text": "Change the status or category filter to see other issues.",
+      "noIssuesAtAll": "No issues recorded for this site",
+      "scanned": "The last scan on {date} found nothing to report for the last 24 hours. This is a measurement, not a guarantee: the scan checks the standard events and destinations described in the categories.",
+      "scanPending": "The quality scan has not run for this site yet, so this is not a health statement. Check back after the worker's next run.",
+      "reset": "Show open issues"
+    },
+    "issue": {
+      "impact": "Impact {score}",
+      "impactHelp": "0–100 from severity, the share of affected events and the known value.",
+      "environment": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "noEnvironment": "No environment selected",
+      "affected": "{affected} of {total} affected ({share})",
+      "affectedOnly": "{affected} affected",
+      "value": "Known value {value}",
+      "firstSeen": "first seen {date}",
+      "lastSeen": "last seen {date}",
+      "occurrences": "seen in {n} scans",
+      "stale": "Stale",
+      "staleHelp": "Not observed for more than {days} days. It is not resolved automatically — resolve it when you have checked.",
+      "mutedUntil": "Muted until {date}",
+      "mutedIndefinitely": "Muted until reopened",
+      "mutedReason": "Reason: {reason}",
+      "note": "Note: {note}",
+      "fixDraft": "Fix draft prepared {date}",
+      "window": "Observation window {from} – {to}",
+      "evidence": "Evidence",
+      "samples": "Redacted sample events",
+      "noSamples": "No sample events are stored for this issue; the counts come from aggregates.",
+      "sample": {
+        "event": "Event",
+        "source": "Source",
+        "time": "Time",
+        "detail": "Finding"
+      },
+      "fixTool": "Track AI tool for this issue: {tool}"
+    },
+    "kinds": {
+      "missing_required_field": "{event}: required field \"{field}\" missing",
+      "invalid_value": "{event}: invalid {field}",
+      "currency_mismatch": "{event}: currency differs from the site currency",
+      "unplanned_event": "Unplanned event \"{event}\"",
+      "duplicate_conversion": "Duplicate {event} conversions",
+      "ingest_drop": "Events dropped at ingest ({reason})",
+      "event_drop": "\"{event}\" volume dropped",
+      "conversion_spike": "\"{event}\" spike",
+      "revenue_leak": "Revenue leak towards {destination}",
+      "signal_gap": "Verified orders without a browser event",
+      "usage_limit_70": "70 % of the monthly event limit used",
+      "usage_limit_90": "90 % of the monthly event limit used",
+      "usage_limit_reached": "Monthly event limit reached"
+    },
+    "actions": {
+      "acknowledge": "Acknowledge",
+      "resolve": "Mark resolved",
+      "reopen": "Reopen",
+      "mute": "Mute…",
+      "prepareFix": "Prepare fix draft…",
+      "askAi": "Ask Track AI",
+      "openExplorer": "Open in event explorer",
+      "viewDraft": "Open draft in releases",
+      "cancel": "Cancel",
+      "working": "Working…",
+      "readOnly": "Changing the status or preparing drafts needs the developer, admin or owner role."
+    },
+    "mute": {
+      "title": "Mute this issue",
+      "description": "A muted issue keeps being measured but leaves the open list. Give a reason your team will understand later.",
+      "reason": "Reason",
+      "reasonHint": "For example: known test traffic, fix scheduled for the next release.",
+      "until": "Mute for",
+      "durations": {
+        "7": "7 days",
+        "30": "30 days",
+        "90": "90 days",
+        "never": "Until reopened"
+      },
+      "confirm": "Mute issue"
+    },
+    "fix": {
+      "title": "Prepare fix draft",
+      "description": "Track creates or updates the open configuration draft for {environment}. Nothing is published: the draft goes through lint, review and release like every other change.",
+      "neverPublishes": "A draft never changes live tracking. Publishing stays a separate, confirmed step in Releases.",
+      "codes": {
+        "authoritative_shop": "Make the connected {platform} shop the authoritative source of purchase events: verified orders carry order ID, value and currency and supersede browser purchases with the same order ID.",
+        "add_event": "Add the custom event \"{event}\" to the event plan (enabled, not critical, API trigger) so it is planned, mapped and monitored.",
+        "destination_hybrid": "Switch {destination} from browser-only to hybrid delivery so verified {event} events are also sent server-side.",
+        "enable_event": "Re-enable the event \"{event}\" in the configuration; it is currently disabled."
+      },
+      "unavailable": {
+        "no_bundle": "No configuration has been published for this environment yet, so there is nothing to draft against.",
+        "connect_shop": "The configuration cannot add missing order data. Connect your shop so verified orders become the authoritative source.",
+        "site_change": "This has to be fixed where the event is sent: the site or shop must provide {field} for {event}. Track never fills in missing values.",
+        "needs_mapping": "{destination} has no mapping for {event}. Add the mapping in Destinations first.",
+        "destination_health": "The cause lies in the delivery to the destination. Check credentials, rate limits and errors in Destinations.",
+        "consent": "Consent decides here. Review the consent policy and the CMP setup; Track does not loosen consent by itself.",
+        "billing": "This is a plan limit. Choose overage or a plan change in Billing.",
+        "not_applicable": "No configuration change can fix this; it needs a human check.",
+        "already_drafted": "A fix draft already exists for this issue."
+      },
+      "links": {
+        "shop": "Open shop connections",
+        "destinations": "Open destinations",
+        "consent": "Open consent & privacy",
+        "billing": "Open billing",
+        "setup": "Open AI setup",
+        "releases": "Open releases"
+      },
+      "confirm": "Create draft",
+      "created": "Draft prepared.",
+      "lint": "Lint: {errors} errors, {warnings} warnings.",
+      "noEnvironment": "Select an environment in the header first; the draft belongs to one environment."
+    },
+    "errors": {
+      "invalid": "The input is invalid.",
+      "not_found": "This issue no longer exists.",
+      "forbidden": "You do not have permission for this action.",
+      "no_environment": "The selected environment does not belong to this site.",
+      "no_fix": "No configuration draft is available for this issue.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "ai": {
+      "prompt": "Explain the data quality issue \"{title}\" on {site} and propose a fix as a draft. Evidence: {summary}"
+    },
+    "leaks": {
+      "title": "Signal gaps & revenue leaks",
+      "intro": "Verified orders or leads from your shop webhooks and server sources compared with what Track observed, deduplicated and delivered per destination. Gaps come with their reason and their uncertainty; missing revenue, orders or identities are never filled in.",
+      "range": {
+        "label": "Period",
+        "7": "Last 7 days",
+        "30": "Last 30 days"
+      },
+      "kind": {
+        "label": "Conversion type",
+        "purchase": "Orders",
+        "lead": "Leads"
+      },
+      "sources": {
+        "title": "Authoritative sources",
+        "shop": "{platform}: {status}",
+        "platform": {
+          "shopify": "Shopify",
+          "woocommerce": "WooCommerce",
+          "shopware": "Shopware"
+        },
+        "shopStatus": {
+          "pending": "pending",
+          "connected": "connected",
+          "paused": "paused"
+        },
+        "lastEvent": "last webhook {date}",
+        "never": "no webhook received yet",
+        "serverKeys": "{n} active server keys",
+        "none": "No verified source is connected. Without shop webhooks or a verified server source there are no authoritative orders to compare against — the report stays empty rather than estimating.",
+        "hint": "Connect Shopify, WooCommerce or Shopware, or create a server source key, to get authoritative orders.",
+        "connect": "Connect a shop"
+      },
+      "empty": {
+        "title": "No reconciliation yet",
+        "text": "The worker has not computed snapshots for this site, period and conversion type. Nothing is estimated in the meantime."
+      },
+      "stale": "The newest snapshot is from {date}; the report may be behind the live data.",
+      "computedAt": "Computed {date}",
+      "honesty": "Counts are verified records. Values are only summed when every valued record shares one currency; orders without a value are counted but never valued. A browser-side pixel delivery cannot be observed and stays unknown.",
+      "summary": {
+        "title": "{kind} in the period",
+        "authoritative": "Verified {kind}",
+        "valued": "{valued} of {count} carry a value",
+        "value": "Known value {value}",
+        "mixed": "Mixed currencies — values are not summed",
+        "mixedShort": "Mixed currencies",
+        "gaps": "Confirmed gaps",
+        "gapsShare": "{share} of verified {kind} did not arrive",
+        "noBase": "No verified records in the period",
+        "leak": "Value of the gaps",
+        "leakRange": "{min} – {max}",
+        "noValue": "No values known",
+        "leakUnvalued": "plus {n} without a value (not quantifiable)",
+        "leakHelp": "Lower bound: confirmed gaps; upper bound: plus the gaps with unknown outcome.",
+        "unknown": "Unknown outcome",
+        "unknownShare": "{share} of verified records",
+        "unknownHelp": "Deliveries Track cannot observe (browser pixels, in-flight retries).",
+        "delivered": "Delivered",
+        "deliveredHelp": "Verified records with at least one successful server-side delivery.",
+        "browserCapture": "Captured in the browser",
+        "browserHelp": "{n} verified records have a matching browser event with the same order ID.",
+        "duplicates": "Duplicates dropped",
+        "duplicatesHelp": "Same order reported twice by the same path; never billed, never delivered twice.",
+        "days": "Days with snapshots"
+      },
+      "reasons": {
+        "title": "Why conversions did not arrive",
+        "reason": "Reason",
+        "count": "Records",
+        "share": "Share",
+        "meaning": "What it means",
+        "dominant": "most frequent",
+        "no_consent": "No consent",
+        "blocked": "Blocked by policy or configuration",
+        "not_captured": "Not captured in the browser",
+        "delivery_failed": "Delivery failed",
+        "unknown": "Unknown",
+        "help": {
+          "no_consent": "The visitor did not grant the purpose the destination requires. Track does not send it — and does not loosen consent.",
+          "blocked": "The destination was paused, not mapped for this event, browser-only, or the policy blocked inferred data.",
+          "not_captured": "The shop reported the order, but no browser event with that order ID reached Track (snippet missing, blocked, or checkout outside the site).",
+          "delivery_failed": "Delivery was attempted and failed or was dead-lettered. Check the destination's health and errors.",
+          "unknown": "Track cannot observe the outcome: browser-side pixel deliveries, retries still in flight, or events outside the retention window."
+        }
+      },
+      "destinations": {
+        "title": "Per destination",
+        "name": "Destination",
+        "mode": "Delivery mode",
+        "authoritative": "Verified",
+        "delivered": "Delivered",
+        "gaps": "Gaps",
+        "unknown": "Unknown",
+        "leak": "Value of gaps",
+        "dominant": "Main reason",
+        "status": {
+          "draft": "draft",
+          "not_connected": "not connected",
+          "connected": "connected",
+          "paused": "paused",
+          "error": "error"
+        },
+        "modes": {
+          "browser": "Browser only",
+          "server": "Server",
+          "hybrid": "Hybrid",
+          "none": "Not in the published configuration"
+        },
+        "notMapped": "not mapped for {kind}",
+        "noData": "No snapshot for this destination in the period.",
+        "empty": "No destinations configured for this site.",
+        "open": "Open destinations"
+      },
+      "daily": {
+        "title": "Per day",
+        "day": "Day",
+        "authoritative": "Verified",
+        "delivered": "Delivered",
+        "gaps": "Gaps",
+        "unknown": "Unknown",
+        "bar": "Delivered vs. gaps",
+        "barLabel": "{delivered} delivered, {gaps} gaps"
+      }
+    }
+  }
+}

@@ -1,74 +1,82 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { ArrowRight, Plus } from "lucide-react";
-import { listSites } from "@track-site/db";
-import { Badge, Button, Card, EmptyState, StatCard } from "@track-site/ui";
-import { requireOrgContext, withOrg } from "@/server/session";
-import { overviewStats } from "@/server/stats";
+import { Suspense } from "react";
+import { EmptyState, Status, buttonVariants, type Tone } from "@track-site/ui";
+import { CommandCenterBody, CommandCenterSkeleton, PageHeader } from "@/components/app/command-center";
+import { requireOrgContext } from "@/server/session";
+import { activeSite } from "@/server/workspace";
 
-export default async function OverviewPage() {
-  const ctx = await requireOrgContext();
-  const t = await getTranslations("app.overview");
-  const sites = await withOrg(ctx, (tx) => listSites(tx, ctx.organization.id));
-  const stats = await overviewStats(ctx, sites.map((s) => s.id));
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
-          <p className="text-sm text-ink-3">{t("welcome", { name: ctx.user.name })}</p>
-        </div>
-        <Link href="/app/onboarding">
-          <Button size="sm">
-            <Plus className="h-4 w-4" aria-hidden="true" /> {t("createSite")}
-          </Button>
-        </Link>
-      </div>
-      {sites.length === 0 ? (
+/** Same mapping as the shell's environment indicator: production is the live path, staging/test flag events as test. */
+const ENVIRONMENT_TONE: Record<"production" | "staging" | "development", Tone> = { production: "ok", staging: "warn", development: "info" };
+
+/**
+ * Tracking Command Center (redesign supplement §8, module 1) for the active workspace site: the
+ * header renders immediately, the measured body streams in behind a skeleton. Reading needs the
+ * events permission; every module link leads to the workflow that owns the action — this page
+ * itself mutates nothing.
+ */
+export default async function CommandCenterPage() {
+  const ctx = await requireOrgContext("events.read");
+  const [t, tEnvironment, locale, workspace] = await Promise.all([getTranslations("commandCenter"), getTranslations("shell.environment.kind"), getLocale(), activeSite(ctx)]);
+  if (!workspace.site) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title={t("title")} description={t("intro")} />
         <EmptyState
-          title={t("noSites")}
-          description={t("noSitesText")}
+          title={t("noSite.title")}
+          description={t("noSite.text")}
           action={
-            <Link href="/app/onboarding">
-              <Button>{t("createSite")}</Button>
+            <Link href="/app/onboarding" className={buttonVariants()}>
+              {t("noSite.createSite")}
             </Link>
           }
         />
-      ) : (
-        <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <StatCard label={t("health")} value={stats.health === null ? "–" : `${stats.health}/100`} tone={stats.health === null ? "neutral" : stats.health >= 80 ? "ok" : stats.health >= 50 ? "warn" : "bad"} />
-            <StatCard label={t("acceptedEvents")} value={stats.accepted.toLocaleString()} />
-            <StatCard label={t("delivered")} value={stats.delivered.toLocaleString()} />
-          </div>
-          <Card>
-            <div className="border-b border-line px-5 py-4">
-              <h2 className="text-base font-semibold text-ink">{t("sites")}</h2>
-            </div>
-            <ul className="divide-y divide-line">
-              {sites.map((s) => (
-                <li key={s.id} className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-ink">{s.name}</p>
-                    <p className="text-sm text-ink-3">
-                      <span className="font-mono">{s.trackingId}</span> · {s.primaryDomain ?? "–"}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge tone={s.status === "active" ? "ok" : "warn"}>{s.status}</Badge>
-                    <Link href={`/app/sites/${s.id}/setup`} className="text-sm font-medium text-primary hover:underline">
-                      {t("openSetup")}
-                    </Link>
-                    <Link href={`/app/sites/${s.id}`} className="inline-flex items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
-                      {t("viewSite")} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </>
-      )}
+      </div>
+    );
+  }
+  const site = workspace.site;
+  const environment = workspace.environment;
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title={t("title")}
+        description={t("intro")}
+        context={
+          <>
+            <span>
+              {t("context.site")}: <span className="font-medium text-ink">{site.name}</span>
+            </span>
+            <span>
+              {t("context.trackingId")}: <span className="font-mono text-ink">{site.trackingId}</span>
+            </span>
+            {environment ? (
+              <Status tone={ENVIRONMENT_TONE[environment.kind]} chip indicator="both">
+                {t("context.environment")}: {tEnvironment(environment.kind)}
+              </Status>
+            ) : (
+              <Status tone="neutral" chip>
+                {t("context.noEnvironment")}
+              </Status>
+            )}
+          </>
+        }
+        actions={
+          <>
+            <Link href="/app/ai-setup" className={buttonVariants({ size: "sm" })}>
+              {t("header.openAiSetup")}
+            </Link>
+            <Link href={`/app/events?site=${site.id}`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+              {t("header.openEvents")}
+            </Link>
+            <Link href={`/app/sites/${site.id}`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+              {t("header.openSite")}
+            </Link>
+          </>
+        }
+      />
+      <Suspense fallback={<CommandCenterSkeleton label={t("loading")} />}>
+        <CommandCenterBody ctx={ctx} workspace={workspace} locale={locale} />
+      </Suspense>
     </div>
   );
 }

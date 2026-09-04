@@ -1,0 +1,381 @@
+{
+  "commandCenter": {
+    "title": "Command Center",
+    "intro": "Eerst wat je aandacht nodig heeft, daarna de gemeten toestand van je site: events, consent, destinations, leveringen, wachtrij en planverbruik.",
+    "context": {
+      "site": "Site",
+      "environment": "Omgeving",
+      "trackingId": "Tracking-ID",
+      "measuredAt": "Gemeten {time}",
+      "measuredAtAbsolute": "Gemeten om {time}",
+      "noEnvironment": "Geen omgeving",
+      "timezone": "Tijden in {timezone}"
+    },
+    "header": {
+      "openAiSetup": "AI-setup openen",
+      "openEvents": "Events openen",
+      "openSite": "Sitedetails"
+    },
+    "noSite": {
+      "title": "Nog geen site",
+      "text": "Maak je eerste site aan om een tracking-ID te krijgen. Het Command Center meet daarna alles op basis van de eigen data van die site.",
+      "createSite": "Site aanmaken"
+    },
+    "loading": "Command Center wordt geladen…",
+    "partial": {
+      "title": "Sommige metingen zijn niet beschikbaar",
+      "text": "Deze waarden konden nu niet worden gemeten en worden als niet beschikbaar getoond: {list}. Er wordt niets in de plaats geschat."
+    },
+    "state": {
+      "measured": "Gemeten",
+      "empty": "Nog geen data",
+      "stale": "Verouderd",
+      "unavailable": "Niet beschikbaar",
+      "not_measurable": "Niet meetbaar"
+    },
+    "measurements": {
+      "siteStatus": "sitestatus",
+      "domain": "domein",
+      "config": "configuratie",
+      "lastEvents": "laatste event",
+      "recentEvents": "recente events",
+      "health": "healthscore",
+      "consent": "consentdekking",
+      "destinations": "destinations",
+      "duplicates": "duplicaatpercentage",
+      "delivery": "leveringsfouten",
+      "queue": "wachtrijvertraging",
+      "usage": "planverbruik",
+      "issues": "datakwaliteitsproblemen",
+      "flow": "eventstroom",
+      "deliveryHistory": "leveringsgeschiedenis"
+    },
+    "severity": {
+      "critical": "Kritiek",
+      "warn": "Waarschuwing",
+      "info": "Suggestie"
+    },
+    "priority": {
+      "heading": "Prioriteiten",
+      "nextAction": "Volgende actie",
+      "attention": "Vraagt aandacht",
+      "attentionCount": "{n, plural, =0 {Geen verdere problemen} one {# verder probleem} other {# verdere problemen}}",
+      "attentionEmpty": "Geen verdere problemen uit de {n} uitgevoerde controles.",
+      "howDecided": "Waarom deze actie",
+      "rulesIntro": "Acties komen uit vaste regels die in een vaste volgorde worden beoordeeld: eerst kritiek, dan waarschuwingen, dan suggesties; binnen een niveau wint de eerdere regel. Een regel gaat alleen af op gemeten waarden — er wordt niets geschat.",
+      "ruleLabel": "Regel",
+      "measuredLabel": "Gemeten {time}",
+      "none": {
+        "title": "Op dit moment is geen actie nodig",
+        "text": "{checked} controles zijn om {time} uitgevoerd en geen ervan vond een probleem.",
+        "checkedTitle": "Uitgevoerde controles",
+        "skippedTitle": "Controles die niet konden worden uitgevoerd",
+        "skippedReason": "{check} — {reason}"
+      },
+      "skipped": {
+        "unavailable": "meting niet beschikbaar",
+        "not_measurable": "niet meetbaar in deze opstelling",
+        "empty": "nog geen data"
+      }
+    },
+    "checks": {
+      "site_paused": "Site gepauzeerd of kill switch",
+      "usage_hard_limit": "Harde planlimiet",
+      "no_config": "Actieve configuratie",
+      "no_events": "Eerste event ontvangen",
+      "credentials": "Inloggegevens van destinations",
+      "dead_letters": "Dead-letter-leveringen",
+      "delivery_failures": "Percentage mislukte leveringen",
+      "critical_issues": "Kritieke datakwaliteitsproblemen",
+      "usage_soft_limit": "Planlimiet op 90 %",
+      "destination_errors": "Destinations met fouten",
+      "silence": "Eventstilte",
+      "no_consent_policy": "Gepubliceerd consentbeleid",
+      "consent_coverage": "Aandeel expliciete consent",
+      "duplicates": "Duplicaatpercentage",
+      "queue_lag": "Wachtrijvertraging",
+      "warning_issues": "Datakwaliteitswaarschuwingen",
+      "usage_warning": "Planlimiet op 70 %",
+      "domain_unverified": "Domeinverificatie",
+      "no_destinations": "Eerste destination"
+    },
+    "actions": {
+      "site_paused": {
+        "title": "Tracking voor {site} hervatten",
+        "why": "{reason, select, kill_switch {De kill switch staat aan: binnenkomende events worden geweigerd totdat hij wordt uitgezet.} other {De site is gepauzeerd: binnenkomende events worden geweigerd totdat hij wordt hervat.}}",
+        "cta": "Site openen",
+        "rule": "Gaat af wanneer de sitestatus ‘gepauzeerd’ is of de kill switch aanstaat."
+      },
+      "usage_hard_limit": {
+        "title": "Planlimiet bereikt — verwerking gepauzeerd",
+        "why": "In {period} zijn {used} van {limit} factureerbare events geteld en de harde limiet is bereikt onder het overschrijdingsbeleid ‘{policy}’. Events worden pas weer verwerkt als je upgradet of overschrijding toestaat.",
+        "cta": "Facturatie openen",
+        "rule": "Gaat af wanneer de huidige verbruiksperiode een tijdstempel voor de harde limiet draagt."
+      },
+      "no_config": {
+        "title": "Een configuratie voor {environment} publiceren",
+        "why": "In de omgeving {environment} is geen configuratieversie actief, dus de snippet heeft niets te laden en er wordt geen event geaccepteerd.",
+        "cta": "AI-setup openen",
+        "rule": "Gaat af wanneer de actieve omgeving geen actieve configuratieversie heeft."
+      },
+      "no_events": {
+        "title": "De snippet installeren en een eerste event sturen",
+        "why": "In {environment} is een configuratie live, maar er heeft nog geen event Track bereikt voor deze omgeving (tracking-ID {trackingId}).",
+        "cta": "Snippet tonen",
+        "rule": "Gaat af wanneer een configuratie actief is en de eventopslag geen event voor de omgeving bevat."
+      },
+      "credentials": {
+        "title": "{count, plural, one {Inloggegevens van {destination} herstellen} other {Inloggegevens van # destinations herstellen}}",
+        "why": "{kind, select, expired {De inloggegevens van {destination} zijn verlopen} expiring {Inloggegevens van {destination} verlopen binnen {days} dagen} oauth {De OAuth-verbinding van {destination} is niet meer verbonden} other {De laatste healthcheck van {destination} meldde een fout in de inloggegevens}}; leveringen ernaartoe mislukken of gaan mislukken.",
+        "cta": "Destination openen",
+        "rule": "Gaat af wanneer een verbonden destination verlopen inloggegevens heeft, inloggegevens die binnen {days} dagen verlopen, een verbroken OAuth-verbinding of een mislukte controle van de inloggegevens."
+      },
+      "dead_letters": {
+        "title": "{count, plural, one {# dead-letter-levering opnieuw versturen} other {# dead-letter-leveringen opnieuw versturen}}",
+        "why": "{count, plural, one {# levering heeft} other {# leveringen hebben}} alle pogingen opgebruikt en wordt zonder opnieuw versturen niet meer verzonden.",
+        "cta": "Destinations openen",
+        "rule": "Gaat af wanneer er voor de site niet opnieuw verstuurde dead-letter-referenties bestaan."
+      },
+      "delivery_failures": {
+        "title": "Leveringsfouten onderzoeken",
+        "why": "{failed} van {attempts} leveringsresultaten in de afgelopen {hours} uur waren fouten ({pct}); de drempel is {thresholdPct}. Meest voorkomende foutklasse: {errorClass}.",
+        "cta": "Destinations openen",
+        "rule": "Gaat af vanaf {minAttempts} resultaten in {hours} uur met een foutaandeel van {thresholdPct} of meer; kritiek vanaf {criticalPct}."
+      },
+      "critical_issues": {
+        "title": "{count, plural, one {# kritiek datakwaliteitsprobleem oplossen} other {# kritieke datakwaliteitsproblemen oplossen}}",
+        "why": "Meest recent: {summary}",
+        "cta": "Datakwaliteit openen",
+        "rule": "Gaat af wanneer er open problemen met de ernst ‘kritiek’ bestaan."
+      },
+      "usage_soft_limit": {
+        "title": "Planlimiet bijna bereikt",
+        "why": "{pct} van de planlimiet is verbruikt ({used} van {limit} factureerbare events in {period}). Boven 100 % geldt het overschrijdingsbeleid ‘{policy}’.",
+        "cta": "Plan en overschrijding bekijken",
+        "rule": "Gaat af vanaf {thresholdPct} van de maandelijkse eventlimiet."
+      },
+      "destination_errors": {
+        "title": "{count, plural, one {Destination {name} controleren} other {# destinations met fouten controleren}}",
+        "why": "{count, plural, one {{name} staat in de foutstatus} other {{name} en # andere staan in de foutstatus}}; leveringen ernaartoe worden niet geprobeerd.",
+        "cta": "Destinations openen",
+        "rule": "Gaat af wanneer een destination de status ‘fout’ heeft."
+      },
+      "silence": {
+        "title": "Al {hours} uur geen events",
+        "why": "Het laatste event in {environment} kwam {lastAt} binnen; de drempel is {threshold} uur. Controleer de snippet, het domein en de consentbanner.",
+        "cta": "Events openen",
+        "rule": "Gaat af wanneer de productieomgeving eerder events ontving, maar geen enkel binnen {threshold} uur."
+      },
+      "no_consent_policy": {
+        "title": "Een consentbeleid publiceren",
+        "why": "{status, select, none {Er bestaat geen consentbeleid voor deze site} other {Het consentbeleid staat nog in de status ‘{status}’}}, dus regioregels en doeleinden worden niet afgedwongen.",
+        "cta": "Consent & privacy openen",
+        "rule": "Gaat af wanneer de site geen gepubliceerd consentbeleid heeft."
+      },
+      "consent_coverage": {
+        "title": "De consentintegratie controleren",
+        "why": "Slechts {pct} van {events} events droeg een expliciet consentsignaal; de drempel is {thresholdPct}. Events in de standaardstatus kunnen voor marketingdestinations worden geblokkeerd.",
+        "cta": "Consent & privacy openen",
+        "rule": "Gaat af vanaf {minEvents} events wanneer het aandeel expliciete signalen onder {thresholdPct} ligt."
+      },
+      "duplicates": {
+        "title": "Dubbele events verminderen",
+        "why": "{deduplicated} van {received} in de afgelopen {hours} uur ontvangen events waren duplicaten ({pct}); de drempel is {thresholdPct}.",
+        "cta": "Events openen",
+        "rule": "Gaat af vanaf {minReceived} ontvangen events in {hours} uur met een duplicaatpercentage van {thresholdPct} of meer."
+      },
+      "queue_lag": {
+        "title": "Leveringen hebben {minutes} minuten vertraging",
+        "why": "Het oudste wachtende bericht staat al {seconds} seconden in de wachtrij ({pending} wachtend); de drempel is {thresholdMinutes} minuten.",
+        "cta": "Destinations openen",
+        "rule": "Gaat af wanneer het oudste gereedstaande bericht van je organisatie {thresholdMinutes} minuten of langer heeft gewacht."
+      },
+      "warning_issues": {
+        "title": "{count, plural, one {# datakwaliteitswaarschuwing bekijken} other {# datakwaliteitswaarschuwingen bekijken}}",
+        "why": "Open waarschuwingen betekenen meestal ontbrekende parameters of ongeplande events.",
+        "cta": "Datakwaliteit openen",
+        "rule": "Gaat af wanneer er open problemen met de ernst ‘waarschuwing’ bestaan."
+      },
+      "usage_warning": {
+        "title": "{pct} van de planlimiet verbruikt",
+        "why": "{used} van {limit} factureerbare events in {period}. Plan vooruit voordat {nextPct} is bereikt.",
+        "cta": "Facturatie openen",
+        "rule": "Gaat af vanaf {thresholdPct} en onder {nextPct} van de maandelijkse eventlimiet."
+      },
+      "domain_unverified": {
+        "title": "{hostname} verifiëren",
+        "why": "Het domein is nog niet geverifieerd. Verificatie bewijst het eigendom en ontgrendelt first-party-leveringsopties.",
+        "cta": "Site openen",
+        "rule": "Gaat af wanneer het primaire domein van de site geen verificatietijdstempel heeft."
+      },
+      "no_destinations": {
+        "title": "Een eerste destination koppelen",
+        "why": "Er komen events binnen, maar er is geen destination geconfigureerd, dus er wordt niets geleverd.",
+        "cta": "Destination toevoegen",
+        "rule": "Gaat af wanneer er events bestaan en de site geen destination heeft."
+      }
+    },
+    "strip": {
+      "heading": "Status",
+      "help": "{term} uitleggen",
+      "siteStatus": {
+        "label": "Site",
+        "help": "Of de site events accepteert. Een gepauzeerde site en de kill switch weigeren alles al aan de rand.",
+        "active": "Actief",
+        "paused": "Gepauzeerd",
+        "deleted": "Verwijderd",
+        "killSwitch": "Kill switch aan"
+      },
+      "config": {
+        "label": "Configuratie",
+        "help": "De ondertekende configuratieversie die de snippet in deze omgeving laadt.",
+        "version": "Versie {version}",
+        "published": "Gepubliceerd {time}",
+        "none": "Niet gepubliceerd"
+      },
+      "lastEvents": {
+        "label": "Laatste event",
+        "help": "Wanneer het laatste browser- en serverevent Track bereikte voor deze omgeving.",
+        "browser": "Browser: {time}",
+        "server": "Server: {time}",
+        "never": "nooit",
+        "none": "Nog geen events"
+      },
+      "health": {
+        "label": "Healthscore",
+        "help": "Tracking Health Score van 0 tot 100, door de worker berekend uit consent, dekking, schema, duplicaten, levering en activiteit.",
+        "value": "{score}/100",
+        "computed": "Berekend {time}",
+        "none": "Nog niet berekend"
+      },
+      "consent": {
+        "label": "Consentdekking",
+        "help": "Aandeel geaccepteerde events waarvan de consent uit een expliciet signaal (CMP, API, TCF, GPP, GPC) komt in plaats van uit de standaardstatus.",
+        "value": "{pct} expliciet",
+        "events": "{n, plural, one {# event} other {# events}}",
+        "marketing": "{pct} met marketingconsent",
+        "policy": "Beleid: {status}",
+        "status": {
+          "draft": "concept",
+          "published": "gepubliceerd",
+          "archived": "gearchiveerd"
+        },
+        "noPolicy": "Geen beleid",
+        "none": "Nog geen events met consent"
+      },
+      "destinations": {
+        "label": "Destinations",
+        "help": "Verbonden destinations van deze site en eventuele problemen met inloggegevens of OAuth.",
+        "value": "{connected} van {total} verbonden",
+        "errors": "{n, plural, one {# met fouten} other {# met fouten}}",
+        "credentials": "{n, plural, one {# probleem met inloggegevens} other {# problemen met inloggegevens}}",
+        "lastSuccess": "Laatste levering {time}",
+        "none": "Nog geen"
+      },
+      "duplicates": {
+        "label": "Duplicaatpercentage",
+        "help": "Events die de ingestfase in de afgelopen 24 uur herkende als herhaling van een al geaccepteerd event.",
+        "value": "{pct}",
+        "detail": "{deduplicated} van {received} ontvangen (24 u)",
+        "none": "Geen events in 24 u"
+      },
+      "delivery": {
+        "label": "Leveringsfouten",
+        "help": "Mislukte en als dead letter afgelegde leveringsresultaten in de afgelopen 24 uur.",
+        "value": "{failed} van {attempts}",
+        "rate": "{pct} mislukt (24 u)",
+        "deadLetters": "{n, plural, one {# dead letter} other {# dead letters}}",
+        "topError": "Meest voorkomend: {errorClass}",
+        "none": "Geen resultaten in 24 u"
+      },
+      "queue": {
+        "label": "Wachtrijvertraging",
+        "help": "Hoe lang het oudste bericht in de leveringswachtrijen van je organisatie op een worker wacht.",
+        "value": "{duration}",
+        "noBacklog": "Geen achterstand",
+        "pending": "{n, plural, one {# bericht wacht} other {# berichten wachten}}",
+        "inFlight": "{n, plural, one {# in behandeling} other {# in behandeling}}",
+        "notMeasurable": "Niet meetbaar met de huidige wachtrijdriver"
+      },
+      "usage": {
+        "label": "Planverbruik",
+        "help": "Factureerbare events van de huidige periode tegenover de maandelijkse limiet van je plan.",
+        "value": "{used} van {limit}",
+        "noLimit": "{used} events, geen vaste bovengrens",
+        "pct": "{pct} van het plan {plan} in {period}",
+        "hardLimit": "Harde limiet bereikt",
+        "softLimit": "Limiet bereikt",
+        "policy": "Overschrijding: {policy}",
+        "policies": {
+          "allow": "overschrijding toestaan",
+          "cost_limit": "kostenlimiet",
+          "pause": "pauzeren"
+        }
+      }
+    },
+    "charts": {
+      "heading": "Afgelopen 24 uur en afgelopen 7 dagen",
+      "showTable": "Als tabel tonen",
+      "flow": {
+        "title": "Eventstroom",
+        "window": "Afgelopen 24 uur, per uur",
+        "caption": "Geaccepteerde, gededupliceerde en verworpen events per uur in de afgelopen 24 uur",
+        "accepted": "Geaccepteerd",
+        "deduplicated": "Gededupliceerd",
+        "dropped": "Verworpen",
+        "received": "Ontvangen",
+        "hour": "Uur",
+        "empty": "In de afgelopen 24 uur zijn geen events geregistreerd."
+      },
+      "delivery": {
+        "title": "Leveringsresultaten",
+        "window": "Afgelopen 7 dagen, per dag (UTC)",
+        "caption": "Geleverde, mislukte en als dead letter afgelegde leveringspogingen per dag in de afgelopen 7 dagen",
+        "success": "Geleverd",
+        "failed": "Mislukt",
+        "dead": "Dead letter",
+        "day": "Dag",
+        "empty": "Geen leveringspogingen in de afgelopen 7 dagen."
+      }
+    },
+    "recentEvents": {
+      "title": "Laatste geverifieerde events",
+      "intro": "De meest recente geaccepteerde events van deze omgeving met hun consent, verwerkingsstatus en leveringen. Payloads worden hier nooit getoond.",
+      "caption": "Recent geaccepteerde events",
+      "columns": {
+        "time": "Tijd",
+        "event": "Event",
+        "source": "Bron",
+        "consent": "Consent",
+        "state": "Status",
+        "deliveries": "Leveringen",
+        "lineage": "Herkomst"
+      },
+      "verified": "Geverifieerd",
+      "unverified": "Niet geverifieerd",
+      "necessaryOnly": "Alleen noodzakelijk",
+      "consentSource": "via {source}",
+      "test": "Test",
+      "deliveries": "{delivered} van {total} geleverd",
+      "noDeliveries": "Niet gerouteerd",
+      "openLineage": "Herkomst openen",
+      "state": {
+        "policy_passed": "Geaccepteerd",
+        "stored": "Opgeslagen",
+        "routed": "Gerouteerd",
+        "delivered": "Geleverd",
+        "received": "Ontvangen"
+      },
+      "empty": {
+        "title": "Nog geen geaccepteerde events",
+        "text": "Zodra de snippet of een serverintegratie events stuurt, verschijnen de laatst geaccepteerde hier met hun consent, status en leveringen.",
+        "installSnippet": "Snippet tonen",
+        "publishConfig": "Configuratie publiceren",
+        "openEvents": "Events openen"
+      }
+    },
+    "footer": {
+      "note": "Elk getal op deze pagina wordt gelezen uit de tabellen van {site} ({environment}). Onbekend blijft onbekend: er wordt niets geschat of aangevuld."
+    }
+  }
+}

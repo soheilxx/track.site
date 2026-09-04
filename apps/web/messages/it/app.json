@@ -1,25 +1,5 @@
 {
   "app": {
-    "nav": {
-      "overview": "Panoramica",
-      "aiSetup": "Setup AI",
-      "sites": "Siti",
-      "events": "Eventi",
-      "debugger": "Event Debugger",
-      "destinations": "Destinazioni",
-      "dataQuality": "Qualità dei dati",
-      "consent": "Consenso e privacy",
-      "audiences": "Audience",
-      "team": "Team",
-      "billing": "Fatturazione",
-      "settings": "Impostazioni",
-      "openMenu": "Apri navigazione",
-      "closeMenu": "Chiudi navigazione",
-      "account": "Account",
-      "logout": "Esci",
-      "switchOrg": "Cambia organizzazione",
-      "expertMode": "Modalità esperto"
-    },
     "overview": {
       "title": "Panoramica",
       "welcome": "Bentornato, {name}",
@@ -79,7 +59,7 @@
       "lastServerEvent": "Ultimo evento server",
       "never": "mai",
       "openSetup": "Apri Setup AI",
-      "openDebugger": "Apri Event Debugger",
+      "openDebugger": "Apri Live Event Explorer",
       "openShop": "Connessione shop"
     },
     "common": {

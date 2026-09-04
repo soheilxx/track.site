@@ -1,0 +1,363 @@
+{
+  "team": {
+    "module": {
+      "nav": {
+        "label": "Team & Zugriff",
+        "overview": "Übersicht",
+        "audit": "Audit-Log"
+      }
+    },
+    "overview": {
+      "title": "Team & Zugriff",
+      "intro": "Mitglieder, Rollen und Einladungen dieser Organisation, die Berechtigungen hinter jeder Rolle, Vier-Augen-Anforderungen und das Audit-Log. Jede Rolle wird serverseitig bei jeder Aktion und jedem Tool-Aufruf des Assistenten durchgesetzt.",
+      "openAudit": "Audit-Log öffnen"
+    },
+    "summary": {
+      "plan": "Plan",
+      "seats": "Plätze",
+      "seatsUsed": "{used} von {cap}",
+      "seatsNoCap": "{used}, keine feste Obergrenze",
+      "seatsPending": "{count} offen",
+      "twoFactor": "Zwei-Faktor",
+      "twoFactorShare": "{enabled} von {total} Mitgliedern",
+      "fourEyes": "Vier-Augen",
+      "fourEyesNotInPlan": "Nicht im Plan",
+      "fourEyesActive": "{count} Änderungstypen",
+      "fourEyesNone": "Nicht konfiguriert",
+      "openRequests": "{count} offen"
+    },
+    "members": {
+      "title": "Mitglieder",
+      "caption": "Mitglieder der Organisation mit Rolle und Zwei-Faktor-Status",
+      "member": "Mitglied",
+      "role": "Rolle",
+      "twoFactor": "Zwei-Faktor",
+      "twoFactorOn": "Aktiv",
+      "twoFactorOff": "Nicht aktiv",
+      "joined": "Beigetreten",
+      "actions": "Aktionen",
+      "you": "du",
+      "roleSelect": "Rolle von {name}",
+      "save": "Rolle speichern",
+      "permissions": "Berechtigungen",
+      "remove": "Entfernen",
+      "fourEyesHint": "Rollenänderungen brauchen eine zweite Person: Speichern erzeugt eine Freigabeanfrage, statt die Rolle direkt zu ändern.",
+      "ownerDialog": {
+        "title": "Owner-Rolle ändern?",
+        "description": "Owner dürfen alles, inklusive Abrechnung, Löschung und Übertragung der Eigentümerschaft. Bestätige die Änderung für {name} von {from} zu {to}.",
+        "confirm": "Rolle ändern"
+      },
+      "removeDialog": {
+        "title": "{name} entfernen?",
+        "description": "{email} verliert sofort den Zugriff auf diese Organisation. Sites, Destinationen und Daten bleiben erhalten. Die Entfernung wird im Audit-Log festgehalten.",
+        "confirm": "Mitglied entfernen"
+      }
+    },
+    "permissionsSheet": {
+      "title": "Berechtigungen von {name}",
+      "description": "Rolle {role}. Berechtigungen ergeben sich aus der Rolle und werden serverseitig bei jeder Aktion und jedem Tool-Aufruf des Assistenten geprüft.",
+      "granted": "{granted} von {total} Berechtigungen erteilt",
+      "yes": "Erteilt",
+      "no": "Nicht erteilt"
+    },
+    "invite": {
+      "title": "Mitglied einladen",
+      "text": "Die Einladung wird per E-Mail versendet und läuft nach 7 Tagen ab. Bis sie angenommen oder zurückgezogen wird, zählt sie als Platz.",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "send": "Einladung senden",
+      "seatLimitTitle": "Alle Plätze sind belegt",
+      "seatLimit": "Dein {plan}-Plan enthält {cap} Plätze (Mitglieder plus offene Einladungen). Entferne ein Mitglied, ziehe eine Einladung zurück oder wähle einen größeren Plan.",
+      "comparePlans": "Pläne vergleichen"
+    },
+    "pending": {
+      "title": "Offene Einladungen",
+      "empty": "Keine offenen Einladungen.",
+      "invitedBy": "eingeladen von {name}",
+      "expires": "läuft ab am {date}",
+      "expired": "Abgelaufen",
+      "resend": "Erneut senden",
+      "cancel": "Zurückziehen"
+    },
+    "roles": {
+      "title": "Rollen und Berechtigungen",
+      "intro": "Sechs Rollen, zentral definiert und vom Server durchgesetzt. Die Matrix zeigt genau, welche Berechtigung jede Rolle hat; das Berechtigungsblatt eines Mitglieds zeigt dasselbe für diese Person.",
+      "customRolesHint": "Individuelle Rollenmodelle über diese sechs Rollen hinaus sind Teil des Enterprise-Plans.",
+      "matrixSummary": "Vollständige Berechtigungsmatrix anzeigen",
+      "matrixCaption": "Berechtigungen je Rolle",
+      "permission": "Berechtigung",
+      "granted": "Erteilt",
+      "notGranted": "Nicht erteilt",
+      "labels": {
+        "OWNER": "Owner",
+        "ADMIN": "Admin",
+        "DEVELOPER": "Developer",
+        "ANALYST": "Analyst",
+        "BILLING": "Billing",
+        "READ_ONLY": "Nur lesen"
+      },
+      "descriptions": {
+        "OWNER": "Alles, inklusive Abrechnung, Löschung und Übertragung der Eigentümerschaft. Immer freigabeberechtigt.",
+        "ADMIN": "Verwaltet Sites, Destinationen, Consent, Team, Betroffenenanfragen und Einstellungen; darf veröffentlichen.",
+        "DEVELOPER": "Konfiguriert Sites, Destinationen und Zugangsdaten, veröffentlicht Konfigurationen und rollt sie zurück.",
+        "ANALYST": "Liest Events, Health und Konfiguration, exportiert Events und nutzt den Assistenten nur lesend.",
+        "BILLING": "Liest alles und verwaltet Abonnement und Rechnungen.",
+        "READ_ONLY": "Nur ansehen; keine Änderungen, keine Exporte."
+      },
+      "areas": {
+        "org": "Organisation",
+        "members": "Team",
+        "sites": "Sites",
+        "domains": "Domains",
+        "events": "Events",
+        "config": "Konfiguration",
+        "integrations": "Destinationen",
+        "credentials": "Zugangsdaten",
+        "consent": "Consent",
+        "privacy": "Datenschutz",
+        "ai": "Track AI",
+        "billing": "Abrechnung",
+        "audit": "Audit",
+        "kill_switch": "Kill-Switch"
+      },
+      "permissions": {
+        "org_read": "Organisation ansehen",
+        "org_update": "Organisationseinstellungen ändern",
+        "org_delete": "Organisation löschen",
+        "members_read": "Mitglieder ansehen",
+        "members_invite": "Mitglieder einladen",
+        "members_update": "Mitgliederrollen ändern",
+        "members_remove": "Mitglieder entfernen",
+        "sites_read": "Sites ansehen",
+        "sites_create": "Sites anlegen",
+        "sites_update": "Sites ändern",
+        "sites_delete": "Sites löschen",
+        "domains_verify": "Domains verifizieren",
+        "events_read": "Events ansehen",
+        "events_export": "Events exportieren",
+        "config_read": "Konfigurationen ansehen",
+        "config_draft": "Konfigurationsentwürfe bearbeiten",
+        "config_publish": "Konfigurationen veröffentlichen",
+        "config_rollback": "Konfigurationen zurückrollen",
+        "integrations_read": "Destinationen ansehen",
+        "integrations_manage": "Destinationen verwalten",
+        "credentials_write": "Zugangsdaten hinterlegen",
+        "credentials_rotate": "Zugangsdaten rotieren",
+        "consent_read": "Consent-Policies ansehen",
+        "consent_manage": "Consent-Policies verwalten",
+        "privacy_dsar": "Betroffenenanfragen bearbeiten",
+        "privacy_retention": "Aufbewahrungsfristen ändern",
+        "ai_chat": "Mit Track AI chatten",
+        "ai_write_tools": "Track AI Änderungen vorbereiten lassen",
+        "billing_read": "Abrechnung ansehen",
+        "billing_manage": "Abonnement verwalten",
+        "audit_read": "Audit-Log ansehen",
+        "kill_switch_manage": "Kill-Switches bedienen"
+      }
+    },
+    "approvals": {
+      "title": "Freigabeanforderungen",
+      "intro": "Riskante Änderungen hinter ein zweites Augenpaar stellen. Eine Änderung eines ausgewählten Typs wird als Anfrage gespeichert und erst ausgeführt, wenn ein anderes Mitglied mit Freigaberechten sie anwendet.",
+      "notInPlanTitle": "Nicht in {plan} enthalten",
+      "notInPlan": "Freigabeprozesse und das Vier-Augen-Prinzip sind Teil des Pro-Plans. In deinem aktuellen Plan wird hier nichts durchgesetzt; die Liste zeigt, was Pro ergänzt.",
+      "storedInactive": "Anforderungen aus einem früheren Plan sind gespeichert. Sie bleiben erhalten, werden aber erst durchgesetzt, wenn der Plan Freigabeprozesse enthält.",
+      "notPersisted": "Der Speicher für Freigabeanforderungen ist noch nicht verfügbar (Migration 0012_team_policies ausstehend). Es wird nichts durchgesetzt.",
+      "comparePlans": "Pläne vergleichen",
+      "readOnly": "Deine Rolle kann diese Anforderungen nur ansehen.",
+      "changeTypesLegend": "Änderungen, die eine zweite Person brauchen",
+      "approversLegend": "Wer freigeben darf",
+      "ownerAlways": "Owner dürfen immer freigeben.",
+      "requesterNote": "Gilt für alle, auch Owner: Niemand gibt die eigene Anfrage frei.",
+      "enforcementNote": "Rollenänderungen werden hier in Team & Zugriff durchgesetzt. Die übrigen Änderungstypen setzt das Modul durch, das sie ausführt (Releases, Destinationen, Consent & Datenschutz, Einstellungen), über dieselbe Richtlinie; ihre Anfragen erscheinen in der Liste oben und können hier abgelehnt werden.",
+      "save": "Anforderungen speichern",
+      "updated": "Zuletzt geändert am {date} von {name}",
+      "neverUpdated": "Noch nicht konfiguriert.",
+      "relaxDialog": {
+        "title": "Freigabeanforderungen lockern?",
+        "description": "Die folgenden Änderungen verringern den Schutz. Sie gelten sofort und werden im Audit-Log festgehalten.",
+        "confirm": "Trotzdem speichern"
+      },
+      "changes": {
+        "relaxed": "{type} braucht keine zweite Person mehr",
+        "approverAdded": "{role} darf ab jetzt freigeben"
+      },
+      "types": {
+        "config_publish": {
+          "label": "Konfiguration veröffentlichen",
+          "description": "Eine neue Tracking-Konfiguration geht für eine Site-Umgebung live."
+        },
+        "config_rollback": {
+          "label": "Konfiguration zurückrollen",
+          "description": "Eine frühere Version ersetzt die aktive Konfiguration."
+        },
+        "consent_publish": {
+          "label": "Consent-Policy veröffentlichen",
+          "description": "Eine neue Policy-Version steuert die Consent Engine für jedes neue Event."
+        },
+        "credential_change": {
+          "label": "Zugangsdaten ändern",
+          "description": "Hinterlegen, Rotieren oder Widerrufen von Zugangsdaten einer Destination."
+        },
+        "destination_pause": {
+          "label": "Destination pausieren",
+          "description": "Zustellungen an eine Destination stoppen, während der Rest weiterläuft."
+        },
+        "member_role_change": {
+          "label": "Mitgliederrolle ändern",
+          "description": "Ein Mitglied erhält eine andere Rolle, einschließlich Owner."
+        },
+        "kill_switch": {
+          "label": "Kill-Switch",
+          "description": "Stoppt Erfassung und Zustellung für eine Site oder die gesamte Organisation."
+        }
+      }
+    },
+    "requests": {
+      "title": "Offene Freigaben",
+      "intro": "Änderungen, die auf eine zweite Person warten. Anfragen laufen nach 7 Tagen ohne Entscheidung ab.",
+      "empty": "Keine offenen Anfragen.",
+      "recent": "Letzte Entscheidungen",
+      "recentEmpty": "Noch keine Entscheidungen.",
+      "target": "Ziel",
+      "change": "Änderung",
+      "roleChange": "{from} → {to}",
+      "requestedBy": "angefragt von {name}",
+      "requestedAt": "am {date}",
+      "expiresAt": "läuft ab am {date}",
+      "former": "ehemaliges Mitglied",
+      "decidedIn": "Diese Änderung wird aus ihrem eigenen Modul angewendet; hier kann sie nur abgelehnt werden.",
+      "approve": "Änderung anwenden",
+      "reject": "Ablehnen",
+      "withdraw": "Zurückziehen",
+      "note": "Notiz (optional)",
+      "status": {
+        "pending": "Offen",
+        "applied": "Angewendet",
+        "rejected": "Abgelehnt",
+        "withdrawn": "Zurückgezogen",
+        "expired": "Abgelaufen"
+      },
+      "decidedBy": "{status} von {name} am {date}",
+      "approveDialog": {
+        "title": "Diese Änderung anwenden?",
+        "description": "Du handelst als zweite Person. Die Änderung wird sofort ausgeführt und mit deinem Namen festgehalten.",
+        "confirm": "Anwenden"
+      },
+      "rejectDialog": {
+        "title": "Diese Anfrage ablehnen?",
+        "description": "Die anfragende Person sieht die Ablehnung und deine Notiz.",
+        "confirm": "Ablehnen"
+      }
+    },
+    "audit": {
+      "title": "Audit-Log",
+      "intro": "Jede festgehaltene Änderung in dieser Organisation: wer hat wann was an welchem Ziel getan. Werte werden redigiert angezeigt; Einträge können nie bearbeitet oder gelöscht werden.",
+      "noPermission": "Deine Rolle kann das Audit-Log nicht ansehen",
+      "noPermissionText": "Bitte einen Owner oder Admin um die Rolle Analyst, Developer oder Admin.",
+      "windowLimited": "Angezeigt werden die letzten {days} Tage in deinem {plan}-Plan. Der Pro-Plan behält die vollständige Historie.",
+      "windowFull": "Vollständige Historie; Einträge werden {days} Tage aufbewahrt.",
+      "comparePlans": "Pläne vergleichen",
+      "filters": {
+        "legend": "Filter",
+        "category": "Kategorie",
+        "actor": "Akteur",
+        "target": "Zieltyp",
+        "search": "Suche",
+        "searchPlaceholder": "Aktion, Ziel oder Request-ID",
+        "from": "Von",
+        "to": "Bis",
+        "apply": "Filter anwenden",
+        "reset": "Zurücksetzen",
+        "all": "Alle",
+        "everyone": "Alle Akteure",
+        "system": "Systemjobs",
+        "agent": "Track AI (im Auftrag eines Mitglieds)",
+        "source_key": "Server-Source-Keys"
+      },
+      "categories": {
+        "team": "Team",
+        "organization": "Organisation",
+        "sites": "Sites",
+        "config": "Konfiguration",
+        "consent": "Consent",
+        "destinations": "Destinationen",
+        "credentials": "Zugangsdaten",
+        "privacy": "Datenschutz",
+        "billing": "Abrechnung",
+        "ai": "Track AI",
+        "other": "Sonstiges"
+      },
+      "count": "{count} Einträge",
+      "countFiltered": "{count} Einträge passen zu den Filtern",
+      "caption": "Audit-Einträge, neueste zuerst",
+      "when": "Wann",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "target": "Ziel",
+      "details": "Details",
+      "showDetails": "Details anzeigen ({count})",
+      "noDetails": "Keine Details",
+      "diff": "Änderung",
+      "metadata": "Metadaten",
+      "truncated": "Weitere Werte ausgelassen.",
+      "redacted": "Personenbezogene Daten und Geheimnisse werden vor dem Speichern eines Eintrags redigiert und bei der Anzeige erneut.",
+      "requestId": "Request",
+      "actorKind": {
+        "user": "Mitglied",
+        "agent": "Track AI",
+        "system": "System",
+        "source_key": "Source-Key",
+        "unknown": "Unbekannt"
+      },
+      "formerMember": "Ehemaliges Mitglied",
+      "empty": "Noch nichts festgehalten",
+      "emptyText": "Einträge erscheinen, sobald jemand etwas in dieser Organisation ändert.",
+      "emptyFiltered": "Keine Einträge passen zu diesen Filtern",
+      "emptyFilteredText": "Erweitere den Zeitraum oder setze die Filter zurück.",
+      "pagination": {
+        "nav": "Seiten des Audit-Logs",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {page}"
+      }
+    },
+    "notices": {
+      "invited": "Einladung gesendet.",
+      "resent": "Einladung erneut gesendet.",
+      "cancelled": "Einladung zurückgezogen.",
+      "roleUpdated": "Rolle geändert.",
+      "roleRequested": "Die Rollenänderung wurde zur Freigabe eingereicht. Ein anderes Mitglied mit Freigaberechten muss sie anwenden.",
+      "removed": "Mitglied entfernt.",
+      "policySaved": "Freigabeanforderungen gespeichert.",
+      "policyUnchanged": "Nichts geändert.",
+      "requestApplied": "Änderung angewendet.",
+      "requestRejected": "Anfrage abgelehnt.",
+      "requestWithdrawn": "Anfrage zurückgezogen."
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen.",
+      "email": "Gib eine gültige E-Mail-Adresse ein.",
+      "forbidden": "Deine Rolle darf das nicht.",
+      "notFound": "Nicht gefunden. Lade die Seite neu.",
+      "self": "Du kannst deine eigene Mitgliedschaft nicht ändern.",
+      "sameRole": "Das Mitglied hat diese Rolle bereits.",
+      "confirmOwner": "Änderungen an der Owner-Rolle brauchen eine Bestätigung.",
+      "lastOwner": "Der letzte Owner kann nicht herabgestuft oder entfernt werden.",
+      "requestExists": "Für dieses Mitglied ist bereits eine Freigabeanfrage offen.",
+      "confirmRequired": "Bestätige die Aktion zuerst.",
+      "alreadyMember": "Diese Person ist bereits Mitglied.",
+      "alreadyInvited": "Für diese E-Mail ist bereits eine Einladung offen. Sende sie aus der Liste erneut.",
+      "seatLimit": "Alle Plätze deines Plans sind belegt.",
+      "notInPlan": "Freigabeprozesse sind nicht Teil deines Plans.",
+      "notPersisted": "Der Speicher für Freigabeanforderungen ist noch nicht verfügbar.",
+      "confirmRelax": "Das Lockern der Anforderungen braucht eine Bestätigung.",
+      "notPending": "Diese Anfrage ist nicht mehr offen.",
+      "selfApproval": "Du kannst deine eigene Anfrage nicht freigeben.",
+      "notAppliedHere": "Dieser Änderungstyp wird aus seinem eigenen Modul angewendet."
+    },
+    "common": {
+      "close": "Schließen",
+      "cancel": "Abbrechen"
+    }
+  }
+}

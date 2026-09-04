@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSite, listShopConnections } from "@track-site/db";
-import { Button } from "@track-site/ui";
+import { buttonVariants } from "@track-site/ui";
 import { ShopConnections } from "@/components/app/shop-connections";
 import { env } from "@/env";
 import { requireOrgContext, withOrg } from "@/server/session";
@@ -27,10 +27,9 @@ export default async function ShopConnectionsPage({ params }: { params: Promise<
           <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
           <p className="mt-1 max-w-2xl text-sm text-ink-3">{t("intro")}</p>
         </div>
-        <Link href={`/app/sites/${site.id}`}>
-          <Button size="sm" variant="secondary">
-            {t("backToSite")}
-          </Button>
+        {/* button-styled link: interactive elements are never nested */}
+        <Link href={`/app/sites/${site.id}`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+          {t("backToSite")}
         </Link>
       </div>
       <ShopConnections

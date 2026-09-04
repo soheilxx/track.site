@@ -7,6 +7,10 @@ const LOCALES = ACTIVE_LOCALES;
 const home = (locale: string) => `/${locale}`;
 const LOCALE_ALTERNATION = ALL_LOCALES.join("|");
 
+// The marketing site is verified as an anonymous visitor: no stored owner session from auth.setup.ts
+// (the dashboard redirect below expects the login page, not the signed-in shell).
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe("marketing site", () => {
   test("serves all six programme locales", () => {
     expect([...LOCALES]).toEqual(["en", "de", "fr", "es", "it", "nl"]);

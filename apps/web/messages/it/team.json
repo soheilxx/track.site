@@ -1,0 +1,363 @@
+{
+  "team": {
+    "module": {
+      "nav": {
+        "label": "Team e accessi",
+        "overview": "Panoramica",
+        "audit": "Log di audit"
+      }
+    },
+    "overview": {
+      "title": "Team e accessi",
+      "intro": "Membri, ruoli e inviti di questa organizzazione, i permessi dietro ogni ruolo, i requisiti a quattro occhi e il log di audit. Ogni ruolo è applicato lato server a ogni azione e a ogni chiamata di strumento dell’assistente.",
+      "openAudit": "Apri il log di audit"
+    },
+    "summary": {
+      "plan": "Piano",
+      "seats": "Posti",
+      "seatsUsed": "{used} di {cap}",
+      "seatsNoCap": "{used}, nessun limite fisso",
+      "seatsPending": "{count} in sospeso",
+      "twoFactor": "Due fattori",
+      "twoFactorShare": "{enabled} membri su {total}",
+      "fourEyes": "Quattro occhi",
+      "fourEyesNotInPlan": "Non nel piano",
+      "fourEyesActive": "{count} tipi di modifica",
+      "fourEyesNone": "Non configurato",
+      "openRequests": "{count} aperte"
+    },
+    "members": {
+      "title": "Membri",
+      "caption": "Membri dell’organizzazione con ruolo e stato dell’autenticazione a due fattori",
+      "member": "Membro",
+      "role": "Ruolo",
+      "twoFactor": "Due fattori",
+      "twoFactorOn": "Attiva",
+      "twoFactorOff": "Non attiva",
+      "joined": "Dal",
+      "actions": "Azioni",
+      "you": "tu",
+      "roleSelect": "Ruolo di {name}",
+      "save": "Salva ruolo",
+      "permissions": "Permessi",
+      "remove": "Rimuovi",
+      "fourEyesHint": "Le modifiche di ruolo richiedono una seconda persona: salvando si crea una richiesta di approvazione invece di cambiare il ruolo direttamente.",
+      "ownerDialog": {
+        "title": "Cambiare il ruolo Owner?",
+        "description": "Gli Owner possono fare tutto, compresi fatturazione, eliminazione e trasferimento della proprietà. Conferma il passaggio di {name} da {from} a {to}.",
+        "confirm": "Cambia ruolo"
+      },
+      "removeDialog": {
+        "title": "Rimuovere {name}?",
+        "description": "{email} perde subito l’accesso a questa organizzazione. Siti, destinazioni e dati restano. La rimozione viene registrata nel log di audit.",
+        "confirm": "Rimuovi membro"
+      }
+    },
+    "permissionsSheet": {
+      "title": "Permessi di {name}",
+      "description": "Ruolo {role}. I permessi derivano dal ruolo e vengono verificati lato server a ogni azione e a ogni chiamata di strumento dell’assistente.",
+      "granted": "{granted} permessi concessi su {total}",
+      "yes": "Concesso",
+      "no": "Non concesso"
+    },
+    "invite": {
+      "title": "Invita un membro",
+      "text": "L’invito viene inviato via e-mail e scade dopo 7 giorni. Conta come un posto finché non viene accettato o annullato.",
+      "email": "E-mail",
+      "role": "Ruolo",
+      "send": "Invia invito",
+      "seatLimitTitle": "Tutti i posti sono occupati",
+      "seatLimit": "Il tuo piano {plan} include {cap} posti (membri più inviti in sospeso). Rimuovi un membro, annulla un invito o scegli un piano più grande.",
+      "comparePlans": "Confronta i piani"
+    },
+    "pending": {
+      "title": "Inviti in sospeso",
+      "empty": "Nessun invito in sospeso.",
+      "invitedBy": "invitato da {name}",
+      "expires": "scade il {date}",
+      "expired": "Scaduto",
+      "resend": "Invia di nuovo",
+      "cancel": "Annulla"
+    },
+    "roles": {
+      "title": "Ruoli e permessi",
+      "intro": "Sei ruoli, definiti una volta e applicati dal server. La matrice mostra esattamente quale permesso ha ogni ruolo; la scheda permessi di un membro mostra lo stesso per quella persona.",
+      "customRolesHint": "I modelli di ruolo personalizzati oltre questi sei ruoli fanno parte del piano Enterprise.",
+      "matrixSummary": "Mostra la matrice completa dei permessi",
+      "matrixCaption": "Permessi per ruolo",
+      "permission": "Permesso",
+      "granted": "Concesso",
+      "notGranted": "Non concesso",
+      "labels": {
+        "OWNER": "Owner",
+        "ADMIN": "Admin",
+        "DEVELOPER": "Developer",
+        "ANALYST": "Analyst",
+        "BILLING": "Billing",
+        "READ_ONLY": "Sola lettura"
+      },
+      "descriptions": {
+        "OWNER": "Tutto, compresi fatturazione, eliminazione e trasferimento della proprietà. Sempre approvatore.",
+        "ADMIN": "Gestisce siti, destinazioni, consenso, team, richieste degli interessati e impostazioni; può pubblicare.",
+        "DEVELOPER": "Configura siti, destinazioni e credenziali, pubblica e ripristina le configurazioni.",
+        "ANALYST": "Legge eventi, stato e configurazione, esporta eventi e usa l’assistente in sola lettura.",
+        "BILLING": "Legge tutto e gestisce abbonamento e fatture.",
+        "READ_ONLY": "Solo visualizzazione; nessuna modifica, nessuna esportazione."
+      },
+      "areas": {
+        "org": "Organizzazione",
+        "members": "Team",
+        "sites": "Siti",
+        "domains": "Domini",
+        "events": "Eventi",
+        "config": "Configurazione",
+        "integrations": "Destinazioni",
+        "credentials": "Credenziali",
+        "consent": "Consenso",
+        "privacy": "Privacy",
+        "ai": "Track AI",
+        "billing": "Fatturazione",
+        "audit": "Audit",
+        "kill_switch": "Kill switch"
+      },
+      "permissions": {
+        "org_read": "Vedere l’organizzazione",
+        "org_update": "Modificare le impostazioni dell’organizzazione",
+        "org_delete": "Eliminare l’organizzazione",
+        "members_read": "Vedere i membri",
+        "members_invite": "Invitare membri",
+        "members_update": "Modificare i ruoli dei membri",
+        "members_remove": "Rimuovere membri",
+        "sites_read": "Vedere i siti",
+        "sites_create": "Creare siti",
+        "sites_update": "Modificare siti",
+        "sites_delete": "Eliminare siti",
+        "domains_verify": "Verificare domini",
+        "events_read": "Vedere gli eventi",
+        "events_export": "Esportare eventi",
+        "config_read": "Vedere le configurazioni",
+        "config_draft": "Modificare le bozze di configurazione",
+        "config_publish": "Pubblicare configurazioni",
+        "config_rollback": "Ripristinare configurazioni",
+        "integrations_read": "Vedere le destinazioni",
+        "integrations_manage": "Gestire le destinazioni",
+        "credentials_write": "Salvare credenziali",
+        "credentials_rotate": "Ruotare credenziali",
+        "consent_read": "Vedere le policy di consenso",
+        "consent_manage": "Gestire le policy di consenso",
+        "privacy_dsar": "Gestire le richieste degli interessati",
+        "privacy_retention": "Modificare i periodi di conservazione",
+        "ai_chat": "Chattare con Track AI",
+        "ai_write_tools": "Lasciare che Track AI prepari modifiche",
+        "billing_read": "Vedere la fatturazione",
+        "billing_manage": "Gestire l’abbonamento",
+        "audit_read": "Vedere il log di audit",
+        "kill_switch_manage": "Azionare i kill switch"
+      }
+    },
+    "approvals": {
+      "title": "Requisiti di approvazione",
+      "intro": "Metti le modifiche rischiose dietro un secondo paio di occhi. Una modifica di un tipo selezionato viene salvata come richiesta ed eseguita solo dopo che un altro membro con diritti di approvazione l’ha applicata.",
+      "notInPlanTitle": "Non incluso in {plan}",
+      "notInPlan": "I flussi di approvazione e il principio dei quattro occhi fanno parte del piano Pro. Nel tuo piano attuale qui non viene applicato nulla; l’elenco mostra cosa aggiunge Pro.",
+      "storedInactive": "Sono salvati requisiti di un piano precedente. Vengono conservati ma non applicati finché il piano non include i flussi di approvazione.",
+      "notPersisted": "L’archiviazione dei requisiti di approvazione non è ancora disponibile (migrazione 0012_team_policies in sospeso). Non viene applicato nulla.",
+      "comparePlans": "Confronta i piani",
+      "readOnly": "Il tuo ruolo può solo vedere questi requisiti.",
+      "changeTypesLegend": "Modifiche che richiedono una seconda persona",
+      "approversLegend": "Chi può approvare",
+      "ownerAlways": "Gli Owner possono sempre approvare.",
+      "requesterNote": "Vale per tutti, Owner compresi: nessuno approva la propria richiesta.",
+      "enforcementNote": "Le modifiche di ruolo vengono applicate qui, in Team e accessi. Gli altri tipi di modifica vengono applicati dal modulo che li esegue (Releases, Destinazioni, Consenso e privacy, Impostazioni) tramite questa stessa policy; le loro richieste compaiono nell’elenco sopra e possono essere rifiutate qui.",
+      "save": "Salva requisiti",
+      "updated": "Ultima modifica il {date} da {name}",
+      "neverUpdated": "Non ancora configurato.",
+      "relaxDialog": {
+        "title": "Allentare i requisiti di approvazione?",
+        "description": "Le modifiche seguenti riducono la protezione. Hanno effetto immediato e vengono registrate nel log di audit.",
+        "confirm": "Salva comunque"
+      },
+      "changes": {
+        "relaxed": "{type} non richiede più una seconda persona",
+        "approverAdded": "{role} può approvare da ora"
+      },
+      "types": {
+        "config_publish": {
+          "label": "Pubblicare una configurazione",
+          "description": "Una nuova configurazione di tracking va in produzione per un ambiente del sito."
+        },
+        "config_rollback": {
+          "label": "Ripristinare una configurazione",
+          "description": "Una versione precedente sostituisce la configurazione attiva."
+        },
+        "consent_publish": {
+          "label": "Pubblicare una policy di consenso",
+          "description": "Una nuova versione della policy guida il motore di consenso per ogni nuovo evento."
+        },
+        "credential_change": {
+          "label": "Modificare le credenziali",
+          "description": "Salvare, ruotare o revocare una credenziale di destinazione."
+        },
+        "destination_pause": {
+          "label": "Mettere in pausa una destinazione",
+          "description": "Le consegne a una destinazione si fermano mentre il resto continua."
+        },
+        "member_role_change": {
+          "label": "Modificare il ruolo di un membro",
+          "description": "Un membro riceve un ruolo diverso, Owner compreso."
+        },
+        "kill_switch": {
+          "label": "Kill switch",
+          "description": "Ferma raccolta e consegna per un sito o per l’intera organizzazione."
+        }
+      }
+    },
+    "requests": {
+      "title": "Approvazioni aperte",
+      "intro": "Modifiche in attesa di una seconda persona. Le richieste scadono dopo 7 giorni senza decisione.",
+      "empty": "Nessuna richiesta aperta.",
+      "recent": "Decisioni recenti",
+      "recentEmpty": "Ancora nessuna decisione.",
+      "target": "Oggetto",
+      "change": "Modifica",
+      "roleChange": "{from} → {to}",
+      "requestedBy": "richiesta da {name}",
+      "requestedAt": "il {date}",
+      "expiresAt": "scade il {date}",
+      "former": "ex membro",
+      "decidedIn": "Questa modifica viene applicata dal suo modulo; qui può solo essere rifiutata.",
+      "approve": "Applica modifica",
+      "reject": "Rifiuta",
+      "withdraw": "Ritira",
+      "note": "Nota (facoltativa)",
+      "status": {
+        "pending": "In sospeso",
+        "applied": "Applicata",
+        "rejected": "Rifiutata",
+        "withdrawn": "Ritirata",
+        "expired": "Scaduta"
+      },
+      "decidedBy": "{status} da {name} il {date}",
+      "approveDialog": {
+        "title": "Applicare questa modifica?",
+        "description": "Agisci come seconda persona. La modifica viene eseguita subito e registrata con il tuo nome.",
+        "confirm": "Applica"
+      },
+      "rejectDialog": {
+        "title": "Rifiutare questa richiesta?",
+        "description": "Chi ha fatto la richiesta vede il rifiuto e la tua nota.",
+        "confirm": "Rifiuta"
+      }
+    },
+    "audit": {
+      "title": "Log di audit",
+      "intro": "Ogni modifica registrata in questa organizzazione: chi ha fatto cosa, quando e su quale oggetto. I valori sono mostrati oscurati; le voci non possono mai essere modificate né eliminate.",
+      "noPermission": "Il tuo ruolo non può vedere il log di audit",
+      "noPermissionText": "Chiedi a un Owner o Admin il ruolo Analyst, Developer o Admin.",
+      "windowLimited": "Vengono mostrati gli ultimi {days} giorni nel tuo piano {plan}. Il piano Pro conserva la cronologia completa.",
+      "windowFull": "Cronologia completa; le voci sono conservate per {days} giorni.",
+      "comparePlans": "Confronta i piani",
+      "filters": {
+        "legend": "Filtri",
+        "category": "Categoria",
+        "actor": "Attore",
+        "target": "Tipo di oggetto",
+        "search": "Cerca",
+        "searchPlaceholder": "Azione, oggetto o id richiesta",
+        "from": "Dal",
+        "to": "Al",
+        "apply": "Applica filtri",
+        "reset": "Reimposta",
+        "all": "Tutti",
+        "everyone": "Tutti gli attori",
+        "system": "Job di sistema",
+        "agent": "Track AI (per conto di un membro)",
+        "source_key": "Chiavi sorgente server"
+      },
+      "categories": {
+        "team": "Team",
+        "organization": "Organizzazione",
+        "sites": "Siti",
+        "config": "Configurazione",
+        "consent": "Consenso",
+        "destinations": "Destinazioni",
+        "credentials": "Credenziali",
+        "privacy": "Privacy",
+        "billing": "Fatturazione",
+        "ai": "Track AI",
+        "other": "Altro"
+      },
+      "count": "{count} voci",
+      "countFiltered": "{count} voci corrispondono ai filtri",
+      "caption": "Voci di audit, le più recenti per prime",
+      "when": "Quando",
+      "actor": "Attore",
+      "action": "Azione",
+      "target": "Oggetto",
+      "details": "Dettagli",
+      "showDetails": "Mostra dettagli ({count})",
+      "noDetails": "Nessun dettaglio",
+      "diff": "Modifica",
+      "metadata": "Metadati",
+      "truncated": "Altri valori omessi.",
+      "redacted": "Dati personali e segreti vengono oscurati prima di salvare una voce e di nuovo quando viene mostrata.",
+      "requestId": "Richiesta",
+      "actorKind": {
+        "user": "Membro",
+        "agent": "Track AI",
+        "system": "Sistema",
+        "source_key": "Chiave sorgente",
+        "unknown": "Sconosciuto"
+      },
+      "formerMember": "Ex membro",
+      "empty": "Ancora nulla di registrato",
+      "emptyText": "Le voci compaiono non appena qualcuno modifica qualcosa in questa organizzazione.",
+      "emptyFiltered": "Nessuna voce corrisponde a questi filtri",
+      "emptyFilteredText": "Amplia il periodo o reimposta i filtri.",
+      "pagination": {
+        "nav": "Pagine del log di audit",
+        "previous": "Pagina precedente",
+        "next": "Pagina successiva",
+        "page": "Pagina {page}"
+      }
+    },
+    "notices": {
+      "invited": "Invito inviato.",
+      "resent": "Invito inviato di nuovo.",
+      "cancelled": "Invito annullato.",
+      "roleUpdated": "Ruolo modificato.",
+      "roleRequested": "La modifica del ruolo è stata inviata per l’approvazione. Un altro membro con diritti di approvazione deve applicarla.",
+      "removed": "Membro rimosso.",
+      "policySaved": "Requisiti di approvazione salvati.",
+      "policyUnchanged": "Nulla è cambiato.",
+      "requestApplied": "Modifica applicata.",
+      "requestRejected": "Richiesta rifiutata.",
+      "requestWithdrawn": "Richiesta ritirata."
+    },
+    "errors": {
+      "generic": "Qualcosa è andato storto.",
+      "email": "Inserisci un indirizzo e-mail valido.",
+      "forbidden": "Il tuo ruolo non può farlo.",
+      "notFound": "Non trovato. Ricarica la pagina.",
+      "self": "Non puoi modificare la tua stessa appartenenza.",
+      "sameRole": "Il membro ha già questo ruolo.",
+      "confirmOwner": "Le modifiche che coinvolgono il ruolo Owner richiedono una conferma.",
+      "lastOwner": "L’ultimo Owner non può essere retrocesso né rimosso.",
+      "requestExists": "Per questo membro è già aperta una richiesta di approvazione.",
+      "confirmRequired": "Conferma prima l’azione.",
+      "alreadyMember": "Questa persona è già membro.",
+      "alreadyInvited": "Per questa e-mail è già in sospeso un invito. Invialo di nuovo dall’elenco.",
+      "seatLimit": "Tutti i posti del tuo piano sono occupati.",
+      "notInPlan": "I flussi di approvazione non fanno parte del tuo piano.",
+      "notPersisted": "L’archiviazione dei requisiti di approvazione non è ancora disponibile.",
+      "confirmRelax": "Allentare i requisiti richiede una conferma.",
+      "notPending": "Questa richiesta non è più aperta.",
+      "selfApproval": "Non puoi approvare la tua stessa richiesta.",
+      "notAppliedHere": "Questo tipo di modifica viene applicato dal suo modulo."
+    },
+    "common": {
+      "close": "Chiudi",
+      "cancel": "Annulla"
+    }
+  }
+}

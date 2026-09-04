@@ -2,21 +2,21 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { listSites } from "@track-site/db";
-import { Badge, Button, Card, EmptyState } from "@track-site/ui";
+import { Badge, Card, EmptyState, buttonVariants } from "@track-site/ui";
 import { requireOrgContext, withOrg } from "@/server/session";
 
 export default async function SitesPage() {
   const ctx = await requireOrgContext("sites.read");
   const t = await getTranslations("app");
+  const tShell = await getTranslations("shell.nav");
   const sites = await withOrg(ctx, (tx) => listSites(tx, ctx.organization.id));
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-semibold text-ink">{t("nav.sites")}</h1>
-        <Link href="/app/onboarding">
-          <Button size="sm">
-            <Plus className="h-4 w-4" aria-hidden="true" /> {t("overview.createSite")}
-          </Button>
+        <h1 className="font-display text-2xl font-semibold text-ink">{tShell("sites")}</h1>
+        {/* button-styled link: interactive elements are never nested */}
+        <Link href="/app/onboarding" className={buttonVariants({ size: "sm" })}>
+          <Plus className="h-4 w-4" aria-hidden="true" /> {t("overview.createSite")}
         </Link>
       </div>
       {sites.length === 0 ? (

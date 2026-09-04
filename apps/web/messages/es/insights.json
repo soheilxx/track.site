@@ -1,0 +1,334 @@
+{
+  "insights": {
+    "eyebrow": "Insights",
+    "subnav": {
+      "label": "Secciones de insights",
+      "overview": "Resumen",
+      "attribution": "Atribución y click IDs",
+      "audiences": "Audiencias"
+    },
+    "toolbar": {
+      "site": "Sitio",
+      "environment": "Entorno",
+      "environmentKind": {
+        "production": "Producción",
+        "staging": "Staging",
+        "development": "Pruebas"
+      },
+      "allEnvironments": "Todos los entornos",
+      "window": "Periodo",
+      "windowRange": "{from} – {to}",
+      "range": "Elegir periodo",
+      "days": "{days} días"
+    },
+    "evidence": {
+      "observed": "Observado",
+      "modelled": "Modelado",
+      "unknown": "Desconocido",
+      "observedHelp": "Contado a partir de los eventos, entregas y puntos de contacto almacenados, exactamente como los registró la pipeline.",
+      "modelledHelp": "Una pista derivada con una suposición explícita. No es una medición y nunca se usa como tal.",
+      "unknownHelp": "Algo que Track no puede saber a partir de sus propios registros. Se nombra, no se rellena."
+    },
+    "noSite": {
+      "title": "Aún no hay sitio",
+      "text": "Crea tu primer sitio para capturar eventos; la atribución y las audiencias se calculan a partir de ellos.",
+      "action": "Crear sitio"
+    },
+    "loading": {
+      "label": "Cargando insights"
+    },
+    "overview": {
+      "title": "Insights",
+      "intro": "Atribución y salud de los click IDs del sitio activo, además de audiencias que respetan el consentimiento. Cada cifra se calcula bajo demanda a partir de los eventos almacenados y se etiqueta como observada, modelada o desconocida.",
+      "attribution": {
+        "title": "Atribución y salud de los click IDs",
+        "open": "Abrir el informe completo",
+        "destinations": "Destinos con problemas de reenvío",
+        "noDestinations": "No hay destinos configurados para este sitio",
+        "destinationsProblems": "Consulta la tabla de reenvío más abajo",
+        "destinationsOk": "No se observó ningún problema en este periodo",
+        "destinationsNoObservation": "No se observó ningún evento elegible para ningún destino"
+      },
+      "empty": {
+        "title": "No hay eventos aceptados en este periodo",
+        "text": "La salud de la atribución necesita eventos. Revisa la instalación y el flujo de eventos en el módulo Eventos.",
+        "action": "Abrir eventos"
+      },
+      "audiences": {
+        "title": "Audiencias",
+        "text": "Segmentos que respetan el consentimiento, derivados de eventos first-party de los últimos 30 días. Desde aquí no se sube nada a las plataformas publicitarias.",
+        "open": "Abrir audiencias"
+      }
+    },
+    "attribution": {
+      "title": "Atribución y salud de los click IDs",
+      "intro": "¿Se capturan los click IDs compatibles (gclid, fbclid, ttclid, msclkid, li_fat_id, rdt_cid y más) con consentimiento de marketing, cuánto viven, de dónde proceden y llegan a tus destinos? Los hechos observados, las pistas modeladas y lo desconocido se mantienen estrictamente separados.",
+      "empty": {
+        "title": "No hay eventos aceptados en este periodo",
+        "text": "No se capturó nada para este sitio y entorno en el periodo elegido, por lo que no se puede informar de tasa de captura, origen ni vida útil. Revisa la instalación o amplía el periodo.",
+        "events": "Abrir eventos",
+        "setup": "Abrir el sitio"
+      },
+      "facts": {
+        "title": "Hechos observados",
+        "consent": {
+          "label": "Eventos con consentimiento de marketing",
+          "hint": "{marketing} de {total} eventos aceptados",
+          "unknown": "No hay eventos aceptados en este periodo"
+        },
+        "withClickIds": {
+          "label": "Eventos con click ID",
+          "hint": "De {marketing} eventos con consentimiento de marketing",
+          "hintNoConsent": "Ningún evento con consentimiento de marketing, así que no se pudo capturar ningún click ID"
+        },
+        "captureRate": {
+          "label": "Tasa de captura conforme al consentimiento",
+          "hint": "Proporción de eventos con consentimiento de marketing que llevan al menos un click ID",
+          "unknown": "No medible: no hay eventos con consentimiento de marketing"
+        },
+        "violations": {
+          "label": "Click IDs sin consentimiento de marketing",
+          "ok": "Ninguno: la política de consentimiento se aplica",
+          "bad": "Infracción de la política: se almacenaron click IDs sin consentimiento de marketing. Revisa la configuración del consentimiento.",
+          "unknown": "Nada que comprobar en este periodo"
+        },
+        "lastEvent": "Último evento aceptado: {at}",
+        "noEvents": "Todavía no hay ningún evento aceptado",
+        "stale": "Ningún evento en las últimas 24 horas: las cifras pueden estar desactualizadas"
+      },
+      "config": {
+        "title": "Configuración de captura",
+        "lead": "Los ajustes de click ID que realmente estaban en vigor para este entorno.",
+        "unknownEnv": "Este sitio aún no tiene entorno, así que no se puede mostrar ninguna configuración.",
+        "source": "Origen",
+        "published": "Configuración publicada, versión {version}",
+        "default": "Sin configuración publicada: se aplican los valores predeterminados de la plataforma",
+        "capture": "Captura",
+        "captureOn": "Activada (solo con consentimiento de marketing)",
+        "captureOff": "Desactivada: los click IDs se descartan",
+        "ttl": "Vida útil",
+        "ttlDays": "{days} días",
+        "note": "Los click IDs se capturan de la URL de aterrizaje solo tras el consentimiento de marketing, se conservan en el almacenamiento first-party hasta que termina la vida útil y se borran al retirar el consentimiento."
+      },
+      "clickIds": {
+        "title": "Click IDs",
+        "lead": "Cada parámetro de click ID visto en los eventos aceptados del periodo. Los valores nunca salen de la base de datos; solo se muestran recuentos, orígenes y duraciones.",
+        "empty": "No se capturó ningún click ID en este periodo.",
+        "caption": "Click IDs capturados por parámetro",
+        "columns": {
+          "param": "Click ID",
+          "events": "Eventos",
+          "values": "IDs distintos",
+          "origin": "Origen",
+          "lifetime": "Vida útil",
+          "span": "Arrastre",
+          "consent": "Consentimiento",
+          "seen": "Visto"
+        },
+        "origin": {
+          "url": "URL de aterrizaje",
+          "storage": "Almacenamiento first-party",
+          "server": "Servidor",
+          "inherited": "Heredado del navegador (unión por pedido)"
+        },
+        "originNote": "Origen: el primer evento que lleva un valor de ID es su URL de aterrizaje; los eventos de navegador posteriores lo llevan desde el almacenamiento first-party; los eventos de servidor lo capturaron ellos mismos o lo heredaron de la sesión de navegador del mismo pedido. Determinado dentro del periodo elegido.",
+        "unknown": "Desconocido",
+        "lifetimeDays": "{days} días",
+        "lifetimeRange": "{min}–{max} días",
+        "span": "mediana {median}, máx. {max}",
+        "unitHours": "h",
+        "unitDays": "d",
+        "consentOk": "Consentimiento de marketing",
+        "consentBad": "{n} sin consentimiento",
+        "seen": "{first} → {last}"
+      },
+      "vendors": {
+        "google": "Google",
+        "meta": "Meta",
+        "tiktok": "TikTok",
+        "reddit": "Reddit",
+        "linkedin": "LinkedIn",
+        "microsoft": "Microsoft",
+        "pinterest": "Pinterest",
+        "snapchat": "Snapchat",
+        "x": "X",
+        "taboola": "Taboola",
+        "outbrain": "Outbrain",
+        "amazon": "Amazon",
+        "spotify": "Spotify",
+        "quora": "Quora",
+        "yahoo": "Yahoo",
+        "tradedesk": "The Trade Desk",
+        "adroll": "AdRoll",
+        "criteo": "Criteo",
+        "affiliate": "Red de afiliación",
+        "other": "Otro"
+      },
+      "destinations": {
+        "title": "Reenvío por destino",
+        "lead": "Para cada destino: qué click IDs puede recibir y si los eventos que los llevan se entregaron mientras el ID seguía siendo válido. Derivado del registro de entrega de cada evento.",
+        "empty": "No hay ningún destino configurado para este sitio.",
+        "emptyAction": "Añadir un destino",
+        "caption": "Reenvío de click IDs por destino",
+        "columns": {
+          "destination": "Destino",
+          "status": "Estado",
+          "accepts": "Acepta",
+          "eligible": "Eventos aptos",
+          "forwarded": "Entregados con ID",
+          "failed": "Fallidos",
+          "pending": "Pendientes / omitidos",
+          "notRouted": "No enrutados",
+          "expired": "Caducados al entregar",
+          "last": "Última entrega",
+          "actions": "Acciones"
+        },
+        "testMode": "Modo de prueba",
+        "verdict": {
+          "forwarding": "Reenvía",
+          "partial": "Reenvía parcialmente",
+          "failing": "Entregas fallando",
+          "not_delivered": "No se observó ninguna entrega",
+          "no_eligible": "Ningún evento apto",
+          "inactive": "No activo",
+          "unsupported": "Sin click IDs"
+        },
+        "verdictHelp": {
+          "forwarding": "Cada evento apto del periodo se entregó mientras su click ID era válido.",
+          "partial": "Algunos eventos aptos se entregaron con su click ID; otros fallaron, están pendientes, no se enrutaron o tenían un ID caducado.",
+          "failing": "Existen eventos aptos, pero todas las entregas fallaron.",
+          "not_delivered": "Existen eventos aptos, pero ninguno se entregó a este destino: revisa el mapeo de eventos y el enrutamiento.",
+          "no_eligible": "Ningún evento aceptado llevaba un click ID que este destino acepte.",
+          "inactive": "El destino no está conectado o está en pausa; el router no le envía nada.",
+          "unsupported": "Este tipo de destino no recibe click IDs."
+        },
+        "status": {
+          "draft": "Borrador",
+          "not_connected": "No conectado",
+          "connected": "Conectado",
+          "paused": "En pausa",
+          "error": "Error"
+        },
+        "acceptsNone": "Ninguno",
+        "never": "Nunca",
+        "open": "Abrir",
+        "note": "Track no ve si el proveedor emparejó un click ID reenviado, solo el resultado HTTP. La carga útil del proveedor, redactada, de cada intento está en el depurador de eventos."
+      },
+      "daily": {
+        "title": "Captura diaria",
+        "lead": "Por día: eventos aceptados con consentimiento de marketing y, de ellos, eventos con click ID.",
+        "empty": "Ningún evento con consentimiento de marketing en este periodo.",
+        "legend": {
+          "marketing": "Eventos con consentimiento de marketing",
+          "withClickIds": "Eventos con click ID"
+        },
+        "showTable": "Mostrar como tabla",
+        "caption": "Eventos diarios con consentimiento de marketing y con click IDs",
+        "columns": {
+          "day": "Día",
+          "total": "Aceptados",
+          "marketing": "Consentimiento de marketing",
+          "withClickIds": "Con click ID"
+        }
+      },
+      "hints": {
+        "title": "Pistas modeladas",
+        "lead": "Derivadas con una suposición explícita: una pista que revisar, nunca una medición.",
+        "paid": {
+          "title": "Tráfico de pago sin click ID",
+          "text": "Eventos con consentimiento de marketing que llevan un marcador de campaña de pago pero ningún click ID.",
+          "unknown": "No medible en este periodo.",
+          "assumption": "Heurística: utm_medium como cpc, paid o display, o un referrer de un servidor de anuncios. Las visitas orgánicas desde búsqueda o redes sociales no se cuentan."
+        },
+        "gap": {
+          "title": "Click IDs posiblemente perdidos por falta de consentimiento",
+          "text": "Extrapolación de la tasa de captura observada a los eventos sin consentimiento de marketing.",
+          "unknown": "No medible: requiere una tasa de captura observada y eventos sin consentimiento de marketing.",
+          "assumption": "Supone que los visitantes sin consentimiento llegan de canales de pago en la misma proporción que los visitantes con consentimiento."
+        }
+      },
+      "unknown": {
+        "title": "Desconocido",
+        "lead": "Lo que Track no puede saber a partir de sus propios registros.",
+        "noConsent": {
+          "title": "{n} eventos sin consentimiento de marketing",
+          "text": "Para estos eventos no se capturó ningún click ID, así que se desconoce si había uno en la URL."
+        },
+        "vendor": {
+          "title": "Emparejamiento en el lado del proveedor",
+          "text": "Track ve el resultado de la entrega, no si la plataforma atribuyó la conversión al clic."
+        },
+        "destinations": {
+          "title": "{n} destinos sin observación",
+          "text": "Los destinos inactivos o sin ningún evento apto no aportan evidencia en ningún sentido."
+        }
+      },
+      "touchpoints": {
+        "title": "Puntos de contacto de atribución",
+        "lead": "Puntos de contacto por canal registrados por visitante (fuente, medio, campaña, click IDs) dentro del periodo. Los touchpoints se registran por sitio, no por entorno, por lo que esta tabla abarca todos los entornos del sitio.",
+        "empty": "No se registró ningún punto de contacto en este periodo.",
+        "caption": "Puntos de contacto por canal",
+        "columns": {
+          "channel": "Canal",
+          "touchpoints": "Puntos de contacto",
+          "visitors": "Visitantes",
+          "withClickIds": "Con click ID",
+          "last": "Último"
+        }
+      },
+      "definitions": {
+        "title": "Definiciones",
+        "capture": {
+          "term": "Tasa de captura conforme al consentimiento",
+          "text": "Eventos aceptados con al menos un click ID dividido por eventos aceptados con consentimiento de marketing. Solo cuentan los eventos aceptados: se excluyen los rechazados, los bloqueados por la política y las conversiones duplicadas."
+        },
+        "origin": {
+          "term": "Origen",
+          "text": "URL de aterrizaje (primer evento que lleva el valor de ID), almacenamiento first-party (eventos de navegador posteriores), servidor (capturado por una fuente del lado del servidor) o heredado (un evento de servidor que asumió la sesión de navegador del mismo pedido)."
+        },
+        "lifetime": {
+          "term": "Vida útil y arrastre",
+          "text": "La vida útil es la caducidad configurada tal como se almacenó en el evento. El arrastre es el tiempo entre el primer y el último evento que llevan el mismo valor de ID."
+        },
+        "forwarding": {
+          "term": "Entregado con ID",
+          "text": "El evento se entregó al destino y llevaba un click ID que el destino acepta y que no había caducado en el momento de la entrega. El router descarta los IDs caducados antes del envío."
+        }
+      }
+    },
+    "audiences": {
+      "title": "Audiencias",
+      "workspaceBanner": {
+        "text": "Este enlace pertenece a otro sitio ({site}).",
+        "switch": "Cambiar a {site}"
+      },
+      "intro": "Segmentos que respetan el consentimiento, calculados a partir de eventos first-party de los últimos 30 días: solo consentimiento de marketing, los {limit} eventos de audiencia más recientes del sitio y entorno activos.",
+      "empty": {
+        "title": "No hay eventos de audiencia en los últimos 30 días",
+        "text": "Los segmentos necesitan eventos de compra, lead, carrito, checkout o registro con consentimiento de marketing.",
+        "action": "Abrir eventos"
+      },
+      "consentNote": "Se han excluido {n} eventos sin consentimiento de marketing. El consentimiento inferido nunca se usa para audiencias.",
+      "identityNote": "{n} eventos con consentimiento no llevan ni ID de usuario ni ID anónimo y no pertenecen a ningún segmento.",
+      "truncated": "Se alcanzó el límite de muestra de {limit} eventos; los segmentos se basan solo en los eventos más recientes.",
+      "segmentsTitle": "Segmentos",
+      "caption": "Segmentos de audiencia de los últimos 30 días",
+      "columns": {
+        "segment": "Segmento",
+        "size": "Personas",
+        "events": "Basado en"
+      },
+      "segments": {
+        "buyers": "Compradores",
+        "highValue": "Compradores de alto valor",
+        "abandoners": "Abandonos de carrito / checkout",
+        "leads": "Leads",
+        "signups": "Registros"
+      },
+      "howTitle": "Cómo llegan las audiencias a las plataformas publicitarias",
+      "how1": "Track nunca sube listas de audiencias. Cada plataforma recibe solo las conversiones de servidor individuales con datos de coincidencia con hash para los que el visitante dio su consentimiento.",
+      "how2": "Usa el creador de audiencias de la propia plataforma sobre esas conversiones (p. ej., públicos personalizados de Meta a partir de eventos de la CAPI o audiencias basadas en conversiones en Google Ads).",
+      "how3": "La retirada del consentimiento detiene de inmediato los envíos futuros y puede aplicarse con carácter retroactivo mediante una solicitud de derechos del interesado."
+    }
+  }
+}

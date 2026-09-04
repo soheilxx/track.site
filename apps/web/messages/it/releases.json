@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center: cosa è live per ambiente, la bozza in preparazione, diff di configurazione leggibili, approvazioni a quattro occhi, pubblicazione pianificata e rollback con un clic. Ogni azione è tracciata nell’audit.",
+    "siteContext": "Bozze, versioni e anteprima d’impatto si riferiscono a {site}",
+    "switchSiteHint": "Cambia sito nel selettore dello spazio di lavoro.",
+    "noSite": "Ancora nessun sito",
+    "noSiteText": "Crea il tuo primo sito per pubblicare una configurazione di tracking.",
+    "createSite": "Crea sito",
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "unknownUser": "Membro sconosciuto",
+    "system": "Pubblicazione pianificata",
+    "migrationMissing": "Dati di release non disponibili",
+    "migrationMissingText": "Le tabelle di approvazioni e pianificazione (migrazione 0010) non sono applicate a questo database. Le versioni pubblicate vengono mostrate; bozze, approvazioni e pianificazioni no.",
+    "loading": "Caricamento delle release",
+    "links": {
+      "aiSetup": "Apri AI Setup",
+      "destinations": "Apri le destinazioni",
+      "dataQuality": "Apri la Data Quality Inbox",
+      "explorer": "Apri il Live Event Explorer",
+      "testLab": "Apri il Live Test Lab"
+    },
+    "environment": {
+      "kind": {
+        "production": "Produzione",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Modalità test",
+      "navLabel": "Ambienti"
+    },
+    "strip": {
+      "active": "Versione live",
+      "noActive": "Ancora nulla di pubblicato",
+      "version": "v{version}",
+      "publishedAgo": "pubblicata {time}",
+      "restored": "ripristinata tramite rollback",
+      "draft": "Bozza",
+      "noDraft": "Nessuna bozza aperta",
+      "draftChanges": "{count, plural, =0 {nessuna modifica} one {# modifica} other {# modifiche}}",
+      "lintErrors": "{count, plural, one {# problema bloccante} other {# problemi bloccanti}}",
+      "scheduled": "Pianificata per {time}",
+      "scheduleFailed": "Pubblicazione pianificata non riuscita",
+      "approvalsPending": "{count, plural, one {# approvazione in attesa} other {# approvazioni in attesa}}",
+      "versions": "{count, plural, =0 {nessuna versione} one {# versione} other {# versioni}}"
+    },
+    "draft": {
+      "title": "Bozza per {environment}",
+      "intro": "La bozza aperta diventa la versione {version} quando viene pubblicata. Le modifiche si preparano in AI Setup, nelle destinazioni e nella Data Quality Inbox; questa pagina le verifica, approva, pianifica e pubblica.",
+      "empty": "Nessuna bozza aperta in {environment}",
+      "emptyText": "Non c’è nulla in attesa di pubblicazione. Prepara una modifica in AI Setup, collega una destinazione o accetta una correzione dalla Data Quality Inbox: la bozza compare qui per la verifica.",
+      "basedOn": "Basata su v{version}",
+      "initial": "Prima versione per questo ambiente",
+      "author": "Preparata da {name}",
+      "updated": "Ultima modifica {time}",
+      "invalid": "Bozza danneggiata",
+      "invalidText": "La bozza non corrisponde allo schema di configurazione e non può essere pubblicata. Scartala e prepara di nuovo la modifica.",
+      "lint": {
+        "ok": "Controlli superati",
+        "errors": "{count, plural, one {# problema bloccante} other {# problemi bloccanti}}",
+        "warnings": "{count, plural, one {# avviso} other {# avvisi}}",
+        "errorsTitle": "Problemi bloccanti",
+        "warningsTitle": "Avvisi",
+        "explain": "I problemi bloccanti provengono dal lint della configurazione (policy, identificatori pubblici, JSONLogic). Gli avvisi non bloccano la pubblicazione."
+      },
+      "changesTitle": "Modifiche",
+      "noChanges": "La bozza è identica alla versione live.",
+      "criticalTitle": "Modifica critica",
+      "criticalText": "Questa modifica riguarda il consenso, un evento critico, una destinazione o il kill switch in produzione. Si applica l’approvazione a quattro occhi.",
+      "signalsTitle": "Segnali critici",
+      "signalsInfo": "In {environment} questi segnali sono informativi; l’approvazione a quattro occhi si applica alla produzione.",
+      "schedule": {
+        "title": "Pubblicazione pianificata",
+        "at": "Pubblicazione {time}",
+        "by": "pianificata da {name}",
+        "pendingWorker": "Il worker pubblica entro un minuto dall’orario pianificato.",
+        "failed": "La pubblicazione pianificata è stata rifiutata: {reason}",
+        "attemptedAt": "tentata {time}",
+        "cancel": "Annulla pianificazione",
+        "reasons": {
+          "signing_key_missing": "il worker non ha una chiave di firma della configurazione",
+          "draft_not_open": "la bozza non era più aperta",
+          "draft_changed": "la bozza è cambiata dopo la pianificazione",
+          "approval_invalid": "l’approvazione registrata non era più valida",
+          "lint_failed": "il lint della configurazione non è riuscito",
+          "publish_failed": "la pubblicazione non è riuscita"
+        }
+      },
+      "evidence": {
+        "title": "Evidenze di test",
+        "intro": "Esecuzioni del Live Test Lab dall’apertura di questa bozza. Esegui un percorso nell’ambiente di test prima di pubblicare in produzione.",
+        "empty": "Nessuna esecuzione di test dall’apertura della bozza.",
+        "unavailable": "Le esecuzioni di test non sono disponibili (migrazione 0007 non applicata).",
+        "steps": "{count, plural, one {# passo} other {# passi}}",
+        "open": "Apri esecuzione"
+      }
+    },
+    "fourEyes": {
+      "title": "Approvazione a quattro occhi",
+      "state": {
+        "not_required": "Non richiesta per questa modifica.",
+        "single_publisher": "Non disponibile: sei l’unico membro che può pubblicare. La release viene registrata come release di una sola persona.",
+        "satisfied": "Approvata da {name} {time}.",
+        "pending": "In attesa di un secondo membro: richiesta da {name} {time}.",
+        "stale": "L’ultima approvazione si riferisce a uno stato precedente della bozza. Richiedi una nuova revisione.",
+        "rejected": "L’ultima richiesta è stata rifiutata. Modifica la bozza e richiedi una nuova revisione.",
+        "missing": "Un secondo membro con diritto di pubblicazione deve approvare questa modifica prima che possa essere pubblicata o pianificata."
+      },
+      "publishers": "{count, plural, one {# membro può pubblicare} other {# membri possono pubblicare}}",
+      "request": "Richiedi approvazione",
+      "requestNote": "Nota per il revisore (facoltativa)",
+      "requestDialogTitle": "Richiedi l’approvazione per v{version}",
+      "requestDialogText": "Un secondo membro con diritto di pubblicazione esamina il riepilogo delle modifiche qui sotto e lo approva o lo rifiuta. La richiesta riguarda la bozza così com’è ora; ulteriori modifiche richiedono una nuova richiesta.",
+      "approve": "Approva",
+      "reject": "Rifiuta",
+      "withdraw": "Ritira richiesta",
+      "decideDialogTitle": "Verifica v{version}",
+      "decideDialogText": "Approvi o rifiuti esattamente le modifiche elencate qui sotto. Un rifiuto richiede una motivazione; la decisione è tracciata nell’audit.",
+      "reason": "Motivazione",
+      "reasonHint": "Obbligatoria per un rifiuto, facoltativa per un’approvazione.",
+      "ownRequest": "Hai richiesto tu questa revisione; deve decidere un altro membro.",
+      "history": "Cronologia delle approvazioni",
+      "decision": {
+        "pending": "In attesa",
+        "approved": "Approvata",
+        "rejected": "Rifiutata",
+        "withdrawn": "Ritirata"
+      },
+      "current": "bozza attuale",
+      "outdated": "stato precedente della bozza",
+      "requestedBy": "richiesta da {name} {time}",
+      "decidedBy": "{decision} da {name} {time}",
+      "note": "Nota: {note}",
+      "reasonGiven": "Motivazione: {reason}",
+      "reasons": {
+        "critical_event": "Un evento critico si ferma o cambia trigger",
+        "consent_weaker": "Il consenso si indebolisce (modalità regionale, consent mode avanzata o Global Privacy Control)",
+        "destination_purpose_weaker": "Una destinazione richiede meno consenso di prima",
+        "destination_stopped": "Una destinazione smette di ricevere eventi",
+        "marketing_destination_added": "Una destinazione pubblicitaria inizia a ricevere eventi",
+        "kill_switch": "Il kill switch cambia",
+        "allowed_hosts_reduced": "Vengono rimossi host verificati"
+      }
+    },
+    "actions": {
+      "publish": "Pubblica ora",
+      "schedule": "Pianifica",
+      "discard": "Scarta bozza",
+      "rollback": "Torna a questa versione",
+      "publishDialogTitle": "Pubblica v{version} in {environment}",
+      "publishDialogText": "La bozza diventa una versione firmata e immutabile ed è live per SDK e worker entro circa un minuto. Non si può annullare, ma un rollback a qualsiasi versione precedente richiede un solo clic.",
+      "publishConfirm": "Pubblica v{version}",
+      "singleAcknowledge": "Confermo da solo questa modifica critica; in questa organizzazione nessun secondo membro può approvarla.",
+      "scheduleDialogTitle": "Pianifica v{version} per {environment}",
+      "scheduleDialogText": "Il worker pubblica la bozza all’orario scelto. Rifiuta la pubblicazione se la bozza cambia dopo la pianificazione o se l’approvazione diventa non valida; il motivo compare qui.",
+      "scheduleAt": "Pubblica il",
+      "scheduleHint": "Tra {min} minuti e {max} giorni da adesso, nella tua ora locale.",
+      "scheduleConfirm": "Pianifica pubblicazione",
+      "discardDialogTitle": "Scartare la bozza v{version}?",
+      "discardDialogText": "La bozza viene archiviata, le richieste di approvazione in attesa vengono ritirate e la pianificazione viene rimossa. Il traffico live non è interessato.",
+      "discardConfirm": "Scarta",
+      "rollbackDialogTitle": "Tornare a v{version} in {environment}?",
+      "rollbackDialogText": "La versione attualmente live v{active} viene sostituita da v{version} entro circa un minuto. La bozza aperta resta intatta; il rollback è tracciato nell’audit.",
+      "rollbackDialogNoActive": "Nulla è live in {environment}; v{version} diventa la versione live entro circa un minuto. Il rollback è tracciato nell’audit.",
+      "rollbackConfirm": "Torna a v{version}",
+      "publishedOk": "La versione {version} è pubblicata.",
+      "scheduledOk": "La bozza è pianificata.",
+      "scheduleCancelledOk": "La pianificazione è stata rimossa.",
+      "discardedOk": "La bozza è stata scartata.",
+      "rolledBackOk": "La versione {version} è di nuovo live.",
+      "requestedOk": "Approvazione richiesta.",
+      "decidedOk": "Decisione registrata.",
+      "withdrawnOk": "Richiesta ritirata."
+    },
+    "errors": {
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "invalid": "La richiesta non era valida.",
+      "forbidden": "Non hai il permesso per questa azione.",
+      "not_found": "La bozza o la versione non esiste più.",
+      "not_open": "La bozza non è più aperta.",
+      "lint": "La bozza ha problemi bloccanti; risolvili prima di pubblicare.",
+      "approval_required": "Questa modifica critica richiede prima un’approvazione a quattro occhi.",
+      "approval_pending": "Una richiesta di approvazione è già in attesa.",
+      "approval_rejected": "L’ultima richiesta di approvazione è stata rifiutata; modifica la bozza e richiedi una nuova revisione.",
+      "acknowledge_required": "Conferma la release di una sola persona per continuare.",
+      "self_approval": "Non puoi approvare la tua stessa richiesta.",
+      "stale": "La bozza è cambiata dopo la richiesta; serve una nuova richiesta.",
+      "reason_required": "Un rifiuto richiede una motivazione (almeno 3 caratteri).",
+      "signing": "La pubblicazione non è configurata su questo deployment (nessuna chiave di firma della configurazione).",
+      "schedule_invalid": "Inserisci una data e un’ora valide.",
+      "schedule_too_soon": "Scegli un orario ad almeno {min} minuti da adesso.",
+      "schedule_too_far": "Scegli un orario entro i prossimi {max} giorni.",
+      "already_active": "Questa versione è già live."
+    },
+    "changes": {
+      "area": {
+        "settings": "Impostazioni",
+        "consent": "Consenso",
+        "events": "Eventi",
+        "destinations": "Destinazioni",
+        "site": "Sito",
+        "other": "Altro"
+      },
+      "op": {
+        "add": "aggiunto",
+        "remove": "rimosso",
+        "change": "modificato"
+      },
+      "before": "prima",
+      "after": "dopo",
+      "none": "nessuno",
+      "unknownDestination": "Destinazione {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "Cosa cambia pubblicando questa bozza, derivato dal diff e dai dati misurati degli ultimi {days} giorni in {environment}. I volumi sono misurazioni, non previsioni; una misurazione mancante resta sconosciuta.",
+      "generatedAt": "Calcolato {time}",
+      "events": {
+        "title": "Eventi interessati",
+        "empty": "Nessuna modifica agli eventi.",
+        "event": "Evento",
+        "change": "Modifica",
+        "accepted": "Accettati ({days} g)",
+        "delivered": "Consegnati ({days} g)",
+        "issues": "Problemi aperti",
+        "destinations": "Destinazioni dopo",
+        "critical": "critico",
+        "notMeasured": "non misurato",
+        "caption": "Eventi che la bozza aggiunge, rimuove, attiva, disattiva o modifica",
+        "kind": {
+          "added": "aggiunto",
+          "removed": "rimosso",
+          "enabled": "attivato",
+          "disabled": "disattivato",
+          "changed": "modificato"
+        }
+      },
+      "destinations": {
+        "title": "Destinazioni interessate",
+        "empty": "Nessuna modifica alle destinazioni.",
+        "destination": "Destinazione",
+        "change": "Modifica",
+        "purpose": "Finalità del consenso",
+        "events": "Eventi mappati",
+        "health": "Salute",
+        "status": "Stato",
+        "noHealth": "non misurata",
+        "healthText": "{success} consegnati · {errorRate} % di errori ({hours} h)",
+        "stale": "obsoleta",
+        "caption": "Destinazioni che la bozza aggiunge, rimuove, attiva, disattiva o modifica",
+        "kind": {
+          "added": "aggiunta",
+          "removed": "rimossa",
+          "enabled": "attivata",
+          "disabled": "disattivata",
+          "changed": "modificata"
+        },
+        "statusLabel": {
+          "draft": "bozza",
+          "not_connected": "non collegata",
+          "connected": "collegata",
+          "paused": "in pausa",
+          "error": "errore",
+          "unknown": "nessuna riga di destinazione"
+        }
+      },
+      "consent": {
+        "title": "Finalità del consenso",
+        "purposes": "Finalità dopo: {purposes}",
+        "added": "aggiunte: {purposes}",
+        "removed": "rimosse: {purposes}",
+        "regionMode": "Modalità regionale predefinita: {before} → {after}",
+        "consentMode": "Consent mode: {before} → {after}",
+        "gpc": "Global Privacy Control: {before} → {after}",
+        "clickIdTtl": "Durata dei click ID: {before} → {after} giorni",
+        "weaker": "Meno restrittiva della versione live",
+        "unchanged": "Nessuna modifica al consenso.",
+        "respected": "rispettato",
+        "ignored": "ignorato",
+        "none": "nessuno",
+        "purpose": {
+          "necessary": "Strettamente necessario",
+          "analytics": "Analisi",
+          "marketing": "Marketing",
+          "personalization": "Personalizzazione"
+        },
+        "regionModes": {
+          "strict_opt_in": "Opt-in rigoroso",
+          "opt_out": "Opt-out",
+          "notice_only": "Solo avviso"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Volume stimato",
+        "baseline": "Eventi che restano attivi",
+        "baselineHint": "accettati negli ultimi {days} giorni",
+        "removed": "Eventi che si fermano",
+        "unmeasured": "{count, plural, one {# evento attivo senza misurazione} other {# eventi attivi senza misurazione}}: {events}",
+        "billable": "Fatturabili",
+        "empty": "Nessun evento misurato negli ultimi {days} giorni per questo ambiente: il volume dopo la modifica è sconosciuto.",
+        "unavailable": "Gli aggregati non sono disponibili su questo database.",
+        "stale": "Ultimo aggregato {time}; gli eventi più recenti potrebbero non essere ancora conteggiati.",
+        "lastBucket": "Ultimo aggregato {time}"
+      },
+      "plan": {
+        "title": "Limiti del piano",
+        "plan": "Piano {plan}",
+        "limit": "{limit} eventi al mese",
+        "noLimit": "Nessun tetto fisso di eventi in questo piano",
+        "used": "{used} eventi fatturabili consumati in {period} ({share} %)",
+        "usedUnknown": "Nessun consumo registrato per {period} finora",
+        "projected": "Base misurata ≈ {projected} eventi al mese ({share} % del limite)",
+        "projectedUnknown": "Nessuna proiezione senza una base misurata",
+        "threshold": "La base misurata supera già la soglia di avviso del {threshold} % del piano.",
+        "billing": "Apri la fatturazione"
+      },
+      "dq": {
+        "title": "Effetto atteso sulla qualità dei dati",
+        "intro": "Basato su regole; ogni riga indica la regola che è scattata. Non è una garanzia: la pipeline misura l’effetto reale dopo la pubblicazione.",
+        "tone": {
+          "ok": "Nessun rischio",
+          "warn": "Avviso",
+          "bad": "Bloccante",
+          "info": "Nota"
+        },
+        "no_changes": "La bozza non cambia la configurazione live.",
+        "critical_event_stopped": "L’evento critico {event} si ferma: {measured, select, yes {{accepted} eventi accettati nella finestra} other {nessuna misurazione}} non verranno più acquisiti.",
+        "event_removed_open_issues": "{event} si ferma con {issues, plural, one {# problema di qualità aperto} other {# problemi di qualità aperti}}; fermare l’evento non li risolve.",
+        "destination_stopped": "{destination} smette di ricevere eventi ({measured, select, yes {{delivered} consegne nella finestra di salute} other {nessuna misurazione di salute}}).",
+        "destination_failing_stopped": "{destination} si ferma; il {errorRate} % delle ultime consegne è fallito, quindi quegli errori cessano con essa.",
+        "destination_no_mappings": "{destination} è attivata senza mappature di eventi e non riceve nulla.",
+        "conversion_browser_only": "{event} è solo lato browser; senza una fonte verificata lato server sono probabili duplicati e valori mancanti.",
+        "conversion_without_authoritative_source": "{event} va a destinazioni pubblicitarie senza una fonte verificata lato server (bloccante).",
+        "mapping_unknown_event": "{destination} mappa {event}, che non è definito.",
+        "consent_weaker": "Il consenso si indebolisce: più eventi possono essere elaborati prima di un segnale esplicito dove la policy regionale lo consente.",
+        "kill_switch_on": "Il kill switch ferma tutta la raccolta per questo ambiente.",
+        "kill_switch_off": "Il kill switch viene rilasciato; la raccolta riprende.",
+        "allowed_hosts_reduced": "Gli eventi da {hosts} vengono rifiutati dopo la pubblicazione.",
+        "new_event_unmeasured": "{event} è nuovo; volume e qualità sono sconosciuti finché non arrivano eventi.",
+        "lint_errors": "{count, plural, one {# problema di lint bloccante impedisce} other {# problemi di lint bloccanti impediscono}} la pubblicazione.",
+        "no_rule_fired": "Nessuna regola è scattata per questa modifica. Verifica l’effetto nel Live Event Explorer dopo la pubblicazione."
+      }
+    },
+    "history": {
+      "title": "Cronologia delle versioni",
+      "intro": "Ogni versione pubblicata di {environment}, la più recente per prima. Le versioni sono immutabili e firmate; un rollback riattiva una versione precedente.",
+      "empty": "Ancora nulla di pubblicato",
+      "emptyText": "La prima versione compare qui non appena una bozza viene pubblicata.",
+      "caption": "Versioni di configurazione pubblicate",
+      "version": "Versione",
+      "status": "Stato",
+      "summary": "Riepilogo",
+      "author": "Autore",
+      "published": "Pubblicata",
+      "changes": "Modifiche",
+      "open": "Apri",
+      "statusLabel": {
+        "active": "Live",
+        "superseded": "Sostituita"
+      },
+      "rolledBack": "rollback eseguito",
+      "restored": "ripristinata",
+      "scheduled": "pianificata",
+      "approved": "quattro occhi",
+      "initial": "Configurazione iniziale"
+    },
+    "version": {
+      "breadcrumbLabel": "Percorso di navigazione",
+      "back": "Releases",
+      "title": "Versione {version}",
+      "notFound": "Versione non trovata",
+      "notFoundText": "La versione non esiste per il sito attivo. Cambia sito nel selettore dello spazio di lavoro o torna alle release.",
+      "status": {
+        "active": "Live",
+        "superseded": "Sostituita"
+      },
+      "activeNow": "v{version} è live",
+      "createdBy": "Pubblicata da {name} {time}",
+      "createdBySystem": "Pubblicata secondo pianificazione {time}",
+      "previous": "Diff rispetto a v{version}",
+      "first": "Prima versione: ogni voce è nuova",
+      "signed": "Firmata con la chiave {keyId} · digest {digest}",
+      "facts": {
+        "title": "Configurazione",
+        "events": "{count, plural, one {# evento attivo} other {# eventi attivi}} ({critical} critici)",
+        "destinations": "Destinazioni: {names}",
+        "noDestinations": "Nessuna destinazione attiva",
+        "consent": "Consenso: {mode}, consent mode {consentMode}, GPC {gpc}",
+        "clickIds": "Durata dei click ID {days} giorni",
+        "hosts": "Host: {hosts}",
+        "noHosts": "Nessun host consentito",
+        "killSwitch": "Kill switch attivo"
+      },
+      "publications": {
+        "title": "Cronologia di pubblicazione",
+        "publish": "Pubblicata",
+        "rollback": "Ripristinata tramite rollback da v{from}",
+        "rollbackUnknown": "Ripristinata tramite rollback",
+        "by": "da {name}",
+        "active": "live adesso",
+        "superseded": "sostituita {time}",
+        "withApproval": "con approvazione a quattro occhi"
+      },
+      "approvals": {
+        "title": "Approvazioni",
+        "empty": "Nessuna richiesta di approvazione per questa versione."
+      },
+      "evidence": {
+        "title": "Evidenze di test",
+        "intro": "Esecuzioni del Live Test Lab tra la bozza e la pubblicazione, e ciò che la pipeline ha osservato in seguito con questa versione.",
+        "runsEmpty": "Nessuna esecuzione di test registrata mentre la bozza era aperta.",
+        "observed": "{count, plural, =0 {Nessun evento memorizzato con questa versione} one {# evento memorizzato con questa versione} other {# eventi memorizzati con questa versione}} dal {since}",
+        "observedRange": "primo {first}, ultimo {last}",
+        "observedUnavailable": "Le osservazioni degli eventi non sono disponibili."
+      },
+      "signals": {
+        "title": "Segnali critici di questa versione",
+        "none": "Nessun segnale critico rispetto alla versione precedente."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "in attesa",
+        "sent": "inviato",
+        "rejected": "rifiutato",
+        "failed": "fallito"
+      }
+    }
+  }
+}

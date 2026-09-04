@@ -1,0 +1,183 @@
+{
+  "shell": {
+    "skipToContent": "Skip to content",
+    "brandHome": "Track – Command Center",
+    "nav": {
+      "label": "Dashboard",
+      "menuTitle": "Navigation",
+      "commandCenter": "Command Center",
+      "aiSetup": "AI Setup",
+      "events": "Events",
+      "destinations": "Destinations",
+      "dataQuality": "Data Quality",
+      "consent": "Consent & Privacy",
+      "insights": "Insights",
+      "releases": "Releases",
+      "team": "Team & Access",
+      "billing": "Billing",
+      "settings": "Settings",
+      "sites": "Sites",
+      "openMenu": "Open navigation",
+      "closeMenu": "Close navigation"
+    },
+    "workspace": {
+      "label": "Workspace",
+      "organization": "Organization",
+      "site": "Site",
+      "noOrganization": "No organization yet",
+      "noSite": "No site yet",
+      "createSite": "Create site",
+      "manageSites": "Manage sites",
+      "switchOrganization": "Switch organization",
+      "switchSite": "Switch site",
+      "current": "Current",
+      "trackingId": "Tracking ID",
+      "trackingIdHelp": "Public six-character identifier of the site. It is not a secret and never changes.",
+      "siteStatus": {
+        "active": "Active",
+        "paused": "Paused",
+        "deleted": "Deleted"
+      },
+      "switching": "Switching…",
+      "switchFailed": "The workspace could not be switched. Please try again.",
+      "contextSwitched": "Workspace switched to {site}."
+    },
+    "environment": {
+      "label": "Environment",
+      "kind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "none": "No environment",
+      "testMode": "Test mode",
+      "live": "Live",
+      "help": {
+        "production": "Live environment: accepted events are delivered to your destinations and count towards your plan.",
+        "staging": "Staging: events are flagged as test events, sent to test endpoints where the platform supports them and never billed.",
+        "development": "Test environment for local checks: events are flagged as test events and never billed."
+      },
+      "switch": "Switch environment"
+    },
+    "palette": {
+      "trigger": "Search or jump to…",
+      "title": "Command palette",
+      "description": "Navigate, switch sites, open destinations or run an action.",
+      "placeholder": "Type a command or search…",
+      "empty": "No results.",
+      "close": "Close",
+      "groups": {
+        "navigation": "Navigation",
+        "modules": "Modules",
+        "sites": "Sites",
+        "destinations": "Destinations",
+        "actions": "Actions"
+      },
+      "switchTo": "Switch to {site}",
+      "actions": {
+        "createSite": "Create a site",
+        "manageSites": "Manage sites",
+        "openAssistant": "Open Track AI",
+        "closeAssistant": "Close Track AI",
+        "logout": "Log out"
+      },
+      "modules": {
+        "eventsMatrix": "Event Coverage Matrix",
+        "eventsExplorer": "Live Event Explorer",
+        "eventsTestLab": "Live Test Lab",
+        "revenueLeaks": "Signal Gaps & Revenue Leaks",
+        "consentSimulator": "Consent Impact Simulator",
+        "attribution": "Attribution & Click-ID Health",
+        "audiences": "Audiences",
+        "usage": "Usage & Cost Guard",
+        "audit": "Audit log"
+      }
+    },
+    "assistant": {
+      "title": "Track AI",
+      "subtitle": "Setup and diagnostics for your site",
+      "region": "Track AI panel",
+      "launcher": "Track AI",
+      "open": "Open Track AI",
+      "close": "Close Track AI",
+      "minimise": "Minimise Track AI",
+      "resize": "Resize the Track AI panel",
+      "width": "{px} pixels wide",
+      "context": "Site: {site}",
+      "environment": "Environment: {environment}",
+      "noSite": "Track AI needs a site to work on.",
+      "noSiteAction": "Create a site",
+      "newMessages": "Show new messages",
+      "showEarlier": "Show {n} earlier messages",
+      "composerHint": "Enter sends, Shift+Enter adds a line.",
+      "loading": "Loading Track AI…",
+      "contextSwitched": "Track AI now works on {site}.",
+      "expertMode": "Expert mode",
+      "chatMode": "Chat",
+      "step": "Step {step}",
+      "toolStatus": {
+        "running": "running",
+        "ok": "done",
+        "error": "failed"
+      }
+    },
+    "user": {
+      "menu": "Account menu",
+      "account": "Account",
+      "signedInAs": "Signed in as",
+      "role": "Role",
+      "logout": "Log out"
+    },
+    "roles": {
+      "OWNER": "Owner",
+      "ADMIN": "Admin",
+      "DEVELOPER": "Developer",
+      "ANALYST": "Analyst",
+      "BILLING": "Billing",
+      "READ_ONLY": "Read only"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "text": "This page does not exist in your workspace or has moved.",
+      "back": "Back to the Command Center"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "text": "The error has been recorded. Try again or go back to the Command Center.",
+      "retry": "Try again",
+      "back": "Command Center"
+    },
+    "pages": {
+      "aiSetup": {
+        "title": "AI Setup",
+        "intro": "Guided setup of your site: platform detection, snippet installation, consent, destinations, event plan, test and publish. Track AI chats with you in the side panel; this page is the step-by-step form with the same checks and drafts.",
+        "siteContext": "Setting up {site}",
+        "noSite": "No site yet",
+        "noSiteText": "Create your first site to get a tracking ID and start the guided setup.",
+        "createSite": "Create site",
+        "openAssistant": "Open Track AI",
+        "step": "Current step: {step}",
+        "progress": "{pct}% complete"
+      },
+      "insights": {
+        "title": "Insights",
+        "intro": "Attribution and click-ID health: which click IDs are captured, how long they live, where they come from and whether they reach your destinations — separated into observed facts, modelled hints and unknowns.",
+        "status": "In preparation",
+        "text": "This module is being built. Nothing here is measured yet, so no numbers are shown. Until it ships, the Events module lists the accepted and dropped events of your site.",
+        "next": "Open Events"
+      },
+      "releases": {
+        "title": "Releases",
+        "intro": "Change & Release Center: drafts, test, staging and production, readable configuration diffs, approvals, scheduled publishing and one-click rollback.",
+        "status": "In preparation",
+        "text": "The release workflow is being built. Until it ships, publishing runs through the AI Setup review step, and the site page shows the version that is live.",
+        "activeVersion": "Active configuration of {site}: version {version}",
+        "noVersion": "Nothing published yet for {site}.",
+        "noSite": "Create a site to publish a configuration.",
+        "next": "Open the site",
+        "nextSetup": "Open AI Setup",
+        "createSite": "Create site"
+      }
+    }
+  }
+}

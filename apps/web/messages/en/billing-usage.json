@@ -1,0 +1,245 @@
+{
+  "billingUsage": {
+    "subnav": {
+      "label": "Billing sections",
+      "overview": "Overview",
+      "usage": "Usage & cost guard"
+    },
+    "title": "Usage & Cost Guard",
+    "intro": "Billable events of the current period, a forecast to the period end, overage in event packs, unusual load against the 4-week baseline and your explicit choice of what happens at the limit. Every figure comes from the usage ledger and the period counters; nothing is estimated silently.",
+    "comparePlans": "Compare plans",
+    "context": {
+      "plan": "Plan {name}",
+      "period": "Period {from} – {to} (UTC)",
+      "updated": "Counters updated {at}",
+      "noCounters": "No period counters yet",
+      "ledger": "Last ledger entry {at}",
+      "stale": "Counters behind the ledger"
+    },
+    "alerts": {
+      "hardLimitTitle": "Limit reached — processing flagged for pause",
+      "hardLimitText": "The usage check flagged this period on {at} under the policy “{policy}”. Change the policy below or switch plan on the overview; the flag is re-evaluated as soon as you save.",
+      "softLimitTitle": "Monthly event limit reached",
+      "softLimitAllow": "Events above the limit are billed as event packs because overage is allowed.",
+      "softLimitCostLimit": "Events above the limit are billed as event packs up to your monthly cost limit of {limit}; processing pauses beyond {pauseAt} events.",
+      "softLimitPause": "Processing pauses at {pauseAt} events ({grace} % grace above the limit) unless you allow overage or switch plan.",
+      "staleTitle": "Period counters are behind the ledger",
+      "staleText": "The ledger holds events newer than the last counter update ({updated}). The counters catch up with the next ingestion run; the daily chart already includes the newer events.",
+      "ledgerOnlyTitle": "Counted from the ledger",
+      "ledgerOnlyText": "The period counters have not been written yet, so the billable figure is the sum of this period's ledger rows.",
+      "noLimitTitle": "No fixed event cap in this plan",
+      "noLimitText": "Overage, thresholds and the pause option do not apply; volume is agreed in your contract."
+    },
+    "empty": {
+      "title": "No billable events in this period yet",
+      "text": "The usage ledger has no rows for {period}. Events appear here once the ingestion accepts them; test-mode events, duplicates and retries never count.",
+      "action": "Open events"
+    },
+    "stats": {
+      "billable": {
+        "label": "Billable events",
+        "ofLimit": "{pct} of {limit}",
+        "noLimit": "No fixed cap",
+        "sourcePeriod": "From the period counters",
+        "sourceLedger": "From the ledger"
+      },
+      "forecast": {
+        "label": "Forecast at period end",
+        "hint": "Linear from {from} – {to} · {rate} per day",
+        "noBasis": "No ledger rows in the last 7 days — equals today's count",
+        "ofLimit": "{pct} of the limit",
+        "above": "{events} above the limit"
+      },
+      "overage": {
+        "label": "Overage now",
+        "none": "None",
+        "packs": "{packs} × {packEvents} events · {cost}",
+        "events": "{events} above the limit",
+        "contractual": "Contractual — no pack for this plan",
+        "forecast": "Forecast at period end: {packs} packs · {cost}",
+        "forecastNone": "Forecast at period end: none"
+      },
+      "load": {
+        "label": "Load vs. 4-week baseline",
+        "elevated": "Elevated",
+        "normal": "Normal",
+        "reduced": "Reduced",
+        "unknown": "Unknown",
+        "deviation": "{deviation} · {recent} vs. {baseline} per day",
+        "noBaseline": "No baseline yet — {from} – {to} holds no events",
+        "peak": "Busiest day {day}: {events}"
+      }
+    },
+    "meter": {
+      "title": "Limit and warning thresholds",
+      "intro": "Billable events of this period against the plan's monthly limit. Warnings are stamped by the usage check at 70, 90 and 100 %; the expected dates come from the 7-day forecast.",
+      "used": "used",
+      "limit": "Limit",
+      "valueText": "{used} of {limit} ({pct})",
+      "exceeded": "Exceeded by {events}",
+      "thresholds": {
+        "title": "Warning thresholds",
+        "threshold": "{pct} %",
+        "events": "{events} events",
+        "reached": "Reached — alert stamped {at}",
+        "reachedPending": "Reached — the alert is stamped on the next usage check",
+        "expected": "Expected {at} · {remaining} to go",
+        "notExpected": "Not expected this period · {remaining} to go"
+      },
+      "pauseAt": "Processing pauses at {events} events ({pct} of the limit).",
+      "neverPauses": "Processing never pauses under the current policy; overage is billed as event packs.",
+      "hardLimitAt": "Flagged {at}."
+    },
+    "chart": {
+      "title": "Billable events per day",
+      "intro": "UTC days from {from} to {to}: the 4-week baseline, the 7 complete days the forecast is averaged over, and today so far. The forecast is a projection and is not drawn.",
+      "aria": "Bar chart of billable events over {days} days: {recent} in the last 7 complete days, {baseline} in the 4-week baseline before them, {today} today so far.",
+      "legend": {
+        "baseline": "Baseline {from} – {to}",
+        "recent": "Last 7 days {from} – {to}",
+        "today": "Today (partial)"
+      },
+      "details": "Show daily values",
+      "day": "Day",
+      "events": "Billable events",
+      "window": {
+        "label": "Window",
+        "baseline": "Baseline",
+        "recent": "Last 7 days",
+        "today": "Today"
+      },
+      "empty": "No billable events in this window."
+    },
+    "policy": {
+      "title": "What happens at the limit",
+      "intro": "Overage is never activated on its own. You choose whether additional events are billed as packs, capped by a monthly cost limit, or whether processing pauses after the grace window. The usage check applies your choice on every run and every change is audited.",
+      "current": "Current policy:",
+      "legend": "Overage policy",
+      "readOnly": "Your role can view the policy but not change it.",
+      "options": {
+        "allow": {
+          "label": "Allow overage",
+          "description": "Events above the limit are billed as event packs at list price. Processing never pauses."
+        },
+        "cost_limit": {
+          "label": "Monthly cost limit",
+          "description": "Event packs are billed up to the amount you set; once the packs needed would cost more, processing pauses for the rest of the period."
+        },
+        "pause": {
+          "label": "Pause at the limit",
+          "description": "Processing continues through a grace window above the limit, then pauses for the rest of the period. No pack is ever billed."
+        }
+      },
+      "notes": {
+        "cost_limit_unset": "No amount set — behaves like “Pause at the limit”.",
+        "no_pack": "No pack for this plan — behaves like “Pause at the limit”."
+      },
+      "costLimit": {
+        "label": "Monthly cost limit (whole euros)",
+        "hint": "{packs} packs of {events} events at {price} each fit in this limit.",
+        "hintPack": "Packs of {events} events cost {price} each.",
+        "noPack": "This plan has no event pack; a cost limit cannot buy overage.",
+        "invalid": "Enter a whole amount between {min} and {max}."
+      },
+      "consequence": {
+        "allow": "Every {events} events above the limit are billed as one pack of {price}, without an upper bound.",
+        "costLimit": "Up to {limit} per month pays for {packs} packs ({events} events above the limit). Processing pauses beyond {pauseAt} billable events.",
+        "costLimitUnset": "Enter an amount to see how many packs it pays for.",
+        "pause": "Processing pauses at {pauseAt} billable events ({grace} % above the limit). No pack is billed.",
+        "noLimit": "This plan has no fixed event cap, so the policy has no effect until a capped plan applies.",
+        "noPack": "This plan has no event pack, so overage cannot be bought; processing pauses after the grace window."
+      },
+      "save": "Save policy",
+      "unchanged": "No change to save.",
+      "confirm": {
+        "title": "Confirm the overage policy",
+        "text": "The policy applies to the current period at once: the pause flag is re-evaluated when you save, and the usage check applies the same rule on every run.",
+        "acknowledge": "I understand that events above the limit will be billed as event packs at list price.",
+        "cancel": "Cancel",
+        "confirm": "Save policy",
+        "working": "Saving…",
+        "close": "Close"
+      },
+      "saved": "Policy saved.",
+      "savedPaused": "Policy saved. Under this policy the current period is flagged as paused.",
+      "savedNotPaused": "Policy saved. The current period is not paused.",
+      "errors": {
+        "invalid": "The choice could not be saved: check the cost limit.",
+        "forbidden": "Your role cannot change the billing policy.",
+        "generic": "Something went wrong. Nothing was changed."
+      }
+    },
+    "comparison": {
+      "title": "Event pack or next plan?",
+      "intro": "For the forecast of {events} billable events per month, at catalogue list prices per {period}.",
+      "introNoBasis": "For {events} billable events per month (today's count — no 7-day rate yet), at catalogue list prices per {period}.",
+      "columns": {
+        "option": "Option",
+        "base": "Plan price / {period}",
+        "included": "Included / month",
+        "overage": "Overage / month",
+        "overageCost": "Pack cost / {period}",
+        "total": "Total / {period}"
+      },
+      "current": "Current plan",
+      "cheapest": "Cheapest",
+      "packs": "{events} → {packs} packs",
+      "contractual": "{events} above what packs cover",
+      "noOverage": "None",
+      "stay": "Staying on {plan} with event packs is the cheaper option for this volume.",
+      "upgradeHint": "{plan} would cost {savings} less per {period} for this volume.",
+      "noneCheapest": "No option can be priced for this volume from the catalogue.",
+      "noSilent": "Track never switches your plan or buys packs on its own.",
+      "contractualNote": "This plan has no list price; overage is agreed in your contract.",
+      "none": "Nothing to compare.",
+      "choosePlan": "Compare plans",
+      "taxNote": "List prices excluding VAT; the amount on your invoice comes from Stripe.",
+      "per": {
+        "monthly": "month",
+        "yearly": "year"
+      }
+    },
+    "sites": {
+      "title": "Billable events per site",
+      "intro": "Ledger rows of this period by site. Usage is measured per organization; the active site is highlighted.",
+      "site": "Site",
+      "trackingId": "Tracking ID",
+      "events": "Billable events",
+      "share": "Share",
+      "active": "Active site",
+      "empty": "No ledger rows for this period."
+    },
+    "rules": {
+      "title": "What counts as a billable event",
+      "intro": "An event is counted exactly once when the ingestion accepts it; forwarding it to several destinations never increases usage. Never counted:"
+    },
+    "overview": {
+      "guard": {
+        "title": "Usage & cost guard",
+        "text": "Forecast, overage, unusual load and your choice of what happens at the limit.",
+        "open": "Open the cost guard",
+        "policy": "Policy",
+        "forecast": "Forecast at period end",
+        "forecastNoBasis": "no 7-day rate yet",
+        "thresholds": "{reached} of {total} warning thresholds reached",
+        "noLimit": "No fixed event cap in this plan",
+        "paused": "Flagged as paused"
+      },
+      "history": {
+        "caption": "Billable, accepted, dropped and deduplicated events per period"
+      },
+      "plans": "Plans",
+      "status": {
+        "none": "No subscription",
+        "trialing": "Trial",
+        "active": "Active",
+        "past_due": "Payment overdue",
+        "canceled": "Cancelled",
+        "unpaid": "Unpaid",
+        "incomplete": "Incomplete",
+        "incomplete_expired": "Incomplete (expired)",
+        "paused": "Paused"
+      }
+    }
+  }
+}

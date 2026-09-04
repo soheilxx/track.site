@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center: qué está en producción por entorno, el borrador en preparación, diffs de configuración legibles, aprobaciones a cuatro ojos, publicación programada y rollback con un clic. Cada acción queda auditada.",
+    "siteContext": "Los borradores, las versiones y la vista previa de impacto se refieren a {site}",
+    "switchSiteHint": "Cambia el sitio en el selector de espacio de trabajo.",
+    "noSite": "Todavía no hay ningún sitio",
+    "noSiteText": "Crea tu primer sitio para publicar una configuración de tracking.",
+    "createSite": "Crear sitio",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "unknownUser": "Miembro desconocido",
+    "system": "Publicación programada",
+    "migrationMissing": "Datos de release no disponibles",
+    "migrationMissingText": "Las tablas de aprobaciones y programación (migración 0010) no están aplicadas en esta base de datos. Se muestran las versiones publicadas; los borradores, las aprobaciones y las programaciones no.",
+    "loading": "Cargando releases",
+    "links": {
+      "aiSetup": "Abrir AI Setup",
+      "destinations": "Abrir destinos",
+      "dataQuality": "Abrir la Data Quality Inbox",
+      "explorer": "Abrir el Live Event Explorer",
+      "testLab": "Abrir el Live Test Lab"
+    },
+    "environment": {
+      "kind": {
+        "production": "Producción",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Modo de prueba",
+      "navLabel": "Entornos"
+    },
+    "strip": {
+      "active": "Versión activa",
+      "noActive": "Todavía no se ha publicado nada",
+      "version": "v{version}",
+      "publishedAgo": "publicada {time}",
+      "restored": "restaurada por rollback",
+      "draft": "Borrador",
+      "noDraft": "Sin borrador abierto",
+      "draftChanges": "{count, plural, =0 {sin cambios} one {# cambio} other {# cambios}}",
+      "lintErrors": "{count, plural, one {# problema bloqueante} other {# problemas bloqueantes}}",
+      "scheduled": "Programada para {time}",
+      "scheduleFailed": "La publicación programada falló",
+      "approvalsPending": "{count, plural, one {# aprobación pendiente} other {# aprobaciones pendientes}}",
+      "versions": "{count, plural, =0 {sin versiones} one {# versión} other {# versiones}}"
+    },
+    "draft": {
+      "title": "Borrador para {environment}",
+      "intro": "El borrador abierto se convierte en la versión {version} al publicarse. Los cambios se preparan en AI Setup, en Destinos y en la Data Quality Inbox; esta página los revisa, aprueba, programa y publica.",
+      "empty": "Sin borrador abierto en {environment}",
+      "emptyText": "No hay nada esperando publicación. Prepara un cambio en AI Setup, conecta un destino o acepta una corrección de la Data Quality Inbox: el borrador aparecerá aquí para su revisión.",
+      "basedOn": "Basado en v{version}",
+      "initial": "Primera versión para este entorno",
+      "author": "Preparado por {name}",
+      "updated": "Último cambio {time}",
+      "invalid": "Borrador dañado",
+      "invalidText": "El borrador no coincide con el esquema de configuración y no se puede publicar. Descártalo y prepara el cambio de nuevo.",
+      "lint": {
+        "ok": "Comprobaciones superadas",
+        "errors": "{count, plural, one {# problema bloqueante} other {# problemas bloqueantes}}",
+        "warnings": "{count, plural, one {# advertencia} other {# advertencias}}",
+        "errorsTitle": "Problemas bloqueantes",
+        "warningsTitle": "Advertencias",
+        "explain": "Los problemas bloqueantes provienen del lint de configuración (política, identificadores públicos, JSONLogic). Las advertencias no bloquean la publicación."
+      },
+      "changesTitle": "Cambios",
+      "noChanges": "El borrador es idéntico a la versión activa.",
+      "criticalTitle": "Cambio crítico",
+      "criticalText": "Este cambio afecta al consentimiento, a un evento crítico, a un destino o al kill switch en producción. Se aplica la aprobación a cuatro ojos.",
+      "signalsTitle": "Señales críticas",
+      "signalsInfo": "En {environment} estas señales son informativas; la aprobación a cuatro ojos se aplica a producción.",
+      "schedule": {
+        "title": "Publicación programada",
+        "at": "Se publica {time}",
+        "by": "programada por {name}",
+        "pendingWorker": "El worker la publica en el minuto siguiente a la hora programada.",
+        "failed": "La publicación programada fue rechazada: {reason}",
+        "attemptedAt": "intentada {time}",
+        "cancel": "Cancelar programación",
+        "reasons": {
+          "signing_key_missing": "el worker no tiene clave de firma de configuración",
+          "draft_not_open": "el borrador ya no estaba abierto",
+          "draft_changed": "el borrador cambió después de programarse",
+          "approval_invalid": "la aprobación registrada ya no era válida",
+          "lint_failed": "el lint de configuración falló",
+          "publish_failed": "la publicación falló"
+        }
+      },
+      "evidence": {
+        "title": "Evidencia de pruebas",
+        "intro": "Ejecuciones del Live Test Lab desde que se abrió este borrador. Ejecuta un recorrido en el entorno de prueba antes de publicar en producción.",
+        "empty": "Ninguna ejecución de prueba desde que se abrió el borrador.",
+        "unavailable": "Las ejecuciones de prueba no están disponibles (migración 0007 no aplicada).",
+        "steps": "{count, plural, one {# paso} other {# pasos}}",
+        "open": "Abrir ejecución"
+      }
+    },
+    "fourEyes": {
+      "title": "Aprobación a cuatro ojos",
+      "state": {
+        "not_required": "No es necesaria para este cambio.",
+        "single_publisher": "No disponible: eres el único miembro que puede publicar. La release se registra como release de una sola persona.",
+        "satisfied": "Aprobada por {name} {time}.",
+        "pending": "Esperando a un segundo miembro: solicitada por {name} {time}.",
+        "stale": "La última aprobación se refiere a un estado anterior del borrador. Solicita una nueva revisión.",
+        "rejected": "La última solicitud fue rechazada. Cambia el borrador y solicita una nueva revisión.",
+        "missing": "Un segundo miembro con permiso de publicación debe aprobar este cambio antes de poder publicarlo o programarlo."
+      },
+      "publishers": "{count, plural, one {# miembro puede publicar} other {# miembros pueden publicar}}",
+      "request": "Solicitar aprobación",
+      "requestNote": "Nota para el revisor (opcional)",
+      "requestDialogTitle": "Solicitar aprobación para v{version}",
+      "requestDialogText": "Un segundo miembro con permiso de publicación revisa el resumen de cambios de abajo y lo aprueba o lo rechaza. La solicitud se refiere al borrador tal como está ahora; cualquier edición posterior necesita una nueva solicitud.",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "withdraw": "Retirar solicitud",
+      "decideDialogTitle": "Revisar v{version}",
+      "decideDialogText": "Apruebas o rechazas exactamente los cambios listados abajo. Un rechazo necesita un motivo; la decisión queda auditada.",
+      "reason": "Motivo",
+      "reasonHint": "Obligatorio para rechazar, opcional para aprobar.",
+      "ownRequest": "Tú solicitaste esta revisión; debe decidir otro miembro.",
+      "history": "Historial de aprobaciones",
+      "decision": {
+        "pending": "Pendiente",
+        "approved": "Aprobada",
+        "rejected": "Rechazada",
+        "withdrawn": "Retirada"
+      },
+      "current": "borrador actual",
+      "outdated": "estado anterior del borrador",
+      "requestedBy": "solicitada por {name} {time}",
+      "decidedBy": "{decision} por {name} {time}",
+      "note": "Nota: {note}",
+      "reasonGiven": "Motivo: {reason}",
+      "reasons": {
+        "critical_event": "Un evento crítico se detiene o cambia su disparador",
+        "consent_weaker": "El consentimiento se debilita (modo regional, consent mode avanzado o Global Privacy Control)",
+        "destination_purpose_weaker": "Un destino necesita menos consentimiento que antes",
+        "destination_stopped": "Un destino deja de recibir eventos",
+        "marketing_destination_added": "Un destino publicitario empieza a recibir eventos",
+        "kill_switch": "El kill switch cambia",
+        "allowed_hosts_reduced": "Se eliminan hosts verificados"
+      }
+    },
+    "actions": {
+      "publish": "Publicar ahora",
+      "schedule": "Programar",
+      "discard": "Descartar borrador",
+      "rollback": "Volver a esta versión",
+      "publishDialogTitle": "Publicar v{version} en {environment}",
+      "publishDialogText": "El borrador se convierte en una versión firmada e inmutable y queda activa para el SDK y el worker en aproximadamente un minuto. No se puede deshacer, pero un rollback a cualquier versión anterior es un solo clic.",
+      "publishConfirm": "Publicar v{version}",
+      "singleAcknowledge": "Confirmo este cambio crítico yo solo; ningún segundo miembro puede aprobarlo en esta organización.",
+      "scheduleDialogTitle": "Programar v{version} para {environment}",
+      "scheduleDialogText": "El worker publica el borrador a la hora elegida. Se niega a publicar si el borrador cambia después de programarse o si la aprobación deja de ser válida; aquí verás el motivo.",
+      "scheduleAt": "Publicar el",
+      "scheduleHint": "Entre {min} minutos y {max} días a partir de ahora, en tu hora local.",
+      "scheduleConfirm": "Programar publicación",
+      "discardDialogTitle": "¿Descartar el borrador v{version}?",
+      "discardDialogText": "El borrador se archiva, las solicitudes de aprobación pendientes se retiran y la programación se elimina. El tráfico activo no se ve afectado.",
+      "discardConfirm": "Descartar",
+      "rollbackDialogTitle": "¿Volver a v{version} en {environment}?",
+      "rollbackDialogText": "La versión activa actual v{active} se sustituye por v{version} en aproximadamente un minuto. El borrador abierto no se toca; el rollback queda auditado.",
+      "rollbackDialogNoActive": "No hay nada activo en {environment}; v{version} pasa a ser la versión activa en aproximadamente un minuto. El rollback queda auditado.",
+      "rollbackConfirm": "Volver a v{version}",
+      "publishedOk": "La versión {version} está publicada.",
+      "scheduledOk": "El borrador está programado.",
+      "scheduleCancelledOk": "La programación se ha eliminado.",
+      "discardedOk": "El borrador se ha descartado.",
+      "rolledBackOk": "La versión {version} vuelve a estar activa.",
+      "requestedOk": "Aprobación solicitada.",
+      "decidedOk": "Decisión registrada.",
+      "withdrawnOk": "Solicitud retirada."
+    },
+    "errors": {
+      "generic": "Algo ha salido mal. Inténtalo de nuevo.",
+      "invalid": "La solicitud no era válida.",
+      "forbidden": "No tienes permiso para esta acción.",
+      "not_found": "El borrador o la versión ya no existe.",
+      "not_open": "El borrador ya no está abierto.",
+      "lint": "El borrador tiene problemas bloqueantes; corrígelos antes de publicar.",
+      "approval_required": "Este cambio crítico necesita primero una aprobación a cuatro ojos.",
+      "approval_pending": "Ya hay una solicitud de aprobación pendiente.",
+      "approval_rejected": "La última solicitud de aprobación fue rechazada; cambia el borrador y solicita una nueva revisión.",
+      "acknowledge_required": "Confirma la release de una sola persona para continuar.",
+      "self_approval": "No puedes aprobar tu propia solicitud.",
+      "stale": "El borrador cambió desde la solicitud; necesita una nueva solicitud.",
+      "reason_required": "Un rechazo necesita un motivo (al menos 3 caracteres).",
+      "signing": "La publicación no está configurada en este despliegue (no hay clave de firma de configuración).",
+      "schedule_invalid": "Introduce una fecha y hora válidas.",
+      "schedule_too_soon": "Elige una hora al menos {min} minutos a partir de ahora.",
+      "schedule_too_far": "Elige una hora dentro de los próximos {max} días.",
+      "already_active": "Esta versión ya está activa."
+    },
+    "changes": {
+      "area": {
+        "settings": "Ajustes",
+        "consent": "Consentimiento",
+        "events": "Eventos",
+        "destinations": "Destinos",
+        "site": "Sitio",
+        "other": "Otros"
+      },
+      "op": {
+        "add": "añadido",
+        "remove": "eliminado",
+        "change": "modificado"
+      },
+      "before": "antes",
+      "after": "después",
+      "none": "ninguno",
+      "unknownDestination": "Destino {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "Qué cambia al publicar este borrador, derivado del diff y de los datos medidos de los últimos {days} días en {environment}. Los volúmenes son mediciones, no previsiones; una medición ausente permanece desconocida.",
+      "generatedAt": "Calculado {time}",
+      "events": {
+        "title": "Eventos afectados",
+        "empty": "Sin cambios en eventos.",
+        "event": "Evento",
+        "change": "Cambio",
+        "accepted": "Aceptados ({days} d)",
+        "delivered": "Entregados ({days} d)",
+        "issues": "Problemas abiertos",
+        "destinations": "Destinos después",
+        "critical": "crítico",
+        "notMeasured": "no medido",
+        "caption": "Eventos que el borrador añade, elimina, activa, desactiva o modifica",
+        "kind": {
+          "added": "añadido",
+          "removed": "eliminado",
+          "enabled": "activado",
+          "disabled": "desactivado",
+          "changed": "modificado"
+        }
+      },
+      "destinations": {
+        "title": "Destinos afectados",
+        "empty": "Sin cambios en destinos.",
+        "destination": "Destino",
+        "change": "Cambio",
+        "purpose": "Finalidad del consentimiento",
+        "events": "Eventos mapeados",
+        "health": "Salud",
+        "status": "Estado",
+        "noHealth": "no medida",
+        "healthText": "{success} entregados · {errorRate} % de errores ({hours} h)",
+        "stale": "obsoleta",
+        "caption": "Destinos que el borrador añade, elimina, activa, desactiva o modifica",
+        "kind": {
+          "added": "añadido",
+          "removed": "eliminado",
+          "enabled": "activado",
+          "disabled": "desactivado",
+          "changed": "modificado"
+        },
+        "statusLabel": {
+          "draft": "borrador",
+          "not_connected": "no conectado",
+          "connected": "conectado",
+          "paused": "en pausa",
+          "error": "error",
+          "unknown": "sin registro de destino"
+        }
+      },
+      "consent": {
+        "title": "Finalidades del consentimiento",
+        "purposes": "Finalidades después: {purposes}",
+        "added": "añadidas: {purposes}",
+        "removed": "eliminadas: {purposes}",
+        "regionMode": "Modo regional por defecto: {before} → {after}",
+        "consentMode": "Consent mode: {before} → {after}",
+        "gpc": "Global Privacy Control: {before} → {after}",
+        "clickIdTtl": "Vida útil de los click IDs: {before} → {after} días",
+        "weaker": "Menos restrictivo que la versión activa",
+        "unchanged": "Sin cambios de consentimiento.",
+        "respected": "respetado",
+        "ignored": "ignorado",
+        "none": "ninguno",
+        "purpose": {
+          "necessary": "Estrictamente necesario",
+          "analytics": "Analítica",
+          "marketing": "Marketing",
+          "personalization": "Personalización"
+        },
+        "regionModes": {
+          "strict_opt_in": "Opt-in estricto",
+          "opt_out": "Opt-out",
+          "notice_only": "Solo aviso"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Volumen estimado",
+        "baseline": "Eventos que siguen activos",
+        "baselineHint": "aceptados en los últimos {days} días",
+        "removed": "Eventos que se detienen",
+        "unmeasured": "{count, plural, one {# evento activo sin medición} other {# eventos activos sin medición}}: {events}",
+        "billable": "Facturables",
+        "empty": "No se han medido eventos en los últimos {days} días para este entorno: el volumen tras el cambio es desconocido.",
+        "unavailable": "Los agregados no están disponibles en esta base de datos.",
+        "stale": "Último agregado {time}; puede que los eventos más recientes aún no estén contados.",
+        "lastBucket": "Último agregado {time}"
+      },
+      "plan": {
+        "title": "Límites del plan",
+        "plan": "Plan {plan}",
+        "limit": "{limit} eventos al mes",
+        "noLimit": "Sin tope fijo de eventos en este plan",
+        "used": "{used} eventos facturables consumidos en {period} ({share} %)",
+        "usedUnknown": "Todavía no hay consumo registrado para {period}",
+        "projected": "Base medida ≈ {projected} eventos al mes ({share} % del límite)",
+        "projectedUnknown": "Sin base medida no hay proyección",
+        "threshold": "La base medida ya supera el umbral de aviso del {threshold} % del plan.",
+        "billing": "Abrir facturación"
+      },
+      "dq": {
+        "title": "Efecto esperado en la calidad de los datos",
+        "intro": "Basado en reglas; cada línea nombra la regla que se activó. No es una garantía: el pipeline mide el efecto real después de publicar.",
+        "tone": {
+          "ok": "Sin riesgo",
+          "warn": "Advertencia",
+          "bad": "Bloqueante",
+          "info": "Nota"
+        },
+        "no_changes": "El borrador no cambia la configuración activa.",
+        "critical_event_stopped": "El evento crítico {event} se detiene: {measured, select, yes {{accepted} eventos aceptados en la ventana} other {sin medición}} dejarán de capturarse.",
+        "event_removed_open_issues": "{event} se detiene con {issues, plural, one {# problema de calidad abierto} other {# problemas de calidad abiertos}}; detener el evento no los resuelve.",
+        "destination_stopped": "{destination} deja de recibir eventos ({measured, select, yes {{delivered} entregas en la ventana de salud} other {sin medición de salud}}).",
+        "destination_failing_stopped": "{destination} se detiene; el {errorRate} % de sus últimas entregas fallaron, así que esos fallos cesan con él.",
+        "destination_no_mappings": "{destination} está activado sin mapeos de eventos y no recibe nada.",
+        "conversion_browser_only": "{event} es solo de navegador; sin una fuente verificada en servidor son probables duplicados y valores ausentes.",
+        "conversion_without_authoritative_source": "{event} va a destinos publicitarios sin una fuente verificada en servidor (bloqueante).",
+        "mapping_unknown_event": "{destination} mapea {event}, que no está definido.",
+        "consent_weaker": "El consentimiento se debilita: más eventos pueden procesarse antes de una señal explícita donde la política regional lo permita.",
+        "kill_switch_on": "El kill switch detiene toda la recogida en este entorno.",
+        "kill_switch_off": "El kill switch se libera; la recogida se reanuda.",
+        "allowed_hosts_reduced": "Los eventos de {hosts} se rechazan después de publicar.",
+        "new_event_unmeasured": "{event} es nuevo; su volumen y calidad son desconocidos hasta que lleguen eventos.",
+        "lint_errors": "{count, plural, one {# problema de lint bloqueante impide} other {# problemas de lint bloqueantes impiden}} la publicación.",
+        "no_rule_fired": "Ninguna regla se activó para este cambio. Verifica el efecto en el Live Event Explorer después de publicar."
+      }
+    },
+    "history": {
+      "title": "Historial de versiones",
+      "intro": "Cada versión publicada de {environment}, la más reciente primero. Las versiones son inmutables y están firmadas; un rollback vuelve a activar una versión anterior.",
+      "empty": "Todavía no se ha publicado nada",
+      "emptyText": "La primera versión aparecerá aquí en cuanto se publique un borrador.",
+      "caption": "Versiones de configuración publicadas",
+      "version": "Versión",
+      "status": "Estado",
+      "summary": "Resumen",
+      "author": "Autor",
+      "published": "Publicada",
+      "changes": "Cambios",
+      "open": "Abrir",
+      "statusLabel": {
+        "active": "Activa",
+        "superseded": "Reemplazada"
+      },
+      "rolledBack": "revertida",
+      "restored": "restaurada",
+      "scheduled": "programada",
+      "approved": "cuatro ojos",
+      "initial": "Configuración inicial"
+    },
+    "version": {
+      "breadcrumbLabel": "Ruta de navegación",
+      "back": "Releases",
+      "title": "Versión {version}",
+      "notFound": "Versión no encontrada",
+      "notFoundText": "La versión no existe para el sitio activo. Cambia el sitio en el selector de espacio de trabajo o vuelve a las releases.",
+      "status": {
+        "active": "Activa",
+        "superseded": "Reemplazada"
+      },
+      "activeNow": "v{version} está activa",
+      "createdBy": "Publicada por {name} {time}",
+      "createdBySystem": "Publicada según programación {time}",
+      "previous": "Diff respecto a v{version}",
+      "first": "Primera versión: cada entrada es nueva",
+      "signed": "Firmada con la clave {keyId} · digest {digest}",
+      "facts": {
+        "title": "Configuración",
+        "events": "{count, plural, one {# evento activo} other {# eventos activos}} ({critical} críticos)",
+        "destinations": "Destinos: {names}",
+        "noDestinations": "Sin destinos activos",
+        "consent": "Consentimiento: {mode}, consent mode {consentMode}, GPC {gpc}",
+        "clickIds": "Vida útil de los click IDs {days} días",
+        "hosts": "Hosts: {hosts}",
+        "noHosts": "Sin hosts permitidos",
+        "killSwitch": "Kill switch activado"
+      },
+      "publications": {
+        "title": "Historial de publicación",
+        "publish": "Publicada",
+        "rollback": "Restaurada por rollback desde v{from}",
+        "rollbackUnknown": "Restaurada por rollback",
+        "by": "por {name}",
+        "active": "activa ahora",
+        "superseded": "reemplazada {time}",
+        "withApproval": "con aprobación a cuatro ojos"
+      },
+      "approvals": {
+        "title": "Aprobaciones",
+        "empty": "Sin solicitud de aprobación para esta versión."
+      },
+      "evidence": {
+        "title": "Evidencia de pruebas",
+        "intro": "Ejecuciones del Live Test Lab entre el borrador y la publicación, y lo que el pipeline observó después con esta versión.",
+        "runsEmpty": "No se registró ninguna ejecución de prueba mientras el borrador estuvo abierto.",
+        "observed": "{count, plural, =0 {Ningún evento almacenado con esta versión} one {# evento almacenado con esta versión} other {# eventos almacenados con esta versión}} desde {since}",
+        "observedRange": "primero {first}, último {last}",
+        "observedUnavailable": "Las observaciones de eventos no están disponibles."
+      },
+      "signals": {
+        "title": "Señales críticas de esta versión",
+        "none": "Ninguna señal crítica respecto a la versión anterior."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "pendiente",
+        "sent": "enviado",
+        "rejected": "rechazado",
+        "failed": "fallido"
+      }
+    }
+  }
+}

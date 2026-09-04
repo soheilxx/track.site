@@ -1,0 +1,334 @@
+{
+  "insights": {
+    "eyebrow": "Insights",
+    "subnav": {
+      "label": "Insights sections",
+      "overview": "Overview",
+      "attribution": "Attribution & click IDs",
+      "audiences": "Audiences"
+    },
+    "toolbar": {
+      "site": "Site",
+      "environment": "Environment",
+      "environmentKind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "allEnvironments": "All environments",
+      "window": "Window",
+      "windowRange": "{from} – {to}",
+      "range": "Time range",
+      "days": "{days} days"
+    },
+    "evidence": {
+      "observed": "Observed",
+      "modelled": "Modelled",
+      "unknown": "Unknown",
+      "observedHelp": "Counted from stored events, deliveries and touchpoints exactly as the pipeline recorded them.",
+      "modelledHelp": "A hint derived with a stated assumption. It is not a measurement and is never used as one.",
+      "unknownHelp": "Something Track cannot know from its own records. It is named, not filled in."
+    },
+    "noSite": {
+      "title": "No site yet",
+      "text": "Create your first site to capture events; attribution and audiences are computed from them.",
+      "action": "Create site"
+    },
+    "loading": {
+      "label": "Loading insights"
+    },
+    "overview": {
+      "title": "Insights",
+      "intro": "Attribution and click-ID health of the active site, plus consent-aware audiences. Every figure is computed from stored events on request and labelled as observed, modelled or unknown.",
+      "attribution": {
+        "title": "Attribution & click-ID health",
+        "open": "Open the full report",
+        "destinations": "Destinations with forwarding issues",
+        "noDestinations": "No destinations configured for this site",
+        "destinationsProblems": "See the forwarding table below",
+        "destinationsOk": "No issue observed in this window",
+        "destinationsNoObservation": "No eligible event was observed for any destination"
+      },
+      "empty": {
+        "title": "No accepted events in this window",
+        "text": "Attribution health needs events. Check the installation and the event flow in the Events module.",
+        "action": "Open Events"
+      },
+      "audiences": {
+        "title": "Audiences",
+        "text": "Consent-aware segments derived from first-party events of the last 30 days. Nothing is uploaded to ad platforms from here.",
+        "open": "Open audiences"
+      }
+    },
+    "attribution": {
+      "title": "Attribution & click-ID health",
+      "intro": "Are the supported click IDs (gclid, fbclid, ttclid, msclkid, li_fat_id, rdt_cid and more) captured with marketing consent, how long do they live, where do they come from and do they reach your destinations? Observed facts, modelled hints and the unknown are kept strictly apart.",
+      "empty": {
+        "title": "No accepted events in this window",
+        "text": "Nothing was captured for this site and environment in the selected window, so no capture rate, origin or lifetime can be reported. Check the installation or widen the window.",
+        "events": "Open Events",
+        "setup": "Open the site"
+      },
+      "facts": {
+        "title": "Observed facts",
+        "consent": {
+          "label": "Events with marketing consent",
+          "hint": "{marketing} of {total} accepted events",
+          "unknown": "No accepted events in this window"
+        },
+        "withClickIds": {
+          "label": "Events carrying a click ID",
+          "hint": "Out of {marketing} events with marketing consent",
+          "hintNoConsent": "No event with marketing consent, so no click ID could be captured"
+        },
+        "captureRate": {
+          "label": "Consent-compliant capture rate",
+          "hint": "Share of events with marketing consent that carry at least one click ID",
+          "unknown": "Not measurable: no events with marketing consent"
+        },
+        "violations": {
+          "label": "Click IDs without marketing consent",
+          "ok": "None – the consent policy is enforced",
+          "bad": "Policy violation: click IDs were stored without marketing consent. Check the consent configuration.",
+          "unknown": "Nothing to check in this window"
+        },
+        "lastEvent": "Last accepted event: {at}",
+        "noEvents": "No accepted event yet",
+        "stale": "No event in the last 24 hours – the figures may be stale"
+      },
+      "config": {
+        "title": "Capture configuration",
+        "lead": "The click-ID settings that were really in force for this environment.",
+        "unknownEnv": "This site has no environment yet, so no configuration can be shown.",
+        "source": "Source",
+        "published": "Published configuration, version {version}",
+        "default": "No published configuration – platform defaults apply",
+        "capture": "Capture",
+        "captureOn": "On (marketing consent only)",
+        "captureOff": "Off – click IDs are discarded",
+        "ttl": "Lifetime",
+        "ttlDays": "{days} days",
+        "note": "Click IDs are captured from the landing URL only after marketing consent, kept in first-party storage until the lifetime ends and cleared when consent is withdrawn."
+      },
+      "clickIds": {
+        "title": "Click IDs",
+        "lead": "Every click-ID parameter seen on accepted events of the window. Values never leave the database; only counts, origins and durations are shown.",
+        "empty": "No click ID was captured in this window.",
+        "caption": "Captured click IDs by parameter",
+        "columns": {
+          "param": "Click ID",
+          "events": "Events",
+          "values": "Distinct IDs",
+          "origin": "Origin",
+          "lifetime": "Lifetime",
+          "span": "Carry-over",
+          "consent": "Consent",
+          "seen": "Seen"
+        },
+        "origin": {
+          "url": "Landing URL",
+          "storage": "First-party storage",
+          "server": "Server",
+          "inherited": "Inherited from browser (order join)"
+        },
+        "originNote": "Origin: the first event carrying an ID value is its landing URL; later browser events carry it from first-party storage; server events either captured it themselves or inherited it from the browser session of the same order. Determined within the selected window.",
+        "unknown": "Unknown",
+        "lifetimeDays": "{days} days",
+        "lifetimeRange": "{min}–{max} days",
+        "span": "median {median}, max {max}",
+        "unitHours": "h",
+        "unitDays": "d",
+        "consentOk": "Marketing consent",
+        "consentBad": "{n} without consent",
+        "seen": "{first} → {last}"
+      },
+      "vendors": {
+        "google": "Google",
+        "meta": "Meta",
+        "tiktok": "TikTok",
+        "reddit": "Reddit",
+        "linkedin": "LinkedIn",
+        "microsoft": "Microsoft",
+        "pinterest": "Pinterest",
+        "snapchat": "Snapchat",
+        "x": "X",
+        "taboola": "Taboola",
+        "outbrain": "Outbrain",
+        "amazon": "Amazon",
+        "spotify": "Spotify",
+        "quora": "Quora",
+        "yahoo": "Yahoo",
+        "tradedesk": "The Trade Desk",
+        "adroll": "AdRoll",
+        "criteo": "Criteo",
+        "affiliate": "Affiliate network",
+        "other": "Other"
+      },
+      "destinations": {
+        "title": "Forwarding per destination",
+        "lead": "For each destination: which click IDs it may receive and whether events carrying them were delivered while the ID was still valid. Derived from the delivery record of every event.",
+        "empty": "No destination is configured for this site.",
+        "emptyAction": "Add a destination",
+        "caption": "Click-ID forwarding by destination",
+        "columns": {
+          "destination": "Destination",
+          "status": "Status",
+          "accepts": "Accepts",
+          "eligible": "Eligible events",
+          "forwarded": "Delivered with ID",
+          "failed": "Failed",
+          "pending": "Pending / skipped",
+          "notRouted": "Not routed",
+          "expired": "Expired at delivery",
+          "last": "Last delivered",
+          "actions": "Actions"
+        },
+        "testMode": "Test mode",
+        "verdict": {
+          "forwarding": "Forwarding",
+          "partial": "Partially forwarding",
+          "failing": "Deliveries failing",
+          "not_delivered": "No delivery observed",
+          "no_eligible": "No eligible event",
+          "inactive": "Not active",
+          "unsupported": "No click IDs"
+        },
+        "verdictHelp": {
+          "forwarding": "Every eligible event of the window was delivered while its click ID was valid.",
+          "partial": "Some eligible events were delivered with their click ID; others failed, are pending, were not routed or had an expired ID.",
+          "failing": "Eligible events exist but every delivery failed.",
+          "not_delivered": "Eligible events exist but none was delivered to this destination – check the event mapping and the routing.",
+          "no_eligible": "No accepted event carried a click ID this destination accepts.",
+          "inactive": "The destination is not connected or paused; the router does not dispatch to it.",
+          "unsupported": "This destination type does not receive click IDs."
+        },
+        "status": {
+          "draft": "Draft",
+          "not_connected": "Not connected",
+          "connected": "Connected",
+          "paused": "Paused",
+          "error": "Error"
+        },
+        "acceptsNone": "None",
+        "never": "Never",
+        "open": "Open",
+        "note": "Whether the vendor matched a forwarded click ID is not visible to Track – only the HTTP result is. The redacted vendor payload of every attempt is in the event debugger."
+      },
+      "daily": {
+        "title": "Daily capture",
+        "lead": "Per day: accepted events with marketing consent and, of those, events carrying a click ID.",
+        "empty": "No event with marketing consent in this window.",
+        "legend": {
+          "marketing": "Events with marketing consent",
+          "withClickIds": "Events carrying a click ID"
+        },
+        "showTable": "Show as table",
+        "caption": "Daily events with marketing consent and with click IDs",
+        "columns": {
+          "day": "Day",
+          "total": "Accepted",
+          "marketing": "Marketing consent",
+          "withClickIds": "With click ID"
+        }
+      },
+      "hints": {
+        "title": "Modelled hints",
+        "lead": "Derived with a stated assumption – a pointer to look at, never a measurement.",
+        "paid": {
+          "title": "Paid traffic without a click ID",
+          "text": "Events with marketing consent that carry a paid-campaign marker but no click ID.",
+          "unknown": "Not measurable in this window.",
+          "assumption": "Heuristic: utm_medium such as cpc, paid or display, or a referrer from an ad server. Organic visits from search or social are not counted."
+        },
+        "gap": {
+          "title": "Click IDs possibly lost to missing consent",
+          "text": "Extrapolation of the observed capture rate onto the events without marketing consent.",
+          "unknown": "Not measurable: needs an observed capture rate and events without marketing consent.",
+          "assumption": "Assumes visitors without consent arrive from paid channels at the same rate as visitors with consent."
+        }
+      },
+      "unknown": {
+        "title": "Unknown",
+        "lead": "What Track cannot know from its own records.",
+        "noConsent": {
+          "title": "{n} events without marketing consent",
+          "text": "For these events no click ID was captured, so it is unknown whether one was present in the URL."
+        },
+        "vendor": {
+          "title": "Vendor-side matching",
+          "text": "Track sees the delivery result, not whether the platform attributed the conversion to the click."
+        },
+        "destinations": {
+          "title": "{n} destinations without an observation",
+          "text": "Inactive destinations or destinations without an eligible event give no evidence either way."
+        }
+      },
+      "touchpoints": {
+        "title": "Attribution touchpoints",
+        "lead": "Channel touchpoints recorded per visitor (source, medium, campaign, click IDs) within the window. Touchpoints are recorded per site, not per environment, so this table covers every environment of the site.",
+        "empty": "No touchpoint was recorded in this window.",
+        "caption": "Touchpoints by channel",
+        "columns": {
+          "channel": "Channel",
+          "touchpoints": "Touchpoints",
+          "visitors": "Visitors",
+          "withClickIds": "With click ID",
+          "last": "Last"
+        }
+      },
+      "definitions": {
+        "title": "Definitions",
+        "capture": {
+          "term": "Consent-compliant capture rate",
+          "text": "Accepted events with at least one click ID divided by accepted events with marketing consent. Only accepted events count – rejected, policy-blocked and duplicate conversions are excluded."
+        },
+        "origin": {
+          "term": "Origin",
+          "text": "Landing URL (first event carrying the ID value), first-party storage (later browser events), server (captured by a server-side source) or inherited (a server event that took over the browser session of the same order)."
+        },
+        "lifetime": {
+          "term": "Lifetime and carry-over",
+          "text": "Lifetime is the configured expiry as stored on the event. Carry-over is the time between the first and the last event carrying the same ID value."
+        },
+        "forwarding": {
+          "term": "Delivered with ID",
+          "text": "The event was delivered to the destination and carried a click ID the destination accepts, which had not expired at delivery time. The router drops expired IDs before dispatch."
+        }
+      }
+    },
+    "audiences": {
+      "title": "Audiences",
+      "workspaceBanner": {
+        "text": "This link belongs to another site ({site}).",
+        "switch": "Switch to {site}"
+      },
+      "intro": "Consent-aware segments computed from first-party events of the last 30 days: marketing consent only, newest {limit} audience events of the active site and environment.",
+      "empty": {
+        "title": "No audience events in the last 30 days",
+        "text": "Segments need purchase, lead, cart, checkout or sign-up events with marketing consent.",
+        "action": "Open Events"
+      },
+      "consentNote": "{n} events without marketing consent were excluded. Inferred consent is never used for audiences.",
+      "identityNote": "{n} consented events carry neither a user ID nor an anonymous ID and belong to no segment.",
+      "truncated": "The sample limit of {limit} events was reached; the segments rest on the newest events only.",
+      "segmentsTitle": "Segments",
+      "caption": "Audience segments of the last 30 days",
+      "columns": {
+        "segment": "Segment",
+        "size": "People",
+        "events": "Based on"
+      },
+      "segments": {
+        "buyers": "Buyers",
+        "highValue": "High-value buyers",
+        "abandoners": "Cart / checkout abandoners",
+        "leads": "Leads",
+        "signups": "Sign-ups"
+      },
+      "howTitle": "How audiences reach ad platforms",
+      "how1": "Track never uploads audience lists. Each platform receives only the individual server conversions with hashed matching data that the visitor consented to.",
+      "how2": "Use the platform’s own audience builder on those conversions (e.g. Meta custom audiences from CAPI events, Google Ads conversion-based audiences).",
+      "how3": "Withdrawn consent stops future sends immediately and can be enforced retroactively through a data subject request."
+    }
+  }
+}

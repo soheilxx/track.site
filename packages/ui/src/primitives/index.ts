@@ -13,3 +13,4 @@ export * from "./status.tsx";
 export * from "./table.tsx";
 export * from "./tabs.tsx";
 export * from "./tooltip.tsx";
+export * from "./scroll-region.tsx";

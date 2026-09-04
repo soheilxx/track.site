@@ -1,102 +1,81 @@
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { dataQualityIssues, listSites, siteHealthSnapshots } from "@track-site/db";
-import { Badge, Card, CardContent, CardHeader, CardTitle, EmptyState, StatCard } from "@track-site/ui";
-import { IssueActions } from "@/components/app/quality";
+import { can } from "@track-site/core";
+import { integrations, sites } from "@track-site/db";
+import { Banner, EmptyState, StatCard, buttonVariants } from "@track-site/ui";
+import { formatDateTime } from "@/components/app/data-quality/format";
+import { InboxFilterBar, InboxList } from "@/components/app/data-quality/inbox";
+import { DataQualityHeader } from "@/components/app/data-quality/page-header";
+import { formatNumber } from "@/lib/format";
+import { aiConfigured } from "@/server/ai/context";
+import { ISSUE_CATEGORIES, loadFixContext, loadInbox, type InboxFilters, type InboxStatus, type IssueCategory } from "@/server/data-quality";
 import { requireOrgContext, withOrg } from "@/server/session";
+import { activeSite } from "@/server/workspace";
 
-export default async function DataQualityPage({ searchParams }: { searchParams: Promise<{ site?: string; status?: string }> }) {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("dataQuality");
+  return { title: t("title") };
+}
+
+const STATUSES: ReadonlyArray<InboxStatus | "all"> = ["open", "acknowledged", "resolved", "muted", "all"];
+
+function parseFilters(q: { status?: string; category?: string }): InboxFilters {
+  const status = STATUSES.includes(q.status as InboxStatus) ? (q.status as InboxStatus | "all") : "open";
+  const category = (ISSUE_CATEGORIES as readonly string[]).includes(q.category ?? "") ? (q.category as IssueCategory) : "all";
+  return { status, category };
+}
+
+/**
+ * Data Quality Inbox (redesign supplement §8 module 7) for the active workspace site: measured issues from the
+ * worker scan, ranked by impact and grouped by category, with evidence, the acknowledge / resolve / mute workflow
+ * and a reviewable fix draft where the configuration can fix the problem. Filters live in the URL.
+ */
+export default async function DataQualityPage({ searchParams }: { searchParams: Promise<{ status?: string; category?: string }> }) {
   const q = await searchParams;
   const ctx = await requireOrgContext("events.read");
-  const t = await getTranslations("app.quality");
-  const sites = await withOrg(ctx, (tx) => listSites(tx, ctx.organization.id));
-  const site = sites.find((s) => s.id === q.site) ?? sites[0] ?? null;
-  if (!site) return <EmptyState title={t("noSites")} />;
-  const status = q.status === "resolved" || q.status === "ignored" ? q.status : "open";
-  const data = await withOrg(ctx, async (tx) => {
-    const issues = await tx.select().from(dataQualityIssues).where(eq(dataQualityIssues.siteId, site.id)).orderBy(desc(dataQualityIssues.lastSeenAt)).limit(200);
-    const snapshot = (await tx.select().from(siteHealthSnapshots).where(eq(siteHealthSnapshots.siteId, site.id)).orderBy(desc(siteHealthSnapshots.computedAt)).limit(1))[0] ?? null;
-    return { issues, snapshot };
+  const t = await getTranslations("dataQuality");
+  const workspace = await activeSite(ctx);
+  if (!workspace.site) {
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
+        <EmptyState
+          title={t("noSite")}
+          description={t("noSiteText")}
+          action={
+            <Link href="/app/onboarding" className={buttonVariants()}>
+              {t("createSite")}
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
+  const site = workspace.site;
+  const environment = workspace.environment;
+  const filters = parseFilters(q);
+  const locale = ctx.user.locale;
+  const { inbox, timezone } = await withOrg(ctx, async (tx) => {
+    const names = await tx.select({ id: integrations.id, name: integrations.name }).from(integrations).where(eq(integrations.siteId, site.id));
+    const [row] = await tx.select({ currency: sites.currency, timezone: sites.timezone }).from(sites).where(eq(sites.id, site.id)).limit(1);
+    const fixContext = await loadFixContext(tx, { siteId: site.id, environmentId: environment?.id ?? null, siteCurrency: row?.currency ?? null, destinationNames: Object.fromEntries(names.map((n) => [n.id, n.name])) });
+    return { inbox: await loadInbox(tx, { siteId: site.id, filters, fixContext }), timezone: row?.timezone ?? "Europe/Berlin" };
   });
-  const issues = data.issues.filter((i) => i.status === status);
-  const counts = { open: data.issues.filter((i) => i.status === "open").length, critical: data.issues.filter((i) => i.status === "open" && i.severity === "critical").length };
+  const canManage = can(ctx.role, "config.draft");
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
-          <p className="mt-1 text-sm text-ink-3">{t("intro")}</p>
-        </div>
-        <div className="flex flex-wrap gap-2 text-sm">
-          {sites.map((s) => (
-            <Link key={s.id} href={`/app/data-quality?site=${s.id}`} className={`rounded-full px-3 py-1 ${s.id === site.id ? "bg-primary-soft text-primary" : "bg-surface-2 text-ink-3"}`}>
-              {s.name}
-            </Link>
-          ))}
-        </div>
+      <DataQualityHeader section="inbox" site={site} />
+      {inbox.scanStale && inbox.lastScanAt ? <Banner tone="warn">{t("summary.staleScan", { date: formatDateTime(inbox.lastScanAt, locale, timezone) })}</Banner> : null}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label={t("summary.open")} value={formatNumber(inbox.counts.open, locale)} tone={inbox.counts.open > 0 ? "warn" : inbox.lastScanAt ? "ok" : "neutral"} hint={inbox.lastScanAt ? undefined : t("summary.notMeasured")} />
+        <StatCard label={t("summary.critical")} value={formatNumber(inbox.counts.critical, locale)} tone={inbox.counts.critical > 0 ? "bad" : inbox.lastScanAt ? "ok" : "neutral"} hint={inbox.lastScanAt ? undefined : t("summary.notMeasured")} />
+        <StatCard label={t("summary.acknowledged")} value={formatNumber(inbox.counts.acknowledged, locale)} hint={t("summary.mutedCount", { n: inbox.counts.muted })} />
+        <StatCard label={t("summary.lastScan")} value={inbox.lastScanAt ? formatDateTime(inbox.lastScanAt, locale, timezone) : "—"} hint={inbox.lastScanAt ? (inbox.lastObservedAt ? t("summary.lastObserved", { date: formatDateTime(inbox.lastObservedAt, locale, timezone) }) : undefined) : t("summary.lastScanNever")} />
       </div>
-      <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label={t("score")} value={data.snapshot ? `${data.snapshot.score}/100` : "—"} tone={data.snapshot ? (data.snapshot.score >= 80 ? "ok" : data.snapshot.score >= 50 ? "warn" : "bad") : "neutral"} hint={data.snapshot ? t("computedAt", { date: data.snapshot.computedAt.toLocaleString() }) : t("noSnapshot")} />
-        <StatCard label={t("openIssues")} value={counts.open} tone={counts.open ? "warn" : "ok"} />
-        <StatCard label={t("critical")} value={counts.critical} tone={counts.critical ? "bad" : "ok"} />
-      </div>
-      {data.snapshot ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("components")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {Object.entries(data.snapshot.components).map(([k, c]) => (
-                <li key={k} className="rounded-xl border border-line p-3 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-ink">{k}</span>
-                    <Badge tone={c.score >= 80 ? "ok" : c.score >= 50 ? "warn" : "bad"}>{c.score}</Badge>
-                  </div>
-                  <p className="mt-1 text-xs text-ink-3">{c.detail}</p>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      ) : null}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("issues")}</CardTitle>
-          <div className="flex gap-2 text-xs">
-            {(["open", "resolved", "ignored"] as const).map((s) => (
-              <Link key={s} href={`/app/data-quality?site=${site.id}&status=${s}`} className={`rounded-full px-2 py-0.5 ${s === status ? "bg-primary-soft text-primary" : "text-ink-3"}`}>
-                {t(`status_${s}`)}
-              </Link>
-            ))}
-          </div>
-        </CardHeader>
-        <CardContent>
-          {issues.length === 0 ? (
-            <p className="text-sm text-ink-3">{t("noIssues")}</p>
-          ) : (
-            <ul className="divide-y divide-line">
-              {issues.map((i) => (
-                <li key={i.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Badge tone={i.severity === "critical" ? "bad" : i.severity === "warning" ? "warn" : "neutral"}>{i.severity}</Badge>
-                      <span className="font-mono text-xs text-ink-3">{i.kind}</span>
-                    </div>
-                    <p className="mt-1 text-sm text-ink">{i.summary}</p>
-                    <p className="text-xs text-ink-3">
-                      {t("occurrences", { n: i.occurrences })} · {t("lastSeen", { date: i.lastSeenAt.toLocaleString() })}
-                      {i.fixTool ? ` · ${t("fixWith", { tool: i.fixTool })}` : ""}
-                    </p>
-                  </div>
-                  <IssueActions issueId={i.id} status={i.status} siteId={site.id} />
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
+      <InboxFilterBar filters={filters} inbox={inbox} locale={locale} />
+      <InboxList inbox={inbox} filters={filters} site={{ id: site.id, name: site.name, timezone }} environment={environment ? { id: environment.id, kind: environment.kind, name: environment.name } : null} locale={locale} canManage={canManage} aiEnabled={aiConfigured()} />
     </div>
   );
 }

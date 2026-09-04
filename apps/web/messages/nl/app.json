@@ -1,25 +1,5 @@
 {
   "app": {
-    "nav": {
-      "overview": "Overzicht",
-      "aiSetup": "AI-setup",
-      "sites": "Sites",
-      "events": "Events",
-      "debugger": "Event Debugger",
-      "destinations": "Destinations",
-      "dataQuality": "Datakwaliteit",
-      "consent": "Toestemming & privacy",
-      "audiences": "Doelgroepen",
-      "team": "Team",
-      "billing": "Facturering",
-      "settings": "Instellingen",
-      "openMenu": "Navigatie openen",
-      "closeMenu": "Navigatie sluiten",
-      "account": "Account",
-      "logout": "Uitloggen",
-      "switchOrg": "Van organisatie wisselen",
-      "expertMode": "Expertmodus"
-    },
     "overview": {
       "title": "Overzicht",
       "welcome": "Welkom terug, {name}",
@@ -79,7 +59,7 @@
       "lastServerEvent": "Laatste serverevent",
       "never": "nooit",
       "openSetup": "AI-setup openen",
-      "openDebugger": "Event Debugger openen",
+      "openDebugger": "Live Event Explorer openen",
       "openShop": "Shopkoppeling"
     },
     "common": {

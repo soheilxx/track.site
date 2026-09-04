@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center : ce qui est en production par environnement, le brouillon en préparation, des diffs de configuration lisibles, les approbations à quatre yeux, la publication planifiée et le rollback en un clic. Chaque action est auditée.",
+    "siteContext": "Les brouillons, les versions et l’aperçu d’impact concernent {site}",
+    "switchSiteHint": "Changez de site dans le sélecteur d’espace de travail.",
+    "noSite": "Pas encore de site",
+    "noSiteText": "Créez votre premier site pour publier une configuration de tracking.",
+    "createSite": "Créer un site",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "unknownUser": "Membre inconnu",
+    "system": "Publication planifiée",
+    "migrationMissing": "Données de release indisponibles",
+    "migrationMissingText": "Les tables d’approbations et de planification (migration 0010) ne sont pas appliquées à cette base de données. Les versions publiées sont affichées ; les brouillons, approbations et planifications ne le sont pas.",
+    "loading": "Chargement des releases",
+    "links": {
+      "aiSetup": "Ouvrir AI Setup",
+      "destinations": "Ouvrir les destinations",
+      "dataQuality": "Ouvrir la Data Quality Inbox",
+      "explorer": "Ouvrir le Live Event Explorer",
+      "testLab": "Ouvrir le Live Test Lab"
+    },
+    "environment": {
+      "kind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Mode test",
+      "navLabel": "Environnements"
+    },
+    "strip": {
+      "active": "Version en ligne",
+      "noActive": "Rien de publié pour l’instant",
+      "version": "v{version}",
+      "publishedAgo": "publiée {time}",
+      "restored": "restaurée par rollback",
+      "draft": "Brouillon",
+      "noDraft": "Aucun brouillon ouvert",
+      "draftChanges": "{count, plural, =0 {aucune modification} one {# modification} other {# modifications}}",
+      "lintErrors": "{count, plural, one {# problème bloquant} other {# problèmes bloquants}}",
+      "scheduled": "Planifiée pour {time}",
+      "scheduleFailed": "Publication planifiée échouée",
+      "approvalsPending": "{count, plural, one {# approbation en attente} other {# approbations en attente}}",
+      "versions": "{count, plural, =0 {aucune version} one {# version} other {# versions}}"
+    },
+    "draft": {
+      "title": "Brouillon pour {environment}",
+      "intro": "Le brouillon ouvert devient la version {version} lors de sa publication. Les modifications se préparent dans AI Setup, dans les destinations et dans la Data Quality Inbox ; cette page les vérifie, les approuve, les planifie et les publie.",
+      "empty": "Aucun brouillon ouvert dans {environment}",
+      "emptyText": "Rien n’attend d’être publié. Préparez une modification dans AI Setup, connectez une destination ou acceptez un correctif de la Data Quality Inbox — le brouillon apparaît ici pour vérification.",
+      "basedOn": "Basé sur v{version}",
+      "initial": "Première version pour cet environnement",
+      "author": "Préparé par {name}",
+      "updated": "Dernière modification {time}",
+      "invalid": "Brouillon corrompu",
+      "invalidText": "Le brouillon ne correspond pas au schéma de configuration et ne peut pas être publié. Abandonnez-le et préparez à nouveau la modification.",
+      "lint": {
+        "ok": "Vérifications réussies",
+        "errors": "{count, plural, one {# problème bloquant} other {# problèmes bloquants}}",
+        "warnings": "{count, plural, one {# avertissement} other {# avertissements}}",
+        "errorsTitle": "Problèmes bloquants",
+        "warningsTitle": "Avertissements",
+        "explain": "Les problèmes bloquants viennent du lint de configuration (policy, identifiants publics, JSONLogic). Les avertissements ne bloquent pas la publication."
+      },
+      "changesTitle": "Modifications",
+      "noChanges": "Le brouillon est identique à la version en ligne.",
+      "criticalTitle": "Modification critique",
+      "criticalText": "Cette modification touche le consentement, un événement critique, une destination ou le kill switch en production. L’approbation à quatre yeux s’applique.",
+      "signalsTitle": "Signaux critiques",
+      "signalsInfo": "Dans {environment}, ces signaux sont informatifs ; l’approbation à quatre yeux s’applique à la production.",
+      "schedule": {
+        "title": "Publication planifiée",
+        "at": "Publication {time}",
+        "by": "planifiée par {name}",
+        "pendingWorker": "Le worker publie dans la minute qui suit l’heure planifiée.",
+        "failed": "La publication planifiée a été refusée : {reason}",
+        "attemptedAt": "tentée {time}",
+        "cancel": "Annuler la planification",
+        "reasons": {
+          "signing_key_missing": "le worker n’a pas de clé de signature de configuration",
+          "draft_not_open": "le brouillon n’était plus ouvert",
+          "draft_changed": "le brouillon a changé après sa planification",
+          "approval_invalid": "l’approbation enregistrée n’était plus valide",
+          "lint_failed": "le lint de configuration a échoué",
+          "publish_failed": "la publication a échoué"
+        }
+      },
+      "evidence": {
+        "title": "Preuves de test",
+        "intro": "Exécutions du Live Test Lab depuis l’ouverture de ce brouillon. Lancez un parcours dans l’environnement de test avant de publier en production.",
+        "empty": "Aucune exécution de test depuis l’ouverture du brouillon.",
+        "unavailable": "Les exécutions de test ne sont pas disponibles (migration 0007 non appliquée).",
+        "steps": "{count, plural, one {# étape} other {# étapes}}",
+        "open": "Ouvrir l’exécution"
+      }
+    },
+    "fourEyes": {
+      "title": "Approbation à quatre yeux",
+      "state": {
+        "not_required": "Non requise pour cette modification.",
+        "single_publisher": "Indisponible : vous êtes le seul membre pouvant publier. La release est enregistrée comme release à une seule personne.",
+        "satisfied": "Approuvée par {name} {time}.",
+        "pending": "En attente d’un second membre : demandée par {name} {time}.",
+        "stale": "La dernière approbation concerne un état antérieur du brouillon. Demandez une nouvelle revue.",
+        "rejected": "La dernière demande a été rejetée. Modifiez le brouillon et demandez une nouvelle revue.",
+        "missing": "Un second membre disposant du droit de publication doit approuver cette modification avant qu’elle puisse être publiée ou planifiée."
+      },
+      "publishers": "{count, plural, one {# membre peut publier} other {# membres peuvent publier}}",
+      "request": "Demander une approbation",
+      "requestNote": "Note pour le relecteur (optionnel)",
+      "requestDialogTitle": "Demander l’approbation de v{version}",
+      "requestDialogText": "Un second membre disposant du droit de publication vérifie le résumé des modifications ci-dessous et l’approuve ou le rejette. La demande porte sur le brouillon tel qu’il est maintenant ; toute modification ultérieure nécessite une nouvelle demande.",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "withdraw": "Retirer la demande",
+      "decideDialogTitle": "Vérifier v{version}",
+      "decideDialogText": "Vous approuvez ou rejetez exactement les modifications listées ci-dessous. Un rejet nécessite un motif ; la décision est auditée.",
+      "reason": "Motif",
+      "reasonHint": "Obligatoire pour un rejet, optionnel pour une approbation.",
+      "ownRequest": "Vous avez demandé cette revue ; un autre membre doit décider.",
+      "history": "Historique des approbations",
+      "decision": {
+        "pending": "En attente",
+        "approved": "Approuvée",
+        "rejected": "Rejetée",
+        "withdrawn": "Retirée"
+      },
+      "current": "brouillon actuel",
+      "outdated": "état antérieur du brouillon",
+      "requestedBy": "demandée par {name} {time}",
+      "decidedBy": "{decision} par {name} {time}",
+      "note": "Note : {note}",
+      "reasonGiven": "Motif : {reason}",
+      "reasons": {
+        "critical_event": "Un événement critique s’arrête ou change de déclencheur",
+        "consent_weaker": "Le consentement s’affaiblit (mode régional, consent mode avancé ou Global Privacy Control)",
+        "destination_purpose_weaker": "Une destination exige moins de consentement qu’avant",
+        "destination_stopped": "Une destination cesse de recevoir des événements",
+        "marketing_destination_added": "Une destination publicitaire commence à recevoir des événements",
+        "kill_switch": "Le kill switch change",
+        "allowed_hosts_reduced": "Des hôtes vérifiés sont supprimés"
+      }
+    },
+    "actions": {
+      "publish": "Publier maintenant",
+      "schedule": "Planifier",
+      "discard": "Abandonner le brouillon",
+      "rollback": "Revenir à cette version",
+      "publishDialogTitle": "Publier v{version} dans {environment}",
+      "publishDialogText": "Le brouillon devient une version signée et immuable, en ligne pour le SDK et le worker en une minute environ. C’est irréversible, mais un rollback vers n’importe quelle version antérieure ne prend qu’un clic.",
+      "publishConfirm": "Publier v{version}",
+      "singleAcknowledge": "Je confirme seul cette modification critique ; aucun second membre ne peut l’approuver dans cette organisation.",
+      "scheduleDialogTitle": "Planifier v{version} pour {environment}",
+      "scheduleDialogText": "Le worker publie le brouillon à l’heure choisie. Il refuse de publier si le brouillon change après la planification ou si l’approbation devient invalide ; le motif s’affiche ici.",
+      "scheduleAt": "Publier le",
+      "scheduleHint": "Entre {min} minutes et {max} jours à partir de maintenant, dans votre heure locale.",
+      "scheduleConfirm": "Planifier la publication",
+      "discardDialogTitle": "Abandonner le brouillon v{version} ?",
+      "discardDialogText": "Le brouillon est archivé, les demandes d’approbation en attente sont retirées et la planification est supprimée. Le trafic en ligne n’est pas affecté.",
+      "discardConfirm": "Abandonner",
+      "rollbackDialogTitle": "Revenir à v{version} dans {environment} ?",
+      "rollbackDialogText": "La version actuellement en ligne v{active} est remplacée par v{version} en une minute environ. Le brouillon ouvert reste intact ; le rollback est audité.",
+      "rollbackDialogNoActive": "Rien n’est en ligne dans {environment} ; v{version} devient la version en ligne en une minute environ. Le rollback est audité.",
+      "rollbackConfirm": "Revenir à v{version}",
+      "publishedOk": "La version {version} est publiée.",
+      "scheduledOk": "Le brouillon est planifié.",
+      "scheduleCancelledOk": "La planification a été supprimée.",
+      "discardedOk": "Le brouillon a été abandonné.",
+      "rolledBackOk": "La version {version} est de nouveau en ligne.",
+      "requestedOk": "Approbation demandée.",
+      "decidedOk": "Décision enregistrée.",
+      "withdrawnOk": "Demande retirée."
+    },
+    "errors": {
+      "generic": "Une erreur s’est produite. Veuillez réessayer.",
+      "invalid": "La requête était invalide.",
+      "forbidden": "Vous n’avez pas l’autorisation pour cette action.",
+      "not_found": "Le brouillon ou la version n’existe plus.",
+      "not_open": "Le brouillon n’est plus ouvert.",
+      "lint": "Le brouillon a des problèmes bloquants ; corrigez-les avant de publier.",
+      "approval_required": "Cette modification critique nécessite d’abord une approbation à quatre yeux.",
+      "approval_pending": "Une demande d’approbation est déjà en attente.",
+      "approval_rejected": "La dernière demande d’approbation a été rejetée ; modifiez le brouillon et demandez une nouvelle revue.",
+      "acknowledge_required": "Confirmez la release à une seule personne pour continuer.",
+      "self_approval": "Vous ne pouvez pas approuver votre propre demande.",
+      "stale": "Le brouillon a changé depuis la demande ; une nouvelle demande est nécessaire.",
+      "reason_required": "Un rejet nécessite un motif (au moins 3 caractères).",
+      "signing": "La publication n’est pas configurée sur ce déploiement (pas de clé de signature de configuration).",
+      "schedule_invalid": "Saisissez une date et une heure valides.",
+      "schedule_too_soon": "Choisissez une heure au moins {min} minutes après maintenant.",
+      "schedule_too_far": "Choisissez une heure dans les {max} prochains jours.",
+      "already_active": "Cette version est déjà en ligne."
+    },
+    "changes": {
+      "area": {
+        "settings": "Paramètres",
+        "consent": "Consentement",
+        "events": "Événements",
+        "destinations": "Destinations",
+        "site": "Site",
+        "other": "Autre"
+      },
+      "op": {
+        "add": "ajouté",
+        "remove": "supprimé",
+        "change": "modifié"
+      },
+      "before": "avant",
+      "after": "après",
+      "none": "aucun",
+      "unknownDestination": "Destination {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "Ce que la publication de ce brouillon change, dérivé du diff et des données mesurées des {days} derniers jours dans {environment}. Les volumes sont des mesures, pas des prévisions ; une mesure manquante reste inconnue.",
+      "generatedAt": "Calculé {time}",
+      "events": {
+        "title": "Événements concernés",
+        "empty": "Aucune modification d’événement.",
+        "event": "Événement",
+        "change": "Modification",
+        "accepted": "Acceptés ({days} j)",
+        "delivered": "Livrés ({days} j)",
+        "issues": "Problèmes ouverts",
+        "destinations": "Destinations après",
+        "critical": "critique",
+        "notMeasured": "non mesuré",
+        "caption": "Événements que le brouillon ajoute, supprime, active, désactive ou modifie",
+        "kind": {
+          "added": "ajouté",
+          "removed": "supprimé",
+          "enabled": "activé",
+          "disabled": "désactivé",
+          "changed": "modifié"
+        }
+      },
+      "destinations": {
+        "title": "Destinations concernées",
+        "empty": "Aucune modification de destination.",
+        "destination": "Destination",
+        "change": "Modification",
+        "purpose": "Finalité du consentement",
+        "events": "Événements mappés",
+        "health": "Santé",
+        "status": "Statut",
+        "noHealth": "non mesurée",
+        "healthText": "{success} livrés · {errorRate} % d’erreurs ({hours} h)",
+        "stale": "obsolète",
+        "caption": "Destinations que le brouillon ajoute, supprime, active, désactive ou modifie",
+        "kind": {
+          "added": "ajoutée",
+          "removed": "supprimée",
+          "enabled": "activée",
+          "disabled": "désactivée",
+          "changed": "modifiée"
+        },
+        "statusLabel": {
+          "draft": "brouillon",
+          "not_connected": "non connectée",
+          "connected": "connectée",
+          "paused": "en pause",
+          "error": "erreur",
+          "unknown": "aucune ligne de destination"
+        }
+      },
+      "consent": {
+        "title": "Finalités du consentement",
+        "purposes": "Finalités après : {purposes}",
+        "added": "ajoutées : {purposes}",
+        "removed": "supprimées : {purposes}",
+        "regionMode": "Mode régional par défaut : {before} → {after}",
+        "consentMode": "Consent mode : {before} → {after}",
+        "gpc": "Global Privacy Control : {before} → {after}",
+        "clickIdTtl": "Durée de vie des click IDs : {before} → {after} jours",
+        "weaker": "Moins restrictif que la version en ligne",
+        "unchanged": "Aucune modification du consentement.",
+        "respected": "respecté",
+        "ignored": "ignoré",
+        "none": "aucun",
+        "purpose": {
+          "necessary": "Strictement nécessaire",
+          "analytics": "Analytique",
+          "marketing": "Marketing",
+          "personalization": "Personnalisation"
+        },
+        "regionModes": {
+          "strict_opt_in": "Opt-in strict",
+          "opt_out": "Opt-out",
+          "notice_only": "Information seule"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Volume estimé",
+        "baseline": "Événements qui restent actifs",
+        "baselineHint": "acceptés au cours des {days} derniers jours",
+        "removed": "Événements qui s’arrêtent",
+        "unmeasured": "{count, plural, one {# événement actif sans mesure} other {# événements actifs sans mesure}} : {events}",
+        "billable": "Facturables",
+        "empty": "Aucun événement mesuré au cours des {days} derniers jours pour cet environnement — le volume après la modification est inconnu.",
+        "unavailable": "Les agrégats ne sont pas disponibles sur cette base de données.",
+        "stale": "Dernier agrégat {time} ; les événements plus récents ne sont peut-être pas encore comptés.",
+        "lastBucket": "Dernier agrégat {time}"
+      },
+      "plan": {
+        "title": "Limites du plan",
+        "plan": "Plan {plan}",
+        "limit": "{limit} événements par mois",
+        "noLimit": "Aucun plafond d’événements fixe dans ce plan",
+        "used": "{used} événements facturables consommés en {period} ({share} %)",
+        "usedUnknown": "Aucune consommation enregistrée pour {period} pour l’instant",
+        "projected": "Base mesurée ≈ {projected} événements par mois ({share} % de la limite)",
+        "projectedUnknown": "Pas de projection sans base mesurée",
+        "threshold": "La base mesurée dépasse déjà le seuil d’alerte de {threshold} % du plan.",
+        "billing": "Ouvrir la facturation"
+      },
+      "dq": {
+        "title": "Effet attendu sur la qualité des données",
+        "intro": "Basé sur des règles ; chaque ligne nomme la règle déclenchée. Ce n’est pas une garantie : le pipeline mesure l’effet réel après la publication.",
+        "tone": {
+          "ok": "Sans risque",
+          "warn": "Avertissement",
+          "bad": "Bloquant",
+          "info": "Remarque"
+        },
+        "no_changes": "Le brouillon ne modifie pas la configuration en ligne.",
+        "critical_event_stopped": "L’événement critique {event} s’arrête : {measured, select, yes {{accepted} événements acceptés dans la fenêtre} other {aucune mesure}} ne seront plus capturés.",
+        "event_removed_open_issues": "{event} s’arrête avec {issues, plural, one {# problème de qualité ouvert} other {# problèmes de qualité ouverts}} ; arrêter l’événement ne les résout pas.",
+        "destination_stopped": "{destination} cesse de recevoir des événements ({measured, select, yes {{delivered} livraisons dans la fenêtre de santé} other {aucune mesure de santé}}).",
+        "destination_failing_stopped": "{destination} s’arrête ; {errorRate} % de ses dernières livraisons ont échoué, ces échecs cessent avec elle.",
+        "destination_no_mappings": "{destination} est activée sans mapping d’événements et ne reçoit rien.",
+        "conversion_browser_only": "{event} est uniquement côté navigateur ; sans source vérifiée côté serveur, doublons et valeurs manquantes sont probables.",
+        "conversion_without_authoritative_source": "{event} part vers des destinations publicitaires sans source vérifiée côté serveur (bloquant).",
+        "mapping_unknown_event": "{destination} mappe {event}, qui n’est pas défini.",
+        "consent_weaker": "Le consentement s’affaiblit : davantage d’événements peuvent être traités avant un signal explicite là où la policy régionale l’autorise.",
+        "kill_switch_on": "Le kill switch arrête toute collecte pour cet environnement.",
+        "kill_switch_off": "Le kill switch est relâché ; la collecte reprend.",
+        "allowed_hosts_reduced": "Les événements de {hosts} sont rejetés après la publication.",
+        "new_event_unmeasured": "{event} est nouveau ; son volume et sa qualité sont inconnus jusqu’à l’arrivée d’événements.",
+        "lint_errors": "{count, plural, one {# problème de lint bloquant empêche} other {# problèmes de lint bloquants empêchent}} la publication.",
+        "no_rule_fired": "Aucune règle n’a été déclenchée pour cette modification. Vérifiez l’effet dans le Live Event Explorer après la publication."
+      }
+    },
+    "history": {
+      "title": "Historique des versions",
+      "intro": "Chaque version publiée de {environment}, la plus récente en premier. Les versions sont immuables et signées ; un rollback réactive une version antérieure.",
+      "empty": "Rien de publié pour l’instant",
+      "emptyText": "La première version apparaît ici dès qu’un brouillon est publié.",
+      "caption": "Versions de configuration publiées",
+      "version": "Version",
+      "status": "Statut",
+      "summary": "Résumé",
+      "author": "Auteur",
+      "published": "Publiée",
+      "changes": "Modifications",
+      "open": "Ouvrir",
+      "statusLabel": {
+        "active": "En ligne",
+        "superseded": "Remplacée"
+      },
+      "rolledBack": "annulée par rollback",
+      "restored": "restaurée",
+      "scheduled": "planifiée",
+      "approved": "quatre yeux",
+      "initial": "Configuration initiale"
+    },
+    "version": {
+      "breadcrumbLabel": "Fil d’Ariane",
+      "back": "Releases",
+      "title": "Version {version}",
+      "notFound": "Version introuvable",
+      "notFoundText": "La version n’existe pas pour le site actif. Changez de site dans le sélecteur d’espace de travail ou revenez aux releases.",
+      "status": {
+        "active": "En ligne",
+        "superseded": "Remplacée"
+      },
+      "activeNow": "v{version} est en ligne",
+      "createdBy": "Publiée par {name} {time}",
+      "createdBySystem": "Publiée selon la planification {time}",
+      "previous": "Diff par rapport à v{version}",
+      "first": "Première version : chaque entrée est nouvelle",
+      "signed": "Signée avec la clé {keyId} · digest {digest}",
+      "facts": {
+        "title": "Configuration",
+        "events": "{count, plural, one {# événement actif} other {# événements actifs}} ({critical} critiques)",
+        "destinations": "Destinations : {names}",
+        "noDestinations": "Aucune destination active",
+        "consent": "Consentement : {mode}, consent mode {consentMode}, GPC {gpc}",
+        "clickIds": "Durée de vie des click IDs {days} jours",
+        "hosts": "Hôtes : {hosts}",
+        "noHosts": "Aucun hôte autorisé",
+        "killSwitch": "Kill switch activé"
+      },
+      "publications": {
+        "title": "Historique de publication",
+        "publish": "Publiée",
+        "rollback": "Restaurée par rollback depuis v{from}",
+        "rollbackUnknown": "Restaurée par rollback",
+        "by": "par {name}",
+        "active": "en ligne maintenant",
+        "superseded": "remplacée {time}",
+        "withApproval": "avec approbation à quatre yeux"
+      },
+      "approvals": {
+        "title": "Approbations",
+        "empty": "Aucune demande d’approbation pour cette version."
+      },
+      "evidence": {
+        "title": "Preuves de test",
+        "intro": "Exécutions du Live Test Lab entre le brouillon et la publication, et ce que le pipeline a observé ensuite avec cette version.",
+        "runsEmpty": "Aucune exécution de test enregistrée pendant que le brouillon était ouvert.",
+        "observed": "{count, plural, =0 {Aucun événement stocké avec cette version} one {# événement stocké avec cette version} other {# événements stockés avec cette version}} depuis {since}",
+        "observedRange": "premier {first}, dernier {last}",
+        "observedUnavailable": "Les observations d’événements ne sont pas disponibles."
+      },
+      "signals": {
+        "title": "Signaux critiques de cette version",
+        "none": "Aucun signal critique par rapport à la version précédente."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "en attente",
+        "sent": "envoyé",
+        "rejected": "rejeté",
+        "failed": "échoué"
+      }
+    }
+  }
+}

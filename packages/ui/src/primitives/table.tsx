@@ -1,10 +1,12 @@
 import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from "react";
 import { cn } from "../cn.ts";
+import { ScrollRegion } from "./scroll-region.tsx";
 
 /**
  * Dense data table. On viewports below 48 rem each row stacks into a card and every cell shows its
  * column name from `data-label` (pass `label` on <Td>). Wrap wide tables in <Table> which scrolls
- * horizontally instead of the page.
+ * horizontally instead of the page; the wrapper is a keyboard-reachable region while it overflows
+ * (named after `caption`).
  */
 export interface TableProps extends HTMLAttributes<HTMLTableElement> {
   /** Stack rows on small screens (default true). */
@@ -17,12 +19,12 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement> {
 
 export function Table({ className, stack = true, caption, showCaption = false, wrapperClassName, children, ...props }: TableProps) {
   return (
-    <div className={cn("w-full min-w-0 overflow-x-auto", wrapperClassName)}>
+    <ScrollRegion label={caption} className={wrapperClassName}>
       <table className={cn("w-full border-collapse text-sm text-ink tabular-nums", stack && "table-stack", className)} {...props}>
         {caption ? <caption className={cn("text-left text-sm text-ink-3", showCaption ? "mb-2" : "sr-only")}>{caption}</caption> : null}
         {children}
       </table>
-    </div>
+    </ScrollRegion>
   );
 }
 

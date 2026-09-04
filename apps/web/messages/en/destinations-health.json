@@ -1,0 +1,239 @@
+{
+  "destinationsHealth": {
+    "title": "Destination Health Center",
+    "intro": "Credential and OAuth expiry, API versions, rate limits, error rate, queue backlog and the last successful delivery of every destination — measured from real delivery attempts. Diagnose or pause one destination without stopping ingestion or the others.",
+    "scope": {
+      "label": "Scope",
+      "thisSite": "This site",
+      "allSites": "All sites",
+      "siteColumn": "Site"
+    },
+    "add": "Add destination",
+    "edit": "Edit",
+    "editHint": "Opens the setup wizard of this destination.",
+    "noSites": "No site yet",
+    "noSitesText": "Create a site first — destinations belong to a site.",
+    "createSite": "Create site",
+    "empty": "No destinations for {site}",
+    "emptyAll": "No destinations yet",
+    "emptyText": "Add an ad platform, analytics tool, affiliate network or webhook. Health is measured from real delivery attempts, never estimated.",
+    "showAllSites": "Show all sites",
+    "summary": {
+      "total": "Destinations",
+      "critical": "Need action",
+      "warning": "Warnings",
+      "healthy": "Healthy",
+      "healthyHint": "connected, no open issue",
+      "paused": "Paused"
+    },
+    "attention": {
+      "title": "Needs attention first",
+      "none": "No open issue in the measured data."
+    },
+    "filter": {
+      "label": "Filter destinations",
+      "all": "All",
+      "attention": "Needs attention",
+      "paused": "Paused",
+      "healthy": "Healthy"
+    },
+    "columns": {
+      "destination": "Destination",
+      "status": "Status",
+      "health": "Health",
+      "credentials": "Credentials",
+      "deliveries": "Deliveries {hours} h",
+      "queue": "Queue",
+      "lastSuccess": "Last success",
+      "actions": "Actions"
+    },
+    "table": {
+      "caption": "Destinations with their measured health, credentials, deliveries and queue backlog",
+      "testMode": "Test mode",
+      "apiVersion": "API {version}",
+      "showDetails": "Show details for {name}",
+      "hideDetails": "Hide details for {name}",
+      "details": "Details"
+    },
+    "status": {
+      "draft": "Draft",
+      "not_connected": "Not connected",
+      "connected": "Connected",
+      "paused": "Paused",
+      "error": "Error"
+    },
+    "health": {
+      "healthy": "Healthy",
+      "degraded": "Degraded",
+      "unhealthy": "Unhealthy",
+      "not_connected": "Not connected",
+      "unknown": "Not checked",
+      "checkedAt": "Checked {when}",
+      "neverChecked": "Never checked"
+    },
+    "credentials": {
+      "title": "Stored credentials",
+      "none": "None stored",
+      "no_expiry": "No expiry reported",
+      "ok": "Valid, expires {when}",
+      "expiring": "Expires {when}",
+      "expired": "Expired {when}",
+      "inactive": "Inactive",
+      "missing": "Missing: {kinds}",
+      "lastValidated": "Last validated {when}",
+      "neverValidated": "Never validated",
+      "kind": "Kind",
+      "label": "Label",
+      "statusLabel": "Status",
+      "expires": "Expires",
+      "validated": "Validated",
+      "last4": "ends with {last4}",
+      "status": {
+        "active": "Active",
+        "rotated": "Rotated",
+        "revoked": "Revoked",
+        "expired": "Expired"
+      }
+    },
+    "oauth": {
+      "title": "OAuth connection",
+      "provider": "Provider",
+      "account": "Account",
+      "accountUnknown": "Account not reported",
+      "requestedScopes": "Requested scopes",
+      "grantedScopes": "Granted scopes",
+      "grantedUnknown": "Not reported by the vendor",
+      "accessExpires": "Access token expires {when}",
+      "accessExpiresUnknown": "Access token expiry not reported",
+      "refreshHint": "Access tokens are refreshed automatically from the stored refresh token."
+    },
+    "api": {
+      "title": "Vendor API",
+      "version": "API version {version}",
+      "verified": "Documentation verified {date}",
+      "sunset": "Version sunsets {date} (in {days} days)",
+      "sunsetPassed": "Sunset date {date} has passed",
+      "noSunset": "No sunset announced",
+      "docs": "Vendor documentation"
+    },
+    "deliveries": {
+      "title": "Deliveries (last {hours} h)",
+      "summary": "{success} delivered · {failed} failed · {retry} retrying",
+      "skipped": "{count} skipped by consent or pause",
+      "none": "No attempts in the last {hours} h",
+      "errorRate": "{rate} of attempts failed",
+      "errorRateNone": "Error rate not measurable without attempts"
+    },
+    "rateLimit": {
+      "title": "Rate limits",
+      "none": "No rate limit hit in the last {hours} h",
+      "count": "{count} rate-limited in the last {hours} h",
+      "lastWait": "Vendor asked to wait {wait}",
+      "lastAt": "Last at {when}"
+    },
+    "queue": {
+      "title": "Queue backlog",
+      "notMeasured": "Not measured yet",
+      "notMeasuredHint": "The worker's destination-health job has not reported for this destination.",
+      "stale": "Stale — measured {when}",
+      "measuredAt": "Measured {when}",
+      "ready": "{count} ready",
+      "scheduled": "{count} scheduled retries",
+      "inFlight": "{count} in flight",
+      "empty": "Queue empty",
+      "lag": "Oldest waiting {duration}",
+      "dead": "{count} dead-lettered"
+    },
+    "freshness": {
+      "missingTitle": "Queue backlog not measured yet",
+      "missingText": "The worker's destination-health job has not written a snapshot for {count} destinations. Delivery counts, credentials and API versions on this page are live; queue figures appear once the job has run.",
+      "staleTitle": "Queue figures are stale",
+      "staleText": "The latest worker snapshot is from {when}. Delivery counts, credentials and API versions are live."
+    },
+    "lastSuccess": {
+      "never": "Never"
+    },
+    "issues": {
+      "credential_expired": "A credential has expired — the vendor will reject deliveries.",
+      "auth_failures": "The vendor rejected the credentials on {count} attempts.",
+      "status_error": "The destination is in error state.",
+      "health_unhealthy": "The last health check failed.",
+      "credential_missing": "Required credentials are missing: {kinds}.",
+      "credential_expiring": "A credential expires {when}.",
+      "health_degraded": "The last health check reported a degraded service.",
+      "rate_limited": "The vendor rate-limited {count} attempts.",
+      "high_error_rate": "{rate} of attempts failed.",
+      "queue_lag": "Messages have been waiting for {duration}.",
+      "dead_letters": "{count} events could not be delivered and were dead-lettered.",
+      "api_sunset": "API version {version} sunsets in {days} days.",
+      "not_connected": "The destination is not connected; nothing is delivered.",
+      "paused": "Paused {when}; events for this destination are skipped.",
+      "draft": "Setup not finished — open the wizard.",
+      "no_delivery_yet": "No successful delivery yet."
+    },
+    "reasons": {
+      "credentials_rejected": "Vendor rejected the credentials",
+      "credential_missing": "Credential missing or revoked",
+      "credential_expired": "Credential expired",
+      "rate_limited": "Vendor rate limit reached",
+      "invalid_payload": "Payload rejected by validation",
+      "consent_missing": "Skipped: required consent not granted",
+      "destination_paused": "Skipped: destination paused",
+      "gpc_opt_out": "Skipped: Global Privacy Control opt-out",
+      "policy_blocked": "Skipped by policy",
+      "vendor_timeout": "Vendor did not answer in time",
+      "vendor_temporary": "Temporary vendor error",
+      "vendor_rejected": "Vendor rejected the request",
+      "destination_missing": "Destination no longer in the published configuration",
+      "unknown": "Unknown error"
+    },
+    "failures": {
+      "title": "Recent failures (7 days)",
+      "none": "No failed attempts in the last 7 days.",
+      "attempt": "Attempt {n}",
+      "http": "HTTP {status}",
+      "willRetry": "will be retried",
+      "redacted": "Vendor message (redacted)"
+    },
+    "actions": {
+      "diagnose": "Diagnose",
+      "diagnosing": "Diagnosing…",
+      "diagnoseHint": "Runs the connector's credential validation and health check with the stored secrets and records the result.",
+      "pause": "Pause",
+      "resume": "Resume",
+      "pauseTitle": "Pause deliveries to {name}?",
+      "pauseText": "Events keep being collected and delivered to every other destination. Events for this destination are skipped while it is paused — they are not queued for later. You can resume at any time.",
+      "pauseConfirm": "Pause destination",
+      "resumeTitle": "Resume deliveries to {name}?",
+      "resumeText": "Track runs a credential check first. Deliveries resume only if the vendor accepts the stored credentials; otherwise the destination stays disconnected and the reason is shown here.",
+      "resumeConfirm": "Check and resume",
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Working…",
+      "readOnly": "Your role can view this page; diagnosing, pausing and resuming needs the integrations permission."
+    },
+    "results": {
+      "diagnoseOk": "Vendor accepted the credentials.",
+      "diagnoseFailed": "Vendor rejected the credentials.",
+      "diagnoseNotConnected": "No credentials to check yet.",
+      "resumed": "Resumed — deliveries continue.",
+      "notResumed": "Not resumed — the vendor did not accept the credentials.",
+      "paused": "Paused. Events for this destination are skipped.",
+      "statusNow": "Status now: {status}",
+      "healthNow": "Health: {health}",
+      "error": {
+        "forbidden": "You are not allowed to do this.",
+        "not_found": "Destination not found.",
+        "invalid": "This action is not possible in the destination's current state.",
+        "connector_unavailable": "This connector is not available on this platform.",
+        "vault_missing": "Credential storage is not configured; stored secrets cannot be read.",
+        "timeout": "The vendor did not answer within 25 seconds.",
+        "failed": "The check could not be completed.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "time": {
+      "unknown": "unknown"
+    }
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "billingUsage": {
+    "subnav": {
+      "label": "Secciones de facturación",
+      "overview": "Resumen",
+      "usage": "Consumo y control de costes"
+    },
+    "title": "Usage & Cost Guard",
+    "intro": "Eventos facturables del periodo actual, una previsión hasta el final del periodo, consumo adicional en paquetes de eventos, carga inusual frente a la línea base de 4 semanas y tu elección explícita de lo que ocurre al llegar al límite. Cada cifra procede del registro de consumo y de los contadores del periodo; nada se estima en silencio.",
+    "comparePlans": "Comparar planes",
+    "context": {
+      "plan": "Plan {name}",
+      "period": "Periodo {from} – {to} (UTC)",
+      "updated": "Contadores actualizados el {at}",
+      "noCounters": "Aún no hay contadores del periodo",
+      "ledger": "Última entrada del registro el {at}",
+      "stale": "Contadores por detrás del registro"
+    },
+    "alerts": {
+      "hardLimitTitle": "Límite alcanzado: procesamiento marcado para pausa",
+      "hardLimitText": "La comprobación de consumo marcó este periodo el {at} con la política «{policy}». Cambia la política abajo o cambia de plan en el resumen; la marca se reevalúa en cuanto guardes.",
+      "softLimitTitle": "Límite mensual de eventos alcanzado",
+      "softLimitAllow": "Los eventos por encima del límite se facturan como paquetes de eventos porque el consumo adicional está permitido.",
+      "softLimitCostLimit": "Los eventos por encima del límite se facturan como paquetes hasta tu límite de coste mensual de {limit}; el procesamiento se pausa a partir de {pauseAt} eventos.",
+      "softLimitPause": "El procesamiento se pausa en {pauseAt} eventos ({grace} % de margen por encima del límite) salvo que permitas el consumo adicional o cambies de plan.",
+      "staleTitle": "Los contadores del periodo van por detrás del registro",
+      "staleText": "El registro contiene eventos más recientes que la última actualización de los contadores ({updated}). Los contadores se ponen al día en la siguiente ejecución de la ingesta; el gráfico diario ya incluye los eventos más recientes.",
+      "ledgerOnlyTitle": "Contado desde el registro",
+      "ledgerOnlyText": "Los contadores del periodo aún no se han escrito, así que la cifra facturable es la suma de las filas del registro de este periodo.",
+      "noLimitTitle": "Este plan no tiene un tope fijo de eventos",
+      "noLimitText": "El consumo adicional, los umbrales y la opción de pausa no aplican; el volumen se acuerda en tu contrato."
+    },
+    "empty": {
+      "title": "Todavía no hay eventos facturables en este periodo",
+      "text": "El registro de consumo no tiene filas para {period}. Los eventos aparecen aquí en cuanto la ingesta los acepta; los eventos en modo de prueba, los duplicados y los reintentos nunca cuentan.",
+      "action": "Abrir eventos"
+    },
+    "stats": {
+      "billable": {
+        "label": "Eventos facturables",
+        "ofLimit": "{pct} de {limit}",
+        "noLimit": "Sin tope fijo",
+        "sourcePeriod": "Desde los contadores del periodo",
+        "sourceLedger": "Desde el registro"
+      },
+      "forecast": {
+        "label": "Previsión al final del periodo",
+        "hint": "Lineal a partir de {from} – {to} · {rate} por día",
+        "noBasis": "Sin filas del registro en los últimos 7 días: igual al recuento de hoy",
+        "ofLimit": "{pct} del límite",
+        "above": "{events} por encima del límite"
+      },
+      "overage": {
+        "label": "Consumo adicional actual",
+        "none": "Ninguno",
+        "packs": "{packs} × {packEvents} eventos · {cost}",
+        "events": "{events} por encima del límite",
+        "contractual": "Contractual: no hay paquete para este plan",
+        "forecast": "Previsión al final del periodo: {packs} paquetes · {cost}",
+        "forecastNone": "Previsión al final del periodo: ninguno"
+      },
+      "load": {
+        "label": "Carga frente a la línea base de 4 semanas",
+        "elevated": "Elevada",
+        "normal": "Normal",
+        "reduced": "Reducida",
+        "unknown": "Desconocida",
+        "deviation": "{deviation} · {recent} frente a {baseline} por día",
+        "noBaseline": "Aún no hay línea base: {from} – {to} no contiene eventos",
+        "peak": "Día con más carga {day}: {events}"
+      }
+    },
+    "meter": {
+      "title": "Límite y umbrales de aviso",
+      "intro": "Eventos facturables de este periodo frente al límite mensual del plan. La comprobación de consumo sella los avisos al 70, 90 y 100 %; las fechas previstas proceden de la previsión de 7 días.",
+      "used": "usados",
+      "limit": "Límite",
+      "valueText": "{used} de {limit} ({pct})",
+      "exceeded": "Superado en {events}",
+      "thresholds": {
+        "title": "Umbrales de aviso",
+        "threshold": "{pct} %",
+        "events": "{events} eventos",
+        "reached": "Alcanzado: aviso sellado el {at}",
+        "reachedPending": "Alcanzado: el aviso se sella en la siguiente comprobación de consumo",
+        "expected": "Previsto el {at} · faltan {remaining}",
+        "notExpected": "No previsto en este periodo · faltan {remaining}"
+      },
+      "pauseAt": "El procesamiento se pausa en {events} eventos ({pct} del límite).",
+      "neverPauses": "Con la política actual el procesamiento nunca se pausa; el consumo adicional se factura como paquetes de eventos.",
+      "hardLimitAt": "Marcado el {at}."
+    },
+    "chart": {
+      "title": "Eventos facturables por día",
+      "intro": "Días UTC del {from} al {to}: la línea base de 4 semanas, los 7 días completos sobre los que se promedia la previsión y el día de hoy hasta ahora. La previsión es una proyección y no se dibuja.",
+      "aria": "Gráfico de barras de eventos facturables en {days} días: {recent} en los últimos 7 días completos, {baseline} en la línea base de 4 semanas anterior, {today} hoy hasta ahora.",
+      "legend": {
+        "baseline": "Línea base {from} – {to}",
+        "recent": "Últimos 7 días {from} – {to}",
+        "today": "Hoy (parcial)"
+      },
+      "details": "Mostrar valores diarios",
+      "day": "Día",
+      "events": "Eventos facturables",
+      "window": {
+        "label": "Ventana",
+        "baseline": "Línea base",
+        "recent": "Últimos 7 días",
+        "today": "Hoy"
+      },
+      "empty": "No hay eventos facturables en esta ventana."
+    },
+    "policy": {
+      "title": "Qué ocurre al llegar al límite",
+      "intro": "El consumo adicional nunca se activa por sí solo. Tú decides si los eventos adicionales se facturan como paquetes, si un límite de coste mensual los acota o si el procesamiento se pausa tras el periodo de gracia. La comprobación de consumo aplica tu elección en cada ejecución y cada cambio queda auditado.",
+      "current": "Política actual:",
+      "legend": "Política de consumo adicional",
+      "readOnly": "Tu rol puede ver la política, pero no cambiarla.",
+      "options": {
+        "allow": {
+          "label": "Permitir el consumo adicional",
+          "description": "Los eventos por encima del límite se facturan como paquetes de eventos a precio de lista. El procesamiento nunca se pausa."
+        },
+        "cost_limit": {
+          "label": "Límite de coste mensual",
+          "description": "Los paquetes de eventos se facturan hasta el importe que fijes; en cuanto los paquetes necesarios costarían más, el procesamiento se pausa durante el resto del periodo."
+        },
+        "pause": {
+          "label": "Pausar en el límite",
+          "description": "El procesamiento continúa durante un margen de gracia por encima del límite y después se pausa durante el resto del periodo. Nunca se factura ningún paquete."
+        }
+      },
+      "notes": {
+        "cost_limit_unset": "Sin importe fijado: se comporta como «Pausar en el límite».",
+        "no_pack": "No hay paquete para este plan: se comporta como «Pausar en el límite»."
+      },
+      "costLimit": {
+        "label": "Límite de coste mensual (euros enteros)",
+        "hint": "En este límite caben {packs} paquetes de {events} eventos a {price} cada uno.",
+        "hintPack": "Los paquetes de {events} eventos cuestan {price} cada uno.",
+        "noPack": "Este plan no tiene paquete de eventos; un límite de coste no puede comprar consumo adicional.",
+        "invalid": "Introduce un importe entero entre {min} y {max}."
+      },
+      "consequence": {
+        "allow": "Cada {events} eventos por encima del límite se facturan como un paquete de {price}, sin tope.",
+        "costLimit": "Hasta {limit} al mes paga {packs} paquetes ({events} eventos por encima del límite). El procesamiento se pausa a partir de {pauseAt} eventos facturables.",
+        "costLimitUnset": "Introduce un importe para ver cuántos paquetes cubre.",
+        "pause": "El procesamiento se pausa en {pauseAt} eventos facturables ({grace} % por encima del límite). No se factura ningún paquete.",
+        "noLimit": "Este plan no tiene un tope fijo de eventos, así que la política no surte efecto hasta que aplique un plan con tope.",
+        "noPack": "Este plan no tiene paquete de eventos, así que el consumo adicional no puede comprarse; el procesamiento se pausa tras el periodo de gracia."
+      },
+      "save": "Guardar política",
+      "unchanged": "No hay cambios que guardar.",
+      "confirm": {
+        "title": "Confirmar la política de consumo adicional",
+        "text": "La política se aplica de inmediato al periodo actual: la marca de pausa se reevalúa al guardar y la comprobación de consumo aplica la misma regla en cada ejecución.",
+        "acknowledge": "Entiendo que los eventos por encima del límite se facturarán como paquetes de eventos a precio de lista.",
+        "cancel": "Cancelar",
+        "confirm": "Guardar política",
+        "working": "Guardando…",
+        "close": "Cerrar"
+      },
+      "saved": "Política guardada.",
+      "savedPaused": "Política guardada. Con esta política el periodo actual queda marcado como pausado.",
+      "savedNotPaused": "Política guardada. El periodo actual no está pausado.",
+      "errors": {
+        "invalid": "No se pudo guardar la elección: revisa el límite de coste.",
+        "forbidden": "Tu rol no puede cambiar la política de facturación.",
+        "generic": "Algo ha fallado. No se ha cambiado nada."
+      }
+    },
+    "comparison": {
+      "title": "¿Paquete de eventos o siguiente plan?",
+      "intro": "Para la previsión de {events} eventos facturables al mes, a precios de lista del catálogo por {period}.",
+      "introNoBasis": "Para {events} eventos facturables al mes (recuento de hoy: aún no hay ritmo de 7 días), a precios de lista del catálogo por {period}.",
+      "columns": {
+        "option": "Opción",
+        "base": "Precio del plan / {period}",
+        "included": "Incluidos / mes",
+        "overage": "Consumo adicional / mes",
+        "overageCost": "Coste de paquetes / {period}",
+        "total": "Total / {period}"
+      },
+      "current": "Plan actual",
+      "cheapest": "Más barato",
+      "packs": "{events} → {packs} paquetes",
+      "contractual": "{events} por encima de lo que cubren los paquetes",
+      "noOverage": "Ninguno",
+      "stay": "Quedarse en {plan} con paquetes de eventos es la opción más barata para este volumen.",
+      "upgradeHint": "{plan} costaría {savings} menos por {period} para este volumen.",
+      "noneCheapest": "Ninguna opción puede tarificarse para este volumen a partir del catálogo.",
+      "noSilent": "Track nunca cambia tu plan ni compra paquetes por su cuenta.",
+      "contractualNote": "Este plan no tiene precio de lista; el consumo adicional se acuerda en tu contrato.",
+      "none": "Nada que comparar.",
+      "choosePlan": "Comparar planes",
+      "taxNote": "Precios de lista sin IVA; el importe de tu factura procede de Stripe.",
+      "per": {
+        "monthly": "mes",
+        "yearly": "año"
+      }
+    },
+    "sites": {
+      "title": "Eventos facturables por sitio",
+      "intro": "Filas del registro de este periodo por sitio. El consumo se mide por organización; el sitio activo aparece resaltado.",
+      "site": "Sitio",
+      "trackingId": "ID de tracking",
+      "events": "Eventos facturables",
+      "share": "Cuota",
+      "active": "Sitio activo",
+      "empty": "No hay filas del registro para este periodo."
+    },
+    "rules": {
+      "title": "Qué cuenta como evento facturable",
+      "intro": "Un evento se cuenta exactamente una vez cuando la ingesta lo acepta; reenviarlo a varios destinos nunca aumenta el consumo. Nunca se cuentan:"
+    },
+    "overview": {
+      "guard": {
+        "title": "Consumo y control de costes",
+        "text": "Previsión, consumo adicional, carga inusual y tu elección de lo que ocurre al llegar al límite.",
+        "open": "Abrir el control de costes",
+        "policy": "Política",
+        "forecast": "Previsión al final del periodo",
+        "forecastNoBasis": "aún no hay ritmo de 7 días",
+        "thresholds": "{reached} de {total} umbrales de aviso alcanzados",
+        "noLimit": "Este plan no tiene un tope fijo de eventos",
+        "paused": "Marcado como pausado"
+      },
+      "history": {
+        "caption": "Eventos facturables, aceptados, descartados y deduplicados por periodo"
+      },
+      "plans": "Planes",
+      "status": {
+        "none": "Sin suscripción",
+        "trialing": "Período de prueba",
+        "active": "Activa",
+        "past_due": "Pago vencido",
+        "canceled": "Cancelada",
+        "unpaid": "Sin pagar",
+        "incomplete": "Incompleta",
+        "incomplete_expired": "Incompleta (caducada)",
+        "paused": "En pausa"
+      }
+    }
+  }
+}

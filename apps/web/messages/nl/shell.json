@@ -1,0 +1,183 @@
+{
+  "shell": {
+    "skipToContent": "Naar de inhoud",
+    "brandHome": "Track – Command Center",
+    "nav": {
+      "label": "Dashboard",
+      "menuTitle": "Navigatie",
+      "commandCenter": "Command Center",
+      "aiSetup": "AI-setup",
+      "events": "Events",
+      "destinations": "Destinations",
+      "dataQuality": "Datakwaliteit",
+      "consent": "Toestemming & privacy",
+      "insights": "Insights",
+      "releases": "Releases",
+      "team": "Team & toegang",
+      "billing": "Facturering",
+      "settings": "Instellingen",
+      "sites": "Sites",
+      "openMenu": "Navigatie openen",
+      "closeMenu": "Navigatie sluiten"
+    },
+    "workspace": {
+      "label": "Workspace",
+      "organization": "Organisatie",
+      "site": "Site",
+      "noOrganization": "Nog geen organisatie",
+      "noSite": "Nog geen site",
+      "createSite": "Site aanmaken",
+      "manageSites": "Sites beheren",
+      "switchOrganization": "Van organisatie wisselen",
+      "switchSite": "Van site wisselen",
+      "current": "Huidig",
+      "trackingId": "Tracking-ID",
+      "trackingIdHelp": "Openbare identificatie van zes tekens van de site. Het is geen geheim en verandert nooit.",
+      "siteStatus": {
+        "active": "Actief",
+        "paused": "Gepauzeerd",
+        "deleted": "Verwijderd"
+      },
+      "switching": "Wisselen…",
+      "switchFailed": "De workspace kon niet worden gewisseld. Probeer het opnieuw.",
+      "contextSwitched": "Workspace gewisseld naar {site}."
+    },
+    "environment": {
+      "label": "Omgeving",
+      "kind": {
+        "production": "Productie",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "none": "Geen omgeving",
+      "testMode": "Testmodus",
+      "live": "Live",
+      "help": {
+        "production": "Productieomgeving: geaccepteerde events worden aan je destinations geleverd en tellen mee voor je abonnement.",
+        "staging": "Staging: events worden gemarkeerd als testevents, naar testeindpunten gestuurd waar het platform dat ondersteunt en nooit gefactureerd.",
+        "development": "Testomgeving voor lokale controles: events worden gemarkeerd als testevents en nooit gefactureerd."
+      },
+      "switch": "Van omgeving wisselen"
+    },
+    "palette": {
+      "trigger": "Zoeken of ga naar…",
+      "title": "Opdrachtenpalet",
+      "description": "Navigeer, wissel van site, open destinations of voer een actie uit.",
+      "placeholder": "Typ een opdracht of zoek…",
+      "empty": "Geen resultaten.",
+      "close": "Sluiten",
+      "groups": {
+        "navigation": "Navigatie",
+        "modules": "Modules",
+        "sites": "Sites",
+        "destinations": "Destinations",
+        "actions": "Acties"
+      },
+      "switchTo": "Wisselen naar {site}",
+      "actions": {
+        "createSite": "Een site aanmaken",
+        "manageSites": "Sites beheren",
+        "openAssistant": "Track AI openen",
+        "closeAssistant": "Track AI sluiten",
+        "logout": "Uitloggen"
+      },
+      "modules": {
+        "eventsMatrix": "Event Coverage Matrix",
+        "eventsExplorer": "Live Event Explorer",
+        "eventsTestLab": "Live Test Lab",
+        "revenueLeaks": "Signaalgaten & omzetlekken",
+        "consentSimulator": "Consent Impact Simulator",
+        "attribution": "Attributie & click-ID-gezondheid",
+        "audiences": "Doelgroepen",
+        "usage": "Usage & Cost Guard",
+        "audit": "Auditlog"
+      }
+    },
+    "assistant": {
+      "title": "Track AI",
+      "subtitle": "Setup en diagnose voor je site",
+      "region": "Track AI-paneel",
+      "launcher": "Track AI",
+      "open": "Track AI openen",
+      "close": "Track AI sluiten",
+      "minimise": "Track AI minimaliseren",
+      "resize": "Breedte van het Track AI-paneel aanpassen",
+      "width": "{px} pixels breed",
+      "context": "Site: {site}",
+      "environment": "Omgeving: {environment}",
+      "noSite": "Track AI heeft een site nodig om aan te werken.",
+      "noSiteAction": "Een site aanmaken",
+      "newMessages": "Nieuwe berichten tonen",
+      "showEarlier": "{n} eerdere berichten tonen",
+      "composerHint": "Enter verzendt, Shift+Enter voegt een regel toe.",
+      "loading": "Track AI wordt geladen…",
+      "contextSwitched": "Track AI werkt nu aan {site}.",
+      "expertMode": "Expertmodus",
+      "chatMode": "Chat",
+      "step": "Stap {step}",
+      "toolStatus": {
+        "running": "bezig",
+        "ok": "klaar",
+        "error": "mislukt"
+      }
+    },
+    "user": {
+      "menu": "Accountmenu",
+      "account": "Account",
+      "signedInAs": "Ingelogd als",
+      "role": "Rol",
+      "logout": "Uitloggen"
+    },
+    "roles": {
+      "OWNER": "Eigenaar",
+      "ADMIN": "Admin",
+      "DEVELOPER": "Ontwikkelaar",
+      "ANALYST": "Analist",
+      "BILLING": "Facturering",
+      "READ_ONLY": "Alleen lezen"
+    },
+    "notFound": {
+      "title": "Pagina niet gevonden",
+      "text": "Deze pagina bestaat niet in je workspace of is verplaatst.",
+      "back": "Terug naar het Command Center"
+    },
+    "error": {
+      "title": "Er is iets misgegaan",
+      "text": "De fout is vastgelegd. Probeer het opnieuw of ga terug naar het Command Center.",
+      "retry": "Opnieuw proberen",
+      "back": "Command Center"
+    },
+    "pages": {
+      "aiSetup": {
+        "title": "AI-setup",
+        "intro": "Begeleide setup van je site: platformherkenning, snippet-installatie, toestemming, destinations, eventplan, test en publicatie. Track AI chat met je in het zijpaneel; deze pagina is het stapsgewijze formulier met dezelfde controles en concepten.",
+        "siteContext": "Setup van {site}",
+        "noSite": "Nog geen site",
+        "noSiteText": "Maak je eerste site aan om een tracking-ID te krijgen en de begeleide setup te starten.",
+        "createSite": "Site aanmaken",
+        "openAssistant": "Track AI openen",
+        "step": "Huidige stap: {step}",
+        "progress": "{pct}% voltooid"
+      },
+      "insights": {
+        "title": "Insights",
+        "intro": "Attributie en click-ID-gezondheid: welke click-ID’s worden vastgelegd, hoe lang ze leven, waar ze vandaan komen en of ze je destinations bereiken – gescheiden in waargenomen feiten, gemodelleerde aanwijzingen en onbekenden.",
+        "status": "In voorbereiding",
+        "text": "Deze module wordt gebouwd. Hier wordt nog niets gemeten, dus er worden geen cijfers getoond. Tot die tijd toont de module Events de geaccepteerde en afgewezen events van je site.",
+        "next": "Events openen"
+      },
+      "releases": {
+        "title": "Releases",
+        "intro": "Change & Release Center: concepten, test, staging en productie, leesbare configuratie-diffs, goedkeuringen, geplande publicatie en rollback met één klik.",
+        "status": "In voorbereiding",
+        "text": "De release-workflow wordt gebouwd. Tot die tijd loopt publiceren via de controlestap van de AI-setup, en de sitepagina toont de versie die live is.",
+        "activeVersion": "Actieve configuratie van {site}: versie {version}",
+        "noVersion": "Voor {site} is nog niets gepubliceerd.",
+        "noSite": "Maak een site aan om een configuratie te publiceren.",
+        "next": "Site openen",
+        "nextSetup": "AI-setup openen",
+        "createSite": "Site aanmaken"
+      }
+    }
+  }
+}

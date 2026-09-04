@@ -1,0 +1,326 @@
+{
+  "dataQuality": {
+    "title": "Datakwaliteit",
+    "intro": "Gemeten trackingproblemen van je site, gerangschikt op impact: ontbrekende verplichte velden, schemafouten, ongeldige waarden, duplicaten, valuta- en waardeproblemen, eventdips, conversiepieken en omzetlekken — elk met bewijs en, waar de configuratie het kan verhelpen, met een controleerbaar concept.",
+    "siteContext": "Site: {site}",
+    "noSite": "Nog geen site",
+    "noSiteText": "Maak je eerste site aan om een tracking-ID te krijgen; de kwaliteitsscan start bij de eerste events.",
+    "createSite": "Site aanmaken",
+    "nav": {
+      "label": "Onderdelen van datakwaliteit",
+      "inbox": "Inbox",
+      "leaks": "Signaalgaten & omzetlekken"
+    },
+    "summary": {
+      "open": "Open problemen",
+      "critical": "Kritiek",
+      "acknowledged": "In behandeling",
+      "mutedCount": "{n} gedempt",
+      "lastScan": "Laatste scan",
+      "lastScanNever": "De kwaliteitsscan is voor deze site nog niet uitgevoerd — er is nog niets gemeten.",
+      "lastObserved": "Nieuwste waarneming {date}",
+      "staleScan": "De laatste kwaliteitsscan draaide op {date}, meer dan een dag geleden. De inbox kan achterlopen op de live data.",
+      "notMeasured": "Nog niet gemeten"
+    },
+    "filters": {
+      "statusLabel": "Filteren op status",
+      "categoryLabel": "Filteren op categorie",
+      "all": "Alle",
+      "status": {
+        "open": "Open",
+        "acknowledged": "In behandeling",
+        "resolved": "Opgelost",
+        "muted": "Gedempt"
+      },
+      "category": {
+        "required_fields": "Verplichte velden",
+        "schema": "Schema",
+        "values": "Waarden & valuta",
+        "duplicates": "Duplicaten",
+        "drops": "Eventdips",
+        "spikes": "Conversiepieken",
+        "revenue": "Signaalgaten & omzet",
+        "usage": "Planverbruik",
+        "delivery": "Levering",
+        "other": "Overig"
+      },
+      "categoryHelp": {
+        "required_fields": "Events die binnenkwamen zonder een veld dat het standaardevent vereist (order-ID, valuta, waarde).",
+        "schema": "Events buiten het gepubliceerde eventplan of met een onverwachte structuur.",
+        "values": "Waarden die nul of negatief zijn, of valuta's die afwijken van de sitevaluta.",
+        "duplicates": "Dezelfde order twee keer gemeld via hetzelfde pad; duplicaten worden verworpen en nooit gefactureerd.",
+        "drops": "Events die bij de ingest zijn geweigerd of een plotselinge daling van het volume van een kritiek event.",
+        "spikes": "Conversies ver boven het daggemiddelde — het controleren waard voordat advertentieplatformen erop optimaliseren.",
+        "revenue": "Geverifieerde orders of leads die een bestemming niet hebben bereikt of nooit in de browser zijn vastgelegd.",
+        "usage": "Waarschuwingen over de maandelijkse eventlimiet van je plan.",
+        "delivery": "Fouten bij het leveren van events aan bestemmingen.",
+        "other": "Problemen zonder specifieke categorie."
+      }
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Waarschuwing",
+      "critical": "Kritiek"
+    },
+    "status": {
+      "open": "Open",
+      "acknowledged": "In behandeling",
+      "resolved": "Opgelost",
+      "muted": "Gedempt"
+    },
+    "empty": {
+      "title": "Geen problemen in deze weergave",
+      "text": "Wijzig het status- of categoriefilter om andere problemen te zien.",
+      "noIssuesAtAll": "Geen problemen geregistreerd voor deze site",
+      "scanned": "De laatste scan op {date} vond niets te melden voor de afgelopen 24 uur. Dit is een meting, geen garantie: de scan controleert de standaardevents en bestemmingen die in de categorieën staan beschreven.",
+      "scanPending": "De kwaliteitsscan is voor deze site nog niet uitgevoerd, dus dit zegt niets over de toestand. Kom terug na de volgende run van de worker.",
+      "reset": "Open problemen tonen"
+    },
+    "issue": {
+      "impact": "Impact {score}",
+      "impactHelp": "0–100 op basis van ernst, aandeel getroffen events en bekende waarde.",
+      "environment": {
+        "production": "Productie",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "noEnvironment": "Geen omgeving geselecteerd",
+      "affected": "{affected} van {total} getroffen ({share})",
+      "affectedOnly": "{affected} getroffen",
+      "value": "Bekende waarde {value}",
+      "firstSeen": "eerst gezien op {date}",
+      "lastSeen": "laatst gezien op {date}",
+      "occurrences": "gezien in {n} scans",
+      "stale": "Verouderd",
+      "staleHelp": "Al meer dan {days} dagen niet waargenomen. Wordt niet automatisch opgelost — los het op zodra je het hebt gecontroleerd.",
+      "mutedUntil": "Gedempt tot {date}",
+      "mutedIndefinitely": "Gedempt tot heropening",
+      "mutedReason": "Reden: {reason}",
+      "note": "Notitie: {note}",
+      "fixDraft": "Fixconcept voorbereid op {date}",
+      "window": "Waarnemingsvenster {from} – {to}",
+      "evidence": "Bewijs",
+      "samples": "Geredigeerde voorbeeldevents",
+      "noSamples": "Voor dit probleem zijn geen voorbeeldevents opgeslagen; de aantallen komen uit aggregaten.",
+      "sample": {
+        "event": "Event",
+        "source": "Bron",
+        "time": "Tijd",
+        "detail": "Bevinding"
+      },
+      "fixTool": "Track AI-tool voor dit probleem: {tool}"
+    },
+    "kinds": {
+      "missing_required_field": "{event}: verplicht veld \"{field}\" ontbreekt",
+      "invalid_value": "{event}: ongeldige {field}",
+      "currency_mismatch": "{event}: valuta wijkt af van de sitevaluta",
+      "unplanned_event": "Ongepland event \"{event}\"",
+      "duplicate_conversion": "Dubbele {event}-conversies",
+      "ingest_drop": "Events verworpen bij ingest ({reason})",
+      "event_drop": "Volume van \"{event}\" gedaald",
+      "conversion_spike": "Piek in \"{event}\"",
+      "revenue_leak": "Omzetlek richting {destination}",
+      "signal_gap": "Geverifieerde orders zonder browserevent",
+      "usage_limit_70": "70 % van de maandelijkse eventlimiet gebruikt",
+      "usage_limit_90": "90 % van de maandelijkse eventlimiet gebruikt",
+      "usage_limit_reached": "Maandelijkse eventlimiet bereikt"
+    },
+    "actions": {
+      "acknowledge": "Oppakken",
+      "resolve": "Markeren als opgelost",
+      "reopen": "Heropenen",
+      "mute": "Dempen…",
+      "prepareFix": "Fixconcept voorbereiden…",
+      "askAi": "Vraag Track AI",
+      "openExplorer": "Openen in de event explorer",
+      "viewDraft": "Concept openen in Releases",
+      "cancel": "Annuleren",
+      "working": "Bezig…",
+      "readOnly": "De status wijzigen of concepten voorbereiden vereist de rol developer, admin of owner."
+    },
+    "mute": {
+      "title": "Dit probleem dempen",
+      "description": "Een gedempt probleem wordt nog steeds gemeten, maar verdwijnt uit de open lijst. Geef een reden die je team later begrijpt.",
+      "reason": "Reden",
+      "reasonHint": "Bijvoorbeeld: bekend testverkeer, fix gepland voor de volgende release.",
+      "until": "Dempen voor",
+      "durations": {
+        "7": "7 dagen",
+        "30": "30 dagen",
+        "90": "90 dagen",
+        "never": "Tot heropening"
+      },
+      "confirm": "Probleem dempen"
+    },
+    "fix": {
+      "title": "Fixconcept voorbereiden",
+      "description": "Track maakt of werkt het open configuratieconcept voor {environment} bij. Er wordt niets gepubliceerd: het concept doorloopt lint, review en release zoals elke andere wijziging.",
+      "neverPublishes": "Een concept verandert nooit de live tracking. Publiceren blijft een aparte, bevestigde stap in Releases.",
+      "codes": {
+        "authoritative_shop": "Maak de gekoppelde {platform}-shop de gezaghebbende bron van purchase-events: geverifieerde orders bevatten order-ID, waarde en valuta en vervangen browseraankopen met dezelfde order-ID.",
+        "add_event": "Voeg het aangepaste event \"{event}\" toe aan het eventplan (ingeschakeld, niet kritiek, API-trigger), zodat het gepland, gemapt en bewaakt wordt.",
+        "destination_hybrid": "Zet {destination} van alleen-browser naar hybride levering, zodat geverifieerde {event}-events ook server-side worden verzonden.",
+        "enable_event": "Schakel het event \"{event}\" opnieuw in de configuratie in; het is momenteel uitgeschakeld."
+      },
+      "unavailable": {
+        "no_bundle": "Voor deze omgeving is nog geen configuratie gepubliceerd, dus er is niets om een concept op te baseren.",
+        "connect_shop": "De configuratie kan ontbrekende ordergegevens niet aanvullen. Koppel je shop zodat geverifieerde orders de gezaghebbende bron worden.",
+        "site_change": "Dit moet worden opgelost waar het event wordt verzonden: de site of shop moet {field} voor {event} leveren. Track vult ontbrekende waarden nooit aan.",
+        "needs_mapping": "{destination} heeft geen mapping voor {event}. Voeg de mapping eerst toe onder Bestemmingen.",
+        "destination_health": "De oorzaak ligt in de levering aan de bestemming. Controleer credentials, rate limits en fouten onder Bestemmingen.",
+        "consent": "Hier beslist de toestemming. Controleer het toestemmingsbeleid en de CMP-instellingen; Track versoepelt toestemming niet uit zichzelf.",
+        "billing": "Dit is een planlimiet. Kies overschrijding of een planwijziging onder Facturering.",
+        "not_applicable": "Geen configuratiewijziging kan dit oplossen; het vraagt een menselijke controle.",
+        "already_drafted": "Voor dit probleem bestaat al een fixconcept."
+      },
+      "links": {
+        "shop": "Shopkoppelingen openen",
+        "destinations": "Bestemmingen openen",
+        "consent": "Toestemming & privacy openen",
+        "billing": "Facturering openen",
+        "setup": "AI Setup openen",
+        "releases": "Releases openen"
+      },
+      "confirm": "Concept aanmaken",
+      "created": "Concept voorbereid.",
+      "lint": "Lint: {errors} fouten, {warnings} waarschuwingen.",
+      "noEnvironment": "Selecteer eerst een omgeving in de koptekst; het concept hoort bij één omgeving."
+    },
+    "errors": {
+      "invalid": "De invoer is ongeldig.",
+      "not_found": "Dit probleem bestaat niet meer.",
+      "forbidden": "Je hebt geen toestemming voor deze actie.",
+      "no_environment": "De geselecteerde omgeving hoort niet bij deze site.",
+      "no_fix": "Voor dit probleem is geen configuratieconcept beschikbaar.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    },
+    "ai": {
+      "prompt": "Leg het datakwaliteitsprobleem \"{title}\" op {site} uit en stel een fix voor als concept. Bewijs: {summary}"
+    },
+    "leaks": {
+      "title": "Signaalgaten & omzetlekken",
+      "intro": "Geverifieerde orders of leads uit je shopwebhooks en serverbronnen vergeleken met wat Track per bestemming heeft waargenomen, ontdubbeld en geleverd. Gaten komen met hun reden en hun onzekerheid; ontbrekende omzet, orders of identiteiten worden nooit aangevuld.",
+      "range": {
+        "label": "Periode",
+        "7": "Laatste 7 dagen",
+        "30": "Laatste 30 dagen"
+      },
+      "kind": {
+        "label": "Conversietype",
+        "purchase": "Orders",
+        "lead": "Leads"
+      },
+      "sources": {
+        "title": "Gezaghebbende bronnen",
+        "shop": "{platform}: {status}",
+        "platform": {
+          "shopify": "Shopify",
+          "woocommerce": "WooCommerce",
+          "shopware": "Shopware"
+        },
+        "shopStatus": {
+          "pending": "in afwachting",
+          "connected": "gekoppeld",
+          "paused": "gepauzeerd"
+        },
+        "lastEvent": "laatste webhook op {date}",
+        "never": "nog geen webhook ontvangen",
+        "serverKeys": "{n} actieve serversleutels",
+        "none": "Er is geen geverifieerde bron gekoppeld. Zonder shopwebhooks of een geverifieerde serverbron zijn er geen gezaghebbende orders om mee te vergelijken — het rapport blijft leeg in plaats van te schatten.",
+        "hint": "Koppel Shopify, WooCommerce of Shopware, of maak een serverbronsleutel aan, om gezaghebbende orders te krijgen.",
+        "connect": "Shop koppelen"
+      },
+      "empty": {
+        "title": "Nog geen afstemming",
+        "text": "De worker heeft nog geen snapshots berekend voor deze site, periode en dit conversietype. Intussen wordt niets geschat."
+      },
+      "stale": "De nieuwste snapshot is van {date}; het rapport kan achterlopen op de live data.",
+      "computedAt": "Berekend op {date}",
+      "honesty": "Aantallen zijn geverifieerde records. Waarden worden alleen opgeteld als elk gewaardeerd record dezelfde valuta heeft; orders zonder waarde worden geteld maar nooit gewaardeerd. Een pixellevering in de browser is niet waarneembaar en blijft onbekend.",
+      "summary": {
+        "title": "{kind} in de periode",
+        "authoritative": "Geverifieerde {kind}",
+        "valued": "{valued} van {count} hebben een waarde",
+        "value": "Bekende waarde {value}",
+        "mixed": "Gemengde valuta's — waarden worden niet opgeteld",
+        "mixedShort": "Gemengde valuta's",
+        "gaps": "Bevestigde gaten",
+        "gapsShare": "{share} van de geverifieerde {kind} is niet aangekomen",
+        "noBase": "Geen geverifieerde records in de periode",
+        "leak": "Waarde van de gaten",
+        "leakRange": "{min} – {max}",
+        "noValue": "Geen waarden bekend",
+        "leakUnvalued": "plus {n} zonder waarde (niet te kwantificeren)",
+        "leakHelp": "Ondergrens: bevestigde gaten; bovengrens: plus de gaten met onbekende uitkomst.",
+        "unknown": "Onbekende uitkomst",
+        "unknownShare": "{share} van de geverifieerde records",
+        "unknownHelp": "Leveringen die Track niet kan waarnemen (browserpixels, lopende nieuwe pogingen).",
+        "delivered": "Geleverd",
+        "deliveredHelp": "Geverifieerde records met minstens één geslaagde server-side levering.",
+        "browserCapture": "Vastgelegd in de browser",
+        "browserHelp": "{n} geverifieerde records hebben een bijpassend browserevent met dezelfde order-ID.",
+        "duplicates": "Verworpen duplicaten",
+        "duplicatesHelp": "Dezelfde order twee keer gemeld via hetzelfde pad; nooit gefactureerd, nooit twee keer geleverd.",
+        "days": "Dagen met snapshots"
+      },
+      "reasons": {
+        "title": "Waarom conversies niet zijn aangekomen",
+        "reason": "Reden",
+        "count": "Records",
+        "share": "Aandeel",
+        "meaning": "Wat het betekent",
+        "dominant": "meest voorkomend",
+        "no_consent": "Geen toestemming",
+        "blocked": "Geblokkeerd door beleid of configuratie",
+        "not_captured": "Niet vastgelegd in de browser",
+        "delivery_failed": "Levering mislukt",
+        "unknown": "Onbekend",
+        "help": {
+          "no_consent": "De bezoeker heeft het doel dat de bestemming vereist niet toegestaan. Track verzendt niet — en versoepelt de toestemming niet.",
+          "blocked": "De bestemming was gepauzeerd, niet gemapt voor dit event, alleen-browser, of het beleid blokkeerde afgeleide data.",
+          "not_captured": "De shop heeft de order gemeld, maar geen browserevent met die order-ID heeft Track bereikt (snippet ontbreekt, geblokkeerd of checkout buiten de site).",
+          "delivery_failed": "De levering is geprobeerd en mislukt of in de dead-letter-queue beland. Controleer de status en fouten van de bestemming.",
+          "unknown": "Track kan de uitkomst niet waarnemen: pixelleveringen in de browser, nog lopende nieuwe pogingen of events buiten het bewaarvenster."
+        }
+      },
+      "destinations": {
+        "title": "Per bestemming",
+        "name": "Bestemming",
+        "mode": "Leveringsmodus",
+        "authoritative": "Geverifieerd",
+        "delivered": "Geleverd",
+        "gaps": "Gaten",
+        "unknown": "Onbekend",
+        "leak": "Waarde van de gaten",
+        "dominant": "Hoofdreden",
+        "status": {
+          "draft": "concept",
+          "not_connected": "niet gekoppeld",
+          "connected": "gekoppeld",
+          "paused": "gepauzeerd",
+          "error": "fout"
+        },
+        "modes": {
+          "browser": "Alleen browser",
+          "server": "Server",
+          "hybrid": "Hybride",
+          "none": "Niet in de gepubliceerde configuratie"
+        },
+        "notMapped": "niet gemapt voor {kind}",
+        "noData": "Geen snapshot voor deze bestemming in de periode.",
+        "empty": "Er zijn geen bestemmingen geconfigureerd voor deze site.",
+        "open": "Bestemmingen openen"
+      },
+      "daily": {
+        "title": "Per dag",
+        "day": "Dag",
+        "authoritative": "Geverifieerd",
+        "delivered": "Geleverd",
+        "gaps": "Gaten",
+        "unknown": "Onbekend",
+        "bar": "Geleverd vs. gaten",
+        "barLabel": "{delivered} geleverd, {gaps} gaten"
+      }
+    }
+  }
+}

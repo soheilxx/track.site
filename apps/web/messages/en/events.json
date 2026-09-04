@@ -1,0 +1,556 @@
+{
+  "events": {
+    "nav": {
+      "label": "Events module",
+      "overview": "Overview",
+      "coverage": "Coverage matrix",
+      "explorer": "Live explorer",
+      "testLab": "Test lab"
+    },
+    "module": {
+      "title": "Events",
+      "noSite": "No site yet",
+      "noSiteText": "Create your first site to receive events, check their coverage and inspect their lineage.",
+      "createSite": "Create site",
+      "noEnvironment": "This site has no environment yet.",
+      "environment": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      }
+    },
+    "common": {
+      "yes": "yes",
+      "no": "no",
+      "never": "never",
+      "unknown": "unknown",
+      "lastUpdated": "Last updated {time}",
+      "refresh": "Refresh",
+      "error": "The data could not be loaded. Try again.",
+      "testEvent": "test",
+      "verified": "verified",
+      "open": "Open",
+      "actions": "Actions",
+      "close": "Close"
+    },
+    "windows": {
+      "1h": "Last hour",
+      "24h": "Last 24 hours",
+      "7d": "Last 7 days",
+      "30d": "Last 30 days"
+    },
+    "sources": {
+      "all": "All sources",
+      "browser": "Browser",
+      "server": "Server",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware",
+      "webhook": "Webhook",
+      "legacy-import": "Import"
+    },
+    "states": {
+      "captured": "Captured",
+      "accepted": "Accepted",
+      "normalized": "Normalized",
+      "policy_passed": "Stored",
+      "policy_blocked": "Blocked by policy",
+      "deduplicated": "Deduplicated",
+      "routed": "Routed",
+      "delivered": "Delivered",
+      "rejected": "Rejected",
+      "imported": "Imported"
+    },
+    "stages": {
+      "captured": "Captured",
+      "accepted": "Accepted",
+      "normalized": "Normalized",
+      "policy": "Policy",
+      "deduplicated": "Deduplicated",
+      "routed": "Routed",
+      "delivered": "Delivered",
+      "rejected": "Ended"
+    },
+    "outcomes": {
+      "ok": "OK",
+      "rejected": "rejected",
+      "blocked": "blocked",
+      "unique": "unique",
+      "duplicate": "duplicate",
+      "none": "not routed",
+      "skipped": "skipped",
+      "delivered": "delivered",
+      "retry": "retrying",
+      "failed": "failed",
+      "dead": "given up",
+      "pending": "pending",
+      "unknown": "unknown"
+    },
+    "reasons": {
+      "consent_missing": "No consent signal was recorded, so the event was not stored.",
+      "consent_denied": "The visitor did not grant the purpose this event needs.",
+      "gpc_opt_out": "Global Privacy Control is on: no marketing or personalization.",
+      "purpose_not_granted": "The purpose this destination requires was not granted.",
+      "inferred_data_not_exportable": "Inferred values must never reach an advertising platform.",
+      "destination_paused": "The destination is paused or not connected.",
+      "pii_blocked": "The event contained a secret, card or IBAN and was rejected.",
+      "bot": "The request looked like a bot.",
+      "duplicate_event": "The same event id was already received.",
+      "duplicate_conversion": "This order was already reported on the same path.",
+      "verified_supersedes_browser": "A verified server record replaced the browser observation of this order.",
+      "cross_path_pair": "The order was also seen on the other path; both are kept and deduplicated by the vendor.",
+      "invalid_event_name": "The event name is not valid.",
+      "timestamp_out_of_window": "The client timestamp is too far from the server time.",
+      "invalid_url": "The page URL is not valid.",
+      "no_config": "No configuration is published for this environment, so nothing is routed.",
+      "no_destinations": "The published configuration has no destinations.",
+      "no_mapping": "No destination maps this event.",
+      "policy_blocked": "Every mapped destination was blocked by the consent policy.",
+      "destination_disabled": "The destination is disabled in the configuration.",
+      "browser_only": "The destination runs in the browser only.",
+      "integration_missing": "The destination no longer exists.",
+      "validation": "The vendor payload failed validation.",
+      "not_mappable": "The connector produced no payload for this event.",
+      "destination_missing": "The integration or its configuration no longer exists.",
+      "circuit_open": "The destination is temporarily paused after repeated failures.",
+      "temporary": "Temporary vendor error",
+      "permanent": "Permanent vendor error",
+      "rate_limited": "The vendor rate-limited the request.",
+      "auth": "The vendor rejected the credentials.",
+      "credential_expired": "The credential is missing or expired.",
+      "invalid_payload": "The vendor rejected the payload.",
+      "timeout": "The vendor did not answer in time.",
+      "unreachable": "The collector could not be reached.",
+      "ingest_host_not_configured": "No collector host is configured."
+    },
+    "detailKeys": {
+      "purposes_granted": "purposes granted",
+      "purpose_required": "purpose required",
+      "stripped_fields": "fields removed",
+      "pii_redacted": "redacted",
+      "consent_source": "consent source",
+      "region": "region",
+      "gpc": "GPC",
+      "policy_version": "policy",
+      "config_version": "config version",
+      "test_mode": "test mode",
+      "billable": "billable",
+      "planned": "in event plan",
+      "adopted_browser_context": "browser context adopted",
+      "connector_type": "connector",
+      "vendor_event": "vendor event",
+      "mode": "mode",
+      "http_status": "HTTP",
+      "duration_ms": "duration (ms)",
+      "error_class": "error class",
+      "attempt": "attempt",
+      "next_retry_at": "next retry",
+      "key": "dedup key",
+      "prior_source": "earlier source",
+      "findings": "findings",
+      "warnings": "warnings",
+      "destination_status": "destination status",
+      "not_routed": "destinations not routed"
+    },
+    "overview": {
+      "title": "Events",
+      "intro": "What the active environment received, stored, deduplicated and delivered, where the pipeline is stuck, and the three tools to check coverage, inspect lineage and run controlled tests.",
+      "day": {
+        "title": "Pipeline",
+        "window": "last 24 hours · hourly aggregates",
+        "received": "Received",
+        "accepted": "Stored",
+        "dropped": "Dropped",
+        "deduplicated": "Deduplicated",
+        "delivered": "Delivered",
+        "failed": "Delivery failed"
+      },
+      "noDay": "No events were processed in the last 24 hours, so there are no numbers to show.",
+      "droppedReasons": "Drop reasons",
+      "sources": {
+        "title": "Sources"
+      },
+      "lastBrowser": "Last browser event",
+      "lastServer": "Last server event",
+      "noEventsYet": "No event has reached this environment yet.",
+      "install": "Install the snippet",
+      "pipeline": {
+        "title": "Pipeline health"
+      },
+      "deadLetters": "Dead-lettered deliveries",
+      "deadLettersHint": "Deliveries the worker gave up on after repeated vendor errors. They stay until they are replayed from the Destination Health Center.",
+      "lineage": "Lineage recording",
+      "lineageOn": "active",
+      "lineageOff": "not available",
+      "lineageOffText": "The lineage table (migration 0007) is not applied yet. The explorer derives the stages from the stored state without stage timestamps until it is.",
+      "modules": {
+        "title": "Tools",
+        "coverage": {
+          "title": "Event Coverage Matrix",
+          "text": "Every relevant event against browser source, server source, consent, required parameters, data quality and destinations — with the repair action per cell."
+        },
+        "explorer": {
+          "title": "Live Event Explorer",
+          "text": "Browser and server events with their full lineage: captured, accepted, normalized, policy, deduplicated, routed, delivered or rejected. Redacted payloads, vendor responses and drop reasons in plain language."
+        },
+        "testLab": {
+          "title": "Live Test Lab",
+          "text": "Guided PageView, Lead, AddToCart, Checkout and Purchase journeys through the real collector in the test environment — consent decision, deduplication, routing and the real test response of each destination."
+        }
+      },
+      "byEvent": "By event",
+      "byEventWindow": "last 7 days",
+      "empty": "No events in the last 7 days.",
+      "emptyText": "Install the snippet or send a test journey; accepted and dropped counts per event appear here.",
+      "columns": {
+        "event": "Event",
+        "sources": "Sources",
+        "received": "Received",
+        "accepted": "Stored",
+        "dropped": "Dropped",
+        "delivered": "Delivered",
+        "failed": "Failed",
+        "lastSeen": "Last seen"
+      }
+    },
+    "coverage": {
+      "title": "Event Coverage Matrix",
+      "intro": "Relevant events as rows — from the event plan, the event definitions and what was observed — against the sources, consent, required parameters, data quality and destinations of the active environment. Every cell shows its status, the last time and the next repair step.",
+      "configVersion": "Configuration v{version}",
+      "noConfig": "No configuration published",
+      "generatedAt": "computed {time}",
+      "noPlanTitle": "No event plan yet",
+      "noPlanText": "This environment has no published configuration and no event definitions. The rows below come from observed events only; run the AI setup to define which events matter.",
+      "empty": "Nothing to cover yet",
+      "emptyText": "No event plan, no event definitions and no observed events in the last 7 days.",
+      "emptyAction": "Open AI Setup",
+      "caption": "Coverage of the last {days} days per event",
+      "columns": {
+        "event": "Event",
+        "browser": "Browser source",
+        "server": "Server source",
+        "consent": "Consent",
+        "params": "Required parameters",
+        "quality": "Data quality",
+        "destinations": "Destinations"
+      },
+      "statuses": {
+        "ok": "OK",
+        "warn": "Attention",
+        "bad": "Missing",
+        "info": "Note",
+        "none": "Not expected",
+        "unknown": "Not measured"
+      },
+      "legend": "Legend",
+      "legendText": {
+        "ok": "measured and healthy",
+        "warn": "stale, partial or with failures",
+        "bad": "expected but missing or failing",
+        "info": "working as configured, worth a look",
+        "none": "not applicable for this event",
+        "unknown": "no measurement yet"
+      },
+      "messages": {
+        "fresh": "Seen within the last 24 hours.",
+        "stale": "Seen in the window, but not in the last 24 hours.",
+        "missing": "Expected for this event, nothing received in the window.",
+        "notExpected": "This source is not configured for the event.",
+        "noData": "No events in the window.",
+        "consentClean": "No event was blocked by consent; no delivery was skipped.",
+        "consentBlocked": "{blocked} of {received} received events blocked by consent; {skipped} deliveries skipped.",
+        "consentSkipped": "{skipped} deliveries skipped because a purpose was not granted.",
+        "noRequired": "No required parameters for this event.",
+        "noSamples": "No stored events to check.",
+        "paramsComplete": "All required parameters present in the last {sampled} events.",
+        "paramsMissing": "Missing in some of the last {sampled} events: {missing}.",
+        "noIssues": "No open data-quality issues.",
+        "openIssues": "{open} open issues, {critical} critical.",
+        "noDestinations": "No destination configured for this site.",
+        "notMapped": "No destination maps this event.",
+        "mapped": "{n} destinations"
+      },
+      "lastAt": "Last: {time}",
+      "actions": {
+        "installSnippet": "Check the snippet",
+        "openSetup": "Fix in AI Setup",
+        "createSourceKey": "Create a source key",
+        "openShop": "Connect the shop",
+        "openConsent": "Open Consent & Privacy",
+        "openDataQuality": "Open the Data Quality inbox",
+        "openDestination": "Open destination",
+        "addDestination": "Add a destination",
+        "mapEvent": "Map the event",
+        "openExplorer": "Inspect in the explorer"
+      },
+      "critical": "critical",
+      "custom": "custom",
+      "origin": {
+        "definition": "event definition",
+        "plan": "published plan",
+        "observed": "observed"
+      },
+      "required": "Required: {params}",
+      "destination": {
+        "counts": "{delivered} delivered · {failed} failed · {skipped} skipped",
+        "lastDelivered": "last delivered {time}",
+        "lastFailed": "last failed {time}"
+      }
+    },
+    "explorer": {
+      "title": "Live Event Explorer",
+      "intro": "Every browser and server event of the active environment with its full lineage. Payloads are redacted, identifiers masked; vendor responses and drop reasons are shown in plain language. The list refreshes itself while the page is open.",
+      "filters": {
+        "label": "Filters",
+        "event": "Event name",
+        "source": "Source",
+        "status": "Status",
+        "window": "Time window",
+        "apply": "Apply",
+        "reset": "Reset"
+      },
+      "statuses": {
+        "all": "All",
+        "stored": "Stored",
+        "routed": "Routed",
+        "delivered": "Delivered",
+        "failed": "Delivery failed",
+        "deduplicated": "Deduplicated",
+        "rejected": "Rejected"
+      },
+      "polling": {
+        "auto": "Auto-refresh every {seconds} s"
+      },
+      "stale": "The workspace changed in another tab. Reload the page to see the active site.",
+      "lineageOff": "Lineage recording not available",
+      "lineageOffText": "Migration 0007 is not applied, so stages are derived from the stored state and rejected events before storage are not listed.",
+      "list": {
+        "title": "Events",
+        "count": "{n} events",
+        "empty": "No events match.",
+        "emptyText": "Widen the time window, clear the filters, or send a test journey from the test lab.",
+        "loadMore": "Load older events",
+        "columns": {
+          "time": "Time",
+          "event": "Event",
+          "source": "Source",
+          "status": "Status",
+          "deliveries": "Deliveries"
+        },
+        "deliveries": "{delivered} delivered · {failed} failed · {skipped} skipped · {pending} pending"
+      },
+      "rejected": {
+        "title": "Rejected before storage",
+        "text": "Events the pipeline dropped without storing them: invalid, bot, no consent or PII. Only name, source, stage and reason are recorded.",
+        "empty": "Nothing was rejected in the window.",
+        "columns": {
+          "stage": "Stage",
+          "reason": "Reason"
+        }
+      },
+      "workspaceBanner": {
+        "text": "This link belongs to another site ({site}).",
+        "switch": "Switch to {site}"
+      },
+      "detail": {
+        "title": "Event detail",
+        "select": "Select an event to see its lineage, consent decision, routing and vendor responses.",
+        "notFound": "This event is not in the active site or was deleted by retention.",
+        "timeline": "Lineage",
+        "derivedOnly": "No lineage rows were recorded for this event; the stages are derived from the stored state.",
+        "summary": "Event",
+        "attempts": "Delivery attempts",
+        "noAttempts": "No delivery attempts for this event.",
+        "related": "Correlated events",
+        "noRelated": "No other event shares this order id or session.",
+        "relatedVia": {
+          "order_id": "same order",
+          "session": "same session"
+        },
+        "noTimeline": "No stages recorded yet.",
+        "noTime": "no timestamp",
+        "derivedHint": "derived from the stored state",
+        "redactionNote": "Free text is redacted, identifiers are masked, hashed user data is listed by field only.",
+        "hashed": "{n} hashed fields: {fields}",
+        "noUserData": "none",
+        "strippedIdentity": "no identifiers (removed by the consent policy)",
+        "identityKind": {
+          "anonymous": "anonymous",
+          "session": "session",
+          "user": "user"
+        },
+        "attempt": "Attempt {n}",
+        "http": "HTTP {status}",
+        "duration": "{ms} ms",
+        "nextRetry": "Next retry {time}",
+        "vendorEventId": "Vendor event id",
+        "payload": "Redacted vendor payload",
+        "response": "Vendor response",
+        "attemptStatus": {
+          "pending": "pending",
+          "success": "delivered",
+          "retry": "retrying",
+          "failed": "failed",
+          "dead": "given up",
+          "skipped": "skipped"
+        },
+        "fields": {
+          "eventId": "Event id",
+          "sourceEventId": "Source event id",
+          "captured": "Captured",
+          "clientTime": "Client time",
+          "source": "Source",
+          "configVersion": "config v{version}",
+          "noConfig": "no config",
+          "state": "State",
+          "consent": "Consent",
+          "noPurposes": "no purposes",
+          "consentSource": "source",
+          "region": "region",
+          "policyVersion": "policy",
+          "clickIds": "Click ids",
+          "vendorIds": "Vendor ids",
+          "page": "Page",
+          "title": "Title",
+          "referrer": "Referrer",
+          "utm": "UTM",
+          "commerce": "Commerce",
+          "commerceValue": "order {orderId} · {value} {currency} · {items} items",
+          "userData": "User data",
+          "identity": "Identity",
+          "device": "Device",
+          "billable": "Billable",
+          "bot": "bot",
+          "provenance": "Provenance",
+          "props": "Properties (redacted)"
+        }
+      }
+    },
+    "testLab": {
+      "title": "Live Test Lab",
+      "intro": "Guided test journeys through the real collector in the test-mode environment of this site. Each run sends controlled test events with an ephemeral key, is audited, and shows the consent decision, deduplication, redacted payload, routing and the real test response of every destination.",
+      "unavailable": "Test lab not available",
+      "unavailableText": "Migration 0007 is not applied, so runs cannot be recorded.",
+      "environment": {
+        "none": "No test environment",
+        "noneText": "This site has no environment in test mode. Runs need a staging or test environment so nothing reaches production destinations.",
+        "sending": "Test events go to {environment} ({kind}, test mode) through {host}."
+      },
+      "permission": "Running a journey requires the Developer role or higher. You can inspect past runs.",
+      "journeys": {
+        "label": "Journey",
+        "page_view": {
+          "title": "PageView",
+          "text": "One page view. Checks capture, consent and routing of the basic event."
+        },
+        "lead": {
+          "title": "Lead",
+          "text": "Page view and a lead form submission."
+        },
+        "add_to_cart": {
+          "title": "AddToCart",
+          "text": "Page view, product view and add to cart with one test item."
+        },
+        "checkout": {
+          "title": "Checkout",
+          "text": "Page view, product view, add to cart and checkout start."
+        },
+        "purchase": {
+          "title": "Purchase",
+          "text": "Page view, checkout and a purchase with a test order id — sent twice to show the order deduplication."
+        }
+      },
+      "steps": {
+        "page_view": "Page view",
+        "view_item": "Product view",
+        "add_to_cart": "Add to cart",
+        "begin_checkout": "Checkout start",
+        "generate_lead": "Lead",
+        "purchase": "Purchase",
+        "duplicate_purchase": "Same order again"
+      },
+      "consent": {
+        "label": "Consent state of the test visitor",
+        "all": {
+          "title": "Analytics and marketing granted",
+          "text": "Events are stored with identifiers and may reach every mapped destination."
+        },
+        "analytics": {
+          "title": "Analytics only",
+          "text": "Events are stored; advertising destinations are skipped by the policy."
+        },
+        "none": {
+          "title": "No consent signal",
+          "text": "Non-operational events are rejected before storage; a purchase is stored without identifiers."
+        }
+      },
+      "run": "Run journey",
+      "confirm": {
+        "title": "Send test events?",
+        "text": "The events go through the real collector and the real pipeline of the test environment.",
+        "events": "{n} events",
+        "journey": "Journey",
+        "environment": "Environment",
+        "consent": "Consent",
+        "collector": "Collector",
+        "nothingProduction": "Nothing reaches a production destination: the events are flagged as test events, are never billed, and destinations receive them in their test mode only. The run and the ephemeral key are audited.",
+        "cancel": "Cancel",
+        "confirm": "Send test events"
+      },
+      "notes": {
+        "audited": "Every run creates an ephemeral source key for the test environment (valid for two minutes, revoked right after the request) and an audit entry."
+      },
+      "errors": {
+        "invalid": "The request was not valid.",
+        "forbidden": "You do not have permission to run test journeys.",
+        "not_found": "The site was not found in this organization.",
+        "no_test_environment": "This site has no environment in test mode.",
+        "unavailable": "The test lab is not available (migration missing or collector host not configured).",
+        "collector": "The collector rejected the batch.",
+        "unreachable": "The collector could not be reached. Is the collector running?",
+        "generic": "The run could not be started."
+      },
+      "collector": {
+        "status": "Collector answered HTTP {status}",
+        "reason": "Reason: {reason}",
+        "accepted": "The collector accepted the batch (HTTP {status}). The timeline below fills as the worker processes it."
+      },
+      "timeline": {
+        "title": "Timeline",
+        "none": "Run a journey to see its timeline here.",
+        "complete": "complete",
+        "incomplete": "in progress",
+        "waiting": "Waiting for the worker",
+        "waitingText": "The collector accepted the batch; the stages appear as soon as the worker processes it.",
+        "workerHint": "No processing recorded yet",
+        "workerHintText": "The batch was accepted more than 90 seconds ago but no stage was recorded. Check that the worker is running and that migration 0007 is applied, then refresh.",
+        "step": "Step {n}",
+        "pending": "pending",
+        "pendingText": "Not processed yet.",
+        "billable": "not billed (test mode)",
+        "notBillable": "not billed (test mode)",
+        "consentDecision": "Consent recorded",
+        "identity": "Identifiers",
+        "autoRefresh": "refreshing every 2 s"
+      },
+      "runs": {
+        "title": "Past runs",
+        "empty": "No runs yet.",
+        "columns": {
+          "time": "Time",
+          "journey": "Journey",
+          "consent": "Consent",
+          "status": "Status",
+          "collector": "Collector"
+        },
+        "status": {
+          "pending": "pending",
+          "sent": "sent",
+          "rejected": "rejected by collector",
+          "failed": "failed"
+        },
+        "open": "Open"
+      }
+    }
+  }
+}

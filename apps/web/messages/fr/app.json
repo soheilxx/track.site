@@ -1,25 +1,5 @@
 {
   "app": {
-    "nav": {
-      "overview": "Vue d’ensemble",
-      "aiSetup": "Configuration IA",
-      "sites": "Sites",
-      "events": "Événements",
-      "debugger": "Event Debugger",
-      "destinations": "Destinations",
-      "dataQuality": "Qualité des données",
-      "consent": "Consentement et confidentialité",
-      "audiences": "Audiences",
-      "team": "Équipe",
-      "billing": "Facturation",
-      "settings": "Paramètres",
-      "openMenu": "Ouvrir la navigation",
-      "closeMenu": "Fermer la navigation",
-      "account": "Compte",
-      "logout": "Se déconnecter",
-      "switchOrg": "Changer d’organisation",
-      "expertMode": "Mode expert"
-    },
     "overview": {
       "title": "Vue d’ensemble",
       "welcome": "Bon retour, {name}",
@@ -79,7 +59,7 @@
       "lastServerEvent": "Dernier événement serveur",
       "never": "jamais",
       "openSetup": "Ouvrir la configuration IA",
-      "openDebugger": "Ouvrir l’Event Debugger",
+      "openDebugger": "Ouvrir le Live Event Explorer",
       "openShop": "Connexion boutique"
     },
     "common": {

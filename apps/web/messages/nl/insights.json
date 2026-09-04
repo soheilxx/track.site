@@ -1,0 +1,334 @@
+{
+  "insights": {
+    "eyebrow": "Insights",
+    "subnav": {
+      "label": "Insights-onderdelen",
+      "overview": "Overzicht",
+      "attribution": "Attributie & click-ID’s",
+      "audiences": "Doelgroepen"
+    },
+    "toolbar": {
+      "site": "Site",
+      "environment": "Omgeving",
+      "environmentKind": {
+        "production": "Productie",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "allEnvironments": "Alle omgevingen",
+      "window": "Periode",
+      "windowRange": "{from} – {to}",
+      "range": "Periode kiezen",
+      "days": "{days} dagen"
+    },
+    "evidence": {
+      "observed": "Waargenomen",
+      "modelled": "Gemodelleerd",
+      "unknown": "Onbekend",
+      "observedHelp": "Geteld uit opgeslagen events, leveringen en touchpoints, precies zoals de pipeline ze heeft vastgelegd.",
+      "modelledHelp": "Een aanwijzing afgeleid met een benoemde aanname. Het is geen meting en wordt nooit als zodanig gebruikt.",
+      "unknownHelp": "Iets wat Track niet uit de eigen gegevens kan weten. Het wordt benoemd, niet ingevuld."
+    },
+    "noSite": {
+      "title": "Nog geen site",
+      "text": "Maak je eerste site aan om events vast te leggen; attributie en doelgroepen worden daaruit berekend.",
+      "action": "Site aanmaken"
+    },
+    "loading": {
+      "label": "Insights worden geladen"
+    },
+    "overview": {
+      "title": "Insights",
+      "intro": "Attributie en click-ID-gezondheid van de actieve site, plus toestemmingsbewuste doelgroepen. Elk cijfer wordt op verzoek berekend uit opgeslagen events en gelabeld als waargenomen, gemodelleerd of onbekend.",
+      "attribution": {
+        "title": "Attributie & click-ID-gezondheid",
+        "open": "Volledig rapport openen",
+        "destinations": "Destinations met doorstuurproblemen",
+        "noDestinations": "Geen destinations geconfigureerd voor deze site",
+        "destinationsProblems": "Zie de doorstuurtabel hieronder",
+        "destinationsOk": "Geen probleem waargenomen in deze periode",
+        "destinationsNoObservation": "Voor geen enkele bestemming is een geschikt event waargenomen"
+      },
+      "empty": {
+        "title": "Geen geaccepteerde events in deze periode",
+        "text": "Attributiegezondheid heeft events nodig. Controleer de installatie en de eventstroom in de module Events.",
+        "action": "Events openen"
+      },
+      "audiences": {
+        "title": "Doelgroepen",
+        "text": "Toestemmingsbewuste segmenten afgeleid uit first-party events van de laatste 30 dagen. Vanaf hier wordt niets naar advertentieplatformen geüpload.",
+        "open": "Doelgroepen openen"
+      }
+    },
+    "attribution": {
+      "title": "Attributie & click-ID-gezondheid",
+      "intro": "Worden de ondersteunde click-ID’s (gclid, fbclid, ttclid, msclkid, li_fat_id, rdt_cid en meer) met marketingtoestemming vastgelegd, hoe lang leven ze, waar komen ze vandaan en bereiken ze je destinations? Waargenomen feiten, gemodelleerde aanwijzingen en het onbekende blijven strikt gescheiden.",
+      "empty": {
+        "title": "Geen geaccepteerde events in deze periode",
+        "text": "Voor deze site en omgeving is in de gekozen periode niets vastgelegd, dus kan geen vastlegpercentage, herkomst of levensduur worden gerapporteerd. Controleer de installatie of verruim de periode.",
+        "events": "Events openen",
+        "setup": "Site openen"
+      },
+      "facts": {
+        "title": "Waargenomen feiten",
+        "consent": {
+          "label": "Events met marketingtoestemming",
+          "hint": "{marketing} van {total} geaccepteerde events",
+          "unknown": "Geen geaccepteerde events in deze periode"
+        },
+        "withClickIds": {
+          "label": "Events met een click-ID",
+          "hint": "Van {marketing} events met marketingtoestemming",
+          "hintNoConsent": "Geen event met marketingtoestemming, dus kon er geen click-ID worden vastgelegd"
+        },
+        "captureRate": {
+          "label": "Toestemmingsconform vastlegpercentage",
+          "hint": "Aandeel van de events met marketingtoestemming dat minstens één click-ID draagt",
+          "unknown": "Niet meetbaar: geen events met marketingtoestemming"
+        },
+        "violations": {
+          "label": "Click-ID’s zonder marketingtoestemming",
+          "ok": "Geen – het toestemmingsbeleid wordt afgedwongen",
+          "bad": "Beleidsschending: click-ID’s zijn opgeslagen zonder marketingtoestemming. Controleer de toestemmingsconfiguratie.",
+          "unknown": "Niets te controleren in deze periode"
+        },
+        "lastEvent": "Laatste geaccepteerde event: {at}",
+        "noEvents": "Nog geen geaccepteerd event",
+        "stale": "Geen event in de laatste 24 uur – de cijfers kunnen verouderd zijn"
+      },
+      "config": {
+        "title": "Vastlegconfiguratie",
+        "lead": "De click-ID-instellingen die werkelijk golden voor deze omgeving.",
+        "unknownEnv": "Deze site heeft nog geen omgeving, dus er kan geen configuratie worden getoond.",
+        "source": "Bron",
+        "published": "Gepubliceerde configuratie, versie {version}",
+        "default": "Geen gepubliceerde configuratie – de standaardwaarden van het platform gelden",
+        "capture": "Vastleggen",
+        "captureOn": "Aan (alleen met marketingtoestemming)",
+        "captureOff": "Uit – click-ID’s worden verworpen",
+        "ttl": "Levensduur",
+        "ttlDays": "{days} dagen",
+        "note": "Click-ID’s worden pas na marketingtoestemming uit de landings-URL vastgelegd, tot het einde van de levensduur in first-party opslag bewaard en bij intrekking van de toestemming gewist."
+      },
+      "clickIds": {
+        "title": "Click-ID’s",
+        "lead": "Elke click-ID-parameter die op geaccepteerde events van de periode voorkwam. Waarden verlaten de database nooit; alleen aantallen, herkomst en duur worden getoond.",
+        "empty": "In deze periode is geen click-ID vastgelegd.",
+        "caption": "Vastgelegde click-ID’s per parameter",
+        "columns": {
+          "param": "Click-ID",
+          "events": "Events",
+          "values": "Unieke ID’s",
+          "origin": "Herkomst",
+          "lifetime": "Levensduur",
+          "span": "Meegenomen",
+          "consent": "Toestemming",
+          "seen": "Gezien"
+        },
+        "origin": {
+          "url": "Landings-URL",
+          "storage": "First-party opslag",
+          "server": "Server",
+          "inherited": "Overgenomen van browser (order-join)"
+        },
+        "originNote": "Herkomst: het eerste event met een ID-waarde is zijn landings-URL; latere browserevents dragen hem uit de first-party opslag; serverevents hebben hem zelf vastgelegd of overgenomen uit de browsersessie van dezelfde bestelling. Bepaald binnen de gekozen periode.",
+        "unknown": "Onbekend",
+        "lifetimeDays": "{days} dagen",
+        "lifetimeRange": "{min}–{max} dagen",
+        "span": "mediaan {median}, max. {max}",
+        "unitHours": "u",
+        "unitDays": "d",
+        "consentOk": "Marketingtoestemming",
+        "consentBad": "{n} zonder toestemming",
+        "seen": "{first} → {last}"
+      },
+      "vendors": {
+        "google": "Google",
+        "meta": "Meta",
+        "tiktok": "TikTok",
+        "reddit": "Reddit",
+        "linkedin": "LinkedIn",
+        "microsoft": "Microsoft",
+        "pinterest": "Pinterest",
+        "snapchat": "Snapchat",
+        "x": "X",
+        "taboola": "Taboola",
+        "outbrain": "Outbrain",
+        "amazon": "Amazon",
+        "spotify": "Spotify",
+        "quora": "Quora",
+        "yahoo": "Yahoo",
+        "tradedesk": "The Trade Desk",
+        "adroll": "AdRoll",
+        "criteo": "Criteo",
+        "affiliate": "Affiliatenetwerk",
+        "other": "Overig"
+      },
+      "destinations": {
+        "title": "Doorsturen per destination",
+        "lead": "Per destination: welke click-ID’s ze mag ontvangen en of events daarmee zijn geleverd terwijl de ID nog geldig was. Afgeleid uit het leveringsrecord van elk event.",
+        "empty": "Er is geen destination geconfigureerd voor deze site.",
+        "emptyAction": "Destination toevoegen",
+        "caption": "Doorsturen van click-ID’s per destination",
+        "columns": {
+          "destination": "Destination",
+          "status": "Status",
+          "accepts": "Accepteert",
+          "eligible": "Geschikte events",
+          "forwarded": "Geleverd met ID",
+          "failed": "Mislukt",
+          "pending": "In behandeling / overgeslagen",
+          "notRouted": "Niet gerouteerd",
+          "expired": "Verlopen bij levering",
+          "last": "Laatst geleverd",
+          "actions": "Acties"
+        },
+        "testMode": "Testmodus",
+        "verdict": {
+          "forwarding": "Stuurt door",
+          "partial": "Stuurt gedeeltelijk door",
+          "failing": "Leveringen mislukken",
+          "not_delivered": "Geen levering waargenomen",
+          "no_eligible": "Geen geschikt event",
+          "inactive": "Niet actief",
+          "unsupported": "Geen click-ID’s"
+        },
+        "verdictHelp": {
+          "forwarding": "Elk geschikt event van de periode is geleverd terwijl zijn click-ID geldig was.",
+          "partial": "Sommige geschikte events zijn met hun click-ID geleverd; andere mislukten, staan in behandeling, zijn niet gerouteerd of hadden een verlopen ID.",
+          "failing": "Er zijn geschikte events, maar elke levering is mislukt.",
+          "not_delivered": "Er zijn geschikte events, maar geen enkele is aan deze destination geleverd – controleer de eventmapping en de routering.",
+          "no_eligible": "Geen geaccepteerd event droeg een click-ID die deze destination accepteert.",
+          "inactive": "De destination is niet verbonden of gepauzeerd; de router verstuurt er niets naartoe.",
+          "unsupported": "Dit type destination ontvangt geen click-ID’s."
+        },
+        "status": {
+          "draft": "Concept",
+          "not_connected": "Niet verbonden",
+          "connected": "Verbonden",
+          "paused": "Gepauzeerd",
+          "error": "Fout"
+        },
+        "acceptsNone": "Geen",
+        "never": "Nooit",
+        "open": "Openen",
+        "note": "Of de leverancier een doorgestuurde click-ID heeft gematcht, ziet Track niet – alleen het HTTP-resultaat. De geredigeerde leverancierspayload van elke poging staat in de event-debugger."
+      },
+      "daily": {
+        "title": "Dagelijkse vastlegging",
+        "lead": "Per dag: geaccepteerde events met marketingtoestemming en daarvan de events met een click-ID.",
+        "empty": "Geen event met marketingtoestemming in deze periode.",
+        "legend": {
+          "marketing": "Events met marketingtoestemming",
+          "withClickIds": "Events met een click-ID"
+        },
+        "showTable": "Als tabel tonen",
+        "caption": "Dagelijkse events met marketingtoestemming en met click-ID’s",
+        "columns": {
+          "day": "Dag",
+          "total": "Geaccepteerd",
+          "marketing": "Marketingtoestemming",
+          "withClickIds": "Met click-ID"
+        }
+      },
+      "hints": {
+        "title": "Gemodelleerde aanwijzingen",
+        "lead": "Afgeleid met een benoemde aanname – een aanwijzing om na te kijken, nooit een meting.",
+        "paid": {
+          "title": "Betaald verkeer zonder click-ID",
+          "text": "Events met marketingtoestemming die een markering van een betaalde campagne dragen maar geen click-ID.",
+          "unknown": "Niet meetbaar in deze periode.",
+          "assumption": "Heuristiek: utm_medium zoals cpc, paid of display, of een referrer van een adserver. Organische bezoeken via zoeken of social tellen niet mee."
+        },
+        "gap": {
+          "title": "Click-ID’s mogelijk verloren door ontbrekende toestemming",
+          "text": "Extrapolatie van het waargenomen vastlegpercentage naar de events zonder marketingtoestemming.",
+          "unknown": "Niet meetbaar: vereist een waargenomen vastlegpercentage en events zonder marketingtoestemming.",
+          "assumption": "Gaat ervan uit dat bezoekers zonder toestemming in dezelfde verhouding uit betaalde kanalen komen als bezoekers met toestemming."
+        }
+      },
+      "unknown": {
+        "title": "Onbekend",
+        "lead": "Wat Track niet uit de eigen gegevens kan weten.",
+        "noConsent": {
+          "title": "{n} events zonder marketingtoestemming",
+          "text": "Voor deze events is geen click-ID vastgelegd, dus is onbekend of er een in de URL aanwezig was."
+        },
+        "vendor": {
+          "title": "Matching aan leverancierszijde",
+          "text": "Track ziet het leveringsresultaat, niet of het platform de conversie aan de klik heeft toegeschreven."
+        },
+        "destinations": {
+          "title": "{n} destinations zonder waarneming",
+          "text": "Inactieve destinations of destinations zonder geschikt event leveren in geen enkele richting bewijs."
+        }
+      },
+      "touchpoints": {
+        "title": "Attributie-touchpoints",
+        "lead": "Per bezoeker vastgelegde kanaal-touchpoints (source, medium, campagne, click-ID’s) binnen de periode. Touchpoints worden per site vastgelegd, niet per omgeving; deze tabel omvat daarom alle omgevingen van de site.",
+        "empty": "In deze periode is geen touchpoint vastgelegd.",
+        "caption": "Touchpoints per kanaal",
+        "columns": {
+          "channel": "Kanaal",
+          "touchpoints": "Touchpoints",
+          "visitors": "Bezoekers",
+          "withClickIds": "Met click-ID",
+          "last": "Laatste"
+        }
+      },
+      "definitions": {
+        "title": "Definities",
+        "capture": {
+          "term": "Toestemmingsconform vastlegpercentage",
+          "text": "Geaccepteerde events met minstens één click-ID gedeeld door geaccepteerde events met marketingtoestemming. Alleen geaccepteerde events tellen mee – afgewezen, door beleid geblokkeerde en dubbele conversies zijn uitgesloten."
+        },
+        "origin": {
+          "term": "Herkomst",
+          "text": "Landings-URL (eerste event met de ID-waarde), first-party opslag (latere browserevents), server (vastgelegd door een serverbron) of overgenomen (een serverevent dat de browsersessie van dezelfde bestelling heeft overgenomen)."
+        },
+        "lifetime": {
+          "term": "Levensduur en meenemen",
+          "text": "Levensduur is de geconfigureerde vervaldatum zoals opgeslagen op het event. Meenemen is de tijd tussen het eerste en het laatste event met dezelfde ID-waarde."
+        },
+        "forwarding": {
+          "term": "Geleverd met ID",
+          "text": "Het event is aan de destination geleverd en droeg een click-ID die de destination accepteert en die op het moment van levering niet verlopen was. De router verwijdert verlopen ID’s vóór verzending."
+        }
+      }
+    },
+    "audiences": {
+      "title": "Doelgroepen",
+      "workspaceBanner": {
+        "text": "Deze link hoort bij een andere site ({site}).",
+        "switch": "Overschakelen naar {site}"
+      },
+      "intro": "Toestemmingsbewuste segmenten, berekend uit first-party events van de laatste 30 dagen: alleen marketingtoestemming, de nieuwste {limit} doelgroep-events van de actieve site en omgeving.",
+      "empty": {
+        "title": "Geen doelgroep-events in de laatste 30 dagen",
+        "text": "Segmenten hebben aankoop-, lead-, winkelwagen-, checkout- of registratie-events met marketingtoestemming nodig.",
+        "action": "Events openen"
+      },
+      "consentNote": "{n} events zonder marketingtoestemming zijn uitgesloten. Afgeleide toestemming wordt nooit gebruikt voor doelgroepen.",
+      "identityNote": "{n} events met toestemming dragen noch een gebruikers-ID noch een anonieme ID en horen bij geen enkel segment.",
+      "truncated": "De steekproeflimiet van {limit} events is bereikt; de segmenten berusten alleen op de nieuwste events.",
+      "segmentsTitle": "Segmenten",
+      "caption": "Doelgroepsegmenten van de laatste 30 dagen",
+      "columns": {
+        "segment": "Segment",
+        "size": "Personen",
+        "events": "Gebaseerd op"
+      },
+      "segments": {
+        "buyers": "Kopers",
+        "highValue": "Kopers met hoge waarde",
+        "abandoners": "Winkelwagen-/checkoutverlaters",
+        "leads": "Leads",
+        "signups": "Registraties"
+      },
+      "howTitle": "Zo bereiken doelgroepen de advertentieplatformen",
+      "how1": "Track uploadt nooit doelgroeplijsten. Elk platform ontvangt alleen de afzonderlijke serverconversies met gehashte matchinggegevens waarvoor de bezoeker toestemming heeft gegeven.",
+      "how2": "Gebruik de eigen doelgroepenbuilder van het platform op die conversies (bijv. Meta custom audiences uit CAPI-events, Google Ads-doelgroepen op basis van conversies).",
+      "how3": "Ingetrokken toestemming stopt toekomstige verzendingen direct en kan met terugwerkende kracht worden afgedwongen via een verzoek van de betrokkene."
+    }
+  }
+}

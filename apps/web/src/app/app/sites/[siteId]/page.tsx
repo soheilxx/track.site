@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { activeVersion, domains, environments, getSite } from "@track-site/db";
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@track-site/ui";
+import { Badge, Card, CardContent, CardHeader, CardTitle, buttonVariants } from "@track-site/ui";
 import { DomainVerification } from "@/components/app/domain-verification";
 import { Snippet } from "@/components/app/snippet";
 import { env } from "@/env";
@@ -14,6 +14,7 @@ export default async function SitePage({ params }: { params: Promise<{ siteId: s
   if (!/^[0-9a-f-]{36}$/i.test(siteId)) notFound();
   const ctx = await requireOrgContext("sites.read");
   const t = await getTranslations("app.site");
+  const tShell = await getTranslations("shell.nav");
   const data = await withOrg(ctx, async (tx) => {
     const site = await getSite(tx, ctx.organization.id, siteId);
     if (!site) return null;
@@ -35,24 +36,19 @@ export default async function SitePage({ params }: { params: Promise<{ siteId: s
             {t("trackingId")}: <span className="font-mono text-ink">{site.trackingId}</span> · {t("trackingIdHelp")}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link href={`/app/sites/${site.id}/setup`}>
-            <Button size="sm">{t("openSetup")}</Button>
+        {/* button-styled links: interactive elements are never nested */}
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/app/sites/${site.id}/setup`} className={buttonVariants({ size: "sm" })}>
+            {t("openSetup")}
           </Link>
-          <Link href={`/app/sites/${site.id}/shop`}>
-            <Button size="sm" variant="secondary">
-              {t("openShop")}
-            </Button>
+          <Link href={`/app/sites/${site.id}/shop`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+            {t("openShop")}
           </Link>
-          <Link href={`/app/sites/${site.id}/destinations`}>
-            <Button size="sm" variant="secondary">
-              Destinations
-            </Button>
+          <Link href={`/app/sites/${site.id}/destinations`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+            {tShell("destinations")}
           </Link>
-          <Link href={`/app/debugger?site=${site.id}`}>
-            <Button size="sm" variant="secondary">
-              {t("openDebugger")}
-            </Button>
+          <Link href={`/app/events/explorer?site=${site.id}`} className={buttonVariants({ size: "sm", variant: "secondary" })}>
+            {t("openDebugger")}
           </Link>
         </div>
       </div>

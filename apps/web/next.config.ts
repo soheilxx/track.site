@@ -66,6 +66,25 @@ const dedicatedHosts = [process.env.HOST_APP, process.env.HOST_API, process.env.
   .filter((h): h is string => Boolean(h) && h !== marketingHost);
 const notOnDedicatedHost = dedicatedHosts.map((h) => ({ type: "host" as const, value: h.replace(/\./g, "\\.") }));
 
+/**
+ * Dashboard paths renamed by the task-oriented navigation (redesign supplement §8). Permanent
+ * redirects, query string preserved. On the dedicated app host the proxy prefixes `/app` only
+ * AFTER these redirects ran, so each rule exists twice: `/app/<old>` (marketing host / local) and
+ * `/<old>` restricted to the app host.
+ *
+ * Only add a rule once its target route exists in `src/app/app`: a 308 is cached by browsers, so a
+ * redirect onto a missing page turns a working module into a permanent 404. The Event Debugger became
+ * the Live Event Explorer (its `site`, `event` and `name` parameters are understood there; the query
+ * string is carried over) and audiences moved into the Insights module.
+ */
+const DASHBOARD_LEGACY_PATHS: ReadonlyArray<[from: string, to: string]> = [
+  ["/setup", "/ai-setup"],
+  ["/debugger", "/events/explorer"],
+  ["/audiences", "/insights/audiences"],
+];
+const appHost = hostnameOf(process.env.HOST_APP);
+const onAppHost = appHost && appHost !== marketingHost ? [{ type: "host" as const, value: appHost.replace(/\./g, "\\.") }] : null;
+
 const nextConfig: NextConfig = {
   experimental: {
     // No shared root layout (marketing `[locale]` and dashboard `/app` render their own `<html>`),
@@ -75,6 +94,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     const marketingOnly = notOnDedicatedHost.length ? { missing: notOnDedicatedHost } : {};
     return [
+      ...DASHBOARD_LEGACY_PATHS.flatMap(([from, to]) => [
+        { source: `/app${from}`, destination: `/app${to}`, permanent: true },
+        ...(onAppHost ? [{ source: from, destination: to, permanent: true, has: onAppHost }] : []),
+      ]),
       // Blog → Tracking Knowledge (supplement §6): direct 301s for old article, index and feed URLs,
       // prefixed and unprefixed, so no request is answered with a chain through `/en/blog/...`.
       ...KNOWLEDGE_LEGACY_REDIRECTS.map((r) => ({

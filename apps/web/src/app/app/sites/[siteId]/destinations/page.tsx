@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
 import { getSite, listIntegrations } from "@track-site/db";
-import { Badge, Button, Card, EmptyState } from "@track-site/ui";
+import { Badge, Card, EmptyState, buttonVariants } from "@track-site/ui";
 import { requireOrgContext, withOrg } from "@/server/session";
 
 const statusTone = (s: string) => (s === "connected" ? "ok" : s === "error" ? "bad" : s === "paused" ? "warn" : "neutral");
@@ -26,10 +26,9 @@ export default async function SiteDestinationsPage({ params }: { params: Promise
           <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
           <p className="text-sm text-ink-3">{data.site.name}</p>
         </div>
-        <Link href={`/app/sites/${data.site.id}/destinations/new`}>
-          <Button size="sm">
-            <Plus className="h-4 w-4" aria-hidden="true" /> {t("add")}
-          </Button>
+        {/* button-styled link: interactive elements are never nested */}
+        <Link href={`/app/sites/${data.site.id}/destinations/new`} className={buttonVariants({ size: "sm" })}>
+          <Plus className="h-4 w-4" aria-hidden="true" /> {t("add")}
         </Link>
       </div>
       {data.rows.length === 0 ? (

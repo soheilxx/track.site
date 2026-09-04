@@ -1,0 +1,381 @@
+{
+  "commandCenter": {
+    "title": "Command Center",
+    "intro": "D’abord ce qui demande votre attention, puis l’état mesuré de votre site : événements, consentement, destinations, livraisons, file d’attente et consommation du forfait.",
+    "context": {
+      "site": "Site",
+      "environment": "Environnement",
+      "trackingId": "ID de suivi",
+      "measuredAt": "Mesuré {time}",
+      "measuredAtAbsolute": "Mesuré à {time}",
+      "noEnvironment": "Aucun environnement",
+      "timezone": "Heures en {timezone}"
+    },
+    "header": {
+      "openAiSetup": "Ouvrir la configuration IA",
+      "openEvents": "Ouvrir les événements",
+      "openSite": "Détails du site"
+    },
+    "noSite": {
+      "title": "Aucun site pour l’instant",
+      "text": "Créez votre premier site pour obtenir un ID de suivi. Le Command Center mesure ensuite tout à partir des données propres à ce site.",
+      "createSite": "Créer un site"
+    },
+    "loading": "Chargement du Command Center…",
+    "partial": {
+      "title": "Certaines mesures sont indisponibles",
+      "text": "Ces valeurs n’ont pas pu être mesurées pour le moment et sont affichées comme indisponibles : {list}. Rien n’est estimé à leur place."
+    },
+    "state": {
+      "measured": "Mesuré",
+      "empty": "Pas encore de données",
+      "stale": "Obsolète",
+      "unavailable": "Indisponible",
+      "not_measurable": "Non mesurable"
+    },
+    "measurements": {
+      "siteStatus": "statut du site",
+      "domain": "domaine",
+      "config": "configuration",
+      "lastEvents": "dernier événement",
+      "recentEvents": "événements récents",
+      "health": "score de santé",
+      "consent": "couverture du consentement",
+      "destinations": "destinations",
+      "duplicates": "taux de doublons",
+      "delivery": "erreurs de livraison",
+      "queue": "retard de la file",
+      "usage": "consommation du forfait",
+      "issues": "problèmes de qualité des données",
+      "flow": "flux d’événements",
+      "deliveryHistory": "historique des livraisons"
+    },
+    "severity": {
+      "critical": "Critique",
+      "warn": "Avertissement",
+      "info": "Suggestion"
+    },
+    "priority": {
+      "heading": "Priorités",
+      "nextAction": "Prochaine action",
+      "attention": "À surveiller",
+      "attentionCount": "{n, plural, =0 {Aucun autre problème} one {# autre problème} other {# autres problèmes}}",
+      "attentionEmpty": "Aucun autre problème parmi les {n} vérifications effectuées.",
+      "howDecided": "Pourquoi cette action",
+      "rulesIntro": "Les actions découlent de règles fixes évaluées dans un ordre fixe : d’abord les critiques, puis les avertissements, puis les suggestions ; à niveau égal, la règle la plus haute l’emporte. Une règle ne se déclenche que sur des valeurs mesurées — rien n’est estimé.",
+      "ruleLabel": "Règle",
+      "measuredLabel": "Mesuré {time}",
+      "none": {
+        "title": "Aucune action nécessaire pour le moment",
+        "text": "{checked} vérifications ont été effectuées à {time} et aucune n’a trouvé de problème.",
+        "checkedTitle": "Vérifications effectuées",
+        "skippedTitle": "Vérifications impossibles",
+        "skippedReason": "{check} — {reason}"
+      },
+      "skipped": {
+        "unavailable": "mesure indisponible",
+        "not_measurable": "non mesurable dans cette configuration",
+        "empty": "pas encore de données"
+      }
+    },
+    "checks": {
+      "site_paused": "Site en pause ou coupe-circuit",
+      "usage_hard_limit": "Limite stricte du forfait",
+      "no_config": "Configuration active",
+      "no_events": "Premier événement reçu",
+      "credentials": "Identifiants des destinations",
+      "dead_letters": "Livraisons en lettres mortes",
+      "delivery_failures": "Taux d’échec des livraisons",
+      "critical_issues": "Problèmes critiques de qualité des données",
+      "usage_soft_limit": "Forfait à 90 %",
+      "destination_errors": "Destinations en erreur",
+      "silence": "Silence des événements",
+      "no_consent_policy": "Politique de consentement publiée",
+      "consent_coverage": "Part de consentement explicite",
+      "duplicates": "Taux de doublons",
+      "queue_lag": "Retard de la file",
+      "warning_issues": "Avertissements de qualité des données",
+      "usage_warning": "Forfait à 70 %",
+      "domain_unverified": "Vérification du domaine",
+      "no_destinations": "Première destination"
+    },
+    "actions": {
+      "site_paused": {
+        "title": "Reprendre le suivi de {site}",
+        "why": "{reason, select, kill_switch {Le coupe-circuit est activé : les événements entrants sont rejetés tant qu’il n’est pas désactivé.} other {Le site est en pause : les événements entrants sont rejetés tant qu’il n’est pas repris.}}",
+        "cta": "Ouvrir le site",
+        "rule": "Se déclenche lorsque le statut du site est « en pause » ou que son coupe-circuit est activé."
+      },
+      "usage_hard_limit": {
+        "title": "Limite du forfait atteinte — traitement en pause",
+        "why": "{used} événements facturables sur {limit} ont été comptés en {period} et la limite stricte a été atteinte selon la politique de dépassement « {policy} ». Les événements ne sont plus traités tant que vous n’avez pas changé de forfait ou autorisé le dépassement.",
+        "cta": "Ouvrir la facturation",
+        "rule": "Se déclenche lorsque la période de consommation en cours porte un horodatage de limite stricte."
+      },
+      "no_config": {
+        "title": "Publier une configuration pour {environment}",
+        "why": "Aucune version de configuration n’est active dans l’environnement {environment} : le snippet n’a rien à charger et aucun événement n’est accepté.",
+        "cta": "Ouvrir la configuration IA",
+        "rule": "Se déclenche lorsque l’environnement actif n’a aucune version de configuration active."
+      },
+      "no_events": {
+        "title": "Installer le snippet et envoyer un premier événement",
+        "why": "Une configuration est en ligne dans {environment}, mais aucun événement n’a encore atteint Track pour cet environnement (ID de suivi {trackingId}).",
+        "cta": "Afficher le snippet",
+        "rule": "Se déclenche lorsqu’une configuration est active et que le magasin d’événements ne contient aucun événement pour l’environnement."
+      },
+      "credentials": {
+        "title": "{count, plural, one {Corriger les identifiants de {destination}} other {Corriger les identifiants de # destinations}}",
+        "why": "{kind, select, expired {L’identifiant de {destination} a expiré} expiring {Un identifiant de {destination} expire dans moins de {days} jours} oauth {La connexion OAuth de {destination} n’est plus établie} other {Le dernier contrôle de santé de {destination} a signalé une erreur d’identifiant}} ; les livraisons vers cette destination échouent ou vont échouer.",
+        "cta": "Ouvrir la destination",
+        "rule": "Se déclenche lorsqu’une destination connectée a un identifiant expiré, un identifiant expirant dans les {days} jours, une connexion OAuth rompue ou un contrôle d’identifiant en échec."
+      },
+      "dead_letters": {
+        "title": "{count, plural, one {Rejouer # livraison en lettre morte} other {Rejouer # livraisons en lettres mortes}}",
+        "why": "{count, plural, one {# livraison a épuisé} other {# livraisons ont épuisé}} toutes les tentatives et ne sera plus envoyée sans rejeu.",
+        "cta": "Ouvrir les destinations",
+        "rule": "Se déclenche lorsque des références de lettres mortes non rejouées existent pour le site."
+      },
+      "delivery_failures": {
+        "title": "Examiner les échecs de livraison",
+        "why": "{failed} résultats de livraison sur {attempts} au cours des {hours} dernières heures étaient des échecs ({pct}) ; le seuil est de {thresholdPct}. Classe d’erreur la plus fréquente : {errorClass}.",
+        "cta": "Ouvrir les destinations",
+        "rule": "Se déclenche à partir de {minAttempts} résultats en {hours} heures avec une part d’échecs d’au moins {thresholdPct} ; critique à partir de {criticalPct}."
+      },
+      "critical_issues": {
+        "title": "{count, plural, one {Résoudre # problème critique de qualité des données} other {Résoudre # problèmes critiques de qualité des données}}",
+        "why": "Le plus récent : {summary}",
+        "cta": "Ouvrir la qualité des données",
+        "rule": "Se déclenche lorsque des problèmes ouverts de gravité « critique » existent."
+      },
+      "usage_soft_limit": {
+        "title": "Limite du forfait presque atteinte",
+        "why": "{pct} de la limite du forfait sont consommés ({used} événements facturables sur {limit} en {period}). Au-delà de 100 %, la politique de dépassement « {policy} » s’applique.",
+        "cta": "Vérifier le forfait et le dépassement",
+        "rule": "Se déclenche à partir de {thresholdPct} de la limite mensuelle d’événements."
+      },
+      "destination_errors": {
+        "title": "{count, plural, one {Vérifier la destination {name}} other {Vérifier # destinations en erreur}}",
+        "why": "{count, plural, one {{name} est en état d’erreur} other {{name} et # autres sont en état d’erreur}} ; aucune livraison n’est tentée vers elles.",
+        "cta": "Ouvrir les destinations",
+        "rule": "Se déclenche lorsqu’une destination a le statut « erreur »."
+      },
+      "silence": {
+        "title": "Aucun événement depuis {hours} heures",
+        "why": "Le dernier événement dans {environment} est arrivé {lastAt} ; le seuil est de {threshold} heures. Vérifiez le snippet, le domaine et la bannière de consentement.",
+        "cta": "Ouvrir les événements",
+        "rule": "Se déclenche lorsque l’environnement de production a déjà reçu des événements mais aucun depuis {threshold} heures."
+      },
+      "no_consent_policy": {
+        "title": "Publier une politique de consentement",
+        "why": "{status, select, none {Aucune politique de consentement n’existe pour ce site} other {La politique de consentement est encore à l’état « {status} »}}, les règles régionales et les finalités ne sont donc pas appliquées.",
+        "cta": "Ouvrir Consentement & confidentialité",
+        "rule": "Se déclenche lorsque le site n’a aucune politique de consentement publiée."
+      },
+      "consent_coverage": {
+        "title": "Vérifier l’intégration du consentement",
+        "why": "Seuls {pct} des {events} événements portaient un signal de consentement explicite ; le seuil est de {thresholdPct}. Les événements à l’état par défaut peuvent être bloqués pour les destinations marketing.",
+        "cta": "Ouvrir Consentement & confidentialité",
+        "rule": "Se déclenche à partir de {minEvents} événements lorsque la part de signaux explicites est inférieure à {thresholdPct}."
+      },
+      "duplicates": {
+        "title": "Réduire les événements en double",
+        "why": "{deduplicated} des {received} événements reçus au cours des {hours} dernières heures étaient des doublons ({pct}) ; le seuil est de {thresholdPct}.",
+        "cta": "Ouvrir les événements",
+        "rule": "Se déclenche à partir de {minReceived} événements reçus en {hours} heures avec un taux de doublons d’au moins {thresholdPct}."
+      },
+      "queue_lag": {
+        "title": "Les livraisons ont {minutes} minutes de retard",
+        "why": "Le plus ancien message en attente est dans la file depuis {seconds} secondes ({pending} en attente) ; le seuil est de {thresholdMinutes} minutes.",
+        "cta": "Ouvrir les destinations",
+        "rule": "Se déclenche lorsque le plus ancien message prêt de votre organisation attend depuis {thresholdMinutes} minutes ou plus."
+      },
+      "warning_issues": {
+        "title": "{count, plural, one {Examiner # avertissement de qualité des données} other {Examiner # avertissements de qualité des données}}",
+        "why": "Les avertissements ouverts signalent généralement des paramètres manquants ou des événements non planifiés.",
+        "cta": "Ouvrir la qualité des données",
+        "rule": "Se déclenche lorsque des problèmes ouverts de gravité « avertissement » existent."
+      },
+      "usage_warning": {
+        "title": "{pct} de la limite du forfait consommés",
+        "why": "{used} événements facturables sur {limit} en {period}. Anticipez avant d’atteindre {nextPct}.",
+        "cta": "Ouvrir la facturation",
+        "rule": "Se déclenche à partir de {thresholdPct} et en dessous de {nextPct} de la limite mensuelle d’événements."
+      },
+      "domain_unverified": {
+        "title": "Vérifier {hostname}",
+        "why": "Le domaine n’est pas encore vérifié. La vérification prouve la propriété et débloque les options de livraison first-party.",
+        "cta": "Ouvrir le site",
+        "rule": "Se déclenche lorsque le domaine principal du site n’a aucun horodatage de vérification."
+      },
+      "no_destinations": {
+        "title": "Connecter une première destination",
+        "why": "Des événements arrivent, mais aucune destination n’est configurée : rien n’est livré.",
+        "cta": "Ajouter une destination",
+        "rule": "Se déclenche lorsque des événements existent et que le site n’a aucune destination."
+      }
+    },
+    "strip": {
+      "heading": "Statut",
+      "help": "Expliquer {term}",
+      "siteStatus": {
+        "label": "Site",
+        "help": "Indique si le site accepte les événements. Un site en pause et le coupe-circuit rejettent tout dès la périphérie.",
+        "active": "Actif",
+        "paused": "En pause",
+        "deleted": "Supprimé",
+        "killSwitch": "Coupe-circuit activé"
+      },
+      "config": {
+        "label": "Configuration",
+        "help": "La version de configuration signée que le snippet charge dans cet environnement.",
+        "version": "Version {version}",
+        "published": "Publiée {time}",
+        "none": "Non publiée"
+      },
+      "lastEvents": {
+        "label": "Dernier événement",
+        "help": "Moment où le dernier événement navigateur et serveur a atteint Track pour cet environnement.",
+        "browser": "Navigateur : {time}",
+        "server": "Serveur : {time}",
+        "never": "jamais",
+        "none": "Pas encore d’événements"
+      },
+      "health": {
+        "label": "Score de santé",
+        "help": "Tracking Health Score de 0 à 100, calculé par le worker à partir du consentement, de la couverture, du schéma, des doublons, de la livraison et de l’activité.",
+        "value": "{score}/100",
+        "computed": "Calculé {time}",
+        "none": "Pas encore calculé"
+      },
+      "consent": {
+        "label": "Couverture du consentement",
+        "help": "Part des événements acceptés dont le consentement provient d’un signal explicite (CMP, API, TCF, GPP, GPC) plutôt que de l’état par défaut.",
+        "value": "{pct} explicite",
+        "events": "{n, plural, one {# événement} other {# événements}}",
+        "marketing": "{pct} avec consentement marketing",
+        "policy": "Politique : {status}",
+        "status": {
+          "draft": "brouillon",
+          "published": "publiée",
+          "archived": "archivée"
+        },
+        "noPolicy": "Aucune politique",
+        "none": "Pas encore d’événements avec consentement"
+      },
+      "destinations": {
+        "label": "Destinations",
+        "help": "Destinations connectées de ce site et éventuels problèmes d’identifiants ou d’OAuth.",
+        "value": "{connected} sur {total} connectées",
+        "errors": "{n, plural, one {# en erreur} other {# en erreur}}",
+        "credentials": "{n, plural, one {# problème d’identifiant} other {# problèmes d’identifiants}}",
+        "lastSuccess": "Dernière livraison {time}",
+        "none": "Aucune pour l’instant"
+      },
+      "duplicates": {
+        "label": "Taux de doublons",
+        "help": "Événements que l’étape d’ingestion a reconnus comme répétitions d’un événement déjà accepté, sur les dernières 24 heures.",
+        "value": "{pct}",
+        "detail": "{deduplicated} sur {received} reçus (24 h)",
+        "none": "Aucun événement en 24 h"
+      },
+      "delivery": {
+        "label": "Erreurs de livraison",
+        "help": "Résultats de livraison en échec ou en lettre morte sur les dernières 24 heures.",
+        "value": "{failed} sur {attempts}",
+        "rate": "{pct} en échec (24 h)",
+        "deadLetters": "{n, plural, one {# lettre morte} other {# lettres mortes}}",
+        "topError": "La plus fréquente : {errorClass}",
+        "none": "Aucun résultat en 24 h"
+      },
+      "queue": {
+        "label": "Retard de la file",
+        "help": "Depuis combien de temps le plus ancien message attend un worker dans les files de livraison de votre organisation.",
+        "value": "{duration}",
+        "noBacklog": "Aucun retard",
+        "pending": "{n, plural, one {# message en attente} other {# messages en attente}}",
+        "inFlight": "{n, plural, one {# en cours} other {# en cours}}",
+        "notMeasurable": "Non mesurable avec le pilote de file actuel"
+      },
+      "usage": {
+        "label": "Consommation du forfait",
+        "help": "Événements facturables de la période en cours par rapport à la limite mensuelle de votre forfait.",
+        "value": "{used} sur {limit}",
+        "noLimit": "{used} événements, pas de plafond fixe",
+        "pct": "{pct} du forfait {plan} en {period}",
+        "hardLimit": "Limite stricte atteinte",
+        "softLimit": "Limite atteinte",
+        "policy": "Dépassement : {policy}",
+        "policies": {
+          "allow": "autoriser le dépassement",
+          "cost_limit": "limite de coût",
+          "pause": "pause"
+        }
+      }
+    },
+    "charts": {
+      "heading": "Dernières 24 heures et 7 derniers jours",
+      "showTable": "Afficher en tableau",
+      "flow": {
+        "title": "Flux d’événements",
+        "window": "Dernières 24 heures, par heure",
+        "caption": "Événements acceptés, dédupliqués et rejetés par heure sur les dernières 24 heures",
+        "accepted": "Acceptés",
+        "deduplicated": "Dédupliqués",
+        "dropped": "Rejetés",
+        "received": "Reçus",
+        "hour": "Heure",
+        "empty": "Aucun événement enregistré au cours des dernières 24 heures."
+      },
+      "delivery": {
+        "title": "Résultats de livraison",
+        "window": "7 derniers jours, par jour (UTC)",
+        "caption": "Tentatives de livraison livrées, en échec et en lettre morte par jour sur les 7 derniers jours",
+        "success": "Livrées",
+        "failed": "En échec",
+        "dead": "Lettres mortes",
+        "day": "Jour",
+        "empty": "Aucune tentative de livraison au cours des 7 derniers jours."
+      }
+    },
+    "recentEvents": {
+      "title": "Derniers événements vérifiés",
+      "intro": "Les événements acceptés les plus récents de cet environnement avec leur consentement, leur état de traitement et leurs livraisons. Les payloads ne sont jamais affichés ici.",
+      "caption": "Événements acceptés récents",
+      "columns": {
+        "time": "Heure",
+        "event": "Événement",
+        "source": "Source",
+        "consent": "Consentement",
+        "state": "État",
+        "deliveries": "Livraisons",
+        "lineage": "Lignée"
+      },
+      "verified": "Vérifié",
+      "unverified": "Non vérifié",
+      "necessaryOnly": "Nécessaire uniquement",
+      "consentSource": "via {source}",
+      "test": "Test",
+      "deliveries": "{delivered} sur {total} livrées",
+      "noDeliveries": "Non routé",
+      "openLineage": "Ouvrir la lignée",
+      "state": {
+        "policy_passed": "Accepté",
+        "stored": "Stocké",
+        "routed": "Routé",
+        "delivered": "Livré",
+        "received": "Reçu"
+      },
+      "empty": {
+        "title": "Pas encore d’événements acceptés",
+        "text": "Dès que le snippet ou une intégration serveur envoie des événements, les derniers acceptés apparaissent ici avec leur consentement, leur état et leurs livraisons.",
+        "installSnippet": "Afficher le snippet",
+        "publishConfig": "Publier la configuration",
+        "openEvents": "Ouvrir les événements"
+      }
+    },
+    "footer": {
+      "note": "Chaque chiffre de cette page est lu dans les tables de {site} ({environment}). L’inconnu reste inconnu : rien n’est estimé ni complété."
+    }
+  }
+}

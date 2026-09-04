@@ -3,7 +3,7 @@
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
 import type { UiInputComponent } from "@track-site/ai";
-import { Alert, Button, Card, Input, Label } from "@track-site/ui";
+import { Alert, Button, Card, Input, Label, LinkButton } from "@track-site/ui";
 import type { CredentialRequestView, PendingApprovalView } from "./types";
 
 export function InputComponentView({ component, onSend, siteId, onCredentialStored }: { component: UiInputComponent; onSend: (text: string) => void; siteId: string; onCredentialStored: (msg: string) => void }) {
@@ -32,9 +32,10 @@ export function InputComponentView({ component, onSend, siteId, onCredentialStor
       return (
         <Card className="p-4">
           <p className="text-sm font-semibold text-ink">{component.label}</p>
-          <a href={`/app/oauth/${encodeURIComponent(component.provider)}/start?integration=${encodeURIComponent(component.integration_id)}&site=${encodeURIComponent(siteId)}`} className="mt-3 inline-block">
-            <Button size="sm">Connect with {component.provider}</Button>
-          </a>
+          {/* button-styled link: interactive elements are never nested */}
+          <LinkButton size="sm" href={`/app/oauth/${encodeURIComponent(component.provider)}/start?integration=${encodeURIComponent(component.integration_id)}&site=${encodeURIComponent(siteId)}`} className="mt-3">
+            Connect with {component.provider}
+          </LinkButton>
         </Card>
       );
     default:

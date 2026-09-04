@@ -1,0 +1,363 @@
+{
+  "team": {
+    "module": {
+      "nav": {
+        "label": "Team & Access",
+        "overview": "Overview",
+        "audit": "Audit log"
+      }
+    },
+    "overview": {
+      "title": "Team & Access",
+      "intro": "Members, roles and invitations of this organization, the permissions behind every role, four-eyes requirements and the audit log. Every role is enforced on the server for each action and each assistant tool call.",
+      "openAudit": "Open audit log"
+    },
+    "summary": {
+      "plan": "Plan",
+      "seats": "Seats",
+      "seatsUsed": "{used} of {cap}",
+      "seatsNoCap": "{used}, no fixed cap",
+      "seatsPending": "{count} pending",
+      "twoFactor": "Two-factor",
+      "twoFactorShare": "{enabled} of {total} members",
+      "fourEyes": "Four-eyes",
+      "fourEyesNotInPlan": "Not in plan",
+      "fourEyesActive": "{count} change types",
+      "fourEyesNone": "Not configured",
+      "openRequests": "{count} open"
+    },
+    "members": {
+      "title": "Members",
+      "caption": "Members of the organization with role and two-factor state",
+      "member": "Member",
+      "role": "Role",
+      "twoFactor": "Two-factor",
+      "twoFactorOn": "Enabled",
+      "twoFactorOff": "Not enabled",
+      "joined": "Joined",
+      "actions": "Actions",
+      "you": "you",
+      "roleSelect": "Role of {name}",
+      "save": "Save role",
+      "permissions": "Permissions",
+      "remove": "Remove",
+      "fourEyesHint": "Role changes need a second person: saving creates an approval request instead of changing the role directly.",
+      "ownerDialog": {
+        "title": "Change the Owner role?",
+        "description": "Owners can do everything, including billing, deletion and ownership transfer. Confirm the change for {name} from {from} to {to}.",
+        "confirm": "Change role"
+      },
+      "removeDialog": {
+        "title": "Remove {name}?",
+        "description": "{email} loses access to this organization immediately. Sites, destinations and data stay. The removal is recorded in the audit log.",
+        "confirm": "Remove member"
+      }
+    },
+    "permissionsSheet": {
+      "title": "Permissions of {name}",
+      "description": "Role {role}. Permissions come from the role and are checked on the server for every action and every assistant tool call.",
+      "granted": "{granted} of {total} permissions granted",
+      "yes": "Granted",
+      "no": "Not granted"
+    },
+    "invite": {
+      "title": "Invite a member",
+      "text": "The invitation is sent by e-mail and expires after 7 days. It counts as a seat until it is accepted or cancelled.",
+      "email": "E-mail",
+      "role": "Role",
+      "send": "Send invitation",
+      "seatLimitTitle": "All seats are in use",
+      "seatLimit": "Your {plan} plan includes {cap} seats (members plus pending invitations). Remove a member, cancel an invitation or choose a larger plan.",
+      "comparePlans": "Compare plans"
+    },
+    "pending": {
+      "title": "Pending invitations",
+      "empty": "No pending invitations.",
+      "invitedBy": "invited by {name}",
+      "expires": "expires {date}",
+      "expired": "Expired",
+      "resend": "Resend",
+      "cancel": "Cancel"
+    },
+    "roles": {
+      "title": "Roles and permissions",
+      "intro": "Six roles, defined once and enforced by the server. The matrix shows exactly which permission each role holds; the permissions sheet of a member shows the same for that person.",
+      "customRolesHint": "Custom role models beyond these six roles are part of the Enterprise plan.",
+      "matrixSummary": "Show the full permission matrix",
+      "matrixCaption": "Permissions per role",
+      "permission": "Permission",
+      "granted": "Granted",
+      "notGranted": "Not granted",
+      "labels": {
+        "OWNER": "Owner",
+        "ADMIN": "Admin",
+        "DEVELOPER": "Developer",
+        "ANALYST": "Analyst",
+        "BILLING": "Billing",
+        "READ_ONLY": "Read only"
+      },
+      "descriptions": {
+        "OWNER": "Everything, including billing, deletion and ownership transfer. Always an approver.",
+        "ADMIN": "Manages sites, destinations, consent, team, privacy requests and settings; can publish.",
+        "DEVELOPER": "Configures sites, destinations and credentials, publishes and rolls back configurations.",
+        "ANALYST": "Reads events, health and configuration, exports events and uses the assistant read-only.",
+        "BILLING": "Reads everything and manages the subscription and invoices.",
+        "READ_ONLY": "Views only; no changes, no exports."
+      },
+      "areas": {
+        "org": "Organization",
+        "members": "Team",
+        "sites": "Sites",
+        "domains": "Domains",
+        "events": "Events",
+        "config": "Configuration",
+        "integrations": "Destinations",
+        "credentials": "Credentials",
+        "consent": "Consent",
+        "privacy": "Privacy",
+        "ai": "Track AI",
+        "billing": "Billing",
+        "audit": "Audit",
+        "kill_switch": "Kill switch"
+      },
+      "permissions": {
+        "org_read": "View the organization",
+        "org_update": "Change organization settings",
+        "org_delete": "Delete the organization",
+        "members_read": "View members",
+        "members_invite": "Invite members",
+        "members_update": "Change member roles",
+        "members_remove": "Remove members",
+        "sites_read": "View sites",
+        "sites_create": "Create sites",
+        "sites_update": "Change sites",
+        "sites_delete": "Delete sites",
+        "domains_verify": "Verify domains",
+        "events_read": "View events",
+        "events_export": "Export events",
+        "config_read": "View configurations",
+        "config_draft": "Edit configuration drafts",
+        "config_publish": "Publish configurations",
+        "config_rollback": "Roll back configurations",
+        "integrations_read": "View destinations",
+        "integrations_manage": "Manage destinations",
+        "credentials_write": "Store credentials",
+        "credentials_rotate": "Rotate credentials",
+        "consent_read": "View consent policies",
+        "consent_manage": "Manage consent policies",
+        "privacy_dsar": "Handle data subject requests",
+        "privacy_retention": "Change retention windows",
+        "ai_chat": "Chat with Track AI",
+        "ai_write_tools": "Let Track AI prepare changes",
+        "billing_read": "View billing",
+        "billing_manage": "Manage the subscription",
+        "audit_read": "View the audit log",
+        "kill_switch_manage": "Operate kill switches"
+      }
+    },
+    "approvals": {
+      "title": "Approval requirements",
+      "intro": "Put risky changes behind a second pair of eyes. A change of a selected type is stored as a request and executed only after a different member with approver rights applies it.",
+      "notInPlanTitle": "Not included in {plan}",
+      "notInPlan": "Approval workflows and the four-eyes principle are part of the Pro plan. Nothing here is enforced in your current plan; the list shows what Pro adds.",
+      "storedInactive": "Requirements from an earlier plan are stored. They are kept but not enforced until the plan includes approval workflows.",
+      "notPersisted": "The storage for approval requirements is not available yet (migration 0012_team_policies pending). Nothing is enforced.",
+      "comparePlans": "Compare plans",
+      "readOnly": "Your role can view these requirements only.",
+      "changeTypesLegend": "Changes that need a second person",
+      "approversLegend": "Who may approve",
+      "ownerAlways": "Owners can always approve.",
+      "requesterNote": "Applies to everyone, owners included: nobody approves their own request.",
+      "enforcementNote": "Role changes are enforced here in Team & Access. The other change types are enforced by the module that executes them (Releases, Destinations, Consent & Privacy, Settings) through this same policy; their requests appear in the list above and can be rejected here.",
+      "save": "Save requirements",
+      "updated": "Last changed {date} by {name}",
+      "neverUpdated": "Not configured yet.",
+      "relaxDialog": {
+        "title": "Relax approval requirements?",
+        "description": "The following changes reduce protection. They take effect immediately and are recorded in the audit log.",
+        "confirm": "Save anyway"
+      },
+      "changes": {
+        "relaxed": "{type} no longer needs a second person",
+        "approverAdded": "{role} may approve from now on"
+      },
+      "types": {
+        "config_publish": {
+          "label": "Publish a configuration",
+          "description": "A new tracking configuration goes live for a site environment."
+        },
+        "config_rollback": {
+          "label": "Roll back a configuration",
+          "description": "An earlier version replaces the active configuration."
+        },
+        "consent_publish": {
+          "label": "Publish a consent policy",
+          "description": "A new policy version drives the consent engine for every new event."
+        },
+        "credential_change": {
+          "label": "Change credentials",
+          "description": "Storing, rotating or revoking a destination credential."
+        },
+        "destination_pause": {
+          "label": "Pause a destination",
+          "description": "Deliveries to a destination stop while the rest keeps flowing."
+        },
+        "member_role_change": {
+          "label": "Change a member role",
+          "description": "A member receives a different role, including Owner."
+        },
+        "kill_switch": {
+          "label": "Kill switch",
+          "description": "Stops collection and delivery for a site or the whole organization."
+        }
+      }
+    },
+    "requests": {
+      "title": "Open approvals",
+      "intro": "Changes waiting for a second person. Requests expire after 7 days without a decision.",
+      "empty": "No open requests.",
+      "recent": "Recent decisions",
+      "recentEmpty": "No decisions yet.",
+      "target": "Target",
+      "change": "Change",
+      "roleChange": "{from} → {to}",
+      "requestedBy": "requested by {name}",
+      "requestedAt": "on {date}",
+      "expiresAt": "expires {date}",
+      "former": "former member",
+      "decidedIn": "This change is applied from its own module; here it can only be rejected.",
+      "approve": "Apply change",
+      "reject": "Reject",
+      "withdraw": "Withdraw",
+      "note": "Note (optional)",
+      "status": {
+        "pending": "Pending",
+        "applied": "Applied",
+        "rejected": "Rejected",
+        "withdrawn": "Withdrawn",
+        "expired": "Expired"
+      },
+      "decidedBy": "{status} by {name} on {date}",
+      "approveDialog": {
+        "title": "Apply this change?",
+        "description": "You act as the second person. The change is executed immediately and recorded with your name.",
+        "confirm": "Apply"
+      },
+      "rejectDialog": {
+        "title": "Reject this request?",
+        "description": "The requester sees the rejection and your note.",
+        "confirm": "Reject"
+      }
+    },
+    "audit": {
+      "title": "Audit log",
+      "intro": "Every recorded change in this organization: who did what, when, on which target. Values are shown redacted; entries can never be edited or deleted.",
+      "noPermission": "Your role cannot view the audit log",
+      "noPermissionText": "Ask an owner or admin for the Analyst, Developer or Admin role.",
+      "windowLimited": "Showing the last {days} days in your {plan} plan. The Pro plan keeps the complete history.",
+      "windowFull": "Complete history; entries are retained for {days} days.",
+      "comparePlans": "Compare plans",
+      "filters": {
+        "legend": "Filters",
+        "category": "Category",
+        "actor": "Actor",
+        "target": "Target type",
+        "search": "Search",
+        "searchPlaceholder": "Action, target or request id",
+        "from": "From",
+        "to": "To",
+        "apply": "Apply filters",
+        "reset": "Reset",
+        "all": "All",
+        "everyone": "Everyone",
+        "system": "System jobs",
+        "agent": "Track AI (on behalf of a member)",
+        "source_key": "Server source keys"
+      },
+      "categories": {
+        "team": "Team",
+        "organization": "Organization",
+        "sites": "Sites",
+        "config": "Configuration",
+        "consent": "Consent",
+        "destinations": "Destinations",
+        "credentials": "Credentials",
+        "privacy": "Privacy",
+        "billing": "Billing",
+        "ai": "Track AI",
+        "other": "Other"
+      },
+      "count": "{count} entries",
+      "countFiltered": "{count} entries match the filters",
+      "caption": "Audit entries, newest first",
+      "when": "When",
+      "actor": "Actor",
+      "action": "Action",
+      "target": "Target",
+      "details": "Details",
+      "showDetails": "Show details ({count})",
+      "noDetails": "No details",
+      "diff": "Change",
+      "metadata": "Metadata",
+      "truncated": "Further values omitted.",
+      "redacted": "Personal data and secrets are redacted before an entry is stored and again when it is shown.",
+      "requestId": "Request",
+      "actorKind": {
+        "user": "Member",
+        "agent": "Track AI",
+        "system": "System",
+        "source_key": "Source key",
+        "unknown": "Unknown"
+      },
+      "formerMember": "Former member",
+      "empty": "Nothing recorded yet",
+      "emptyText": "Entries appear as soon as someone changes something in this organization.",
+      "emptyFiltered": "No entries match these filters",
+      "emptyFilteredText": "Widen the range or reset the filters.",
+      "pagination": {
+        "nav": "Audit log pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "page": "Page {page}"
+      }
+    },
+    "notices": {
+      "invited": "Invitation sent.",
+      "resent": "Invitation sent again.",
+      "cancelled": "Invitation cancelled.",
+      "roleUpdated": "Role changed.",
+      "roleRequested": "The role change was sent for approval. A different member with approver rights has to apply it.",
+      "removed": "Member removed.",
+      "policySaved": "Approval requirements saved.",
+      "policyUnchanged": "Nothing changed.",
+      "requestApplied": "Change applied.",
+      "requestRejected": "Request rejected.",
+      "requestWithdrawn": "Request withdrawn."
+    },
+    "errors": {
+      "generic": "Something went wrong.",
+      "email": "Enter a valid e-mail address.",
+      "forbidden": "Your role cannot do this.",
+      "notFound": "Not found. Reload the page.",
+      "self": "You cannot change your own membership.",
+      "sameRole": "The member already has this role.",
+      "confirmOwner": "Changes involving the Owner role need confirmation.",
+      "lastOwner": "The last owner cannot be demoted or removed.",
+      "requestExists": "An approval request for this member is already open.",
+      "confirmRequired": "Confirm the action first.",
+      "alreadyMember": "This person is already a member.",
+      "alreadyInvited": "An invitation for this e-mail is already pending. Resend it from the list.",
+      "seatLimit": "All seats of your plan are in use.",
+      "notInPlan": "Approval workflows are not part of your plan.",
+      "notPersisted": "The storage for approval requirements is not available yet.",
+      "confirmRelax": "Relaxing the requirements needs confirmation.",
+      "notPending": "This request is no longer open.",
+      "selfApproval": "You cannot approve your own request.",
+      "notAppliedHere": "This change type is applied from its own module."
+    },
+    "common": {
+      "close": "Close",
+      "cancel": "Cancel"
+    }
+  }
+}

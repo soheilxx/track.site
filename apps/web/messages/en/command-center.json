@@ -1,0 +1,381 @@
+{
+  "commandCenter": {
+    "title": "Command Center",
+    "intro": "What needs your attention first, then the measured state of your site: events, consent, destinations, deliveries, queue and plan usage.",
+    "context": {
+      "site": "Site",
+      "environment": "Environment",
+      "trackingId": "Tracking ID",
+      "measuredAt": "Measured {time}",
+      "measuredAtAbsolute": "Measured at {time}",
+      "noEnvironment": "No environment",
+      "timezone": "Times in {timezone}"
+    },
+    "header": {
+      "openAiSetup": "Open AI Setup",
+      "openEvents": "Open Events",
+      "openSite": "Site details"
+    },
+    "noSite": {
+      "title": "No site yet",
+      "text": "Create your first site to get a tracking ID. The Command Center then measures everything from that site's own data.",
+      "createSite": "Create site"
+    },
+    "loading": "Loading the Command Center…",
+    "partial": {
+      "title": "Some measurements are unavailable",
+      "text": "These could not be measured right now and are shown as unavailable: {list}. Nothing is estimated in their place."
+    },
+    "state": {
+      "measured": "Measured",
+      "empty": "No data yet",
+      "stale": "Stale",
+      "unavailable": "Unavailable",
+      "not_measurable": "Not measurable"
+    },
+    "measurements": {
+      "siteStatus": "site status",
+      "domain": "domain",
+      "config": "configuration",
+      "lastEvents": "last event",
+      "recentEvents": "recent events",
+      "health": "health score",
+      "consent": "consent coverage",
+      "destinations": "destinations",
+      "duplicates": "duplicate rate",
+      "delivery": "delivery errors",
+      "queue": "queue lag",
+      "usage": "plan usage",
+      "issues": "data quality issues",
+      "flow": "event flow",
+      "deliveryHistory": "delivery history"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warn": "Warning",
+      "info": "Suggestion"
+    },
+    "priority": {
+      "heading": "Priorities",
+      "nextAction": "Next action",
+      "attention": "Needs attention",
+      "attentionCount": "{n, plural, =0 {No further problems} one {# further problem} other {# further problems}}",
+      "attentionEmpty": "No further problems from the {n} checks that ran.",
+      "howDecided": "Why this action",
+      "rulesIntro": "Actions come from fixed rules evaluated in a fixed order: critical first, then warnings, then suggestions; within a level the earlier rule wins. A rule only fires on measured values — nothing is estimated.",
+      "ruleLabel": "Rule",
+      "measuredLabel": "Measured {time}",
+      "none": {
+        "title": "No action needed right now",
+        "text": "{checked} checks ran at {time} and none found a problem.",
+        "checkedTitle": "Checks that ran",
+        "skippedTitle": "Checks that could not run",
+        "skippedReason": "{check} — {reason}"
+      },
+      "skipped": {
+        "unavailable": "measurement unavailable",
+        "not_measurable": "not measurable in this setup",
+        "empty": "no data yet"
+      }
+    },
+    "checks": {
+      "site_paused": "Site paused or kill switch",
+      "usage_hard_limit": "Hard plan limit",
+      "no_config": "Active configuration",
+      "no_events": "First event received",
+      "credentials": "Destination credentials",
+      "dead_letters": "Dead-lettered deliveries",
+      "delivery_failures": "Delivery failure rate",
+      "critical_issues": "Critical data quality issues",
+      "usage_soft_limit": "Plan limit at 90 %",
+      "destination_errors": "Destinations in error",
+      "silence": "Event silence",
+      "no_consent_policy": "Published consent policy",
+      "consent_coverage": "Explicit consent share",
+      "duplicates": "Duplicate rate",
+      "queue_lag": "Queue lag",
+      "warning_issues": "Data quality warnings",
+      "usage_warning": "Plan limit at 70 %",
+      "domain_unverified": "Domain verification",
+      "no_destinations": "First destination"
+    },
+    "actions": {
+      "site_paused": {
+        "title": "Resume tracking for {site}",
+        "why": "{reason, select, kill_switch {The kill switch is on: incoming events are rejected until it is turned off.} other {The site is paused: incoming events are rejected until it is resumed.}}",
+        "cta": "Open site",
+        "rule": "Fires when the site status is “paused” or its kill switch is on."
+      },
+      "usage_hard_limit": {
+        "title": "Plan limit reached — processing is paused",
+        "why": "{used} of {limit} billable events were counted in {period} and the hard limit was hit under the “{policy}” overage policy. Events are not processed until you upgrade or allow overage.",
+        "cta": "Open billing",
+        "rule": "Fires when the current usage period carries a hard-limit timestamp."
+      },
+      "no_config": {
+        "title": "Publish a configuration for {environment}",
+        "why": "No configuration version is active in the {environment} environment, so the snippet has nothing to load and no event is accepted.",
+        "cta": "Open AI Setup",
+        "rule": "Fires when the active environment has no active configuration version."
+      },
+      "no_events": {
+        "title": "Install the snippet and send a first event",
+        "why": "A configuration is live in {environment}, but no event has reached Track for this environment yet (tracking ID {trackingId}).",
+        "cta": "Show snippet",
+        "rule": "Fires when a configuration is active and the event store holds no event for the environment."
+      },
+      "credentials": {
+        "title": "{count, plural, one {Fix the credentials of {destination}} other {Fix credentials for # destinations}}",
+        "why": "{kind, select, expired {The credential of {destination} has expired} expiring {A credential of {destination} expires within {days} days} oauth {The OAuth connection of {destination} is no longer connected} other {The last health check of {destination} reported a credential error}}; deliveries to it fail or will start failing.",
+        "cta": "Open destination",
+        "rule": "Fires when a connected destination has an expired credential, a credential expiring within {days} days, a disconnected OAuth connection or a failed credential health check."
+      },
+      "dead_letters": {
+        "title": "{count, plural, one {Replay # dead-lettered delivery} other {Replay # dead-lettered deliveries}}",
+        "why": "{count, plural, one {# delivery} other {# deliveries}} exhausted all retries and will not be sent again without a replay.",
+        "cta": "Open destinations",
+        "rule": "Fires when unreplayed dead-letter references exist for the site."
+      },
+      "delivery_failures": {
+        "title": "Investigate delivery failures",
+        "why": "{failed} of {attempts} delivery outcomes in the last {hours} hours were failures ({pct}); the threshold is {thresholdPct}. Most common error class: {errorClass}.",
+        "cta": "Open destinations",
+        "rule": "Fires from {minAttempts} outcomes in {hours} hours with a failure share of {thresholdPct} or more; critical from {criticalPct}."
+      },
+      "critical_issues": {
+        "title": "{count, plural, one {Resolve # critical data quality issue} other {Resolve # critical data quality issues}}",
+        "why": "Most recent: {summary}",
+        "cta": "Open Data Quality",
+        "rule": "Fires when open issues with severity “critical” exist."
+      },
+      "usage_soft_limit": {
+        "title": "Plan limit almost reached",
+        "why": "{pct} of the plan limit is used ({used} of {limit} billable events in {period}). Above 100 % the “{policy}” overage policy applies.",
+        "cta": "Review plan and overage",
+        "rule": "Fires from {thresholdPct} of the monthly event limit."
+      },
+      "destination_errors": {
+        "title": "{count, plural, one {Check destination {name}} other {Check # destinations with errors}}",
+        "why": "{count, plural, one {{name} is in the error state} other {{name} and # more are in the error state}}; deliveries to it are not attempted.",
+        "cta": "Open destinations",
+        "rule": "Fires when a destination has the status “error”."
+      },
+      "silence": {
+        "title": "No events for {hours} hours",
+        "why": "The last event in {environment} arrived {lastAt}; the threshold is {threshold} hours. Check the snippet, the domain and the consent banner.",
+        "cta": "Open Events",
+        "rule": "Fires when the production environment received events before but none within {threshold} hours."
+      },
+      "no_consent_policy": {
+        "title": "Publish a consent policy",
+        "why": "{status, select, none {No consent policy exists for this site} other {The consent policy is still in the “{status}” state}}, so region rules and purposes are not enforced.",
+        "cta": "Open Consent & Privacy",
+        "rule": "Fires when the site has no published consent policy."
+      },
+      "consent_coverage": {
+        "title": "Check the consent integration",
+        "why": "Only {pct} of {events} events carried an explicit consent signal; the threshold is {thresholdPct}. Events in the default state can be blocked for marketing destinations.",
+        "cta": "Open Consent & Privacy",
+        "rule": "Fires from {minEvents} events when the explicit-signal share is below {thresholdPct}."
+      },
+      "duplicates": {
+        "title": "Reduce duplicate events",
+        "why": "{deduplicated} of {received} events received in the last {hours} hours were duplicates ({pct}); the threshold is {thresholdPct}.",
+        "cta": "Open Events",
+        "rule": "Fires from {minReceived} received events in {hours} hours with a duplicate rate of {thresholdPct} or more."
+      },
+      "queue_lag": {
+        "title": "Deliveries are delayed by {minutes} minutes",
+        "why": "The oldest waiting message has been queued for {seconds} seconds ({pending} waiting); the threshold is {thresholdMinutes} minutes.",
+        "cta": "Open destinations",
+        "rule": "Fires when the oldest ready message of your organization has waited {thresholdMinutes} minutes or more."
+      },
+      "warning_issues": {
+        "title": "{count, plural, one {Review # data quality warning} other {Review # data quality warnings}}",
+        "why": "Open warnings usually mean missing parameters or unplanned events.",
+        "cta": "Open Data Quality",
+        "rule": "Fires when open issues with severity “warning” exist."
+      },
+      "usage_warning": {
+        "title": "{pct} of the plan limit used",
+        "why": "{used} of {limit} billable events in {period}. Plan ahead before {nextPct}.",
+        "cta": "Open billing",
+        "rule": "Fires from {thresholdPct} and below {nextPct} of the monthly event limit."
+      },
+      "domain_unverified": {
+        "title": "Verify {hostname}",
+        "why": "The domain is not verified yet. Verification proves ownership and unlocks first-party delivery options.",
+        "cta": "Open site",
+        "rule": "Fires when the site's primary domain has no verification timestamp."
+      },
+      "no_destinations": {
+        "title": "Connect a first destination",
+        "why": "Events arrive, but no destination is configured, so nothing is delivered.",
+        "cta": "Add destination",
+        "rule": "Fires when events exist and the site has no destination."
+      }
+    },
+    "strip": {
+      "heading": "Status",
+      "help": "Explain {term}",
+      "siteStatus": {
+        "label": "Site",
+        "help": "Whether the site accepts events. A paused site and the kill switch reject everything at the edge.",
+        "active": "Active",
+        "paused": "Paused",
+        "deleted": "Deleted",
+        "killSwitch": "Kill switch on"
+      },
+      "config": {
+        "label": "Configuration",
+        "help": "The signed configuration version the snippet loads in this environment.",
+        "version": "Version {version}",
+        "published": "Published {time}",
+        "none": "Not published"
+      },
+      "lastEvents": {
+        "label": "Last event",
+        "help": "When the last browser and server event reached Track for this environment.",
+        "browser": "Browser: {time}",
+        "server": "Server: {time}",
+        "never": "never",
+        "none": "No events yet"
+      },
+      "health": {
+        "label": "Health score",
+        "help": "Tracking Health Score from 0 to 100, computed by the worker from consent, coverage, schema, duplicates, delivery and liveness.",
+        "value": "{score}/100",
+        "computed": "Computed {time}",
+        "none": "Not computed yet"
+      },
+      "consent": {
+        "label": "Consent coverage",
+        "help": "Share of accepted events whose consent came from an explicit signal (CMP, API, TCF, GPP, GPC) rather than the default state.",
+        "value": "{pct} explicit",
+        "events": "{n, plural, one {# event} other {# events}}",
+        "marketing": "{pct} with marketing consent",
+        "policy": "Policy: {status}",
+        "status": {
+          "draft": "draft",
+          "published": "published",
+          "archived": "archived"
+        },
+        "noPolicy": "No policy",
+        "none": "No consented events yet"
+      },
+      "destinations": {
+        "label": "Destinations",
+        "help": "Connected destinations of this site and any credential or OAuth problems.",
+        "value": "{connected} of {total} connected",
+        "errors": "{n, plural, one {# with errors} other {# with errors}}",
+        "credentials": "{n, plural, one {# credential problem} other {# credential problems}}",
+        "lastSuccess": "Last delivery {time}",
+        "none": "None yet"
+      },
+      "duplicates": {
+        "label": "Duplicate rate",
+        "help": "Events the ingest stage recognised as repeats of an already accepted event, over the last 24 hours.",
+        "value": "{pct}",
+        "detail": "{deduplicated} of {received} received (24 h)",
+        "none": "No events in 24 h"
+      },
+      "delivery": {
+        "label": "Delivery errors",
+        "help": "Failed and dead-lettered delivery outcomes over the last 24 hours.",
+        "value": "{failed} of {attempts}",
+        "rate": "{pct} failed (24 h)",
+        "deadLetters": "{n, plural, one {# dead letter} other {# dead letters}}",
+        "topError": "Most common: {errorClass}",
+        "none": "No outcomes in 24 h"
+      },
+      "queue": {
+        "label": "Queue lag",
+        "help": "How long the oldest message has been waiting for a worker in your organization's delivery queues.",
+        "value": "{duration}",
+        "noBacklog": "No backlog",
+        "pending": "{n, plural, one {# message waiting} other {# messages waiting}}",
+        "inFlight": "{n, plural, one {# in flight} other {# in flight}}",
+        "notMeasurable": "Not measurable with the current queue driver"
+      },
+      "usage": {
+        "label": "Plan usage",
+        "help": "Billable events of the current period against the monthly limit of your plan.",
+        "value": "{used} of {limit}",
+        "noLimit": "{used} events, no fixed cap",
+        "pct": "{pct} of the {plan} plan in {period}",
+        "hardLimit": "Hard limit reached",
+        "softLimit": "Limit reached",
+        "policy": "Overage: {policy}",
+        "policies": {
+          "allow": "allow overage",
+          "cost_limit": "cost limit",
+          "pause": "pause"
+        }
+      }
+    },
+    "charts": {
+      "heading": "Last 24 hours and last 7 days",
+      "showTable": "Show as table",
+      "flow": {
+        "title": "Event flow",
+        "window": "Last 24 hours, per hour",
+        "caption": "Accepted, deduplicated and dropped events per hour over the last 24 hours",
+        "accepted": "Accepted",
+        "deduplicated": "Deduplicated",
+        "dropped": "Dropped",
+        "received": "Received",
+        "hour": "Hour",
+        "empty": "No events were recorded in the last 24 hours."
+      },
+      "delivery": {
+        "title": "Delivery outcomes",
+        "window": "Last 7 days, per day (UTC)",
+        "caption": "Delivered, failed and dead-lettered delivery attempts per day over the last 7 days",
+        "success": "Delivered",
+        "failed": "Failed",
+        "dead": "Dead-lettered",
+        "day": "Day",
+        "empty": "No delivery attempts in the last 7 days."
+      }
+    },
+    "recentEvents": {
+      "title": "Last verified events",
+      "intro": "The most recent accepted events of this environment with their consent, processing state and deliveries. Payloads are never shown here.",
+      "caption": "Recent accepted events",
+      "columns": {
+        "time": "Time",
+        "event": "Event",
+        "source": "Source",
+        "consent": "Consent",
+        "state": "State",
+        "deliveries": "Deliveries",
+        "lineage": "Lineage"
+      },
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "necessaryOnly": "Necessary only",
+      "consentSource": "via {source}",
+      "test": "Test",
+      "deliveries": "{delivered} of {total} delivered",
+      "noDeliveries": "None routed",
+      "openLineage": "Open lineage",
+      "state": {
+        "policy_passed": "Accepted",
+        "stored": "Stored",
+        "routed": "Routed",
+        "delivered": "Delivered",
+        "received": "Received"
+      },
+      "empty": {
+        "title": "No accepted events yet",
+        "text": "As soon as the snippet or a server integration sends events, the last accepted ones appear here with their consent, state and deliveries.",
+        "installSnippet": "Show snippet",
+        "publishConfig": "Publish configuration",
+        "openEvents": "Open Events"
+      }
+    },
+    "footer": {
+      "note": "Every number on this page is read from the tables of {site} ({environment}). Unknown stays unknown: nothing is estimated or filled in."
+    }
+  }
+}

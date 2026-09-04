@@ -1,0 +1,239 @@
+{
+  "destinationsHealth": {
+    "title": "Destination Health Center",
+    "intro": "Ablauf von Zugangsdaten und OAuth, API-Versionen, Rate Limits, Fehlerquote, Queue-Backlog und die letzte erfolgreiche Zustellung jeder Destination — gemessen aus echten Zustellversuchen. Diagnostiziere oder pausiere eine Destination, ohne die Ingestion oder andere Ziele zu stoppen.",
+    "scope": {
+      "label": "Bereich",
+      "thisSite": "Diese Site",
+      "allSites": "Alle Sites",
+      "siteColumn": "Site"
+    },
+    "add": "Destination hinzufügen",
+    "edit": "Bearbeiten",
+    "editHint": "Öffnet den Einrichtungsassistenten dieser Destination.",
+    "noSites": "Noch keine Site",
+    "noSitesText": "Lege zuerst eine Site an — Destinationen gehören zu einer Site.",
+    "createSite": "Site anlegen",
+    "empty": "Keine Destinationen für {site}",
+    "emptyAll": "Noch keine Destinationen",
+    "emptyText": "Füge eine Werbeplattform, ein Analytics-Tool, ein Affiliate-Netzwerk oder einen Webhook hinzu. Der Zustand wird aus echten Zustellversuchen gemessen, nie geschätzt.",
+    "showAllSites": "Alle Sites anzeigen",
+    "summary": {
+      "total": "Destinationen",
+      "critical": "Handlungsbedarf",
+      "warning": "Warnungen",
+      "healthy": "Gesund",
+      "healthyHint": "verbunden, kein offenes Problem",
+      "paused": "Pausiert"
+    },
+    "attention": {
+      "title": "Zuerst beachten",
+      "none": "Kein offenes Problem in den gemessenen Daten."
+    },
+    "filter": {
+      "label": "Destinationen filtern",
+      "all": "Alle",
+      "attention": "Handlungsbedarf",
+      "paused": "Pausiert",
+      "healthy": "Gesund"
+    },
+    "columns": {
+      "destination": "Destination",
+      "status": "Status",
+      "health": "Zustand",
+      "credentials": "Zugangsdaten",
+      "deliveries": "Zustellungen {hours} h",
+      "queue": "Queue",
+      "lastSuccess": "Letzter Erfolg",
+      "actions": "Aktionen"
+    },
+    "table": {
+      "caption": "Destinationen mit gemessenem Zustand, Zugangsdaten, Zustellungen und Queue-Backlog",
+      "testMode": "Testmodus",
+      "apiVersion": "API {version}",
+      "showDetails": "Details für {name} anzeigen",
+      "hideDetails": "Details für {name} ausblenden",
+      "details": "Details"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "not_connected": "Nicht verbunden",
+      "connected": "Verbunden",
+      "paused": "Pausiert",
+      "error": "Fehler"
+    },
+    "health": {
+      "healthy": "Gesund",
+      "degraded": "Eingeschränkt",
+      "unhealthy": "Gestört",
+      "not_connected": "Nicht verbunden",
+      "unknown": "Nicht geprüft",
+      "checkedAt": "Geprüft {when}",
+      "neverChecked": "Noch nie geprüft"
+    },
+    "credentials": {
+      "title": "Gespeicherte Zugangsdaten",
+      "none": "Keine gespeichert",
+      "no_expiry": "Kein Ablaufdatum gemeldet",
+      "ok": "Gültig, läuft ab {when}",
+      "expiring": "Läuft ab {when}",
+      "expired": "Abgelaufen {when}",
+      "inactive": "Inaktiv",
+      "missing": "Fehlt: {kinds}",
+      "lastValidated": "Zuletzt geprüft {when}",
+      "neverValidated": "Noch nie geprüft",
+      "kind": "Art",
+      "label": "Bezeichnung",
+      "statusLabel": "Status",
+      "expires": "Läuft ab",
+      "validated": "Geprüft",
+      "last4": "endet auf {last4}",
+      "status": {
+        "active": "Aktiv",
+        "rotated": "Rotiert",
+        "revoked": "Widerrufen",
+        "expired": "Abgelaufen"
+      }
+    },
+    "oauth": {
+      "title": "OAuth-Verbindung",
+      "provider": "Anbieter",
+      "account": "Konto",
+      "accountUnknown": "Konto nicht gemeldet",
+      "requestedScopes": "Angeforderte Scopes",
+      "grantedScopes": "Gewährte Scopes",
+      "grantedUnknown": "Vom Anbieter nicht gemeldet",
+      "accessExpires": "Access-Token läuft ab {when}",
+      "accessExpiresUnknown": "Ablauf des Access-Tokens nicht gemeldet",
+      "refreshHint": "Access-Tokens werden automatisch aus dem gespeicherten Refresh-Token erneuert."
+    },
+    "api": {
+      "title": "Anbieter-API",
+      "version": "API-Version {version}",
+      "verified": "Dokumentation geprüft {date}",
+      "sunset": "Version endet {date} (in {days} Tagen)",
+      "sunsetPassed": "Abschaltdatum {date} ist überschritten",
+      "noSunset": "Keine Abschaltung angekündigt",
+      "docs": "Anbieterdokumentation"
+    },
+    "deliveries": {
+      "title": "Zustellungen (letzte {hours} h)",
+      "summary": "{success} zugestellt · {failed} fehlgeschlagen · {retry} in Wiederholung",
+      "skipped": "{count} durch Consent oder Pause übersprungen",
+      "none": "Keine Versuche in den letzten {hours} h",
+      "errorRate": "{rate} der Versuche fehlgeschlagen",
+      "errorRateNone": "Fehlerquote ohne Versuche nicht messbar"
+    },
+    "rateLimit": {
+      "title": "Rate Limits",
+      "none": "Kein Rate Limit in den letzten {hours} h erreicht",
+      "count": "{count} rate-limitiert in den letzten {hours} h",
+      "lastWait": "Anbieter forderte {wait} Wartezeit",
+      "lastAt": "Zuletzt {when}"
+    },
+    "queue": {
+      "title": "Queue-Backlog",
+      "notMeasured": "Noch nicht gemessen",
+      "notMeasuredHint": "Der Destination-Health-Job des Workers hat für diese Destination noch nicht berichtet.",
+      "stale": "Veraltet — gemessen {when}",
+      "measuredAt": "Gemessen {when}",
+      "ready": "{count} bereit",
+      "scheduled": "{count} geplante Wiederholungen",
+      "inFlight": "{count} in Bearbeitung",
+      "empty": "Queue leer",
+      "lag": "Ältester wartet seit {duration}",
+      "dead": "{count} in der Dead-Letter-Queue"
+    },
+    "freshness": {
+      "missingTitle": "Queue-Backlog noch nicht gemessen",
+      "missingText": "Der Destination-Health-Job des Workers hat für {count} Destinationen noch keinen Snapshot geschrieben. Zustellzahlen, Zugangsdaten und API-Versionen auf dieser Seite sind live; Queue-Werte erscheinen, sobald der Job gelaufen ist.",
+      "staleTitle": "Queue-Werte sind veraltet",
+      "staleText": "Der letzte Worker-Snapshot stammt von {when}. Zustellzahlen, Zugangsdaten und API-Versionen sind live."
+    },
+    "lastSuccess": {
+      "never": "Nie"
+    },
+    "issues": {
+      "credential_expired": "Zugangsdaten sind abgelaufen — der Anbieter wird Zustellungen ablehnen.",
+      "auth_failures": "Der Anbieter hat die Zugangsdaten bei {count} Versuchen abgelehnt.",
+      "status_error": "Die Destination ist im Fehlerzustand.",
+      "health_unhealthy": "Die letzte Zustandsprüfung ist fehlgeschlagen.",
+      "credential_missing": "Erforderliche Zugangsdaten fehlen: {kinds}.",
+      "credential_expiring": "Zugangsdaten laufen ab {when}.",
+      "health_degraded": "Die letzte Zustandsprüfung meldete einen eingeschränkten Dienst.",
+      "rate_limited": "Der Anbieter hat {count} Versuche rate-limitiert.",
+      "high_error_rate": "{rate} der Versuche sind fehlgeschlagen.",
+      "queue_lag": "Nachrichten warten seit {duration}.",
+      "dead_letters": "{count} Events konnten nicht zugestellt werden und liegen in der Dead-Letter-Queue.",
+      "api_sunset": "API-Version {version} endet in {days} Tagen.",
+      "not_connected": "Die Destination ist nicht verbunden; es wird nichts zugestellt.",
+      "paused": "Pausiert {when}; Events für diese Destination werden übersprungen.",
+      "draft": "Einrichtung nicht abgeschlossen — Assistent öffnen.",
+      "no_delivery_yet": "Noch keine erfolgreiche Zustellung."
+    },
+    "reasons": {
+      "credentials_rejected": "Anbieter hat die Zugangsdaten abgelehnt",
+      "credential_missing": "Zugangsdaten fehlen oder wurden widerrufen",
+      "credential_expired": "Zugangsdaten abgelaufen",
+      "rate_limited": "Rate Limit des Anbieters erreicht",
+      "invalid_payload": "Payload von der Validierung abgelehnt",
+      "consent_missing": "Übersprungen: erforderlicher Consent nicht erteilt",
+      "destination_paused": "Übersprungen: Destination pausiert",
+      "gpc_opt_out": "Übersprungen: Global-Privacy-Control-Opt-out",
+      "policy_blocked": "Durch Policy übersprungen",
+      "vendor_timeout": "Anbieter hat nicht rechtzeitig geantwortet",
+      "vendor_temporary": "Vorübergehender Anbieterfehler",
+      "vendor_rejected": "Anbieter hat die Anfrage abgelehnt",
+      "destination_missing": "Destination nicht mehr in der veröffentlichten Konfiguration",
+      "unknown": "Unbekannter Fehler"
+    },
+    "failures": {
+      "title": "Letzte Fehler (7 Tage)",
+      "none": "Keine fehlgeschlagenen Versuche in den letzten 7 Tagen.",
+      "attempt": "Versuch {n}",
+      "http": "HTTP {status}",
+      "willRetry": "wird wiederholt",
+      "redacted": "Anbieternachricht (redigiert)"
+    },
+    "actions": {
+      "diagnose": "Diagnostizieren",
+      "diagnosing": "Diagnose läuft…",
+      "diagnoseHint": "Führt die Credential-Prüfung und die Zustandsprüfung des Connectors mit den gespeicherten Geheimnissen aus und zeichnet das Ergebnis auf.",
+      "pause": "Pausieren",
+      "resume": "Fortsetzen",
+      "pauseTitle": "Zustellungen an {name} pausieren?",
+      "pauseText": "Events werden weiterhin erfasst und an alle anderen Destinationen zugestellt. Events für diese Destination werden während der Pause übersprungen — sie werden nicht für später aufbewahrt. Du kannst jederzeit fortsetzen.",
+      "pauseConfirm": "Destination pausieren",
+      "resumeTitle": "Zustellungen an {name} fortsetzen?",
+      "resumeText": "Track prüft zuerst die Zugangsdaten. Zustellungen laufen nur weiter, wenn der Anbieter die gespeicherten Zugangsdaten akzeptiert; andernfalls bleibt die Destination getrennt und der Grund wird hier angezeigt.",
+      "resumeConfirm": "Prüfen und fortsetzen",
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "working": "Wird ausgeführt…",
+      "readOnly": "Deine Rolle kann diese Seite ansehen; Diagnose, Pausieren und Fortsetzen erfordern die Integrations-Berechtigung."
+    },
+    "results": {
+      "diagnoseOk": "Anbieter hat die Zugangsdaten akzeptiert.",
+      "diagnoseFailed": "Anbieter hat die Zugangsdaten abgelehnt.",
+      "diagnoseNotConnected": "Noch keine Zugangsdaten zum Prüfen.",
+      "resumed": "Fortgesetzt — Zustellungen laufen weiter.",
+      "notResumed": "Nicht fortgesetzt — der Anbieter hat die Zugangsdaten nicht akzeptiert.",
+      "paused": "Pausiert. Events für diese Destination werden übersprungen.",
+      "statusNow": "Status jetzt: {status}",
+      "healthNow": "Zustand: {health}",
+      "error": {
+        "forbidden": "Dazu bist du nicht berechtigt.",
+        "not_found": "Destination nicht gefunden.",
+        "invalid": "Diese Aktion ist im aktuellen Zustand der Destination nicht möglich.",
+        "connector_unavailable": "Dieser Connector ist auf dieser Plattform nicht verfügbar.",
+        "vault_missing": "Der Credential-Speicher ist nicht konfiguriert; gespeicherte Geheimnisse können nicht gelesen werden.",
+        "timeout": "Der Anbieter hat nicht innerhalb von 25 Sekunden geantwortet.",
+        "failed": "Die Prüfung konnte nicht abgeschlossen werden.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+      }
+    },
+    "time": {
+      "unknown": "unbekannt"
+    }
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "billingUsage": {
+    "subnav": {
+      "label": "Sections de facturation",
+      "overview": "Aperçu",
+      "usage": "Consommation & garde-fou des coûts"
+    },
+    "title": "Usage & Cost Guard",
+    "intro": "Événements facturables de la période en cours, prévision jusqu’à la fin de période, dépassement en packs d’événements, charge inhabituelle par rapport à la référence sur 4 semaines et votre choix explicite de ce qui se passe à la limite. Chaque chiffre provient du registre de consommation et des compteurs de période ; rien n’est estimé en silence.",
+    "comparePlans": "Comparer les plans",
+    "context": {
+      "plan": "Plan {name}",
+      "period": "Période {from} – {to} (UTC)",
+      "updated": "Compteurs mis à jour le {at}",
+      "noCounters": "Pas encore de compteurs de période",
+      "ledger": "Dernière entrée du registre le {at}",
+      "stale": "Compteurs en retard sur le registre"
+    },
+    "alerts": {
+      "hardLimitTitle": "Limite atteinte — traitement marqué pour suspension",
+      "hardLimitText": "Le contrôle de consommation a marqué cette période le {at} selon la politique « {policy} ». Modifiez la politique ci-dessous ou changez de plan depuis l’aperçu ; le marqueur est réévalué dès l’enregistrement.",
+      "softLimitTitle": "Limite mensuelle d’événements atteinte",
+      "softLimitAllow": "Les événements au-delà de la limite sont facturés en packs d’événements, car le dépassement est autorisé.",
+      "softLimitCostLimit": "Les événements au-delà de la limite sont facturés en packs jusqu’à votre plafond mensuel de {limit} ; le traitement se suspend au-delà de {pauseAt} événements.",
+      "softLimitPause": "Le traitement se suspend à {pauseAt} événements ({grace} % de tolérance au-dessus de la limite), sauf si vous autorisez le dépassement ou changez de plan.",
+      "staleTitle": "Les compteurs de période sont en retard sur le registre",
+      "staleText": "Le registre contient des événements plus récents que la dernière mise à jour des compteurs ({updated}). Les compteurs rattrapent leur retard à la prochaine exécution de l’ingestion ; le graphique quotidien inclut déjà les événements récents.",
+      "ledgerOnlyTitle": "Compté depuis le registre",
+      "ledgerOnlyText": "Les compteurs de période n’ont pas encore été écrits ; le chiffre facturable est donc la somme des lignes du registre de cette période.",
+      "noLimitTitle": "Aucun plafond d’événements fixe dans ce plan",
+      "noLimitText": "Dépassement, seuils et option de suspension ne s’appliquent pas ; le volume est convenu dans votre contrat."
+    },
+    "empty": {
+      "title": "Aucun événement facturable dans cette période pour l’instant",
+      "text": "Le registre de consommation n’a aucune ligne pour {period}. Les événements apparaissent ici dès que l’ingestion les accepte ; les événements en mode test, les doublons et les nouvelles tentatives ne comptent jamais.",
+      "action": "Ouvrir les événements"
+    },
+    "stats": {
+      "billable": {
+        "label": "Événements facturables",
+        "ofLimit": "{pct} de {limit}",
+        "noLimit": "Aucun plafond fixe",
+        "sourcePeriod": "Depuis les compteurs de période",
+        "sourceLedger": "Depuis le registre"
+      },
+      "forecast": {
+        "label": "Prévision à la fin de période",
+        "hint": "Linéaire sur {from} – {to} · {rate} par jour",
+        "noBasis": "Aucune ligne du registre sur les 7 derniers jours — égale au compte du jour",
+        "ofLimit": "{pct} de la limite",
+        "above": "{events} au-delà de la limite"
+      },
+      "overage": {
+        "label": "Dépassement actuel",
+        "none": "Aucun",
+        "packs": "{packs} × {packEvents} événements · {cost}",
+        "events": "{events} au-delà de la limite",
+        "contractual": "Contractuel — aucun pack pour ce plan",
+        "forecast": "Prévision à la fin de période : {packs} packs · {cost}",
+        "forecastNone": "Prévision à la fin de période : aucun"
+      },
+      "load": {
+        "label": "Charge vs référence 4 semaines",
+        "elevated": "Élevée",
+        "normal": "Normale",
+        "reduced": "Réduite",
+        "unknown": "Inconnue",
+        "deviation": "{deviation} · {recent} vs {baseline} par jour",
+        "noBaseline": "Pas encore de référence — {from} – {to} ne contient aucun événement",
+        "peak": "Jour le plus chargé {day} : {events}"
+      }
+    },
+    "meter": {
+      "title": "Limite et seuils d’alerte",
+      "intro": "Événements facturables de cette période par rapport à la limite mensuelle du plan. Les alertes sont horodatées par le contrôle de consommation à 70, 90 et 100 % ; les dates attendues proviennent de la prévision sur 7 jours.",
+      "used": "utilisés",
+      "limit": "Limite",
+      "valueText": "{used} sur {limit} ({pct})",
+      "exceeded": "Dépassée de {events}",
+      "thresholds": {
+        "title": "Seuils d’alerte",
+        "threshold": "{pct} %",
+        "events": "{events} événements",
+        "reached": "Atteint — alerte horodatée le {at}",
+        "reachedPending": "Atteint — l’alerte sera horodatée au prochain contrôle de consommation",
+        "expected": "Attendu le {at} · {remaining} restants",
+        "notExpected": "Non attendu dans cette période · {remaining} restants"
+      },
+      "pauseAt": "Le traitement se suspend à {events} événements ({pct} de la limite).",
+      "neverPauses": "Avec la politique actuelle, le traitement ne se suspend jamais ; le dépassement est facturé en packs d’événements.",
+      "hardLimitAt": "Marqué le {at}."
+    },
+    "chart": {
+      "title": "Événements facturables par jour",
+      "intro": "Jours UTC du {from} au {to} : la référence sur 4 semaines, les 7 jours complets sur lesquels la prévision est moyennée, et la journée en cours. La prévision est une projection et n’est pas dessinée.",
+      "aria": "Diagramme en barres des événements facturables sur {days} jours : {recent} sur les 7 derniers jours complets, {baseline} sur la référence de 4 semaines précédente, {today} aujourd’hui jusqu’à présent.",
+      "legend": {
+        "baseline": "Référence {from} – {to}",
+        "recent": "7 derniers jours {from} – {to}",
+        "today": "Aujourd’hui (partiel)"
+      },
+      "details": "Afficher les valeurs quotidiennes",
+      "day": "Jour",
+      "events": "Événements facturables",
+      "window": {
+        "label": "Fenêtre",
+        "baseline": "Référence",
+        "recent": "7 derniers jours",
+        "today": "Aujourd’hui"
+      },
+      "empty": "Aucun événement facturable dans cette fenêtre."
+    },
+    "policy": {
+      "title": "Ce qui se passe à la limite",
+      "intro": "Le dépassement n’est jamais activé de lui-même. Vous choisissez si les événements supplémentaires sont facturés en packs, plafonnés par une limite de coût mensuelle, ou si le traitement se suspend après la période de tolérance. Le contrôle de consommation applique votre choix à chaque exécution et chaque modification est auditée.",
+      "current": "Politique actuelle :",
+      "legend": "Politique de dépassement",
+      "readOnly": "Votre rôle peut consulter la politique mais pas la modifier.",
+      "options": {
+        "allow": {
+          "label": "Autoriser le dépassement",
+          "description": "Les événements au-delà de la limite sont facturés en packs d’événements au prix catalogue. Le traitement ne se suspend jamais."
+        },
+        "cost_limit": {
+          "label": "Plafond de coût mensuel",
+          "description": "Les packs d’événements sont facturés jusqu’au montant que vous fixez ; dès que les packs nécessaires coûteraient davantage, le traitement se suspend pour le reste de la période."
+        },
+        "pause": {
+          "label": "Suspendre à la limite",
+          "description": "Le traitement continue pendant une période de tolérance au-dessus de la limite, puis se suspend pour le reste de la période. Aucun pack n’est jamais facturé."
+        }
+      },
+      "notes": {
+        "cost_limit_unset": "Aucun montant défini — se comporte comme « Suspendre à la limite ».",
+        "no_pack": "Aucun pack pour ce plan — se comporte comme « Suspendre à la limite »."
+      },
+      "costLimit": {
+        "label": "Plafond de coût mensuel (euros entiers)",
+        "hint": "{packs} packs de {events} événements à {price} chacun tiennent dans ce plafond.",
+        "hintPack": "Les packs de {events} événements coûtent {price} chacun.",
+        "noPack": "Ce plan n’a pas de pack d’événements ; un plafond de coût ne peut pas acheter de dépassement.",
+        "invalid": "Saisissez un montant entier entre {min} et {max}."
+      },
+      "consequence": {
+        "allow": "Chaque tranche de {events} événements au-delà de la limite est facturée comme un pack à {price}, sans plafond.",
+        "costLimit": "Jusqu’à {limit} par mois paie {packs} packs ({events} événements au-delà de la limite). Le traitement se suspend au-delà de {pauseAt} événements facturables.",
+        "costLimitUnset": "Saisissez un montant pour voir combien de packs il couvre.",
+        "pause": "Le traitement se suspend à {pauseAt} événements facturables ({grace} % au-dessus de la limite). Aucun pack n’est facturé.",
+        "noLimit": "Ce plan n’a pas de plafond d’événements fixe ; la politique n’a d’effet qu’avec un plan plafonné.",
+        "noPack": "Ce plan n’a pas de pack d’événements, le dépassement ne peut donc pas être acheté ; le traitement se suspend après la période de tolérance."
+      },
+      "save": "Enregistrer la politique",
+      "unchanged": "Aucune modification à enregistrer.",
+      "confirm": {
+        "title": "Confirmer la politique de dépassement",
+        "text": "La politique s’applique immédiatement à la période en cours : le marqueur de suspension est réévalué à l’enregistrement, et le contrôle de consommation applique la même règle à chaque exécution.",
+        "acknowledge": "Je comprends que les événements au-delà de la limite seront facturés en packs d’événements au prix catalogue.",
+        "cancel": "Annuler",
+        "confirm": "Enregistrer la politique",
+        "working": "Enregistrement…",
+        "close": "Fermer"
+      },
+      "saved": "Politique enregistrée.",
+      "savedPaused": "Politique enregistrée. Avec cette politique, la période en cours est marquée comme suspendue.",
+      "savedNotPaused": "Politique enregistrée. La période en cours n’est pas suspendue.",
+      "errors": {
+        "invalid": "Le choix n’a pas pu être enregistré : vérifiez le plafond de coût.",
+        "forbidden": "Votre rôle ne peut pas modifier la politique de facturation.",
+        "generic": "Une erreur s’est produite. Rien n’a été modifié."
+      }
+    },
+    "comparison": {
+      "title": "Pack d’événements ou plan supérieur ?",
+      "intro": "Pour la prévision de {events} événements facturables par mois, aux prix catalogue par {period}.",
+      "introNoBasis": "Pour {events} événements facturables par mois (compte du jour — pas encore de rythme sur 7 jours), aux prix catalogue par {period}.",
+      "columns": {
+        "option": "Option",
+        "base": "Prix du plan / {period}",
+        "included": "Inclus / mois",
+        "overage": "Dépassement / mois",
+        "overageCost": "Coût des packs / {period}",
+        "total": "Total / {period}"
+      },
+      "current": "Plan actuel",
+      "cheapest": "Le moins cher",
+      "packs": "{events} → {packs} packs",
+      "contractual": "{events} au-delà de ce que couvrent les packs",
+      "noOverage": "Aucun",
+      "stay": "Rester sur {plan} avec des packs d’événements est l’option la moins chère pour ce volume.",
+      "upgradeHint": "{plan} coûterait {savings} de moins par {period} pour ce volume.",
+      "noneCheapest": "Aucune option ne peut être tarifée pour ce volume à partir du catalogue.",
+      "noSilent": "Track ne change jamais votre plan et n’achète jamais de packs de sa propre initiative.",
+      "contractualNote": "Ce plan n’a pas de prix catalogue ; le dépassement est convenu dans votre contrat.",
+      "none": "Rien à comparer.",
+      "choosePlan": "Comparer les plans",
+      "taxNote": "Prix catalogue hors TVA ; le montant de votre facture provient de Stripe.",
+      "per": {
+        "monthly": "mois",
+        "yearly": "an"
+      }
+    },
+    "sites": {
+      "title": "Événements facturables par site",
+      "intro": "Lignes du registre de cette période par site. La consommation est mesurée par organisation ; le site actif est mis en évidence.",
+      "site": "Site",
+      "trackingId": "ID de tracking",
+      "events": "Événements facturables",
+      "share": "Part",
+      "active": "Site actif",
+      "empty": "Aucune ligne du registre pour cette période."
+    },
+    "rules": {
+      "title": "Ce qui compte comme événement facturable",
+      "intro": "Un événement est compté exactement une fois lorsque l’ingestion l’accepte ; sa transmission à plusieurs destinations n’augmente jamais la consommation. Ne sont jamais comptés :"
+    },
+    "overview": {
+      "guard": {
+        "title": "Consommation & garde-fou des coûts",
+        "text": "Prévision, dépassement, charge inhabituelle et votre choix de ce qui se passe à la limite.",
+        "open": "Ouvrir le garde-fou des coûts",
+        "policy": "Politique",
+        "forecast": "Prévision à la fin de période",
+        "forecastNoBasis": "pas encore de rythme sur 7 jours",
+        "thresholds": "{reached} seuils d’alerte sur {total} atteints",
+        "noLimit": "Aucun plafond d’événements fixe dans ce plan",
+        "paused": "Marqué comme suspendu"
+      },
+      "history": {
+        "caption": "Événements facturables, acceptés, écartés et dédupliqués par période"
+      },
+      "plans": "Plans",
+      "status": {
+        "none": "Aucun abonnement",
+        "trialing": "Période d’essai",
+        "active": "Actif",
+        "past_due": "Paiement en retard",
+        "canceled": "Résilié",
+        "unpaid": "Impayé",
+        "incomplete": "Incomplet",
+        "incomplete_expired": "Incomplet (expiré)",
+        "paused": "En pause"
+      }
+    }
+  }
+}

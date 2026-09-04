@@ -1,0 +1,556 @@
+{
+  "events": {
+    "nav": {
+      "label": "Events-module",
+      "overview": "Overzicht",
+      "coverage": "Dekkingsmatrix",
+      "explorer": "Live explorer",
+      "testLab": "Test lab"
+    },
+    "module": {
+      "title": "Events",
+      "noSite": "Nog geen site",
+      "noSiteText": "Maak je eerste site aan om events te ontvangen, hun dekking te controleren en hun lineage te bekijken.",
+      "createSite": "Site aanmaken",
+      "noEnvironment": "Deze site heeft nog geen omgeving.",
+      "environment": {
+        "production": "Productie",
+        "staging": "Staging",
+        "development": "Test"
+      }
+    },
+    "common": {
+      "yes": "ja",
+      "no": "nee",
+      "never": "nooit",
+      "unknown": "onbekend",
+      "lastUpdated": "Laatst bijgewerkt {time}",
+      "refresh": "Vernieuwen",
+      "error": "De gegevens konden niet worden geladen. Probeer het opnieuw.",
+      "testEvent": "test",
+      "verified": "geverifieerd",
+      "open": "Openen",
+      "actions": "Acties",
+      "close": "Sluiten"
+    },
+    "windows": {
+      "1h": "Laatste uur",
+      "24h": "Laatste 24 uur",
+      "7d": "Laatste 7 dagen",
+      "30d": "Laatste 30 dagen"
+    },
+    "sources": {
+      "all": "Alle bronnen",
+      "browser": "Browser",
+      "server": "Server",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware",
+      "webhook": "Webhook",
+      "legacy-import": "Import"
+    },
+    "states": {
+      "captured": "Vastgelegd",
+      "accepted": "Geaccepteerd",
+      "normalized": "Genormaliseerd",
+      "policy_passed": "Opgeslagen",
+      "policy_blocked": "Geblokkeerd door policy",
+      "deduplicated": "Gededupliceerd",
+      "routed": "Gerouteerd",
+      "delivered": "Afgeleverd",
+      "rejected": "Afgewezen",
+      "imported": "Geïmporteerd"
+    },
+    "stages": {
+      "captured": "Vastgelegd",
+      "accepted": "Geaccepteerd",
+      "normalized": "Genormaliseerd",
+      "policy": "Policy",
+      "deduplicated": "Gededupliceerd",
+      "routed": "Gerouteerd",
+      "delivered": "Afgeleverd",
+      "rejected": "Beëindigd"
+    },
+    "outcomes": {
+      "ok": "OK",
+      "rejected": "afgewezen",
+      "blocked": "geblokkeerd",
+      "unique": "uniek",
+      "duplicate": "duplicaat",
+      "none": "niet gerouteerd",
+      "skipped": "overgeslagen",
+      "delivered": "afgeleverd",
+      "retry": "nieuwe poging",
+      "failed": "mislukt",
+      "dead": "opgegeven",
+      "pending": "in afwachting",
+      "unknown": "onbekend"
+    },
+    "reasons": {
+      "consent_missing": "Er is geen toestemmingssignaal vastgelegd, dus het event is niet opgeslagen.",
+      "consent_denied": "De bezoeker heeft het doel dat dit event nodig heeft niet verleend.",
+      "gpc_opt_out": "Global Privacy Control staat aan: geen marketing of personalisatie.",
+      "purpose_not_granted": "Het doel dat deze bestemming vereist is niet verleend.",
+      "inferred_data_not_exportable": "Afgeleide waarden mogen nooit een advertentieplatform bereiken.",
+      "destination_paused": "De bestemming is gepauzeerd of niet verbonden.",
+      "pii_blocked": "Het event bevatte een geheim, kaartnummer of IBAN en is afgewezen.",
+      "bot": "Het verzoek leek op een bot.",
+      "duplicate_event": "Hetzelfde event-id was al ontvangen.",
+      "duplicate_conversion": "Deze bestelling was al via hetzelfde pad gemeld.",
+      "verified_supersedes_browser": "Een geverifieerd serverrecord heeft de browserwaarneming van deze bestelling vervangen.",
+      "cross_path_pair": "De bestelling is ook via het andere pad gezien; beide blijven bewaard en worden door de leverancier gededupliceerd.",
+      "invalid_event_name": "De eventnaam is ongeldig.",
+      "timestamp_out_of_window": "De clienttijdstempel wijkt te veel af van de servertijd.",
+      "invalid_url": "De pagina-URL is ongeldig.",
+      "no_config": "Voor deze omgeving is geen configuratie gepubliceerd, dus er wordt niets gerouteerd.",
+      "no_destinations": "De gepubliceerde configuratie heeft geen bestemmingen.",
+      "no_mapping": "Geen enkele bestemming koppelt dit event.",
+      "policy_blocked": "Elke gekoppelde bestemming is geblokkeerd door het toestemmingsbeleid.",
+      "destination_disabled": "De bestemming is uitgeschakeld in de configuratie.",
+      "browser_only": "De bestemming werkt alleen in de browser.",
+      "integration_missing": "De bestemming bestaat niet meer.",
+      "validation": "De leverancierspayload kwam niet door de validatie.",
+      "not_mappable": "De connector heeft geen payload voor dit event gemaakt.",
+      "destination_missing": "De integratie of de configuratie ervan bestaat niet meer.",
+      "circuit_open": "De bestemming is tijdelijk gepauzeerd na herhaalde fouten.",
+      "temporary": "Tijdelijke leveranciersfout",
+      "permanent": "Permanente leveranciersfout",
+      "rate_limited": "De leverancier heeft het verzoek beperkt.",
+      "auth": "De leverancier heeft de inloggegevens afgewezen.",
+      "credential_expired": "De inloggegevens ontbreken of zijn verlopen.",
+      "invalid_payload": "De leverancier heeft de payload afgewezen.",
+      "timeout": "De leverancier antwoordde niet op tijd.",
+      "unreachable": "De collector was niet bereikbaar.",
+      "ingest_host_not_configured": "Er is geen collector-host geconfigureerd."
+    },
+    "detailKeys": {
+      "purposes_granted": "verleende doelen",
+      "purpose_required": "vereist doel",
+      "stripped_fields": "verwijderde velden",
+      "pii_redacted": "geredigeerd",
+      "consent_source": "toestemmingsbron",
+      "region": "regio",
+      "gpc": "GPC",
+      "policy_version": "policy",
+      "config_version": "configversie",
+      "test_mode": "testmodus",
+      "billable": "factureerbaar",
+      "planned": "in eventplan",
+      "adopted_browser_context": "browsercontext overgenomen",
+      "connector_type": "connector",
+      "vendor_event": "leveranciersevent",
+      "mode": "modus",
+      "http_status": "HTTP",
+      "duration_ms": "duur (ms)",
+      "error_class": "foutklasse",
+      "attempt": "poging",
+      "next_retry_at": "volgende poging",
+      "key": "dedup-sleutel",
+      "prior_source": "eerdere bron",
+      "findings": "bevindingen",
+      "warnings": "waarschuwingen",
+      "destination_status": "bestemmingsstatus",
+      "not_routed": "niet-gerouteerde bestemmingen"
+    },
+    "overview": {
+      "title": "Events",
+      "intro": "Wat de actieve omgeving heeft ontvangen, opgeslagen, gededupliceerd en afgeleverd, waar de pipeline vastloopt, en de drie tools om dekking te controleren, lineage te bekijken en gecontroleerde tests uit te voeren.",
+      "day": {
+        "title": "Pipeline",
+        "window": "laatste 24 uur · aggregaten per uur",
+        "received": "Ontvangen",
+        "accepted": "Opgeslagen",
+        "dropped": "Verworpen",
+        "deduplicated": "Gededupliceerd",
+        "delivered": "Afgeleverd",
+        "failed": "Aflevering mislukt"
+      },
+      "noDay": "In de laatste 24 uur zijn geen events verwerkt, dus er zijn geen cijfers om te tonen.",
+      "droppedReasons": "Redenen voor verwerpen",
+      "sources": {
+        "title": "Bronnen"
+      },
+      "lastBrowser": "Laatste browser-event",
+      "lastServer": "Laatste server-event",
+      "noEventsYet": "Er heeft nog geen event deze omgeving bereikt.",
+      "install": "Snippet installeren",
+      "pipeline": {
+        "title": "Pipelinestatus"
+      },
+      "deadLetters": "Opgegeven afleveringen",
+      "deadLettersHint": "Afleveringen die de worker heeft opgegeven na herhaalde leveranciersfouten. Ze blijven staan tot ze opnieuw worden afgespeeld vanuit het Destination Health Center.",
+      "lineage": "Lineage-registratie",
+      "lineageOn": "actief",
+      "lineageOff": "niet beschikbaar",
+      "lineageOffText": "De lineage-tabel (migratie 0007) is nog niet toegepast. Tot dan leidt de explorer de fasen af uit de opgeslagen status, zonder tijdstempels per fase.",
+      "modules": {
+        "title": "Tools",
+        "coverage": {
+          "title": "Event Coverage Matrix",
+          "text": "Elk relevant event tegenover browserbron, serverbron, toestemming, verplichte parameters, datakwaliteit en bestemmingen — met de reparatieactie per cel."
+        },
+        "explorer": {
+          "title": "Live Event Explorer",
+          "text": "Browser- en server-events met hun volledige lineage: vastgelegd, geaccepteerd, genormaliseerd, policy, gededupliceerd, gerouteerd, afgeleverd of afgewezen. Geredigeerde payloads, leveranciersantwoorden en redenen in gewone taal."
+        },
+        "testLab": {
+          "title": "Live Test Lab",
+          "text": "Begeleide PageView-, Lead-, AddToCart-, Checkout- en Purchase-journeys via de echte collector in de testomgeving — toestemmingsbeslissing, deduplicatie, routering en het echte testantwoord van elke bestemming."
+        }
+      },
+      "byEvent": "Per event",
+      "byEventWindow": "laatste 7 dagen",
+      "empty": "Geen events in de laatste 7 dagen.",
+      "emptyText": "Installeer de snippet of stuur een testjourney; hier verschijnen de geaccepteerde en verworpen aantallen per event.",
+      "columns": {
+        "event": "Event",
+        "sources": "Bronnen",
+        "received": "Ontvangen",
+        "accepted": "Opgeslagen",
+        "dropped": "Verworpen",
+        "delivered": "Afgeleverd",
+        "failed": "Mislukt",
+        "lastSeen": "Laatst gezien"
+      }
+    },
+    "coverage": {
+      "title": "Event Coverage Matrix",
+      "intro": "Relevante events als rijen — uit het eventplan, de eventdefinities en de waarnemingen — tegenover bronnen, toestemming, verplichte parameters, datakwaliteit en bestemmingen van de actieve omgeving. Elke cel toont status, laatste tijdstip en de volgende reparatiestap.",
+      "configVersion": "Configuratie v{version}",
+      "noConfig": "Geen configuratie gepubliceerd",
+      "generatedAt": "berekend {time}",
+      "noPlanTitle": "Nog geen eventplan",
+      "noPlanText": "Deze omgeving heeft geen gepubliceerde configuratie en geen eventdefinities. De rijen hieronder komen alleen uit waargenomen events; start de AI Setup om te bepalen welke events ertoe doen.",
+      "empty": "Nog niets om te dekken",
+      "emptyText": "Geen eventplan, geen eventdefinities en geen waargenomen events in de laatste 7 dagen.",
+      "emptyAction": "AI Setup openen",
+      "caption": "Dekking van de laatste {days} dagen per event",
+      "columns": {
+        "event": "Event",
+        "browser": "Browserbron",
+        "server": "Serverbron",
+        "consent": "Toestemming",
+        "params": "Verplichte parameters",
+        "quality": "Datakwaliteit",
+        "destinations": "Bestemmingen"
+      },
+      "statuses": {
+        "ok": "OK",
+        "warn": "Let op",
+        "bad": "Ontbreekt",
+        "info": "Opmerking",
+        "none": "Niet verwacht",
+        "unknown": "Niet gemeten"
+      },
+      "legend": "Legenda",
+      "legendText": {
+        "ok": "gemeten en in orde",
+        "warn": "verouderd, gedeeltelijk of met fouten",
+        "bad": "verwacht maar ontbrekend of falend",
+        "info": "werkt zoals geconfigureerd, het bekijken waard",
+        "none": "niet van toepassing op dit event",
+        "unknown": "nog geen meting"
+      },
+      "messages": {
+        "fresh": "Gezien in de laatste 24 uur.",
+        "stale": "Gezien in het venster, maar niet in de laatste 24 uur.",
+        "missing": "Verwacht voor dit event, niets ontvangen in het venster.",
+        "notExpected": "Deze bron is niet geconfigureerd voor het event.",
+        "noData": "Geen events in het venster.",
+        "consentClean": "Geen event geblokkeerd door toestemming; geen aflevering overgeslagen.",
+        "consentBlocked": "{blocked} van {received} ontvangen events geblokkeerd door toestemming; {skipped} afleveringen overgeslagen.",
+        "consentSkipped": "{skipped} afleveringen overgeslagen omdat een doel niet was verleend.",
+        "noRequired": "Geen verplichte parameters voor dit event.",
+        "noSamples": "Geen opgeslagen events om te controleren.",
+        "paramsComplete": "Alle verplichte parameters aanwezig in de laatste {sampled} events.",
+        "paramsMissing": "Ontbreekt in sommige van de laatste {sampled} events: {missing}.",
+        "noIssues": "Geen openstaande datakwaliteitsproblemen.",
+        "openIssues": "{open} openstaande problemen, {critical} kritiek.",
+        "noDestinations": "Geen bestemming geconfigureerd voor deze site.",
+        "notMapped": "Geen enkele bestemming koppelt dit event.",
+        "mapped": "{n} bestemmingen"
+      },
+      "lastAt": "Laatst: {time}",
+      "actions": {
+        "installSnippet": "Snippet controleren",
+        "openSetup": "Oplossen in AI Setup",
+        "createSourceKey": "Source key aanmaken",
+        "openShop": "Shop koppelen",
+        "openConsent": "Consent & Privacy openen",
+        "openDataQuality": "Data Quality-inbox openen",
+        "openDestination": "Bestemming openen",
+        "addDestination": "Bestemming toevoegen",
+        "mapEvent": "Event koppelen",
+        "openExplorer": "Bekijken in de explorer"
+      },
+      "critical": "kritiek",
+      "custom": "aangepast",
+      "origin": {
+        "definition": "eventdefinitie",
+        "plan": "gepubliceerd plan",
+        "observed": "waargenomen"
+      },
+      "required": "Verplicht: {params}",
+      "destination": {
+        "counts": "{delivered} afgeleverd · {failed} mislukt · {skipped} overgeslagen",
+        "lastDelivered": "laatst afgeleverd {time}",
+        "lastFailed": "laatst mislukt {time}"
+      }
+    },
+    "explorer": {
+      "title": "Live Event Explorer",
+      "intro": "Elk browser- en server-event van de actieve omgeving met de volledige lineage. Payloads zijn geredigeerd, identifiers gemaskeerd; leveranciersantwoorden en redenen worden in gewone taal getoond. De lijst vernieuwt zichzelf zolang de pagina open staat.",
+      "filters": {
+        "label": "Filters",
+        "event": "Eventnaam",
+        "source": "Bron",
+        "status": "Status",
+        "window": "Tijdvenster",
+        "apply": "Toepassen",
+        "reset": "Herstellen"
+      },
+      "statuses": {
+        "all": "Alle",
+        "stored": "Opgeslagen",
+        "routed": "Gerouteerd",
+        "delivered": "Afgeleverd",
+        "failed": "Aflevering mislukt",
+        "deduplicated": "Gededupliceerd",
+        "rejected": "Afgewezen"
+      },
+      "polling": {
+        "auto": "Automatisch vernieuwen elke {seconds} s"
+      },
+      "stale": "De werkruimte is in een ander tabblad gewijzigd. Laad de pagina opnieuw om de actieve site te zien.",
+      "lineageOff": "Lineage-registratie niet beschikbaar",
+      "lineageOffText": "Migratie 0007 is niet toegepast: de fasen worden afgeleid uit de opgeslagen status en events die vóór opslag zijn afgewezen worden niet getoond.",
+      "list": {
+        "title": "Events",
+        "count": "{n} events",
+        "empty": "Geen events gevonden.",
+        "emptyText": "Vergroot het tijdvenster, wis de filters of stuur een testjourney vanuit het test lab.",
+        "loadMore": "Oudere events laden",
+        "columns": {
+          "time": "Tijd",
+          "event": "Event",
+          "source": "Bron",
+          "status": "Status",
+          "deliveries": "Afleveringen"
+        },
+        "deliveries": "{delivered} afgeleverd · {failed} mislukt · {skipped} overgeslagen · {pending} in afwachting"
+      },
+      "rejected": {
+        "title": "Afgewezen vóór opslag",
+        "text": "Events die de pipeline heeft verworpen zonder ze op te slaan: ongeldig, bot, geen toestemming of persoonsgegevens. Alleen naam, bron, fase en reden worden vastgelegd.",
+        "empty": "Er is niets afgewezen in het venster.",
+        "columns": {
+          "stage": "Fase",
+          "reason": "Reden"
+        }
+      },
+      "workspaceBanner": {
+        "text": "Deze link hoort bij een andere site ({site}).",
+        "switch": "Overschakelen naar {site}"
+      },
+      "detail": {
+        "title": "Eventdetails",
+        "select": "Selecteer een event om de lineage, toestemmingsbeslissing, routering en leveranciersantwoorden te zien.",
+        "notFound": "Dit event hoort niet bij de actieve site of is verwijderd door de bewaartermijn.",
+        "timeline": "Lineage",
+        "derivedOnly": "Voor dit event zijn geen lineage-rijen vastgelegd; de fasen zijn afgeleid uit de opgeslagen status.",
+        "summary": "Event",
+        "attempts": "Afleverpogingen",
+        "noAttempts": "Geen afleverpogingen voor dit event.",
+        "related": "Gecorreleerde events",
+        "noRelated": "Geen ander event deelt dit bestel-id of deze sessie.",
+        "relatedVia": {
+          "order_id": "zelfde bestelling",
+          "session": "zelfde sessie"
+        },
+        "noTimeline": "Nog geen fasen vastgelegd.",
+        "noTime": "geen tijdstempel",
+        "derivedHint": "afgeleid uit de opgeslagen status",
+        "redactionNote": "Vrije tekst is geredigeerd, identifiers zijn gemaskeerd, gehashte gebruikersgegevens worden alleen per veld genoemd.",
+        "hashed": "{n} gehashte velden: {fields}",
+        "noUserData": "geen",
+        "strippedIdentity": "geen identifiers (verwijderd door het toestemmingsbeleid)",
+        "identityKind": {
+          "anonymous": "anoniem",
+          "session": "sessie",
+          "user": "gebruiker"
+        },
+        "attempt": "Poging {n}",
+        "http": "HTTP {status}",
+        "duration": "{ms} ms",
+        "nextRetry": "Volgende poging {time}",
+        "vendorEventId": "Leveranciers-event-id",
+        "payload": "Geredigeerde leverancierspayload",
+        "response": "Leveranciersantwoord",
+        "attemptStatus": {
+          "pending": "in afwachting",
+          "success": "afgeleverd",
+          "retry": "nieuwe poging",
+          "failed": "mislukt",
+          "dead": "opgegeven",
+          "skipped": "overgeslagen"
+        },
+        "fields": {
+          "eventId": "Event-id",
+          "sourceEventId": "Bron-event-id",
+          "captured": "Vastgelegd",
+          "clientTime": "Clienttijd",
+          "source": "Bron",
+          "configVersion": "config v{version}",
+          "noConfig": "geen config",
+          "state": "Status",
+          "consent": "Toestemming",
+          "noPurposes": "geen doelen",
+          "consentSource": "bron",
+          "region": "regio",
+          "policyVersion": "policy",
+          "clickIds": "Click-id’s",
+          "vendorIds": "Leveranciers-id’s",
+          "page": "Pagina",
+          "title": "Titel",
+          "referrer": "Referrer",
+          "utm": "UTM",
+          "commerce": "Commerce",
+          "commerceValue": "bestelling {orderId} · {value} {currency} · {items} artikelen",
+          "userData": "Gebruikersgegevens",
+          "identity": "Identiteit",
+          "device": "Apparaat",
+          "billable": "Factureerbaar",
+          "bot": "bot",
+          "provenance": "Herkomst",
+          "props": "Eigenschappen (geredigeerd)"
+        }
+      }
+    },
+    "testLab": {
+      "title": "Live Test Lab",
+      "intro": "Begeleide testjourneys via de echte collector in de testomgeving van deze site. Elke run stuurt gecontroleerde test-events met een tijdelijke sleutel, wordt geauditeerd en toont de toestemmingsbeslissing, deduplicatie, geredigeerde payload, routering en het echte testantwoord van elke bestemming.",
+      "unavailable": "Test lab niet beschikbaar",
+      "unavailableText": "Migratie 0007 is niet toegepast, dus runs kunnen niet worden vastgelegd.",
+      "environment": {
+        "none": "Geen testomgeving",
+        "noneText": "Deze site heeft geen omgeving in testmodus. Runs hebben een staging- of testomgeving nodig zodat niets productiebestemmingen bereikt.",
+        "sending": "Test-events gaan naar {environment} ({kind}, testmodus) via {host}."
+      },
+      "permission": "Een journey uitvoeren vereist de rol Developer of hoger. Je kunt eerdere runs bekijken.",
+      "journeys": {
+        "label": "Journey",
+        "page_view": {
+          "title": "PageView",
+          "text": "Eén paginaweergave. Controleert vastlegging, toestemming en routering van het basisevent."
+        },
+        "lead": {
+          "title": "Lead",
+          "text": "Paginaweergave en het verzenden van een leadformulier."
+        },
+        "add_to_cart": {
+          "title": "AddToCart",
+          "text": "Paginaweergave, productweergave en toevoegen aan winkelwagen met één testartikel."
+        },
+        "checkout": {
+          "title": "Checkout",
+          "text": "Paginaweergave, productweergave, toevoegen aan winkelwagen en start van de checkout."
+        },
+        "purchase": {
+          "title": "Purchase",
+          "text": "Paginaweergave, checkout en een aankoop met een testbestel-id — twee keer verzonden om de bestellingsdeduplicatie te tonen."
+        }
+      },
+      "steps": {
+        "page_view": "Paginaweergave",
+        "view_item": "Productweergave",
+        "add_to_cart": "Toevoegen aan winkelwagen",
+        "begin_checkout": "Start checkout",
+        "generate_lead": "Lead",
+        "purchase": "Aankoop",
+        "duplicate_purchase": "Dezelfde bestelling opnieuw"
+      },
+      "consent": {
+        "label": "Toestemmingsstatus van de testbezoeker",
+        "all": {
+          "title": "Analytics en marketing verleend",
+          "text": "Events worden opgeslagen met identifiers en mogen elke gekoppelde bestemming bereiken."
+        },
+        "analytics": {
+          "title": "Alleen analytics",
+          "text": "Events worden opgeslagen; advertentiebestemmingen worden door de policy overgeslagen."
+        },
+        "none": {
+          "title": "Geen toestemmingssignaal",
+          "text": "Niet-operationele events worden vóór opslag afgewezen; een aankoop wordt zonder identifiers opgeslagen."
+        }
+      },
+      "run": "Journey uitvoeren",
+      "confirm": {
+        "title": "Test-events verzenden?",
+        "text": "De events gaan door de echte collector en de echte pipeline van de testomgeving.",
+        "events": "{n} events",
+        "journey": "Journey",
+        "environment": "Omgeving",
+        "consent": "Toestemming",
+        "collector": "Collector",
+        "nothingProduction": "Niets bereikt een productiebestemming: de events zijn gemarkeerd als test, worden nooit gefactureerd en bestemmingen ontvangen ze alleen in hun testmodus. De run en de tijdelijke sleutel worden geauditeerd.",
+        "cancel": "Annuleren",
+        "confirm": "Test-events verzenden"
+      },
+      "notes": {
+        "audited": "Elke run maakt een tijdelijke source key voor de testomgeving aan (twee minuten geldig, direct na het verzoek ingetrokken) en een auditvermelding."
+      },
+      "errors": {
+        "invalid": "Het verzoek was ongeldig.",
+        "forbidden": "Je hebt geen toestemming om testjourneys uit te voeren.",
+        "not_found": "De site is niet gevonden in deze organisatie.",
+        "no_test_environment": "Deze site heeft geen omgeving in testmodus.",
+        "unavailable": "Het test lab is niet beschikbaar (migratie ontbreekt of collector-host niet geconfigureerd).",
+        "collector": "De collector heeft de batch afgewezen.",
+        "unreachable": "De collector was niet bereikbaar. Draait de collector?",
+        "generic": "De run kon niet worden gestart."
+      },
+      "collector": {
+        "status": "Collector antwoordde HTTP {status}",
+        "reason": "Reden: {reason}",
+        "accepted": "De collector heeft de batch geaccepteerd (HTTP {status}). De tijdlijn hieronder vult zich zodra de worker hem verwerkt."
+      },
+      "timeline": {
+        "title": "Tijdlijn",
+        "none": "Voer een journey uit om hier de tijdlijn te zien.",
+        "complete": "voltooid",
+        "incomplete": "bezig",
+        "waiting": "Wachten op de worker",
+        "waitingText": "De collector heeft de batch geaccepteerd; de fasen verschijnen zodra de worker hem verwerkt.",
+        "workerHint": "Nog geen verwerking vastgelegd",
+        "workerHintText": "De batch is meer dan 90 seconden geleden geaccepteerd, maar er is geen fase vastgelegd. Controleer of de worker draait en of migratie 0007 is toegepast, en vernieuw daarna.",
+        "step": "Stap {n}",
+        "pending": "in afwachting",
+        "pendingText": "Nog niet verwerkt.",
+        "billable": "niet gefactureerd (testmodus)",
+        "notBillable": "niet gefactureerd (testmodus)",
+        "consentDecision": "Vastgelegde toestemming",
+        "identity": "Identifiers",
+        "autoRefresh": "vernieuwt elke 2 s"
+      },
+      "runs": {
+        "title": "Eerdere runs",
+        "empty": "Nog geen runs.",
+        "columns": {
+          "time": "Tijd",
+          "journey": "Journey",
+          "consent": "Toestemming",
+          "status": "Status",
+          "collector": "Collector"
+        },
+        "status": {
+          "pending": "in afwachting",
+          "sent": "verzonden",
+          "rejected": "afgewezen door collector",
+          "failed": "mislukt"
+        },
+        "open": "Openen"
+      }
+    }
+  }
+}

@@ -1,0 +1,442 @@
+{
+  "releases": {
+    "title": "Releases",
+    "intro": "Change & Release Center: what is live per environment, the draft being prepared, readable configuration diffs, four-eyes approvals, scheduled publishing and one-click rollback. Every action is audited.",
+    "siteContext": "Drafts, versions and the impact preview refer to {site}",
+    "switchSiteHint": "Change the site in the workspace switcher.",
+    "noSite": "No site yet",
+    "noSiteText": "Create your first site to publish a tracking configuration.",
+    "createSite": "Create site",
+    "close": "Close",
+    "cancel": "Cancel",
+    "unknownUser": "Unknown member",
+    "system": "Scheduled publication",
+    "migrationMissing": "Release data unavailable",
+    "migrationMissingText": "The approvals and scheduling tables (migration 0010) are not applied to this database. Published versions are shown; drafts, approvals and schedules are not.",
+    "loading": "Loading releases",
+    "links": {
+      "aiSetup": "Open AI Setup",
+      "destinations": "Open destinations",
+      "dataQuality": "Open Data Quality Inbox",
+      "explorer": "Open Live Event Explorer",
+      "testLab": "Open Live Test Lab"
+    },
+    "environment": {
+      "kind": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      },
+      "testMode": "Test mode",
+      "navLabel": "Environments"
+    },
+    "strip": {
+      "active": "Live version",
+      "noActive": "Nothing published yet",
+      "version": "v{version}",
+      "publishedAgo": "published {time}",
+      "restored": "restored by rollback",
+      "draft": "Draft",
+      "noDraft": "No open draft",
+      "draftChanges": "{count, plural, =0 {no changes} one {# change} other {# changes}}",
+      "lintErrors": "{count, plural, one {# blocking issue} other {# blocking issues}}",
+      "scheduled": "Scheduled for {time}",
+      "scheduleFailed": "Scheduled publication failed",
+      "approvalsPending": "{count, plural, one {# approval pending} other {# approvals pending}}",
+      "versions": "{count, plural, =0 {no versions} one {# version} other {# versions}}"
+    },
+    "draft": {
+      "title": "Draft for {environment}",
+      "intro": "The open draft becomes version {version} when it is published. Changes are prepared in AI Setup, in Destinations and in the Data Quality Inbox; this page reviews, approves, schedules and publishes them.",
+      "empty": "No open draft in {environment}",
+      "emptyText": "Nothing is waiting to be published. Prepare a change in AI Setup, connect a destination or accept a fix from the Data Quality Inbox — the draft appears here for review.",
+      "basedOn": "Based on v{version}",
+      "initial": "First version for this environment",
+      "author": "Prepared by {name}",
+      "updated": "Last change {time}",
+      "invalid": "Corrupt draft",
+      "invalidText": "The draft does not match the configuration schema and cannot be published. Discard it and prepare the change again.",
+      "lint": {
+        "ok": "Checks passed",
+        "errors": "{count, plural, one {# blocking issue} other {# blocking issues}}",
+        "warnings": "{count, plural, one {# warning} other {# warnings}}",
+        "errorsTitle": "Blocking issues",
+        "warningsTitle": "Warnings",
+        "explain": "Blocking issues come from the configuration lint (policy, public ids, JSONLogic). Warnings do not block publishing."
+      },
+      "changesTitle": "Changes",
+      "noChanges": "The draft is identical to the live version.",
+      "criticalTitle": "Critical change",
+      "criticalText": "This change touches consent, a critical event, a destination or the kill switch in production. Four-eyes approval applies.",
+      "signalsTitle": "Critical signals",
+      "signalsInfo": "In {environment} these signals are informational; four-eyes applies to production.",
+      "schedule": {
+        "title": "Scheduled publication",
+        "at": "Publishes {time}",
+        "by": "scheduled by {name}",
+        "pendingWorker": "The worker publishes it within a minute of the scheduled time.",
+        "failed": "The scheduled publication was refused: {reason}",
+        "attemptedAt": "attempted {time}",
+        "cancel": "Cancel schedule",
+        "reasons": {
+          "signing_key_missing": "the worker has no configuration signing key",
+          "draft_not_open": "the draft was no longer open",
+          "draft_changed": "the draft changed after it was scheduled",
+          "approval_invalid": "the recorded approval was no longer valid",
+          "lint_failed": "the configuration lint failed",
+          "publish_failed": "publishing failed"
+        }
+      },
+      "evidence": {
+        "title": "Test evidence",
+        "intro": "Live Test Lab runs since this draft was opened. Run a journey in the test environment before publishing to production.",
+        "empty": "No test run since the draft was opened.",
+        "unavailable": "Test runs are not available (migration 0007 not applied).",
+        "steps": "{count, plural, one {# step} other {# steps}}",
+        "open": "Open run"
+      }
+    },
+    "fourEyes": {
+      "title": "Four-eyes approval",
+      "state": {
+        "not_required": "Not required for this change.",
+        "single_publisher": "Not available: you are the only member who can publish. The release is recorded as a single-person release.",
+        "satisfied": "Approved by {name} {time}.",
+        "pending": "Waiting for a second member: requested by {name} {time}.",
+        "stale": "The last approval refers to an older state of the draft. Request a new review.",
+        "rejected": "The last request was rejected. Change the draft and request a new review.",
+        "missing": "A second member with publish rights has to approve this change before it can be published or scheduled."
+      },
+      "publishers": "{count, plural, one {# member can publish} other {# members can publish}}",
+      "request": "Request approval",
+      "requestNote": "Note for the reviewer (optional)",
+      "requestDialogTitle": "Request approval for v{version}",
+      "requestDialogText": "A second member with publish rights reviews the change summary below and approves or rejects it. The request refers to the draft as it is now; further edits need a new request.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "withdraw": "Withdraw request",
+      "decideDialogTitle": "Review v{version}",
+      "decideDialogText": "You approve or reject exactly the changes listed below. A rejection needs a reason; the decision is audited.",
+      "reason": "Reason",
+      "reasonHint": "Required for a rejection, optional for an approval.",
+      "ownRequest": "You requested this review; another member has to decide.",
+      "history": "Approval history",
+      "decision": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "withdrawn": "Withdrawn"
+      },
+      "current": "current draft",
+      "outdated": "older draft state",
+      "requestedBy": "requested by {name} {time}",
+      "decidedBy": "{decision} by {name} {time}",
+      "note": "Note: {note}",
+      "reasonGiven": "Reason: {reason}",
+      "reasons": {
+        "critical_event": "A critical event stops or changes its trigger",
+        "consent_weaker": "Consent gets weaker (region mode, advanced consent mode or Global Privacy Control)",
+        "destination_purpose_weaker": "A destination needs less consent than before",
+        "destination_stopped": "A destination stops receiving events",
+        "marketing_destination_added": "An advertising destination starts receiving events",
+        "kill_switch": "The kill switch changes",
+        "allowed_hosts_reduced": "Verified hosts are removed"
+      }
+    },
+    "actions": {
+      "publish": "Publish now",
+      "schedule": "Schedule",
+      "discard": "Discard draft",
+      "rollback": "Roll back to this version",
+      "publishDialogTitle": "Publish v{version} to {environment}",
+      "publishDialogText": "The draft becomes a signed, immutable version and is live for the SDK and the worker within about a minute. This cannot be undone, but a rollback to any earlier version takes one click.",
+      "publishConfirm": "Publish v{version}",
+      "singleAcknowledge": "I confirm this critical change alone; no second member can approve it in this organization.",
+      "scheduleDialogTitle": "Schedule v{version} for {environment}",
+      "scheduleDialogText": "The worker publishes the draft at the chosen time. It refuses to publish if the draft changes after scheduling or the approval becomes invalid; you see the reason here.",
+      "scheduleAt": "Publish at",
+      "scheduleHint": "Between {min} minutes and {max} days from now, in your local time.",
+      "scheduleConfirm": "Schedule publication",
+      "discardDialogTitle": "Discard draft v{version}?",
+      "discardDialogText": "The draft is archived, pending approval requests are withdrawn and a schedule is removed. Live traffic is not affected.",
+      "discardConfirm": "Discard",
+      "rollbackDialogTitle": "Roll back {environment} to v{version}?",
+      "rollbackDialogText": "The currently live version v{active} is replaced by v{version} within about a minute. The open draft stays untouched; the rollback is audited.",
+      "rollbackDialogNoActive": "Nothing is live in {environment}; v{version} becomes the live version within about a minute. The rollback is audited.",
+      "rollbackConfirm": "Roll back to v{version}",
+      "publishedOk": "Version {version} is published.",
+      "scheduledOk": "The draft is scheduled.",
+      "scheduleCancelledOk": "The schedule was removed.",
+      "discardedOk": "The draft was discarded.",
+      "rolledBackOk": "Version {version} is live again.",
+      "requestedOk": "Approval requested.",
+      "decidedOk": "Decision recorded.",
+      "withdrawnOk": "Request withdrawn."
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "invalid": "The request was invalid.",
+      "forbidden": "You do not have permission for this action.",
+      "not_found": "The draft or version no longer exists.",
+      "not_open": "The draft is no longer open.",
+      "lint": "The draft has blocking issues; fix them before publishing.",
+      "approval_required": "This critical change needs a four-eyes approval first.",
+      "approval_pending": "An approval request is already pending.",
+      "approval_rejected": "The last approval request was rejected; change the draft and request a new review.",
+      "acknowledge_required": "Confirm the single-person release to continue.",
+      "self_approval": "You cannot approve your own request.",
+      "stale": "The draft changed since the request; it needs a new request.",
+      "reason_required": "A rejection needs a reason (at least 3 characters).",
+      "signing": "Publishing is not configured on this deployment (no configuration signing key).",
+      "schedule_invalid": "Enter a valid date and time.",
+      "schedule_too_soon": "Choose a time at least {min} minutes from now.",
+      "schedule_too_far": "Choose a time within the next {max} days.",
+      "already_active": "This version is already live."
+    },
+    "changes": {
+      "area": {
+        "settings": "Settings",
+        "consent": "Consent",
+        "events": "Events",
+        "destinations": "Destinations",
+        "site": "Site",
+        "other": "Other"
+      },
+      "op": {
+        "add": "added",
+        "remove": "removed",
+        "change": "changed"
+      },
+      "before": "before",
+      "after": "after",
+      "none": "none",
+      "unknownDestination": "Destination {id}"
+    },
+    "impact": {
+      "title": "Change Impact Preview",
+      "intro": "What publishing this draft changes, derived from the diff and from measured data of the last {days} days in {environment}. Volumes are measurements, not forecasts; a missing measurement stays unknown.",
+      "generatedAt": "Computed {time}",
+      "events": {
+        "title": "Affected events",
+        "empty": "No event changes.",
+        "event": "Event",
+        "change": "Change",
+        "accepted": "Accepted ({days} d)",
+        "delivered": "Delivered ({days} d)",
+        "issues": "Open issues",
+        "destinations": "Destinations after",
+        "critical": "critical",
+        "notMeasured": "not measured",
+        "caption": "Events the draft adds, removes, enables, disables or changes",
+        "kind": {
+          "added": "added",
+          "removed": "removed",
+          "enabled": "enabled",
+          "disabled": "disabled",
+          "changed": "changed"
+        }
+      },
+      "destinations": {
+        "title": "Affected destinations",
+        "empty": "No destination changes.",
+        "destination": "Destination",
+        "change": "Change",
+        "purpose": "Consent purpose",
+        "events": "Mapped events",
+        "health": "Health",
+        "status": "Status",
+        "noHealth": "not measured",
+        "healthText": "{success} delivered · {errorRate}% errors ({hours} h)",
+        "stale": "stale",
+        "caption": "Destinations the draft adds, removes, enables, disables or changes",
+        "kind": {
+          "added": "added",
+          "removed": "removed",
+          "enabled": "enabled",
+          "disabled": "disabled",
+          "changed": "changed"
+        },
+        "statusLabel": {
+          "draft": "draft",
+          "not_connected": "not connected",
+          "connected": "connected",
+          "paused": "paused",
+          "error": "error",
+          "unknown": "no destination row"
+        }
+      },
+      "consent": {
+        "title": "Consent purposes",
+        "purposes": "Purposes after: {purposes}",
+        "added": "added: {purposes}",
+        "removed": "removed: {purposes}",
+        "regionMode": "Default region mode: {before} → {after}",
+        "consentMode": "Consent mode: {before} → {after}",
+        "gpc": "Global Privacy Control: {before} → {after}",
+        "clickIdTtl": "Click-ID lifetime: {before} → {after} days",
+        "weaker": "Less restrictive than the live version",
+        "unchanged": "No consent changes.",
+        "respected": "respected",
+        "ignored": "ignored",
+        "none": "none",
+        "purpose": {
+          "necessary": "Strictly necessary",
+          "analytics": "Analytics",
+          "marketing": "Marketing",
+          "personalization": "Personalization"
+        },
+        "regionModes": {
+          "strict_opt_in": "Strict opt-in",
+          "opt_out": "Opt-out",
+          "notice_only": "Notice only"
+        },
+        "consentModes": {
+          "basic": "basic",
+          "advanced": "advanced"
+        }
+      },
+      "volume": {
+        "title": "Estimated volume",
+        "baseline": "Events that stay enabled",
+        "baselineHint": "accepted in the last {days} days",
+        "removed": "Events that stop",
+        "unmeasured": "{count, plural, one {# enabled event without measurement} other {# enabled events without measurement}}: {events}",
+        "billable": "Billable",
+        "empty": "No events measured in the last {days} days for this environment — the volume after the change is unknown.",
+        "unavailable": "Aggregates are not available on this database.",
+        "stale": "Last aggregate {time}; newer events may not be counted yet.",
+        "lastBucket": "Last aggregate {time}"
+      },
+      "plan": {
+        "title": "Plan limits",
+        "plan": "{plan} plan",
+        "limit": "{limit} events per month",
+        "noLimit": "No fixed event cap in this plan",
+        "used": "{used} billable events used in {period} ({share}%)",
+        "usedUnknown": "No usage recorded for {period} yet",
+        "projected": "Measured baseline ≈ {projected} events per month ({share}% of the limit)",
+        "projectedUnknown": "No projection without a measured baseline",
+        "threshold": "The measured baseline already crosses the {threshold}% warning threshold of the plan.",
+        "billing": "Open billing"
+      },
+      "dq": {
+        "title": "Expected data-quality effect",
+        "intro": "Rule-based; each line names the rule that fired. This is not a guarantee: the pipeline measures the real effect after publishing.",
+        "tone": {
+          "ok": "No concern",
+          "warn": "Warning",
+          "bad": "Blocking",
+          "info": "Note"
+        },
+        "no_changes": "The draft does not change the live configuration.",
+        "critical_event_stopped": "Critical event {event} stops: {measured, select, yes {{accepted} accepted events in the window} other {no measurement}} will no longer be captured.",
+        "event_removed_open_issues": "{event} stops with {issues, plural, one {# open data-quality issue} other {# open data-quality issues}}; stopping the event does not resolve them.",
+        "destination_stopped": "{destination} stops receiving events ({measured, select, yes {{delivered} deliveries in the health window} other {no health measurement}}).",
+        "destination_failing_stopped": "{destination} stops; it failed {errorRate}% of recent deliveries, so those failures stop with it.",
+        "destination_no_mappings": "{destination} is enabled without event mappings and receives nothing.",
+        "conversion_browser_only": "{event} is browser-only; without a server-verified source duplicates and missing values are likely.",
+        "conversion_without_authoritative_source": "{event} goes to advertising destinations without a server-verified source (blocking).",
+        "mapping_unknown_event": "{destination} maps {event}, which is not defined.",
+        "consent_weaker": "Consent gets weaker: more events may be processed before an explicit signal where the region policy allows it.",
+        "kill_switch_on": "The kill switch stops all collection for this environment.",
+        "kill_switch_off": "The kill switch is released; collection resumes.",
+        "allowed_hosts_reduced": "Events from {hosts} are rejected after publishing.",
+        "new_event_unmeasured": "{event} is new; its volume and quality are unknown until events arrive.",
+        "lint_errors": "{count, plural, one {# blocking lint issue prevents} other {# blocking lint issues prevent}} publishing.",
+        "no_rule_fired": "No rule fired for this change. Verify the effect in the Live Event Explorer after publishing."
+      }
+    },
+    "history": {
+      "title": "Version history",
+      "intro": "Every published version of {environment}, newest first. Versions are immutable and signed; a rollback activates an earlier version again.",
+      "empty": "Nothing published yet",
+      "emptyText": "The first version appears here once a draft is published.",
+      "caption": "Published configuration versions",
+      "version": "Version",
+      "status": "Status",
+      "summary": "Summary",
+      "author": "Author",
+      "published": "Published",
+      "changes": "Changes",
+      "open": "Open",
+      "statusLabel": {
+        "active": "Live",
+        "superseded": "Superseded"
+      },
+      "rolledBack": "rolled back",
+      "restored": "restored",
+      "scheduled": "scheduled",
+      "approved": "four-eyes",
+      "initial": "Initial configuration"
+    },
+    "version": {
+      "breadcrumbLabel": "Breadcrumb",
+      "back": "Releases",
+      "title": "Version {version}",
+      "notFound": "Version not found",
+      "notFoundText": "The version does not exist for the active site. Switch the site in the workspace switcher or go back to the releases.",
+      "status": {
+        "active": "Live",
+        "superseded": "Superseded"
+      },
+      "activeNow": "v{version} is live",
+      "createdBy": "Published by {name} {time}",
+      "createdBySystem": "Published on schedule {time}",
+      "previous": "Diff against v{version}",
+      "first": "First version: every entry is new",
+      "signed": "Signed with key {keyId} · digest {digest}",
+      "facts": {
+        "title": "Configuration",
+        "events": "{count, plural, one {# enabled event} other {# enabled events}} ({critical} critical)",
+        "destinations": "Destinations: {names}",
+        "noDestinations": "No enabled destinations",
+        "consent": "Consent: {mode}, consent mode {consentMode}, GPC {gpc}",
+        "clickIds": "Click-ID lifetime {days} days",
+        "hosts": "Hosts: {hosts}",
+        "noHosts": "No allowed hosts",
+        "killSwitch": "Kill switch on"
+      },
+      "publications": {
+        "title": "Publication history",
+        "publish": "Published",
+        "rollback": "Restored by rollback from v{from}",
+        "rollbackUnknown": "Restored by rollback",
+        "by": "by {name}",
+        "active": "live now",
+        "superseded": "superseded {time}",
+        "withApproval": "with four-eyes approval"
+      },
+      "approvals": {
+        "title": "Approvals",
+        "empty": "No approval request for this version."
+      },
+      "evidence": {
+        "title": "Test evidence",
+        "intro": "Live Test Lab runs between the draft and the publication, and what the pipeline observed with this version afterwards.",
+        "runsEmpty": "No test run recorded while the draft was open.",
+        "observed": "{count, plural, =0 {No event stored with this version} one {# event stored with this version} other {# events stored with this version}} since {since}",
+        "observedRange": "first {first}, last {last}",
+        "observedUnavailable": "Event observations are not available."
+      },
+      "signals": {
+        "title": "Critical signals of this version",
+        "none": "No critical signal against the previous version."
+      }
+    },
+    "testLab": {
+      "journey": {
+        "page_view": "PageView",
+        "lead": "Lead",
+        "add_to_cart": "AddToCart",
+        "checkout": "Checkout",
+        "purchase": "Purchase"
+      },
+      "status": {
+        "pending": "pending",
+        "sent": "sent",
+        "rejected": "rejected",
+        "failed": "failed"
+      }
+    }
+  }
+}

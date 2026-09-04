@@ -1,0 +1,326 @@
+{
+  "dataQuality": {
+    "title": "Calidad de datos",
+    "intro": "Problemas de tracking medidos en tu sitio, ordenados por impacto: campos obligatorios ausentes, errores de esquema, valores no válidos, duplicados, problemas de moneda y valor, caídas de eventos, picos de conversiones y fugas de ingresos; cada uno con sus evidencias y, cuando la configuración puede corregirlo, con un borrador revisable.",
+    "siteContext": "Sitio: {site}",
+    "noSite": "Aún no hay sitio",
+    "noSiteText": "Crea tu primer sitio para obtener un ID de tracking; el análisis de calidad empieza con los primeros eventos.",
+    "createSite": "Crear sitio",
+    "nav": {
+      "label": "Secciones de calidad de datos",
+      "inbox": "Bandeja",
+      "leaks": "Señales perdidas y fugas de ingresos"
+    },
+    "summary": {
+      "open": "Problemas abiertos",
+      "critical": "Críticos",
+      "acknowledged": "En curso",
+      "mutedCount": "{n} silenciados",
+      "lastScan": "Último análisis",
+      "lastScanNever": "El análisis de calidad aún no se ha ejecutado para este sitio: no se ha medido nada.",
+      "lastObserved": "Observación más reciente {date}",
+      "staleScan": "El último análisis de calidad se ejecutó el {date}, hace más de un día. La bandeja puede ir por detrás de los datos en vivo.",
+      "notMeasured": "Aún no medido"
+    },
+    "filters": {
+      "statusLabel": "Filtrar por estado",
+      "categoryLabel": "Filtrar por categoría",
+      "all": "Todos",
+      "status": {
+        "open": "Abierto",
+        "acknowledged": "En curso",
+        "resolved": "Resuelto",
+        "muted": "Silenciado"
+      },
+      "category": {
+        "required_fields": "Campos obligatorios",
+        "schema": "Esquema",
+        "values": "Valores y moneda",
+        "duplicates": "Duplicados",
+        "drops": "Caídas de eventos",
+        "spikes": "Picos de conversiones",
+        "revenue": "Señales perdidas e ingresos",
+        "usage": "Consumo del plan",
+        "delivery": "Entrega",
+        "other": "Otros"
+      },
+      "categoryHelp": {
+        "required_fields": "Eventos que llegaron sin un campo exigido por el evento estándar (ID de pedido, moneda, valor).",
+        "schema": "Eventos fuera del plan de eventos publicado o con una estructura inesperada.",
+        "values": "Valores cero o negativos, o monedas distintas de la moneda del sitio.",
+        "duplicates": "El mismo pedido notificado dos veces por la misma vía; los duplicados se descartan y nunca se facturan.",
+        "drops": "Eventos rechazados en la ingesta o una caída repentina del volumen de un evento crítico.",
+        "spikes": "Conversiones muy por encima de la media diaria: conviene verificarlas antes de que las plataformas publicitarias optimicen sobre ellas.",
+        "revenue": "Pedidos o leads verificados que no llegaron a un destino o que nunca se capturaron en el navegador.",
+        "usage": "Avisos sobre el límite mensual de eventos de tu plan.",
+        "delivery": "Fallos al entregar eventos a los destinos.",
+        "other": "Problemas sin categoría específica."
+      }
+    },
+    "severity": {
+      "info": "Info",
+      "warning": "Aviso",
+      "critical": "Crítico"
+    },
+    "status": {
+      "open": "Abierto",
+      "acknowledged": "En curso",
+      "resolved": "Resuelto",
+      "muted": "Silenciado"
+    },
+    "empty": {
+      "title": "No hay problemas en esta vista",
+      "text": "Cambia el filtro de estado o de categoría para ver otros problemas.",
+      "noIssuesAtAll": "No hay problemas registrados para este sitio",
+      "scanned": "El último análisis del {date} no encontró nada que notificar en las últimas 24 horas. Es una medición, no una garantía: el análisis comprueba los eventos estándar y los destinos descritos en las categorías.",
+      "scanPending": "El análisis de calidad aún no se ha ejecutado para este sitio, así que esto no es una afirmación sobre su estado. Vuelve después de la próxima ejecución del worker.",
+      "reset": "Mostrar problemas abiertos"
+    },
+    "issue": {
+      "impact": "Impacto {score}",
+      "impactHelp": "0–100 según la gravedad, la proporción de eventos afectados y el valor conocido.",
+      "environment": {
+        "production": "Producción",
+        "staging": "Staging",
+        "development": "Pruebas"
+      },
+      "noEnvironment": "Ningún entorno seleccionado",
+      "affected": "{affected} de {total} afectados ({share})",
+      "affectedOnly": "{affected} afectados",
+      "value": "Valor conocido {value}",
+      "firstSeen": "visto por primera vez el {date}",
+      "lastSeen": "visto por última vez el {date}",
+      "occurrences": "visto en {n} análisis",
+      "stale": "Obsoleto",
+      "staleHelp": "Sin observar desde hace más de {days} días. No se resuelve automáticamente: resuélvelo cuando lo hayas comprobado.",
+      "mutedUntil": "Silenciado hasta el {date}",
+      "mutedIndefinitely": "Silenciado hasta que se reabra",
+      "mutedReason": "Motivo: {reason}",
+      "note": "Nota: {note}",
+      "fixDraft": "Borrador de corrección preparado el {date}",
+      "window": "Ventana de observación {from} – {to}",
+      "evidence": "Evidencias",
+      "samples": "Eventos de muestra redactados",
+      "noSamples": "No hay eventos de muestra guardados para este problema; las cifras proceden de agregados.",
+      "sample": {
+        "event": "Evento",
+        "source": "Origen",
+        "time": "Hora",
+        "detail": "Hallazgo"
+      },
+      "fixTool": "Herramienta de Track AI para este problema: {tool}"
+    },
+    "kinds": {
+      "missing_required_field": "{event}: falta el campo obligatorio «{field}»",
+      "invalid_value": "{event}: {field} no válido",
+      "currency_mismatch": "{event}: la moneda difiere de la del sitio",
+      "unplanned_event": "Evento no planificado «{event}»",
+      "duplicate_conversion": "Conversiones {event} duplicadas",
+      "ingest_drop": "Eventos descartados en la ingesta ({reason})",
+      "event_drop": "Caída del volumen de «{event}»",
+      "conversion_spike": "Pico de «{event}»",
+      "revenue_leak": "Fuga de ingresos hacia {destination}",
+      "signal_gap": "Pedidos verificados sin evento de navegador",
+      "usage_limit_70": "70 % del límite mensual de eventos consumido",
+      "usage_limit_90": "90 % del límite mensual de eventos consumido",
+      "usage_limit_reached": "Límite mensual de eventos alcanzado"
+    },
+    "actions": {
+      "acknowledge": "Asumir",
+      "resolve": "Marcar como resuelto",
+      "reopen": "Reabrir",
+      "mute": "Silenciar…",
+      "prepareFix": "Preparar borrador de corrección…",
+      "askAi": "Preguntar a Track AI",
+      "openExplorer": "Abrir en el explorador de eventos",
+      "viewDraft": "Abrir borrador en Releases",
+      "cancel": "Cancelar",
+      "working": "Procesando…",
+      "readOnly": "Cambiar el estado o preparar borradores requiere el rol de desarrollador, administrador o propietario."
+    },
+    "mute": {
+      "title": "Silenciar este problema",
+      "description": "Un problema silenciado se sigue midiendo, pero sale de la lista de abiertos. Indica un motivo que tu equipo entienda más adelante.",
+      "reason": "Motivo",
+      "reasonHint": "Por ejemplo: tráfico de prueba conocido, corrección prevista para la próxima versión.",
+      "until": "Silenciar durante",
+      "durations": {
+        "7": "7 días",
+        "30": "30 días",
+        "90": "90 días",
+        "never": "Hasta que se reabra"
+      },
+      "confirm": "Silenciar problema"
+    },
+    "fix": {
+      "title": "Preparar borrador de corrección",
+      "description": "Track crea o actualiza el borrador de configuración abierto para {environment}. No se publica nada: el borrador pasa por lint, revisión y release como cualquier otro cambio.",
+      "neverPublishes": "Un borrador nunca cambia el tracking en vivo. La publicación sigue siendo un paso aparte y confirmado en Releases.",
+      "codes": {
+        "authoritative_shop": "Convertir la tienda {platform} conectada en la fuente autoritativa de los eventos de compra: los pedidos verificados llevan ID de pedido, valor y moneda y reemplazan las compras del navegador con el mismo ID de pedido.",
+        "add_event": "Añadir el evento personalizado «{event}» al plan de eventos (activo, no crítico, disparador API) para que quede planificado, mapeado y supervisado.",
+        "destination_hybrid": "Cambiar {destination} de entrega solo por navegador a modo híbrido para que los eventos {event} verificados también se envíen desde el servidor.",
+        "enable_event": "Reactivar el evento «{event}» en la configuración; actualmente está desactivado."
+      },
+      "unavailable": {
+        "no_bundle": "Todavía no se ha publicado ninguna configuración para este entorno, así que no hay nada sobre lo que preparar un borrador.",
+        "connect_shop": "La configuración no puede añadir datos de pedido que faltan. Conecta tu tienda para que los pedidos verificados sean la fuente autoritativa.",
+        "site_change": "Esto debe corregirse donde se envía el evento: el sitio o la tienda debe proporcionar {field} para {event}. Track nunca rellena valores ausentes.",
+        "needs_mapping": "{destination} no tiene mapeo para {event}. Añade primero el mapeo en Destinos.",
+        "destination_health": "La causa está en la entrega al destino. Comprueba credenciales, límites de tasa y errores en Destinos.",
+        "consent": "Aquí decide el consentimiento. Revisa la política de consentimiento y la configuración del CMP; Track no relaja el consentimiento por su cuenta.",
+        "billing": "Es un límite del plan. Elige exceso o un cambio de plan en Facturación.",
+        "not_applicable": "Ningún cambio de configuración puede corregir esto; necesita una comprobación humana.",
+        "already_drafted": "Ya existe un borrador de corrección para este problema."
+      },
+      "links": {
+        "shop": "Abrir conexiones de tienda",
+        "destinations": "Abrir destinos",
+        "consent": "Abrir Consentimiento y privacidad",
+        "billing": "Abrir facturación",
+        "setup": "Abrir AI Setup",
+        "releases": "Abrir Releases"
+      },
+      "confirm": "Crear borrador",
+      "created": "Borrador preparado.",
+      "lint": "Lint: {errors} errores, {warnings} avisos.",
+      "noEnvironment": "Selecciona primero un entorno en la cabecera; el borrador pertenece a un entorno."
+    },
+    "errors": {
+      "invalid": "La entrada no es válida.",
+      "not_found": "Este problema ya no existe.",
+      "forbidden": "No tienes permiso para esta acción.",
+      "no_environment": "El entorno seleccionado no pertenece a este sitio.",
+      "no_fix": "No hay ningún borrador de configuración disponible para este problema.",
+      "generic": "Algo ha salido mal. Inténtalo de nuevo."
+    },
+    "ai": {
+      "prompt": "Explica el problema de calidad de datos «{title}» en {site} y propón una corrección como borrador. Evidencias: {summary}"
+    },
+    "leaks": {
+      "title": "Señales perdidas y fugas de ingresos",
+      "intro": "Pedidos o leads verificados de tus webhooks de tienda y fuentes de servidor comparados con lo que Track observó, deduplicó y entregó por destino. Las brechas vienen con su motivo y su incertidumbre; los ingresos, pedidos o identidades que faltan nunca se rellenan.",
+      "range": {
+        "label": "Periodo",
+        "7": "Últimos 7 días",
+        "30": "Últimos 30 días"
+      },
+      "kind": {
+        "label": "Tipo de conversión",
+        "purchase": "Pedidos",
+        "lead": "Leads"
+      },
+      "sources": {
+        "title": "Fuentes autoritativas",
+        "shop": "{platform}: {status}",
+        "platform": {
+          "shopify": "Shopify",
+          "woocommerce": "WooCommerce",
+          "shopware": "Shopware"
+        },
+        "shopStatus": {
+          "pending": "pendiente",
+          "connected": "conectada",
+          "paused": "en pausa"
+        },
+        "lastEvent": "último webhook el {date}",
+        "never": "aún no se ha recibido ningún webhook",
+        "serverKeys": "{n} claves de servidor activas",
+        "none": "No hay ninguna fuente verificada conectada. Sin webhooks de tienda ni una fuente de servidor verificada no hay pedidos autoritativos con los que comparar: el informe queda vacío en lugar de estimar.",
+        "hint": "Conecta Shopify, WooCommerce o Shopware, o crea una clave de fuente de servidor, para obtener pedidos autoritativos.",
+        "connect": "Conectar una tienda"
+      },
+      "empty": {
+        "title": "Aún no hay conciliación",
+        "text": "El worker todavía no ha calculado snapshots para este sitio, periodo y tipo de conversión. Mientras tanto no se estima nada."
+      },
+      "stale": "El snapshot más reciente es del {date}; el informe puede ir por detrás de los datos en vivo.",
+      "computedAt": "Calculado el {date}",
+      "honesty": "Las cifras son registros verificados. Los valores solo se suman cuando todos los registros con valor comparten una misma moneda; los pedidos sin valor se cuentan pero nunca se valoran. Una entrega por píxel en el navegador no es observable y permanece desconocida.",
+      "summary": {
+        "title": "{kind} en el periodo",
+        "authoritative": "{kind} verificados",
+        "valued": "{valued} de {count} tienen valor",
+        "value": "Valor conocido {value}",
+        "mixed": "Monedas mixtas: los valores no se suman",
+        "mixedShort": "Monedas mixtas",
+        "gaps": "Brechas confirmadas",
+        "gapsShare": "{share} de los {kind} verificados no llegaron",
+        "noBase": "No hay registros verificados en el periodo",
+        "leak": "Valor de las brechas",
+        "leakRange": "{min} – {max}",
+        "noValue": "No se conocen valores",
+        "leakUnvalued": "más {n} sin valor (no cuantificables)",
+        "leakHelp": "Límite inferior: brechas confirmadas; límite superior: más las brechas con resultado desconocido.",
+        "unknown": "Resultado desconocido",
+        "unknownShare": "{share} de los registros verificados",
+        "unknownHelp": "Entregas que Track no puede observar (píxeles de navegador, reintentos en curso).",
+        "delivered": "Entregados",
+        "deliveredHelp": "Registros verificados con al menos una entrega correcta desde el servidor.",
+        "browserCapture": "Capturados en el navegador",
+        "browserHelp": "{n} registros verificados tienen un evento de navegador coincidente con el mismo ID de pedido.",
+        "duplicates": "Duplicados descartados",
+        "duplicatesHelp": "El mismo pedido notificado dos veces por la misma vía; nunca facturado, nunca entregado dos veces.",
+        "days": "Días con snapshots"
+      },
+      "reasons": {
+        "title": "Por qué no llegaron las conversiones",
+        "reason": "Motivo",
+        "count": "Registros",
+        "share": "Proporción",
+        "meaning": "Qué significa",
+        "dominant": "más frecuente",
+        "no_consent": "Sin consentimiento",
+        "blocked": "Bloqueado por la política o la configuración",
+        "not_captured": "No capturado en el navegador",
+        "delivery_failed": "Entrega fallida",
+        "unknown": "Desconocido",
+        "help": {
+          "no_consent": "El visitante no otorgó la finalidad que exige el destino. Track no lo envía, y no relaja el consentimiento.",
+          "blocked": "El destino estaba en pausa, sin mapeo para este evento, solo por navegador, o la política bloqueó datos inferidos.",
+          "not_captured": "La tienda notificó el pedido, pero ningún evento de navegador con ese ID de pedido llegó a Track (snippet ausente, bloqueado o pago fuera del sitio).",
+          "delivery_failed": "Se intentó la entrega y falló o pasó a la cola de errores. Comprueba el estado y los errores del destino.",
+          "unknown": "Track no puede observar el resultado: entregas por píxel en el navegador, reintentos aún en curso o eventos fuera de la ventana de retención."
+        }
+      },
+      "destinations": {
+        "title": "Por destino",
+        "name": "Destino",
+        "mode": "Modo de entrega",
+        "authoritative": "Verificados",
+        "delivered": "Entregados",
+        "gaps": "Brechas",
+        "unknown": "Desconocidos",
+        "leak": "Valor de las brechas",
+        "dominant": "Motivo principal",
+        "status": {
+          "draft": "borrador",
+          "not_connected": "no conectado",
+          "connected": "conectado",
+          "paused": "en pausa",
+          "error": "error"
+        },
+        "modes": {
+          "browser": "Solo navegador",
+          "server": "Servidor",
+          "hybrid": "Híbrido",
+          "none": "No está en la configuración publicada"
+        },
+        "notMapped": "sin mapeo para {kind}",
+        "noData": "No hay snapshot para este destino en el periodo.",
+        "empty": "No hay destinos configurados para este sitio.",
+        "open": "Abrir destinos"
+      },
+      "daily": {
+        "title": "Por día",
+        "day": "Día",
+        "authoritative": "Verificados",
+        "delivered": "Entregados",
+        "gaps": "Brechas",
+        "unknown": "Desconocidos",
+        "bar": "Entregados vs. brechas",
+        "barLabel": "{delivered} entregados, {gaps} brechas"
+      }
+    }
+  }
+}

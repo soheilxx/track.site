@@ -8,6 +8,30 @@
 @source "../../../../packages/ui/src";
 @source "../";
 
+/*
+ * Dashboard shell (redesign supplement §9 "Viewport-feste App-Shell"): the whole app is exactly one
+ * viewport high and the document never scrolls — navigation, main content and the Track AI panel
+ * are independent scroll areas inside the shell grid. Scoped to the dashboard root layout via the
+ * `data-dashboard` attribute; marketing and auth pages keep the normal document scroll.
+ */
+html[data-dashboard],
+html[data-dashboard] > body {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@layer utilities {
+  /* mobile safe areas (launcher, bottom sheet composer) */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
 @layer components {
   /* Skip link (docs/12 §6): visually hidden until focused, then a solid primary chip at the top. */
   .skip-link {

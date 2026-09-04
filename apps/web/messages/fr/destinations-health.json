@@ -1,0 +1,239 @@
+{
+  "destinationsHealth": {
+    "title": "Destination Health Center",
+    "intro": "Expiration des identifiants et OAuth, versions d'API, limites de débit, taux d'erreur, retard de file d'attente et dernière livraison réussie de chaque destination — mesurés à partir de vraies tentatives de livraison. Diagnostiquez ou mettez en pause une destination sans arrêter l'ingestion ni les autres.",
+    "scope": {
+      "label": "Périmètre",
+      "thisSite": "Ce site",
+      "allSites": "Tous les sites",
+      "siteColumn": "Site"
+    },
+    "add": "Ajouter une destination",
+    "edit": "Modifier",
+    "editHint": "Ouvre l'assistant de configuration de cette destination.",
+    "noSites": "Aucun site pour l'instant",
+    "noSitesText": "Créez d'abord un site — les destinations appartiennent à un site.",
+    "createSite": "Créer un site",
+    "empty": "Aucune destination pour {site}",
+    "emptyAll": "Aucune destination pour l'instant",
+    "emptyText": "Ajoutez une plateforme publicitaire, un outil d'analyse, un réseau d'affiliation ou un webhook. L'état est mesuré à partir de vraies tentatives de livraison, jamais estimé.",
+    "showAllSites": "Afficher tous les sites",
+    "summary": {
+      "total": "Destinations",
+      "critical": "Action requise",
+      "warning": "Avertissements",
+      "healthy": "Saines",
+      "healthyHint": "connectées, aucun problème ouvert",
+      "paused": "En pause"
+    },
+    "attention": {
+      "title": "À traiter en priorité",
+      "none": "Aucun problème ouvert dans les données mesurées."
+    },
+    "filter": {
+      "label": "Filtrer les destinations",
+      "all": "Toutes",
+      "attention": "Action requise",
+      "paused": "En pause",
+      "healthy": "Saines"
+    },
+    "columns": {
+      "destination": "Destination",
+      "status": "Statut",
+      "health": "État",
+      "credentials": "Identifiants",
+      "deliveries": "Livraisons {hours} h",
+      "queue": "File d'attente",
+      "lastSuccess": "Dernier succès",
+      "actions": "Actions"
+    },
+    "table": {
+      "caption": "Destinations avec leur état mesuré, leurs identifiants, leurs livraisons et le retard de file d'attente",
+      "testMode": "Mode test",
+      "apiVersion": "API {version}",
+      "showDetails": "Afficher les détails de {name}",
+      "hideDetails": "Masquer les détails de {name}",
+      "details": "Détails"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "not_connected": "Non connectée",
+      "connected": "Connectée",
+      "paused": "En pause",
+      "error": "Erreur"
+    },
+    "health": {
+      "healthy": "Saine",
+      "degraded": "Dégradée",
+      "unhealthy": "En panne",
+      "not_connected": "Non connectée",
+      "unknown": "Non vérifiée",
+      "checkedAt": "Vérifiée {when}",
+      "neverChecked": "Jamais vérifiée"
+    },
+    "credentials": {
+      "title": "Identifiants enregistrés",
+      "none": "Aucun enregistré",
+      "no_expiry": "Aucune expiration signalée",
+      "ok": "Valide, expire {when}",
+      "expiring": "Expire {when}",
+      "expired": "Expiré {when}",
+      "inactive": "Inactif",
+      "missing": "Manquant : {kinds}",
+      "lastValidated": "Dernière validation {when}",
+      "neverValidated": "Jamais validé",
+      "kind": "Type",
+      "label": "Libellé",
+      "statusLabel": "Statut",
+      "expires": "Expire",
+      "validated": "Validé",
+      "last4": "se termine par {last4}",
+      "status": {
+        "active": "Actif",
+        "rotated": "Renouvelé",
+        "revoked": "Révoqué",
+        "expired": "Expiré"
+      }
+    },
+    "oauth": {
+      "title": "Connexion OAuth",
+      "provider": "Fournisseur",
+      "account": "Compte",
+      "accountUnknown": "Compte non signalé",
+      "requestedScopes": "Scopes demandés",
+      "grantedScopes": "Scopes accordés",
+      "grantedUnknown": "Non signalés par le fournisseur",
+      "accessExpires": "Le jeton d'accès expire {when}",
+      "accessExpiresUnknown": "Expiration du jeton d'accès non signalée",
+      "refreshHint": "Les jetons d'accès sont renouvelés automatiquement à partir du jeton de rafraîchissement enregistré."
+    },
+    "api": {
+      "title": "API du fournisseur",
+      "version": "Version d'API {version}",
+      "verified": "Documentation vérifiée le {date}",
+      "sunset": "La version prend fin le {date} (dans {days} jours)",
+      "sunsetPassed": "La date de fin {date} est dépassée",
+      "noSunset": "Aucune fin annoncée",
+      "docs": "Documentation du fournisseur"
+    },
+    "deliveries": {
+      "title": "Livraisons (dernières {hours} h)",
+      "summary": "{success} livrées · {failed} échouées · {retry} en nouvelle tentative",
+      "skipped": "{count} ignorées par consentement ou pause",
+      "none": "Aucune tentative dans les dernières {hours} h",
+      "errorRate": "{rate} des tentatives ont échoué",
+      "errorRateNone": "Taux d'erreur non mesurable sans tentatives"
+    },
+    "rateLimit": {
+      "title": "Limites de débit",
+      "none": "Aucune limite de débit atteinte dans les dernières {hours} h",
+      "count": "{count} limitées par le débit dans les dernières {hours} h",
+      "lastWait": "Le fournisseur a demandé d'attendre {wait}",
+      "lastAt": "Dernière fois {when}"
+    },
+    "queue": {
+      "title": "Retard de file d'attente",
+      "notMeasured": "Pas encore mesuré",
+      "notMeasuredHint": "La tâche destination-health du worker n'a pas encore rapporté pour cette destination.",
+      "stale": "Obsolète — mesuré {when}",
+      "measuredAt": "Mesuré {when}",
+      "ready": "{count} prêts",
+      "scheduled": "{count} nouvelles tentatives planifiées",
+      "inFlight": "{count} en cours",
+      "empty": "File d'attente vide",
+      "lag": "Le plus ancien attend depuis {duration}",
+      "dead": "{count} en lettres mortes"
+    },
+    "freshness": {
+      "missingTitle": "Retard de file d'attente pas encore mesuré",
+      "missingText": "La tâche destination-health du worker n'a pas encore écrit d'instantané pour {count} destinations. Les livraisons, identifiants et versions d'API de cette page sont en direct ; les valeurs de file d'attente apparaîtront après l'exécution de la tâche.",
+      "staleTitle": "Les valeurs de file d'attente sont obsolètes",
+      "staleText": "Le dernier instantané du worker date de {when}. Les livraisons, identifiants et versions d'API sont en direct."
+    },
+    "lastSuccess": {
+      "never": "Jamais"
+    },
+    "issues": {
+      "credential_expired": "Un identifiant a expiré — le fournisseur refusera les livraisons.",
+      "auth_failures": "Le fournisseur a refusé les identifiants lors de {count} tentatives.",
+      "status_error": "La destination est en état d'erreur.",
+      "health_unhealthy": "La dernière vérification d'état a échoué.",
+      "credential_missing": "Des identifiants requis manquent : {kinds}.",
+      "credential_expiring": "Un identifiant expire {when}.",
+      "health_degraded": "La dernière vérification d'état a signalé un service dégradé.",
+      "rate_limited": "Le fournisseur a limité le débit de {count} tentatives.",
+      "high_error_rate": "{rate} des tentatives ont échoué.",
+      "queue_lag": "Des messages attendent depuis {duration}.",
+      "dead_letters": "{count} événements n'ont pas pu être livrés et sont en lettres mortes.",
+      "api_sunset": "La version d'API {version} prend fin dans {days} jours.",
+      "not_connected": "La destination n'est pas connectée ; rien n'est livré.",
+      "paused": "En pause {when} ; les événements de cette destination sont ignorés.",
+      "draft": "Configuration inachevée — ouvrez l'assistant.",
+      "no_delivery_yet": "Aucune livraison réussie pour l'instant."
+    },
+    "reasons": {
+      "credentials_rejected": "Le fournisseur a refusé les identifiants",
+      "credential_missing": "Identifiant manquant ou révoqué",
+      "credential_expired": "Identifiant expiré",
+      "rate_limited": "Limite de débit du fournisseur atteinte",
+      "invalid_payload": "Charge utile refusée par la validation",
+      "consent_missing": "Ignoré : consentement requis non accordé",
+      "destination_paused": "Ignoré : destination en pause",
+      "gpc_opt_out": "Ignoré : refus Global Privacy Control",
+      "policy_blocked": "Ignoré par la politique",
+      "vendor_timeout": "Le fournisseur n'a pas répondu à temps",
+      "vendor_temporary": "Erreur temporaire du fournisseur",
+      "vendor_rejected": "Le fournisseur a refusé la requête",
+      "destination_missing": "Destination absente de la configuration publiée",
+      "unknown": "Erreur inconnue"
+    },
+    "failures": {
+      "title": "Échecs récents (7 jours)",
+      "none": "Aucune tentative échouée au cours des 7 derniers jours.",
+      "attempt": "Tentative {n}",
+      "http": "HTTP {status}",
+      "willRetry": "sera réessayée",
+      "redacted": "Message du fournisseur (expurgé)"
+    },
+    "actions": {
+      "diagnose": "Diagnostiquer",
+      "diagnosing": "Diagnostic en cours…",
+      "diagnoseHint": "Exécute la validation des identifiants et la vérification d'état du connecteur avec les secrets enregistrés et enregistre le résultat.",
+      "pause": "Mettre en pause",
+      "resume": "Reprendre",
+      "pauseTitle": "Mettre en pause les livraisons vers {name} ?",
+      "pauseText": "Les événements continuent d'être collectés et livrés à toutes les autres destinations. Les événements de cette destination sont ignorés pendant la pause — ils ne sont pas mis en attente. Vous pouvez reprendre à tout moment.",
+      "pauseConfirm": "Mettre la destination en pause",
+      "resumeTitle": "Reprendre les livraisons vers {name} ?",
+      "resumeText": "Track vérifie d'abord les identifiants. Les livraisons ne reprennent que si le fournisseur accepte les identifiants enregistrés ; sinon la destination reste déconnectée et la raison s'affiche ici.",
+      "resumeConfirm": "Vérifier et reprendre",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "readOnly": "Votre rôle peut consulter cette page ; diagnostiquer, mettre en pause et reprendre nécessitent la permission sur les intégrations."
+    },
+    "results": {
+      "diagnoseOk": "Le fournisseur a accepté les identifiants.",
+      "diagnoseFailed": "Le fournisseur a refusé les identifiants.",
+      "diagnoseNotConnected": "Aucun identifiant à vérifier pour l'instant.",
+      "resumed": "Reprise — les livraisons continuent.",
+      "notResumed": "Non reprise — le fournisseur n'a pas accepté les identifiants.",
+      "paused": "En pause. Les événements de cette destination sont ignorés.",
+      "statusNow": "Statut actuel : {status}",
+      "healthNow": "État : {health}",
+      "error": {
+        "forbidden": "Vous n'êtes pas autorisé à faire cela.",
+        "not_found": "Destination introuvable.",
+        "invalid": "Cette action n'est pas possible dans l'état actuel de la destination.",
+        "connector_unavailable": "Ce connecteur n'est pas disponible sur cette plateforme.",
+        "vault_missing": "Le coffre d'identifiants n'est pas configuré ; les secrets enregistrés ne peuvent pas être lus.",
+        "timeout": "Le fournisseur n'a pas répondu dans les 25 secondes.",
+        "failed": "La vérification n'a pas pu être terminée.",
+        "generic": "Une erreur s'est produite. Veuillez réessayer."
+      }
+    },
+    "time": {
+      "unknown": "inconnu"
+    }
+  }
+}

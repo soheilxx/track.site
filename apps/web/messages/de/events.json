@@ -1,0 +1,556 @@
+{
+  "events": {
+    "nav": {
+      "label": "Events-Modul",
+      "overview": "Übersicht",
+      "coverage": "Coverage-Matrix",
+      "explorer": "Live-Explorer",
+      "testLab": "Test Lab"
+    },
+    "module": {
+      "title": "Events",
+      "noSite": "Noch keine Site",
+      "noSiteText": "Lege deine erste Site an, um Events zu empfangen, ihre Abdeckung zu prüfen und ihre Lineage nachzuvollziehen.",
+      "createSite": "Site anlegen",
+      "noEnvironment": "Diese Site hat noch keine Umgebung.",
+      "environment": {
+        "production": "Production",
+        "staging": "Staging",
+        "development": "Test"
+      }
+    },
+    "common": {
+      "yes": "ja",
+      "no": "nein",
+      "never": "nie",
+      "unknown": "unbekannt",
+      "lastUpdated": "Zuletzt aktualisiert {time}",
+      "refresh": "Aktualisieren",
+      "error": "Die Daten konnten nicht geladen werden. Bitte erneut versuchen.",
+      "testEvent": "Test",
+      "verified": "verifiziert",
+      "open": "Öffnen",
+      "actions": "Aktionen",
+      "close": "Schließen"
+    },
+    "windows": {
+      "1h": "Letzte Stunde",
+      "24h": "Letzte 24 Stunden",
+      "7d": "Letzte 7 Tage",
+      "30d": "Letzte 30 Tage"
+    },
+    "sources": {
+      "all": "Alle Quellen",
+      "browser": "Browser",
+      "server": "Server",
+      "shopify": "Shopify",
+      "woocommerce": "WooCommerce",
+      "shopware": "Shopware",
+      "webhook": "Webhook",
+      "legacy-import": "Import"
+    },
+    "states": {
+      "captured": "Erfasst",
+      "accepted": "Akzeptiert",
+      "normalized": "Normalisiert",
+      "policy_passed": "Gespeichert",
+      "policy_blocked": "Durch Policy blockiert",
+      "deduplicated": "Dedupliziert",
+      "routed": "Geroutet",
+      "delivered": "Zugestellt",
+      "rejected": "Abgelehnt",
+      "imported": "Importiert"
+    },
+    "stages": {
+      "captured": "Erfasst",
+      "accepted": "Akzeptiert",
+      "normalized": "Normalisiert",
+      "policy": "Policy",
+      "deduplicated": "Dedupliziert",
+      "routed": "Geroutet",
+      "delivered": "Zugestellt",
+      "rejected": "Beendet"
+    },
+    "outcomes": {
+      "ok": "OK",
+      "rejected": "abgelehnt",
+      "blocked": "blockiert",
+      "unique": "eindeutig",
+      "duplicate": "Duplikat",
+      "none": "nicht geroutet",
+      "skipped": "übersprungen",
+      "delivered": "zugestellt",
+      "retry": "wird wiederholt",
+      "failed": "fehlgeschlagen",
+      "dead": "aufgegeben",
+      "pending": "ausstehend",
+      "unknown": "unbekannt"
+    },
+    "reasons": {
+      "consent_missing": "Es wurde kein Consent-Signal erfasst, daher wurde das Event nicht gespeichert.",
+      "consent_denied": "Der Besucher hat den Zweck, den dieses Event benötigt, nicht erteilt.",
+      "gpc_opt_out": "Global Privacy Control ist aktiv: kein Marketing und keine Personalisierung.",
+      "purpose_not_granted": "Der Zweck, den diese Destination benötigt, wurde nicht erteilt.",
+      "inferred_data_not_exportable": "Abgeleitete Werte dürfen nie an eine Werbeplattform gelangen.",
+      "destination_paused": "Die Destination ist pausiert oder nicht verbunden.",
+      "pii_blocked": "Das Event enthielt ein Secret, eine Kartennummer oder IBAN und wurde abgelehnt.",
+      "bot": "Die Anfrage sah nach einem Bot aus.",
+      "duplicate_event": "Dieselbe Event-ID wurde bereits empfangen.",
+      "duplicate_conversion": "Diese Bestellung wurde auf demselben Pfad bereits gemeldet.",
+      "verified_supersedes_browser": "Ein verifizierter Server-Datensatz hat die Browser-Beobachtung dieser Bestellung ersetzt.",
+      "cross_path_pair": "Die Bestellung wurde auch auf dem anderen Pfad gesehen; beide bleiben erhalten und werden beim Anbieter dedupliziert.",
+      "invalid_event_name": "Der Eventname ist ungültig.",
+      "timestamp_out_of_window": "Der Client-Zeitstempel weicht zu stark von der Serverzeit ab.",
+      "invalid_url": "Die Seiten-URL ist ungültig.",
+      "no_config": "Für diese Umgebung ist keine Konfiguration veröffentlicht, daher wird nichts geroutet.",
+      "no_destinations": "Die veröffentlichte Konfiguration hat keine Destinations.",
+      "no_mapping": "Keine Destination bildet dieses Event ab.",
+      "policy_blocked": "Jede zugeordnete Destination wurde durch die Consent-Policy blockiert.",
+      "destination_disabled": "Die Destination ist in der Konfiguration deaktiviert.",
+      "browser_only": "Die Destination läuft nur im Browser.",
+      "integration_missing": "Die Destination existiert nicht mehr.",
+      "validation": "Die Anbieter-Payload hat die Validierung nicht bestanden.",
+      "not_mappable": "Der Connector hat für dieses Event keine Payload erzeugt.",
+      "destination_missing": "Die Integration oder ihre Konfiguration existiert nicht mehr.",
+      "circuit_open": "Die Destination ist nach wiederholten Fehlern vorübergehend pausiert.",
+      "temporary": "Vorübergehender Anbieterfehler",
+      "permanent": "Dauerhafter Anbieterfehler",
+      "rate_limited": "Der Anbieter hat die Anfrage gedrosselt.",
+      "auth": "Der Anbieter hat die Zugangsdaten abgelehnt.",
+      "credential_expired": "Die Zugangsdaten fehlen oder sind abgelaufen.",
+      "invalid_payload": "Der Anbieter hat die Payload abgelehnt.",
+      "timeout": "Der Anbieter hat nicht rechtzeitig geantwortet.",
+      "unreachable": "Der Collector war nicht erreichbar.",
+      "ingest_host_not_configured": "Es ist kein Collector-Host konfiguriert."
+    },
+    "detailKeys": {
+      "purposes_granted": "erteilte Zwecke",
+      "purpose_required": "benötigter Zweck",
+      "stripped_fields": "entfernte Felder",
+      "pii_redacted": "redigiert",
+      "consent_source": "Consent-Quelle",
+      "region": "Region",
+      "gpc": "GPC",
+      "policy_version": "Policy",
+      "config_version": "Config-Version",
+      "test_mode": "Testmodus",
+      "billable": "abrechenbar",
+      "planned": "im Eventplan",
+      "adopted_browser_context": "Browser-Kontext übernommen",
+      "connector_type": "Connector",
+      "vendor_event": "Anbieter-Event",
+      "mode": "Modus",
+      "http_status": "HTTP",
+      "duration_ms": "Dauer (ms)",
+      "error_class": "Fehlerklasse",
+      "attempt": "Versuch",
+      "next_retry_at": "nächster Versuch",
+      "key": "Dedup-Schlüssel",
+      "prior_source": "frühere Quelle",
+      "findings": "Funde",
+      "warnings": "Warnungen",
+      "destination_status": "Destination-Status",
+      "not_routed": "nicht geroutete Destinations"
+    },
+    "overview": {
+      "title": "Events",
+      "intro": "Was die aktive Umgebung empfangen, gespeichert, dedupliziert und zugestellt hat, wo die Pipeline hakt, und die drei Werkzeuge, um Abdeckung zu prüfen, Lineage nachzuvollziehen und kontrollierte Tests zu fahren.",
+      "day": {
+        "title": "Pipeline",
+        "window": "letzte 24 Stunden · stündliche Aggregate",
+        "received": "Empfangen",
+        "accepted": "Gespeichert",
+        "dropped": "Verworfen",
+        "deduplicated": "Dedupliziert",
+        "delivered": "Zugestellt",
+        "failed": "Zustellung fehlgeschlagen"
+      },
+      "noDay": "In den letzten 24 Stunden wurden keine Events verarbeitet, daher gibt es keine Zahlen.",
+      "droppedReasons": "Verwerfungsgründe",
+      "sources": {
+        "title": "Quellen"
+      },
+      "lastBrowser": "Letztes Browser-Event",
+      "lastServer": "Letztes Server-Event",
+      "noEventsYet": "Diese Umgebung hat noch kein Event erreicht.",
+      "install": "Snippet installieren",
+      "pipeline": {
+        "title": "Pipeline-Zustand"
+      },
+      "deadLetters": "Aufgegebene Zustellungen",
+      "deadLettersHint": "Zustellungen, die der Worker nach wiederholten Anbieterfehlern aufgegeben hat. Sie bleiben, bis sie im Destination Health Center erneut angestoßen werden.",
+      "lineage": "Lineage-Aufzeichnung",
+      "lineageOn": "aktiv",
+      "lineageOff": "nicht verfügbar",
+      "lineageOffText": "Die Lineage-Tabelle (Migration 0007) ist noch nicht eingespielt. Bis dahin leitet der Explorer die Stufen ohne Zeitstempel aus dem gespeicherten Zustand ab.",
+      "modules": {
+        "title": "Werkzeuge",
+        "coverage": {
+          "title": "Event Coverage Matrix",
+          "text": "Jedes relevante Event gegen Browserquelle, Serverquelle, Consent, Pflichtparameter, Datenqualität und Destinations — mit der Reparaturaktion pro Zelle."
+        },
+        "explorer": {
+          "title": "Live Event Explorer",
+          "text": "Browser- und Server-Events mit kompletter Lineage: erfasst, akzeptiert, normalisiert, Policy, dedupliziert, geroutet, zugestellt oder abgelehnt. Redigierte Payloads, Anbieterantworten und Drop-Gründe verständlich erklärt."
+        },
+        "testLab": {
+          "title": "Live Test Lab",
+          "text": "Geführte PageView-, Lead-, AddToCart-, Checkout- und Purchase-Journeys durch den echten Collector in der Testumgebung — Consent-Entscheidung, Deduplizierung, Routing und die echte Testantwort jeder Destination."
+        }
+      },
+      "byEvent": "Nach Event",
+      "byEventWindow": "letzte 7 Tage",
+      "empty": "Keine Events in den letzten 7 Tagen.",
+      "emptyText": "Installiere das Snippet oder sende eine Test-Journey; akzeptierte und verworfene Events pro Eventname erscheinen hier.",
+      "columns": {
+        "event": "Event",
+        "sources": "Quellen",
+        "received": "Empfangen",
+        "accepted": "Gespeichert",
+        "dropped": "Verworfen",
+        "delivered": "Zugestellt",
+        "failed": "Fehlgeschlagen",
+        "lastSeen": "Zuletzt gesehen"
+      }
+    },
+    "coverage": {
+      "title": "Event Coverage Matrix",
+      "intro": "Relevante Events als Zeilen — aus Eventplan, Eventdefinitionen und Beobachtung — gegen Quellen, Consent, Pflichtparameter, Datenqualität und Destinations der aktiven Umgebung. Jede Zelle zeigt Status, letzte Zeit und den nächsten Reparaturschritt.",
+      "configVersion": "Konfiguration v{version}",
+      "noConfig": "Keine Konfiguration veröffentlicht",
+      "generatedAt": "berechnet {time}",
+      "noPlanTitle": "Noch kein Eventplan",
+      "noPlanText": "Diese Umgebung hat keine veröffentlichte Konfiguration und keine Eventdefinitionen. Die Zeilen stammen nur aus beobachteten Events; starte das AI Setup, um festzulegen, welche Events zählen.",
+      "empty": "Noch nichts abzudecken",
+      "emptyText": "Kein Eventplan, keine Eventdefinitionen und keine beobachteten Events in den letzten 7 Tagen.",
+      "emptyAction": "AI Setup öffnen",
+      "caption": "Abdeckung der letzten {days} Tage pro Event",
+      "columns": {
+        "event": "Event",
+        "browser": "Browserquelle",
+        "server": "Serverquelle",
+        "consent": "Consent",
+        "params": "Pflichtparameter",
+        "quality": "Datenqualität",
+        "destinations": "Destinations"
+      },
+      "statuses": {
+        "ok": "OK",
+        "warn": "Achtung",
+        "bad": "Fehlt",
+        "info": "Hinweis",
+        "none": "Nicht erwartet",
+        "unknown": "Nicht gemessen"
+      },
+      "legend": "Legende",
+      "legendText": {
+        "ok": "gemessen und in Ordnung",
+        "warn": "veraltet, unvollständig oder mit Fehlern",
+        "bad": "erwartet, aber fehlend oder fehlschlagend",
+        "info": "funktioniert wie konfiguriert, einen Blick wert",
+        "none": "für dieses Event nicht relevant",
+        "unknown": "noch keine Messung"
+      },
+      "messages": {
+        "fresh": "In den letzten 24 Stunden gesehen.",
+        "stale": "Im Zeitfenster gesehen, aber nicht in den letzten 24 Stunden.",
+        "missing": "Für dieses Event erwartet, im Zeitfenster nichts empfangen.",
+        "notExpected": "Diese Quelle ist für das Event nicht konfiguriert.",
+        "noData": "Keine Events im Zeitfenster.",
+        "consentClean": "Kein Event wurde durch Consent blockiert; keine Zustellung übersprungen.",
+        "consentBlocked": "{blocked} von {received} empfangenen Events durch Consent blockiert; {skipped} Zustellungen übersprungen.",
+        "consentSkipped": "{skipped} Zustellungen übersprungen, weil ein Zweck nicht erteilt war.",
+        "noRequired": "Keine Pflichtparameter für dieses Event.",
+        "noSamples": "Keine gespeicherten Events zum Prüfen.",
+        "paramsComplete": "Alle Pflichtparameter in den letzten {sampled} Events vorhanden.",
+        "paramsMissing": "In einigen der letzten {sampled} Events fehlt: {missing}.",
+        "noIssues": "Keine offenen Datenqualitätsprobleme.",
+        "openIssues": "{open} offene Probleme, {critical} kritisch.",
+        "noDestinations": "Für diese Site ist keine Destination konfiguriert.",
+        "notMapped": "Keine Destination bildet dieses Event ab.",
+        "mapped": "{n} Destinations"
+      },
+      "lastAt": "Zuletzt: {time}",
+      "actions": {
+        "installSnippet": "Snippet prüfen",
+        "openSetup": "Im AI Setup beheben",
+        "createSourceKey": "Source Key anlegen",
+        "openShop": "Shop verbinden",
+        "openConsent": "Consent & Privacy öffnen",
+        "openDataQuality": "Data-Quality-Inbox öffnen",
+        "openDestination": "Destination öffnen",
+        "addDestination": "Destination hinzufügen",
+        "mapEvent": "Event zuordnen",
+        "openExplorer": "Im Explorer prüfen"
+      },
+      "critical": "kritisch",
+      "custom": "custom",
+      "origin": {
+        "definition": "Eventdefinition",
+        "plan": "veröffentlichter Plan",
+        "observed": "beobachtet"
+      },
+      "required": "Pflicht: {params}",
+      "destination": {
+        "counts": "{delivered} zugestellt · {failed} fehlgeschlagen · {skipped} übersprungen",
+        "lastDelivered": "zuletzt zugestellt {time}",
+        "lastFailed": "zuletzt fehlgeschlagen {time}"
+      }
+    },
+    "explorer": {
+      "title": "Live Event Explorer",
+      "intro": "Jedes Browser- und Server-Event der aktiven Umgebung mit kompletter Lineage. Payloads sind redigiert, Identifier maskiert; Anbieterantworten und Drop-Gründe werden verständlich dargestellt. Die Liste aktualisiert sich, solange die Seite geöffnet ist.",
+      "filters": {
+        "label": "Filter",
+        "event": "Eventname",
+        "source": "Quelle",
+        "status": "Status",
+        "window": "Zeitfenster",
+        "apply": "Anwenden",
+        "reset": "Zurücksetzen"
+      },
+      "statuses": {
+        "all": "Alle",
+        "stored": "Gespeichert",
+        "routed": "Geroutet",
+        "delivered": "Zugestellt",
+        "failed": "Zustellung fehlgeschlagen",
+        "deduplicated": "Dedupliziert",
+        "rejected": "Abgelehnt"
+      },
+      "polling": {
+        "auto": "Alle {seconds} s automatisch aktualisieren"
+      },
+      "stale": "Der Workspace wurde in einem anderen Tab gewechselt. Lade die Seite neu, um die aktive Site zu sehen.",
+      "lineageOff": "Lineage-Aufzeichnung nicht verfügbar",
+      "lineageOffText": "Migration 0007 ist nicht eingespielt; die Stufen werden aus dem gespeicherten Zustand abgeleitet, und vor der Speicherung abgelehnte Events werden nicht aufgelistet.",
+      "list": {
+        "title": "Events",
+        "count": "{n} Events",
+        "empty": "Keine passenden Events.",
+        "emptyText": "Erweitere das Zeitfenster, setze die Filter zurück oder sende eine Test-Journey aus dem Test Lab.",
+        "loadMore": "Ältere Events laden",
+        "columns": {
+          "time": "Zeit",
+          "event": "Event",
+          "source": "Quelle",
+          "status": "Status",
+          "deliveries": "Zustellungen"
+        },
+        "deliveries": "{delivered} zugestellt · {failed} fehlgeschlagen · {skipped} übersprungen · {pending} ausstehend"
+      },
+      "rejected": {
+        "title": "Vor der Speicherung abgelehnt",
+        "text": "Events, die die Pipeline verworfen hat, ohne sie zu speichern: ungültig, Bot, kein Consent oder PII. Aufgezeichnet werden nur Name, Quelle, Stufe und Grund.",
+        "empty": "Im Zeitfenster wurde nichts abgelehnt.",
+        "columns": {
+          "stage": "Stufe",
+          "reason": "Grund"
+        }
+      },
+      "workspaceBanner": {
+        "text": "Dieser Link gehört zu einer anderen Site ({site}).",
+        "switch": "Zu {site} wechseln"
+      },
+      "detail": {
+        "title": "Event-Details",
+        "select": "Wähle ein Event, um Lineage, Consent-Entscheidung, Routing und Anbieterantworten zu sehen.",
+        "notFound": "Dieses Event gehört nicht zur aktiven Site oder wurde durch die Aufbewahrungsfrist gelöscht.",
+        "timeline": "Lineage",
+        "derivedOnly": "Für dieses Event wurden keine Lineage-Zeilen aufgezeichnet; die Stufen sind aus dem gespeicherten Zustand abgeleitet.",
+        "summary": "Event",
+        "attempts": "Zustellversuche",
+        "noAttempts": "Keine Zustellversuche für dieses Event.",
+        "related": "Korrelierte Events",
+        "noRelated": "Kein anderes Event teilt diese Bestell-ID oder Session.",
+        "relatedVia": {
+          "order_id": "gleiche Bestellung",
+          "session": "gleiche Session"
+        },
+        "noTimeline": "Noch keine Stufen aufgezeichnet.",
+        "noTime": "kein Zeitstempel",
+        "derivedHint": "aus dem gespeicherten Zustand abgeleitet",
+        "redactionNote": "Freitext ist redigiert, Identifier sind maskiert, gehashte Nutzerdaten werden nur als Feldnamen gelistet.",
+        "hashed": "{n} gehashte Felder: {fields}",
+        "noUserData": "keine",
+        "strippedIdentity": "keine Identifier (durch die Consent-Policy entfernt)",
+        "identityKind": {
+          "anonymous": "anonym",
+          "session": "Sitzung",
+          "user": "Nutzer"
+        },
+        "attempt": "Versuch {n}",
+        "http": "HTTP {status}",
+        "duration": "{ms} ms",
+        "nextRetry": "Nächster Versuch {time}",
+        "vendorEventId": "Anbieter-Event-ID",
+        "payload": "Redigierte Anbieter-Payload",
+        "response": "Anbieterantwort",
+        "attemptStatus": {
+          "pending": "ausstehend",
+          "success": "zugestellt",
+          "retry": "wird wiederholt",
+          "failed": "fehlgeschlagen",
+          "dead": "aufgegeben",
+          "skipped": "übersprungen"
+        },
+        "fields": {
+          "eventId": "Event-ID",
+          "sourceEventId": "Quell-Event-ID",
+          "captured": "Erfasst",
+          "clientTime": "Client-Zeit",
+          "source": "Quelle",
+          "configVersion": "Config v{version}",
+          "noConfig": "keine Config",
+          "state": "Zustand",
+          "consent": "Consent",
+          "noPurposes": "keine Zwecke",
+          "consentSource": "Quelle",
+          "region": "Region",
+          "policyVersion": "Policy",
+          "clickIds": "Click-IDs",
+          "vendorIds": "Anbieter-IDs",
+          "page": "Seite",
+          "title": "Titel",
+          "referrer": "Referrer",
+          "utm": "UTM",
+          "commerce": "Commerce",
+          "commerceValue": "Bestellung {orderId} · {value} {currency} · {items} Artikel",
+          "userData": "Nutzerdaten",
+          "identity": "Identität",
+          "device": "Gerät",
+          "billable": "Abrechenbar",
+          "bot": "Bot",
+          "provenance": "Herkunft",
+          "props": "Eigenschaften (redigiert)"
+        }
+      }
+    },
+    "testLab": {
+      "title": "Live Test Lab",
+      "intro": "Geführte Test-Journeys durch den echten Collector in der Testumgebung dieser Site. Jeder Lauf sendet kontrollierte Test-Events mit einem kurzlebigen Schlüssel, wird auditiert und zeigt Consent-Entscheidung, Deduplizierung, redigierte Payload, Routing und die echte Testantwort jeder Destination.",
+      "unavailable": "Test Lab nicht verfügbar",
+      "unavailableText": "Migration 0007 ist nicht eingespielt, daher können Läufe nicht aufgezeichnet werden.",
+      "environment": {
+        "none": "Keine Testumgebung",
+        "noneText": "Diese Site hat keine Umgebung im Testmodus. Läufe brauchen eine Staging- oder Testumgebung, damit nichts Produktions-Destinations erreicht.",
+        "sending": "Test-Events gehen an {environment} ({kind}, Testmodus) über {host}."
+      },
+      "permission": "Zum Starten einer Journey ist mindestens die Rolle Developer nötig. Frühere Läufe kannst du einsehen.",
+      "journeys": {
+        "label": "Journey",
+        "page_view": {
+          "title": "PageView",
+          "text": "Ein Seitenaufruf. Prüft Erfassung, Consent und Routing des Basis-Events."
+        },
+        "lead": {
+          "title": "Lead",
+          "text": "Seitenaufruf und Absenden eines Lead-Formulars."
+        },
+        "add_to_cart": {
+          "title": "AddToCart",
+          "text": "Seitenaufruf, Produktansicht und In-den-Warenkorb mit einem Testartikel."
+        },
+        "checkout": {
+          "title": "Checkout",
+          "text": "Seitenaufruf, Produktansicht, In-den-Warenkorb und Checkout-Start."
+        },
+        "purchase": {
+          "title": "Purchase",
+          "text": "Seitenaufruf, Checkout und ein Kauf mit Test-Bestell-ID — zweimal gesendet, um die Bestell-Deduplizierung zu zeigen."
+        }
+      },
+      "steps": {
+        "page_view": "Seitenaufruf",
+        "view_item": "Produktansicht",
+        "add_to_cart": "In den Warenkorb",
+        "begin_checkout": "Checkout-Start",
+        "generate_lead": "Lead",
+        "purchase": "Kauf",
+        "duplicate_purchase": "Dieselbe Bestellung erneut"
+      },
+      "consent": {
+        "label": "Consent-Zustand des Testbesuchers",
+        "all": {
+          "title": "Analytics und Marketing erteilt",
+          "text": "Events werden mit Identifiern gespeichert und dürfen jede zugeordnete Destination erreichen."
+        },
+        "analytics": {
+          "title": "Nur Analytics",
+          "text": "Events werden gespeichert; Werbe-Destinations werden durch die Policy übersprungen."
+        },
+        "none": {
+          "title": "Kein Consent-Signal",
+          "text": "Nicht-operative Events werden vor der Speicherung abgelehnt; ein Kauf wird ohne Identifier gespeichert."
+        }
+      },
+      "run": "Journey starten",
+      "confirm": {
+        "title": "Test-Events senden?",
+        "text": "Die Events laufen durch den echten Collector und die echte Pipeline der Testumgebung.",
+        "events": "{n} Events",
+        "journey": "Journey",
+        "environment": "Umgebung",
+        "consent": "Consent",
+        "collector": "Collector",
+        "nothingProduction": "Nichts erreicht eine Produktions-Destination: Die Events sind als Test-Events markiert, werden nie abgerechnet, und Destinations empfangen sie nur in ihrem Testmodus. Lauf und kurzlebiger Schlüssel werden auditiert.",
+        "cancel": "Abbrechen",
+        "confirm": "Test-Events senden"
+      },
+      "notes": {
+        "audited": "Jeder Lauf erzeugt einen kurzlebigen Source Key für die Testumgebung (zwei Minuten gültig, direkt nach der Anfrage widerrufen) und einen Audit-Eintrag."
+      },
+      "errors": {
+        "invalid": "Die Anfrage war ungültig.",
+        "forbidden": "Du hast keine Berechtigung, Test-Journeys zu starten.",
+        "not_found": "Die Site wurde in dieser Organisation nicht gefunden.",
+        "no_test_environment": "Diese Site hat keine Umgebung im Testmodus.",
+        "unavailable": "Das Test Lab ist nicht verfügbar (Migration fehlt oder Collector-Host nicht konfiguriert).",
+        "collector": "Der Collector hat den Batch abgelehnt.",
+        "unreachable": "Der Collector war nicht erreichbar. Läuft der Collector?",
+        "generic": "Der Lauf konnte nicht gestartet werden."
+      },
+      "collector": {
+        "status": "Collector antwortete mit HTTP {status}",
+        "reason": "Grund: {reason}",
+        "accepted": "Der Collector hat den Batch angenommen (HTTP {status}). Die Timeline unten füllt sich, sobald der Worker ihn verarbeitet."
+      },
+      "timeline": {
+        "title": "Timeline",
+        "none": "Starte eine Journey, um hier ihre Timeline zu sehen.",
+        "complete": "abgeschlossen",
+        "incomplete": "in Bearbeitung",
+        "waiting": "Warten auf den Worker",
+        "waitingText": "Der Collector hat den Batch angenommen; die Stufen erscheinen, sobald der Worker ihn verarbeitet.",
+        "workerHint": "Noch keine Verarbeitung aufgezeichnet",
+        "workerHintText": "Der Batch wurde vor mehr als 90 Sekunden angenommen, aber keine Stufe wurde aufgezeichnet. Prüfe, ob der Worker läuft und Migration 0007 eingespielt ist, und aktualisiere dann.",
+        "step": "Schritt {n}",
+        "pending": "ausstehend",
+        "pendingText": "Noch nicht verarbeitet.",
+        "billable": "nicht abgerechnet (Testmodus)",
+        "notBillable": "nicht abgerechnet (Testmodus)",
+        "consentDecision": "Erfasster Consent",
+        "identity": "Identifier",
+        "autoRefresh": "aktualisiert alle 2 s"
+      },
+      "runs": {
+        "title": "Frühere Läufe",
+        "empty": "Noch keine Läufe.",
+        "columns": {
+          "time": "Zeit",
+          "journey": "Journey",
+          "consent": "Consent",
+          "status": "Status",
+          "collector": "Collector"
+        },
+        "status": {
+          "pending": "ausstehend",
+          "sent": "gesendet",
+          "rejected": "vom Collector abgelehnt",
+          "failed": "fehlgeschlagen"
+        },
+        "open": "Öffnen"
+      }
+    }
+  }
+}
