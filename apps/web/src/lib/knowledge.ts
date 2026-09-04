@@ -4,6 +4,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
 import { ACTIVE_LOCALES, DEFAULT_LOCALE, type AppLocale } from "@/i18n/routing";
+import { buildSearchIndex, extractHeadings, plainTextFromMarkdown, search, type FacetCounts, type HubQuery, type HubTaxonomy, type SearchDocument, type SearchIndex } from "./knowledge-search";
 
 /**
  * Tracking Knowledge content loader. Articles live in `apps/web/content/knowledge/<locale>/<file>.mdx`
@@ -114,6 +115,10 @@ export interface ArticleMeta {
   readingMinutes: number;
   sources: Array<{ title: string; url: string }>;
   legalNotice: boolean;
+  /** Front matter `featured: true` marks the hub's editorial lead story (supplement §6). */
+  featured: boolean;
+  /** Heading texts of the body (search index, table of contents). */
+  headings: string[];
 }
 
 export interface Article extends ArticleMeta {
@@ -202,6 +207,8 @@ function toArticle(locale: string, fileName: string, raw: string): Article | nul
     readingMinutes: Math.max(1, Math.round(readingTime(content).minutes)),
     sources: Array.isArray(data.sources) ? data.sources.map((s: { title: string; url: string }) => ({ title: String(s.title), url: String(s.url) })) : [],
     legalNotice: Boolean(data.legalNotice),
+    featured: data.featured === true,
+    headings: extractHeadings(content),
     content,
   };
 }
@@ -351,6 +358,180 @@ export async function translationParity(): Promise<Array<{ translationGroupId: s
     versions,
     complete: ACTIVE_LOCALES.every((l) => versions[l]?.status === "published"),
   })).sort((a, b) => a.translationGroupId.localeCompare(b.translationGroupId));
+}
+
+/* ---------- hub: featured story, fresh lists, guides ---------- */
+
+function freshness(a: ArticleMeta): string {
+  return a.updatedAt ?? a.publishedAt;
+}
+
+/**
+ * The hub's lead story: the published article with front matter `featured: true` (the most recently
+ * reviewed one when several are flagged), otherwise the most recently reviewed published article
+ * (ties: most recently updated/published). `null` only when nothing is published in the locale.
+ */
+export async function getFeaturedArticle(locale: string): Promise<ArticleMeta | null> {
+  const published = await listArticles(locale);
+  if (published.length === 0) return null;
+  const byReview = (x: ArticleMeta, y: ArticleMeta) => (y.reviewedAt ?? "").localeCompare(x.reviewedAt ?? "") || freshness(y).localeCompare(freshness(x)) || x.slug.localeCompare(y.slug);
+  const flagged = published.filter((a) => a.featured).sort(byReview);
+  return flagged[0] ?? [...published].sort(byReview)[0] ?? null;
+}
+
+/** Newest published articles by publication date. */
+export async function listRecentlyPublished(locale: string, limit = 5): Promise<ArticleMeta[]> {
+  return (await listArticles(locale)).slice(0, limit);
+}
+
+/** Published articles that carry an `updatedAt` after publication, most recent update first; empty when nothing was updated yet. */
+export async function listRecentlyUpdated(locale: string, limit = 5): Promise<ArticleMeta[]> {
+  return (await listArticles(locale))
+    .filter((a) => a.updatedAt && a.updatedAt > a.publishedAt)
+    .sort((x, y) => (y.updatedAt ?? "").localeCompare(x.updatedAt ?? "") || x.slug.localeCompare(y.slug))
+    .slice(0, limit);
+}
+
+export interface GuideTarget {
+  /** Platform or shop-system id as used in the front matter (= integration catalogue slug). */
+  id: string;
+  count: number;
+}
+
+/** Platforms and shop systems named in the published articles' front matter with their article counts (most articles first). */
+export async function listGuideTargets(locale: string): Promise<{ platforms: GuideTarget[]; shopSystems: GuideTarget[] }> {
+  const platforms = new Map<string, number>();
+  const shopSystems = new Map<string, number>();
+  for (const a of await listArticles(locale)) {
+    for (const p of a.platforms) platforms.set(p, (platforms.get(p) ?? 0) + 1);
+    for (const s of a.shopSystems) shopSystems.set(s, (shopSystems.get(s) ?? 0) + 1);
+  }
+  const sorted = (m: Map<string, number>) => Array.from(m, ([id, count]) => ({ id, count })).sort((x, y) => y.count - x.count || x.id.localeCompare(y.id));
+  return { platforms: sorted(platforms), shopSystems: sorted(shopSystems) };
+}
+
+/* ---------- hub: curated learning paths ---------- */
+
+/**
+ * Curated learning path as authored in `content/knowledge/paths.<locale>.json` — one file per locale,
+ * a top-level JSON array (an object `{ "paths": [...] }` is accepted too):
+ *
+ *   [{ "id": "server-side-basics",           // stable, URL-safe, unique per file
+ *      "title": "…",                          // localized
+ *      "description": "…",                    // localized, one or two sentences
+ *      "groupIds": ["server-side-tracking-explained", "dedup-event-id-order-id"] }]  // translationGroupIds in reading order
+ *
+ * Only published articles of the locale are resolved; unknown or unpublished ids are skipped, a path
+ * without any resolvable article is dropped, and a missing or malformed file yields an empty list.
+ */
+export interface LearningPath {
+  id: string;
+  title: string;
+  description: string;
+  groupIds: string[];
+}
+
+export interface LearningPathWithArticles extends LearningPath {
+  articles: ArticleMeta[];
+  /** Sum of the reading minutes of the resolved articles. */
+  readingMinutes: number;
+}
+
+function pathsFile(locale: string): string {
+  return path.resolve(process.cwd(), "content", "knowledge", `paths.${locale}.json`);
+}
+
+function toLearningPath(raw: unknown): LearningPath | null {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  if (typeof r.id !== "string" || !SLUG_RE.test(r.id) || typeof r.title !== "string" || !r.title.trim()) return null;
+  const groupIds = Array.isArray(r.groupIds) ? r.groupIds.filter((g): g is string => typeof g === "string" && SLUG_RE.test(g)) : [];
+  return { id: r.id, title: r.title.trim(), description: typeof r.description === "string" ? r.description.trim() : "", groupIds };
+}
+
+/** Raw learning paths of a locale (no article resolution); `[]` when the file is missing or invalid. */
+export function readLearningPaths(locale: string): LearningPath[] {
+  const file = pathsFile(locale);
+  if (!existsSync(file)) return [];
+  try {
+    const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+    const list = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" && Array.isArray((parsed as { paths?: unknown }).paths) ? (parsed as { paths: unknown[] }).paths : [];
+    const seen = new Set<string>();
+    const paths: LearningPath[] = [];
+    for (const item of list) {
+      const p = toLearningPath(item);
+      if (p && !seen.has(p.id)) {
+        seen.add(p.id);
+        paths.push(p);
+      }
+    }
+    return paths;
+  } catch {
+    return [];
+  }
+}
+
+/** Learning paths with their published articles resolved in reading order (see `LearningPath`). */
+export async function listLearningPaths(locale: string): Promise<LearningPathWithArticles[]> {
+  const byGroup = new Map((await listArticles(locale)).map((a) => [a.translationGroupId, a]));
+  return readLearningPaths(locale)
+    .map((p) => {
+      const articles = p.groupIds.map((g) => byGroup.get(g)).filter((a): a is ArticleMeta => !!a);
+      return { ...p, articles, readingMinutes: articles.reduce((n, a) => n + a.readingMinutes, 0) };
+    })
+    .filter((p) => p.articles.length > 0);
+}
+
+/* ---------- hub: full-text search ---------- */
+
+/** Catalogue values the search query parser and the facet counts validate against. */
+export const KNOWLEDGE_TAXONOMY: HubTaxonomy = { topics: TOPIC_IDS, contentTypes: CONTENT_TYPES, levels: LEVELS, recencyDays: RECENCY_WINDOWS };
+
+function toSearchDocument(a: Article): SearchDocument {
+  return {
+    id: a.translationGroupId,
+    title: a.title,
+    description: a.description,
+    excerpt: a.excerpt,
+    headings: a.headings,
+    body: plainTextFromMarkdown(a.content),
+    topic: a.topic,
+    platforms: a.platforms,
+    shopSystems: a.shopSystems,
+    contentType: a.contentType,
+    level: a.level,
+    publishedAt: a.publishedAt,
+    updatedAt: a.updatedAt,
+  };
+}
+
+/** Search index per locale, built at request time from the loader and kept in module scope until the published set changes. */
+const searchIndexCache = new Map<string, { fingerprint: string; index: SearchIndex }>();
+
+export function getSearchIndex(locale: string): SearchIndex {
+  const published = loadLocale(locale).filter((a) => a.status === "published");
+  const fingerprint = published.map((a) => `${a.slug}:${a.updatedAt ?? a.publishedAt}:${a.content.length}`).join("|");
+  const cached = searchIndexCache.get(locale);
+  if (cached && cached.fingerprint === fingerprint) return cached.index;
+  const index = buildSearchIndex(published.map(toSearchDocument), KNOWLEDGE_TAXONOMY);
+  searchIndexCache.set(locale, { fingerprint, index });
+  return index;
+}
+
+export interface KnowledgeSearchResult {
+  hits: ArticleMeta[];
+  total: number;
+  corpus: number;
+  facets: FacetCounts;
+}
+
+/** Full-text search over the published articles of a locale combined with the directory filters (supplement §6). */
+export async function searchKnowledge(locale: string, query: HubQuery, now: Date = new Date()): Promise<KnowledgeSearchResult> {
+  const index = getSearchIndex(locale);
+  const published = loadLocale(locale).filter((a) => a.status === "published");
+  const byGroup = new Map(published.map((a) => [a.translationGroupId, stripContent(a)]));
+  const result = search(index, query, now);
+  return { hits: result.hits.map((h) => byGroup.get(h.doc.id)).filter((a): a is ArticleMeta => !!a), total: result.total, corpus: result.corpus, facets: result.facets };
 }
 
 export { DEFAULT_LOCALE as KNOWLEDGE_DEFAULT_LOCALE };
