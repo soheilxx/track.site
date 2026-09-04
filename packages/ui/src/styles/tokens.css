@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 /*
- * Track design tokens. Light, high-end SaaS look: off-white ground, clear black type,
- * thin grey borders, royal/electric blue for primary actions, sparse status accents.
- * Dark theme mirrors the scale; both are defined explicitly (no transparent body).
+ * Track design tokens (docs/12-design-system.md §1–§2, supplement §3).
+ *
+ * Off-white ground, ink text, cobalt as the only action colour, violet/cyan reserved for AI surfaces
+ * and data-flow lines, semantic colours reserved for states. Light and dark are both defined
+ * explicitly (no transparent body). Spacing follows the 8 px system on Tailwind's 4 px base:
+ * 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96 px = spacing 1 / 2 / 3 / 4 / 6 / 8 / 12 / 16 / 24.
  */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
@@ -14,21 +17,36 @@
     var(--font-bricolage, "Bricolage Grotesque"), var(--font-inter, "Inter"), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
+  /* ground / surfaces */
   --color-ground: #f7f7f5;
   --color-surface: #ffffff;
   --color-surface-2: #f1f1ef;
+  /* ink (AA on all surfaces) */
   --color-ink: #0a0a0a;
   --color-ink-2: #3f3f46;
   --color-ink-3: #62626b;
+  /* lines */
   --color-line: #e4e4e7;
   --color-line-2: #d4d4d8;
 
-  --color-primary: #1f62ff;
-  --color-primary-strong: #1550e6;
-  --color-primary-soft: #eef4ff;
-  --color-primary-soft-2: #dbe7ff;
+  /* primary: cobalt, the only action colour */
+  --color-primary: #1f4fe0;
+  --color-primary-strong: #173fbf;
+  --color-primary-soft: #eaf0ff;
+  --color-primary-soft-2: #d6e0ff;
   --color-on-primary: #ffffff;
 
+  /* AI / data-flow accents (sparse: AI surfaces, flow lines, Living AI Core) */
+  --color-violet: #6d3df5;
+  --color-violet-strong: #5a2fd6;
+  --color-violet-soft: #f3efff;
+  --color-violet-soft-2: #e6dcff;
+  --color-cyan: #0aa5c2;
+  --color-cyan-strong: #086f86; /* text-safe cyan (>= 4.5:1 on surface and cyan-soft); #0aa5c2 is for lines and fills only */
+  --color-cyan-soft: #e6f7fa;
+  --color-cyan-soft-2: #cdeff5;
+
+  /* semantic: states only, never decorative */
   --color-ok: #15803d;
   --color-ok-soft: #ecfdf3;
   --color-warn: #b45309;
@@ -37,22 +55,97 @@
   --color-bad-soft: #fef2f2;
   --color-info: #0e7490;
   --color-info-soft: #ecfeff;
-  --color-violet: #7c3aed;
-  --color-violet-soft: #f5f3ff;
 
+  /* dark product stage (same in both themes; see .surface-stage) */
+  --color-stage: #0f0f11;
+  --color-stage-2: #17171a;
+  --color-stage-3: #1f1f23;
+  --color-stage-line: #2a2a30;
+  --color-stage-line-2: #3a3a42;
+  --color-stage-ink: #f4f4f5;
+  --color-stage-ink-2: #c4c4cc;
+  --color-stage-ink-3: #8b8b95;
+  --color-stage-primary: #4d82ff;
+
+  /* radii: panels 16–24, cards 16, controls 10–12, chips 999 (chips only) */
+  --radius-panel: 20px;
+  --radius-panel-lg: 24px;
   --radius-card: 16px;
   --radius-control: 12px;
+  --radius-control-sm: 10px;
+  --radius-chip: 999px;
+
+  /* shadows: hairline + soft; no heavy glass, no neon */
   --shadow-card: 0 1px 2px rgba(10, 10, 10, 0.04), 0 8px 24px -12px rgba(10, 10, 10, 0.12);
   --shadow-pop: 0 12px 40px -12px rgba(10, 10, 10, 0.25);
+  --shadow-stage: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 64px -32px rgba(10, 10, 10, 0.5);
+
+  /* containers (also usable as max-w-text / max-w-page / max-w-wide) */
+  --container-text: 720px;
+  --container-page: 1200px;
+  --container-wide: 1360px;
+
+  /* typography scale (also usable as text-h1 / text-h2 / text-h3) */
+  --text-h1: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.3;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.4;
+
+  /* motion easing (utilities: ease-flow) */
+  --ease-flow: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-flow-dash: flow-dash 1.2s linear infinite;
+  --animate-pulse-once: pulse-once 700ms ease-out 1;
+
+  @keyframes flow-dash {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes pulse-once {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.06);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 }
 
 :root {
   color-scheme: light;
   background: var(--color-ground);
+
+  /* motion budget (docs/12 §2): hover/focus 150–200, tabs/filters 200–300, charts/flow 350–500, success pulse 600–900 once */
+  --motion-fast: 160ms;
+  --motion-base: 240ms;
+  --motion-slow: 400ms;
+  --motion-pulse: 700ms;
+  --ease-out-track: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out-track: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-flow-track: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
+  /* dark text on the lighter dark-mode primary: white on #4d82ff is only 3.5:1 */
+  --color-on-primary: #0a0a0a;
   --color-ground: #0f0f11;
   --color-surface: #17171a;
   --color-surface-2: #1f1f23;
@@ -65,12 +158,24 @@
   --color-primary-strong: #6d99ff;
   --color-primary-soft: #16264d;
   --color-primary-soft-2: #1c3061;
+  --color-violet: #9a78ff;
+  --color-violet-strong: #b094ff;
+  --color-violet-soft: #241a45;
+  --color-violet-soft-2: #2f235a;
+  --color-cyan: #38c4de;
+  --color-cyan-strong: #5fd2e8;
+  --color-cyan-soft: #0d2a31;
+  --color-cyan-soft-2: #11383f;
+  --color-ok: #3ccf6e;
   --color-ok-soft: #0a2b20;
+  --color-warn: #f2a541;
   --color-warn-soft: #2e2410;
+  --color-bad: #f26d6d;
   --color-bad-soft: #331416;
+  --color-info: #3cc3dd;
   --color-info-soft: #0f2536;
-  --color-violet-soft: #271840;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-pop: 0 12px 40px -12px rgba(0, 0, 0, 0.7);
 }
 
 @layer base {
@@ -91,10 +196,15 @@
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
+  /*
+   * Reduced motion: every non-essential transition/animation is neutralised (no flash on load).
+   * Motion that carries information (a spinner, the Living AI Core state) opts out with
+   * data-motion="essential"; it must still be usable without movement.
+   */
   @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *:not([data-motion="essential"]),
+    *:not([data-motion="essential"])::before,
+    *:not([data-motion="essential"])::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
@@ -103,9 +213,86 @@
   }
 }
 
+/* --- containers (text 720, page 1200, wide product stage 1360) --- */
+@utility container-text {
+  width: 100%;
+  max-width: var(--container-text);
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+}
+@utility container-page {
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+@utility container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* --- subtle technical pattern (dots on line-2, very low contrast) --- */
+@utility grid-dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-line-2) 70%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+/* legacy alias used by the current home hero */
 @utility dot-grid {
   background-image: radial-gradient(var(--color-line-2) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/*
+ * Dark product stage: re-scopes the surface/ink/line tokens so any child built from tokens
+ * (bg-surface, text-ink, border-line, Card, Table, Status …) renders dark inside it, in both themes.
+ */
+@utility surface-stage {
+  color-scheme: dark;
+  --color-ground: var(--color-stage);
+  --color-surface: var(--color-stage-2);
+  --color-surface-2: var(--color-stage-3);
+  --color-ink: var(--color-stage-ink);
+  --color-ink-2: var(--color-stage-ink-2);
+  --color-ink-3: var(--color-stage-ink-3);
+  --color-line: var(--color-stage-line);
+  --color-line-2: var(--color-stage-line-2);
+  --color-primary: var(--color-stage-primary);
+  --color-on-primary: #0a0a0a;
+  --color-primary-strong: #6d99ff;
+  --color-primary-soft: #16264d;
+  --color-primary-soft-2: #1c3061;
+  --color-violet: #9a78ff;
+  --color-violet-soft: #241a45;
+  --color-cyan: #38c4de;
+  --color-cyan-soft: #0d2a31;
+  --color-ok: #3ccf6e;
+  --color-ok-soft: #0a2b20;
+  --color-warn: #f2a541;
+  --color-warn-soft: #2e2410;
+  --color-bad: #f26d6d;
+  --color-bad-soft: #331416;
+  --color-info: #3cc3dd;
+  --color-info-soft: #0f2536;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  background: var(--color-ground);
+  color: var(--color-ink);
 }
 
 @utility card {
@@ -113,4 +300,141 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+}
+
+@layer components {
+  /* readable running text: 65–75 characters per line */
+  .prose-track {
+    max-width: 70ch;
+    color: var(--color-ink-2);
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
+  .prose-track > * + * {
+    margin-top: 1rem;
+  }
+  .prose-track h2,
+  .prose-track h3,
+  .prose-track h4 {
+    color: var(--color-ink);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .prose-track h2 {
+    margin-top: 2.5rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+  .prose-track h3 {
+    margin-top: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.35;
+  }
+  .prose-track a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-track ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+  }
+  .prose-track ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+  .prose-track li + li {
+    margin-top: 0.375rem;
+  }
+  .prose-track code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--color-surface-2);
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+  }
+  .prose-track pre {
+    overflow-x: auto;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-control);
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .prose-track pre code {
+    background: transparent;
+    padding: 0;
+  }
+  .prose-track blockquote {
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+  }
+  .prose-track hr {
+    border-color: var(--color-line);
+    margin: 2rem 0;
+  }
+
+  /* Table: dense on desktop, stacked rows on mobile via data-label on each cell */
+  .table-stack {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  @media (width < 48rem) {
+    .table-stack thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .table-stack,
+    .table-stack tbody,
+    .table-stack tr,
+    .table-stack td {
+      display: block;
+    }
+    .table-stack tr {
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-control);
+      background: var(--color-surface);
+    }
+    .table-stack tr + tr {
+      margin-top: 0.75rem;
+    }
+    .table-stack td {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.5rem 0.75rem;
+      border: 0;
+      border-bottom: 1px solid var(--color-line);
+      text-align: right;
+    }
+    .table-stack td:last-child {
+      border-bottom: 0;
+    }
+    .table-stack td[data-label]::before {
+      content: attr(data-label);
+      flex: 0 0 40%;
+      font-size: var(--text-micro);
+      font-weight: 500;
+      color: var(--color-ink-3);
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  /* animated data-flow edge: motion only when the user has not asked for reduced motion */
+  .flow-edge-animated {
+    stroke-dasharray: 6 6;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .flow-edge-animated {
+      animation: var(--animate-flow-dash);
+    }
+  }
 }

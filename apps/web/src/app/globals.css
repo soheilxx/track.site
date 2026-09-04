@@ -1,9 +1,37 @@
+/*
+ * Order matters: the token sheet is the Tailwind entry (`@import "tailwindcss"`, @theme, base layer,
+ * the .container-* / .grid-dots / .surface-stage / .prose-track / .table-stack utilities and the
+ * reduced-motion rule). Plugins and content sources follow; app-level layers come last.
+ */
 @import "@track-site/ui/styles/tokens.css";
 @plugin "@tailwindcss/typography";
 @source "../../../../packages/ui/src";
 @source "../";
 
+@layer components {
+  /* Skip link (docs/12 §6): visually hidden until focused, then a solid primary chip at the top. */
+  .skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0.5rem 0.75rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border-radius: 0 0 var(--radius-control) 0;
+    font-size: var(--text-small);
+    font-weight: 500;
+    transform: translateY(-120%);
+    transition: transform var(--motion-fast) var(--ease-out-track);
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+    outline-offset: -2px;
+  }
+}
+
 @layer utilities {
+  /* Legacy article styles (knowledge/legal pages); new pages use .prose-track from the token sheet. */
   .prose-ts {
     color: var(--color-ink-2);
     line-height: 1.7;

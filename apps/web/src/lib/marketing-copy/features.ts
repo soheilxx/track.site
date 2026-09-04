@@ -1,0 +1,1078 @@
+import type { FeatureCopy, LocalizedCopy, TitledText } from "./types";
+
+/*
+ * Feature pages (/features, /features/[slug]).
+ *
+ * `FEATURES` keeps the `FeatureCopy` shape (slug, title, short, intro, sections, bullets, faq) and
+ * adds what the redesigned pages need: a customer benefit, the narrative next to the data-flow
+ * diagram, a before/after comparison and the caption of the product view. `FEATURES_PAGE_COPY` is
+ * the overview page, `FEATURE_DETAIL_COPY` the labels of the detail pages and `FEATURE_UI_COPY` the
+ * labels and example fixtures of the static product views (every value is a deliberately marked
+ * example state, never live data). Only verifiable product facts: the counts, names and reasons
+ * below mirror packages/events, packages/policy, packages/analytics and the integrations catalog.
+ */
+
+export interface ComparisonRow {
+  aspect: string;
+  before: string;
+  after: string;
+}
+
+export interface Comparison {
+  title: string;
+  text: string;
+  beforeLabel: string;
+  afterLabel: string;
+  rows: ComparisonRow[];
+}
+
+export interface FeatureDetailCopy extends FeatureCopy {
+  /** Customer benefit in one sentence (overview rows, detail hero). */
+  benefit: string;
+  /** Narrative next to the feature's data-flow diagram; the diagram carries the same information. */
+  flow: { title: string; text: string; caption: string };
+  /** What the example product view shows. */
+  viewCaption: string;
+  comparison: Comparison;
+}
+
+export interface FeatureScenario {
+  id: "granted" | "withdrawn" | "outage";
+  label: string;
+  title: string;
+  text: string;
+  points: string[];
+}
+
+export interface FeaturesPageCopy {
+  eyebrow: string;
+  title: string;
+  text: string;
+  cta: string;
+  ctaSecondary: string;
+  stage: { title: string; description: string; caption: string };
+  scenarios: { title: string; text: string; tabsLabel: string; items: FeatureScenario[] };
+  index: { title: string; text: string; more: string };
+  comparison: Comparison;
+  trust: { title: string; items: TitledText[] };
+  closing: { title: string; text: string; cta: string; secondary: string };
+}
+
+export interface FeatureDetailLabels {
+  features: string;
+  breadcrumb: string;
+  howBuilt: string;
+  howBuiltText: string;
+  proof: string;
+  proofText: string;
+  faq: string;
+  more: string;
+  moreText: string;
+  cta: string;
+  ctaText: string;
+  start: string;
+  pricing: string;
+}
+
+export interface StreamRow {
+  event: string;
+  origin: string;
+  consent: string;
+  consentTone: "ok" | "warn" | "bad";
+  decision: string;
+  decisionTone: "ok" | "warn" | "bad";
+  destination: string;
+}
+
+export interface FeatureUiCopy {
+  example: string;
+  exampleHint: string;
+  diagram: {
+    website: string;
+    browser: string;
+    server: string;
+    track: string;
+    gate: string;
+    gateGranted: string;
+    gateDenied: string;
+    gatePending: string;
+    dedup: string;
+    notUsed: string;
+    delivered: string;
+    blocked: string;
+    retrying: string;
+    paused: string;
+    destinations: { meta: string; googleAds: string; ga4: string; tiktok: string; linkedin: string };
+    /** Prose version of the diagram for assistive technology. */
+    describe: (paths: "browser" | "server" | "hybrid", gate: "granted" | "denied" | "pending") => string;
+    /** Node labels of the feature-specific chain diagrams (setup, health score, click ids). */
+    chains: {
+      setup: { ai: string; aiSub: string; tools: string; toolsSub: string; approval: string; approvalSub: string; config: string; configSub: string; website: string; websiteSub: string; describe: string };
+      health: { events: string; eventsSub: string; checks: string; checksSub: string; score: string; scoreSub: string; issues: string; issuesSub: string; describe: string };
+      attribution: { landing: string; landingSub: string; consent: string; consentSub: string; store: string; storeSub: string; purchase: string; purchaseSub: string; google: string; googleSub: string; meta: string; metaSub: string; describe: string };
+    };
+  };
+  stream: {
+    title: string;
+    caption: string;
+    columns: { event: string; origin: string; consent: string; decision: string; destination: string };
+    rows: StreamRow[];
+  };
+  lineage: {
+    title: string;
+    caption: string;
+    facts: Array<{ label: string; value: string }>;
+    attempts: { title: string; columns: { destination: string; status: string; result: string }; rows: Array<{ destination: string; status: string; tone: "ok" | "warn" | "bad"; result: string }> };
+    payload: { title: string; copy: string; copied: string; code: string };
+  };
+  health: {
+    title: string;
+    caption: string;
+    scoreLabel: string;
+    score: number;
+    componentsLabel: string;
+    weight: (percent: number) => string;
+    components: Array<{ key: string; label: string; score: number; weight: number; detail: string }>;
+    issuesLabel: string;
+    issues: Array<{ title: string; detail: string; fix: string; tone: "warn" | "bad" }>;
+  };
+  consent: {
+    title: string;
+    caption: string;
+    purposesLabel: string;
+    purposes: Array<{ label: string; granted: boolean }>;
+    granted: string;
+    denied: string;
+    flagsLabel: string;
+    flags: Array<{ key: string; value: "granted" | "denied" }>;
+    reasonsLabel: string;
+    reasons: Array<{ code: string; text: string }>;
+  };
+  attribution: {
+    title: string;
+    caption: string;
+    columns: { id: string; captured: string; forwarded: string; retention: string };
+    rows: Array<{ id: string; captured: string; forwarded: string; retention: string }>;
+    note: string;
+  };
+  setup: {
+    title: string;
+    caption: string;
+    assistant: string;
+    you: string;
+    messages: Array<{ from: "assistant" | "you"; text: string }>;
+    vault: { title: string; text: string; state: string };
+    test: { title: string; text: string; state: string };
+    approval: { title: string; text: string; diff: string[]; state: string; action: string };
+  };
+  destinations: {
+    title: string;
+    caption: string;
+    columns: { destination: string; mode: string; health: string; last: string; queue: string };
+    rows: Array<{ destination: string; mode: string; health: string; tone: "ok" | "warn" | "bad" | "neutral"; last: string; queue: string }>;
+  };
+}
+
+export const FEATURES: LocalizedCopy<FeatureDetailCopy[]> = {
+  en: [
+    {
+      slug: "ai-setup",
+      title: "AI-guided setup",
+      short: "Describe your site, confirm each step, publish a signed configuration.",
+      benefit: "Your first destination goes live in one guided session — without writing a tag, and without giving up control over what gets published.",
+      intro: "The assistant turns a domain into a working measurement setup: it detects the platform and consent tool, proposes an event plan for your business type, collects public identifiers in chat and secrets in a vault card, sends a real test event and prepares a publish diff you approve.",
+      flow: {
+        title: "Every action is a typed tool call you can see",
+        text: "The assistant never runs free-form code. It calls server-validated tools: detect the platform, draft the event plan, validate a pixel id, send a test event, prepare a diff. Anything irreversible — publishing, rollback, credential rotation — stops at an approval card bound to the exact change you are looking at.",
+        caption: "Assistant → typed tools → approval card → signed configuration. Secrets go straight into the vault and never pass through the chat.",
+      },
+      viewCaption: "Example session: platform detected, event plan proposed, token stored in the vault, a real test event accepted, publish waiting for your approval.",
+      sections: [
+        { title: "Typed tools instead of free-form actions", text: "Every action the assistant takes is a server-validated tool call with role checks, an audit entry and, for anything irreversible, an approval token bound to the exact diff you saw." },
+        { title: "Secrets never reach the model", text: "Access tokens go straight into the encrypted vault through a dedicated card or OAuth. The transcript, the model and the browser never see them; a DLP layer redacts pasted secrets and PII." },
+        { title: "Deterministic state machine", text: "Setup follows an explicit state machine with requirements and evidence for each state. The same states are available as a rule-based wizard when the AI provider is unavailable — nothing depends on a model being online." },
+      ],
+      bullets: ["Business type and platform detection with a confidence level", "Event plan templates for shops, lead generation, SaaS and publishers", "Public IDs validated against vendor formats", "Publish only after a diff, recipient list and explicit confirmation"],
+      comparison: {
+        title: "Setup by hand versus the guided session",
+        text: "What changes when the assistant drives the setup and you keep the approvals.",
+        beforeLabel: "Manual container setup",
+        afterLabel: "Guided setup with Track",
+        rows: [
+          { aspect: "Event plan", before: "Written from memory, one tag at a time", after: "Proposed for your business type, edited in chat, validated before publishing" },
+          { aspect: "Credentials", before: "Pasted into tag fields and visible to everyone with container access", after: "Entered in a vault card or via OAuth; never shown in the transcript" },
+          { aspect: "Verification", before: "Hope the vendor received something", after: "A real test event through the real pipeline with the vendor's verdict" },
+          { aspect: "Publishing", before: "Publish, then discover what changed", after: "Diff, recipients and approval first; a signed, versioned bundle after" },
+        ],
+      },
+      faq: [
+        { q: "Can the assistant publish without me?", a: "No. Publishing, rollbacks, credential rotation and destination activation always require your click on an approval card that is bound to the exact change." },
+        { q: "Which model is used?", a: "OpenAI Responses API with structured outputs and strict function calling. Model names are configured server-side and verified at start; the UI never hard-codes them." },
+      ],
+    },
+    {
+      slug: "server-side-tracking",
+      title: "Server-side event router",
+      short: "One event, every platform: browser and server delivery with shared deduplication.",
+      benefit: "Send each conversion once and let every platform receive it in the way it counts best — browser, server or both — without double counting.",
+      intro: "Track receives events from the browser SDK, your server, shop platforms and affiliate networks, normalizes them into one schema, applies consent, and routes them to 22 destination types with retries, circuit breakers, a dead-letter queue and replay.",
+      flow: {
+        title: "Browser and server share one event id",
+        text: "The browser SDK and your server (or shop webhook) send the same purchase with the same event id. Track normalizes both, evaluates consent per destination and forwards them; Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn and the others deduplicate on that id, Google Ads on the order id.",
+        caption: "Website → Track → Consent/Policy → Destinations. Both origins end at the same destinations and are deduplicated there.",
+      },
+      viewCaption: "Example destination health: two healthy destinations, one vendor outage handled by the circuit breaker, one destination paused by a kill switch.",
+      sections: [
+        { title: "Hybrid by default", text: "Every destination can run browser tag, server API or both. Both paths share one event id, so Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn and the others deduplicate reliably." },
+        { title: "Durable and observable", text: "A durable queue with idempotent messages, per-destination retries with jittered backoff, circuit breakers on failing vendors, dead-letter storage and replay. Every attempt is recorded with a redacted payload preview." },
+        { title: "First-party by design", text: "The tracker is served from your CDN host, events go to your ingest host, configuration bundles are Ed25519-signed and verified in the browser before anything loads." },
+      ],
+      bullets: ["Browser SDK kept under 30 KB gzip by a CI budget, with consent-gated storage", "Server API with source keys for CRM and offline conversions", "Kill switches per site and organization", "EU data plane with row-level tenant isolation"],
+      comparison: {
+        title: "Browser-only tags versus the hybrid router",
+        text: "Why one event through Track is worth more than the same pixel fired twice.",
+        beforeLabel: "Browser-only tags",
+        afterLabel: "Browser + server with Track",
+        rows: [
+          { aspect: "Lost events", before: "Blocked scripts and closed tabs simply drop the conversion", after: "The server path still delivers it; the browser path adds match data when available" },
+          { aspect: "Duplicates", before: "Pixel and server API count the same order twice", after: "Shared event id and order id; vendors deduplicate" },
+          { aspect: "Vendor outage", before: "Silent failure, no retry", after: "Retries with backoff, circuit breaker, dead-letter queue and replay" },
+          { aspect: "Where data goes", before: "Third-party endpoints called from the page", after: "First-party ingest host; vendors receive only mapped fields" },
+        ],
+      },
+      faq: [
+        { q: "Does server-side tracking bypass consent?", a: "No. Consent is evaluated for every event and destination; without the required purpose nothing is stored, sent or replayed later." },
+        { q: "What happens when a vendor is down?", a: "Deliveries are retried with backoff, the circuit breaker pauses the destination, failed events land in the dead-letter queue and can be replayed once the vendor recovers." },
+      ],
+    },
+    {
+      slug: "event-debugger",
+      title: "Event debugger and lineage",
+      short: "See every event with its consent snapshot, routing decision and vendor response.",
+      benefit: "When a number in an ad platform looks wrong, you find out why in one place — not by guessing between browser console, vendor UI and a colleague's memory.",
+      intro: "Open any event and read its story: source and SDK version, the consent that was granted at that moment, captured click ids, the configuration version that routed it, and the delivery attempt per destination including the redacted payload and vendor answer.",
+      flow: {
+        title: "One event, the whole path",
+        text: "The debugger follows an event from the origin through normalization, the consent decision and every delivery attempt. Drops are never silent: each carries a reason such as missing consent, blocked PII, an invalid name, a duplicate or a paused destination.",
+        caption: "The lineage keeps the origin, the consent snapshot, the routing decision and each vendor's answer together.",
+      },
+      viewCaption: "Example event stream: delivered events, one deduplicated purchase and one server purchase blocked for a missing marketing purpose.",
+      sections: [
+        { title: "Redacted, not hidden", text: "Payload previews show structure and hashed identifiers so you can verify mappings without exposing personal data or tokens." },
+        { title: "Test events through the real pipeline", text: "Test events are flagged, run through the same queue and worker, and report the vendor's verdict — no simulated success." },
+        { title: "Drops are explained", text: "Every dropped event carries a reason: missing consent, PII blocked, invalid name, duplicate, paused destination or policy block." },
+      ],
+      bullets: ["Filter by event name, state and source", "Per-destination attempt history with HTTP status and error class", "Vendor test-mode hints per platform", "Links straight into the destination wizard"],
+      comparison: {
+        title: "Debugging by console versus debugging by lineage",
+        text: "The same question — why did this purchase not reach Meta? — answered two ways.",
+        beforeLabel: "Browser console and vendor UI",
+        afterLabel: "Event lineage in Track",
+        rows: [
+          { aspect: "Where to look", before: "Network tab, tag preview mode, the vendor's event manager", after: "One event record with every attempt and answer" },
+          { aspect: "Consent at that moment", before: "Unknown; reconstructed from the banner settings", after: "Stored as a snapshot with the event" },
+          { aspect: "Server-side events", before: "Invisible from the browser", after: "Same lineage, marked with their origin" },
+          { aspect: "Personal data", before: "Raw payloads in logs and screenshots", after: "Hashed identifiers, redacted previews" },
+        ],
+      },
+      faq: [{ q: "How long are debugger records kept?", a: "Delivery attempts default to 90 days and events to 13 months; both are configurable per organization in the privacy center." }],
+    },
+    {
+      slug: "data-quality",
+      title: "Data quality and health score",
+      short: "A single score with explainable components and issues that link to their fix.",
+      benefit: "Know when tracking breaks, see which part broke and jump straight to the fix — before a campaign runs on bad data.",
+      intro: "The worker computes a tracking health score from consent coverage, critical event coverage, schema quality, duplicate rate, delivery success and freshness. Each detected issue names the assistant tool that resolves it.",
+      flow: {
+        title: "Six components, one explainable score",
+        text: "The score is computed from the events of the last period: how many carry an explicit consent signal, which planned critical events were seen, how many pass schema and PII checks, the duplicate rate, the delivery success per destination and when the last browser event arrived. The weights are shown next to the score, so a lower number always points at its cause.",
+        caption: "Events → checks → weighted components → score with the issues that lowered it.",
+      },
+      viewCaption: "Example score with its six components and two open issues, each naming the tool that fixes it.",
+      sections: [
+        { title: "Issues with fingerprints", text: "Recurring problems are grouped, counted and timestamped so you see trends instead of noise." },
+        { title: "Schema guardrails", text: "Standard events have required parameters; custom events follow naming rules; PII in properties is blocked before storage." },
+        { title: "Benchmarks only with opt-in", text: "Anonymised, aggregated benchmarks are available only for organizations that opt in." },
+      ],
+      bullets: ["Score per site with its components", "Resolve or ignore issues with an audit trail", "Consent coverage and duplicate rate as first-class metrics"],
+      comparison: {
+        title: "Noticing problems versus being told",
+        text: "How a broken purchase event surfaces with and without the health score.",
+        beforeLabel: "Without monitoring",
+        afterLabel: "With the health score",
+        rows: [
+          { aspect: "Detection", before: "Someone notices a dip in the ads dashboard days later", after: "The score drops and an issue is opened" },
+          { aspect: "Diagnosis", before: "Which tag, which page, which browser?", after: "The component that dropped and the events behind it" },
+          { aspect: "Fix", before: "Ticket, tag change, re-publish, wait", after: "The issue names the assistant tool; you approve the change" },
+          { aspect: "Trend", before: "No history", after: "Grouped, counted and timestamped issues" },
+        ],
+      },
+      faq: [{ q: "Is the score comparable across sites?", a: "The components are identical for every site; weights are documented in the score card so teams can reason about differences." }],
+    },
+    {
+      slug: "consent",
+      title: "Consent-aware by construction",
+      short: "Strict opt-in defaults, Consent Mode v2, purpose-based destinations, no replay after consent.",
+      benefit: "Every destination receives exactly what the visitor agreed to — evaluated for each event, in the browser and again on the server — so compliance is not a banner setting you hope is right.",
+      intro: "Consent is not a banner integration but a policy engine: purposes, regions, destination requirements and click-id capture are evaluated for every event in the browser and again on the server.",
+      flow: {
+        title: "The gate sits in front of every destination",
+        text: "Each destination declares the purpose it needs. When an event arrives, Track compares the consent snapshot with that requirement: analytics destinations receive events with analytics consent, advertising destinations only with marketing consent. A withdrawal stops sends immediately, and nothing stored before consent is replayed afterwards.",
+        caption: "Website → Track → Consent/Policy gate → only the destinations whose purpose was granted.",
+      },
+      viewCaption: "Example consent state: analytics granted, marketing denied — and the Consent Mode v2 flags and block reasons derived from it.",
+      sections: [
+        { title: "CMP adapters and API", text: "TCF 2.2, GPP and Global Privacy Control, Cookiebot, OneTrust and Usercentrics adapters, plus a consent API for custom banners." },
+        { title: "Consent Mode v2, purpose-based", text: "Google consent signals are derived from purposes; advanced mode is available only with a documented legal review note." },
+        { title: "Evidence", text: "Deduplicated consent snapshots are stored with each event so you can prove what was granted when." },
+      ],
+      bullets: ["Inferred consent is never exported to advertising platforms", "Withdrawal stops sends immediately", "Server purchases stay operational, never advertising without consent"],
+      comparison: {
+        title: "Consent per tag versus a policy engine",
+        text: "Where the decision is made — and whether you can prove it later.",
+        beforeLabel: "Consent handled per tag",
+        afterLabel: "Policy engine in Track",
+        rows: [
+          { aspect: "Decision point", before: "Each tag's trigger, configured by hand", after: "Every event, every destination, in the browser and on the server" },
+          { aspect: "Server-side events", before: "Sent regardless of the banner", after: "Same purpose check as browser events" },
+          { aspect: "Withdrawal", before: "Takes effect on the next page load, if at all", after: "Stops sends immediately; no replay of earlier events" },
+          { aspect: "Evidence", before: "None", after: "Consent snapshot stored with each event" },
+        ],
+      },
+      faq: [{ q: "Which regions are supported?", a: "Strict opt-in for the EU/EEA/UK/CH by default; per-region policies can be configured, but never weaker than the legal baseline without an explicit decision." }],
+    },
+    {
+      slug: "attribution",
+      title: "Click ids and attribution done right",
+      short: "Capture only the ids the destination needs, only with consent, only for the documented window.",
+      benefit: "Your campaigns get the click ids they need to attribute a conversion — and no platform ever receives an id that belongs to another.",
+      intro: "The tracker captures gclid, fbclid, ttclid, msclkid, li_fat_id and the other platform click ids on landing pages after marketing consent, stores them first-party for the vendor's window and forwards each id only to the platform it belongs to.",
+      flow: {
+        title: "Each id travels to exactly one platform",
+        text: "A landing page with a gclid and a fbclid produces two stored ids after marketing consent. When the purchase arrives, Track attaches the gclid to the Google Ads delivery and the fbclid to the Meta delivery — the matrix is machine-checked, so a cross-vendor leak is not a configuration mistake you can make.",
+        caption: "Landing page → first-party click-id store → purchase → destination-scoped forwarding.",
+      },
+      viewCaption: "Example matrix: which click id is captured, where it is forwarded and for how long it is kept.",
+      sections: [
+        { title: "Destination-scoped forwarding", text: "Meta never sees your gclid and Google never sees your fbclid. The policy matrix is machine-checked." },
+        { title: "Order-level deduplication", text: "Purchases carry the order id to every vendor that supports it, so browser and server conversions merge correctly." },
+        { title: "Offline and CRM", text: "Server events with an offline flag reach Google Ads, CM360, Microsoft, Meta, TikTok, Pinterest, Snapchat, Amazon, Yahoo and LinkedIn as offline conversions." },
+      ],
+      bullets: ["Documented retention per click id (90 days by default)", "Enhanced Conversions with normalized hashing", "Affiliate networks with per-network click ids"],
+      comparison: {
+        title: "URL parameters in the dataLayer versus a scoped click-id store",
+        text: "The difference between collecting everything and forwarding what belongs where.",
+        beforeLabel: "Click ids in the dataLayer",
+        afterLabel: "Click-id store in Track",
+        rows: [
+          { aspect: "Capture", before: "Every parameter, on every page, regardless of consent", after: "Only known ids, on landing pages, after marketing consent" },
+          { aspect: "Forwarding", before: "Whatever a tag template reads", after: "Per destination from a machine-checked matrix" },
+          { aspect: "Retention", before: "Cookie lifetime set by each tag", after: "Documented window per id, 90 days by default" },
+          { aspect: "Offline conversions", before: "Manual uploads", after: "Server events with an offline flag" },
+        ],
+      },
+      faq: [{ q: "Do you build cross-site profiles?", a: "No. There is no fingerprinting and no cross-site identity; identifiers stay within the site and the consented purposes." }],
+    },
+  ],
+  de: [
+    {
+      slug: "ai-setup",
+      title: "KI-geführte Einrichtung",
+      short: "Site beschreiben, jeden Schritt bestätigen, signierte Konfiguration veröffentlichen.",
+      benefit: "Deine erste Destination geht in einer geführten Sitzung live — ohne einen Tag zu schreiben und ohne die Kontrolle darüber abzugeben, was veröffentlicht wird.",
+      intro: "Der Assistent macht aus einer Domain ein funktionierendes Messsetup: Er erkennt Plattform und Consent-Tool, schlägt einen Eventplan für deinen Geschäftstyp vor, sammelt öffentliche IDs im Chat und Geheimnisse in einer Tresor-Karte, sendet einen echten Testevent und bereitet ein Publish-Diff vor, das du freigibst.",
+      flow: {
+        title: "Jede Aktion ist ein typisierter Tool-Aufruf, den du siehst",
+        text: "Der Assistent führt nie freien Code aus. Er ruft serverseitig validierte Tools auf: Plattform erkennen, Eventplan entwerfen, Pixel-ID prüfen, Testevent senden, Diff vorbereiten. Alles Unumkehrbare — Veröffentlichen, Rollback, Credential-Rotation — stoppt an einer Freigabe-Karte, die an genau die Änderung gebunden ist, die du gerade siehst.",
+        caption: "Assistent → typisierte Tools → Freigabe-Karte → signierte Konfiguration. Geheimnisse gehen direkt in den Tresor und laufen nie durch den Chat.",
+      },
+      viewCaption: "Beispielsitzung: Plattform erkannt, Eventplan vorgeschlagen, Token im Tresor abgelegt, echter Testevent akzeptiert, Veröffentlichung wartet auf deine Freigabe.",
+      sections: [
+        { title: "Typisierte Tools statt freier Aktionen", text: "Jede Aktion des Assistenten ist ein serverseitig validierter Tool-Aufruf mit Rollenprüfung, Audit-Eintrag und — bei allem Unumkehrbaren — einem Freigabe-Token, das an das exakte Diff gebunden ist." },
+        { title: "Geheimnisse erreichen das Modell nie", text: "Access-Tokens gehen über eine eigene Karte oder OAuth direkt in den verschlüsselten Tresor. Transkript, Modell und Browser sehen sie nie; eine DLP-Schicht schwärzt eingefügte Secrets und PII." },
+        { title: "Deterministische State Machine", text: "Die Einrichtung folgt einer expliziten State Machine mit Anforderungen und Evidenz je Zustand. Dieselben Zustände gibt es als regelbasierten Assistenten, wenn der KI-Anbieter nicht erreichbar ist — nichts hängt davon ab, dass ein Modell online ist." },
+      ],
+      bullets: ["Erkennung von Geschäftstyp und Plattform mit Konfidenzangabe", "Eventplan-Vorlagen für Shops, Leadgenerierung, SaaS und Publisher", "Öffentliche IDs gegen Anbieterformate validiert", "Veröffentlichung nur nach Diff, Empfängerliste und expliziter Bestätigung"],
+      comparison: {
+        title: "Einrichtung von Hand versus geführte Sitzung",
+        text: "Was sich ändert, wenn der Assistent die Einrichtung übernimmt und du die Freigaben behältst.",
+        beforeLabel: "Manuelle Container-Einrichtung",
+        afterLabel: "Geführte Einrichtung mit Track",
+        rows: [
+          { aspect: "Eventplan", before: "Aus dem Gedächtnis geschrieben, ein Tag nach dem anderen", after: "Für deinen Geschäftstyp vorgeschlagen, im Chat bearbeitet, vor der Veröffentlichung validiert" },
+          { aspect: "Zugangsdaten", before: "In Tag-Felder eingefügt und für alle mit Container-Zugriff sichtbar", after: "In einer Tresor-Karte oder per OAuth eingegeben; nie im Transkript sichtbar" },
+          { aspect: "Verifikation", before: "Hoffen, dass beim Anbieter etwas ankam", after: "Ein echter Testevent durch die echte Pipeline mit dem Urteil des Anbieters" },
+          { aspect: "Veröffentlichen", before: "Veröffentlichen und danach herausfinden, was sich geändert hat", after: "Erst Diff, Empfänger und Freigabe; danach ein signiertes, versioniertes Bundle" },
+        ],
+      },
+      faq: [
+        { q: "Kann der Assistent ohne mich veröffentlichen?", a: "Nein. Veröffentlichen, Rollbacks, Credential-Rotation und Aktivierung von Destinationen erfordern immer deinen Klick auf eine Freigabe-Karte, die an die exakte Änderung gebunden ist." },
+        { q: "Welches Modell wird genutzt?", a: "OpenAI Responses API mit Structured Outputs und striktem Function Calling. Modellnamen werden serverseitig konfiguriert und beim Start geprüft; die Oberfläche kodiert sie nie fest." },
+      ],
+    },
+    {
+      slug: "server-side-tracking",
+      title: "Serverseitiger Event-Router",
+      short: "Ein Event, jede Plattform: Browser- und Server-Zustellung mit gemeinsamer Deduplizierung.",
+      benefit: "Sende jede Conversion einmal und lass jede Plattform sie so empfangen, wie sie am besten zählt — Browser, Server oder beides — ohne Doppelzählung.",
+      intro: "Track empfängt Events aus dem Browser-SDK, deinem Server, Shopsystemen und Affiliate-Netzwerken, normalisiert sie in ein Schema, wendet Consent an und leitet sie mit Retries, Circuit Breakern, Dead-Letter-Queue und Replay an 22 Destinationstypen weiter.",
+      flow: {
+        title: "Browser und Server teilen eine Event-ID",
+        text: "Browser-SDK und dein Server (oder Shop-Webhook) senden denselben Kauf mit derselben Event-ID. Track normalisiert beide, prüft Consent pro Destination und leitet weiter; Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn und die anderen deduplizieren über diese ID, Google Ads über die Bestellnummer.",
+        caption: "Website → Track → Consent/Policy → Destinationen. Beide Ursprünge enden bei denselben Destinationen und werden dort dedupliziert.",
+      },
+      viewCaption: "Beispiel für Destination Health: zwei gesunde Destinationen, ein Anbieterausfall, den der Circuit Breaker abfängt, eine per Kill-Switch pausierte Destination.",
+      sections: [
+        { title: "Hybrid als Standard", text: "Jede Destination kann per Browser-Tag, Server-API oder beidem laufen. Beide Wege teilen eine Event-ID, sodass Meta, TikTok, Pinterest, Snapchat, Microsoft, LinkedIn und die anderen zuverlässig deduplizieren." },
+        { title: "Dauerhaft und beobachtbar", text: "Dauerhafte Queue mit idempotenten Nachrichten, Retries pro Destination mit Jitter-Backoff, Circuit Breaker bei ausfallenden Anbietern, Dead-Letter-Speicher und Replay. Jeder Versuch wird mit geschwärzter Payload-Vorschau protokolliert." },
+        { title: "First-Party by Design", text: "Der Tracker kommt von deinem CDN-Host, Events gehen an deinen Ingest-Host, Konfigurationsbundles sind Ed25519-signiert und werden im Browser geprüft, bevor irgendetwas lädt." },
+      ],
+      bullets: ["Browser-SDK durch ein CI-Budget unter 30 KB gzip gehalten, mit consent-gesteuertem Speicher", "Server-API mit Source-Keys für CRM- und Offline-Conversions", "Kill-Switches pro Site und Organisation", "EU-Datenebene mit Row-Level-Mandantentrennung"],
+      comparison: {
+        title: "Reine Browser-Tags versus hybrider Router",
+        text: "Warum ein Event über Track mehr wert ist als derselbe Pixel, der zweimal feuert.",
+        beforeLabel: "Nur Browser-Tags",
+        afterLabel: "Browser + Server mit Track",
+        rows: [
+          { aspect: "Verlorene Events", before: "Blockierte Skripte und geschlossene Tabs verwerfen die Conversion einfach", after: "Der Server-Weg liefert sie trotzdem; der Browser-Weg ergänzt Matching-Daten, wenn verfügbar" },
+          { aspect: "Duplikate", before: "Pixel und Server-API zählen dieselbe Bestellung doppelt", after: "Gemeinsame Event-ID und Bestellnummer; die Anbieter deduplizieren" },
+          { aspect: "Anbieterausfall", before: "Stiller Fehler, kein Retry", after: "Retries mit Backoff, Circuit Breaker, Dead-Letter-Queue und Replay" },
+          { aspect: "Wohin Daten gehen", before: "Drittanbieter-Endpunkte werden aus der Seite aufgerufen", after: "First-Party-Ingest-Host; Anbieter erhalten nur gemappte Felder" },
+        ],
+      },
+      faq: [
+        { q: "Umgeht serverseitiges Tracking den Consent?", a: "Nein. Consent wird für jedes Event und jede Destination geprüft; ohne den erforderlichen Zweck wird nichts gespeichert, gesendet oder später nachgeliefert." },
+        { q: "Was passiert, wenn ein Anbieter ausfällt?", a: "Zustellungen werden mit Backoff wiederholt, der Circuit Breaker pausiert die Destination, fehlgeschlagene Events landen in der Dead-Letter-Queue und können nach der Erholung erneut gesendet werden." },
+      ],
+    },
+    {
+      slug: "event-debugger",
+      title: "Event-Debugger und Herkunft",
+      short: "Jedes Event mit Consent-Snapshot, Routing-Entscheidung und Anbieterantwort.",
+      benefit: "Wenn eine Zahl in einer Werbeplattform falsch aussieht, findest du an einer Stelle heraus, warum — statt zwischen Browser-Konsole, Anbieter-Oberfläche und dem Gedächtnis eines Kollegen zu raten.",
+      intro: "Öffne ein Event und lies seine Geschichte: Quelle und SDK-Version, der zu diesem Zeitpunkt erteilte Consent, erfasste Click-IDs, die Konfigurationsversion, die es geroutet hat, und der Zustellversuch pro Destination inklusive geschwärzter Payload und Anbieterantwort.",
+      flow: {
+        title: "Ein Event, der ganze Weg",
+        text: "Der Debugger folgt einem Event vom Ursprung über Normalisierung und Consent-Entscheidung bis zu jedem Zustellversuch. Verwerfungen sind nie still: Jede trägt einen Grund wie fehlender Consent, blockierte PII, ungültiger Name, Duplikat oder pausierte Destination.",
+        caption: "Die Herkunft hält Ursprung, Consent-Snapshot, Routing-Entscheidung und die Antwort jedes Anbieters zusammen.",
+      },
+      viewCaption: "Beispiel-Eventstream: zugestellte Events, ein deduplizierter Kauf und ein Server-Kauf, der wegen fehlendem Marketing-Zweck blockiert wurde.",
+      sections: [
+        { title: "Geschwärzt, nicht versteckt", text: "Payload-Vorschauen zeigen Struktur und gehashte Kennungen, damit du Mappings prüfen kannst, ohne personenbezogene Daten oder Tokens offenzulegen." },
+        { title: "Testevents durch die echte Pipeline", text: "Testevents sind markiert, laufen durch dieselbe Queue und denselben Worker und melden das Urteil des Anbieters — kein simulierter Erfolg." },
+        { title: "Verwerfungen werden erklärt", text: "Jedes verworfene Event trägt einen Grund: fehlender Consent, PII blockiert, ungültiger Name, Duplikat, pausierte Destination oder Policy-Block." },
+      ],
+      bullets: ["Filter nach Eventname, Status und Quelle", "Versuchshistorie pro Destination mit HTTP-Status und Fehlerklasse", "Testmodus-Hinweise pro Plattform", "Direkte Links in den Destination-Assistenten"],
+      comparison: {
+        title: "Debugging per Konsole versus Debugging per Herkunft",
+        text: "Dieselbe Frage — warum hat dieser Kauf Meta nicht erreicht? — zweimal beantwortet.",
+        beforeLabel: "Browser-Konsole und Anbieter-Oberfläche",
+        afterLabel: "Event-Herkunft in Track",
+        rows: [
+          { aspect: "Wo suchen", before: "Netzwerk-Tab, Tag-Vorschaumodus, der Event-Manager des Anbieters", after: "Ein Event-Datensatz mit jedem Versuch und jeder Antwort" },
+          { aspect: "Consent zu diesem Zeitpunkt", before: "Unbekannt; aus den Banner-Einstellungen rekonstruiert", after: "Als Snapshot mit dem Event gespeichert" },
+          { aspect: "Serverseitige Events", before: "Aus dem Browser unsichtbar", after: "Dieselbe Herkunft, mit ihrem Ursprung markiert" },
+          { aspect: "Personenbezogene Daten", before: "Rohe Payloads in Logs und Screenshots", after: "Gehashte Kennungen, geschwärzte Vorschauen" },
+        ],
+      },
+      faq: [{ q: "Wie lange werden Debugger-Daten aufbewahrt?", a: "Zustellversuche standardmäßig 90 Tage, Events 13 Monate; beides ist pro Organisation im Datenschutz-Center konfigurierbar." }],
+    },
+    {
+      slug: "data-quality",
+      title: "Datenqualität und Health-Score",
+      short: "Ein Score mit erklärbaren Komponenten und Problemen, die auf ihre Lösung verlinken.",
+      benefit: "Erfahre, wenn Tracking bricht, sieh, welcher Teil gebrochen ist, und spring direkt zur Lösung — bevor eine Kampagne auf schlechten Daten läuft.",
+      intro: "Der Worker berechnet einen Tracking-Health-Score aus Consent-Abdeckung, Abdeckung kritischer Events, Schemaqualität, Duplikatrate, Zustellerfolg und Aktualität. Jedes erkannte Problem benennt das Assistenten-Tool, das es löst.",
+      flow: {
+        title: "Sechs Komponenten, ein erklärbarer Score",
+        text: "Der Score wird aus den Events des letzten Zeitraums berechnet: wie viele ein explizites Consent-Signal tragen, welche geplanten kritischen Events gesehen wurden, wie viele Schema- und PII-Prüfungen bestehen, die Duplikatrate, den Zustellerfolg pro Destination und wann das letzte Browser-Event ankam. Die Gewichte stehen neben dem Score, sodass eine niedrigere Zahl immer auf ihre Ursache zeigt.",
+        caption: "Events → Prüfungen → gewichtete Komponenten → Score mit den Problemen, die ihn gesenkt haben.",
+      },
+      viewCaption: "Beispiel-Score mit seinen sechs Komponenten und zwei offenen Problemen, die jeweils das Tool benennen, das sie löst.",
+      sections: [
+        { title: "Probleme mit Fingerprints", text: "Wiederkehrende Probleme werden gruppiert, gezählt und mit Zeitstempeln versehen, damit du Trends statt Rauschen siehst." },
+        { title: "Schema-Leitplanken", text: "Standardevents haben Pflichtparameter; Custom-Events folgen Namensregeln; PII in Properties wird vor dem Speichern blockiert." },
+        { title: "Benchmarks nur mit Opt-in", text: "Anonymisierte, aggregierte Benchmarks gibt es nur für Organisationen, die sich dafür entscheiden." },
+      ],
+      bullets: ["Score pro Site mit seinen Komponenten", "Probleme lösen oder ignorieren mit Audit-Trail", "Consent-Abdeckung und Duplikatrate als zentrale Kennzahlen"],
+      comparison: {
+        title: "Probleme bemerken versus gemeldet bekommen",
+        text: "Wie ein kaputter Kauf-Event mit und ohne Health-Score sichtbar wird.",
+        beforeLabel: "Ohne Monitoring",
+        afterLabel: "Mit dem Health-Score",
+        rows: [
+          { aspect: "Erkennung", before: "Jemand bemerkt Tage später einen Einbruch im Ads-Dashboard", after: "Der Score sinkt und ein Problem wird geöffnet" },
+          { aspect: "Diagnose", before: "Welcher Tag, welche Seite, welcher Browser?", after: "Die gesunkene Komponente und die Events dahinter" },
+          { aspect: "Behebung", before: "Ticket, Tag-Änderung, erneut veröffentlichen, warten", after: "Das Problem benennt das Assistenten-Tool; du gibst die Änderung frei" },
+          { aspect: "Trend", before: "Keine Historie", after: "Gruppierte, gezählte Probleme mit Zeitstempeln" },
+        ],
+      },
+      faq: [{ q: "Ist der Score über Sites vergleichbar?", a: "Die Komponenten sind für jede Site identisch; die Gewichte stehen in der Score-Karte, damit Teams Unterschiede nachvollziehen können." }],
+    },
+    {
+      slug: "consent",
+      title: "Consent-konform von Grund auf",
+      short: "Strikte Opt-in-Standards, Consent Mode v2, zweckgebundene Destinationen, kein Replay nach Consent.",
+      benefit: "Jede Destination erhält genau das, dem der Besucher zugestimmt hat — geprüft für jedes Event, im Browser und noch einmal auf dem Server — statt einer Banner-Einstellung, von der du hoffst, dass sie stimmt.",
+      intro: "Consent ist keine Banner-Integration, sondern eine Policy-Engine: Zwecke, Regionen, Destinationsanforderungen und Click-ID-Erfassung werden für jedes Event im Browser und erneut auf dem Server geprüft.",
+      flow: {
+        title: "Das Gate steht vor jeder Destination",
+        text: "Jede Destination deklariert den Zweck, den sie braucht. Kommt ein Event an, vergleicht Track den Consent-Snapshot mit dieser Anforderung: Analyse-Destinationen erhalten Events mit Analyse-Consent, Werbe-Destinationen nur mit Marketing-Consent. Ein Widerruf stoppt Sendungen sofort, und nichts, was vor dem Consent gespeichert wurde, wird danach nachgeliefert.",
+        caption: "Website → Track → Consent/Policy-Gate → nur die Destinationen, deren Zweck erteilt wurde.",
+      },
+      viewCaption: "Beispiel-Consent-Zustand: Analyse erteilt, Marketing verweigert — und die daraus abgeleiteten Consent-Mode-v2-Flags und Blockgründe.",
+      sections: [
+        { title: "CMP-Adapter und API", text: "TCF 2.2, GPP und Global Privacy Control, Adapter für Cookiebot, OneTrust und Usercentrics sowie eine Consent-API für eigene Banner." },
+        { title: "Consent Mode v2, zweckbasiert", text: "Google-Consent-Signale werden aus Zwecken abgeleitet; der erweiterte Modus ist nur mit dokumentierter juristischer Prüfung verfügbar." },
+        { title: "Nachweis", text: "Deduplizierte Consent-Snapshots werden mit jedem Event gespeichert, damit du belegen kannst, was wann erteilt wurde." },
+      ],
+      bullets: ["Abgeleiteter Consent wird nie an Werbeplattformen exportiert", "Ein Widerruf stoppt Sendungen sofort", "Server-Käufe bleiben operativ, aber ohne Consent nie Werbung"],
+      comparison: {
+        title: "Consent pro Tag versus Policy-Engine",
+        text: "Wo die Entscheidung fällt — und ob du sie später belegen kannst.",
+        beforeLabel: "Consent pro Tag gehandhabt",
+        afterLabel: "Policy-Engine in Track",
+        rows: [
+          { aspect: "Entscheidungspunkt", before: "Der Trigger jedes Tags, von Hand konfiguriert", after: "Jedes Event, jede Destination, im Browser und auf dem Server" },
+          { aspect: "Serverseitige Events", before: "Unabhängig vom Banner gesendet", after: "Dieselbe Zweckprüfung wie bei Browser-Events" },
+          { aspect: "Widerruf", before: "Greift beim nächsten Seitenaufruf, wenn überhaupt", after: "Stoppt Sendungen sofort; kein Replay früherer Events" },
+          { aspect: "Nachweis", before: "Keiner", after: "Consent-Snapshot mit jedem Event gespeichert" },
+        ],
+      },
+      faq: [{ q: "Welche Regionen werden unterstützt?", a: "Striktes Opt-in für EU/EWR/UK/CH als Standard; regionale Policies sind konfigurierbar, aber nie schwächer als die rechtliche Basis ohne explizite Entscheidung." }],
+    },
+    {
+      slug: "attribution",
+      title: "Click-IDs und Attribution richtig gemacht",
+      short: "Nur die IDs erfassen, die die Destination braucht, nur mit Consent, nur für das dokumentierte Zeitfenster.",
+      benefit: "Deine Kampagnen bekommen die Click-IDs, die sie brauchen, um eine Conversion zuzuordnen — und keine Plattform erhält je eine ID, die zu einer anderen gehört.",
+      intro: "Der Tracker erfasst gclid, fbclid, ttclid, msclkid, li_fat_id und die anderen Plattform-Click-IDs auf Landingpages nach Marketing-Consent, speichert sie First-Party für das Zeitfenster des Anbieters und leitet jede ID nur an die Plattform weiter, zu der sie gehört.",
+      flow: {
+        title: "Jede ID reist zu genau einer Plattform",
+        text: "Eine Landingpage mit gclid und fbclid erzeugt nach Marketing-Consent zwei gespeicherte IDs. Kommt der Kauf an, hängt Track die gclid an die Google-Ads-Zustellung und die fbclid an die Meta-Zustellung — die Matrix wird maschinell geprüft, ein anbieterübergreifendes Leck ist also kein Konfigurationsfehler, den du machen kannst.",
+        caption: "Landingpage → First-Party-Click-ID-Speicher → Kauf → Weitergabe pro Destination.",
+      },
+      viewCaption: "Beispielmatrix: welche Click-ID erfasst wird, wohin sie weitergegeben wird und wie lange sie aufbewahrt wird.",
+      sections: [
+        { title: "Weitergabe pro Destination", text: "Meta sieht nie deine gclid und Google nie deine fbclid. Die Policy-Matrix wird maschinell geprüft." },
+        { title: "Deduplizierung auf Bestellebene", text: "Käufe tragen die Bestellnummer zu jedem Anbieter, der sie unterstützt, damit Browser- und Server-Conversions korrekt zusammenlaufen." },
+        { title: "Offline und CRM", text: "Server-Events mit Offline-Flag erreichen Google Ads, CM360, Microsoft, Meta, TikTok, Pinterest, Snapchat, Amazon, Yahoo und LinkedIn als Offline-Conversions." },
+      ],
+      bullets: ["Dokumentierte Aufbewahrung pro Click-ID (standardmäßig 90 Tage)", "Enhanced Conversions mit normalisiertem Hashing", "Affiliate-Netzwerke mit Click-IDs pro Netzwerk"],
+      comparison: {
+        title: "URL-Parameter im dataLayer versus zweckgebundener Click-ID-Speicher",
+        text: "Der Unterschied zwischen alles sammeln und weitergeben, was wohin gehört.",
+        beforeLabel: "Click-IDs im dataLayer",
+        afterLabel: "Click-ID-Speicher in Track",
+        rows: [
+          { aspect: "Erfassung", before: "Jeder Parameter, auf jeder Seite, unabhängig vom Consent", after: "Nur bekannte IDs, auf Landingpages, nach Marketing-Consent" },
+          { aspect: "Weitergabe", before: "Was eine Tag-Vorlage eben ausliest", after: "Pro Destination aus einer maschinell geprüften Matrix" },
+          { aspect: "Aufbewahrung", before: "Cookie-Laufzeit von jedem Tag selbst gesetzt", after: "Dokumentiertes Zeitfenster pro ID, standardmäßig 90 Tage" },
+          { aspect: "Offline-Conversions", before: "Manuelle Uploads", after: "Server-Events mit Offline-Flag" },
+        ],
+      },
+      faq: [{ q: "Baut ihr seitenübergreifende Profile?", a: "Nein. Es gibt kein Fingerprinting und keine seitenübergreifende Identität; Kennungen bleiben innerhalb der Site und der eingewilligten Zwecke." }],
+    },
+  ],
+};
+
+export const FEATURES_PAGE_COPY: LocalizedCopy<FeaturesPageCopy> = {
+  en: {
+    eyebrow: "Features",
+    title: "Every conversion delivered once, with consent, to the platform it belongs to",
+    text: "Track replaces the tag container with a guided setup, a consent-aware server-side router and a debugger that explains every event. This page shows the product as it works — the states below are example data, not live traffic.",
+    cta: "Start with your domain",
+    ctaSecondary: "See how it works",
+    stage: {
+      title: "Data flow from the website through Track to the destinations",
+      description: "A website sends events from the browser SDK and from the server to Track. Track evaluates consent at a policy gate and forwards each event only to destinations whose purpose was granted: Meta, Google Ads, Google Analytics 4 and TikTok.",
+      caption: "Website → Track → Consent/Policy → Destinations. Browser and server share one event id; the gate decides per destination.",
+    },
+    scenarios: {
+      title: "What happens to one purchase",
+      text: "Switch the scenario to see how the same event is routed when consent is granted, withdrawn, or a vendor is down. The decision and its reason are what you later read in the debugger.",
+      tabsLabel: "Routing scenarios",
+      items: [
+        {
+          id: "granted",
+          label: "Consent granted",
+          title: "Analytics and marketing granted",
+          text: "The purchase arrives from the browser and from the server with the same event id. The gate finds the required purposes and forwards it to all four destinations; Meta and TikTok deduplicate on the event id, Google Ads on the order id.",
+          points: ["Decision: delivered to Meta, Google Ads, GA4, TikTok", "Deduplication: event id (Meta, TikTok), order id (Google Ads)", "Click ids attached per destination: gclid → Google, fbclid → Meta"],
+        },
+        {
+          id: "withdrawn",
+          label: "Marketing withdrawn",
+          title: "Analytics granted, marketing denied",
+          text: "The visitor withdrew marketing consent before the purchase. The gate lets the event through to Google Analytics 4 and blocks the advertising destinations with the reason purpose_not_granted. Nothing is stored for later; when consent is granted again, earlier events are not replayed.",
+          points: ["Decision: delivered to GA4; blocked for Meta, Google Ads, TikTok", "Reason shown in the debugger: purpose_not_granted (marketing)", "Consent Mode v2: analytics_storage granted, ad_storage denied"],
+        },
+        {
+          id: "outage",
+          label: "Vendor down",
+          title: "Consent granted, one vendor unavailable",
+          text: "TikTok answers with a server error. Track retries with jittered backoff, opens the circuit breaker after repeated failures and parks the event in the dead-letter queue. The other three destinations are unaffected. Once TikTok recovers, the dead-letter queue is replayed.",
+          points: ["Decision: delivered to Meta, Google Ads, GA4; TikTok retrying", "Circuit breaker open for TikTok; events in the dead-letter queue", "Replay after recovery keeps the original event id, so nothing counts twice"],
+        },
+      ],
+    },
+    index: {
+      title: "Six capabilities, one event layer",
+      text: "Each capability is built on the same signed configuration and the same event schema. Open a capability to see its product view, data flow and a before/after comparison.",
+      more: "Read more",
+    },
+    comparison: {
+      title: "Tag container versus event layer",
+      text: "Where a classic container leaves the work to you and where Track does it by construction.",
+      beforeLabel: "Classic tag container",
+      afterLabel: "Track",
+      rows: [
+        { aspect: "What runs on your site", before: "Custom HTML and JavaScript tags from anyone with container access", after: "One snippet and a signed, versioned configuration — no custom code execution" },
+        { aspect: "Consent", before: "Trigger conditions per tag, maintained by hand", after: "Policy engine that evaluates every event for every destination, browser and server" },
+        { aspect: "Server-side delivery", before: "A second container, a second set of tags, manual deduplication", after: "Built in: shared event id, retries, circuit breakers, replay" },
+        { aspect: "Finding errors", before: "Preview mode and vendor UIs", after: "Event lineage with consent snapshot, routing decision and vendor response" },
+        { aspect: "Changes", before: "Publish and hope", after: "Diff, approval, signed version, one-click rollback" },
+      ],
+    },
+    trust: {
+      title: "Facts you can verify",
+      items: [
+        { title: "EU data region", text: "Events are processed in the EU; vendor APIs receive only the fields you mapped, under the transfer basis documented per destination." },
+        { title: "Signed configurations", text: "Every published bundle is immutable, versioned and Ed25519-signed; the SDK verifies the signature before applying it." },
+        { title: "No custom code", text: "There is no custom HTML or JavaScript tag type. Transformations are declarative and validated on the server." },
+        { title: "Strict opt-in by default", text: "EU/EEA/UK/CH start with strict opt-in; inferred consent is never exported to advertising platforms." },
+      ],
+    },
+    closing: { title: "See these views with your own events", text: "Create your site, paste the snippet and let the assistant configure the first destination — the debugger and the health score fill up from the first event.", cta: "Start with your domain", secondary: "See pricing" },
+  },
+  de: {
+    eyebrow: "Funktionen",
+    title: "Jede Conversion einmal zugestellt, mit Consent, an die Plattform, zu der sie gehört",
+    text: "Track ersetzt den Tag-Container durch eine geführte Einrichtung, einen consent-konformen serverseitigen Router und einen Debugger, der jedes Event erklärt. Diese Seite zeigt das Produkt, wie es arbeitet — die Zustände unten sind Beispieldaten, kein Live-Traffic.",
+    cta: "Mit deiner Domain starten",
+    ctaSecondary: "So funktioniert es",
+    stage: {
+      title: "Datenfluss von der Website über Track zu den Destinationen",
+      description: "Eine Website sendet Events aus dem Browser-SDK und vom Server an Track. Track prüft Consent an einem Policy-Gate und leitet jedes Event nur an Destinationen weiter, deren Zweck erteilt wurde: Meta, Google Ads, Google Analytics 4 und TikTok.",
+      caption: "Website → Track → Consent/Policy → Destinationen. Browser und Server teilen eine Event-ID; das Gate entscheidet pro Destination.",
+    },
+    scenarios: {
+      title: "Was mit einem Kauf passiert",
+      text: "Wechsle das Szenario, um zu sehen, wie dasselbe Event geroutet wird, wenn Consent erteilt oder widerrufen wurde oder ein Anbieter ausfällt. Entscheidung und Grund sind das, was du später im Debugger liest.",
+      tabsLabel: "Routing-Szenarien",
+      items: [
+        {
+          id: "granted",
+          label: "Consent erteilt",
+          title: "Analyse und Marketing erteilt",
+          text: "Der Kauf kommt aus dem Browser und vom Server mit derselben Event-ID. Das Gate findet die nötigen Zwecke und leitet ihn an alle vier Destinationen weiter; Meta und TikTok deduplizieren über die Event-ID, Google Ads über die Bestellnummer.",
+          points: ["Entscheidung: zugestellt an Meta, Google Ads, GA4, TikTok", "Deduplizierung: Event-ID (Meta, TikTok), Bestellnummer (Google Ads)", "Click-IDs pro Destination angehängt: gclid → Google, fbclid → Meta"],
+        },
+        {
+          id: "withdrawn",
+          label: "Marketing widerrufen",
+          title: "Analyse erteilt, Marketing verweigert",
+          text: "Der Besucher hat den Marketing-Consent vor dem Kauf widerrufen. Das Gate lässt das Event zu Google Analytics 4 durch und blockiert die Werbe-Destinationen mit dem Grund purpose_not_granted. Nichts wird für später gespeichert; wird Consent wieder erteilt, werden frühere Events nicht nachgeliefert.",
+          points: ["Entscheidung: zugestellt an GA4; blockiert für Meta, Google Ads, TikTok", "Grund im Debugger: purpose_not_granted (marketing)", "Consent Mode v2: analytics_storage granted, ad_storage denied"],
+        },
+        {
+          id: "outage",
+          label: "Anbieter ausgefallen",
+          title: "Consent erteilt, ein Anbieter nicht erreichbar",
+          text: "TikTok antwortet mit einem Serverfehler. Track wiederholt mit Jitter-Backoff, öffnet nach wiederholten Fehlern den Circuit Breaker und parkt das Event in der Dead-Letter-Queue. Die anderen drei Destinationen sind nicht betroffen. Sobald TikTok wieder erreichbar ist, wird die Dead-Letter-Queue erneut gesendet.",
+          points: ["Entscheidung: zugestellt an Meta, Google Ads, GA4; TikTok wird wiederholt", "Circuit Breaker für TikTok offen; Events in der Dead-Letter-Queue", "Replay nach der Erholung behält die ursprüngliche Event-ID, nichts zählt doppelt"],
+        },
+      ],
+    },
+    index: {
+      title: "Sechs Fähigkeiten, eine Event-Ebene",
+      text: "Jede Fähigkeit baut auf derselben signierten Konfiguration und demselben Eventschema auf. Öffne eine Fähigkeit für Produktansicht, Datenfluss und einen Vorher/Nachher-Vergleich.",
+      more: "Mehr lesen",
+    },
+    comparison: {
+      title: "Tag-Container versus Event-Ebene",
+      text: "Wo ein klassischer Container die Arbeit dir überlässt und wo Track sie von Grund auf erledigt.",
+      beforeLabel: "Klassischer Tag-Container",
+      afterLabel: "Track",
+      rows: [
+        { aspect: "Was auf deiner Site läuft", before: "Custom-HTML- und JavaScript-Tags von allen mit Container-Zugriff", after: "Ein Snippet und eine signierte, versionierte Konfiguration — keine Ausführung von Custom-Code" },
+        { aspect: "Consent", before: "Trigger-Bedingungen pro Tag, von Hand gepflegt", after: "Policy-Engine, die jedes Event für jede Destination prüft, im Browser und auf dem Server" },
+        { aspect: "Serverseitige Zustellung", before: "Ein zweiter Container, ein zweiter Satz Tags, manuelle Deduplizierung", after: "Eingebaut: gemeinsame Event-ID, Retries, Circuit Breaker, Replay" },
+        { aspect: "Fehler finden", before: "Vorschaumodus und Anbieter-Oberflächen", after: "Event-Herkunft mit Consent-Snapshot, Routing-Entscheidung und Anbieterantwort" },
+        { aspect: "Änderungen", before: "Veröffentlichen und hoffen", after: "Diff, Freigabe, signierte Version, Rollback per Klick" },
+      ],
+    },
+    trust: {
+      title: "Fakten, die du prüfen kannst",
+      items: [
+        { title: "EU-Datenregion", text: "Events werden in der EU verarbeitet; Anbieter-APIs erhalten nur die Felder, die du gemappt hast, auf der pro Destination dokumentierten Übermittlungsgrundlage." },
+        { title: "Signierte Konfigurationen", text: "Jedes veröffentlichte Bundle ist unveränderlich, versioniert und Ed25519-signiert; das SDK prüft die Signatur, bevor es sie anwendet." },
+        { title: "Kein Custom-Code", text: "Es gibt keinen Custom-HTML- oder JavaScript-Tagtyp. Transformationen sind deklarativ und werden auf dem Server validiert." },
+        { title: "Striktes Opt-in als Standard", text: "EU/EWR/UK/CH starten mit striktem Opt-in; abgeleiteter Consent wird nie an Werbeplattformen exportiert." },
+      ],
+    },
+    closing: { title: "Sieh diese Ansichten mit deinen eigenen Events", text: "Site anlegen, Snippet einfügen und den Assistenten die erste Destination einrichten lassen — Debugger und Health-Score füllen sich ab dem ersten Event.", cta: "Mit deiner Domain starten", secondary: "Preise ansehen" },
+  },
+};
+
+export const FEATURE_DETAIL_COPY: LocalizedCopy<FeatureDetailLabels> = {
+  en: {
+    features: "Features",
+    breadcrumb: "Breadcrumb",
+    howBuilt: "How it is built",
+    howBuiltText: "The technical decisions behind the capability — the proof after the benefit.",
+    proof: "What you can verify",
+    proofText: "Product facts you will find in the dashboard, the docs and the audit log.",
+    faq: "Questions",
+    more: "More capabilities",
+    moreText: "Built on the same signed configuration and event schema.",
+    cta: "Try it on your domain",
+    ctaText: "Create a site, install one snippet and let the assistant configure the first destination in minutes.",
+    start: "Start free",
+    pricing: "See pricing",
+  },
+  de: {
+    features: "Funktionen",
+    breadcrumb: "Navigationspfad",
+    howBuilt: "So ist es gebaut",
+    howBuiltText: "Die technischen Entscheidungen hinter der Fähigkeit — der Beleg nach dem Nutzen.",
+    proof: "Was du prüfen kannst",
+    proofText: "Produktfakten, die du im Dashboard, in der Dokumentation und im Audit-Log findest.",
+    faq: "Fragen",
+    more: "Weitere Fähigkeiten",
+    moreText: "Gebaut auf derselben signierten Konfiguration und demselben Eventschema.",
+    cta: "Auf deiner Domain ausprobieren",
+    ctaText: "Site anlegen, ein Snippet installieren und den Assistenten in Minuten die erste Destination einrichten lassen.",
+    start: "Kostenlos starten",
+    pricing: "Preise ansehen",
+  },
+};
+
+const PAYLOAD_EXAMPLE = `{
+  "event": "purchase",
+  "event_id": "evt_…7f2a",
+  "order_id": "A-1042",
+  "value": 129.9,
+  "currency": "EUR",
+  "user": { "em": "sha256:…9c1e" },
+  "click_ids": { "gclid": "…" }
+}`;
+
+export const FEATURE_UI_COPY: LocalizedCopy<FeatureUiCopy> = {
+  en: {
+    example: "Example data",
+    exampleHint: "Static example state — not live traffic, no real customer data.",
+    diagram: {
+      website: "Website",
+      browser: "Browser SDK",
+      server: "Server API",
+      track: "Track",
+      gate: "Consent / Policy",
+      gateGranted: "consent granted",
+      gateDenied: "marketing denied",
+      gatePending: "consent pending",
+      dedup: "one event id",
+      notUsed: "not used",
+      delivered: "delivered",
+      blocked: "blocked",
+      retrying: "retrying",
+      paused: "paused",
+      destinations: { meta: "Meta", googleAds: "Google Ads", ga4: "GA4", tiktok: "TikTok", linkedin: "LinkedIn" },
+      describe: (paths, gate) => {
+        const origin = paths === "browser" ? "only from the browser SDK" : paths === "server" ? "only from the server API" : "from the browser SDK and the server API with one shared event id";
+        const decision = gate === "granted" ? "the consent gate is open and events reach the destinations" : gate === "denied" ? "the consent gate blocks advertising destinations and only analytics receives the event" : "the consent gate waits for a signal and nothing is forwarded";
+        return `The website sends events ${origin} to Track; ${decision}.`;
+      },
+      chains: {
+        setup: { ai: "Track AI", aiSub: "proposes", tools: "Typed tools", toolsSub: "server-validated", approval: "Your approval", approvalSub: "bound to the diff", config: "Signed config", configSub: "version 13", website: "Website", websiteSub: "verifies signature", describe: "Track AI proposes changes through typed, server-validated tools; your approval, bound to the diff, publishes a signed configuration that the website verifies before loading." },
+        health: { events: "Events", eventsSub: "last period", checks: "Checks", checksSub: "consent · schema · delivery", score: "Score 86", scoreSub: "6 weighted components", issues: "2 issues", issuesSub: "each names its fix", describe: "Events of the last period run through the checks; six weighted components form the score, and each open issue names the tool that fixes it." },
+        attribution: { landing: "Landing page", landingSub: "gclid · fbclid", consent: "Marketing consent", consentSub: "granted", store: "Click-id store", storeSub: "first-party · 90 days", purchase: "Purchase", purchaseSub: "3 days later", google: "Google Ads", googleSub: "gclid only", meta: "Meta", metaSub: "fbclid only", describe: "A landing page with gclid and fbclid stores both ids first-party after marketing consent; the purchase three days later reaches Google Ads with the gclid only and Meta with the fbclid only." },
+      },
+    },
+    stream: {
+      title: "Live events",
+      caption: "Every row is one event with its origin, the consent at that moment, the routing decision and the destinations.",
+      columns: { event: "Event", origin: "Origin", consent: "Consent", decision: "Decision", destination: "Destinations" },
+      rows: [
+        { event: "page_view", origin: "browser", consent: "analytics", consentTone: "ok", decision: "delivered", decisionTone: "ok", destination: "GA4" },
+        { event: "add_to_cart", origin: "browser", consent: "marketing", consentTone: "ok", decision: "delivered", decisionTone: "ok", destination: "Meta, TikTok" },
+        { event: "purchase", origin: "browser + server", consent: "marketing", consentTone: "ok", decision: "delivered, deduplicated (order id)", decisionTone: "ok", destination: "Meta CAPI, Google Ads" },
+        { event: "purchase", origin: "server", consent: "marketing missing", consentTone: "bad", decision: "blocked: consent_missing", decisionTone: "bad", destination: "Meta CAPI" },
+        { event: "generate_lead", origin: "browser", consent: "marketing", consentTone: "ok", decision: "delivered", decisionTone: "ok", destination: "LinkedIn" },
+      ],
+    },
+    lineage: {
+      title: "Event lineage",
+      caption: "One purchase, read from origin to vendor answer.",
+      facts: [
+        { label: "Event", value: "purchase · evt_…7f2a" },
+        { label: "Origin", value: "browser SDK + server (shop webhook)" },
+        { label: "Configuration", value: "version 12, signature verified" },
+        { label: "Consent snapshot", value: "analytics, marketing · source: CMP" },
+        { label: "Click ids", value: "gclid (captured 3 days ago)" },
+      ],
+      attempts: {
+        title: "Delivery attempts",
+        columns: { destination: "Destination", status: "Status", result: "Result" },
+        rows: [
+          { destination: "Meta Conversions API", status: "200", tone: "ok", result: "accepted, deduplicated by event id" },
+          { destination: "Google Ads", status: "200", tone: "ok", result: "accepted, deduplicated by order id" },
+          { destination: "TikTok Events API", status: "503", tone: "warn", result: "retry 2 scheduled with backoff" },
+        ],
+      },
+      payload: { title: "Redacted payload", copy: "Copy payload", copied: "Copied", code: PAYLOAD_EXAMPLE },
+    },
+    health: {
+      title: "Tracking health",
+      caption: "Weighted components; a lower score always points at its cause.",
+      scoreLabel: "Score",
+      score: 86,
+      componentsLabel: "Components",
+      weight: (percent) => `${percent}% weight`,
+      components: [
+        { key: "consent", label: "Consent coverage", score: 91, weight: 20, detail: "91% of events carry an explicit consent signal" },
+        { key: "coverage", label: "Critical events", score: 78, weight: 25, detail: "7 of 9 planned critical events observed" },
+        { key: "schema", label: "Schema quality", score: 74, weight: 15, detail: "74% of events pass schema and PII checks" },
+        { key: "dedup", label: "Duplicates", score: 96, weight: 10, detail: "1.0% duplicates" },
+        { key: "delivery", label: "Delivery", score: 88, weight: 20, detail: "94% delivered, 1 integration with credential problems" },
+        { key: "liveness", label: "Freshness", score: 100, weight: 10, detail: "Last browser event 4 min ago" },
+      ],
+      issuesLabel: "Open issues",
+      issues: [
+        { title: "purchase without currency", detail: "12 events in the last 24 h are missing the required parameter", fix: "Fix: update the event mapping", tone: "warn" },
+        { title: "Consent signal missing", detail: "9% of events arrived without an explicit consent state", fix: "Fix: connect the CMP adapter", tone: "warn" },
+      ],
+    },
+    consent: {
+      title: "Consent state and derived signals",
+      caption: "Purposes come from your CMP; everything else is derived, never guessed.",
+      purposesLabel: "Purposes",
+      purposes: [
+        { label: "Strictly necessary", granted: true },
+        { label: "Analytics", granted: true },
+        { label: "Marketing", granted: false },
+        { label: "Personalization", granted: false },
+      ],
+      granted: "granted",
+      denied: "denied",
+      flagsLabel: "Consent Mode v2",
+      flags: [
+        { key: "analytics_storage", value: "granted" },
+        { key: "ad_storage", value: "denied" },
+        { key: "ad_user_data", value: "denied" },
+        { key: "ad_personalization", value: "denied" },
+      ],
+      reasonsLabel: "Block reasons the policy engine reports",
+      reasons: [
+        { code: "consent_missing", text: "no consent signal for the event yet" },
+        { code: "consent_denied", text: "the visitor declined" },
+        { code: "purpose_not_granted", text: "destination needs a purpose that was not granted" },
+        { code: "gpc_opt_out", text: "Global Privacy Control set" },
+        { code: "destination_paused", text: "kill switch or circuit breaker" },
+        { code: "inferred_data_not_exportable", text: "inferred consent never reaches ad platforms" },
+      ],
+    },
+    attribution: {
+      title: "Click-id matrix",
+      caption: "Captured after marketing consent, stored first-party, forwarded only to the owning platform.",
+      columns: { id: "Click id", captured: "Captured", forwarded: "Forwarded only to", retention: "Kept" },
+      rows: [
+        { id: "gclid", captured: "landing page, after marketing consent", forwarded: "Google Ads, GA4, Google Marketing Platform", retention: "90 days" },
+        { id: "fbclid", captured: "landing page, after marketing consent", forwarded: "Meta", retention: "90 days" },
+        { id: "ttclid", captured: "landing page, after marketing consent", forwarded: "TikTok", retention: "90 days" },
+        { id: "msclkid", captured: "landing page, after marketing consent", forwarded: "Microsoft Advertising", retention: "90 days" },
+        { id: "li_fat_id", captured: "landing page, after marketing consent", forwarded: "LinkedIn", retention: "90 days" },
+      ],
+      note: "Retention is documented per id and configurable; 90 days is the default.",
+    },
+    setup: {
+      title: "Guided setup",
+      caption: "The assistant proposes, tools validate, you approve.",
+      assistant: "Track AI",
+      you: "You",
+      messages: [
+        { from: "assistant", text: "example-shop.test runs on Shopify with Cookiebot as consent tool (high confidence). For a shop I suggest view_item, add_to_cart, begin_checkout and purchase. Shall I draft the plan for Meta and Google Ads?" },
+        { from: "you", text: "Yes, Meta first." },
+        { from: "assistant", text: "Pixel id validated. The Conversions API needs an access token — please enter it in the vault card below; it never appears in this chat." },
+      ],
+      vault: { title: "Vault card · Meta access token", text: "Stored encrypted; visible to no one, including the model.", state: "stored" },
+      test: { title: "Test event · purchase", text: "Sent through the real pipeline with the vendor's test event code.", state: "accepted by Meta" },
+      approval: {
+        title: "Publish version 13",
+        text: "Bound to exactly this diff and to you as the approver.",
+        diff: ["+ destination meta: browser + server", "+ mapping purchase → Purchase (event id, order id)", "~ consent: marketing required for meta"],
+        state: "waiting for your approval",
+        action: "Approve and publish",
+      },
+    },
+    destinations: {
+      title: "Destination health",
+      caption: "Health, mode and queue per destination; failures are handled, not hidden.",
+      columns: { destination: "Destination", mode: "Mode", health: "Health", last: "Last delivery", queue: "Queue" },
+      rows: [
+        { destination: "Meta", mode: "browser + server", health: "healthy", tone: "ok", last: "12 s ago", queue: "0 retries" },
+        { destination: "Google Ads", mode: "server", health: "healthy", tone: "ok", last: "40 s ago", queue: "0 retries" },
+        { destination: "TikTok", mode: "browser + server", health: "degraded, circuit breaker open", tone: "warn", last: "6 min ago", queue: "3 in dead-letter queue" },
+        { destination: "LinkedIn", mode: "server", health: "paused by kill switch", tone: "neutral", last: "2 h ago", queue: "held" },
+      ],
+    },
+  },
+  de: {
+    example: "Beispieldaten",
+    exampleHint: "Statischer Beispielzustand — kein Live-Traffic, keine echten Kundendaten.",
+    diagram: {
+      website: "Website",
+      browser: "Browser-SDK",
+      server: "Server-API",
+      track: "Track",
+      gate: "Consent / Policy",
+      gateGranted: "Consent erteilt",
+      gateDenied: "Marketing verweigert",
+      gatePending: "Consent ausstehend",
+      dedup: "eine Event-ID",
+      notUsed: "nicht genutzt",
+      delivered: "zugestellt",
+      blocked: "blockiert",
+      retrying: "wird wiederholt",
+      paused: "pausiert",
+      destinations: { meta: "Meta", googleAds: "Google Ads", ga4: "GA4", tiktok: "TikTok", linkedin: "LinkedIn" },
+      describe: (paths, gate) => {
+        const origin = paths === "browser" ? "nur aus dem Browser-SDK" : paths === "server" ? "nur aus der Server-API" : "aus Browser-SDK und Server-API mit einer gemeinsamen Event-ID";
+        const decision = gate === "granted" ? "das Consent-Gate ist offen und die Events erreichen die Destinationen" : gate === "denied" ? "das Consent-Gate blockiert Werbe-Destinationen und nur die Analyse erhält das Event" : "das Consent-Gate wartet auf ein Signal und nichts wird weitergeleitet";
+        return `Die Website sendet Events ${origin} an Track; ${decision}.`;
+      },
+      chains: {
+        setup: { ai: "Track AI", aiSub: "schlägt vor", tools: "Typisierte Tools", toolsSub: "serverseitig validiert", approval: "Deine Freigabe", approvalSub: "an das Diff gebunden", config: "Signierte Config", configSub: "Version 13", website: "Website", websiteSub: "prüft Signatur", describe: "Track AI schlägt Änderungen über typisierte, serverseitig validierte Tools vor; deine an das Diff gebundene Freigabe veröffentlicht eine signierte Konfiguration, die die Website vor dem Laden prüft." },
+        health: { events: "Events", eventsSub: "letzter Zeitraum", checks: "Prüfungen", checksSub: "Consent · Schema · Zustellung", score: "Score 86", scoreSub: "6 gewichtete Komponenten", issues: "2 Probleme", issuesSub: "jedes benennt seine Lösung", describe: "Die Events des letzten Zeitraums laufen durch die Prüfungen; sechs gewichtete Komponenten bilden den Score, und jedes offene Problem benennt das Tool, das es löst." },
+        attribution: { landing: "Landingpage", landingSub: "gclid · fbclid", consent: "Marketing-Consent", consentSub: "erteilt", store: "Click-ID-Speicher", storeSub: "First-Party · 90 Tage", purchase: "Kauf", purchaseSub: "3 Tage später", google: "Google Ads", googleSub: "nur gclid", meta: "Meta", metaSub: "nur fbclid", describe: "Eine Landingpage mit gclid und fbclid speichert beide IDs nach Marketing-Consent First-Party; der Kauf drei Tage später erreicht Google Ads nur mit der gclid und Meta nur mit der fbclid." },
+      },
+    },
+    stream: {
+      title: "Live-Events",
+      caption: "Jede Zeile ist ein Event mit Ursprung, dem Consent zu diesem Zeitpunkt, der Routing-Entscheidung und den Destinationen.",
+      columns: { event: "Event", origin: "Ursprung", consent: "Consent", decision: "Entscheidung", destination: "Destinationen" },
+      rows: [
+        { event: "page_view", origin: "Browser", consent: "Analyse", consentTone: "ok", decision: "zugestellt", decisionTone: "ok", destination: "GA4" },
+        { event: "add_to_cart", origin: "Browser", consent: "Marketing", consentTone: "ok", decision: "zugestellt", decisionTone: "ok", destination: "Meta, TikTok" },
+        { event: "purchase", origin: "Browser + Server", consent: "Marketing", consentTone: "ok", decision: "zugestellt, dedupliziert (Bestellnummer)", decisionTone: "ok", destination: "Meta CAPI, Google Ads" },
+        { event: "purchase", origin: "Server", consent: "Marketing fehlt", consentTone: "bad", decision: "blockiert: consent_missing", decisionTone: "bad", destination: "Meta CAPI" },
+        { event: "generate_lead", origin: "Browser", consent: "Marketing", consentTone: "ok", decision: "zugestellt", decisionTone: "ok", destination: "LinkedIn" },
+      ],
+    },
+    lineage: {
+      title: "Event-Herkunft",
+      caption: "Ein Kauf, gelesen vom Ursprung bis zur Anbieterantwort.",
+      facts: [
+        { label: "Event", value: "purchase · evt_…7f2a" },
+        { label: "Ursprung", value: "Browser-SDK + Server (Shop-Webhook)" },
+        { label: "Konfiguration", value: "Version 12, Signatur geprüft" },
+        { label: "Consent-Snapshot", value: "Analyse, Marketing · Quelle: CMP" },
+        { label: "Click-IDs", value: "gclid (vor 3 Tagen erfasst)" },
+      ],
+      attempts: {
+        title: "Zustellversuche",
+        columns: { destination: "Destination", status: "Status", result: "Ergebnis" },
+        rows: [
+          { destination: "Meta Conversions API", status: "200", tone: "ok", result: "akzeptiert, dedupliziert über Event-ID" },
+          { destination: "Google Ads", status: "200", tone: "ok", result: "akzeptiert, dedupliziert über Bestellnummer" },
+          { destination: "TikTok Events API", status: "503", tone: "warn", result: "Versuch 2 mit Backoff geplant" },
+        ],
+      },
+      payload: { title: "Geschwärzte Payload", copy: "Payload kopieren", copied: "Kopiert", code: PAYLOAD_EXAMPLE },
+    },
+    health: {
+      title: "Tracking-Zustand",
+      caption: "Gewichtete Komponenten; ein niedrigerer Score zeigt immer auf seine Ursache.",
+      scoreLabel: "Score",
+      score: 86,
+      componentsLabel: "Komponenten",
+      weight: (percent) => `${percent} % Gewicht`,
+      components: [
+        { key: "consent", label: "Consent-Abdeckung", score: 91, weight: 20, detail: "91 % der Events tragen ein explizites Consent-Signal" },
+        { key: "coverage", label: "Kritische Events", score: 78, weight: 25, detail: "7 von 9 geplanten kritischen Events gesehen" },
+        { key: "schema", label: "Schemaqualität", score: 74, weight: 15, detail: "74 % der Events bestehen Schema- und PII-Prüfungen" },
+        { key: "dedup", label: "Duplikate", score: 96, weight: 10, detail: "1,0 % Duplikate" },
+        { key: "delivery", label: "Zustellung", score: 88, weight: 20, detail: "94 % zugestellt, 1 Integration mit Credential-Problemen" },
+        { key: "liveness", label: "Aktualität", score: 100, weight: 10, detail: "Letztes Browser-Event vor 4 Minuten" },
+      ],
+      issuesLabel: "Offene Probleme",
+      issues: [
+        { title: "purchase ohne currency", detail: "12 Events in den letzten 24 h fehlt der Pflichtparameter", fix: "Lösung: Event-Mapping aktualisieren", tone: "warn" },
+        { title: "Consent-Signal fehlt", detail: "9 % der Events kamen ohne expliziten Consent-Zustand an", fix: "Lösung: CMP-Adapter verbinden", tone: "warn" },
+      ],
+    },
+    consent: {
+      title: "Consent-Zustand und abgeleitete Signale",
+      caption: "Zwecke kommen aus deinem CMP; alles andere wird abgeleitet, nie geraten.",
+      purposesLabel: "Zwecke",
+      purposes: [
+        { label: "Technisch erforderlich", granted: true },
+        { label: "Analyse", granted: true },
+        { label: "Marketing", granted: false },
+        { label: "Personalisierung", granted: false },
+      ],
+      granted: "erteilt",
+      denied: "verweigert",
+      flagsLabel: "Consent Mode v2",
+      flags: [
+        { key: "analytics_storage", value: "granted" },
+        { key: "ad_storage", value: "denied" },
+        { key: "ad_user_data", value: "denied" },
+        { key: "ad_personalization", value: "denied" },
+      ],
+      reasonsLabel: "Blockgründe, die die Policy-Engine meldet",
+      reasons: [
+        { code: "consent_missing", text: "noch kein Consent-Signal für das Event" },
+        { code: "consent_denied", text: "der Besucher hat abgelehnt" },
+        { code: "purpose_not_granted", text: "die Destination braucht einen nicht erteilten Zweck" },
+        { code: "gpc_opt_out", text: "Global Privacy Control gesetzt" },
+        { code: "destination_paused", text: "Kill-Switch oder Circuit Breaker" },
+        { code: "inferred_data_not_exportable", text: "abgeleiteter Consent erreicht nie Werbeplattformen" },
+      ],
+    },
+    attribution: {
+      title: "Click-ID-Matrix",
+      caption: "Nach Marketing-Consent erfasst, First-Party gespeichert, nur an die zugehörige Plattform weitergegeben.",
+      columns: { id: "Click-ID", captured: "Erfasst", forwarded: "Weitergabe nur an", retention: "Aufbewahrt" },
+      rows: [
+        { id: "gclid", captured: "Landingpage, nach Marketing-Consent", forwarded: "Google Ads, GA4, Google Marketing Platform", retention: "90 Tage" },
+        { id: "fbclid", captured: "Landingpage, nach Marketing-Consent", forwarded: "Meta", retention: "90 Tage" },
+        { id: "ttclid", captured: "Landingpage, nach Marketing-Consent", forwarded: "TikTok", retention: "90 Tage" },
+        { id: "msclkid", captured: "Landingpage, nach Marketing-Consent", forwarded: "Microsoft Advertising", retention: "90 Tage" },
+        { id: "li_fat_id", captured: "Landingpage, nach Marketing-Consent", forwarded: "LinkedIn", retention: "90 Tage" },
+      ],
+      note: "Die Aufbewahrung ist pro ID dokumentiert und konfigurierbar; 90 Tage sind der Standard.",
+    },
+    setup: {
+      title: "Geführte Einrichtung",
+      caption: "Der Assistent schlägt vor, Tools validieren, du gibst frei.",
+      assistant: "Track AI",
+      you: "Du",
+      messages: [
+        { from: "assistant", text: "example-shop.test läuft auf Shopify mit Cookiebot als Consent-Tool (hohe Konfidenz). Für einen Shop schlage ich view_item, add_to_cart, begin_checkout und purchase vor. Soll ich den Plan für Meta und Google Ads entwerfen?" },
+        { from: "you", text: "Ja, Meta zuerst." },
+        { from: "assistant", text: "Pixel-ID geprüft. Die Conversions API braucht einen Access-Token — bitte in der Tresor-Karte unten eingeben; er erscheint nie in diesem Chat." },
+      ],
+      vault: { title: "Tresor-Karte · Meta-Access-Token", text: "Verschlüsselt gespeichert; für niemanden sichtbar, auch nicht für das Modell.", state: "gespeichert" },
+      test: { title: "Testevent · purchase", text: "Durch die echte Pipeline gesendet, mit dem Test-Event-Code des Anbieters.", state: "von Meta akzeptiert" },
+      approval: {
+        title: "Version 13 veröffentlichen",
+        text: "Gebunden an genau dieses Diff und an dich als freigebende Person.",
+        diff: ["+ destination meta: browser + server", "+ mapping purchase → Purchase (event id, order id)", "~ consent: marketing required for meta"],
+        state: "wartet auf deine Freigabe",
+        action: "Freigeben und veröffentlichen",
+      },
+    },
+    destinations: {
+      title: "Destination Health",
+      caption: "Zustand, Modus und Queue pro Destination; Fehler werden behandelt, nicht versteckt.",
+      columns: { destination: "Destination", mode: "Modus", health: "Zustand", last: "Letzte Zustellung", queue: "Queue" },
+      rows: [
+        { destination: "Meta", mode: "Browser + Server", health: "gesund", tone: "ok", last: "vor 12 s", queue: "0 Retries" },
+        { destination: "Google Ads", mode: "Server", health: "gesund", tone: "ok", last: "vor 40 s", queue: "0 Retries" },
+        { destination: "TikTok", mode: "Browser + Server", health: "beeinträchtigt, Circuit Breaker offen", tone: "warn", last: "vor 6 min", queue: "3 in der Dead-Letter-Queue" },
+        { destination: "LinkedIn", mode: "Server", health: "per Kill-Switch pausiert", tone: "neutral", last: "vor 2 h", queue: "zurückgehalten" },
+      ],
+    },
+  },
+};
