@@ -29,14 +29,20 @@ test.describe("marketing site", () => {
     const target = new URL(pricing.headers().location!, "http://x");
     expect(target.pathname).toBe("/en/pricing");
     expect(target.search).toBe("?plan=growth");
+    // the dashboard is never localized: an anonymous visitor is sent straight to the localized login page (no /en/app, no /login → /en/login chain)
     const app = await request.get("/app", { maxRedirects: 0 });
-    expect(app.headers().location ?? "").not.toMatch(/\/en\//);
+    const appTarget = new URL(app.headers().location ?? "/", "http://x");
+    expect(appTarget.pathname).not.toMatch(/^\/(en|de)\/app(\/|$)/);
+    expect(appTarget.pathname).toBe("/en/login");
+    expect(appTarget.searchParams.get("next")).toBe("/app");
   });
 
   test("the language switcher leads to the same page in the other language", async ({ page }) => {
     await page.goto("/en/pricing");
-    await page.getByRole("button", { name: /language/i }).click();
-    await page.getByRole("link", { name: "Deutsch" }).click();
+    // header and footer both carry a language switcher; drive the header one
+    const header = page.locator("header");
+    await header.getByRole("button", { name: /language/i }).click();
+    await header.getByRole("link", { name: "Deutsch" }).click();
     await expect(page).toHaveURL(/\/de\/pricing$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
   });
@@ -64,7 +70,8 @@ test.describe("marketing site", () => {
     // header and footer carry the wordmark "Track"; the domain is never a visible brand there
     await expect(page.locator("header").getByRole("link", { name: "Track – home" })).toBeVisible();
     await expect(page.locator("footer")).toContainText(/© \d{4} Track\./);
-    await expect(page.locator("header, footer")).not.toContainText(/track\.site/i);
+    await expect(page.locator("header")).not.toContainText(/track\.site/i);
+    await expect(page.locator("footer")).not.toContainText(/track\.site/i);
     const logo = jsonLd.map((t) => /"publisher":\{[^}]*"logo":\{"@type":"ImageObject","url":"([^"]+)"/.exec(t)?.[1]).find(Boolean);
     expect(logo).toBeTruthy();
     expect((await page.request.get(logo!)).status()).toBe(200);

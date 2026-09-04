@@ -8,6 +8,8 @@ import { MarketingHeader } from "@/components/marketing/header";
 import { LocalizedPathsProvider } from "@/components/marketing/localized-paths";
 import { ThemeScript } from "@/components/theme-script";
 import { routing } from "@/i18n/routing";
+import { pick } from "@/lib/marketing-copy/pick";
+import { HEADER_COPY } from "@/lib/marketing-copy/shared";
 import { BRAND_NAME, baseUrl, ogLocale } from "@/lib/seo";
 import { bodyClassName, fontClassName } from "../fonts";
 import "../globals.css";
@@ -37,13 +39,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
  * layout above the `[locale]` segment) so the locale is known statically from the URL segment:
  * `setRequestLocale` runs before any next-intl call, nothing reads request headers or cookies, and
  * every `/[locale]/**` page stays prerendered. The dashboard (`/app`) has its own root layout.
+ *
+ * Shell: skip link → header (sticky, mega navigation + mobile drawer) → `<main id="main">` → footer.
+ * There is deliberately no consent dialog: the marketing site sets no optional cookies or storage
+ * (see components/marketing/consent-dialog.tsx for the audit and the mounting instructions).
  */
 export default async function LocaleLayout({ children, params }: { children: ReactNode; params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
-  const t = await getTranslations({ locale, namespace: "nav" });
+  const shell = pick(locale, HEADER_COPY);
   return (
     <html lang={locale} suppressHydrationWarning className={fontClassName}>
       <head>
@@ -53,14 +59,14 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <NextIntlClientProvider locale={locale} messages={messages}>
           <LocalizedPathsProvider>
             <div className="flex min-h-screen flex-col">
-              <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-3 focus:py-2 focus:text-sm">
-                {t("skipToContent")}
+              <a href="#main" className="skip-link">
+                {shell.skipToContent}
               </a>
               <MarketingHeader />
-              <main id="main" className="flex-1">
+              <main id="main" tabIndex={-1} className="flex-1 outline-none">
                 {children}
               </main>
-              <MarketingFooter />
+              <MarketingFooter locale={locale} />
             </div>
           </LocalizedPathsProvider>
         </NextIntlClientProvider>

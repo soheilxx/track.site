@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { normalizeDomainInput } from "@track-site/core";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { safeDomain } from "@/components/auth/domain";
 import { SignupForm } from "@/components/auth/signup-form";
 import { Link } from "@/i18n/navigation";
 
@@ -16,21 +16,23 @@ export default async function SignupPage({ params, searchParams }: { params: Pro
   setRequestLocale(locale);
   const { domain } = await searchParams;
   const t = await getTranslations("auth");
-  const safeDomain = domain ? normalizeDomainInput(domain) : null;
   return (
-    <AuthCard
+    <AuthShell
+      locale={locale}
       title={t("signup.title")}
       subtitle={t("signup.subtitle")}
+      step={1}
+      preview
       footer={
-        <span>
+        <>
           {t("signup.haveAccount")}{" "}
-          <Link href="/login" className="font-medium text-primary hover:underline">
+          <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
             {t("signup.login")}
           </Link>
-        </span>
+        </>
       }
     >
-      <SignupForm domain={safeDomain} />
-    </AuthCard>
+      <SignupForm domain={safeDomain(domain)} />
+    </AuthShell>
   );
 }

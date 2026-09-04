@@ -17,13 +17,13 @@ export function AcceptInvitation({ invitationId, signedIn }: { invitationId: str
     // full path including the locale: the login form opens it with a document load after sign-in
     const next = `/${locale}/accept-invitation/${invitationId}`;
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Alert tone="info">{t("invitation.loginFirst")}</Alert>
-        <div className="flex gap-2">
-          <Link href={`/login?next=${encodeURIComponent(next)}`} className={buttonVariants()}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link href={`/login?next=${encodeURIComponent(next)}`} className={buttonVariants({ size: "lg" })}>
             {t("login.submit")}
           </Link>
-          <Link href="/signup" className={buttonVariants({ variant: "secondary" })}>
+          <Link href="/signup" className={buttonVariants({ variant: "secondary", size: "lg" })}>
             {t("signup.submit")}
           </Link>
         </div>
@@ -32,18 +32,20 @@ export function AcceptInvitation({ invitationId, signedIn }: { invitationId: str
   }
   if (state === "done") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Alert tone="ok">{t("invitation.accepted")}</Alert>
-        <NextLink href="/app" className="text-sm font-medium text-primary hover:underline">
+        <NextLink href="/app" className={buttonVariants({ size: "lg", className: "w-full" })}>
           {t("invitation.openApp")}
         </NextLink>
       </div>
     );
   }
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {state === "error" ? <Alert tone="bad">{t("invitation.invalid")}</Alert> : null}
       <Button
+        size="lg"
+        className="w-full"
         loading={pending}
         onClick={async () => {
           setPending(true);

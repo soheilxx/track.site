@@ -1,35 +1,107 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { Check } from "lucide-react";
+import { ProductStage, Tab, TabList, TabPanel, Tabs } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
-import { FeatureGrid, FinalCta, PageHero, Section } from "@/components/marketing/page-shell";
-import { FEATURES, pick } from "@/lib/marketing-copy";
+import { BeforeAfter } from "@/components/marketing/features/comparison";
+import { FeatureIndex } from "@/components/marketing/features/feature-index";
+import { scenarioFlow } from "@/components/marketing/features/feature-view";
+import { FlowDiagram } from "@/components/marketing/features/flow-diagram";
+import { ClosingCta, FeatureHero, MarketingSection, Narrative, SectionHeading } from "@/components/marketing/features/section";
+import { pick } from "@/lib/marketing-copy";
+import { FEATURES, FEATURES_PAGE_COPY, FEATURE_UI_COPY } from "@/lib/marketing-copy/features";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
-const COPY = {
-  en: { eyebrow: "Features", title: "Everything a modern tag manager should have done years ago", text: "AI-guided setup, a consent-aware server-side router for 22 destination types, an event debugger with lineage and a health score that tells you what to fix.", cta: "Start with your domain", ctaText: "Free to start. Signed configuration, EU data plane, no code on your site beyond one snippet.", secondary: "See how it works" },
-  de: { eyebrow: "Funktionen", title: "Alles, was ein moderner Tag-Manager schon vor Jahren hätte können sollen", text: "KI-geführte Einrichtung, ein consent-konformer serverseitiger Router für 22 Destinationstypen, ein Event-Debugger mit Herkunft und ein Health-Score, der sagt, was zu tun ist.", cta: "Mit deiner Domain starten", ctaText: "Kostenlos starten. Signierte Konfiguration, EU-Datenebene, kein Code auf deiner Site außer einem Snippet.", secondary: "So funktioniert es" },
-};
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const c = pick(locale, COPY);
+  const c = pick(locale, FEATURES_PAGE_COPY);
   return pageMetadata({ locale, path: "/features", title: seoTitle(c.eyebrow), description: seoDescription(c.text) });
 }
 
 export default async function FeaturesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const c = pick(locale, COPY);
+  const c = pick(locale, FEATURES_PAGE_COPY);
+  const ui = pick(locale, FEATURE_UI_COPY);
   const features = pick(locale, FEATURES);
+  const hero = scenarioFlow("granted", ui);
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.eyebrow, path: "/features" }], locale)} />
-      <PageHero eyebrow={c.eyebrow} title={c.title} text={c.text} />
-      <Section>
-        <FeatureGrid items={features.map((f) => ({ title: f.title, text: f.short, href: `/features/${f.slug}` }))} columns={3} />
-      </Section>
-      <FinalCta title={c.cta} text={c.ctaText} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.secondary, href: "/how-it-works" }} />
+
+      <FeatureHero eyebrow={c.eyebrow} title={c.title} text={c.text} primary={{ label: c.cta, href: "/signup" }} secondary={{ label: c.ctaSecondary, href: "/how-it-works" }}>
+        <ProductStage tone="dark" dots padding="md">
+          <FlowDiagram title={c.stage.title} description={c.stage.description} caption={c.stage.caption} labels={ui.diagram} paths={hero.paths} gate={hero.gate} destinations={hero.destinations} />
+        </ProductStage>
+      </FeatureHero>
+
+      <MarketingSection tone="surface" labelledBy="scenarios-title">
+        <SectionHeading id="scenarios-title" title={c.scenarios.title} text={c.scenarios.text} />
+        <Tabs defaultValue="granted" className="mt-10">
+          <TabList aria-label={c.scenarios.tabsLabel} variant="pill">
+            {c.scenarios.items.map((s) => (
+              <Tab key={s.id} value={s.id}>
+                {s.label}
+              </Tab>
+            ))}
+          </TabList>
+          {c.scenarios.items.map((s) => {
+            const flow = scenarioFlow(s.id, ui);
+            return (
+              <TabPanel key={s.id} value={s.id} keepMounted className="pt-8">
+                <Narrative
+                  text={
+                    <div>
+                      <h3 className="text-h3 font-semibold text-ink">{s.title}</h3>
+                      <p className="mt-3 text-body text-ink-2">{s.text}</p>
+                      <ul className="mt-5 space-y-2">
+                        {s.points.map((p) => (
+                          <li key={p} className="flex items-start gap-2 text-small text-ink-2">
+                            <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                            <span>{p}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  }
+                  visual={
+                    <ProductStage as="div" tone="light" padding="md">
+                      <FlowDiagram title={s.title} description={ui.diagram.describe(flow.paths, flow.gate)} labels={ui.diagram} paths={flow.paths} gate={flow.gate} destinations={flow.destinations} />
+                    </ProductStage>
+                  }
+                />
+              </TabPanel>
+            );
+          })}
+        </Tabs>
+      </MarketingSection>
+
+      <MarketingSection labelledBy="index-title">
+        <SectionHeading id="index-title" title={c.index.title} text={c.index.text} />
+        <div className="mt-14 md:mt-20">
+          <FeatureIndex features={features} ui={ui} more={c.index.more} />
+        </div>
+      </MarketingSection>
+
+      <MarketingSection tone="surface" labelledBy="comparison-title">
+        <SectionHeading id="comparison-title" title={c.comparison.title} text={c.comparison.text} />
+        <BeforeAfter comparison={c.comparison} className="mt-10" />
+      </MarketingSection>
+
+      <MarketingSection labelledBy="trust-title">
+        <SectionHeading id="trust-title" title={c.trust.title} />
+        <dl className="mt-10 grid gap-x-12 gap-y-8 sm:grid-cols-2">
+          {c.trust.items.map((item) => (
+            <div key={item.title} className="border-t border-line-2 pt-4">
+              <dt className="font-semibold text-ink">{item.title}</dt>
+              <dd className="mt-2 text-small text-ink-2">{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </MarketingSection>
+
+      <ClosingCta title={c.closing.title} text={c.closing.text} primary={{ label: c.closing.cta, href: "/signup" }} secondary={{ label: c.closing.secondary, href: "/pricing" }} />
     </>
   );
 }

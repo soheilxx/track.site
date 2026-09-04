@@ -4,10 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Button, FieldError, Input, Label } from "@track-site/ui";
+import { Alert, Button, Field, Input, buttonVariants } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth-client";
 import { forgotSchema, resetSchema } from "@/lib/validation/auth";
+import { PasswordInput } from "./password-input";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth");
@@ -15,11 +16,20 @@ export function ForgotPasswordForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<{ email: string }>({ resolver: zodResolver(forgotSchema), defaultValues: { email: "" } });
-  if (sent) return <Alert tone="ok">{t("forgot.sent")}</Alert>;
+  if (sent) {
+    return (
+      <div className="space-y-5">
+        <Alert tone="ok">{t("forgot.sent")}</Alert>
+        <Link href="/login" className={buttonVariants({ variant: "secondary", size: "lg", className: "w-full" })}>
+          {t("forgot.back")}
+        </Link>
+      </div>
+    );
+  }
   return (
     <form
       noValidate
-      className="space-y-4"
+      className="space-y-5"
       onSubmit={form.handleSubmit(async ({ email }) => {
         setError(null);
         // the e-mailed link opens the reset page in the language the request was made in
@@ -29,12 +39,10 @@ export function ForgotPasswordForm() {
       })}
     >
       {error ? <Alert tone="bad">{error}</Alert> : null}
-      <div>
-        <Label htmlFor="email">{t("email")}</Label>
-        <Input id="email" type="email" autoComplete="email" className="mt-1" aria-invalid={Boolean(form.formState.errors.email)} {...form.register("email")} />
-        <FieldError>{form.formState.errors.email ? t("errors.email") : null}</FieldError>
-      </div>
-      <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+      <Field id="email" label={t("email")} error={form.formState.errors.email ? t("errors.email") : undefined}>
+        {(control) => <Input {...control} type="email" autoComplete="email" inputMode="email" {...form.register("email")} />}
+      </Field>
+      <Button type="submit" size="lg" className="w-full" loading={form.formState.isSubmitting}>
         {t("forgot.submit")}
       </Button>
     </form>
@@ -46,11 +54,12 @@ export function ResetPasswordForm({ token, invalid }: { token: string | null; in
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<{ password: string; confirm: string }>({ resolver: zodResolver(resetSchema), defaultValues: { password: "", confirm: "" } });
+  const errors = form.formState.errors;
   if (!token || invalid) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Alert tone="bad">{t("errors.tokenInvalid")}</Alert>
-        <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline">
+        <Link href="/forgot-password" className={buttonVariants({ size: "lg", className: "w-full" })}>
           {t("forgot.title")}
         </Link>
       </div>
@@ -58,9 +67,9 @@ export function ResetPasswordForm({ token, invalid }: { token: string | null; in
   }
   if (done) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Alert tone="ok">{t("reset.done")}</Alert>
-        <Link href="/login" className="text-sm font-medium text-primary hover:underline">
+        <Link href="/login" className={buttonVariants({ size: "lg", className: "w-full" })}>
           {t("login.submit")}
         </Link>
       </div>
@@ -69,7 +78,7 @@ export function ResetPasswordForm({ token, invalid }: { token: string | null; in
   return (
     <form
       noValidate
-      className="space-y-4"
+      className="space-y-5"
       onSubmit={form.handleSubmit(async ({ password }) => {
         setError(null);
         const res = await authClient.resetPassword({ newPassword: password, token });
@@ -78,20 +87,13 @@ export function ResetPasswordForm({ token, invalid }: { token: string | null; in
       })}
     >
       {error ? <Alert tone="bad">{error}</Alert> : null}
-      <div>
-        <Label htmlFor="password">{t("newPassword")}</Label>
-        <Input id="password" type="password" autoComplete="new-password" className="mt-1" aria-invalid={Boolean(form.formState.errors.password)} aria-describedby="pw-help" {...form.register("password")} />
-        <p id="pw-help" className="mt-1 text-xs text-ink-3">
-          {t("passwordHint")}
-        </p>
-        <FieldError>{form.formState.errors.password ? t("errors.password") : null}</FieldError>
-      </div>
-      <div>
-        <Label htmlFor="confirm">{t("confirmPassword")}</Label>
-        <Input id="confirm" type="password" autoComplete="new-password" className="mt-1" aria-invalid={Boolean(form.formState.errors.confirm)} {...form.register("confirm")} />
-        <FieldError>{form.formState.errors.confirm ? t("errors.passwordMatch") : null}</FieldError>
-      </div>
-      <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+      <Field id="password" label={t("newPassword")} hint={t("passwordHint")} error={errors.password ? t("errors.password") : undefined}>
+        {(control) => <PasswordInput {...control} autoComplete="new-password" {...form.register("password")} />}
+      </Field>
+      <Field id="confirm" label={t("confirmPassword")} error={errors.confirm ? t("errors.passwordMatch") : undefined}>
+        {(control) => <PasswordInput {...control} autoComplete="new-password" {...form.register("confirm")} />}
+      </Field>
+      <Button type="submit" size="lg" className="w-full" loading={form.formState.isSubmitting}>
         {t("reset.submit")}
       </Button>
     </form>

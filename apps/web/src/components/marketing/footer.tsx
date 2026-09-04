@@ -1,45 +1,62 @@
-import { useTranslations } from "next-intl";
-import { Brand, Container } from "@track-site/ui";
+import { getLocale } from "next-intl/server";
+import { Brand, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
+import { pick } from "@/lib/marketing-copy/pick";
+import { FOOTER_COPY } from "@/lib/marketing-copy/shared";
+import { BRAND_NAME } from "@/lib/seo";
+import { LocaleSwitcher } from "./locale-switcher";
 
-const COLUMNS = [
-  { key: "product", links: [["/features", "features"], ["/how-it-works", "howItWorks"], ["/integrations", "integrations"], ["/pricing", "pricing"], ["/docs", "docs"]] },
-  { key: "integrations", links: [["/integrations/meta", "meta"], ["/integrations/google-analytics", "ga4"], ["/integrations/google-ads", "googleAds"], ["/integrations/shopify", "shopify"], ["/integrations/woocommerce", "woocommerce"], ["/integrations/shopware", "shopware"]] },
-  { key: "trust", links: [["/security", "security"], ["/privacy", "privacy"], ["/data-processing", "dataProcessing"], ["/subprocessors", "subprocessors"], ["/terms", "terms"], ["/imprint", "imprint"]] },
-  { key: "company", links: [["/tracking-knowledge", "trackingKnowledge"], ["/contact", "contact"], ["/demo", "demo"], ["/support", "support"], ["/status", "status"]] },
-] as const;
-
-export function MarketingFooter() {
-  const t = useTranslations("footer");
+/**
+ * Marketing footer (server component). Brand mark + wordmark, the tagline and the verifiable region
+ * note (no postal address is published here), five link columns — product, integrations, knowledge,
+ * company, legal — each a `<nav>` named by its heading, and a bottom bar with the copyright line, the
+ * legal note and the inline language switcher (same page in the other language).
+ * `variant="compact"` (auth shell) keeps the brand block, the legal column and the bottom bar.
+ */
+export async function MarketingFooter({ locale: localeProp, variant = "full" }: { locale?: string; variant?: "full" | "compact" }) {
+  const locale = localeProp ?? (await getLocale());
+  const copy = pick(locale, FOOTER_COPY);
   const year = new Date().getFullYear();
+  const full = variant === "full";
+  const columns = full ? copy.columns : copy.columns.filter((column) => column.key === "legal");
   return (
     <footer className="border-t border-line bg-surface">
-      <Container className="grid gap-10 py-12 md:grid-cols-[1.4fr_repeat(4,1fr)]">
-        <div>
+      <div className={cn("container-page grid gap-x-8 gap-y-10 py-12 md:py-16", full ? "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))]" : "sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]")}>
+        <div className={cn(full && "sm:col-span-2 md:col-span-3 lg:col-span-1")}>
           <Brand size={32} textClassName="text-lg" />
-          <p className="mt-3 max-w-xs text-sm text-ink-3">{t("tagline")}</p>
-          <p className="mt-4 text-xs text-ink-3">{t("region")}</p>
+          <p className="mt-4 max-w-xs text-small text-ink-2">{copy.tagline}</p>
+          <p className="mt-3 max-w-xs text-micro text-ink-3">{copy.region}</p>
         </div>
-        {COLUMNS.map((col) => (
-          <nav key={col.key} aria-label={t(`columns.${col.key}`)}>
-            <h3 className="text-sm font-semibold text-ink">{t(`columns.${col.key}`)}</h3>
-            <ul className="mt-3 space-y-2">
-              {col.links.map(([href, key]) => (
-                <li key={href}>
-                  <Link href={href} className="text-sm text-ink-3 hover:text-ink">
-                    {t(`links.${key}`)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
-      </Container>
+        {columns.map((column) => {
+          const headingId = `footer-${column.key ?? column.title}`;
+          return (
+            <nav key={headingId} aria-labelledby={headingId}>
+              <p id={headingId} className="text-small font-semibold text-ink">
+                {column.title}
+              </p>
+              <ul className="mt-4 space-y-1">
+                {column.links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="inline-flex min-h-8 items-center rounded-sm text-small text-ink-3 underline-offset-4 transition-colors duration-[var(--motion-fast)] ease-out hover:text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          );
+        })}
+      </div>
       <div className="border-t border-line">
-        <Container className="flex flex-col gap-2 py-4 text-xs text-ink-3 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Track. {t("rights")}</p>
-          <p>{t("legalNote")}</p>
-        </Container>
+        <div className="container-page flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">
+          <div className="text-micro text-ink-3">
+            <p>
+              © {year} {BRAND_NAME}. {copy.rights}
+            </p>
+            <p className="mt-1">{copy.legalNote}</p>
+          </div>
+          <LocaleSwitcher variant="inline" label={copy.language} />
+        </div>
       </div>
     </footer>
   );

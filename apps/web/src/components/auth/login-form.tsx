@@ -1,19 +1,23 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { KeyRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Button, FieldError, Input, Label } from "@track-site/ui";
+import { Alert, Button, Field, Input } from "@track-site/ui";
 import { Link, useRouter } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth-client";
 import { loginSchema, type LoginInput } from "@/lib/validation/auth";
+import { PasswordInput } from "./password-input";
 
 export function LoginForm({ next }: { next: string }) {
   const t = useTranslations("auth");
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [passkeyPending, setPasskeyPending] = useState(false);
   const form = useForm<LoginInput>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" } });
+  const errors = form.formState.errors;
   const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/app";
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -36,33 +40,43 @@ export function LoginForm({ next }: { next: string }) {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4">
+    <form onSubmit={onSubmit} noValidate className="space-y-5">
       {error ? <Alert tone="bad">{error}</Alert> : null}
-      <div>
-        <Label htmlFor="email">{t("email")}</Label>
-        <Input id="email" type="email" autoComplete="email" inputMode="email" className="mt-1" aria-invalid={Boolean(form.formState.errors.email)} aria-describedby="email-error" {...form.register("email")} />
-        <FieldError id="email-error">{form.formState.errors.email ? t("errors.email") : null}</FieldError>
-      </div>
-      <div>
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">{t("password")}</Label>
-          <Link href="/forgot-password" className="text-xs font-medium text-primary hover:underline">
+      <Field id="email" label={t("email")} error={errors.email ? t("errors.email") : undefined}>
+        {(control) => <Input {...control} type="email" autoComplete="email" inputMode="email" {...form.register("email")} />}
+      </Field>
+      <Field
+        id="password"
+        label={t("password")}
+        error={errors.password ? t("errors.passwordRequired") : undefined}
+        meta={
+          <Link href="/forgot-password" className="inline-flex min-h-6 items-center rounded-md text-xs font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             {t("login.forgot")}
           </Link>
-        </div>
-        <Input id="password" type="password" autoComplete="current-password" className="mt-1" aria-invalid={Boolean(form.formState.errors.password)} aria-describedby="password-error" {...form.register("password")} />
-        <FieldError id="password-error">{form.formState.errors.password ? t("errors.password") : null}</FieldError>
-      </div>
-      <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+        }
+      >
+        {(control) => <PasswordInput {...control} autoComplete="current-password" {...form.register("password")} />}
+      </Field>
+      <Button type="submit" size="lg" className="w-full" loading={form.formState.isSubmitting}>
         {t("login.submit")}
       </Button>
+      <div aria-hidden="true" className="flex items-center gap-3 text-xs text-ink-3">
+        <span className="h-px flex-1 bg-line" />
+        {t("login.or")}
+        <span className="h-px flex-1 bg-line" />
+      </div>
       <Button
         type="button"
         variant="secondary"
+        size="lg"
         className="w-full"
+        loading={passkeyPending}
+        leadingIcon={<KeyRound className="size-4" aria-hidden="true" />}
         onClick={async () => {
           setError(null);
+          setPasskeyPending(true);
           const res = await authClient.signIn.passkey();
+          setPasskeyPending(false);
           if (res?.error) setError(t("errors.generic"));
           else window.location.assign(safeNext);
         }}

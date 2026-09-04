@@ -3,43 +3,43 @@ import { setRequestLocale } from "next-intl/server";
 import { Container } from "@track-site/ui";
 import { ContactForm } from "@/components/marketing/contact-form";
 import { JsonLd } from "@/components/marketing/json-ld";
-import { Link } from "@/i18n/navigation";
-import { FORM_COPY, pick } from "@/lib/marketing-copy";
+import { Checklist, FormPanel, LinkList, SplitLayout } from "@/components/marketing/secondary/shell";
+import { FORM_COPY, SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
-const COPY = {
-  en: { title: "Support", intro: "Customers reach engineering support here. Include your site's tracking ID (six characters, shown in the dashboard) so we can look at the right events — never paste access tokens.", docs: "Check the documentation first", status: "System status", placeholder: "Tracking ID, destination, what you expected and what happened." },
-  de: { title: "Support", intro: "Kunden erreichen hier den Engineering-Support. Gib die Tracking-ID deiner Site an (sechs Zeichen, im Dashboard sichtbar), damit wir die richtigen Events prüfen — niemals Access-Tokens einfügen.", docs: "Erst in die Dokumentation schauen", status: "Systemstatus", placeholder: "Tracking-ID, Destination, was du erwartet hast und was passiert ist." },
-};
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const c = pick(locale, COPY);
-  return pageMetadata({ locale, path: "/support", title: seoTitle(c.title), description: seoDescription(c.intro) });
+  const s = pick(locale, SECONDARY_COPY).support;
+  return pageMetadata({ locale, path: "/support", title: seoTitle(s.title), description: seoDescription(s.intro) });
 }
 
+/** Support: self-help paths and the checklist on the left, the request form on the right. */
 export default async function SupportPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const c = pick(locale, COPY);
+  const s = pick(locale, SECONDARY_COPY).support;
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/support" }], locale)} />
-      <Container className="max-w-2xl py-14 md:py-20">
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{c.title}</h1>
-        <p className="mt-4 text-lg text-ink-2">{c.intro}</p>
-        <p className="mt-3 flex gap-4 text-sm">
-          <Link href="/docs" className="text-primary hover:underline">
-            {c.docs}
-          </Link>
-          <Link href="/status" className="text-primary hover:underline">
-            {c.status}
-          </Link>
-        </p>
-        <div className="mt-8">
-          <ContactForm kind="support" locale={locale} copy={pick(locale, FORM_COPY)} messagePlaceholder={c.placeholder} />
-        </div>
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: s.title, path: "/support" }], locale)} />
+      <Container className="py-12 md:py-20">
+        <SplitLayout
+          aside={
+            <>
+              <p className="text-micro font-semibold tracking-wide text-primary uppercase">{s.eyebrow}</p>
+              <h1 className="mt-4 font-display text-h1 font-semibold text-ink">{s.title}</h1>
+              <p className="mt-5 text-lg text-ink-2">{s.intro}</p>
+              <h2 className="mt-10 text-h3 font-semibold text-ink">{s.before.title}</h2>
+              <LinkList items={s.before.items} className="mt-4" />
+              <h2 className="mt-10 text-h3 font-semibold text-ink">{s.include.title}</h2>
+              <Checklist items={s.include.items} className="mt-4" />
+            </>
+          }
+        >
+          <FormPanel id="support-form" title={s.formTitle} footer={s.reply}>
+            <ContactForm kind="support" locale={locale} copy={pick(locale, FORM_COPY)} messagePlaceholder={s.placeholder} />
+          </FormPanel>
+        </SplitLayout>
       </Container>
     </>
   );

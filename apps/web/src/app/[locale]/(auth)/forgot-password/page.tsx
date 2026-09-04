@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { ForgotPasswordForm } from "@/components/auth/password-forms";
 import { Link } from "@/i18n/navigation";
 
@@ -15,16 +15,17 @@ export default async function ForgotPasswordPage({ params }: { params: Promise<{
   setRequestLocale(locale);
   const t = await getTranslations("auth");
   return (
-    <AuthCard
+    <AuthShell
+      locale={locale}
       title={t("forgot.title")}
       subtitle={t("forgot.text")}
       footer={
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
           {t("forgot.back")}
         </Link>
       }
     >
       <ForgotPasswordForm />
-    </AuthCard>
+    </AuthShell>
   );
 }

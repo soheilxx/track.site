@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { ResetPasswordForm } from "@/components/auth/password-forms";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -15,8 +15,8 @@ export default async function ResetPasswordPage({ params, searchParams }: { para
   const { token, error } = await searchParams;
   const t = await getTranslations("auth");
   return (
-    <AuthCard title={t("reset.title")}>
+    <AuthShell locale={locale} title={t("reset.title")}>
       <ResetPasswordForm token={token ?? null} invalid={Boolean(error)} />
-    </AuthCard>
+    </AuthShell>
   );
 }

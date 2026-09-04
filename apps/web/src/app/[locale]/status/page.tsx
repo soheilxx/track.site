@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { Badge, Container } from "@track-site/ui";
+import { EmptyState, ProductStage, Status, TBody, Table, Td, Th, THead, Tr, type Tone } from "@track-site/ui";
 import { JsonLd } from "@/components/marketing/json-ld";
+import { StatusFlowDiagram } from "@/components/marketing/secondary/diagrams";
+import { PageIntro, PageSection, SectionHeading } from "@/components/marketing/secondary/shell";
 import { pool } from "@/server/db";
+import { SECONDARY_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
 
 export const dynamic = "force-dynamic";
 
-const COPY = {
-  en: { title: "System status", intro: "Live health of the Track components, checked on every page load. Incident history is published here when one occurs.", component: "Component", state: "State", checked: "Checked", ok: "operational", degraded: "degraded", down: "unavailable", db: "Control plane database", queue: "Event queue backlog", worker: "Delivery worker (last delivery attempt)", collector: "Collector (ingest)", none: "no data yet", incidents: "Incidents", noIncidents: "No incidents recorded.", note: "Status is derived from the same database and queue the product uses; there is no separate status service to disagree with." },
-  de: { title: "Systemstatus", intro: "Live-Zustand der Track-Komponenten, bei jedem Seitenaufruf geprüft. Vorfälle werden hier veröffentlicht, wenn sie auftreten.", component: "Komponente", state: "Zustand", checked: "Geprüft", ok: "betriebsbereit", degraded: "eingeschränkt", down: "nicht verfügbar", db: "Control-Plane-Datenbank", queue: "Event-Queue-Rückstand", worker: "Zustell-Worker (letzter Zustellversuch)", collector: "Collector (Ingest)", none: "noch keine Daten", incidents: "Vorfälle", noIncidents: "Keine Vorfälle verzeichnet.", note: "Der Status wird aus derselben Datenbank und Queue abgeleitet, die das Produkt nutzt; es gibt keinen separaten Statusdienst, der abweichen könnte." },
-};
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const c = locale === "de" ? COPY.de : COPY.en;
-  return pageMetadata({ locale, path: "/status", title: seoTitle(c.title), description: seoDescription(c.intro) });
+  const s = pick(locale, SECONDARY_COPY).status;
+  return pageMetadata({ locale, path: "/status", title: seoTitle(s.title), description: seoDescription(s.intro) });
 }
 
+type Level = "ok" | "degraded" | "down";
+const TONE: Record<Level, Tone> = { ok: "ok", degraded: "warn", down: "bad" };
+
+/** Live probe of the same database and queue the product uses; every failure degrades honestly to "no data". */
 async function probe(): Promise<{ db: "ok" | "down"; backlog: number | null; lastAttempt: Date | null; lastEvent: Date | null }> {
   try {
     const p = pool();
@@ -33,50 +35,78 @@ async function probe(): Promise<{ db: "ok" | "down"; backlog: number | null; las
   }
 }
 
+/** Status: component table with dot + icon + text states, the event path toned by the same states, incidents. */
 export default async function StatusPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const c = locale === "de" ? COPY.de : COPY.en;
-  const s = await probe();
+  const c = pick(locale, SECONDARY_COPY);
+  const s = c.status;
+  const p = await probe();
   const now = new Date();
+  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
+  const stamp = (d: Date) => `${fmt.format(d)} ${c.common.utc}`;
+  const label: Record<Level, string> = { ok: s.ok, degraded: s.degraded, down: s.down };
   const rows = [
-    { name: c.db, state: s.db === "ok" ? "ok" : "down", detail: s.db },
-    { name: c.queue, state: s.backlog === null ? "degraded" : s.backlog > 10_000 ? "degraded" : "ok", detail: s.backlog === null ? c.none : `${s.backlog} pending` },
-    { name: c.worker, state: s.lastAttempt ? "ok" : "degraded", detail: s.lastAttempt ? s.lastAttempt.toLocaleString() : c.none },
-    { name: c.collector, state: s.lastEvent ? "ok" : "degraded", detail: s.lastEvent ? s.lastEvent.toLocaleString() : c.none },
-  ] as const;
+    { key: "db", name: s.db, level: p.db === "ok" ? "ok" : "down", detail: p.db === "ok" ? s.ok : s.down },
+    { key: "queue", name: s.queue, level: p.backlog === null ? "degraded" : p.backlog > 10_000 ? "degraded" : "ok", detail: p.backlog === null ? s.none : s.pending.replace("{n}", new Intl.NumberFormat(locale).format(p.backlog)) },
+    { key: "worker", name: s.worker, level: p.lastAttempt ? "ok" : "degraded", detail: p.lastAttempt ? stamp(p.lastAttempt) : s.none },
+    { key: "collector", name: s.collector, level: p.lastEvent ? "ok" : "degraded", detail: p.lastEvent ? stamp(p.lastEvent) : s.none },
+  ] as const satisfies ReadonlyArray<{ key: "db" | "queue" | "worker" | "collector"; name: string; level: Level; detail: string }>;
+  const nodeState = (key: (typeof rows)[number]["key"]) => {
+    const row = rows.find((r) => r.key === key)!;
+    return { tone: TONE[row.level], text: label[row.level] };
+  };
   return (
     <>
-      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: c.title, path: "/status" }], locale)} />
-      <Container className="max-w-3xl py-14 md:py-20">
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink">{c.title}</h1>
-        <p className="mt-4 text-lg text-ink-2">{c.intro}</p>
-        <div className="mt-8 overflow-hidden rounded-2xl border border-line">
-          <table className="w-full text-sm">
-            <thead className="bg-surface-2 text-left text-xs text-ink-3">
-              <tr>
-                <th className="px-4 py-2">{c.component}</th>
-                <th className="px-4 py-2">{c.state}</th>
-                <th className="px-4 py-2">{c.checked}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.name} className="border-t border-line">
-                  <td className="px-4 py-2 text-ink">{r.name}</td>
-                  <td className="px-4 py-2">
-                    <Badge tone={r.state === "ok" ? "ok" : r.state === "degraded" ? "warn" : "bad"}>{r.state === "ok" ? c.ok : r.state === "degraded" ? c.degraded : c.down}</Badge> <span className="text-xs text-ink-3">{r.detail}</span>
-                  </td>
-                  <td className="px-4 py-2 text-xs text-ink-3">{now.toLocaleTimeString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <h2 className="mt-10 font-display text-xl font-semibold text-ink">{c.incidents}</h2>
-        <p className="mt-2 text-sm text-ink-2">{c.noIncidents}</p>
-        <p className="mt-6 text-xs text-ink-3">{c.note}</p>
-      </Container>
+      <JsonLd data={breadcrumbJsonLd([{ name: BRAND_NAME, path: "/" }, { name: s.title, path: "/status" }], locale)} />
+      <PageIntro eyebrow={s.eyebrow} title={s.title} text={s.intro} meta={`${s.checkedAt}: ${stamp(now)}`} />
+
+      <PageSection id="components" labelledBy="components-title">
+        <SectionHeading id="components-title" title={s.componentsTitle} />
+        <Table className="mt-6" caption={s.componentsTitle}>
+          <THead>
+            <tr>
+              <Th>{s.component}</Th>
+              <Th>{s.state}</Th>
+              <Th>{s.detail}</Th>
+              <Th>{s.checked}</Th>
+            </tr>
+          </THead>
+          <TBody>
+            {rows.map((r) => (
+              <Tr key={r.key}>
+                <Td label={s.component} className="font-medium text-ink">
+                  {r.name}
+                </Td>
+                <Td label={s.state}>
+                  <Status tone={TONE[r.level]} indicator="both">
+                    {label[r.level]}
+                  </Status>
+                </Td>
+                <Td label={s.detail} className="text-ink-2">
+                  {r.detail}
+                </Td>
+                <Td label={s.checked} className="text-ink-3">
+                  {stamp(now)}
+                </Td>
+              </Tr>
+            ))}
+          </TBody>
+        </Table>
+      </PageSection>
+
+      <PageSection id="flow" labelledBy="flow-title" tone="surface">
+        <SectionHeading id="flow-title" title={s.flow.title} />
+        <ProductStage as="div" tone="light" className="mt-8">
+          <StatusFlowDiagram title={s.flow.title} caption={s.flow.caption} labels={{ collector: s.flow.collector, queue: s.flow.queue, worker: s.flow.worker, database: s.flow.database, destinations: s.flow.destinations }} states={{ collector: nodeState("collector"), queue: nodeState("queue"), worker: nodeState("worker"), db: nodeState("db") }} />
+        </ProductStage>
+      </PageSection>
+
+      <PageSection id="incidents" labelledBy="incidents-title">
+        <SectionHeading id="incidents-title" title={s.incidents} />
+        <EmptyState className="mt-6" title={s.noIncidents} description={s.incidentsText} />
+        <p className="mt-6 max-w-text text-small text-ink-3">{s.note}</p>
+      </PageSection>
     </>
   );
 }

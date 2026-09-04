@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
 import { Link } from "@/i18n/navigation";
 
@@ -16,19 +16,21 @@ export default async function LoginPage({ params, searchParams }: { params: Prom
   const { next } = await searchParams;
   const t = await getTranslations("auth");
   return (
-    <AuthCard
+    <AuthShell
+      locale={locale}
       title={t("login.title")}
       subtitle={t("login.subtitle")}
+      preview
       footer={
-        <span>
+        <>
           {t("login.noAccount")}{" "}
-          <Link href="/signup" className="font-medium text-primary hover:underline">
+          <Link href="/signup" className="font-medium text-primary underline-offset-4 hover:underline">
             {t("login.signup")}
           </Link>
-        </span>
+        </>
       }
     >
       <LoginForm next={next ?? "/app"} />
-    </AuthCard>
+    </AuthShell>
   );
 }

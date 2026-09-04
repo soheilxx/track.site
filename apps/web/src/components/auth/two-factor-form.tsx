@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Button, FieldError, Input, Label } from "@track-site/ui";
+import { Alert, Button, Checkbox, Field, Input } from "@track-site/ui";
 import { authClient } from "@/lib/auth-client";
 import { totpSchema } from "@/lib/validation/auth";
 
@@ -17,7 +17,7 @@ export function TwoFactorForm({ next }: { next: string }) {
   return (
     <form
       noValidate
-      className="space-y-4"
+      className="space-y-5"
       onSubmit={form.handleSubmit(async ({ code, trust }) => {
         setError(null);
         const res = useBackup ? await authClient.twoFactor.verifyBackupCode({ code, trustDevice: trust }) : await authClient.twoFactor.verifyTotp({ code, trustDevice: trust });
@@ -26,20 +26,35 @@ export function TwoFactorForm({ next }: { next: string }) {
       })}
     >
       {error ? <Alert tone="bad">{error}</Alert> : null}
-      <div>
-        <Label htmlFor="code">{t("twoFactor.code")}</Label>
-        <Input id="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" className="mt-1 text-center font-mono text-lg tracking-[0.4em]" aria-invalid={Boolean(form.formState.errors.code)} {...form.register("code")} />
-        <FieldError>{form.formState.errors.code ? t("errors.code") : null}</FieldError>
-      </div>
-      <label className="flex items-center gap-2 text-sm text-ink-2">
-        <input type="checkbox" className="h-4 w-4 rounded border-line-2" {...form.register("trust")} /> {t("twoFactor.trust")}
-      </label>
-      <Button type="submit" className="w-full" loading={form.formState.isSubmitting}>
+      <Field id="code" label={useBackup ? t("twoFactor.backupCode") : t("twoFactor.code")} hint={useBackup ? t("twoFactor.backupText") : undefined} error={form.formState.errors.code ? t("errors.code") : undefined}>
+        {(control) => (
+          <Input
+            {...control}
+            inputMode={useBackup ? "text" : "numeric"}
+            autoComplete="one-time-code"
+            pattern={useBackup ? undefined : "[0-9]*"}
+            spellCheck={false}
+            className={useBackup ? "font-mono" : "text-center font-mono text-lg tracking-[0.4em]"}
+            {...form.register("code")}
+          />
+        )}
+      </Field>
+      <Checkbox label={t("twoFactor.trust")} {...form.register("trust")} />
+      <Button type="submit" size="lg" className="w-full" loading={form.formState.isSubmitting}>
         {t("twoFactor.submit")}
       </Button>
-      <button type="button" className="text-sm font-medium text-primary hover:underline" onClick={() => setUseBackup((v) => !v)}>
-        {useBackup ? t("twoFactor.code") : t("twoFactor.backup")}
-      </button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="w-full text-primary"
+        onClick={() => {
+          setUseBackup((v) => !v);
+          form.clearErrors("code");
+        }}
+      >
+        {useBackup ? t("twoFactor.useApp") : t("twoFactor.backup")}
+      </Button>
     </form>
   );
 }

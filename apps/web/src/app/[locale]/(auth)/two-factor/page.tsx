@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { TwoFactorForm } from "@/components/auth/two-factor-form";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -15,8 +15,8 @@ export default async function TwoFactorPage({ params, searchParams }: { params: 
   const { next } = await searchParams;
   const t = await getTranslations("auth");
   return (
-    <AuthCard title={t("twoFactor.title")} subtitle={t("twoFactor.text")}>
+    <AuthShell locale={locale} title={t("twoFactor.title")} subtitle={t("twoFactor.text")}>
       <TwoFactorForm next={next ?? "/app"} />
-    </AuthCard>
+    </AuthShell>
   );
 }
