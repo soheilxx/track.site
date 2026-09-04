@@ -1,5 +1,6 @@
 "use client";
 
+import { ACTIVE_LOCALES, LOCALE_NAMES } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Alert, Badge, Button, Input, Label, Select } from "@track-site/ui";
@@ -37,8 +38,11 @@ export function OrgSettingsForm({ settings }: { settings: { locale: string; data
         <div>
           <Label htmlFor="set-locale">{t("locale")}</Label>
           <Select id="set-locale" name="locale" defaultValue={settings.locale} className="mt-1">
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
+            {ACTIVE_LOCALES.map((l) => (
+              <option key={l} value={l}>
+                {LOCALE_NAMES[l]}
+              </option>
+            ))}
           </Select>
         </div>
         <div>

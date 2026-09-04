@@ -30,7 +30,7 @@ export async function updateOrganizationAction(_prev: ActionState, formData: For
   return { ok: true, error: null };
 }
 
-const settingsSchema = z.object({ locale: z.enum(["en", "de"]), dataRegion: z.enum(["eu"]), aiEnabled: z.boolean(), benchmarkOptIn: z.boolean(), killSwitch: z.boolean() });
+const settingsSchema = z.object({ locale: z.enum(ALL_LOCALES), dataRegion: z.enum(["eu"]), aiEnabled: z.boolean(), benchmarkOptIn: z.boolean(), killSwitch: z.boolean() });
 
 export async function updateOrgSettingsAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const ctx = await requireOrgContext("org.update");
