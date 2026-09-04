@@ -26,12 +26,14 @@ Environments: development -> staging -> production, with separate OpenAI project
 6. DNS: `track.site`, `app.`, `api.` -> web; `ingest.` -> collector; `cdn.` -> CDN. TLS via platform.
 7. Stripe: create products/prices (test mode) with the list prices of the tariff catalogue (`packages/catalog`: Starter 19 €/190 €, Growth 90 €/900 €, Pro 180 €/1 800 €, EUR), set `STRIPE_PRICE_{STARTER,GROWTH,PRO}_{MONTHLY,YEARLY}`, register webhook `https://api.<host>/billing/webhook`, store `STRIPE_WEBHOOK_SECRET`.
 8. Vendor OAuth apps (Google Ads, LinkedIn): redirect URIs `https://app.<host>/api/oauth/<vendor>/callback`.
-9. Smoke: `/api/health`, collector `/health`, publish demo config, send a test event, verify delivery in the Event Debugger.
+9. Smoke: `/api/health`, collector `/health`, worker `/health` (every scheduled job listed with its last run), publish demo config, send a test event (Events → Live Test Lab), verify delivery in the Live Event Explorer.
 
 ## Release procedure
 
 1. CI green on the feature branch (all gates in `.github/workflows/ci.yml`).
 2. Migrations are expand/contract; `pnpm db:check` fails CI on drift.
+   - Migrations are hand-written SQL under `packages/db/drizzle/` (`--> statement-breakpoint`, idempotent DDL: `IF NOT EXISTS`, `DROP POLICY IF EXISTS` + `CREATE POLICY`, `ADD VALUE IF NOT EXISTS`) and registered in `drizzle/meta/_journal.json`; the migrator applies every journal entry whose `when` is newer than the last applied one, so an entry is added at the end and never reordered. Current list: 0000 baseline, 0001 RLS + partitions, 0002 credential kinds, 0003 shop connections, 0004 tariff catalogue, 0005 knowledge feedback, 0006 workspace preferences, 0007 event lineage + test lab runs, 0008 destination health snapshots, 0009 data-quality workflow + revenue reconciliation, 0010 release approvals + scheduled publish, 0012 approval policy + approval requests (0011 is unused).
+   - Parity gate: `pnpm --filter @track-site/db migrate` against a fresh `*_test` database, then `pnpm --filter @track-site/db migrate:check` (journal ↔ applied) and `pnpm --filter @track-site/db schema:check` (drizzle schema ↔ database columns, RLS and a policy on every tenant table). A tenant table = `organization_id` + org index + `ENABLE ROW LEVEL SECURITY` + policy `<table>_tenant_isolation … TO tracksite_app`.
 3. Deploy worker first, then collector, then web.
 4. Verify queue lag, DLQ size, delivery success rate, config activation < 60 s.
 5. Rollback: redeploy the previous build; config rollback via dashboard; compensating migrations only.
@@ -46,6 +48,22 @@ Environments: development -> staging -> production, with separate OpenAI project
 | Rotate master key | `pnpm --filter @track-site/core keys:rotate` re-wraps DEKs |
 | Backups | daily snapshots + PITR (35 days); restore test documented in `docs/ops/restore-tests.md` |
 | Incident | `docs/ops/incident-runbook.md` |
+
+## Worker jobs
+
+`apps/worker/src/jobs/index.ts` (`JOB_SCHEDULE`) runs these in-process on every worker; each job is idempotent and safe to run on several instances, a tick is skipped while the previous run of the same job is still going, and the worker `/health` endpoint lists every job with interval, run count, last run and last error.
+
+| Job | Interval | What it does | Feeds |
+| --- | --- | --- | --- |
+| `outbox` | 5 s | relays control-plane outbox rows to the queue | config activation, credential rotation, deletion jobs |
+| `usage` | 60 s | 70/90/100 % usage warnings and the organisation's overage policy (`pause` flags the period) | Billing, Usage & Cost Guard |
+| `partitions` | 6 h | creates the coming monthly event partitions | event store |
+| `retention` | 24 h | retention per org/site (events, click ids, DSAR completion) | Consent & Privacy |
+| `destination-health` | 60 s | per-destination attempt counters (24 h window), rate-limit waits, queue backlog and dead letters → `destination_health_snapshots` | Destination Health Center, Command Center, Change Impact Preview |
+| `data-quality` | 1 h | reconciliation of authoritative orders/leads against observed, deduplicated and delivered conversions → `revenue_reconciliation_snapshots`; inbox scan → `data_quality_issues` with evidence and impact score | Data Quality Inbox, Signal Gap & Revenue Leak Detector |
+| `scheduled-publish` | 30 s | publishes open drafts whose `scheduled_at` is due through `publishDraft` (digest and approval re-checked); refusals are written to `schedule_error` | Change & Release Center |
+
+Until a job has run once, the pages it feeds show "not measured" rather than a value. `scheduled-publish` needs `CONFIG_SIGNING_PRIVATE_KEY` and `CONFIG_SIGNING_KEY_ID` on the worker (same values as the web app); without them due drafts are refused with `signing_key_missing` and shown as such in the release center.
 
 ## Observability
 

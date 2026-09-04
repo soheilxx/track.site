@@ -46,3 +46,4 @@ next-env.d.ts
 
 .vercel
 .env*
+apps/web/e2e/.auth/
