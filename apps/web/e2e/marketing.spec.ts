@@ -1,17 +1,26 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { ACTIVE_LOCALES, ALL_LOCALES } from "../src/i18n/routing";
 
-/** Every public URL carries a locale prefix, English included: the home page is /en, German /de. */
-const LOCALES = ["en", "de"] as const;
-const home = (locale: (typeof LOCALES)[number]) => `/${locale}`;
+/** Every public URL carries a locale prefix, English included: the home page is /en, German /de … Dutch /nl. All six programme locales are active. */
+const LOCALES = ACTIVE_LOCALES;
+const home = (locale: string) => `/${locale}`;
+const LOCALE_ALTERNATION = ALL_LOCALES.join("|");
 
 test.describe("marketing site", () => {
+  test("serves all six programme locales", () => {
+    expect([...LOCALES]).toEqual(["en", "de", "fr", "es", "it", "nl"]);
+  });
+
   for (const locale of LOCALES) {
-    test(`home renders with lang="${locale}", one h1, self canonical, hreflang alternates and no serious accessibility violations`, async ({ page }) => {
+    test(`home renders with lang="${locale}", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations`, async ({ page }) => {
       await page.goto(home(locale));
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
       await expect(page.locator("h1")).toHaveCount(1);
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", new RegExp(`/${locale}$`));
+      // seven hreflang links: one per active locale plus x-default
+      await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(LOCALES.length + 1);
+      expect(LOCALES.length + 1).toBe(7);
       for (const l of [...LOCALES, "x-default"]) await expect(page.locator(`link[rel="alternate"][hreflang="${l}"]`)).toHaveCount(1);
       await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", /\/en$/);
       const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
@@ -32,7 +41,7 @@ test.describe("marketing site", () => {
     // the dashboard is never localized: an anonymous visitor is sent straight to the localized login page (no /en/app, no /login → /en/login chain)
     const app = await request.get("/app", { maxRedirects: 0 });
     const appTarget = new URL(app.headers().location ?? "/", "http://x");
-    expect(appTarget.pathname).not.toMatch(/^\/(en|de)\/app(\/|$)/);
+    expect(appTarget.pathname).not.toMatch(new RegExp(`^/(${LOCALE_ALTERNATION})/app(/|$)`));
     expect(appTarget.pathname).toBe("/en/login");
     expect(appTarget.searchParams.get("next")).toBe("/app");
   });
@@ -45,6 +54,12 @@ test.describe("marketing site", () => {
     await header.getByRole("link", { name: "Deutsch" }).click();
     await expect(page).toHaveURL(/\/de\/pricing$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
+    // six written-out native names, and a second switch (to French) stays on the same page as well
+    await header.getByRole("button", { name: /sprache/i }).click();
+    for (const name of ["English", "Deutsch", "Français", "Español", "Italiano", "Nederlands"]) await expect(header.getByRole("link", { name })).toBeVisible();
+    await header.getByRole("link", { name: "Français" }).click();
+    await expect(page).toHaveURL(/\/fr\/pricing$/);
+    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
   });
 
   test("Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card", async ({ page }) => {

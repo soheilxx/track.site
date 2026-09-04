@@ -1,5 +1,5 @@
 import type { FeatureKey } from "./features.ts";
-import { CURRENCY, type BillingInterval, type Currency, type Label, type PaidPlanId, type PlanId } from "./types.ts";
+import { CURRENCY, type BillingInterval, type CatalogLocale, type Currency, type Label, type PaidPlanId, type PlanId } from "./types.ts";
 
 /** List price per plan: integers in cents, EUR. Yearly = ten monthly instalments (owner supplement §5). */
 export interface PlanPrice {
@@ -116,16 +116,16 @@ export const PLANS: readonly Plan[] = [
     recommended: false,
     contactSales: false,
     inherits: null,
-    audience: { en: "A single website, a small shop or the first professional tracking setup", de: "Einzelne Website, kleiner Shop oder erstes professionelles Tracking-Setup" },
+    audience: { en: "A single website, a small shop or the first professional tracking setup", de: "Einzelne Website, kleiner Shop oder erstes professionelles Tracking-Setup", es: "Un solo sitio web, una tienda pequeña o la primera configuración de tracking profesional", fr: "Un seul site web, une petite boutique ou une première configuration de tracking professionnelle", it: "Un singolo sito web, un piccolo shop o la prima configurazione di tracking professionale", nl: "Eén website, een kleine webshop of de eerste professionele trackingsetup" },
     price: { currency: CURRENCY, monthlyCents: 1_900, yearlyCents: 19_000 },
     limits: { sites: 1, eventsPerMonth: 500_000, teamMembers: 2, retentionDays: 90, retentionMonths: null },
     features: STARTER_FEATURES,
     highlights: [
-      { en: "Browser and server-side tracking incl. supported conversion APIs", de: "Browser- und Server-Side-Tracking einschließlich unterstützter Conversion APIs" },
-      { en: "All standard destinations without a connector paywall", de: "Alle Standard-Destinations ohne künstliche Connector-Sperre" },
-      { en: "AI-guided setup and product-related chat", de: "AI-geführtes Setup und normale produktbezogene Chatnutzung" },
-      { en: "Consent engine, live event debugger, tracking health and configuration versioning", de: "Consent Engine, Live Event Debugger, Tracking Health und Config-Versionierung" },
-      { en: "Standard e-commerce events and e-mail support", de: "Standard-E-Commerce-Events und E-Mail-Support" },
+      { en: "Browser and server-side tracking incl. supported conversion APIs", de: "Browser- und Server-Side-Tracking einschließlich unterstützter Conversion APIs", es: "Tracking en el navegador y server-side, incluidas las APIs de conversiones compatibles", fr: "Tracking navigateur et côté serveur, y compris les API de conversion prises en charge", it: "Tracking browser e server-side, incluse le Conversions API supportate", nl: "Browser- en server-side tracking incl. ondersteunde conversie-API's" },
+      { en: "All standard destinations without a connector paywall", de: "Alle Standard-Destinations ohne künstliche Connector-Sperre", es: "Todos los destinos estándar, sin conectores de pago", fr: "Toutes les destinations standard, sans connecteur payant", it: "Tutte le destinazioni standard, senza connettori a pagamento", nl: "Alle standaard-destinations zonder betaalmuur voor connectoren" },
+      { en: "AI-guided setup and product-related chat", de: "AI-geführtes Setup und normale produktbezogene Chatnutzung", es: "Configuración guiada por IA y chat relacionado con el producto", fr: "Configuration guidée par l’IA et chat lié au produit", it: "Configurazione guidata dall’AI e chat relativa al prodotto", nl: "AI-begeleide setup en productgerelateerde chat" },
+      { en: "Consent engine, live event debugger, tracking health and configuration versioning", de: "Consent Engine, Live Event Debugger, Tracking Health und Config-Versionierung", es: "Consent Engine, Live Event Debugger, Tracking Health y versionado de configuraciones", fr: "Consent Engine, Live Event Debugger, Tracking Health et versionnage des configurations", it: "Consent Engine, Live Event Debugger, Tracking Health e versionamento delle configurazioni", nl: "Consent Engine, Live Event Debugger, Tracking Health en configuratieversiebeheer" },
+      { en: "Standard e-commerce events and e-mail support", de: "Standard-E-Commerce-Events und E-Mail-Support", es: "Eventos de e-commerce estándar y soporte por correo electrónico", fr: "Événements e-commerce standard et support par e-mail", it: "Eventi e-commerce standard e supporto via e-mail", nl: "Standaard e-commerce-events en support per e-mail" },
     ],
     stripePriceEnv: { monthly: stripePriceEnvName("starter", "monthly"), yearly: stripePriceEnvName("starter", "yearly") },
   },
@@ -136,16 +136,16 @@ export const PLANS: readonly Plan[] = [
     recommended: true,
     contactSales: false,
     inherits: "starter",
-    audience: { en: "Growing shops and marketing teams with several sites", de: "Wachsende Shops und Marketingteams mit mehreren Sites" },
+    audience: { en: "Growing shops and marketing teams with several sites", de: "Wachsende Shops und Marketingteams mit mehreren Sites", es: "Tiendas en crecimiento y equipos de marketing con varios sitios", fr: "Boutiques en croissance et équipes marketing avec plusieurs sites", it: "Shop in crescita e team marketing con più siti", nl: "Groeiende webshops en marketingteams met meerdere sites" },
     price: { currency: CURRENCY, monthlyCents: 9_000, yearlyCents: 90_000 },
     limits: { sites: 5, eventsPerMonth: 5_000_000, teamMembers: 10, retentionDays: retentionDaysForMonths(13), retentionMonths: 13 },
     features: GROWTH_FEATURES,
     highlights: [
-      { en: "Advanced e-commerce events, subscriptions, refunds and returns", de: "Erweiterte E-Commerce-Events, Subscriptions, Refunds und Returns" },
-      { en: "Cross-domain tracking and offline conversions", de: "Cross-Domain-Tracking und Offline Conversions" },
-      { en: "Enhanced matching / enhanced conversions where consent-compliant and supported by the destination", de: "Enhanced Matching/Enhanced Conversions, soweit consent-konform und vom Ziel unterstützt" },
-      { en: "Data quality inbox, funnel/revenue reconciliation and automatic anomaly detection", de: "Data Quality Inbox, Funnel-/Revenue-Abgleich und automatische Anomalieerkennung" },
-      { en: "Scheduled AI tracking audits and priority support", de: "Geplante AI-Tracking-Audits und priorisierter Support" },
+      { en: "Advanced e-commerce events, subscriptions, refunds and returns", de: "Erweiterte E-Commerce-Events, Subscriptions, Refunds und Returns", es: "Eventos de e-commerce avanzados, suscripciones, reembolsos y devoluciones", fr: "Événements e-commerce avancés, abonnements, remboursements et retours", it: "Eventi e-commerce avanzati, abbonamenti, rimborsi e resi", nl: "Geavanceerde e-commerce-events, abonnementen, terugbetalingen en retouren" },
+      { en: "Cross-domain tracking and offline conversions", de: "Cross-Domain-Tracking und Offline Conversions", es: "Tracking cross-domain y conversiones offline", fr: "Tracking cross-domain et conversions hors ligne", it: "Tracking cross-domain e conversioni offline", nl: "Cross-domain tracking en offline conversies" },
+      { en: "Enhanced matching / enhanced conversions where consent-compliant and supported by the destination", de: "Enhanced Matching/Enhanced Conversions, soweit consent-konform und vom Ziel unterstützt", es: "Enhanced Matching / Enhanced Conversions cuando el consentimiento lo permite y el destino lo admite", fr: "Enhanced Matching / Enhanced Conversions lorsque le consentement le permet et que la destination les prend en charge", it: "Enhanced Matching / Enhanced Conversions dove conforme al consenso e supportato dalla destinazione", nl: "Enhanced Matching / Enhanced Conversions waar dat in lijn met de toestemming is en door de destination wordt ondersteund" },
+      { en: "Data quality inbox, funnel/revenue reconciliation and automatic anomaly detection", de: "Data Quality Inbox, Funnel-/Revenue-Abgleich und automatische Anomalieerkennung", es: "Data Quality Inbox, conciliación de embudo e ingresos y detección automática de anomalías", fr: "Data Quality Inbox, rapprochement funnel / chiffre d’affaires et détection automatique des anomalies", it: "Data Quality Inbox, riconciliazione di funnel e ricavi e rilevamento automatico delle anomalie", nl: "Data Quality Inbox, funnel-/omzetreconciliatie en automatische anomaliedetectie" },
+      { en: "Scheduled AI tracking audits and priority support", de: "Geplante AI-Tracking-Audits und priorisierter Support", es: "Auditorías de tracking con IA programadas y soporte prioritario", fr: "Audits de tracking IA planifiés et support prioritaire", it: "Audit AI del tracking pianificati e supporto prioritario", nl: "Geplande AI-trackingaudits en support met prioriteit" },
     ],
     stripePriceEnv: { monthly: stripePriceEnvName("growth", "monthly"), yearly: stripePriceEnvName("growth", "yearly") },
   },
@@ -156,16 +156,16 @@ export const PLANS: readonly Plan[] = [
     recommended: false,
     contactSales: false,
     inherits: "growth",
-    audience: { en: "Agencies, larger shops, several brands and high volumes", de: "Agenturen, größere Shops, mehrere Marken und hohe Volumina" },
+    audience: { en: "Agencies, larger shops, several brands and high volumes", de: "Agenturen, größere Shops, mehrere Marken und hohe Volumina", es: "Agencias, tiendas más grandes, varias marcas y volúmenes altos", fr: "Agences, boutiques plus importantes, plusieurs marques et volumes élevés", it: "Agenzie, shop più grandi, più brand e volumi elevati", nl: "Bureaus, grotere webshops, meerdere merken en hoge volumes" },
     price: { currency: CURRENCY, monthlyCents: 18_000, yearlyCents: 180_000 },
     limits: { sites: 25, eventsPerMonth: 20_000_000, teamMembers: null, retentionDays: retentionDaysForMonths(25), retentionMonths: 25 },
     features: PRO_FEATURES,
     highlights: [
-      { en: "Multi-store, multi-domain and agency structures", de: "Multi-Store-, Multi-Domain- und Agenturstrukturen" },
-      { en: "Fine-grained roles, approval workflows, four-eyes principle and full audit log", de: "Feinere Rollen, Freigabeprozesse, Vier-Augen-Prinzip und vollständiges Audit Log" },
-      { en: "Event replay, advanced attribution and root-cause analysis", de: "Event Replay, erweiterte Attribution und Root-Cause-Analysen" },
-      { en: "Data warehouse, streaming and scheduled exports", de: "Data-Warehouse-, Streaming- und geplante Exporte" },
-      { en: "Advanced alerts, priority onboarding and priority support", de: "Erweiterte Alerts, priorisiertes Onboarding und priorisierter Support" },
+      { en: "Multi-store, multi-domain and agency structures", de: "Multi-Store-, Multi-Domain- und Agenturstrukturen", es: "Estructuras multitienda, multidominio y de agencia", fr: "Structures multi-boutiques, multi-domaines et agences", it: "Strutture multi-store, multi-dominio e per agenzie", nl: "Multi-store-, multi-domein- en bureaustructuren" },
+      { en: "Fine-grained roles, approval workflows, four-eyes principle and full audit log", de: "Feinere Rollen, Freigabeprozesse, Vier-Augen-Prinzip und vollständiges Audit Log", es: "Roles granulares, flujos de aprobación, principio de los cuatro ojos y log de auditoría completo", fr: "Rôles granulaires, workflows d’approbation, principe des quatre yeux et journal d’audit complet", it: "Ruoli granulari, flussi di approvazione, principio dei quattro occhi e log di audit completo", nl: "Fijnmazige rollen, goedkeuringsworkflows, vier-ogenprincipe en volledig auditlog" },
+      { en: "Event replay, advanced attribution and root-cause analysis", de: "Event Replay, erweiterte Attribution und Root-Cause-Analysen", es: "Event Replay, atribución avanzada y análisis de causa raíz", fr: "Event Replay, attribution avancée et analyse des causes racines", it: "Event Replay, attribuzione avanzata e analisi delle cause", nl: "Event Replay, geavanceerde attributie en root-cause-analyse" },
+      { en: "Data warehouse, streaming and scheduled exports", de: "Data-Warehouse-, Streaming- und geplante Exporte", es: "Exportaciones a data warehouse, en streaming y programadas", fr: "Exports vers l’entrepôt de données, en streaming et planifiés", it: "Esportazioni verso data warehouse, in streaming e pianificate", nl: "Datawarehouse-, streaming- en geplande exports" },
+      { en: "Advanced alerts, priority onboarding and priority support", de: "Erweiterte Alerts, priorisiertes Onboarding und priorisierter Support", es: "Alertas avanzadas, onboarding prioritario y soporte prioritario", fr: "Alertes avancées, onboarding prioritaire et support prioritaire", it: "Avvisi avanzati, onboarding prioritario e supporto prioritario", nl: "Geavanceerde alerts, onboarding met prioriteit en support met prioriteit" },
     ],
     stripePriceEnv: { monthly: stripePriceEnvName("pro", "monthly"), yearly: stripePriceEnvName("pro", "yearly") },
   },
@@ -176,17 +176,17 @@ export const PLANS: readonly Plan[] = [
     recommended: false,
     contactSales: true,
     inherits: "pro",
-    audience: { en: "Custom volumes, infrastructure, governance and SLA", de: "Individuelle Volumina, Infrastruktur, Governance und SLA" },
+    audience: { en: "Custom volumes, infrastructure, governance and SLA", de: "Individuelle Volumina, Infrastruktur, Governance und SLA", es: "Volúmenes, infraestructura, gobernanza y SLA a medida", fr: "Volumes, infrastructure, gouvernance et SLA sur mesure", it: "Volumi, infrastruttura, governance e SLA su misura", nl: "Volumes, infrastructuur, governance en SLA op maat" },
     price: null,
     limits: { sites: null, eventsPerMonth: null, teamMembers: null, retentionDays: null, retentionMonths: null },
     features: ENTERPRISE_FEATURES,
     highlights: [
-      { en: "Custom event, site, retention and data volume", de: "Individuelles Event-, Site-, Retention- und Datenvolumen" },
-      { en: "SAML SSO, SCIM and custom role models", de: "SAML SSO, SCIM und individuelle Rollenmodelle" },
-      { en: "Custom data residency, single-tenant, private cloud or BYOC where technically offered", de: "Individuelle Datenresidenz, Single-Tenant, Private Cloud oder BYOC, sofern technisch angeboten" },
-      { en: "SLA, security review, audit export and contractual support hours", de: "SLA, Security Review, Audit-Export und vertragliche Supportzeiten" },
-      { en: "Custom migrations, connectors and implementation support", de: "Individuelle Migrationen, Connectoren und Implementierungsunterstützung" },
-      { en: "Dedicated technical contact plus invoice and purchase-order handling", de: "Dedizierter technischer Ansprechpartner sowie Rechnungs-/PO-Abwicklung" },
+      { en: "Custom event, site, retention and data volume", de: "Individuelles Event-, Site-, Retention- und Datenvolumen", es: "Volumen de eventos, sitios, retención y datos a medida", fr: "Volumes d’événements, de sites, de conservation et de données sur mesure", it: "Volumi di eventi, siti, conservazione e dati su misura", nl: "Event-, site-, bewaar- en datavolume op maat" },
+      { en: "SAML SSO, SCIM and custom role models", de: "SAML SSO, SCIM und individuelle Rollenmodelle", es: "SAML SSO, SCIM y modelos de roles a medida", fr: "SAML SSO, SCIM et modèles de rôles sur mesure", it: "SAML SSO, SCIM e modelli di ruoli su misura", nl: "SAML SSO, SCIM en rollenmodellen op maat" },
+      { en: "Custom data residency, single-tenant, private cloud or BYOC where technically offered", de: "Individuelle Datenresidenz, Single-Tenant, Private Cloud oder BYOC, sofern technisch angeboten", es: "Residencia de datos a medida, single-tenant, nube privada o BYOC cuando se ofrezca técnicamente", fr: "Résidence des données sur mesure, single-tenant, cloud privé ou BYOC lorsque techniquement proposé", it: "Residenza dei dati su misura, single-tenant, private cloud o BYOC dove tecnicamente offerto", nl: "Dataresidentie op maat, single-tenant, private cloud of BYOC waar technisch aangeboden" },
+      { en: "SLA, security review, audit export and contractual support hours", de: "SLA, Security Review, Audit-Export und vertragliche Supportzeiten", es: "SLA, revisión de seguridad, exportación de auditoría y horas de soporte contractuales", fr: "SLA, revue de sécurité, export d’audit et heures de support contractuelles", it: "SLA, security review, esportazione dell’audit e ore di supporto contrattuali", nl: "SLA, security review, audit-export en contractuele supporturen" },
+      { en: "Custom migrations, connectors and implementation support", de: "Individuelle Migrationen, Connectoren und Implementierungsunterstützung", es: "Migraciones, conectores y apoyo a la implementación a medida", fr: "Migrations, connecteurs et accompagnement à l’implémentation sur mesure", it: "Migrazioni, connettori e supporto all’implementazione su misura", nl: "Migraties, connectoren en implementatieondersteuning op maat" },
+      { en: "Dedicated technical contact plus invoice and purchase-order handling", de: "Dedizierter technischer Ansprechpartner sowie Rechnungs-/PO-Abwicklung", es: "Contacto técnico dedicado, además de gestión por factura y orden de compra", fr: "Interlocuteur technique dédié, ainsi que facturation sur facture et bon de commande", it: "Referente tecnico dedicato, oltre a fatturazione tramite fattura e ordine di acquisto", nl: "Dedicated technisch aanspreekpunt plus afhandeling per factuur en inkooporder" },
     ],
     stripePriceEnv: null,
   },
@@ -230,24 +230,26 @@ export function planHasFeature(planId: PlanId, feature: FeatureKey): boolean {
 export function inheritsLabel(plan: Plan): Label | null {
   if (!plan.inherits) return null;
   const parent = planById(plan.inherits).name;
-  return { en: `Everything in ${parent}, plus`, de: `Alles aus ${parent}, zusätzlich` };
+  return { en: `Everything in ${parent}, plus`, de: `Alles aus ${parent}, zusätzlich`, es: `Todo lo de ${parent}, y además`, fr: `Tout ce qu’inclut ${parent}, plus`, it: `Tutto ciò che include ${parent}, più`, nl: `Alles uit ${parent}, plus` };
 }
 
-const nf = (locale: "en" | "de", n: number) => new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-IE").format(n);
+/** BCP 47 tag per catalogue locale (mirrors INTL_LOCALES of apps/web/src/lib/format.ts). */
+const INTL_LOCALES: Readonly<Record<CatalogLocale, string>> = { en: "en-IE", de: "de-DE", fr: "fr-FR", es: "es-ES", it: "it-IT", nl: "nl-NL" };
+const nf = (locale: CatalogLocale, n: number) => new Intl.NumberFormat(INTL_LOCALES[locale]).format(n);
 
 /** Localised bullets for the hard limits (sites, events, team, retention); numbers formatted per language. */
 export function limitBullets(plan: Plan): Label[] {
   const l = plan.limits;
   const out: Label[] = [];
-  if (l.sites == null) out.push({ en: "Custom number of production websites", de: "Individuelle Anzahl produktiver Websites" });
-  else if (l.sites === 1) out.push({ en: "1 production website; staging and preview subdomains do not count extra", de: "1 produktive Website; Staging-/Preview-Subdomains zählen nicht zusätzlich" });
-  else out.push({ en: `${nf("en", l.sites)} production websites`, de: `${nf("de", l.sites)} produktive Websites` });
-  if (l.eventsPerMonth == null) out.push({ en: "Custom event volume", de: "Individuelles Eventvolumen" });
-  else out.push({ en: `${nf("en", l.eventsPerMonth)} accepted events per month`, de: `${nf("de", l.eventsPerMonth)} akzeptierte Events pro Monat` });
-  if (l.teamMembers == null) out.push(plan.contactSales ? { en: "Custom team size", de: "Individuelle Teamgröße" } : { en: "Unlimited team members within fair-use limits", de: "Unbegrenzte Teammitglieder innerhalb der Fair-Use-Grenzen" });
-  else out.push({ en: `${nf("en", l.teamMembers)} team members`, de: `${nf("de", l.teamMembers)} Teammitglieder` });
-  if (l.retentionMonths != null) out.push({ en: `${nf("en", l.retentionMonths)} months event retention`, de: `${nf("de", l.retentionMonths)} Monate Eventaufbewahrung` });
-  else if (l.retentionDays != null) out.push({ en: `${nf("en", l.retentionDays)} days event retention`, de: `${nf("de", l.retentionDays)} Tage Eventaufbewahrung` });
-  else out.push({ en: "Custom event retention", de: "Individuelle Eventaufbewahrung" });
+  if (l.sites == null) out.push({ en: "Custom number of production websites", de: "Individuelle Anzahl produktiver Websites", es: "Número de sitios web en producción a medida", fr: "Nombre de sites web de production sur mesure", it: "Numero di siti web in produzione su misura", nl: "Aantal productiewebsites op maat" });
+  else if (l.sites === 1) out.push({ en: "1 production website; staging and preview subdomains do not count extra", de: "1 produktive Website; Staging-/Preview-Subdomains zählen nicht zusätzlich", es: "1 sitio web en producción; los subdominios de staging y preview no cuentan aparte", fr: "1 site web de production ; les sous-domaines de staging et de preview ne comptent pas en plus", it: "1 sito web in produzione; i sottodomini di staging e preview non contano in più", nl: "1 productiewebsite; staging- en preview-subdomeinen tellen niet extra mee" });
+  else out.push({ en: `${nf("en", l.sites)} production websites`, de: `${nf("de", l.sites)} produktive Websites`, es: `${nf("es", l.sites)} sitios web en producción`, fr: `${nf("fr", l.sites)} sites web de production`, it: `${nf("it", l.sites)} siti web in produzione`, nl: `${nf("nl", l.sites)} productiewebsites` });
+  if (l.eventsPerMonth == null) out.push({ en: "Custom event volume", de: "Individuelles Eventvolumen", es: "Volumen de eventos a medida", fr: "Volume d’événements sur mesure", it: "Volume di eventi su misura", nl: "Eventvolume op maat" });
+  else out.push({ en: `${nf("en", l.eventsPerMonth)} accepted events per month`, de: `${nf("de", l.eventsPerMonth)} akzeptierte Events pro Monat`, es: `${nf("es", l.eventsPerMonth)} eventos aceptados al mes`, fr: `${nf("fr", l.eventsPerMonth)} événements acceptés par mois`, it: `${nf("it", l.eventsPerMonth)} eventi accettati al mese`, nl: `${nf("nl", l.eventsPerMonth)} geaccepteerde events per maand` });
+  if (l.teamMembers == null) out.push(plan.contactSales ? { en: "Custom team size", de: "Individuelle Teamgröße", es: "Tamaño de equipo a medida", fr: "Taille d’équipe sur mesure", it: "Dimensione del team su misura", nl: "Teamgrootte op maat" } : { en: "Unlimited team members within fair-use limits", de: "Unbegrenzte Teammitglieder innerhalb der Fair-Use-Grenzen", es: "Miembros del equipo ilimitados dentro de los límites de uso razonable", fr: "Membres de l’équipe illimités dans les limites d’un usage raisonnable", it: "Membri del team illimitati entro i limiti del fair use", nl: "Onbeperkt aantal teamleden binnen de fair-use-grenzen" });
+  else out.push({ en: `${nf("en", l.teamMembers)} team members`, de: `${nf("de", l.teamMembers)} Teammitglieder`, es: `${nf("es", l.teamMembers)} miembros del equipo`, fr: `${nf("fr", l.teamMembers)} membres de l’équipe`, it: `${nf("it", l.teamMembers)} membri del team`, nl: `${nf("nl", l.teamMembers)} teamleden` });
+  if (l.retentionMonths != null) out.push({ en: `${nf("en", l.retentionMonths)} months event retention`, de: `${nf("de", l.retentionMonths)} Monate Eventaufbewahrung`, es: `${nf("es", l.retentionMonths)} meses de retención de eventos`, fr: `${nf("fr", l.retentionMonths)} mois de conservation des événements`, it: `${nf("it", l.retentionMonths)} mesi di conservazione degli eventi`, nl: `${nf("nl", l.retentionMonths)} maanden bewaartermijn voor events` });
+  else if (l.retentionDays != null) out.push({ en: `${nf("en", l.retentionDays)} days event retention`, de: `${nf("de", l.retentionDays)} Tage Eventaufbewahrung`, es: `${nf("es", l.retentionDays)} días de retención de eventos`, fr: `${nf("fr", l.retentionDays)} jours de conservation des événements`, it: `${nf("it", l.retentionDays)} giorni di conservazione degli eventi`, nl: `${nf("nl", l.retentionDays)} dagen bewaartermijn voor events` });
+  else out.push({ en: "Custom event retention", de: "Individuelle Eventaufbewahrung", es: "Retención de eventos a medida", fr: "Conservation des événements sur mesure", it: "Conservazione degli eventi su misura", nl: "Bewaartermijn voor events op maat" });
   return out;
 }

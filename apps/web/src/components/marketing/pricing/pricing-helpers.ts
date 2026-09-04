@@ -1,4 +1,5 @@
 import { estimateCost, findPlan, overagePackFor, planById, publicPlanOrder, recommendPlan, type BillingInterval, type CostEstimate, type OveragePack, type PaidPlanId, type Plan, type PlanFinderInput, type PlanId } from "@track-site/catalog";
+import { intlLocale } from "@/lib/format";
 import { planSelectionQuery, safePlanSelection } from "./plan-selection";
 
 /**
@@ -12,9 +13,9 @@ export function fill(template: string, vars: Record<string, string | number>): s
   return template.replace(/\{(\w+)\}/g, (match, key: string) => (Object.prototype.hasOwnProperty.call(vars, key) ? String(vars[key]) : match));
 }
 
-/** BCP 47 tag for number formatting per copy locale (EUR formats: `€19` / `19 €`). */
+/** BCP 47 tag for number formatting per app locale (`lib/format.ts`; EUR formats: `€19` / `19 €` / `€ 19`). */
 export function numberLocale(locale: string): string {
-  return locale === "de" ? "de-DE" : "en-IE";
+  return intlLocale(locale);
 }
 
 /** Integer cents → currency string; whole amounts without decimals, fractional ones with two. */

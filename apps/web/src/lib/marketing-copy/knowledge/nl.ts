@@ -1,0 +1,121 @@
+import type { KnowledgeCopy, KnowledgeHubCopy } from "../types";
+
+/**
+ * Dutch (nl) copy of the knowledge area, informal "je/jij" like the rest of the Dutch copy. Same shape as en.ts;
+ * see docs/14-localization.md.
+ */
+
+export const KNOWLEDGE_HUB_COPY_NL: KnowledgeHubCopy = {
+  meta: {
+    description: "Gidsen, tutorials en referenties over server-side tracking, toestemming, deduplicatie en attributie voor elk advertentieplatform en shopsysteem.",
+    searchTitle: "Zoeken naar “{q}”",
+  },
+  breadcrumbs: { label: "Kruimelpad", home: "Track" },
+  hero: {
+    eyebrow: "Track",
+    lead: "Server-side tracking, toestemming, deduplicatie en attributie, uitgelegd door het team dat de connectoren bouwt. Zoek, blader per onderwerp of volg een leerpad.",
+    articles: { one: "{n} artikel", other: "{n} artikelen" },
+    topics: { one: "{n} onderwerp", other: "{n} onderwerpen" },
+    browse: "Naar het overzicht",
+    rss: "RSS-feed",
+  },
+  search: {
+    label: "Tracking Knowledge doorzoeken",
+    placeholder: "Zoek, bijv. event_id, Consent Mode, Shopify …",
+    clear: "Zoekopdracht wissen",
+    submit: "Zoeken",
+    hint: "Typefouten, accenten en umlauts worden getolereerd. De resultaten worden bijgewerkt terwijl je typt.",
+    resultsAll: "Alle {total} artikelen",
+    resultsSome: "{n} van {total} artikelen",
+    resultsQuery: "{n} van {total} artikelen voor “{q}”",
+  },
+  featured: { eyebrow: "Uitgelicht", read: "Lees het artikel" },
+  topics: {
+    eyebrow: "Themawerelden",
+    title: "Negen onderwerpen, één taxonomie",
+    text: "Elk artikel hoort bij precies één onderwerp. Open een onderwerp om de artikelen ervan in het overzicht te zien.",
+    articles: { one: "{n} artikel", other: "{n} artikelen" },
+    descriptions: {
+      "getting-started": "Eventtaxonomie, eerste setup en migratieplannen: waar tracking met Track begint.",
+      "pixel-platform-integrations": "Meta, Google, TikTok, LinkedIn, Microsoft en meer: pixels, conversie-API's en de velden die elk platform verwacht.",
+      "server-side-tracking": "Wat er verandert als events de browser verlaten: first-party-domeinen, deduplicatie en aflevering.",
+      "ecommerce-tracking": "Shopify, WooCommerce en Shopware: geverifieerde orders, purchase-events en koppeling op order-ID.",
+      "consent-privacy": "Consent Mode, TCF, bewaartermijnen en verzoeken van betrokkenen: tracking dat de keuze respecteert.",
+      "attribution-analytics": "Click-ID's, attributievensters, offline conversies en leadtracking zonder dubbeltelling.",
+      "ai-data-quality": "De Tracking Health Score, getypeerde AI-tools en de controles die data eerlijk houden.",
+      troubleshooting: "Adblockers, ITP, incident-playbooks en de kill switch: als de cijfers niet kloppen.",
+      "product-updates": "Ondertekende configuratie, releases en wat er in Track is veranderd.",
+    },
+  },
+  paths: {
+    eyebrow: "Leerpaden",
+    title: "Samengestelde leesvolgordes",
+    text: "Meerdere artikelen in de volgorde waarin ze op elkaar voortbouwen, met de werkelijke totale leestijd.",
+    steps: { one: "{n} stap", other: "{n} stappen" },
+    minutes: "{n} min",
+    step: "Stap {n}",
+  },
+  guides: {
+    eyebrow: "Platformen en shopsystemen",
+    title: "Gidsen per platform en shopsysteem",
+    text: "Elk platform en shopsysteem met minstens één artikel. Elke link opent het overzicht, gefilterd op dat platform of systeem.",
+    platforms: "Platformen",
+    shopSystems: "Shopsystemen",
+    articles: { one: "{n} artikel", other: "{n} artikelen" },
+  },
+  fresh: {
+    eyebrow: "Nieuw",
+    newTitle: "Recent gepubliceerd",
+    newText: "De nieuwste artikelen op publicatiedatum.",
+    updatedTitle: "Onlangs bijgewerkt",
+    updatedText: "Artikelen die na publicatie zijn herzien, meest recente herziening eerst.",
+    updatedEmpty: "Er is nog geen artikel herzien sinds de publicatie. Herzieningen verschijnen hier met datum.",
+  },
+  directory: {
+    eyebrow: "Overzicht",
+    title: "Alle artikelen",
+    text: "Filter op onderwerp, platform, shopsysteem, inhoudstype, niveau en actualiteit. De getallen naast elk filter zijn echte aantallen treffers.",
+    filtersTitle: "Filters",
+    facets: { topic: "Onderwerp", platform: "Platform", shopSystem: "Shopsysteem", contentType: "Inhoudstype", level: "Niveau", recency: "Actualiteit" },
+    all: "Alle",
+    reset: "Filters resetten",
+    listLabel: "Artikelen",
+    emptyTitle: "Bij deze zoekopdracht past nog geen artikel.",
+    emptyText: "Probeer een korter woord, controleer de spelling of verwijder een filter. Elk gepubliceerd artikel staat in het overzicht.",
+    emptyAction: "Alle artikelen tonen",
+    searching: "Zoeken …",
+  },
+  card: { minutes: "{n} min leestijd", published: "Gepubliceerd", updated: "Bijgewerkt" },
+  cta: {
+    eyebrow: "Track",
+    title: "Bekijk de datastroom op je eigen site",
+    text: "Voeg de snippet toe, koppel een destination en volg events, toestemmingsstatussen en afleveringen in het Track-dashboard.",
+    primary: "Start met je domein",
+    secondary: "Hoe Track werkt",
+  },
+};
+
+/** Index page metadata, feed and social-card copy; "Tracking Knowledge" is the fixed product name. */
+export const KNOWLEDGE_COPY_NL: KnowledgeCopy = {
+  name: "Tracking Knowledge",
+  intro: "Praktische gidsen over server-side tracking, toestemming, deduplicatie, attributie en de afzonderlijke advertentieplatformen — geschreven door het team dat de connectoren bouwt.",
+  cardAlt: "Track Tracking Knowledge: gidsen over server-side tracking, toestemming, deduplicatie en attributie",
+  feedDescription: "Gidsen over server-side tracking, toestemming en attributie",
+  all: "Alle onderwerpen",
+  minutes: "{n} min leestijd",
+  rss: "RSS-feed",
+  empty: "Nog geen artikelen gepubliceerd.",
+  emptyFiltered: "Bij deze selectie passen nog geen artikelen.",
+  filtered: "Gefilterde weergave",
+  reset: "Alle artikelen tonen",
+  updated: "Bijgewerkt",
+  published: "Gepubliceerd",
+  reviewed: "Gecontroleerd",
+  sources: "Bronnen",
+  related: "Gerelateerde artikelen",
+  by: "Door",
+  topic: "Onderwerp",
+  level: "Niveau",
+  legal: "Dit artikel biedt algemene informatie, geen juridisch advies. Raadpleeg voor jouw specifieke situatie een jurist die gespecialiseerd is in gegevensbescherming.",
+  breadcrumbHome: "Track",
+};

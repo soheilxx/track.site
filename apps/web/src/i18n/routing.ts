@@ -6,14 +6,16 @@ import { defineRouting } from "next-intl/routing";
  * Accept-Language redirect. Dashboard (/app), API and CDN paths are never localized by URL.
  *
  * A locale is ACTIVE only once its UI catalogs, marketing/legal copy and all knowledge articles
- * exist, so no English fallback is ever served on a localized public page. Rolling out a locale
- * means adding it to ACTIVE_LOCALES — nothing else in the app hard-codes the locale list.
+ * exist, so no English fallback is ever served on a localized public page. Since 2026-09-04 all six
+ * programme locales are active (`docs/i18n-parity-report.md` shows zero gaps for every locale);
+ * `ACTIVE_LOCALES` stays a separate list so a locale can be withdrawn again without touching the
+ * type model — nothing else in the app hard-codes the locale list.
  */
 export const ALL_LOCALES = ["en", "de", "fr", "es", "it", "nl"] as const;
 export type AppLocale = (typeof ALL_LOCALES)[number];
 
-/** Locales served publicly today; later phases add fr/es/it/nl here. */
-export const ACTIVE_LOCALES: readonly AppLocale[] = ["en", "de"];
+/** Locales served publicly: all six programme locales (enable stage of phase 4, docs/14-localization.md §3). */
+export const ACTIVE_LOCALES: readonly AppLocale[] = ["en", "de", "fr", "es", "it", "nl"];
 export const DEFAULT_LOCALE: AppLocale = "en";
 
 /** Native language names for the switcher (written out, no flags). */
@@ -52,12 +54,12 @@ export const routing = defineRouting({
 
 export const LOCALES = routing.locales;
 
-/** True for a locale that is served publicly today (`ACTIVE_LOCALES`). */
+/** True for a locale that is served publicly (`ACTIVE_LOCALES`). */
 export function isLocale(value: unknown): value is AppLocale {
   return typeof value === "string" && (ACTIVE_LOCALES as readonly string[]).includes(value);
 }
 
-/** True for any of the six programme locales, active or not. */
+/** True for any of the six programme locales (identical to `isLocale` while all six are active; kept for callers that must accept a withdrawn locale). */
 export function isKnownLocale(value: unknown): value is AppLocale {
   return typeof value === "string" && (ALL_LOCALES as readonly string[]).includes(value);
 }

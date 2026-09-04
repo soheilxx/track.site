@@ -121,7 +121,8 @@ describe("Tracking Knowledge content", () => {
         }
       }
     }
-  });
+    // 180 articles (30 topics × six active locales) are read and parsed here: well beyond the 5 s default
+  }, 60_000);
 
   it("counts published articles per topic in catalogue order", async () => {
     const topics = await listTopics("de");

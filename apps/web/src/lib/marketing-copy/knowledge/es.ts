@@ -1,0 +1,121 @@
+import type { KnowledgeCopy, KnowledgeHubCopy } from "../types";
+
+/**
+ * Spanish (es, Spain) copy of the knowledge area. Same shape as en.ts; see docs/14-localization.md.
+ * Register: tú. "Tracking Knowledge" is the fixed product name in every language.
+ */
+
+export const KNOWLEDGE_HUB_COPY_ES: KnowledgeHubCopy = {
+  meta: {
+    description: "Guías, tutoriales y referencias sobre tracking server-side, consentimiento, deduplicación y atribución para todas las plataformas publicitarias y sistemas de tienda.",
+    searchTitle: "Búsqueda «{q}»",
+  },
+  breadcrumbs: { label: "Ruta de navegación", home: "Track" },
+  hero: {
+    eyebrow: "Track",
+    lead: "Tracking server-side, consentimiento, deduplicación y atribución, explicados por el equipo que construye los conectores. Busca, explora por tema o sigue una ruta de aprendizaje.",
+    articles: { one: "{n} artículo", other: "{n} artículos" },
+    topics: { one: "{n} tema", other: "{n} temas" },
+    browse: "Explorar el directorio",
+    rss: "Feed RSS",
+  },
+  search: {
+    label: "Buscar en Tracking Knowledge",
+    placeholder: "Busca, p. ej. event_id, Consent Mode, Shopify…",
+    clear: "Borrar búsqueda",
+    submit: "Buscar",
+    hint: "Se toleran erratas, tildes y diéresis. Los resultados se actualizan mientras escribes.",
+    resultsAll: "Los {total} artículos",
+    resultsSome: "{n} de {total} artículos",
+    resultsQuery: "{n} de {total} artículos para «{q}»",
+  },
+  featured: { eyebrow: "Artículo destacado", read: "Leer el artículo" },
+  topics: {
+    eyebrow: "Áreas temáticas",
+    title: "Nueve temas, una taxonomía",
+    text: "Cada artículo pertenece exactamente a un tema. Abre un tema para ver sus artículos en el directorio.",
+    articles: { one: "{n} artículo", other: "{n} artículos" },
+    descriptions: {
+      "getting-started": "Taxonomía de eventos, primera configuración y planes de migración: donde empieza el tracking con Track.",
+      "pixel-platform-integrations": "Meta, Google, TikTok, LinkedIn, Microsoft y más: píxeles, APIs de conversiones y los campos que espera cada plataforma.",
+      "server-side-tracking": "Qué cambia cuando los eventos salen del navegador: dominios first-party, deduplicación y entrega.",
+      "ecommerce-tracking": "Shopify, WooCommerce y Shopware: pedidos verificados, eventos de compra y emparejamiento por ID de pedido.",
+      "consent-privacy": "Consent Mode, TCF, retención y solicitudes de los interesados: tracking que respeta la decisión del usuario.",
+      "attribution-analytics": "IDs de clic, ventanas de atribución, conversiones offline y tracking de leads sin dobles conteos.",
+      "ai-data-quality": "El Tracking Health Score, herramientas de IA tipadas y las comprobaciones que mantienen los datos fiables.",
+      troubleshooting: "Bloqueadores de anuncios, ITP, playbooks de incidentes y el kill switch: cuando los números no cuadran.",
+      "product-updates": "Configuración firmada, lanzamientos y qué ha cambiado en Track.",
+    },
+  },
+  paths: {
+    eyebrow: "Rutas de aprendizaje",
+    title: "Órdenes de lectura seleccionados",
+    text: "Varios artículos en el orden en que se apoyan unos en otros, con el tiempo total de lectura real.",
+    steps: { one: "{n} paso", other: "{n} pasos" },
+    minutes: "{n} min",
+    step: "Paso {n}",
+  },
+  guides: {
+    eyebrow: "Plataformas y sistemas de tienda",
+    title: "Guías por plataforma y sistema de tienda",
+    text: "Todas las plataformas y sistemas de tienda con al menos un artículo. Cada enlace abre el directorio filtrado por ese elemento.",
+    platforms: "Plataformas",
+    shopSystems: "Sistemas de tienda",
+    articles: { one: "{n} artículo", other: "{n} artículos" },
+  },
+  fresh: {
+    eyebrow: "Novedades",
+    newTitle: "Recién publicados",
+    newText: "Los últimos artículos por fecha de publicación.",
+    updatedTitle: "Actualizados recientemente",
+    updatedText: "Artículos revisados tras su publicación, la revisión más reciente primero.",
+    updatedEmpty: "Todavía no se ha revisado ningún artículo tras su publicación. Las revisiones aparecerán aquí con su fecha.",
+  },
+  directory: {
+    eyebrow: "Directorio",
+    title: "Todos los artículos",
+    text: "Filtra por tema, plataforma, sistema de tienda, tipo de contenido, nivel y actualidad. Los números junto a cada filtro son recuentos reales.",
+    filtersTitle: "Filtros",
+    facets: { topic: "Tema", platform: "Plataforma", shopSystem: "Sistema de tienda", contentType: "Tipo de contenido", level: "Nivel", recency: "Actualidad" },
+    all: "Todos",
+    reset: "Restablecer filtros",
+    listLabel: "Artículos",
+    emptyTitle: "Ningún artículo coincide con esta búsqueda todavía.",
+    emptyText: "Prueba con una palabra más corta, revisa la ortografía o quita un filtro. Todos los artículos publicados aparecen en el directorio.",
+    emptyAction: "Mostrar todos los artículos",
+    searching: "Buscando…",
+  },
+  card: { minutes: "{n} min de lectura", published: "Publicado", updated: "Actualizado" },
+  cta: {
+    eyebrow: "Track",
+    title: "Mira el flujo en tu propio sitio",
+    text: "Añade el snippet, conecta un destino y observa los eventos, los estados de consentimiento y las entregas en el panel de Track.",
+    primary: "Empieza con tu dominio",
+    secondary: "Cómo funciona Track",
+  },
+};
+
+/** Index page metadata, feed and social-card copy; "Tracking Knowledge" is the fixed product name. */
+export const KNOWLEDGE_COPY_ES: KnowledgeCopy = {
+  name: "Tracking Knowledge",
+  intro: "Guías prácticas sobre tracking server-side, consentimiento, deduplicación, atribución y cada plataforma publicitaria, escritas por el equipo que construye los conectores.",
+  cardAlt: "Track Tracking Knowledge: guías sobre tracking server-side, consentimiento, deduplicación y atribución",
+  feedDescription: "Guías sobre tracking server-side, consentimiento y atribución",
+  all: "Todos los temas",
+  minutes: "{n} min de lectura",
+  rss: "Feed RSS",
+  empty: "Todavía no hay artículos publicados.",
+  emptyFiltered: "Ningún artículo coincide con esta selección todavía.",
+  filtered: "Vista filtrada",
+  reset: "Mostrar todos los artículos",
+  updated: "Actualizado",
+  published: "Publicado",
+  reviewed: "Revisado",
+  sources: "Fuentes",
+  related: "Artículos relacionados",
+  by: "Por",
+  topic: "Tema",
+  level: "Nivel",
+  legal: "Este artículo ofrece información general, no asesoramiento jurídico. Consulta a tu asesor en protección de datos para tu situación concreta.",
+  breadcrumbHome: "Track",
+};

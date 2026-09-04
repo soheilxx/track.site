@@ -7,9 +7,10 @@ import { hasIntegrationQuery, parseIntegrationQuery, toSearchable } from "@/comp
 import { IntegrationsOverviewDiagram } from "@/components/marketing/integrations/diagrams";
 import { IntegrationsExplorer, type ExplorerCopy, type ExplorerItem } from "@/components/marketing/integrations/explorer";
 import { IntegrationsSection } from "@/components/marketing/integrations/sections";
+import { integrationText } from "@/components/marketing/integrations/text";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { FinalCta } from "@/components/marketing/page-shell";
-import { INTEGRATIONS, INTEGRATION_MODES, catalogLang } from "@/lib/integrations-catalog";
+import { INTEGRATIONS, INTEGRATION_MODES } from "@/lib/integrations-catalog";
 import { INTEGRATIONS_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, absoluteUrl, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 import { seoDescription, seoTitle } from "@/lib/seo-text";
@@ -40,16 +41,18 @@ export default async function IntegrationsPage({ params, searchParams }: { param
   const { locale } = await params;
   setRequestLocale(locale);
   const c = pick(locale, INTEGRATIONS_COPY);
-  const lang = catalogLang(locale);
   const query = parseIntegrationQuery(await searchParams);
-  const items: ExplorerItem[] = INTEGRATIONS.map((i) => ({
-    ...toSearchable(i, lang),
-    monogram: i.monogram,
-    kind: i.kind,
-    accessNote: i.accessNote?.[lang] ?? null,
-    access: i.access,
-    verification: i.verification,
-  }));
+  const items: ExplorerItem[] = INTEGRATIONS.map((i) => {
+    const text = integrationText(i, locale);
+    return {
+      ...toSearchable(i, text.summary),
+      monogram: i.monogram,
+      kind: i.kind,
+      accessNote: text.accessNote,
+      access: i.access,
+      verification: i.verification,
+    };
+  });
   const explorerCopy: ExplorerCopy = { ...c.explorer, categories: c.categories, categoryText: c.categoryText, modes: c.modes, access: c.access, verificationShort: c.verificationShort };
   const destinations = INTEGRATIONS.filter((i) => i.kind === "destination").length;
   const presets = INTEGRATIONS.find((i) => i.type === "affiliate")?.presets?.length ?? 0;

@@ -3,7 +3,10 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
-import { ACTIVE_LOCALES, DEFAULT_LOCALE, type AppLocale } from "@/i18n/routing";
+import { ACTIVE_LOCALES, ALL_LOCALES, DEFAULT_LOCALE, type AppLocale } from "@/i18n/routing";
+import { KNOWLEDGE_LABELS, type KnowledgeLabels } from "./marketing-copy/knowledge-labels";
+import { pick } from "./marketing-copy/pick";
+import type { LocalizedCopy } from "./marketing-copy/types";
 import { buildSearchIndex, extractHeadings, plainTextFromMarkdown, search, type FacetCounts, type HubQuery, type HubTaxonomy, type SearchDocument, type SearchIndex } from "./knowledge-search";
 
 /**
@@ -17,39 +20,38 @@ import { buildSearchIndex, extractHeadings, plainTextFromMarkdown, search, type 
 export const KNOWLEDGE_NAME = "Tracking Knowledge";
 export const KNOWLEDGE_PATH = "/tracking-knowledge";
 
-export type LocalizedLabel = { en: string; de: string };
+/**
+ * A label in every programme locale (`null` until translated). The texts live in
+ * `lib/marketing-copy/knowledge-labels/<locale>.ts` (one file per language); the tables below are
+ * projections of them so every call site keeps `labelFor(label, locale)`.
+ */
+export type LocalizedLabel = LocalizedCopy<string>;
 
-export const TOPICS = [
-  { id: "getting-started", label: { en: "Getting Started", de: "Erste Schritte" } },
-  { id: "pixel-platform-integrations", label: { en: "Pixel & Platform Integrations", de: "Pixel- & Plattform-Integrationen" } },
-  { id: "server-side-tracking", label: { en: "Server-Side Tracking", de: "Server-Side Tracking" } },
-  { id: "ecommerce-tracking", label: { en: "Ecommerce Tracking", de: "E-Commerce-Tracking" } },
-  { id: "consent-privacy", label: { en: "Consent & Privacy", de: "Consent & Datenschutz" } },
-  { id: "attribution-analytics", label: { en: "Attribution & Analytics", de: "Attribution & Analytics" } },
-  { id: "ai-data-quality", label: { en: "AI & Data Quality", de: "KI & Datenqualität" } },
-  { id: "troubleshooting", label: { en: "Troubleshooting", de: "Fehlerbehebung" } },
-  { id: "product-updates", label: { en: "Product Updates", de: "Produkt-Updates" } },
-] as const satisfies ReadonlyArray<{ id: string; label: LocalizedLabel }>;
-export type TopicId = (typeof TOPICS)[number]["id"];
-export const TOPIC_IDS: readonly TopicId[] = TOPICS.map((t) => t.id);
+function projectLabel(select: (labels: KnowledgeLabels) => string): LocalizedLabel {
+  const out = {} as Record<AppLocale, string | null>;
+  for (const locale of ALL_LOCALES) {
+    const entry = KNOWLEDGE_LABELS[locale];
+    out[locale] = entry ? select(entry) : null;
+  }
+  return out as LocalizedLabel;
+}
+
+function constantLabel(text: string): LocalizedLabel {
+  return Object.fromEntries(ALL_LOCALES.map((locale) => [locale, text])) as LocalizedLabel;
+}
+
+/** The nine topic worlds (supplement §6) in catalogue order; labels come from the knowledge-labels copy area. */
+export const TOPIC_IDS = ["getting-started", "pixel-platform-integrations", "server-side-tracking", "ecommerce-tracking", "consent-privacy", "attribution-analytics", "ai-data-quality", "troubleshooting", "product-updates"] as const;
+export type TopicId = (typeof TOPIC_IDS)[number];
+export const TOPICS: ReadonlyArray<{ id: TopicId; label: LocalizedLabel }> = TOPIC_IDS.map((id) => ({ id, label: projectLabel((l) => l.topics[id]) }));
 
 export const CONTENT_TYPES = ["guide", "tutorial", "reference", "explainer", "update"] as const;
 export type ContentType = (typeof CONTENT_TYPES)[number];
-export const CONTENT_TYPE_LABELS: Record<ContentType, LocalizedLabel> = {
-  guide: { en: "Guide", de: "Leitfaden" },
-  tutorial: { en: "Tutorial", de: "Tutorial" },
-  reference: { en: "Reference", de: "Referenz" },
-  explainer: { en: "Explainer", de: "Erklärung" },
-  update: { en: "Update", de: "Update" },
-};
+export const CONTENT_TYPE_LABELS: Record<ContentType, LocalizedLabel> = Object.fromEntries(CONTENT_TYPES.map((t) => [t, projectLabel((l) => l.contentTypes[t])])) as Record<ContentType, LocalizedLabel>;
 
 export const LEVELS = ["beginner", "intermediate", "advanced"] as const;
 export type Level = (typeof LEVELS)[number];
-export const LEVEL_LABELS: Record<Level, LocalizedLabel> = {
-  beginner: { en: "Beginner", de: "Einsteiger" },
-  intermediate: { en: "Intermediate", de: "Fortgeschrittene" },
-  advanced: { en: "Advanced", de: "Experten" },
-};
+export const LEVEL_LABELS: Record<Level, LocalizedLabel> = Object.fromEntries(LEVELS.map((l) => [l, projectLabel((labels) => labels.levels[l])])) as Record<Level, LocalizedLabel>;
 
 /** Editorial workflow states (supplement §7). Only `published` is public. */
 export const KNOWLEDGE_STATUSES = ["draft", "translated", "reviewed", "published"] as const;
@@ -58,11 +60,8 @@ export type KnowledgeStatus = (typeof KNOWLEDGE_STATUSES)[number];
 /** Recency filter: articles published or updated within the window. */
 export const RECENCY_WINDOWS = { "30d": 30, "90d": 90, "365d": 365 } as const;
 export type RecencyId = keyof typeof RECENCY_WINDOWS;
-export const RECENCY_LABELS: Record<RecencyId, LocalizedLabel> = {
-  "30d": { en: "Last 30 days", de: "Letzte 30 Tage" },
-  "90d": { en: "Last 90 days", de: "Letzte 90 Tage" },
-  "365d": { en: "Last 12 months", de: "Letzte 12 Monate" },
-};
+export const RECENCY_IDS = Object.keys(RECENCY_WINDOWS) as RecencyId[];
+export const RECENCY_LABELS: Record<RecencyId, LocalizedLabel> = Object.fromEntries(RECENCY_IDS.map((r) => [r, projectLabel((l) => l.recency[r])])) as Record<RecencyId, LocalizedLabel>;
 
 export function isTopicId(value: unknown): value is TopicId {
   return typeof value === "string" && (TOPIC_IDS as readonly string[]).includes(value);
@@ -80,9 +79,9 @@ export function isRecencyId(value: unknown): value is RecencyId {
   return typeof value === "string" && value in RECENCY_WINDOWS;
 }
 
-/** Label in the requested locale; English for locales without a catalogue entry yet. */
+/** Label in the requested locale: strict for active locales, English only for inactive ones (same rule as `pick`). */
 export function labelFor(label: LocalizedLabel, locale: string): string {
-  return locale === "de" ? label.de : label.en;
+  return pick(locale, label);
 }
 export function topicLabel(topic: TopicId, locale: string): string {
   const entry = TOPICS.find((t) => t.id === topic);
@@ -131,20 +130,21 @@ export interface Author {
   bio: LocalizedLabel;
 }
 
-export const AUTHORS: Record<string, Author> = {
+/** Editorial author records (real, no invented authors); their localized texts live in the knowledge-labels copy area. */
+export const AUTHOR_KEYS = ["track-editorial"] as const;
+export type AuthorKey = (typeof AUTHOR_KEYS)[number];
+
+export const AUTHORS: Record<AuthorKey, Author> = {
   "track-editorial": {
-    name: "Track editorial team",
-    role: { en: "Product & engineering", de: "Produkt & Engineering" },
-    bio: {
-      en: "The people building Track: engineers and analysts who work on server-side tracking, consent tooling and connector integrations every day.",
-      de: "Die Menschen hinter Track: Engineers und Analysts, die täglich an Server-Side Tracking, Consent-Tooling und Connector-Integrationen arbeiten.",
-    },
+    name: KNOWLEDGE_LABELS.en.authors["track-editorial"].displayName,
+    role: projectLabel((l) => l.authors["track-editorial"].role),
+    bio: projectLabel((l) => l.authors["track-editorial"].bio),
   },
 };
 
 /** Localized display name of the editorial author record. */
-export const AUTHOR_DISPLAY_NAMES: Record<string, LocalizedLabel> = {
-  "track-editorial": { en: "Track editorial team", de: "Track-Redaktion" },
+export const AUTHOR_DISPLAY_NAMES: Record<AuthorKey, LocalizedLabel> = {
+  "track-editorial": projectLabel((l) => l.authors["track-editorial"].displayName),
 };
 
 /** Front-matter keys that still use the pre-rename author id. */
@@ -157,9 +157,9 @@ export function resolveAuthorKey(key: string): string {
 /** Author record (with a localized display name) for a front-matter `author` value; unknown keys fall back to the raw value. */
 export function authorFor(key: string, locale: string): Author & { key: string; displayName: string } {
   const resolved = resolveAuthorKey(key);
-  const record = AUTHORS[resolved];
-  if (!record) return { key: resolved, name: key, displayName: key, role: { en: "", de: "" }, bio: { en: "", de: "" } };
-  const names = AUTHOR_DISPLAY_NAMES[resolved];
+  const record = (AUTHORS as Record<string, Author | undefined>)[resolved];
+  if (!record) return { key: resolved, name: key, displayName: key, role: constantLabel(""), bio: constantLabel("") };
+  const names = (AUTHOR_DISPLAY_NAMES as Record<string, LocalizedLabel | undefined>)[resolved];
   return { key: resolved, ...record, displayName: names ? labelFor(names, locale) : record.name };
 }
 
@@ -169,7 +169,7 @@ export function articlePath(slug: string): string {
 
 /** Localized alt text of the generated 1200×630 social card. */
 export function socialCardAlt(title: string, locale: string): string {
-  return locale === "de" ? `Track ${KNOWLEDGE_NAME}: ${title}` : `Track ${KNOWLEDGE_NAME}: ${title}`;
+  return pick(locale, KNOWLEDGE_LABELS).socialCardAlt.replace("{title}", title);
 }
 
 const SLUG_RE = /^[a-z0-9-]{3,120}$/;

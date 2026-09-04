@@ -87,7 +87,8 @@ export interface SearchableIntegration {
   tier: number;
 }
 
-export function toSearchable(entry: IntegrationCatalogEntry, lang: "en" | "de"): SearchableIntegration {
+/** `summary` is the localized one-liner of the entry (`integrationText()` in ./text.ts resolves it per locale on the server). */
+export function toSearchable(entry: IntegrationCatalogEntry, summary: string): SearchableIntegration {
   return {
     slug: entry.slug,
     name: entry.name,
@@ -96,7 +97,7 @@ export function toSearchable(entry: IntegrationCatalogEntry, lang: "en" | "de"):
     modes: integrationModes(entry),
     // click ids are searchable too ("gclid" → Google Ads, GA4, Floodlight)
     keywords: [...entry.keywords, ...entry.clickIds],
-    summary: entry.summary[lang],
+    summary,
     ...(entry.presets ? { presets: entry.presets } : {}),
     tier: entry.group === "commerce" ? 1 : entry.group,
   };

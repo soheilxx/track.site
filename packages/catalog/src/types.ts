@@ -18,13 +18,27 @@ export type BillingInterval = (typeof BILLING_INTERVALS)[number];
 export const CURRENCY = "EUR" as const;
 export type Currency = typeof CURRENCY;
 
-/** Locales the product will ship; `en` and `de` are mandatory for every label, the rest arrive with the localisation phase. */
+/** Locales the product will ship (mirrors ALL_LOCALES of apps/web; the catalogue has no dependency on the app). */
 export const CATALOG_LOCALES = ["en", "de", "fr", "es", "it", "nl"] as const;
 export type CatalogLocale = (typeof CATALOG_LOCALES)[number];
-export type OptionalCatalogLocale = Exclude<CatalogLocale, "en" | "de">;
+export type OptionalCatalogLocale = Exclude<CatalogLocale, "en">;
 
-/** A localised text: English and German are required, other locales are added when translated. */
-export type Label = { en: string; de: string } & Partial<Record<OptionalCatalogLocale, string>>;
+/**
+ * Locales every label must carry today (mirrors ACTIVE_LOCALES of apps/web). `catalog.test.ts`
+ * fails when any label lacks one of them, so the enable stage of a locale adds it here and the
+ * missing labels surface as test failures instead of English fallbacks on a localized page.
+ */
+export const REQUIRED_LABEL_LOCALES = ["en", "de", "fr", "es", "it", "nl"] as const satisfies readonly CatalogLocale[];
+
+/**
+ * A localised text. English is required (it is the source every translation is made from); every
+ * other locale is added when translated. The catalogue itself never falls back: `labelIn` returns
+ * `null` for a missing translation. The only place that falls back to English is the pricing/billing
+ * data layer of apps/web (`apps/web/src/server/pricing.ts`, `text()`), and only for locales that are
+ * not active; the parity report (`apps/web/scripts/i18n-parity.mjs`) lists every missing label per
+ * locale.
+ */
+export type Label = { en: string } & Partial<Record<OptionalCatalogLocale, string>>;
 
 export function isPlanId(value: unknown): value is PlanId {
   return typeof value === "string" && (PLAN_IDS as readonly string[]).includes(value);

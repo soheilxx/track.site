@@ -2,20 +2,18 @@ import { ArrowRight } from "lucide-react";
 import { TRIAL, labelIn, planById, publicPlanOrder, type Plan } from "@track-site/catalog";
 import { Badge, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
+import { formatCents, formatNumber } from "@/lib/format";
 import type { HomeCopy } from "@/lib/marketing-copy/types";
 import { fill, plural } from "@/components/marketing/demo/text";
 import { HomeSection } from "./section";
 
-function intlLocale(locale: string): string {
-  return locale === "de" ? "de-DE" : "en-IE";
-}
-
+/** List price in whole euros in the locale's format (`€19`, `19 €`, `€ 19`); formatting lives in `lib/format.ts`. */
 function money(cents: number, currency: string, locale: string): string {
-  return new Intl.NumberFormat(intlLocale(locale), { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+  return formatCents(cents, locale, { currency, minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 function count(n: number, locale: string): string {
-  return new Intl.NumberFormat(intlLocale(locale)).format(n);
+  return formatNumber(n, locale);
 }
 
 /** Pricing teaser from the tariff catalogue: real list prices and limits, monthly view, one link to the full page. */

@@ -1,0 +1,185 @@
+import type { SecondaryCopy } from "../types";
+import { CONSENT_CALL, SERVER_CALL, SNIPPET, browserEvents } from "./samples";
+
+/**
+ * Spanish (es, Spain) copy of the secondary area (docs, support, contact, demo, status, security and
+ * the frame of the legal pages). Same shape as en.ts; see docs/14-localization.md. Register: tú.
+ * Only the code comment passed to `browserEvents()` is translated; the snippets themselves are shared.
+ */
+
+export const SECONDARY_COPY_ES: SecondaryCopy = {
+  common: { onThisPage: "En esta página", breadcrumb: "Ruta de navegación", home: "Inicio", updated: "Última actualización", copy: "Copiar código", copied: "Copiado", utc: "UTC", related: "Páginas relacionadas" },
+  docs: {
+    title: "Documentación",
+    intro: "Todo lo necesario para instalar Track, enviar eventos de servidor, integrar el consentimiento y configurar destinos. El asistente del panel enlaza aquí en cada paso.",
+    toc: "En esta página",
+    eyebrow: "Documentación",
+    links: { integrations: "Todas las integraciones", support: "Preguntar al soporte de ingeniería", knowledge: "Tracking Knowledge" },
+    quickstart: {
+      title: "Tres pasos para una configuración operativa",
+      text: "Instala una vez, envía tus eventos y conecta las plataformas que usas. Cada paso se puede verificar en el panel antes de continuar.",
+      outcomeLabel: "Puedes comprobar",
+      steps: [
+        { title: "Instala el snippet", text: "Añade una etiqueta script asíncrona a tus páginas. Carga la configuración firmada de tu ID de tracking y respeta el consentimiento desde la primera vista de página.", outcome: "Las vistas de página aparecen en el depurador de eventos." },
+        { title: "Envía tus eventos", text: "Usa los eventos estándar desde el navegador, un plugin de tienda o tu servidor. Las compras llevan un ID de pedido para que las copias de navegador y de servidor se dedupliquen.", outcome: "Cada evento muestra su estado de consentimiento y el motivo por el que se entregó o se retuvo." },
+        { title: "Conecta un destino", text: "El asistente paso a paso valida las credenciales, mapea los eventos, envía un evento de prueba real y publica solo tras tu aprobación.", outcome: "La salud de entrega y la última entrega correcta se muestran por destino." },
+      ],
+    },
+    flow: {
+      title: "Cómo viaja un evento",
+      text: "Todos los eventos siguen la misma ruta, vengan del navegador, de un plugin de tienda o de tu servidor: Track los valida y deduplica, evalúa la política de consentimiento y los enruta a los destinos que hayas configurado.",
+      caption: "Sitio web → Track → Consentimiento/Políticas → Destinos. Un evento sin la finalidad de consentimiento requerida se detiene en el control: ni se almacena ni se reenvía.",
+      nodes: { website: "Sitio web", websiteSub: "navegador · servidor", track: "Track", trackSub: "validar · deduplicar · enrutar", consent: "Consentimiento", destinations: "Destinos" },
+      labels: { granted: "finalidad concedida", held: "retenido: sin finalidad" },
+    },
+    guidesTitle: "Guías",
+    guides: [
+      { id: "install", title: "Instala el snippet", text: "Añade el script asíncrono a todas las páginas, idealmente en el head. Carga la configuración firmada de tu ID de tracking, respeta el consentimiento y nunca bloquea el renderizado. Sustituye TRACKING_ID por el ID de seis caracteres de tu panel.", code: SNIPPET, language: "html", codeTitle: "Snippet" },
+      { id: "events", title: "Envía eventos de navegador", text: "Los eventos estándar (page_view, view_item, add_to_cart, begin_checkout, purchase, generate_lead, sign_up, subscribe, start_trial, contact, book_appointment, download, search, login) llevan parámetros validados; los eventos personalizados usan nombres en snake_case en minúsculas.", code: browserEvents("hash en el cliente antes del envío"), language: "js", codeTitle: "Navegador" },
+      { id: "server", title: "API de servidor y conversiones offline", text: "Crea una clave de origen en Ajustes → Claves de origen del servidor y envía eventos desde tu backend, CRM o TPV. Indica el mismo ID de pedido que el evento de navegador para la deduplicación; añade props.offline para las conversiones offline.", code: SERVER_CALL, language: "bash", codeTitle: "POST /v1/s" },
+      { id: "consent", title: "Integración del consentimiento", text: "Usa una CMP compatible (TCF 2.2, GPP/GPC, Cookiebot, OneTrust, Usercentrics), que el tracker lee automáticamente, o llama a la API de consentimiento desde tu propio banner. Finalidades: necessary, analytics, marketing, personalization. La retirada lo detiene todo de inmediato.", code: CONSENT_CALL, language: "js", codeTitle: "API de consentimiento" },
+      { id: "destinations", title: "Destinos", text: "Cada destino tiene un asistente paso a paso: identificadores, credenciales en el almacén cifrado u OAuth, validación del proveedor, mapeo de eventos con valores por defecto verificados, un evento de prueba real, lint, diff y publicación con aprobación. Navegador y servidor comparten un ID de evento; las compras añaden el ID de pedido.", bullets: ["Meta, Google Ads/YouTube, GA4, TikTok, Microsoft, LinkedIn, Reddit, Pinterest, Snapchat", "X, Taboola, Outbrain, Amazon Ads, Spotify, Quora", "Yahoo DSP, The Trade Desk, Google Marketing Platform, AdRoll, Criteo, postbacks de afiliación (13 presets), webhooks"] },
+      { id: "shops", title: "Plataformas de e-commerce", text: "Shopify (app con webhooks de pedidos y web pixel), WooCommerce (plugin con webhooks de pedidos firmados) y Shopware 6 (app con script de storefront y webhooks de pedidos) envían eventos verificados de compra y reembolso con ID de pedido. Instala el plugin, pega el ID de tracking y la clave de origen, y listo.", bullets: ["Fuente verificada: los eventos se marcan como source_verified y se usan como conversión autorizada", "Los reembolsos generan eventos de valor negativo en los proveedores que los admiten", "Las compras de navegador del tema se deduplican por ID de pedido"] },
+      { id: "privacy", title: "Centro de privacidad y solicitudes de los interesados (DSAR)", text: "Los plazos de retención por tipo de datos, las versiones de la política de consentimiento por sitio y las solicitudes de los interesados (exportación, supresión, limitación, rectificación, oposición, portabilidad) se gestionan en Consentimiento y privacidad. Las solicitudes usan solo identificadores con hash y generan un informe auditado." },
+    ],
+    reference: {
+      title: "Endpoints de un vistazo",
+      text: "Todas las respuestas son JSON; 202 significa que el lote se ha encolado de forma duradera.",
+      columns: { endpoint: "Endpoint", purpose: "Finalidad", notes: "Notas" },
+      rows: [
+        { endpoint: "POST /v1/e", purpose: "Lotes de navegador", notes: "≤ 50 eventos por lote" },
+        { endpoint: "POST /v1/s", purpose: "Lotes de servidor", notes: "≤ 100 eventos por lote, clave de origen como Bearer" },
+        { endpoint: "POST /v1/affiliate/in/{trackingId}/{preset}", purpose: "Postbacks entrantes de redes de afiliación", notes: "13 presets de red" },
+        { endpoint: "GET /c/{trackingId}/manifest.json", purpose: "Manifiesto de configuración y bundle firmado", notes: "Firmado con Ed25519, verificado por el SDK de navegador" },
+      ],
+    },
+  },
+  support: {
+    title: "Soporte",
+    intro: "Aquí los clientes contactan con el soporte de ingeniería. Incluye el ID de tracking de tu sitio (seis caracteres, visible en el panel) para que podamos mirar los eventos correctos; nunca pegues tokens de acceso.",
+    placeholder: "ID de tracking, destino, qué esperabas y qué ocurrió.",
+    eyebrow: "Soporte",
+    formTitle: "Escribe al soporte de ingeniería",
+    before: {
+      title: "Antes de escribir",
+      items: [
+        { title: "Documentación", text: "Instalación, eventos, consentimiento y destinos con ejemplos de código.", href: "/docs" },
+        { title: "Estado del sistema", text: "Salud en directo del collector, la cola y el worker de entrega.", href: "/status" },
+        { title: "Tracking Knowledge", text: "Guías sobre deduplicación, Consent Mode e IDs de clic.", href: "/tracking-knowledge" },
+      ],
+    },
+    include: {
+      title: "Qué nos ayuda a responder rápido",
+      items: ["Tu ID de tracking (seis caracteres, visible en el panel)", "El destino y el nombre del evento afectados", "Qué esperabas y qué ocurrió, con la hora", "Capturas del depurador o del paso del asistente; nunca tokens de acceso ni otros secretos"],
+    },
+    reply: "Respondemos por correo electrónico a la dirección que indiques.",
+  },
+  contact: {
+    title: "Contacto",
+    intro: "Preguntas sobre planes, volumen enterprise, contratos de encargo del tratamiento o colaboraciones. Respondemos en un día laborable.",
+    enterprise: "Solicitud Enterprise: volumen individual, SSO, SLA, tratamiento dedicado.",
+    eyebrow: "Contacto",
+    formTitle: "Envía un mensaje",
+    topics: {
+      title: "En qué podemos ayudarte",
+      items: [
+        { title: "Planes y facturación", text: "Qué plan encaja con tu volumen de eventos, cómo funciona la facturación anual, facturas." },
+        { title: "Enterprise", text: "Volumen individual, SSO, SLA y tratamiento dedicado." },
+        { title: "Tratamiento de datos", text: "El contrato de encargo del tratamiento, los subencargados y el alojamiento en la UE." },
+        { title: "Colaboraciones", text: "Agencias, plataformas de e-commerce y proveedores de gestión del consentimiento." },
+      ],
+    },
+    other: {
+      title: "¿Buscas otra cosa?",
+      items: [
+        { title: "Reservar una demo", text: "Treinta minutos con un ingeniero en tu sitio real.", href: "/demo" },
+        { title: "Soporte", text: "Preguntas técnicas sobre una configuración existente.", href: "/support" },
+      ],
+    },
+  },
+  demo: {
+    title: "Reservar una demo",
+    intro: "Treinta minutos con un ingeniero: configuramos un destino en tu sitio real, enviamos un evento de prueba y repasamos el consentimiento, la deduplicación y el depurador.",
+    agenda: ["Tu stack: plataforma, CMP, etiquetas actuales y puntos de dolor", "Configuración en directo de un destino con el asistente", "Política de consentimiento, IDs de clic y conversiones offline para tu caso", "Precios, plan de migración y contrato de encargo del tratamiento"],
+    placeholder: "¿Qué plataformas y sistema de tienda usas, y qué te gustaría que mostráramos?",
+    eyebrow: "Demo en directo",
+    formTitle: "Solicita una cita",
+    agendaTitle: "Qué cubren los treinta minutos",
+    duration: "30 minutos, online, con un ingeniero",
+    prepare: { title: "Conviene tener a mano", items: ["Acceso a tu sitio web o a una copia de staging", "Las plataformas en las que haces publicidad", "Tu plataforma de gestión del consentimiento, si usas una"] },
+    honest: "Sin guion de ventas: te vas con un destino configurado y una valoración sincera de lo que Track puede y no puede hacer por tu stack.",
+  },
+  status: {
+    title: "Estado del sistema",
+    intro: "Salud en directo de los componentes de Track, comprobada en cada carga de página. El historial de incidentes se publica aquí cuando ocurre alguno.",
+    component: "Componente",
+    state: "Estado",
+    checked: "Comprobado",
+    ok: "operativo",
+    degraded: "degradado",
+    down: "no disponible",
+    db: "Base de datos del control plane",
+    queue: "Eventos pendientes en la cola",
+    worker: "Worker de entrega (último intento de entrega)",
+    collector: "Collector (ingesta)",
+    none: "sin datos todavía",
+    incidents: "Incidentes",
+    noIncidents: "No hay incidentes registrados.",
+    note: "El estado se deriva de la misma base de datos y la misma cola que usa el producto; no hay un servicio de estado independiente que pueda contradecirlo.",
+    eyebrow: "Estado",
+    componentsTitle: "Componentes",
+    detail: "Detalle",
+    pending: "{n} pendientes",
+    checkedAt: "Hora de comprobación",
+    flow: { title: "Ruta de los eventos y salud actual", caption: "Collector → cola → worker de entrega → destinos; la base de datos del control plane guarda la configuración y los registros de entrega. El color y la etiqueta de cada nodo coinciden con la tabla de arriba.", collector: "Collector", queue: "Cola", worker: "Worker de entrega", database: "Base de datos", destinations: "Destinos" },
+    incidentsText: "Cuando un componente está degradado o no disponible, aquí se registran el incidente, su impacto y la resolución.",
+  },
+  security: {
+    title: "Seguridad",
+    intro: "Cómo protege Track los datos de los clientes: arquitectura, controles y las garantías que puedes verificar en el producto.",
+    eyebrow: "Seguridad",
+    flow: {
+      title: "Dónde se protegen los datos en su recorrido",
+      text: "Desde la primera petición hasta la entrega, cada salto tiene un control: comprobación de origen, límites de tasa y firmas HMAC en el collector, una cola duradera, la política de consentimiento antes de cualquier enrutamiento y workers con reintentos, circuit breakers y una dead-letter queue. Los kill switches detienen un sitio o una organización en cuestión de segundos.",
+      caption: "La configuración firmada llega al navegador, los eventos llegan al collector y solo los eventos que pasan la política llegan a un destino. Las credenciales de los proveedores solo salen del almacén cifrado dentro del worker.",
+      nodes: { website: "Sitio web", config: "Config firmada", configSub: "Ed25519 · fail closed", collector: "Collector", collectorSub: "origen · límite de tasa · HMAC", queue: "Cola", queueSub: "duradera", policy: "Política", worker: "Worker", workerSub: "reintentos · breaker · DLQ", destination: "Destino", vault: "Almacén cifrado", vaultSub: "sobre KMS", kill: "Kill switch" },
+    },
+    controls: {
+      title: "Controles de un vistazo",
+      text: "Cada control se describe en las secciones anteriores; esta tabla es la versión corta.",
+      columns: { control: "Control", scope: "Ámbito", mechanism: "Mecanismo" },
+      rows: [
+        { control: "Aislamiento por tenant", scope: "Todas las tablas de tenant, rol de la aplicación", mechanism: "ID de organización en cada fila, seguridad a nivel de fila de PostgreSQL aplicada" },
+        { control: "Almacenamiento de secretos", scope: "Credenciales de proveedores", mechanism: "Cifrado de sobre (claves de datos AES-256-GCM envueltas por AWS KMS o una clave maestra local); solo se ven una referencia y los cuatro últimos caracteres" },
+        { control: "Configuración firmada", scope: "SDK de navegador", mechanism: "Bundles inmutables, versionados y firmados con Ed25519, verificados con WebCrypto; fail closed" },
+        { control: "Protección de la ingesta", scope: "Collector", mechanism: "Validación de origen, límites de tasa, peticiones de servidor firmadas con HMAC, cola duradera antes de la respuesta" },
+        { control: "Entrega", scope: "Workers", mechanism: "Reintentos, circuit breakers y una dead-letter queue" },
+        { control: "Kill switches", scope: "Por sitio u organización", mechanism: "Detienen la recogida y la entrega en cuestión de segundos" },
+        { control: "Minimización de datos", scope: "Propiedades de eventos, direcciones IP", mechanism: "El escáner de PII bloquea los datos personales antes de almacenarlos; las IP se truncan en la ingesta; sin fingerprinting" },
+        { control: "Auditoría", scope: "Log de auditoría, registro de consumo", mechanism: "Solo escritura incremental (append-only) mediante triggers de base de datos" },
+        { control: "Acceso", scope: "Miembros de la organización", mechanism: "Seis roles, MFA y passkeys, acceso de emergencia (break-glass) con motivo obligatorio y entrada de auditoría" },
+      ],
+    },
+    report: { title: "Informar de una vulnerabilidad", text: "Informa de las vulnerabilidades de forma responsable a", missing: "la dirección publicada en el aviso legal", ack: "Acusamos recibo en dos días laborables y nunca nombramos a quien informa sin su consentimiento." },
+  },
+  legal: {
+    eyebrow: "Legal",
+    operator: { title: "Operador", company: "Empresa", address: "Dirección", representatives: "Representada por", email: "Correo electrónico", phone: "Teléfono", register: "Registro", vatId: "NIF-IVA", dpo: "Delegado de protección de datos", missing: "El operador publicará estos datos antes del lanzamiento (variables de entorno LEGAL_*)." },
+    related: { privacy: "Política de privacidad", terms: "Condiciones del servicio", dpa: "Contrato de encargo del tratamiento", subprocessors: "Subencargados", imprint: "Aviso legal", security: "Seguridad" },
+  },
+  subprocessors: {
+    title: "Subencargados",
+    intro: "Terceros que tratan datos de clientes por cuenta del operador, y los proveedores publicitarios que reciben eventos solo cuando un cliente los configura como destino.",
+    processorsTitle: "Encargados contratados por el operador",
+    columns: { name: "Proveedor", purpose: "Finalidad", region: "Región", basis: "Base de la transferencia" },
+    vendors: "Proveedores de destino (elegidos por el cliente)",
+    vendorsText: "Cada destino muestra su receptor de datos, la región y la base de la transferencia en el asistente de configuración. Los datos llegan a un proveedor solo para los destinos que activas y solo con la finalidad de consentimiento que exige el destino.",
+    updated: "Los clientes reciben aviso 30 días antes de cualquier cambio.",
+  },
+  imprint: {
+    title: "Aviso legal",
+    intro: "Información legal sobre el operador de este sitio web conforme al § 5 DDG y al § 18 MStV.",
+    dispute: "La Comisión Europea pone a disposición una plataforma de resolución de litigios en línea (https://ec.europa.eu/consumers/odr). El operador no está obligado ni dispuesto a participar en procedimientos de resolución de litigios ante una junta arbitral de consumo.",
+    liability: "Pese a un control cuidadoso, no asumimos ninguna responsabilidad por el contenido de los enlaces externos; los operadores de las páginas enlazadas son los únicos responsables de su contenido.",
+  },
+};

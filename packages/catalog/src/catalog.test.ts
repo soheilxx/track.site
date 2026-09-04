@@ -5,9 +5,12 @@ import {
   FEATURES,
   FEATURE_KEYS,
   LEGACY_STRIPE_PRICE_ENV,
+  NON_BILLABLE_REASON_LABELS,
   OVERAGE_PACKS,
+  OVERAGE_POLICY_LABELS,
   PLANS,
   PLAN_IDS,
+  REQUIRED_LABEL_LOCALES,
   TRIAL,
   USAGE_WARNING_THRESHOLDS,
   estimablePlanIds,
@@ -27,6 +30,7 @@ import {
   stripePriceSlots,
   verifyStripeAmount,
   yearlyMonthlyEquivalentCents,
+  type Label,
 } from "./index.ts";
 
 describe("catalogue invariants", () => {
@@ -74,7 +78,7 @@ describe("catalogue invariants", () => {
     expect(planById("pro").limits.retentionDays).toBe(761);
   });
 
-  it("features are cumulative and every key is registered with en + de labels", () => {
+  it("features are cumulative and every key is registered with a label in every required locale", () => {
     const has = (id: "starter" | "growth" | "pro" | "enterprise") => new Set(planById(id).features);
     for (const key of has("starter")) expect(has("growth").has(key)).toBe(true);
     for (const key of has("growth")) expect(has("pro").has(key)).toBe(true);
@@ -83,17 +87,10 @@ describe("catalogue invariants", () => {
       expect(new Set(p.features).size).toBe(p.features.length);
       for (const key of p.features) expect(FEATURE_KEYS).toContain(key);
       expect(p.highlights.length).toBeLessThanOrEqual(6);
-      for (const h of p.highlights) {
-        expect(h.en.length).toBeGreaterThan(0);
-        expect(h.de.length).toBeGreaterThan(0);
-      }
-      expect(p.audience.en.length).toBeGreaterThan(0);
-      expect(p.audience.de.length).toBeGreaterThan(0);
+      for (const h of p.highlights) for (const locale of REQUIRED_LABEL_LOCALES) expect(labelIn(h, locale), `${p.id} highlight (${locale})`).toBeTruthy();
+      for (const locale of REQUIRED_LABEL_LOCALES) expect(labelIn(p.audience, locale), `${p.id} audience (${locale})`).toBeTruthy();
     }
-    for (const key of FEATURE_KEYS) {
-      expect(FEATURES[key].label.en.length).toBeGreaterThan(0);
-      expect(FEATURES[key].label.de.length).toBeGreaterThan(0);
-    }
+    for (const key of FEATURE_KEYS) for (const locale of REQUIRED_LABEL_LOCALES) expect(labelIn(FEATURES[key].label, locale), `${key} (${locale})`).toBeTruthy();
     const paid = ["starter", "growth", "pro"] as const;
     for (const id of paid) for (const key of ["server_side_tracking", "all_standard_destinations", "ai_assistant", "consent_engine", "event_debugger", "tracking_health", "config_versioning"] as const) expect(planById(id).features).toContain(key);
     expect(planById("starter").features).not.toContain("advanced_ecommerce_events");
@@ -107,10 +104,10 @@ describe("catalogue invariants", () => {
   it("labels are strict per locale (no silent fallback) and inherits reads naturally", () => {
     const label = planById("growth").audience;
     expect(labelIn(label, "de")).toBe(label.de);
-    expect(labelIn(label, "fr")).toBeNull();
+    expect(labelIn({ en: "English only" }, "fr")).toBeNull();
     expect(labelIn(label, "xx")).toBeNull();
     expect(inheritsLabel(planById("starter"))).toBeNull();
-    expect(inheritsLabel(planById("pro"))).toEqual({ en: "Everything in Growth, plus", de: "Alles aus Growth, zusätzlich" });
+    expect(inheritsLabel(planById("pro"))).toMatchObject({ en: "Everything in Growth, plus", de: "Alles aus Growth, zusätzlich", fr: "Tout ce qu’inclut Growth, plus" });
   });
 
   it("limit bullets format numbers per language and never invent a cap", () => {
@@ -251,5 +248,23 @@ describe("stripe helpers", () => {
     expect(verifyStripeAmount({ planId: "starter", interval: "monthly", unitAmount: 1_900, currency: "usd" })).toEqual({ ok: false, error: "currency_mismatch:usd≠eur" });
     expect(verifyStripeAmount({ planId: "starter", interval: "monthly", unitAmount: null, currency: "eur" })).toEqual({ ok: false, error: "no_unit_amount" });
     expect(verifyStripeAmount({ planId: "enterprise", interval: "monthly", unitAmount: 1, currency: "eur" })).toEqual({ ok: false, error: "no_list_price" });
+  });
+});
+
+describe("catalog labels", () => {
+  it("carry every required locale (the enable stage adds a locale to REQUIRED_LABEL_LOCALES and fixes what fails here)", () => {
+    const labels: Array<[string, Label]> = [];
+    for (const p of PLANS) {
+      labels.push([`${p.id}.audience`, p.audience]);
+      p.highlights.forEach((h, i) => labels.push([`${p.id}.highlights[${i}]`, h]));
+      limitBullets(p).forEach((b, i) => labels.push([`${p.id}.limits[${i}]`, b]));
+      const lead = inheritsLabel(p);
+      if (lead) labels.push([`${p.id}.inherits`, lead]);
+    }
+    for (const key of FEATURE_KEYS) labels.push([`feature.${key}`, FEATURES[key].label]);
+    for (const [key, label] of Object.entries(OVERAGE_POLICY_LABELS)) labels.push([`overagePolicy.${key}`, label]);
+    for (const [key, label] of Object.entries(NON_BILLABLE_REASON_LABELS)) labels.push([`nonBillable.${key}`, label]);
+    expect(labels.length).toBeGreaterThan(20);
+    for (const [id, label] of labels) for (const locale of REQUIRED_LABEL_LOCALES) expect(labelIn(label, locale), `${id} (${locale})`).toBeTruthy();
   });
 });

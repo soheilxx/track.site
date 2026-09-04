@@ -14,6 +14,7 @@
     "test:e2e": "playwright test",
     "seo:check": "tsx scripts/seo-check.ts",
     "knowledge:validate": "node scripts/validate-knowledge-content.mjs && node scripts/migrate-knowledge-frontmatter.mjs --check",
+    "i18n:parity": "node scripts/i18n-parity.mjs",
     "predev": "node scripts/sync-sdk.mjs",
     "prebuild": "node scripts/sync-sdk.mjs"
   },

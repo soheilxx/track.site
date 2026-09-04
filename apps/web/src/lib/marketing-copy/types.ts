@@ -3,25 +3,37 @@ import type { AppLocale } from "@/i18n/routing";
 import type { ContactFormCopy } from "@/components/marketing/contact-form";
 import type { DemoConsent, DemoCurrency, DemoDedup, DemoHealthPart, DemoHealthTone, DemoOrigin, DemoOutcome, DemoReason, DemoViewId } from "@/components/marketing/demo/model";
 import type { ConsentPurposeId, CredentialKindId, IntegrationAccess, IntegrationCategory, IntegrationKind, IntegrationMode, IntegrationVerification } from "@/lib/integrations-catalog";
-import type { TopicId } from "@/lib/knowledge";
+import type { AuthorKey, ContentType, Level, RecencyId, TopicId } from "@/lib/knowledge";
 import type { FacetKey } from "@/lib/knowledge-search";
 
 /**
- * Locale model of the marketing copy.
+ * Locale model of the typed copy (marketing, legal, mail, knowledge labels).
  *
- * `COPY_LOCALES` are the locales that have typed marketing copy today. They are a subset of the
- * programme's `ALL_LOCALES` (checked by `satisfies`) and must stay a superset of `ACTIVE_LOCALES`
- * (checked in pick.test.ts), so an active public locale is never served English copy. fr/es/it/nl
- * are added here in the localization phase together with their texts.
+ * Every copy constant carries one entry per programme locale (`ALL_LOCALES` in i18n/routing.ts):
+ * the translated object, or `null` while the translation does not exist yet. `pick()` resolves it —
+ * strictly for active locales (a `null` throws instead of rendering English on a localized page),
+ * with an English fallback only for inactive locales.
+ *
+ * `COPY_LOCALES` are the locales whose entry is *required by the type system* (`T`, not `T | null`).
+ * They must stay a superset of `ACTIVE_LOCALES` (checked in pick.test.ts). Rolling a locale out
+ * therefore means: translators fill `<area>/<locale>.ts` and replace `<locale>: null` in every
+ * `<area>/index.ts`; the enable stage adds the locale here and to `ACTIVE_LOCALES`, after which a
+ * remaining `null` is a compile error. Since the enable stage of 2026-09-04 all six programme
+ * locales are copy locales: every copy constant must carry a translated object for each of them.
+ * See docs/14-localization.md.
  */
-export const COPY_LOCALES = ["en", "de"] as const satisfies readonly AppLocale[];
+export const COPY_LOCALES = ["en", "de", "fr", "es", "it", "nl"] as const satisfies readonly AppLocale[];
 export type CopyLocale = (typeof COPY_LOCALES)[number];
 
 /** Name kept for existing imports (`import type { Locale } from "@/lib/marketing-copy"`). */
 export type Locale = CopyLocale;
 
-/** One object per copy locale, all of the same shape. */
-export type LocalizedCopy<T> = Record<CopyLocale, T>;
+/**
+ * One entry per programme locale: the object for `COPY_LOCALES`, the object or `null` for the rest.
+ * Structurally assignable to `Record<AppLocale, T | null>`; `pick()` is the only reader that should
+ * decide between strict and fallback behaviour.
+ */
+export type LocalizedCopy<T> = { [L in AppLocale]: L extends CopyLocale ? T : T | null };
 
 export type { ContactFormCopy };
 
@@ -462,6 +474,22 @@ export interface HomeCopy {
 /* ------------------------------------------------------------ integrations */
 
 /**
+ * Localized text of one entry of `@/lib/integrations-catalog` (`INTEGRATION_CATALOG_TEXT`, area
+ * `integration-catalog/`): the one-sentence summary, the vendor-side prerequisite note (`null` when
+ * the catalogue has none — identical in every language) and the display label of every public id,
+ * keyed by the config key (`pixel_id`, `shop_domain`, …). The catalogue itself carries the technical
+ * facts plus the English/German source text; the copy area adds the other programme locales.
+ */
+export interface IntegrationText {
+  summary: string;
+  accessNote: string | null;
+  publicIds: Record<string, string>;
+}
+
+/** `IntegrationText` per catalogue `slug`, in catalogue order. */
+export type IntegrationCatalogText = Record<string, IntegrationText>;
+
+/**
  * Integrations area (overview with search + filters, detail pages). Every fact rendered next to this
  * copy comes from `@/lib/integrations-catalog` — the copy only labels it.
  */
@@ -820,7 +848,7 @@ export interface ControlRow {
 
 /**
  * Secondary public pages: docs, support, contact, demo, status, security and the frame of the legal
- * pages. The legal texts themselves stay in lib/legal-copy.ts; this is only the chrome around them.
+ * pages. The legal texts themselves stay in lib/legal-copy/<locale>.ts; this is only the chrome around them.
  */
 export interface SecondaryCopy {
   common: {
@@ -1030,4 +1058,58 @@ export interface KnowledgeArticleCopy {
   cta: { eyebrow: string; items: Record<KnowledgeCtaKey, KnowledgeCtaItem> };
   related: string;
   feedback: { heading: string; yes: string; no: string; sending: string; thanks: string; error: string };
+}
+
+/* ------------------------------------------------------- knowledge: surrounding copy + labels */
+
+/**
+ * Surrounding copy of the Tracking Knowledge area used by the index page, the feed and the social
+ * cards (`app/[locale]/(marketing)/tracking-knowledge/copy.ts`). `name` is the fixed product name
+ * "Tracking Knowledge" in every language (supplement §6).
+ */
+export interface KnowledgeCopy {
+  name: string;
+  intro: string;
+  cardAlt: string;
+  feedDescription: string;
+  all: string;
+  /** `{n}` = reading minutes. */
+  minutes: string;
+  rss: string;
+  empty: string;
+  emptyFiltered: string;
+  filtered: string;
+  reset: string;
+  updated: string;
+  published: string;
+  reviewed: string;
+  sources: string;
+  related: string;
+  by: string;
+  topic: string;
+  level: string;
+  legal: string;
+  breadcrumbHome: string;
+}
+
+export interface KnowledgeAuthorLabels {
+  displayName: string;
+  role: string;
+  bio: string;
+}
+
+/**
+ * Localized labels of the knowledge taxonomy (topic worlds, content types, levels, recency filter)
+ * and of the editorial author records. The ids are fixed in `lib/knowledge.ts`; only the texts are
+ * translated. Technical topic names ("Server-Side Tracking", "Attribution & Analytics") may stay
+ * English where the language area uses the English term.
+ */
+export interface KnowledgeLabels {
+  topics: Record<TopicId, string>;
+  contentTypes: Record<ContentType, string>;
+  levels: Record<Level, string>;
+  recency: Record<RecencyId, string>;
+  authors: Record<AuthorKey, KnowledgeAuthorLabels>;
+  /** Alt text of the generated 1200×630 social card of an article; `{title}` = article title. */
+  socialCardAlt: string;
 }

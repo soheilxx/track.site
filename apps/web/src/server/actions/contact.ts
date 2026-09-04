@@ -7,6 +7,7 @@ import { MemoryRateLimiter, sha256Hex } from "@track-site/core";
 import { uaFamily } from "@track-site/events";
 import { contactRequests } from "@track-site/db";
 import { env } from "@/env";
+import { ALL_LOCALES } from "@/i18n/routing";
 import { db, logger } from "@/server/db";
 import { sendMail } from "@/server/mail";
 import { getSession } from "@/server/session";
@@ -24,7 +25,8 @@ const schema = z.object({
   company: z.string().trim().max(120).optional(),
   message: z.string().trim().min(10).max(4000),
   topic: z.string().trim().max(60).optional(),
-  locale: z.enum(["en", "de"]).default("en"),
+  // the page's locale (hidden field of the form on every public locale): a programme locale, never a free string
+  locale: z.enum(ALL_LOCALES).default("en"),
   website: z.string().max(0).optional(), // honeypot
 });
 

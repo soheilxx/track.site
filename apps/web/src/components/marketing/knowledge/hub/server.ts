@@ -1,5 +1,6 @@
 import "server-only";
 import { ACTIVE_LOCALES, LOCALE_NAMES } from "@/i18n/routing";
+import { formatDate } from "@/lib/format";
 import { integrationBySlug, type IntegrationCategory } from "@/lib/integrations-catalog";
 import {
   CONTENT_TYPES,
@@ -52,8 +53,9 @@ export function islandCopy(locale: string): HubIslandCopy {
   return { search: c.search, directory: c.directory, card: c.card, labels: hubLabels(locale) };
 }
 
+/** Long calendar date in the locale's convention (`lib/format.ts`, UTC so a date-only value never shifts). */
 export function formatHubDate(locale: string, iso: string): string {
-  return new Date(iso).toLocaleDateString(locale === "de" ? "de-DE" : "en-GB", { year: "numeric", month: "long", day: "numeric" });
+  return formatDate(iso, locale);
 }
 
 export function readingLabel(copy: KnowledgeHubCopy, minutes: number): string {

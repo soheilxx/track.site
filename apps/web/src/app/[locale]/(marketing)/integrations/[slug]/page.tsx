@@ -7,11 +7,12 @@ import { relatedKnowledgeFor } from "@/components/marketing/integrations/catalog
 import { IntegrationFlowDiagram } from "@/components/marketing/integrations/diagrams";
 import { IntegrationGlyph } from "@/components/marketing/integrations/glyph";
 import { CheckList, Code, FactList, IntegrationBreadcrumbs, IntegrationsSection, Milestones, RelatedKnowledge } from "@/components/marketing/integrations/sections";
+import { integrationText, publicIdLabel } from "@/components/marketing/integrations/text";
 import { JsonLd } from "@/components/marketing/json-ld";
 import { Faq, FinalCta, faqJsonLd } from "@/components/marketing/page-shell";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { INTEGRATIONS, catalogLang, integrationBySlug, integrationModes } from "@/lib/integrations-catalog";
+import { INTEGRATIONS, integrationBySlug, integrationModes } from "@/lib/integrations-catalog";
 import { CONTENT_TYPE_LABELS, KNOWLEDGE_PATH, articlePath, labelFor, listArticles } from "@/lib/knowledge";
 import { INTEGRATIONS_COPY, pick } from "@/lib/marketing-copy";
 import { BRAND_NAME, breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale, slug } = await params;
   const i = integrationBySlug(slug);
   if (!i) return {};
-  return pageMetadata({ locale, path: `/integrations/${slug}`, title: seoTitle(i.name), description: seoDescription(i.summary[catalogLang(locale)]) });
+  return pageMetadata({ locale, path: `/integrations/${slug}`, title: seoTitle(i.name), description: seoDescription(integrationText(i, locale).summary) });
 }
 
 /**
@@ -41,7 +42,7 @@ export default async function IntegrationPage({ params }: { params: Promise<{ lo
   if (!i) notFound();
   const c = pick(locale, INTEGRATIONS_COPY);
   const d = c.detail;
-  const lang = catalogLang(locale);
+  const text = integrationText(i, locale);
   const modes = integrationModes(i);
   const isSource = i.kind === "source";
   const faq = isSource ? d.faq.source : d.faq.destination;
@@ -102,7 +103,7 @@ export default async function IntegrationPage({ params }: { params: Promise<{ lo
             <div className="min-w-0 flex-1">
               <p className="text-micro font-semibold tracking-wide text-primary uppercase">{d.eyebrow[i.kind]}</p>
               <h1 className="mt-2 font-display text-h1 text-ink">{i.name}</h1>
-              <p className="mt-4 max-w-text text-body text-ink-2">{i.summary[lang]}</p>
+              <p className="mt-4 max-w-text text-body text-ink-2">{text.summary}</p>
               <div className="mt-6 flex flex-wrap items-center gap-2">
                 {modes.map((m) => (
                   <Badge key={m} tone="primary">
@@ -148,9 +149,9 @@ export default async function IntegrationPage({ params }: { params: Promise<{ lo
             <IntegrationFlowDiagram kind={i.kind} modes={modes} name={i.shortName} purposeLabel={c.purposes[i.consentPurpose]} copy={{ title: d.flow.diagramTitle(i.shortName), description: d.flow.text[i.kind], caption: d.flow.caption[i.kind], nodes: d.flow.nodes, edges: d.flow.edges }} />
           </div>
         </div>
-        {i.accessNote ? (
+        {text.accessNote ? (
           <Alert tone="warn" title={d.prerequisites} className="mt-10 max-w-text">
-            {i.accessNote[lang]}
+            {text.accessNote}
           </Alert>
         ) : null}
       </IntegrationsSection>
@@ -173,7 +174,7 @@ export default async function IntegrationPage({ params }: { params: Promise<{ lo
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="min-w-0">
             <h3 className="text-base font-semibold text-ink">{d.ids.publicIds}</h3>
-            <FactList rows={i.publicIds.map((p) => ({ term: p.key, value: <>{p.label[lang]}{p.optional ? <span className="text-ink-3"> ({c.optional})</span> : null}</> }))} />
+            <FactList rows={i.publicIds.map((p) => ({ term: p.key, value: <>{publicIdLabel(text, p.key)}{p.optional ? <span className="text-ink-3"> ({c.optional})</span> : null}</> }))} />
           </div>
           <div className="min-w-0">
             <h3 className="text-base font-semibold text-ink">{d.ids.credentials}</h3>

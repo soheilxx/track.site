@@ -72,7 +72,7 @@ describe("brand guard: visible name is 'Track', 'track.site' only as domain or t
     expect(files.some((f) => f.endsWith(path.join("messages", "en", "common.json")))).toBe(true);
     expect(files.some((f) => f.endsWith(path.join("components", "marketing", "header.tsx")))).toBe(true);
     expect(files.some((f) => f.endsWith(path.join("components", "marketing", "knowledge", "hub", "sections.tsx")))).toBe(true);
-    expect(files.some((f) => f.endsWith(path.join("lib", "marketing-copy", "knowledge.ts")))).toBe(true);
+    expect(files.some((f) => f.endsWith(path.join("lib", "marketing-copy", "knowledge", "en.ts")))).toBe(true);
     expect(files.some((f) => f.endsWith(path.join("lib", "marketing-copy.ts")))).toBe(false);
   });
 

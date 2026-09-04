@@ -50,7 +50,7 @@ export function HomeAiSetup({ copy }: { copy: HomeCopy }) {
             </ol>
             <div className="mt-4 rounded-[var(--radius-card)] border border-warn/40 bg-warn-soft p-4">
               <p className="text-small font-semibold text-ink">{c.approval.title}</p>
-              <pre className="mt-3 overflow-x-auto rounded-[var(--radius-control-sm)] bg-surface p-3 font-mono text-micro leading-relaxed text-ink-2">
+              <pre tabIndex={0} role="region" aria-label={c.approval.title} className="mt-3 overflow-x-auto rounded-[var(--radius-control-sm)] bg-surface p-3 font-mono text-micro leading-relaxed text-ink-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
                 {c.approval.diff.map((line) => (
                   <span key={line} className={cn("block", line.startsWith("+") && "text-ok")}>
                     {line}

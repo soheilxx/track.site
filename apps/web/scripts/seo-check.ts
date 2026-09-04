@@ -15,6 +15,11 @@ import { ACTIVE_LOCALES, DEFAULT_LOCALE } from "../src/i18n/routing";
 
 const base = (process.env.SEO_BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const LOCALES = ACTIVE_LOCALES;
+// the release gate covers all six programme locales (supplement §7); a shorter list means a locale was withdrawn — fail loudly
+if (LOCALES.length !== 6) {
+  console.error(`SEO check: expected six active locales, routing.ts has ${LOCALES.length} (${LOCALES.join(", ")})`);
+  process.exit(1);
+}
 /** Every public URL carries its locale prefix, English included. */
 const prefix = (locale: string) => `/${locale}`;
 const KNOWLEDGE = "/tracking-knowledge";

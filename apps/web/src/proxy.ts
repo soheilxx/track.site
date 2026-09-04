@@ -1,6 +1,6 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
-import { DEFAULT_LOCALE, isKnownLocale, isLocale, routing } from "./i18n/routing";
+import { DEFAULT_LOCALE, isLocale, routing } from "./i18n/routing";
 
 /**
  * Host routing + locale routing. Production hosts map to internal path prefixes so the same app
@@ -8,9 +8,12 @@ import { DEFAULT_LOCALE, isKnownLocale, isLocale, routing } from "./i18n/routing
  *   app.track.site/x  -> /app/x      api.track.site/x -> /api/x      cdn.track.site/x -> /cdn/x
  *
  * Marketing URLs always carry a locale prefix (`/en` included). An unprefixed marketing path is
- * answered with a permanent redirect to its English URL (query string preserved); a path prefixed
- * with a programme locale that is not published yet is sent temporarily to the English version.
- * Dashboard, API, CDN, Next internals and file-like paths are never redirected or localized.
+ * answered with a permanent redirect to its English URL (query string preserved) — or to the
+ * language the visitor chose deliberately in the switcher (NEXT_LOCALE cookie), never by geo or
+ * Accept-Language detection. Every programme locale is active, so a prefixed path is passed to
+ * next-intl as is; should a locale ever be withdrawn from `ACTIVE_LOCALES`, its prefix is simply
+ * unknown here and is redirected like any other unprefixed path. Dashboard, API, CDN, Next
+ * internals and file-like paths are never redirected or localized.
  */
 const intl = createIntlMiddleware(routing);
 
@@ -47,19 +50,12 @@ export function localeRedirect(request: NextRequest): NextResponse | null {
   const { pathname } = request.nextUrl;
   if (isUnlocalizedPath(pathname)) return null;
   const segments = pathname.split("/").filter(Boolean);
-  const first = segments[0];
-  if (isLocale(first)) return null;
+  if (isLocale(segments[0])) return null;
   // a plain URL keeps the query string but not NextURL's remembered trailing slash
   const url = new URL(request.url);
   // a deliberate choice stored by the language switcher wins over the English default (no geo detection)
   const chosen = request.cookies.get("NEXT_LOCALE")?.value;
   const target = isLocale(chosen) ? chosen : DEFAULT_LOCALE;
-  if (isKnownLocale(first)) {
-    // programme locale without published content yet: temporary, so the redirect is not cached once it goes live
-    const rest = segments.slice(1).join("/");
-    url.pathname = `/${target}${rest ? `/${rest}` : ""}`;
-    return NextResponse.redirect(url, 307);
-  }
   const rest = segments.join("/");
   url.pathname = `/${target}${rest ? `/${rest}` : ""}`;
   return NextResponse.redirect(url, 308);

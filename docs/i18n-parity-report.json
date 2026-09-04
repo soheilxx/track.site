@@ -1,0 +1,485 @@
+{
+  "generatedAt": "2026-09-04T04:55:39.750Z",
+  "strict": true,
+  "allLocales": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl"
+  ],
+  "activeLocales": [
+    "en",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "nl"
+  ],
+  "reference": {
+    "messages": {
+      "app": 331,
+      "auth": 71,
+      "chat": 68,
+      "common": 77,
+      "destinations": 121
+    },
+    "copyModules": [
+      "AUTH_COPY",
+      "CONSENT_COPY",
+      "FEATURES",
+      "FEATURES_PAGE_COPY",
+      "FEATURE_DETAIL_COPY",
+      "FEATURE_UI_COPY",
+      "FOOTER_COPY",
+      "FORM_COPY",
+      "HEADER_COPY",
+      "HOME_COPY",
+      "HOW_IT_WORKS",
+      "INTEGRATIONS_COPY",
+      "INTEGRATION_CATALOG_TEXT",
+      "KNOWLEDGE_ARTICLE_COPY",
+      "KNOWLEDGE_COPY",
+      "KNOWLEDGE_HUB_COPY",
+      "KNOWLEDGE_LABELS",
+      "LEGAL",
+      "MAIL_COPY",
+      "PRICING_COPY",
+      "SECONDARY_COPY"
+    ],
+    "knowledgeGroups": 30,
+    "knowledgeGroupsPublishedEn": 30,
+    "learningPaths": [
+      "server-side-foundations",
+      "consent-and-privacy",
+      "conversion-apis",
+      "commerce-and-attribution"
+    ],
+    "catalogLabels": 95
+  },
+  "ok": true,
+  "failing": [],
+  "locales": {
+    "de": {
+      "active": true,
+      "complete": true,
+      "gaps": 0,
+      "sections": {
+        "messages": {
+          "gaps": 0,
+          "namespaces": {
+            "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "auth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "common": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            }
+          }
+        },
+        "marketingCopy": {
+          "modules": 18,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledgeLabels": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "legal": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "mail": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledge": {
+          "directory": true,
+          "groups": 30,
+          "published": 30,
+          "missing": [],
+          "unpublished": [],
+          "extra": [],
+          "slugDiffers": [],
+          "gaps": 0
+        },
+        "learningPaths": {
+          "file": true,
+          "paths": 4,
+          "missing": [],
+          "extra": [],
+          "orderDiffers": [],
+          "gaps": 0
+        },
+        "catalog": {
+          "labels": 95,
+          "missing": [],
+          "gaps": 0
+        }
+      }
+    },
+    "fr": {
+      "active": true,
+      "complete": true,
+      "gaps": 0,
+      "sections": {
+        "messages": {
+          "gaps": 0,
+          "namespaces": {
+            "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "auth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "common": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            }
+          }
+        },
+        "marketingCopy": {
+          "modules": 18,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledgeLabels": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "legal": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "mail": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledge": {
+          "directory": true,
+          "groups": 30,
+          "published": 30,
+          "missing": [],
+          "unpublished": [],
+          "extra": [],
+          "slugDiffers": [],
+          "gaps": 0
+        },
+        "learningPaths": {
+          "file": true,
+          "paths": 4,
+          "missing": [],
+          "extra": [],
+          "orderDiffers": [],
+          "gaps": 0
+        },
+        "catalog": {
+          "labels": 95,
+          "missing": [],
+          "gaps": 0
+        }
+      }
+    },
+    "es": {
+      "active": true,
+      "complete": true,
+      "gaps": 0,
+      "sections": {
+        "messages": {
+          "gaps": 0,
+          "namespaces": {
+            "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "auth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "common": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            }
+          }
+        },
+        "marketingCopy": {
+          "modules": 18,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledgeLabels": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "legal": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "mail": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledge": {
+          "directory": true,
+          "groups": 30,
+          "published": 30,
+          "missing": [],
+          "unpublished": [],
+          "extra": [],
+          "slugDiffers": [],
+          "gaps": 0
+        },
+        "learningPaths": {
+          "file": true,
+          "paths": 4,
+          "missing": [],
+          "extra": [],
+          "orderDiffers": [],
+          "gaps": 0
+        },
+        "catalog": {
+          "labels": 95,
+          "missing": [],
+          "gaps": 0
+        }
+      }
+    },
+    "it": {
+      "active": true,
+      "complete": true,
+      "gaps": 0,
+      "sections": {
+        "messages": {
+          "gaps": 0,
+          "namespaces": {
+            "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "auth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "common": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            }
+          }
+        },
+        "marketingCopy": {
+          "modules": 18,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledgeLabels": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "legal": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "mail": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledge": {
+          "directory": true,
+          "groups": 30,
+          "published": 30,
+          "missing": [],
+          "unpublished": [],
+          "extra": [],
+          "slugDiffers": [],
+          "gaps": 0
+        },
+        "learningPaths": {
+          "file": true,
+          "paths": 4,
+          "missing": [],
+          "extra": [],
+          "orderDiffers": [],
+          "gaps": 0
+        },
+        "catalog": {
+          "labels": 95,
+          "missing": [],
+          "gaps": 0
+        }
+      }
+    },
+    "nl": {
+      "active": true,
+      "complete": true,
+      "gaps": 0,
+      "sections": {
+        "messages": {
+          "gaps": 0,
+          "namespaces": {
+            "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "auth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "chat": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "common": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "destinations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            }
+          }
+        },
+        "marketingCopy": {
+          "modules": 18,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledgeLabels": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "legal": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "mail": {
+          "modules": 1,
+          "missingModules": [],
+          "drift": [],
+          "gaps": 0
+        },
+        "knowledge": {
+          "directory": true,
+          "groups": 30,
+          "published": 30,
+          "missing": [],
+          "unpublished": [],
+          "extra": [],
+          "slugDiffers": [],
+          "gaps": 0
+        },
+        "learningPaths": {
+          "file": true,
+          "paths": 4,
+          "missing": [],
+          "extra": [],
+          "orderDiffers": [],
+          "gaps": 0
+        },
+        "catalog": {
+          "labels": 95,
+          "missing": [],
+          "gaps": 0
+        }
+      }
+    }
+  }
+}

@@ -6,11 +6,13 @@ import { PlanCards, type PlanView } from "@/components/app/billing";
 import { planSelectionFromSearchParams } from "@/components/marketing/pricing/plan-selection";
 import { billingOverview, priceIdFor } from "@/server/billing";
 import { env } from "@/env";
+import { formatCents } from "@/lib/format";
 import { planBullets } from "@/server/pricing";
 import { requireOrgContext } from "@/server/session";
 
+/** Plan price in whole euros in the user's locale (`lib/format.ts`, one BCP 47 tag per app locale). */
 function money(cents: number, currency: string, locale: string): string {
-  return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-IE", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+  return formatCents(cents, locale, { currency, minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 export default async function BillingPage({ searchParams }: { searchParams: Promise<{ checkout?: string; plan?: string; interval?: string }> }) {

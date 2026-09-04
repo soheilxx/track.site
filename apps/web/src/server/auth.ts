@@ -10,6 +10,13 @@ import { createAccessControl } from "better-auth/plugins/access";
 import { env } from "../env";
 import { db, logger } from "./db";
 import { sendMail } from "./mail";
+import { getMailCopy, renderMail } from "./mail/templates";
+
+/** Stored language preference of a user record (additional field `locale`); undefined → English templates. */
+function userLocale(user: unknown): string | undefined {
+  const locale = (user as { locale?: unknown } | null)?.locale;
+  return typeof locale === "string" ? locale : undefined;
+}
 
 /** Transactional mails must not fail silently: a transport error is logged (without addresses) and surfaced to the caller. */
 async function mustSend(mail: Parameters<typeof sendMail>[0]): Promise<void> {
@@ -76,7 +83,7 @@ function createAuth() {
       requireEmailVerification: true,
       autoSignIn: false,
       sendResetPassword: async ({ user, url }) => {
-        await mustSend({ to: user.email, subject: "Reset your Track password", text: `Reset your password: ${url}\n\nIf you did not request this, ignore this e-mail.` });
+        await mustSend({ to: user.email, ...renderMail(getMailCopy(userLocale(user)).resetPassword, { url }) });
       },
     },
     emailVerification: {
@@ -84,7 +91,7 @@ function createAuth() {
       autoSignInAfterVerification: true,
       expiresIn: 60 * 60 * 24,
       sendVerificationEmail: async ({ user, url }) => {
-        await mustSend({ to: user.email, subject: "Verify your e-mail for Track", text: `Welcome to Track. Confirm your e-mail address: ${url}` });
+        await mustSend({ to: user.email, ...renderMail(getMailCopy(userLocale(user)).verifyEmail, { url }) });
       },
     },
     plugins: [
@@ -97,7 +104,8 @@ function createAuth() {
         membershipLimit: 100,
         invitationExpiresIn: 60 * 60 * 24 * 7,
         sendInvitationEmail: async ({ email, organization: org, inviter, id }) => {
-          await mustSend({ to: email, subject: `${inviter.user.name} invited you to ${org.name} on Track`, text: `Accept the invitation: ${baseURL}/accept-invitation/${id}` });
+          // the invitee has no account yet, so the inviter's language (the organisation's working language) is used
+          await mustSend({ to: email, ...renderMail(getMailCopy(userLocale(inviter.user)).invitation, { inviter: inviter.user.name, organization: org.name, url: `${baseURL}/accept-invitation/${id}` }) });
         },
       }),
       twoFactor({ issuer: "Track" }),

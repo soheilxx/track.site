@@ -1,0 +1,121 @@
+import type { KnowledgeCopy, KnowledgeHubCopy } from "../types";
+
+/**
+ * French (fr) copy of the knowledge area. Same shape as en.ts; see docs/14-localization.md.
+ * "Tracking Knowledge" and "Track" never change. Register: vous.
+ */
+
+export const KNOWLEDGE_HUB_COPY_FR: KnowledgeHubCopy = {
+  meta: {
+    description: "Guides, tutoriels et références sur le tracking côté serveur, le consentement, la déduplication et l’attribution pour chaque plateforme publicitaire et plateforme e-commerce.",
+    searchTitle: "Recherche « {q} »",
+  },
+  breadcrumbs: { label: "Fil d’Ariane", home: "Track" },
+  hero: {
+    eyebrow: "Track",
+    lead: "Le tracking côté serveur, le consentement, la déduplication et l’attribution, expliqués par l’équipe qui construit les connecteurs. Recherchez, parcourez par thématique ou suivez un parcours d’apprentissage.",
+    articles: { one: "{n} article", other: "{n} articles" },
+    topics: { one: "{n} thématique", other: "{n} thématiques" },
+    browse: "Parcourir le répertoire",
+    rss: "Flux RSS",
+  },
+  search: {
+    label: "Rechercher dans Tracking Knowledge",
+    placeholder: "Rechercher, p. ex. event_id, Consent Mode, Shopify …",
+    clear: "Effacer la recherche",
+    submit: "Rechercher",
+    hint: "Les fautes de frappe et les accents sont tolérés. Les résultats se mettent à jour pendant la saisie.",
+    resultsAll: "Les {total} articles",
+    resultsSome: "{n} articles sur {total}",
+    resultsQuery: "{n} articles sur {total} pour « {q} »",
+  },
+  featured: { eyebrow: "À la une", read: "Lire l’article" },
+  topics: {
+    eyebrow: "Univers thématiques",
+    title: "Neuf thématiques, une seule taxonomie",
+    text: "Chaque article appartient à exactement une thématique. Ouvrez une thématique pour voir ses articles dans le répertoire.",
+    articles: { one: "{n} article", other: "{n} articles" },
+    descriptions: {
+      "getting-started": "Taxonomie des événements, première configuration et plans de migration : là où le tracking avec Track commence.",
+      "pixel-platform-integrations": "Meta, Google, TikTok, LinkedIn, Microsoft et plus : pixels, API de conversion et les champs attendus par chaque plateforme.",
+      "server-side-tracking": "Ce qui change lorsque les événements quittent le navigateur : domaines first-party, déduplication et livraison.",
+      "ecommerce-tracking": "Shopify, WooCommerce et Shopware : commandes vérifiées, événements d’achat et appariement par identifiant de commande.",
+      "consent-privacy": "Consent Mode, TCF, conservation et demandes des personnes concernées : un tracking qui respecte le choix.",
+      "attribution-analytics": "Identifiants de clic, fenêtres d’attribution, conversions hors ligne et tracking des leads sans double comptage.",
+      "ai-data-quality": "Le Tracking Health Score, les outils IA typés et les contrôles qui gardent les données honnêtes.",
+      troubleshooting: "Bloqueurs de publicité, ITP, playbooks d’incident et kill switch : quand les chiffres ne concordent pas.",
+      "product-updates": "Configuration signée, versions publiées et ce qui a changé dans Track.",
+    },
+  },
+  paths: {
+    eyebrow: "Parcours d’apprentissage",
+    title: "Des ordres de lecture sélectionnés",
+    text: "Plusieurs articles dans l’ordre où ils s’appuient les uns sur les autres, avec le temps de lecture total réel.",
+    steps: { one: "{n} étape", other: "{n} étapes" },
+    minutes: "{n} min",
+    step: "Étape {n}",
+  },
+  guides: {
+    eyebrow: "Plateformes et plateformes e-commerce",
+    title: "Guides par plateforme et par plateforme e-commerce",
+    text: "Chaque plateforme et chaque plateforme e-commerce avec au moins un article. Chaque lien ouvre le répertoire filtré en conséquence.",
+    platforms: "Plateformes",
+    shopSystems: "Plateformes e-commerce",
+    articles: { one: "{n} article", other: "{n} articles" },
+  },
+  fresh: {
+    eyebrow: "Nouveautés",
+    newTitle: "Récemment publiés",
+    newText: "Les derniers articles par date de publication.",
+    updatedTitle: "Récemment mis à jour",
+    updatedText: "Les articles révisés après leur publication, révision la plus récente en premier.",
+    updatedEmpty: "Aucun article n’a encore été révisé depuis sa publication. Les révisions apparaîtront ici avec leur date.",
+  },
+  directory: {
+    eyebrow: "Répertoire",
+    title: "Tous les articles",
+    text: "Filtrez par thématique, plateforme, plateforme e-commerce, type de contenu, niveau et période. Les nombres à côté de chaque filtre sont de vrais nombres de résultats.",
+    filtersTitle: "Filtres",
+    facets: { topic: "Thématique", platform: "Plateforme", shopSystem: "Plateforme e-commerce", contentType: "Type de contenu", level: "Niveau", recency: "Période" },
+    all: "Tous",
+    reset: "Réinitialiser les filtres",
+    listLabel: "Articles",
+    emptyTitle: "Aucun article ne correspond encore à cette recherche.",
+    emptyText: "Essayez un mot plus court, vérifiez l’orthographe ou retirez un filtre. Chaque article publié figure dans le répertoire.",
+    emptyAction: "Afficher tous les articles",
+    searching: "Recherche en cours …",
+  },
+  card: { minutes: "{n} min de lecture", published: "Publié le", updated: "Mis à jour le" },
+  cta: {
+    eyebrow: "Track",
+    title: "Voyez le flux sur votre propre site",
+    text: "Ajoutez le snippet, connectez une destination et observez les événements, les états de consentement et les livraisons dans le tableau de bord Track.",
+    primary: "Commencer avec votre domaine",
+    secondary: "Comment fonctionne Track",
+  },
+};
+
+/** Index page metadata, feed and social-card copy; "Tracking Knowledge" is the fixed product name. */
+export const KNOWLEDGE_COPY_FR: KnowledgeCopy = {
+  name: "Tracking Knowledge",
+  intro: "Des guides pratiques sur le tracking côté serveur, le consentement, la déduplication, l’attribution et chaque plateforme publicitaire — rédigés par l’équipe qui construit les connecteurs.",
+  cardAlt: "Track Tracking Knowledge : guides sur le tracking côté serveur, le consentement, la déduplication et l’attribution",
+  feedDescription: "Guides sur le tracking côté serveur, le consentement et l’attribution",
+  all: "Toutes les thématiques",
+  minutes: "{n} min de lecture",
+  rss: "Flux RSS",
+  empty: "Aucun article publié pour le moment.",
+  emptyFiltered: "Aucun article ne correspond encore à cette sélection.",
+  filtered: "Vue filtrée",
+  reset: "Afficher tous les articles",
+  updated: "Mis à jour le",
+  published: "Publié le",
+  reviewed: "Relu le",
+  sources: "Sources",
+  related: "Articles associés",
+  by: "Par",
+  topic: "Thématique",
+  level: "Niveau",
+  legal: "Cet article fournit des informations générales et ne constitue pas un conseil juridique. Consultez votre conseil en protection des données pour votre situation particulière.",
+  breadcrumbHome: "Track",
+};

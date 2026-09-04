@@ -1,14 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import { AFFILIATE_PRESETS, buildIntegrationMatrix } from "@track-site/connectors";
 import { DESTINATION_CLICK_IDS, DESTINATION_PURPOSE, type ConnectorType } from "@track-site/policy";
+import { ALL_LOCALES } from "@/i18n/routing";
 import { INTEGRATIONS, INTEGRATION_CATEGORIES, integrationModes } from "@/lib/integrations-catalog";
+import { INTEGRATION_CATALOG_TEXT } from "@/lib/marketing-copy/integration-catalog";
 import { INTEGRATIONS_COPY } from "@/lib/marketing-copy/integrations";
 import { COPY_LOCALES } from "@/lib/marketing-copy/types";
 import { countByCategory, countByMode, filterIntegrations, groupByCategory, integrationQueryToSearch, parseIntegrationQuery, relatedKnowledgeFor, searchScore, toSearchable } from "./catalog";
+import { integrationText, publicIdLabel } from "./text";
 
 vi.mock("server-only", () => ({}));
 
-const items = INTEGRATIONS.map((i) => toSearchable(i, "en"));
+const items = INTEGRATIONS.map((i) => toSearchable(i, i.summary.en));
 const bySlug = (slug: string) => items.find((i) => i.slug === slug)!;
 
 describe("integrations catalogue vs connector registry", () => {
@@ -66,11 +69,32 @@ describe("integrations catalogue vs connector registry", () => {
           expect(c.credentialKinds[cred.kind]).toBeTruthy();
           if (cred.oauth) expect(c.oauthProviders[cred.oauth]).toBeTruthy();
         }
-        for (const id of i.publicIds) expect(id.label[locale]).toBeTruthy();
-        expect(i.summary[locale]).toBeTruthy();
-        if (i.accessNote) expect(i.accessNote[locale]).toBeTruthy();
       }
     }
+  });
+
+  it("has a summary, prerequisite note and public-id labels for every entry in all six locales (no English fallback on a localized page)", () => {
+    expect([...COPY_LOCALES]).toEqual([...ALL_LOCALES]);
+    for (const locale of ALL_LOCALES) {
+      const text = INTEGRATION_CATALOG_TEXT[locale];
+      expect(Object.keys(text).sort(), `${locale}: exactly the catalogue slugs`).toEqual(INTEGRATIONS.map((i) => i.slug).sort());
+      for (const i of INTEGRATIONS) {
+        const t = integrationText(i, locale);
+        expect(t.summary.trim().length, `${locale}/${i.slug} summary`).toBeGreaterThan(10);
+        // the note exists in every language or in none: it is a vendor fact, not optional copy
+        expect(t.accessNote === null, `${locale}/${i.slug} accessNote`).toBe(i.accessNote === null);
+        if (i.accessNote) expect(t.accessNote!.trim().length).toBeGreaterThan(10);
+        expect(Object.keys(t.publicIds).sort(), `${locale}/${i.slug} public ids`).toEqual(i.publicIds.map((p) => p.key).sort());
+        for (const id of i.publicIds) expect(publicIdLabel(t, id.key), `${locale}/${i.slug}/${id.key}`).not.toBe(id.key);
+      }
+    }
+    // English and German are the catalogue's own strings, never a diverging copy
+    for (const i of INTEGRATIONS) {
+      expect(integrationText(i, "en").summary).toBe(i.summary.en);
+      expect(integrationText(i, "de").summary).toBe(i.summary.de);
+      for (const id of i.publicIds) expect(publicIdLabel(integrationText(i, "de"), id.key)).toBe(id.label.de);
+    }
+    expect(() => integrationText({ slug: "not-in-catalogue" }, "fr")).toThrow(/not-in-catalogue/);
   });
 });
 
