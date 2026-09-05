@@ -1,0 +1,42 @@
+{
+  "project": "xb-mobile-chromium-pixel7",
+  "page": "app-sheet-open",
+  "at": "2026-09-05T14:53:23.309Z",
+  "measure": {
+    "innerWidth": 412,
+    "innerHeight": 839,
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "bodyScrollWidth": 412,
+    "visualViewport": {
+      "width": 412,
+      "scale": 1
+    },
+    "dpr": 2.625,
+    "coarsePointer": true,
+    "wideElements": [],
+    "ua": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Mobile Safari/537.36"
+  },
+  "sheet": {
+    "x": 0,
+    "y": 0,
+    "width": 412,
+    "height": 839
+  },
+  "composer": {
+    "x": 16,
+    "y": 763,
+    "width": 328,
+    "height": 64,
+    "bottom": 827
+  },
+  "axe": {
+    "violationsByImpact": {},
+    "rules": [],
+    "serious": [],
+    "passes": 23,
+    "incomplete": 1,
+    "axeVersion": "4.13.0"
+  },
+  "consoleErrors": []
+}

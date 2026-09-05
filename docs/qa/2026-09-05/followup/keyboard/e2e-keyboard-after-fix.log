@@ -1,0 +1,14 @@
+﻿
+Running 1 test using 1 worker
+
+node.exe : (node:34448) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+In C:\Users\Soheil\AppData\Roaming\npm\pnpm.ps1:24 Zeichen:5
++     & "node$exe"  "$basedir/node_modules/pnpm/bin/pnpm.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:34448) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\app.spec.ts:528:3 › mobile on-screen keyboard › the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts (3.6s)
+
+  1 passed (4.3s)

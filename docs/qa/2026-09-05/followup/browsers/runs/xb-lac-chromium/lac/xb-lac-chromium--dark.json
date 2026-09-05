@@ -1,0 +1,47 @@
+{
+  "project": "xb-lac-chromium",
+  "case": "dark",
+  "at": "2026-09-05T14:52:09.029Z",
+  "settledTier": "webgl",
+  "probe": {
+    "tier": "webgl",
+    "state": "idle",
+    "pref": "system",
+    "htmlMotion": "system",
+    "theme": "dark",
+    "panelState": "idle",
+    "webgl2StrictLowPower": true,
+    "webgl2Lenient": true,
+    "canvas": {
+      "backing": [
+        399,
+        224
+      ],
+      "css": [
+        399,
+        224
+      ],
+      "opacity": "1"
+    },
+    "coreCss": [
+      399,
+      224
+    ],
+    "blobKeyframes": [
+      "none",
+      "none",
+      "none"
+    ],
+    "runningAnimations": 0,
+    "reducedMotion": false,
+    "coarsePointer": false,
+    "dpr": 1,
+    "requestIdleCallback": "function",
+    "counters": {
+      "draws": 36,
+      "frames": 72
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36"
+  },
+  "consoleErrors": []
+}

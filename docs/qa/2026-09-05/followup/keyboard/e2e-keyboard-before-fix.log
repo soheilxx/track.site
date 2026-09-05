@@ -1,0 +1,42 @@
+﻿
+Running 1 test using 1 worker
+
+node.exe : (node:37004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+In C:\Users\Soheil\AppData\Roaming\npm\pnpm.ps1:24 Zeichen:5
++     & "node$exe"  "$basedir/node_modules/pnpm/bin/pnpm.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:37004) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › e2e\app.spec.ts:528:3 › mobile on-screen keyboard › the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts (3.6s)
+
+
+  1) [chromium] › e2e\app.spec.ts:528:3 › mobile on-screen keyboard › the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 342
+    Received:    707
+
+      569 |     // the last message stays fully inside the (smaller) transcript region, above the composer
+      570 |     expect(after.lastMessage!.top).toBeGreaterThanOrEqual(after.list.top - 1);
+    > 571 |     expect(after.lastMessage!.bottom).toBeLessThanOrEqual(after.list.bottom + 1);
+          |                                       ^
+      572 |     expect(after.lastMessage!.bottom).toBeLessThanOrEqual(after.composer!.top);
+      573 |     await expect(last).toBeInViewport({ ratio: 1 });
+      574 |     // only the transcript scrolled to keep the end in view; no shift counts towards CLS
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\app.spec.ts:571:39
+
+    Error Context: test-results\app-mobile-on-screen-keybo-f8ebd-the-keyboard-nothing-shifts-chromium\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\app-mobile-on-screen-keybo-f8ebd-the-keyboard-nothing-shifts-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\app-mobile-on-screen-keybo-f8ebd-the-keyboard-nothing-shifts-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e\app.spec.ts:528:3 › mobile on-screen keyboard › the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts 

@@ -1,0 +1,137 @@
+[
+  {
+    "file": "app-overview-1440-actual.webp",
+    "sourcePx": [
+      1440,
+      900
+    ],
+    "outputPx": [
+      1440,
+      900
+    ],
+    "bytes": 70556,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "app-overview-1440-diff.webp",
+    "sourcePx": [
+      1440,
+      900
+    ],
+    "outputPx": [
+      1440,
+      900
+    ],
+    "bytes": 57298,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "app-overview-1440-expected.webp",
+    "sourcePx": [
+      1440,
+      900
+    ],
+    "outputPx": [
+      1440,
+      900
+    ],
+    "bytes": 79690,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "article-consent-mode-v2-guide-375-actual.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 109468,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "article-consent-mode-v2-guide-375-diff.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 100394,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "article-consent-mode-v2-guide-375-expected.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 130016,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "home-375-actual.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 87566,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "home-375-diff.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 77330,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "home-375-expected.webp",
+    "sourcePx": [
+      375,
+      2500
+    ],
+    "outputPx": [
+      375,
+      2500
+    ],
+    "bytes": 99620,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  }
+]

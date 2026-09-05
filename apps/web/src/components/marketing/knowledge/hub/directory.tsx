@@ -5,7 +5,7 @@ import { useId, type MouseEvent } from "react";
 import { Badge, EmptyState, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 import { FACET_KEYS, hubQueryToSearch, withoutFacet, type FacetKey, type HubQuery } from "@/lib/knowledge-search";
-import { KNOWLEDGE_PATH } from "@/lib/routes";
+import { KNOWLEDGE_PATH } from "@/lib/knowledge-routes";
 import { Cover } from "../cover";
 import { useHub } from "./provider";
 import { resultsText } from "./search-box";

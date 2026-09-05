@@ -1,0 +1,243 @@
+import { expect, test, type Page } from "@playwright/test";
+import fs from "node:fs";
+import path from "node:path";
+
+/**
+ * TEMPORARY (task E2, cross-browser matrix, 2026-09-05) — deleted after the run.
+ * Living AI Core tier matrix per engine on /app with the stored owner session: WebGL2 availability,
+ * the tier the component chose, the fallbacks (reduced motion → static, WebGL2 unavailable → css,
+ * context loss → css), the dark theme, and the console errors of every case. Results are written as
+ * JSON + panel screenshots into XB_OUT/lac/<project>--<case>.{json,png}; the summary is built from
+ * those files. Runs only inside the `xb-lac-*` projects of playwright.xbrowser.config.mjs (guard in the hook
+ * inserted by make-tmp-specs.mjs).
+ */
+const OUT = path.join(process.env.XB_OUT ?? path.resolve("test-results-xbrowser"), "lac");
+const SETTLE_MS = 6_000;
+
+interface Collected {
+  errors: string[];
+}
+
+function collectConsole(page: Page): Collected {
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(`console.error: ${message.text()}`);
+  });
+  page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
+  return { errors };
+}
+
+/** Counts WebGL draw calls and animation frames from the first script on (informative: draw rate of the webgl tier). */
+const INSTRUMENT = () => {
+  const w = window as unknown as { __xb: { draws: number; frames: number } };
+  w.__xb = { draws: 0, frames: 0 };
+  const proto = (globalThis as { WebGL2RenderingContext?: { prototype: { drawArrays: (...args: unknown[]) => void } } }).WebGL2RenderingContext;
+  if (proto) {
+    const orig = proto.prototype.drawArrays;
+    proto.prototype.drawArrays = function (this: unknown, ...args: unknown[]) {
+      w.__xb.draws += 1;
+      return orig.apply(this, args);
+    };
+  }
+  const raf = window.requestAnimationFrame.bind(window);
+  window.requestAnimationFrame = (cb) =>
+    raf((t) => {
+      w.__xb.frames += 1;
+      cb(t);
+    });
+};
+
+const PROBE = () => {
+  const w = window as unknown as { __xb?: { draws: number; frames: number } };
+  const core = document.querySelector<HTMLElement>('[data-testid="living-ai-core"]');
+  const canvas = document.querySelector<HTMLCanvasElement>("canvas.lac-gl");
+  const coreBox = document.querySelector<HTMLElement>(".lac-core")?.getBoundingClientRect();
+  const probeCanvas = (attrs?: WebGLContextAttributes) => {
+    try {
+      return document.createElement("canvas").getContext("webgl2", attrs) !== null;
+    } catch {
+      return false;
+    }
+  };
+  const blobs = Array.from(document.querySelectorAll<HTMLElement>(".lac-blob > i"));
+  const running = document.getAnimations().filter((a) => {
+    const target = (a.effect as KeyframeEffect | null)?.target;
+    return target instanceof Element && target.closest(".lac") !== null && a.playState === "running";
+  }).length;
+  return {
+    tier: core?.getAttribute("data-tier") ?? null,
+    state: core?.getAttribute("data-state") ?? null,
+    pref: core?.getAttribute("data-pref") ?? null,
+    htmlMotion: document.documentElement.getAttribute("data-ai-motion"),
+    theme: document.documentElement.getAttribute("data-theme"),
+    panelState: document.querySelector('[data-testid="assistant-panel"]')?.getAttribute("data-ai-state") ?? null,
+    webgl2StrictLowPower: probeCanvas({ failIfMajorPerformanceCaveat: true, powerPreference: "low-power" }),
+    webgl2Lenient: probeCanvas(),
+    canvas: canvas
+      ? { backing: [canvas.width, canvas.height], css: [Math.round(canvas.getBoundingClientRect().width), Math.round(canvas.getBoundingClientRect().height)], opacity: getComputedStyle(canvas).opacity }
+      : null,
+    coreCss: coreBox ? [Math.round(coreBox.width), Math.round(coreBox.height)] : null,
+    blobKeyframes: blobs.map((b) => getComputedStyle(b).animationName),
+    runningAnimations: running,
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+    coarsePointer: matchMedia("(pointer: coarse)").matches,
+    dpr: window.devicePixelRatio,
+    requestIdleCallback: typeof (window as { requestIdleCallback?: unknown }).requestIdleCallback,
+    counters: w.__xb ? { ...w.__xb } : null,
+    ua: navigator.userAgent,
+  };
+};
+
+type Probe = ReturnType<typeof PROBE>;
+
+async function settleTier(page: Page, wanted: RegExp, maxMs = SETTLE_MS): Promise<string | null> {
+  const core = page.getByTestId("living-ai-core");
+  await expect(core).toBeAttached();
+  const started = Date.now();
+  let tier = await core.getAttribute("data-tier");
+  while (!(tier && wanted.test(tier)) && Date.now() - started < maxMs) {
+    await page.waitForTimeout(250);
+    tier = await core.getAttribute("data-tier");
+  }
+  return tier;
+}
+
+async function record(page: Page, name: string, data: Record<string, unknown>) {
+  const project = test.info().project.name;
+  fs.mkdirSync(OUT, { recursive: true });
+  const file = path.join(OUT, `${project}--${name}`);
+  fs.writeFileSync(`${file}.json`, JSON.stringify({ project, case: name, at: new Date().toISOString(), ...data }, null, 2));
+  const panel = page.getByTestId("assistant-panel");
+  if ((await panel.count()) > 0) await panel.screenshot({ path: `${file}.png` }).catch(() => undefined);
+}
+
+async function open(page: Page) {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/app");
+  await expect(page.getByTestId("app-shell")).toBeVisible();
+  await expect(page.getByTestId("assistant-panel")).toBeVisible();
+}
+
+test.describe("Living AI Core tiers", () => {
+  test("default motion: WebGL2 availability, the tier chosen and the draw rate", async ({ page }) => {
+    const { errors } = collectConsole(page);
+    await page.addInitScript(INSTRUMENT);
+    await open(page);
+    const settled = await settleTier(page, /^webgl$/);
+    const before = await page.evaluate(PROBE);
+    await page.waitForTimeout(2_000);
+    const after = await page.evaluate(PROBE);
+    const draws = (after.counters?.draws ?? 0) - (before.counters?.draws ?? 0);
+    const frames = (after.counters?.frames ?? 0) - (before.counters?.frames ?? 0);
+    await record(page, "default", { settledTier: settled, probe: after, drawsPer2s: draws, rafPer2s: frames, consoleErrors: errors });
+    expect(after.tier, "hydrated tier is css or webgl (static only for reduced/off)").toMatch(/^(css|webgl)$/);
+    if (after.tier === "webgl") {
+      expect(after.canvas, "webgl tier renders the canvas").not.toBeNull();
+      // ≤ 30 fps (docs/15 §4): at most ~60 draws in 2 s plus tolerance for timer jitter
+      expect(draws).toBeLessThanOrEqual(70);
+      expect(draws).toBeGreaterThan(0);
+    } else {
+      expect(after.blobKeyframes.length).toBeGreaterThan(0);
+      expect(after.blobKeyframes.every((name: string) => name !== "none"), "css tier runs the drift keyframes").toBe(true);
+    }
+    expect(errors, "no console errors on /app").toEqual([]);
+  });
+
+  test("prefers-reduced-motion: static tier, no frames, no canvas", async ({ page }) => {
+    const { errors } = collectConsole(page);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.addInitScript(INSTRUMENT);
+    await open(page);
+    await page.waitForTimeout(2_500);
+    const probe = await page.evaluate(PROBE);
+    await record(page, "reduced-motion", { probe, consoleErrors: errors });
+    expect(probe.reducedMotion).toBe(true);
+    expect(probe.tier).toBe("static");
+    expect(probe.canvas).toBeNull();
+    expect(probe.runningAnimations).toBe(0);
+    expect(probe.blobKeyframes.every((name: string) => name === "none")).toBe(true);
+    expect(probe.counters?.draws ?? 0).toBe(0);
+    expect(errors).toEqual([]);
+  });
+
+  test("WebGL2 unavailable: silent css fallback, the chat stays usable", async ({ page }) => {
+    const { errors } = collectConsole(page);
+    await page.addInitScript(() => {
+      const orig = HTMLCanvasElement.prototype.getContext;
+      // @ts-expect-error — deliberately returns null for webgl2 only
+      HTMLCanvasElement.prototype.getContext = function (type: string, ...rest: unknown[]) {
+        if (type === "webgl2") return null;
+        return (orig as unknown as (...a: unknown[]) => unknown).call(this, type, ...rest);
+      };
+    });
+    await page.addInitScript(INSTRUMENT);
+    await open(page);
+    await page.waitForTimeout(3_000);
+    const probe = await page.evaluate(PROBE);
+    await record(page, "no-webgl2", { probe, consoleErrors: errors });
+    expect(probe.webgl2Lenient).toBe(false);
+    expect(probe.tier).toBe("css");
+    expect(probe.canvas, "the canvas is released after the failed init").toBeNull();
+    expect(probe.blobKeyframes.every((name: string) => name !== "none")).toBe(true);
+    expect(probe.runningAnimations).toBeGreaterThan(0);
+    // chat still usable: composer focusable and typed into
+    const composer = page.getByTestId("assistant-composer");
+    await composer.click();
+    await expect(composer).toBeFocused();
+    await page.keyboard.type("x");
+    await page.keyboard.press("Backspace");
+    expect(errors).toEqual([]);
+  });
+
+  test("lost WebGL context: css fallback without a chat interruption", async ({ page }) => {
+    const { errors } = collectConsole(page);
+    await page.addInitScript(INSTRUMENT);
+    await open(page);
+    const settled = await settleTier(page, /^webgl$/);
+    if (settled !== "webgl") {
+      await record(page, "context-lost", { applicable: false, reason: `tier after settle is ${settled}, no context to lose`, consoleErrors: errors });
+      test.info().annotations.push({ type: "not applicable", description: `tier ${settled}` });
+      return;
+    }
+    const lost = await page.evaluate(() => {
+      const canvas = document.querySelector<HTMLCanvasElement>("canvas.lac-gl");
+      const gl = canvas?.getContext("webgl2");
+      const ext = gl?.getExtension("WEBGL_lose_context");
+      if (!ext) return false;
+      ext.loseContext();
+      return true;
+    });
+    expect(lost, "WEBGL_lose_context available").toBe(true);
+    const tier = await settleTier(page, /^css$/, 3_000);
+    await page.waitForTimeout(800);
+    const probe = await page.evaluate(PROBE);
+    await record(page, "context-lost", { applicable: true, tierAfterLoss: tier, probe, consoleErrors: errors });
+    expect(tier).toBe("css");
+    expect(probe.canvas).toBeNull();
+    expect(probe.blobKeyframes.every((name: string) => name !== "none")).toBe(true);
+    await expect(page.getByTestId("assistant-composer")).toBeVisible();
+    // a forced loss may be echoed by the engine as a console message; anything else is a defect
+    const unexpected = errors.filter((e) => !/context lost|CONTEXT_LOST/i.test(e));
+    expect(unexpected).toEqual([]);
+  });
+
+  test("dark theme: same tier, no console errors", async ({ page }) => {
+    const { errors } = collectConsole(page);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("ts-theme", "dark");
+      } catch {
+        /* storage unavailable */
+      }
+    });
+    await page.addInitScript(INSTRUMENT);
+    await open(page);
+    const settled = await settleTier(page, /^webgl$/);
+    await page.waitForTimeout(1_000);
+    const probe = await page.evaluate(PROBE);
+    await record(page, "dark", { settledTier: settled, probe, consoleErrors: errors });
+    expect(probe.theme).toBe("dark");
+    expect(probe.tier).toMatch(/^(css|webgl)$/);
+    expect(errors).toEqual([]);
+  });
+});

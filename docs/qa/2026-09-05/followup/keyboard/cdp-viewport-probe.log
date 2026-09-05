@@ -1,0 +1,5 @@
+2026-09-05T14:59:03.206Z http://localhost:3014 chromium 151.0.7922.34
+sheet open, composer focused: {"visualViewport":{"width":375,"height":812,"offsetTop":0,"scale":1},"innerHeight":812,"sheetHeight":812}
+after Emulation.setDeviceMetricsOverride viewport {x:0,y:382,w:375,h:430,scale:1}: {"visualViewport":{"width":375,"height":812,"offsetTop":0,"scale":1},"innerHeight":812,"sheetHeight":812}
+after Emulation.setVisibleSize 375x430: {"visualViewport":{"width":375,"height":812,"offsetTop":0,"scale":1},"innerHeight":812,"sheetHeight":812}
+after page.setViewportSize 375x430: {"visualViewport":{"width":375,"height":430,"offsetTop":0,"scale":1},"innerHeight":430,"sheetHeight":430}

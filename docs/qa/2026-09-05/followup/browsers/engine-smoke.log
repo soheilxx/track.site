@@ -1,0 +1,3 @@
+chromium: launched=true version=151.0.7922.34 error=-
+firefox: launched=false version=null error=browserType.launch: spawn UNKNOWN | Call log: | [2m  - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-MRgI35 -juggler-pipe -silent[22m | 
+webkit: launched=true version=26.5 error=-

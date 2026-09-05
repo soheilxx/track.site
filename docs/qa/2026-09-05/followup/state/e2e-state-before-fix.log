@@ -1,0 +1,43 @@
+﻿
+Running 2 tests using 1 worker
+
+node.exe : (node:43172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+In C:\Users\Soheil\AppData\Roaming\npm\pnpm.ps1:24 Zeichen:5
++     & "node$exe"  "$basedir/node_modules/pnpm/bin/pnpm.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:43172) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\app.spec.ts:653:3 › Track AI state across routes and sites › the transcript, the scroll position, the draft and the panel geometry survive a route change (2.9s)
+  x  2 [chromium] › e2e\app.spec.ts:688:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript (111ms)
+
+
+  1) [chromium] › e2e\app.spec.ts:688:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript 
+
+    Error: ENOENT: no such file or directory, open 'C:\Users\Soheil\Downloads\track.site\apps\.env'
+
+      591 | function databaseUrl(rootDir: string): string {
+      592 |   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+    > 593 |   const env = fs.readFileSync(path.resolve(rootDir, "../../.env"), "utf8");
+          |                  ^
+      594 |   const m = /^DATABASE_URL=(.+)$/m.exec(env);
+      595 |   if (!m) throw new Error("DATABASE_URL is neither set nor in the root .env");
+      596 |   return m[1]!.trim().replace(/^"(.*)"$/, "$1");
+        at databaseUrl (C:\Users\Soheil\Downloads\track.site\apps\web\e2e\app.spec.ts:593:18)
+        at withSecondSite (C:\Users\Soheil\Downloads\track.site\apps\web\e2e\app.spec.ts:606:52)
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\app.spec.ts:690:11
+
+    Error Context: test-results\app-Track-AI-state-across--35cf3-the-other-site-s-transcript-chromium\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\app-Track-AI-state-across--35cf3-the-other-site-s-transcript-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\app-Track-AI-state-across--35cf3-the-other-site-s-transcript-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e\app.spec.ts:688:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript 
+  1 passed (4.1s)

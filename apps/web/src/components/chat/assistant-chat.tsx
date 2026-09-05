@@ -304,6 +304,23 @@ export function AssistantMessages() {
     [getObserver],
   );
 
+  // the scroll container shrinks when the on-screen keyboard opens (the sheet follows the visual viewport) or the panel
+  // is resized: a reader at the end stays at the end, so the keyboard never hides the last message (supplement §9);
+  // away from the end the reader's position is kept. DOM-only, no state per resize.
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    let height = el.clientHeight;
+    const observer = new ResizeObserver(() => {
+      if (el.clientHeight === height) return;
+      height = el.clientHeight;
+      if (atBottom.current) el.scrollTop = el.scrollHeight;
+      syncView();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [syncView]);
+
   // autoscroll (DOM only) when the reader is already at the end; otherwise the "new messages" hint is derived below
   const activityCount = chat.activities.length;
   useEffect(() => {

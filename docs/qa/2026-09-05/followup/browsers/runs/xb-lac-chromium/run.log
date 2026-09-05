@@ -1,0 +1,11 @@
+
+Running 5 tests using 1 worker
+
+  ok 1 [xb-lac-chromium] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate (2.8s)
+  ok 2 [xb-lac-chromium] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas (3.2s)
+  ok 3 [xb-lac-chromium] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable (3.9s)
+  ok 4 [xb-lac-chromium] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption (1.6s)
+  ok 5 [xb-lac-chromium] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors (2.1s)
+
+  5 passed (14.6s)
+exit=0

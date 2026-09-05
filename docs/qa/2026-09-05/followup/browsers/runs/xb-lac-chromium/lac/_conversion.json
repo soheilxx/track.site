@@ -1,0 +1,77 @@
+[
+  {
+    "file": "xb-lac-chromium--context-lost.webp",
+    "sourcePx": [
+      400,
+      844
+    ],
+    "outputPx": [
+      400,
+      844
+    ],
+    "bytes": 33150,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-lac-chromium--dark.webp",
+    "sourcePx": [
+      400,
+      844
+    ],
+    "outputPx": [
+      400,
+      844
+    ],
+    "bytes": 28882,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-lac-chromium--default.webp",
+    "sourcePx": [
+      400,
+      844
+    ],
+    "outputPx": [
+      400,
+      844
+    ],
+    "bytes": 33220,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-lac-chromium--no-webgl2.webp",
+    "sourcePx": [
+      400,
+      844
+    ],
+    "outputPx": [
+      400,
+      844
+    ],
+    "bytes": 33156,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-lac-chromium--reduced-motion.webp",
+    "sourcePx": [
+      400,
+      844
+    ],
+    "outputPx": [
+      400,
+      844
+    ],
+    "bytes": 32964,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  }
+]

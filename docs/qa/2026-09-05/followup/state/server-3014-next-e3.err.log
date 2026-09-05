@@ -1,0 +1,30 @@
+$ next start "-p" "3014"
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}

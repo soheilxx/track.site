@@ -1,0 +1,29 @@
+{
+  "project": "xb-mobile-webkit-iphone14",
+  "page": "pricing",
+  "at": "2026-09-05T14:53:02.463Z",
+  "measure": {
+    "innerWidth": 390,
+    "innerHeight": 664,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "bodyScrollWidth": 390,
+    "visualViewport": {
+      "width": 390,
+      "scale": 1
+    },
+    "dpr": 3,
+    "coarsePointer": true,
+    "wideElements": [],
+    "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Mobile/15E148 Safari/604.1"
+  },
+  "axe": {
+    "violationsByImpact": {},
+    "rules": [],
+    "serious": [],
+    "passes": 35,
+    "incomplete": 1,
+    "axeVersion": "4.13.0"
+  },
+  "consoleErrors": []
+}

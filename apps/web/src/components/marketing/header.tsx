@@ -1,12 +1,9 @@
 "use client";
 
 import { ArrowRight, ChevronDown, Menu } from "lucide-react";
-import { useLocale } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type RefObject } from "react";
 import { Brand, Container, IconButton, Sheet, buttonVariants, cn } from "@track-site/ui";
 import { Link, usePathname } from "@/i18n/navigation";
-import { pick } from "@/lib/marketing-copy/pick";
-import { HEADER_COPY } from "@/lib/marketing-copy/shared";
 import type { HeaderCopy, NavGroup, NavLink } from "@/lib/marketing-copy/types";
 import { LocaleSwitcher } from "./locale-switcher";
 
@@ -28,8 +25,10 @@ import { LocaleSwitcher } from "./locale-switcher";
  * the inline language switcher. Every target is ≥ 44 px; links are <a>, actions are <button>, never
  * nested. `variant="compact"` (auth shell) keeps only the brand and the language switcher.
  *
- * Copy comes from HEADER_COPY (lib/marketing-copy/shared.ts) for the active locale; hrefs are
- * locale-neutral and next-intl's <Link> adds the prefix.
+ * Copy comes from HEADER_COPY (lib/marketing-copy/shared) for the active locale, resolved by the
+ * server layout and passed in as a prop: a client-side `pick()` would bundle the header copy of all
+ * six locales (21 KB minified) into every public page. Hrefs are locale-neutral and next-intl's
+ * <Link> adds the prefix.
  */
 type GroupKey = NavGroup["key"];
 
@@ -57,17 +56,16 @@ const topItem = cn(
   focusRing,
 );
 
-export function MarketingHeader({ variant = "full" }: { variant?: "full" | "compact" }) {
-  const locale = useLocale();
+export function MarketingHeader({ copy, variant = "full" }: { copy: HeaderCopy; variant?: "full" | "compact" }) {
   const pathname = usePathname();
-  const copy = pick(locale, HEADER_COPY);
   const [drawer, setDrawer] = useState(false);
   const closeDrawer = useCallback(() => setDrawer(false), []);
   const full = variant === "full";
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-ground/85 backdrop-blur supports-[backdrop-filter]:bg-ground/70">
       <Container className="relative flex h-16 items-center gap-2 sm:gap-4">
-        <Link href="/" aria-label={copy.brandHome} className={cn("inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-control-sm)]", focusRing)}>
+        {/* no prefetch of the page we are on: the brand link otherwise fetches the current route's RSC segments (~80 KB on /) right after hydration */}
+        <Link href="/" prefetch={pathname === "/" ? false : undefined} aria-label={copy.brandHome} className={cn("inline-flex min-h-11 shrink-0 items-center rounded-[var(--radius-control-sm)]", focusRing)}>
           <Brand size={32} textClassName="text-lg" />
         </Link>
         {full ? <DesktopNav copy={copy} pathname={pathname} /> : null}

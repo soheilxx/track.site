@@ -1,0 +1,13 @@
+PASS home: demo section rendered from the server — data-demo=static
+PASS home: interactive demo swapped in after scrolling to it
+PASS home: demo tab switches
+PASS home: domain form validates on the client
+PASS home: no page errors
+PASS pricing: plan card CTA follows the yearly toggle — /en/signup?plan=growth&interval=yearly
+PASS pricing: plan finder recommends another plan for 30 sites — RECOMMENDATION / 
+PASS pricing: matrix cell icons reference one symbol and render at 16 px — symbols=1 uses=117 size=16x16
+PASS pricing: no page errors
+PASS hub: live search updates the result count — 28 of 30 articles for “consent”
+PASS hub: language switcher navigates to the same page in German
+PASS hub: no page errors
+12/12 checks passed

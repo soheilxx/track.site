@@ -2,6 +2,10 @@
  * Order matters: the token sheet is the Tailwind entry (`@import "tailwindcss"`, @theme, base layer,
  * the .container-* / .grid-dots / .surface-stage / .prose-track / .table-stack utilities and the
  * reduced-motion rule). Plugins and content sources follow; app-level layers come last.
+ *
+ * This sheet belongs to the dashboard root layout (`app/layout.tsx`). The public tree loads
+ * `marketing.css` instead: the same tokens and plugin with the Tailwind sources limited to what the
+ * marketing and auth pages render (see that file), so their render-blocking CSS stays small.
  */
 @import "@track-site/ui/styles/tokens.css";
 @plugin "@tailwindcss/typography";

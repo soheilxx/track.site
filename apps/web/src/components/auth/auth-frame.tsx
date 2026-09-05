@@ -30,7 +30,7 @@ export function AuthFrame({ locale, children }: { locale: string; children: Reac
         <Link href="/" aria-label={c.shell.brandHome} className="inline-flex min-h-11 items-center rounded-[var(--radius-control)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
           <Brand size={32} textClassName="text-lg" />
         </Link>
-        <LocaleSwitcher />
+        <LocaleSwitcher label={shell.language} />
       </Container>
       <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
         {children}

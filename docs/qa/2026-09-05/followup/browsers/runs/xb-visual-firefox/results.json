@@ -1,0 +1,886 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "C:/Users/Soheil/Downloads/track.site/docs/qa/2026-09-05/followup/browsers/playwright.xbrowser.config.mjs",
+      "--project=xb-visual-firefox",
+      "--update-snapshots=none"
+    ],
+    "configFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\playwright.xbrowser.config.mjs",
+    "rootDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-webkit",
+        "name": "xb-func-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-chromium",
+        "name": "xb-func-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-chromium",
+        "name": "xb-visual-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-webkit",
+        "name": "xb-visual-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-firefox",
+        "name": "xb-visual-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-chromium",
+        "name": "xb-lac-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-webkit",
+        "name": "xb-lac-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-firefox",
+        "name": "xb-lac-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-webkit-iphone14",
+        "name": "xb-mobile-webkit-iphone14",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-firefox",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-chromium-pixel7",
+        "name": "xb-mobile-chromium-pixel7",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\runs\\xb-visual-firefox\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "none",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "visual-xb.tmp.spec.ts",
+      "file": "visual-xb.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "public pages (anonymous visitor)",
+          "file": "visual-xb.tmp.spec.ts",
+          "line": 124,
+          "column": 6,
+          "specs": [
+            {
+              "title": "home at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-xbgmuD -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-xbgmuD -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-xbgmuD -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:47.857Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-01256c14d4916fa05d8f",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "home at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-YvKS44 -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-YvKS44 -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-YvKS44 -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:48.293Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-2202c-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-2202c-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-df910995da58c247a8ac",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "pricing at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-A2Vs3F -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-A2Vs3F -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-A2Vs3F -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:48.728Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-5499f--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-5499f--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-b06b2ad2361e4c5bc279",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "pricing at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-fUa6ud -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-fUa6ud -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-fUa6ud -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:49.177Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-a6b5d5294f8dcec3c138",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "knowledge-hub at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-o86ZEK -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-o86ZEK -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-o86ZEK -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:49.614Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-ad79e--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-ad79e--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-97b8c8e3f578e02dbe4d",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "knowledge-hub at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-82XQpH -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-82XQpH -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-82XQpH -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:50.118Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-2ce1c-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-2ce1c-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-d3d8cdb2b8cebdb0dfea",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "article-consent-mode-v2-guide at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-X6kEEf -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-X6kEEf -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-X6kEEf -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:50.641Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-249a339d259e626a5d51",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "article-consent-mode-v2-guide at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-SyQcJD -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-SyQcJD -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-SyQcJD -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:51.151Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-5e01d-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-5e01d-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-b1555119b7ac15ebc44d",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "login at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-ubcqhe -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-ubcqhe -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-ubcqhe -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:51.713Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-564d3--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-564d3--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-9cb4f2a9661ee83d6c90",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            },
+            {
+              "title": "login at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-O0wycO -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-O0wycO -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-O0wycO -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:52.287Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-1b9e9-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-public-pages-1b9e9-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-c358d1524e098f6878bd",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 130,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "dashboard (stored owner session)",
+          "file": "visual-xb.tmp.spec.ts",
+          "line": 141,
+          "column": 6,
+          "specs": [
+            {
+              "title": "app-overview at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-JEnWER -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-JEnWER -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-JEnWER -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:52.813Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-dashboard-st-efe5b--375px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-dashboard-st-efe5b--375px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-e48728f33e32e76d926a",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 144,
+              "column": 7
+            },
+            {
+              "title": "app-overview at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-firefox",
+                  "projectName": "xb-visual-firefox",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-8iqTkF -juggler-pipe -silent\u001b[22m\n",
+                        "stack": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-8iqTkF -juggler-pipe -silent\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: spawn UNKNOWN\nCall log:\n\u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-8iqTkF -juggler-pipe -silent\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:53.360Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-firefox\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-firefox\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-firefox\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-cc5a5b047e9ebcae5256",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 144,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-05T14:51:47.368Z",
+    "duration": 6079.081,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 12,
+    "flaky": 0
+  }
+}

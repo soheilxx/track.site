@@ -22,7 +22,7 @@ export function LiveEventsView({ state, copy, dispatch, interactive, playback }:
           const detailId = `${baseId}-${e.key}`;
           return (
             <li key={e.key} className={cn(i >= 4 && "hidden @2xl:block", i === 0 && interactive && playback.advanced && "motion-safe:starting:translate-y-1 motion-safe:starting:opacity-0 transition-[opacity,transform] duration-[var(--motion-slow)] ease-flow")}>
-              <button type="button" aria-expanded={open} aria-controls={open ? detailId : undefined} onClick={() => dispatch({ type: "expand", key: open ? null : e.key })} className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left text-small transition-colors duration-[var(--motion-fast)] hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
+              <button type="button" aria-expanded={open} aria-controls={open ? detailId : undefined} onClick={() => dispatch?.({ type: "expand", key: open ? null : e.key })} className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left text-small transition-colors duration-[var(--motion-fast)] hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
                 <span className="hidden w-16 shrink-0 font-mono text-micro text-ink-3 @xl:inline">{e.time}</span>
                 <span className="min-w-0 flex-1 truncate font-medium text-ink">{e.name}</span>
                 <OriginBadge origin={e.origin} copy={copy} />

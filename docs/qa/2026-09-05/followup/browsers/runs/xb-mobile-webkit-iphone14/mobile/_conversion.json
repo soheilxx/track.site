@@ -1,0 +1,62 @@
+[
+  {
+    "file": "xb-mobile-webkit-iphone14--app-closed.webp",
+    "sourcePx": [
+      1170,
+      1992
+    ],
+    "outputPx": [
+      1170,
+      1992
+    ],
+    "bytes": 93286,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-webkit-iphone14--app-sheet-open.webp",
+    "sourcePx": [
+      1170,
+      1992
+    ],
+    "outputPx": [
+      1170,
+      1992
+    ],
+    "bytes": 92112,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-webkit-iphone14--home.webp",
+    "sourcePx": [
+      1170,
+      1992
+    ],
+    "outputPx": [
+      1170,
+      1992
+    ],
+    "bytes": 96200,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-webkit-iphone14--pricing.webp",
+    "sourcePx": [
+      1170,
+      1992
+    ],
+    "outputPx": [
+      1170,
+      1992
+    ],
+    "bytes": 95148,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  }
+]

@@ -1,0 +1,102 @@
+
+Running 5 tests using 1 worker
+
+  x  1 [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate (1ms)
+  x  2 [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas (1ms)
+  x  3 [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable (1ms)
+  x  4 [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption (1ms)
+  x  5 [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors (1ms)
+
+
+  1) [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-idcVWI -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-mievaW -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-hiSMjD -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-ZzgGjZ -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-2DIJpr -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-firefox\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate 
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas 
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable 
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption 
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+exit=1

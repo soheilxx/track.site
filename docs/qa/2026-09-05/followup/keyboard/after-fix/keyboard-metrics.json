@@ -1,0 +1,106 @@
+{
+  "before": {
+    "visualViewport": {
+      "width": 375,
+      "height": 812,
+      "offsetTop": 0
+    },
+    "innerHeight": 812,
+    "documentFits": true,
+    "sheet": {
+      "top": 0,
+      "bottom": 812,
+      "left": 0,
+      "right": 375,
+      "height": 812
+    },
+    "context": {
+      "top": 94,
+      "bottom": 110,
+      "left": 16,
+      "right": 359,
+      "height": 16
+    },
+    "list": {
+      "top": 123,
+      "bottom": 723,
+      "left": 0,
+      "right": 375,
+      "height": 600,
+      "scrollTop": 21352,
+      "scrollHeight": 21952,
+      "clientHeight": 600
+    },
+    "lastMessage": {
+      "top": 631,
+      "bottom": 707,
+      "left": 16,
+      "right": 359,
+      "height": 76
+    },
+    "composer": {
+      "top": 736,
+      "bottom": 800,
+      "left": 16,
+      "right": 307,
+      "height": 64
+    },
+    "composerFocused": true
+  },
+  "after": {
+    "visualViewport": {
+      "width": 375,
+      "height": 430,
+      "offsetTop": 0
+    },
+    "innerHeight": 430,
+    "documentFits": true,
+    "sheet": {
+      "top": 0,
+      "bottom": 430,
+      "left": 0,
+      "right": 375,
+      "height": 430
+    },
+    "context": {
+      "top": 94,
+      "bottom": 110,
+      "left": 16,
+      "right": 359,
+      "height": 16
+    },
+    "list": {
+      "top": 123,
+      "bottom": 341,
+      "left": 0,
+      "right": 375,
+      "height": 218,
+      "scrollTop": 21734,
+      "scrollHeight": 21952,
+      "clientHeight": 218
+    },
+    "lastMessage": {
+      "top": 249,
+      "bottom": 325,
+      "left": 16,
+      "right": 359,
+      "height": 76
+    },
+    "composer": {
+      "top": 354,
+      "bottom": 418,
+      "left": 16,
+      "right": 307,
+      "height": 64
+    },
+    "composerFocused": true
+  },
+  "resizeShifts": [
+    {
+      "value": 0.18387236343969712,
+      "hadRecentInput": true,
+      "t": 1012
+    }
+  ],
+  "idleShifts": []
+}

@@ -1,0 +1,200 @@
+
+Running 12 tests using 1 worker
+
+  x   1 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 375px matches the baseline (4.6s)
+  ok  2 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (2.6s)
+  ok  3 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (2.8s)
+  x   4 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (3.3s)
+  ok  5 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (3.4s)
+  ok  6 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (5.0s)
+  x   7 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (3.6s)
+  ok  8 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (3.5s)
+  ok  9 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › login at 375px matches the baseline (2.0s)
+  ok 10 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (2.3s)
+  ok 11 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (3.5s)
+  x  12 [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (4.4s)
+
+
+  1) [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 375px matches the baseline 
+
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      9975 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: home-375.png
+
+    Call log:
+      - Expect "toHaveScreenshot(home-375.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 9975 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 9975 pixels (ratio 0.02 of all image pixels) are different.
+
+
+      104 |     await wait(250);
+      105 |   });
+    > 106 | }
+          |  ^
+      107 |
+      108 | async function clipFor(page: Page, width: number) {
+      109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
+        at snapshot (C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:106:22)
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:127:9
+
+    attachment #1: home-375 (image/png) ────────────────────────────────────────────────────────────
+    Expected: e2e\__screenshots__\home-375-visual-win32.png
+    Received: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\home-375-actual.png
+    Diff:     ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\home-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline 
+
+    Error: route.fulfill: Fetch response has been disposed
+
+      19 |       const headers = { ...response.headers() };
+      20 |       delete headers["strict-transport-security"];
+    > 21 |       if (headers["content-security-policy"]) headers["content-security-policy"] = headers["content-security-policy"].replace(/;\s*upgrade-insecure-requests/, "");
+         |                 ^
+      22 |       await route.fulfill({ response, headers });
+      23 |     } catch {
+      24 |       // a request still in flight when the test ends (Next.js route prefetch): not a test failure
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:21:17
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline 
+
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      13209 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: article-consent-mode-v2-guide-375.png
+
+    Call log:
+      - Expect "toHaveScreenshot(article-consent-mode-v2-guide-375.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 13209 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 13209 pixels (ratio 0.02 of all image pixels) are different.
+
+
+      104 |     await wait(250);
+      105 |   });
+    > 106 | }
+          |  ^
+      107 |
+      108 | async function clipFor(page: Page, width: number) {
+      109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
+        at snapshot (C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:106:22)
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:127:9
+
+    attachment #1: article-consent-mode-v2-guide-375 (image/png) ───────────────────────────────────
+    Expected: e2e\__screenshots__\article-consent-mode-v2-guide-375-visual-win32.png
+    Received: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\article-consent-mode-v2-guide-375-actual.png
+    Diff:     ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\article-consent-mode-v2-guide-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline 
+
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      13545 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: app-overview-1440.png
+
+    Call log:
+      - Expect "toHaveScreenshot(app-overview-1440.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 13545 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 13545 pixels (ratio 0.02 of all image pixels) are different.
+
+
+      104 |     await wait(250);
+      105 |   });
+    > 106 | }
+          |  ^
+      107 |
+      108 | async function clipFor(page: Page, width: number) {
+      109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
+        at snapshot (C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:106:22)
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\visual-xb.tmp.spec.ts:140:9
+
+    attachment #1: app-overview-1440 (image/png) ───────────────────────────────────────────────────
+    Expected: e2e\__screenshots__\app-overview-1440-visual-win32.png
+    Received: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\app-overview-1440-actual.png
+    Diff:     ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\app-overview-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-webkit\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 375px matches the baseline 
+    [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline 
+    [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline 
+    [xb-visual-webkit] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline 
+  8 passed (44.2s)
+exit=1

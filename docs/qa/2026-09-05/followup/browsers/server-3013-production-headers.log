@@ -1,0 +1,58 @@
+$ next start "-p" "3013"
+▲ Next.js 16.3.4
+- Local:         http://localhost:3013
+- Network:       http://172.20.7.2:3013
+✓ Ready in 181ms
+✓ Running next.config.ts took 99ms
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+C:\Users\Soheil\Downloads\track.site\apps\web:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @track-site/web@0.1.0 start: `next start "-p" "3013"`
+Exit status 4294967295

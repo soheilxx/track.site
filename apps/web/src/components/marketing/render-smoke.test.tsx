@@ -26,7 +26,9 @@ import { IntervalProvider, IntervalToggle } from "@/components/marketing/pricing
 import { OverageSection } from "@/components/marketing/pricing/overage-section";
 import { PlanCards } from "@/components/marketing/pricing/plan-cards";
 import { PricingFaq } from "@/components/marketing/pricing/pricing-faq";
+import { planHrefMap } from "@/components/marketing/pricing/pricing-helpers";
 import { PricingTools } from "@/components/marketing/pricing/pricing-tools";
+import { PricingToolsStatic } from "@/components/marketing/pricing/pricing-tools-static";
 import { TrialNote } from "@/components/marketing/pricing/trial-note";
 import { KNOWLEDGE_NAME, KNOWLEDGE_PATH, KNOWLEDGE_TAXONOMY } from "@/lib/knowledge";
 import { HOME_COPY, PRICING_COPY, pick } from "@/lib/marketing-copy";
@@ -119,10 +121,11 @@ describe("marketing sections render on the server", () => {
     const html = render(
       <IntervalProvider>
         <IntervalToggle copy={c.interval} />
-        <PlanCards locale={LOCALE} plans={paid} copy={c.plan} trial={{ planId: trial.planId, days: trial.days }} />
+        <PlanCards locale={LOCALE} plans={paid} copy={c.plan} trial={{ planId: trial.planId, days: trial.days }} hrefs={planHrefMap(paid)} />
         <EnterprisePanel plan={enterprise!} copy={c.enterprise} />
         <IncludedStrip features={sharedPaidFeatures(LOCALE)} note={c.includedSection.note} />
         <PricingTools locale={LOCALE} plans={paid} finder={c.finder} calculator={c.calculator} thresholds={usage.thresholds} />
+        <PricingToolsStatic locale={LOCALE} plans={paid} finder={c.finder} calculator={c.calculator} thresholds={usage.thresholds} />
         <ComparisonMatrix locale={LOCALE} plans={plans} matrix={featureMatrix(LOCALE)} copy={c.matrix} labels={{ recommended: c.recommended, start: c.start, contactSales: c.contactSales }} />
         <EventDefinition text={c.whatCountsText} notCounted={usage.notCounted} copy={c.events} />
         <OverageSection locale={LOCALE} intro={c.overageText} packs={publicOveragePacks()} policy={usage} enterpriseName={enterprise!.name} copy={c.overageSection} />

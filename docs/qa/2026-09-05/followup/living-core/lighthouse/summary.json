@@ -1,0 +1,638 @@
+{
+  "generatedAt": "2026-09-05T14:39:25.582Z",
+  "lighthouseVersion": "13.4.1",
+  "page": "/app",
+  "runsPerGroup": 3,
+  "groups": {
+    "docked/full": {
+      "variant": "docked",
+      "config": "full",
+      "runs": [
+        {
+          "file": "app--full--docked--run1.report.json",
+          "config": "full",
+          "variant": "docked",
+          "run": 1,
+          "perf": 76,
+          "metrics": {
+            "lcp": 4995.563,
+            "tbt": 269,
+            "cls": 0.00767607421875,
+            "si": 2154.489574810056,
+            "fcp": 1669.527
+          },
+          "mainThreadMs": 2097.2280000000014,
+          "bootupMs": 1148.4520000000027,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:38:36.756Z"
+        },
+        {
+          "file": "app--full--docked--run2.report.json",
+          "config": "full",
+          "variant": "docked",
+          "run": 2,
+          "perf": 71,
+          "metrics": {
+            "lcp": 4904.964499999998,
+            "tbt": 419.00000000000273,
+            "cls": 0.00767607421875,
+            "si": 1928.4804708912882,
+            "fcp": 1675.2704999999996
+          },
+          "mainThreadMs": 2387.079999999999,
+          "bootupMs": 1219.8320000000047,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:38:48.523Z"
+        },
+        {
+          "file": "app--full--docked--run3.report.json",
+          "config": "full",
+          "variant": "docked",
+          "run": 3,
+          "perf": 70,
+          "metrics": {
+            "lcp": 5050.0419999999995,
+            "tbt": 432.99999999999864,
+            "cls": 0.00767607421875,
+            "si": 2029.0312746717245,
+            "fcp": 1674.018
+          },
+          "mainThreadMs": 2173.4639999999968,
+          "bootupMs": 1140.0960000000023,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:39:00.230Z"
+        }
+      ],
+      "median": {
+        "perf": 71,
+        "lcp": 4995.563,
+        "tbt": 419.00000000000273,
+        "cls": 0.00767607421875,
+        "si": 2029.0312746717245,
+        "fcp": 1674.018,
+        "mainThreadMs": 2173.4639999999968,
+        "bootupMs": 1148.4520000000027
+      }
+    },
+    "docked/off": {
+      "variant": "docked",
+      "config": "off",
+      "runs": [
+        {
+          "file": "app--off--docked--run1.report.json",
+          "config": "off",
+          "variant": "docked",
+          "run": 1,
+          "perf": 75,
+          "metrics": {
+            "lcp": 4657.495999999999,
+            "tbt": 337.49999999999727,
+            "cls": 0.007018542480468751,
+            "si": 1941.695979485747,
+            "fcp": 1682.622
+          },
+          "mainThreadMs": 2072.448000000002,
+          "bootupMs": 1101.7200000000014,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:35:52.324Z"
+        },
+        {
+          "file": "app--off--docked--run2.report.json",
+          "config": "off",
+          "variant": "docked",
+          "run": 2,
+          "perf": 79,
+          "metrics": {
+            "lcp": 5015.891,
+            "tbt": 161.99999999999864,
+            "cls": 0.00767607421875,
+            "si": 1718.9357980538225,
+            "fcp": 1678.239
+          },
+          "mainThreadMs": 1482.5520000000045,
+          "bootupMs": 712.588000000003,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:36:04.593Z"
+        },
+        {
+          "file": "app--off--docked--run3.report.json",
+          "config": "off",
+          "variant": "docked",
+          "run": 3,
+          "perf": 77,
+          "metrics": {
+            "lcp": 4912.370999999998,
+            "tbt": 221,
+            "cls": 0.007018542480468751,
+            "si": 1735.641677385212,
+            "fcp": 1680.1589999999997
+          },
+          "mainThreadMs": 1698.5840000000042,
+          "bootupMs": 824.2520000000029,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:36:16.423Z"
+        }
+      ],
+      "median": {
+        "perf": 77,
+        "lcp": 4912.370999999998,
+        "tbt": 221,
+        "cls": 0.007018542480468751,
+        "si": 1735.641677385212,
+        "fcp": 1680.1589999999997,
+        "mainThreadMs": 1698.5840000000042,
+        "bootupMs": 824.2520000000029
+      }
+    },
+    "docked/system": {
+      "variant": "docked",
+      "config": "system",
+      "runs": [
+        {
+          "file": "app--system--docked--run1.report.json",
+          "config": "system",
+          "variant": "docked",
+          "run": 1,
+          "perf": 70,
+          "metrics": {
+            "lcp": 4998.972000000001,
+            "tbt": 434.00000000000045,
+            "cls": 0.00767607421875,
+            "si": 1734.636467779224,
+            "fcp": 1670.9880000000003
+          },
+          "mainThreadMs": 2093.7680000000046,
+          "bootupMs": 1129.6560000000054,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:37:15.044Z"
+        },
+        {
+          "file": "app--system--docked--run2.report.json",
+          "config": "system",
+          "variant": "docked",
+          "run": 2,
+          "perf": 71,
+          "metrics": {
+            "lcp": 4993.365000000001,
+            "tbt": 429.9999999999982,
+            "cls": 0.00767607421875,
+            "si": 1742.160002747379,
+            "fcp": 1668.585
+          },
+          "mainThreadMs": 2150.216000000005,
+          "bootupMs": 1146.1320000000035,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:37:26.789Z"
+        },
+        {
+          "file": "app--system--docked--run3.report.json",
+          "config": "system",
+          "variant": "docked",
+          "run": 3,
+          "perf": 71,
+          "metrics": {
+            "lcp": 4910.6395,
+            "tbt": 407.00000000000273,
+            "cls": 0.007018542480468751,
+            "si": 1885.8995798348374,
+            "fcp": 1676.8455
+          },
+          "mainThreadMs": 2219.3119999999976,
+          "bootupMs": 1164.5280000000007,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 1280,
+            "height": 800,
+            "deviceScaleFactor": 2,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:37:38.478Z"
+        }
+      ],
+      "median": {
+        "perf": 71,
+        "lcp": 4993.365000000001,
+        "tbt": 429.9999999999982,
+        "cls": 0.00767607421875,
+        "si": 1742.160002747379,
+        "fcp": 1670.9880000000003,
+        "mainThreadMs": 2150.216000000005,
+        "bootupMs": 1146.1320000000035
+      }
+    },
+    "phone/off": {
+      "variant": "phone",
+      "config": "off",
+      "runs": [
+        {
+          "file": "app--off--phone--run1.report.json",
+          "config": "off",
+          "variant": "phone",
+          "run": 1,
+          "perf": 83,
+          "metrics": {
+            "lcp": 4230.683999999999,
+            "tbt": 162.49999999999955,
+            "cls": 0,
+            "si": 1515.342,
+            "fcp": 1515.342
+          },
+          "mainThreadMs": 1296.2840000000076,
+          "bootupMs": 665.0240000000038,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:36:34.506Z"
+        },
+        {
+          "file": "app--off--phone--run2.report.json",
+          "config": "off",
+          "variant": "phone",
+          "run": 2,
+          "perf": 84,
+          "metrics": {
+            "lcp": 4223.536,
+            "tbt": 150,
+            "cls": 0,
+            "si": 1511.768,
+            "fcp": 1511.768
+          },
+          "mainThreadMs": 1128.4360000000047,
+          "bootupMs": 602.4280000000034,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:36:45.243Z"
+        },
+        {
+          "file": "app--off--phone--run3.report.json",
+          "config": "off",
+          "variant": "phone",
+          "run": 3,
+          "perf": 83,
+          "metrics": {
+            "lcp": 4227.496,
+            "tbt": 188,
+            "cls": 0,
+            "si": 1513.748,
+            "fcp": 1513.748
+          },
+          "mainThreadMs": 1223.5800000000074,
+          "bootupMs": 663.2480000000046,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:36:56.109Z"
+        }
+      ],
+      "median": {
+        "perf": 83,
+        "lcp": 4227.496,
+        "tbt": 162.49999999999955,
+        "cls": 0,
+        "si": 1513.748,
+        "fcp": 1513.748,
+        "mainThreadMs": 1223.5800000000074,
+        "bootupMs": 663.2480000000046
+      }
+    },
+    "phone/system": {
+      "variant": "phone",
+      "config": "system",
+      "runs": [
+        {
+          "file": "app--system--phone--run1.report.json",
+          "config": "system",
+          "variant": "phone",
+          "run": 1,
+          "perf": 82,
+          "metrics": {
+            "lcp": 4240.3,
+            "tbt": 199.53750000000127,
+            "cls": 0,
+            "si": 1520.15,
+            "fcp": 1520.15
+          },
+          "mainThreadMs": 1276.5920000000076,
+          "bootupMs": 724.7880000000062,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:37:56.775Z"
+        },
+        {
+          "file": "app--system--phone--run2.report.json",
+          "config": "system",
+          "variant": "phone",
+          "run": 2,
+          "perf": 84,
+          "metrics": {
+            "lcp": 4223.3279999999995,
+            "tbt": 148,
+            "cls": 0,
+            "si": 1511.6639999999998,
+            "fcp": 1511.6639999999998
+          },
+          "mainThreadMs": 1190.6600000000062,
+          "bootupMs": 626.656000000005,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:38:07.381Z"
+        },
+        {
+          "file": "app--system--phone--run3.report.json",
+          "config": "system",
+          "variant": "phone",
+          "run": 3,
+          "perf": 83,
+          "metrics": {
+            "lcp": 4384.216,
+            "tbt": 145,
+            "cls": 0,
+            "si": 1517.1080000000002,
+            "fcp": 1517.1080000000002
+          },
+          "mainThreadMs": 1106.460000000006,
+          "bootupMs": 594.4520000000039,
+          "runtimeError": null,
+          "warnings": [],
+          "screen": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttling": "simulate",
+          "formFactor": "mobile",
+          "lighthouseVersion": "13.4.1",
+          "fetchTime": "2026-09-05T14:38:17.831Z"
+        }
+      ],
+      "median": {
+        "perf": 83,
+        "lcp": 4240.3,
+        "tbt": 148,
+        "cls": 0,
+        "si": 1517.1080000000002,
+        "fcp": 1517.1080000000002,
+        "mainThreadMs": 1190.6600000000062,
+        "bootupMs": 626.656000000005
+      }
+    }
+  },
+  "tiers": {
+    "off/docked": {
+      "panelMounted": true,
+      "coreMounted": true,
+      "tier": "static",
+      "pref": "off",
+      "state": "idle",
+      "canvas": false,
+      "htmlMotion": "off",
+      "viewport": {
+        "w": 1280,
+        "h": 800,
+        "dpr": 2,
+        "coarse": true
+      }
+    },
+    "off/phone": {
+      "panelMounted": false,
+      "coreMounted": false,
+      "tier": null,
+      "pref": null,
+      "state": null,
+      "canvas": false,
+      "htmlMotion": "off",
+      "viewport": {
+        "w": 412,
+        "h": 823,
+        "dpr": 1.75,
+        "coarse": true
+      }
+    },
+    "system/docked": {
+      "panelMounted": true,
+      "coreMounted": true,
+      "tier": "webgl",
+      "pref": "system",
+      "state": "idle",
+      "canvas": true,
+      "htmlMotion": "system",
+      "viewport": {
+        "w": 1280,
+        "h": 800,
+        "dpr": 2,
+        "coarse": true
+      }
+    },
+    "system/phone": {
+      "panelMounted": false,
+      "coreMounted": false,
+      "tier": null,
+      "pref": null,
+      "state": null,
+      "canvas": false,
+      "htmlMotion": "system",
+      "viewport": {
+        "w": 412,
+        "h": 823,
+        "dpr": 1.75,
+        "coarse": true
+      }
+    },
+    "full/docked": {
+      "panelMounted": true,
+      "coreMounted": true,
+      "tier": "webgl",
+      "pref": "full",
+      "state": "idle",
+      "canvas": true,
+      "htmlMotion": "full",
+      "viewport": {
+        "w": 1280,
+        "h": 800,
+        "dpr": 2,
+        "coarse": true
+      }
+    },
+    "full/phone": {
+      "panelMounted": false,
+      "coreMounted": false,
+      "tier": null,
+      "pref": null,
+      "state": null,
+      "canvas": false,
+      "htmlMotion": "full",
+      "viewport": {
+        "w": 412,
+        "h": 823,
+        "dpr": 1.75,
+        "coarse": true
+      }
+    }
+  },
+  "deltas": {
+    "docked/system-vs-off": {
+      "perf": -6,
+      "lcp": 80.99400000000242,
+      "tbt": 208.99999999999818,
+      "cls": 0.0006575317382812489,
+      "withinThreePoints": false
+    },
+    "docked/full-vs-off": {
+      "perf": -6,
+      "lcp": 83.19200000000183,
+      "tbt": 198.00000000000273,
+      "cls": 0.0006575317382812489,
+      "withinThreePoints": false
+    },
+    "phone/system-vs-off": {
+      "perf": 0,
+      "lcp": 12.804000000000087,
+      "tbt": -14.499999999999545,
+      "cls": 0,
+      "withinThreePoints": true
+    }
+  }
+}

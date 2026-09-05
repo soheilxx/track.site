@@ -1,0 +1,26 @@
+[1/23] app-data-quality@1440: 11 nodes
+[2/23] de-docs@1440: 18 nodes
+[3/23] de-docs@375: 12 nodes
+[4/23] de-home@1440: 33 nodes
+[5/23] de-integration-meta@1440: 15 nodes
+[6/23] de-integration-meta@375: 15 nodes
+[7/23] de-integrations@1440: 36 nodes
+[8/23] de-integrations@375: 36 nodes
+[9/23] de-login@1440: 28 nodes
+[10/23] de-pricing@1440: 35 nodes
+[11/23] de-pricing@375: 35 nodes
+[12/23] de-signup@1440: 33 nodes
+[13/23] en-docs@1440: 18 nodes
+[14/23] en-docs@375: 12 nodes
+[15/23] en-home@1440: 32 nodes
+[16/23] en-integration-meta@1440: 15 nodes
+[17/23] en-integration-meta@375: 15 nodes
+[18/23] en-integrations@1440: 36 nodes
+[19/23] en-integrations@375: 36 nodes
+[20/23] en-login@1440: 28 nodes
+[21/23] en-pricing@1440: 35 nodes
+[22/23] en-pricing@375: 35 nodes
+[23/23] en-signup@1440: 33 nodes
+merged 602 evaluations of 23 runs into docs\qa\2026-09-05\followup\contrast\results-after.json (previous 2026-09-05T15:01:47.742Z)
+wrote docs\qa\2026-09-05\followup\contrast\results-after.json (1935 evaluations)
+exit=0

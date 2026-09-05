@@ -1,0 +1,49 @@
+{
+  "project": "xb-lac-webkit",
+  "case": "dark",
+  "at": "2026-09-05T14:52:46.187Z",
+  "settledTier": "webgl",
+  "probe": {
+    "tier": "webgl",
+    "state": "idle",
+    "pref": "system",
+    "htmlMotion": "system",
+    "theme": "dark",
+    "panelState": "idle",
+    "webgl2StrictLowPower": true,
+    "webgl2Lenient": true,
+    "canvas": {
+      "backing": [
+        599,
+        336
+      ],
+      "css": [
+        399,
+        224
+      ],
+      "opacity": "1"
+    },
+    "coreCss": [
+      399,
+      224
+    ],
+    "blobKeyframes": [
+      "none",
+      "none",
+      "none"
+    ],
+    "runningAnimations": 0,
+    "reducedMotion": false,
+    "coarsePointer": false,
+    "dpr": 2,
+    "requestIdleCallback": "undefined",
+    "counters": {
+      "draws": 24,
+      "frames": 34
+    },
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+  },
+  "consoleErrors": [
+    "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored."
+  ]
+}

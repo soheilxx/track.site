@@ -1,4 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import fs from "node:fs";
+import path from "node:path";
+import { expect, test, type Page, type TestInfo } from "@playwright/test";
+import pg from "pg";
 
 const email = process.env.E2E_EMAIL ?? "owner@acme.test";
 const password = process.env.E2E_PASSWORD ?? "Demo-Password-123!";
@@ -481,5 +484,243 @@ test.describe("Track AI panel", () => {
     // the panel's composer is focusable from the workspace without leaving the page
     await page.getByRole("button", { name: "Open Track AI" }).first().click();
     await expect(page.getByTestId("assistant-composer")).toBeFocused();
+  });
+});
+
+/** Evidence files of a spec: `E2E_EVIDENCE_DIR` when a QA run collects them, otherwise the test's output directory. */
+function evidencePath(testInfo: TestInfo, name: string): string {
+  const dir = process.env.E2E_EVIDENCE_DIR;
+  if (!dir) return testInfo.outputPath(name);
+  fs.mkdirSync(dir, { recursive: true });
+  return path.join(dir, name);
+}
+
+type Box = { top: number; bottom: number; left: number; right: number; height: number };
+
+/** Geometry of the open sheet as the reader sees it: visual viewport, transcript, last message and composer. */
+const sheetMetrics = (page: Page) =>
+  page.evaluate(() => {
+    const read = (selector: string): Box | null => {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      const b = el.getBoundingClientRect();
+      return { top: Math.round(b.top), bottom: Math.round(b.bottom), left: Math.round(b.left), right: Math.round(b.right), height: Math.round(b.height) };
+    };
+    const listEl = document.querySelector<HTMLElement>('[data-testid="assistant-messages"]')!;
+    return {
+      visualViewport: { width: window.visualViewport!.width, height: window.visualViewport!.height, offsetTop: window.visualViewport!.offsetTop },
+      innerHeight: window.innerHeight,
+      documentFits: document.documentElement.scrollHeight <= window.innerHeight + 1,
+      sheet: read('[data-testid="assistant-panel"]'),
+      context: read('[data-testid="assistant-context"]'),
+      list: { ...read('[data-testid="assistant-messages"]')!, scrollTop: Math.round(listEl.scrollTop), scrollHeight: listEl.scrollHeight, clientHeight: listEl.clientHeight },
+      lastMessage: read('[data-message-id="fixture-249"]'),
+      composer: read('[data-testid="assistant-composer"]'),
+      composerFocused: document.activeElement?.getAttribute("data-testid") === "assistant-composer",
+    };
+  });
+
+test.describe("mobile on-screen keyboard", () => {
+  // touch device at 375 × 812; the keyboard is emulated by shrinking the viewport to 375 × 430 (Chromium ≥ 108 and Safari
+  // shrink the visual viewport only — both `100dvh` and the sheet's visualViewport listener resolve to the same 430 px here)
+  test.use({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
+
+  test("the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts", async ({ page }, testInfo) => {
+    await page.goto("/app?ai_fixture=long-conversation");
+    await page.getByTestId("assistant-fab").tap();
+    const sheet = page.getByRole("dialog", { name: /Track AI/ });
+    await expect(sheet).toBeVisible();
+    const list = page.getByTestId("assistant-messages");
+    await expect(list).toHaveAttribute("data-total", "250");
+    const last = page.locator('[data-message-id="fixture-249"]');
+    await expect(last).toBeVisible();
+    const composer = page.getByTestId("assistant-composer");
+    await composer.tap();
+    await expect(composer).toBeFocused();
+    const before = await sheetMetrics(page);
+    await page.screenshot({ path: evidencePath(testInfo, "keyboard-before.png") });
+    // layout shifts from here on (the resize itself and the ambient motion afterwards)
+    await page.evaluate(() => {
+      const w = window as unknown as { __shifts: { value: number; hadRecentInput: boolean; t: number }[] };
+      w.__shifts = [];
+      new PerformanceObserver((entries) => {
+        for (const e of entries.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) w.__shifts.push({ value: e.value, hadRecentInput: e.hadRecentInput, t: Math.round(e.startTime) });
+      }).observe({ type: "layout-shift", buffered: false });
+    });
+    await page.setViewportSize({ width: 375, height: 430 });
+    await expect.poll(() => page.evaluate(() => window.visualViewport!.height)).toBe(430);
+    await page.waitForTimeout(500);
+    const resizeShifts = await page.evaluate(() => (window as unknown as { __shifts: unknown[] }).__shifts.splice(0));
+    // keyboard open, core animating: nothing may move now
+    await page.waitForTimeout(1500);
+    const idleShifts = await page.evaluate(() => (window as unknown as { __shifts: unknown[] }).__shifts.splice(0));
+    const after = await sheetMetrics(page);
+    await page.screenshot({ path: evidencePath(testInfo, "keyboard-after.png") });
+    fs.writeFileSync(evidencePath(testInfo, "keyboard-metrics.json"), JSON.stringify({ before, after, resizeShifts, idleShifts }, null, 2));
+
+    expect(after.visualViewport).toEqual({ width: 375, height: 430, offsetTop: 0 });
+    expect(after.documentFits).toBe(true);
+    expect(after.sheet!.top).toBe(0);
+    expect(Math.abs(after.sheet!.height - 430)).toBeLessThanOrEqual(2);
+    // composer inside the visible viewport and still focused
+    expect(after.composer!.top).toBeGreaterThanOrEqual(0);
+    expect(after.composer!.bottom).toBeLessThanOrEqual(430);
+    expect(after.composerFocused).toBe(true);
+    // the last message stays fully inside the (smaller) transcript region, above the composer
+    expect(after.lastMessage!.top).toBeGreaterThanOrEqual(after.list.top - 1);
+    expect(after.lastMessage!.bottom).toBeLessThanOrEqual(after.list.bottom + 1);
+    expect(after.lastMessage!.bottom).toBeLessThanOrEqual(after.composer!.top);
+    await expect(last).toBeInViewport({ ratio: 1 });
+    // only the transcript scrolled to keep the end in view; no shift counts towards CLS
+    expect(after.list.scrollTop).toBeGreaterThan(before.list.scrollTop);
+    expect(resizeShifts.filter((s) => !(s as { hadRecentInput: boolean }).hadRecentInput)).toEqual([]);
+    expect(idleShifts).toEqual([]);
+    // keyboard closed: back to the full sheet
+    await page.setViewportSize({ width: 375, height: 812 });
+    await expect(last).toBeInViewport({ ratio: 1 });
+    await expect(composer).toBeVisible();
+    await expect(composer).toBeFocused();
+  });
+});
+
+const DRAFT = "Draft kept across routes";
+const SEEDED_SITE = "Acme Shop";
+const E2E_SITE = { name: "E2E switch site", domain: "e2e-switch.acme.test" };
+
+/** Connection string of the database the server under test uses: `DATABASE_URL`, else the root `.env` (loaded by next.config.ts). */
+function databaseUrl(testInfo: TestInfo): string {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+  const webDir = testInfo.config.configFile ? path.dirname(testInfo.config.configFile) : process.cwd();
+  const env = fs.readFileSync(path.resolve(webDir, "../../.env"), "utf8");
+  const m = /^DATABASE_URL=(.+)$/m.exec(env);
+  if (!m) throw new Error("DATABASE_URL is neither set nor in the root .env");
+  return m[1]!.trim().replace(/^"(.*)"$/, "$1");
+}
+
+/**
+ * Second site of the demo organization for the site-switch spec. The seed creates one site and the starter plan caps
+ * the organization at one (`siteLimitReached`), so the product itself cannot add it: the spec writes it to the local
+ * database the way `SEED_DEMO=true pnpm db:seed` does (site + default environments), revives the row of an earlier
+ * run instead of creating a new tracking id, and soft-deletes it afterwards exactly like `softDeleteSite`.
+ */
+async function withSecondSite<T>(testInfo: TestInfo, fn: (site: { id: string; name: string }) => Promise<T>): Promise<T> {
+  const client = new pg.Client({ connectionString: databaseUrl(testInfo) });
+  await client.connect();
+  try {
+    const org = (await client.query<{ id: string }>("select id from organization where slug = $1", ["acme-demo"])).rows[0];
+    if (!org) throw new Error("demo organization not seeded (SEED_DEMO=true pnpm db:seed)");
+    let site = (await client.query<{ id: string; name: string }>("update sites set deleted_at = null, status = 'active', kill_switch = false where organization_id = $1 and name = $2 returning id, name", [org.id, E2E_SITE.name])).rows[0];
+    if (!site) {
+      const trackingId = Array.from({ length: 6 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random() * 32)]).join("");
+      site = (await client.query<{ id: string; name: string }>("insert into sites (organization_id, tracking_id, name, primary_domain, business_type) values ($1, $2, $3, $4, 'saas') returning id, name", [org.id, trackingId, E2E_SITE.name, E2E_SITE.domain])).rows[0]!;
+      await client.query("insert into environments (organization_id, site_id, kind, name, is_default, test_mode) values ($1, $2, 'production', 'Production', true, false), ($1, $2, 'staging', 'Staging', false, true)", [org.id, site.id]);
+    }
+    try {
+      return await fn(site);
+    } finally {
+      await client.query("update sites set status = 'deleted', deleted_at = now(), kill_switch = true where id = $1", [site.id]);
+    }
+  } finally {
+    await client.end();
+  }
+}
+
+/** Selects `name` in the header's site menu (no-op when it is the active site already). */
+async function switchSite(page: Page, name: string) {
+  const trigger = page.getByRole("button", { name: /^Site:/ });
+  if (new RegExp(`^Site: ${name}\\b`).test((await trigger.getAttribute("aria-label")) ?? "")) return;
+  await trigger.click();
+  await page.getByRole("menuitemradio", { name: new RegExp(`^${name}\\b`) }).click();
+  await expect(trigger).toHaveAttribute("aria-label", new RegExp(`^Site: ${name}\\b`));
+}
+
+/** What the reader sees of the Track AI panel: transcript length, scroll position, draft and panel geometry. */
+const panelState = (page: Page) =>
+  page.evaluate(() => {
+    const list = document.querySelector<HTMLElement>('[data-testid="assistant-messages"]')!;
+    const panel = document.querySelector<HTMLElement>('[data-testid="assistant-panel"]')!.getBoundingClientRect();
+    const visible = Array.from(document.querySelectorAll<HTMLElement>("[data-message-id]")).find((m) => m.getBoundingClientRect().bottom > list.getBoundingClientRect().top);
+    return {
+      total: list.getAttribute("data-total"),
+      scrollTop: Math.round(list.scrollTop),
+      firstVisibleMessage: visible?.dataset.messageId ?? null,
+      draft: document.querySelector<HTMLTextAreaElement>('[data-testid="assistant-composer"]')!.value,
+      panel: { left: Math.round(panel.left), top: Math.round(panel.top), width: Math.round(panel.width), height: Math.round(panel.height) },
+      url: location.pathname + location.search,
+    };
+  });
+
+test.describe("Track AI state across routes and sites", () => {
+  test("the transcript, the scroll position, the draft and the panel geometry survive a route change", async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/app?ai_fixture=long-conversation");
+    const list = page.getByTestId("assistant-messages");
+    await expect(list).toHaveAttribute("data-total", "250");
+    await expect(page.locator('[data-message-id="fixture-249"]')).toBeVisible();
+    // read somewhere in the middle of the transcript and leave a draft in the composer
+    await list.evaluate((el) => {
+      el.scrollTop = Math.round((el.scrollHeight - el.clientHeight) / 2);
+    });
+    await page.waitForTimeout(400); // the position is saved to the store 150 ms after the last scroll event
+    await page.getByTestId("assistant-composer").fill(DRAFT);
+    const before = await panelState(page);
+    expect(before.scrollTop).toBeGreaterThan(0);
+    // leave through the navigation and come back the same way (client-side transitions of the dashboard layout)
+    const nav = page.getByRole("navigation", { name: "Dashboard" }).first();
+    await nav.getByRole("link", { name: "Events", exact: true }).click();
+    await page.waitForURL(/\/app\/events/);
+    await expect(page.getByTestId("app-main").locator("h1")).toHaveCount(1);
+    await expect(page.getByTestId("assistant-panel")).toBeVisible();
+    await nav.getByRole("link", { name: "Command Center", exact: true }).click();
+    await page.waitForURL((url) => url.pathname === "/app");
+    await expect(list).toHaveAttribute("data-total", "250");
+    const after = await panelState(page);
+    fs.writeFileSync(evidencePath(testInfo, "route-change.json"), JSON.stringify({ before, after }, null, 2));
+    // the URL carries no fixture any more: what is shown comes from the layout-level store, not from a reload
+    expect(after.url).toBe("/app");
+    expect(after.total).toBe("250");
+    expect(Math.abs(after.scrollTop - before.scrollTop)).toBeLessThanOrEqual(50);
+    expect(after.draft).toBe(DRAFT);
+    expect(after.panel).toEqual(before.panel);
+    // leave the composer empty for the next spec
+    await page.getByTestId("assistant-composer").fill("");
+  });
+
+  test("a site switch confirms the new context visibly and never shows the other site's transcript", async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await withSecondSite(testInfo, async (other) => {
+      await page.goto("/app?ai_fixture=long-conversation");
+      const list = page.getByTestId("assistant-messages");
+      await expect(list).toHaveAttribute("data-total", "250");
+      const context = page.getByTestId("assistant-context");
+      await expect(context).toContainText(`Site: ${SEEDED_SITE}`);
+      // drop the fixture parameter from the URL first (Events → Command Center), so a reload of any site shows its real transcript
+      const nav = page.getByRole("navigation", { name: "Dashboard" }).first();
+      await nav.getByRole("link", { name: "Events", exact: true }).click();
+      await page.waitForURL(/\/app\/events/);
+      await nav.getByRole("link", { name: "Command Center", exact: true }).click();
+      await page.waitForURL((url) => url.pathname === "/app" && !url.search);
+      await expect(list).toHaveAttribute("data-total", "250");
+      try {
+        await switchSite(page, other.name);
+        // visible confirmation in the panel's context line (also a polite live region) and in the header's announcement
+        await expect(context.getByRole("status")).toHaveText(`Track AI now works on ${other.name}.`);
+        await expect(context).toContainText(`Site: ${other.name}`);
+        await expect(page.getByTestId("workspace-switcher").getByRole("status")).toHaveText(`Workspace switched to ${other.name}.`);
+        // the new site's own conversation: nothing of the 250 seeded messages, no mixed data
+        await expect(list).not.toHaveAttribute("aria-busy", "true");
+        await expect(list).toHaveAttribute("data-total", "0");
+        await expect(page.locator('[data-message-id^="fixture-"]')).toHaveCount(0);
+        const switched = await panelState(page);
+        // back to the seeded site: its transcript is still there (kept in the store per site, the URL has no fixture to reload)
+        await switchSite(page, SEEDED_SITE);
+        await expect(context.getByRole("status")).toHaveText(`Track AI now works on ${SEEDED_SITE}.`);
+        await expect(list).toHaveAttribute("data-total", "250");
+        fs.writeFileSync(evidencePath(testInfo, "site-switch.json"), JSON.stringify({ otherSite: other.name, switched, restored: await panelState(page) }, null, 2));
+      } finally {
+        // the active site is a stored preference of the owner: always leave the seeded site active for the other specs
+        await switchSite(page, SEEDED_SITE).catch(() => undefined);
+      }
+    });
   });
 });

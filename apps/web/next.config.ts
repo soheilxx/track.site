@@ -46,6 +46,10 @@ const csp = [
   .filter(Boolean)
   .join("; ");
 
+/** Cache lifetimes of assets that only change with a deploy (favicons, manifest, brand files) and of generated social cards. */
+const STATIC_ASSET_CACHE = "public, max-age=86400, stale-while-revalidate=604800";
+const SOCIAL_CARD_CACHE = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
+
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -86,6 +90,10 @@ const appHost = hostnameOf(process.env.HOST_APP);
 const onAppHost = appHost && appHost !== marketingHost ? [{ type: "host" as const, value: appHost.replace(/\./g, "\\.") }] : null;
 
 const nextConfig: NextConfig = {
+  // Analysis builds (bundle attribution for docs/qa): `NEXT_DIST_DIR=.next-analysis NEXT_SOURCEMAPS=1 next build`
+  // writes a separate output directory with browser source maps and leaves `.next` (served by `next start`) untouched.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
+  productionBrowserSourceMaps: process.env.NEXT_SOURCEMAPS === "1",
   experimental: {
     // No shared root layout (marketing `[locale]` and dashboard `/app` render their own `<html>`),
     // so the 404 for unmatched non-localized paths is `src/app/global-not-found.tsx`.
@@ -136,6 +144,14 @@ const nextConfig: NextConfig = {
     return [
       { source: "/(.*)", headers: securityHeaders },
       { source: "/cdn/:path*", headers: [{ key: "Access-Control-Allow-Origin", value: "*" }] },
+      // Static brand assets and app icons change only with a deploy: a day in the browser cache, a week
+      // stale-while-revalidate. (`/_next/static` is already served immutable by Next.js.)
+      { source: "/brand/:path*", headers: [{ key: "Cache-Control", value: STATIC_ASSET_CACHE }] },
+      { source: "/:file(icon\\.svg|apple-icon\\.png|manifest\\.webmanifest)", headers: [{ key: "Cache-Control", value: STATIC_ASSET_CACHE }] },
+      // Generated social cards of Tracking Knowledge (route handlers): cache at the edge and in the
+      // browser; a card changes only when an article title changes.
+      { source: "/:locale(en|de|fr|es|it|nl)/tracking-knowledge/card.png", headers: [{ key: "Cache-Control", value: SOCIAL_CARD_CACHE }] },
+      { source: "/:locale(en|de|fr|es|it|nl)/tracking-knowledge/:slug/card.png", headers: [{ key: "Cache-Control", value: SOCIAL_CARD_CACHE }] },
     ];
   },
 };

@@ -1,0 +1,587 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "C:/Users/Soheil/Downloads/track.site/docs/qa/2026-09-05/followup/browsers/playwright.xbrowser.config.mjs",
+      "--project=xb-lac-webkit",
+      "--update-snapshots=none"
+    ],
+    "configFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\playwright.xbrowser.config.mjs",
+    "rootDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-webkit",
+        "name": "xb-func-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-chromium",
+        "name": "xb-func-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-chromium",
+        "name": "xb-visual-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-webkit",
+        "name": "xb-visual-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-firefox",
+        "name": "xb-visual-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-chromium",
+        "name": "xb-lac-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-webkit",
+        "name": "xb-lac-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-firefox",
+        "name": "xb-lac-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-webkit-iphone14",
+        "name": "xb-mobile-webkit-iphone14",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-chromium-pixel7",
+        "name": "xb-mobile-chromium-pixel7",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\runs\\xb-lac-webkit\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "none",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "xbrowser-lac.tmp.spec.ts",
+      "file": "xbrowser-lac.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Living AI Core tiers",
+          "file": "xbrowser-lac.tmp.spec.ts",
+          "line": 152,
+          "column": 6,
+          "specs": [
+            {
+              "title": "default motion: WebGL2 availability, the tier chosen and the draw rate",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-webkit",
+                  "projectName": "xb-lac-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5647,
+                      "error": {
+                        "message": "Error: no console errors on /app\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: no console errors on /app\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:174:49",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                          "column": 49,
+                          "line": 174
+                        },
+                        "snippet": "  172 |       expect(after.blobKeyframes.every((name: string) => name !== \"none\"), \"css tier runs the drift keyframes\").toBe(true);\n  173 |     }\n> 174 |     expect(errors, \"no console errors on /app\").toEqual([]);\n      |                                                 ^\n  175 |   });\n  176 |\n  177 |   test(\"prefers-reduced-motion: static tier, no frames, no canvas\", async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                            "column": 49,
+                            "line": 174
+                          },
+                          "message": "Error: no console errors on /app\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  172 |       expect(after.blobKeyframes.every((name: string) => name !== \"none\"), \"css tier runs the drift keyframes\").toBe(true);\n  173 |     }\n> 174 |     expect(errors, \"no console errors on /app\").toEqual([]);\n      |                                                 ^\n  175 |   });\n  176 |\n  177 |   test(\"prefers-reduced-motion: static tier, no frames, no canvas\", async ({ page }) => {\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:174:49"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:11.304Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                        "column": 49,
+                        "line": 174
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-36dd0ecbb4b1a57a5080",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 153,
+              "column": 3
+            },
+            {
+              "title": "prefers-reduced-motion: static tier, no frames, no canvas",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-webkit",
+                  "projectName": "xb-lac-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4627,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:191:20",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                          "column": 20,
+                          "line": 191
+                        },
+                        "snippet": "  189 |     expect(probe.blobKeyframes.every((name: string) => name === \"none\")).toBe(true);\n  190 |     expect(probe.counters?.draws ?? 0).toBe(0);\n> 191 |     expect(errors).toEqual([]);\n      |                    ^\n  192 |   });\n  193 |\n  194 |   test(\"WebGL2 unavailable: silent css fallback, the chat stays usable\", async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                            "column": 20,
+                            "line": 191
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  189 |     expect(probe.blobKeyframes.every((name: string) => name === \"none\")).toBe(true);\n  190 |     expect(probe.counters?.draws ?? 0).toBe(0);\n> 191 |     expect(errors).toEqual([]);\n      |                    ^\n  192 |   });\n  193 |\n  194 |   test(\"WebGL2 unavailable: silent css fallback, the chat stays usable\", async ({ page }) => {\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:191:20"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:17.841Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                        "column": 20,
+                        "line": 191
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-fdd91c6e8ee0f2a5a38f",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 177,
+              "column": 3
+            },
+            {
+              "title": "WebGL2 unavailable: silent css fallback, the chat stays usable",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-webkit",
+                  "projectName": "xb-lac-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10905,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:220:20",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                          "column": 20,
+                          "line": 220
+                        },
+                        "snippet": "  218 |     await page.keyboard.type(\"x\");\n  219 |     await page.keyboard.press(\"Backspace\");\n> 220 |     expect(errors).toEqual([]);\n      |                    ^\n  221 |   });\n  222 |\n  223 |   test(\"lost WebGL context: css fallback without a chat interruption\", async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                            "column": 20,
+                            "line": 220
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  218 |     await page.keyboard.type(\"x\");\n  219 |     await page.keyboard.press(\"Backspace\");\n> 220 |     expect(errors).toEqual([]);\n      |                    ^\n  221 |   });\n  222 |\n  223 |   test(\"lost WebGL context: css fallback without a chat interruption\", async ({ page }) => {\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:220:20"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:23.342Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                        "column": 20,
+                        "line": 220
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-b67ad182fde91384cf62",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 194,
+              "column": 3
+            },
+            {
+              "title": "lost WebGL context: css fallback without a chat interruption",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-webkit",
+                  "projectName": "xb-lac-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5884,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:252:24",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                          "column": 24,
+                          "line": 252
+                        },
+                        "snippet": "  250 |     // a forced loss may be echoed by the engine as a console message; anything else is a defect\n  251 |     const unexpected = errors.filter((e) => !/context lost|CONTEXT_LOST/i.test(e));\n> 252 |     expect(unexpected).toEqual([]);\n      |                        ^\n  253 |   });\n  254 |\n  255 |   test(\"dark theme: same tier, no console errors\", async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                            "column": 24,
+                            "line": 252
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  250 |     // a forced loss may be echoed by the engine as a console message; anything else is a defect\n  251 |     const unexpected = errors.filter((e) => !/context lost|CONTEXT_LOST/i.test(e));\n> 252 |     expect(unexpected).toEqual([]);\n      |                        ^\n  253 |   });\n  254 |\n  255 |   test(\"dark theme: same tier, no console errors\", async ({ page }) => {\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:252:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:35.470Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                        "column": 24,
+                        "line": 252
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-aa6ec1eda41e42bc2236",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 223,
+              "column": 3
+            },
+            {
+              "title": "dark theme: same tier, no console errors",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-webkit",
+                  "projectName": "xb-lac-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5003,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:272:20",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                          "column": 20,
+                          "line": 272
+                        },
+                        "snippet": "  270 |     expect(probe.theme).toBe(\"dark\");\n  271 |     expect(probe.tier).toMatch(/^(css|webgl)$/);\n> 272 |     expect(errors).toEqual([]);\n      |                    ^\n  273 |   });\n  274 | });\n  275 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                            "column": 20,
+                            "line": 272
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"console.error: Viewport argument key \\\"interactive-widget\\\" not recognized and ignored.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  270 |     expect(probe.theme).toBe(\"dark\");\n  271 |     expect(probe.tier).toMatch(/^(css|webgl)$/);\n> 272 |     expect(errors).toEqual([]);\n      |                    ^\n  273 |   });\n  274 | });\n  275 |\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts:272:20"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:42.485Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-lac-webkit\\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\xbrowser-lac.tmp.spec.ts",
+                        "column": 20,
+                        "line": 272
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-46f405e28ab076beaf73",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 255,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-05T14:52:10.869Z",
+    "duration": 37100.901999999995,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

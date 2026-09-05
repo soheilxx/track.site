@@ -35,7 +35,7 @@ export async function InboxFilterBar({ filters, inbox, locale }: { filters: Inbo
           return (
             <Link key={s} href={href(filters, { status: s })} aria-current={active ? "true" : undefined} className={chip(active)}>
               {t(`status.${s}`)}
-              <span className={cn("text-xs tabular-nums", active ? "text-primary/80" : "text-ink-3")}>{formatNumber(inbox.counts[s], locale)}</span>
+              <span className={cn("text-xs tabular-nums", active ? "text-primary" : "text-ink-3")}>{formatNumber(inbox.counts[s], locale)}</span>
             </Link>
           );
         })}
@@ -52,7 +52,7 @@ export async function InboxFilterBar({ filters, inbox, locale }: { filters: Inbo
           return (
             <Link key={c} href={href(filters, { category: c })} aria-current={active ? "true" : undefined} className={chip(active)} title={t(`categoryHelp.${c}`)}>
               {t(`category.${c}`)}
-              <span className={cn("text-xs tabular-nums", active ? "text-primary/80" : "text-ink-3")}>{formatNumber(inbox.byCategory[c], locale)}</span>
+              <span className={cn("text-xs tabular-nums", active ? "text-primary" : "text-ink-3")}>{formatNumber(inbox.byCategory[c], locale)}</span>
             </Link>
           );
         })}

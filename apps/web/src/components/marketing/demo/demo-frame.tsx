@@ -1,5 +1,3 @@
-"use client";
-
 import { Pause, Play, RotateCcw, SkipForward } from "lucide-react";
 import { useId, type ReactNode, type Ref } from "react";
 import { Badge, BrandGlyph, IconButton, Status, Tab, TabList, TabPanel, Tabs } from "@track-site/ui";
@@ -15,7 +13,8 @@ export interface DemoFrameProps {
   copy: DemoCopy;
   /** Accessible name of the demo region (from the page copy). */
   heading: string;
-  dispatch: (action: DemoAction) => void;
+  /** Absent in the server-rendered placeholder: the controls carry no handlers until the island swaps in the interactive demo. */
+  dispatch?: (action: DemoAction) => void;
   interactive: boolean;
   playback: DemoPlayback;
   /** Polite live-region text for new events (empty until the visitor engages with the demo). */
@@ -30,7 +29,9 @@ export interface DemoFrameProps {
 /**
  * Chrome of the demo: dark product stage, sample-data label, controls, the five view tabs and the
  * live regions. Identical markup for the static placeholder and the interactive component so the
- * swap after hydration causes no visible change.
+ * swap after hydration causes no visible change. Server-safe on purpose (no directive, no hooks
+ * beyond `useId`): the placeholder renders it on the server without handlers, the interactive demo
+ * (a client component) renders it with `dispatch` and `onEngage`.
  */
 export function DemoFrame({ state, copy, heading, dispatch, interactive, playback, announcement, notice, rootRef, onEngage, children }: DemoFrameProps) {
   const headingId = useId();
@@ -59,23 +60,27 @@ export function DemoFrame({ state, copy, heading, dispatch, interactive, playbac
             {fill(copy.configLive, { version: state.configVersion })}
           </Status>
           {playback.reducedMotion ? null : (
-            <IconButton label={state.playing ? copy.controls.pause : copy.controls.play} onClick={() => dispatch({ type: "play", playing: !state.playing })}>
+            <IconButton label={state.playing ? copy.controls.pause : copy.controls.play} onClick={dispatch ? () => dispatch({ type: "play", playing: !state.playing }) : undefined}>
               {state.playing ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
             </IconButton>
           )}
-          <IconButton label={copy.controls.next} onClick={() => dispatch({ type: "advance" })}>
+          <IconButton label={copy.controls.next} onClick={dispatch ? () => dispatch({ type: "advance" }) : undefined}>
             <SkipForward className="size-4" aria-hidden="true" />
           </IconButton>
-          <IconButton label={copy.controls.reset} onClick={() => dispatch({ type: "reset" })}>
+          <IconButton label={copy.controls.reset} onClick={dispatch ? () => dispatch({ type: "reset" }) : undefined}>
             <RotateCcw className="size-4" aria-hidden="true" />
           </IconButton>
         </div>
       </div>
       <Tabs
         value={state.view}
-        onValueChange={(next) => {
-          if (isDemoView(next)) dispatch({ type: "view", view: next });
-        }}
+        onValueChange={
+          dispatch
+            ? (next) => {
+                if (isDemoView(next)) dispatch({ type: "view", view: next });
+              }
+            : undefined
+        }
         className="p-3 @xl:p-4"
       >
         <TabList aria-label={copy.viewsLabel} variant="pill" className="max-w-full">

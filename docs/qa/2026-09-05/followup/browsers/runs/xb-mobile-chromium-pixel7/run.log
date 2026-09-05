@@ -1,0 +1,9 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 [xb-mobile-chromium-pixel7] › e2e\xbrowser-mobile.tmp.spec.ts:137:5 › marketing pages (anonymous visitor) › /en: no horizontal scroll, axe without serious/critical violations (2.8s)
+  ok 2 [xb-mobile-chromium-pixel7] › e2e\xbrowser-mobile.tmp.spec.ts:137:5 › marketing pages (anonymous visitor) › /en/pricing: no horizontal scroll, axe without serious/critical violations (3.4s)
+  ok 3 [xb-mobile-chromium-pixel7] › e2e\xbrowser-mobile.tmp.spec.ts:154:3 › dashboard (stored owner session) › /app: no horizontal scroll, composer visible with the bottom sheet open, axe without serious/critical violations (3.5s)
+
+  3 passed (10.7s)
+exit=0

@@ -1,0 +1,412 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "C:/Users/Soheil/Downloads/track.site/docs/qa/2026-09-05/followup/browsers/playwright.xbrowser.config.mjs",
+      "--project=xb-lac-chromium",
+      "--update-snapshots=none"
+    ],
+    "configFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\playwright.xbrowser.config.mjs",
+    "rootDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-webkit",
+        "name": "xb-func-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-chromium",
+        "name": "xb-func-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-chromium",
+        "name": "xb-visual-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-webkit",
+        "name": "xb-visual-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-firefox",
+        "name": "xb-visual-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-chromium",
+        "name": "xb-lac-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-webkit",
+        "name": "xb-lac-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-firefox",
+        "name": "xb-lac-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-webkit-iphone14",
+        "name": "xb-mobile-webkit-iphone14",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-lac-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-chromium-pixel7",
+        "name": "xb-mobile-chromium-pixel7",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\runs\\xb-lac-chromium\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "none",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "xbrowser-lac.tmp.spec.ts",
+      "file": "xbrowser-lac.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Living AI Core tiers",
+          "file": "xbrowser-lac.tmp.spec.ts",
+          "line": 152,
+          "column": 6,
+          "specs": [
+            {
+              "title": "default motion: WebGL2 availability, the tier chosen and the draw rate",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-chromium",
+                  "projectName": "xb-lac-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2805,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:55.385Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-88b51fe8ae24fa217b50",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 153,
+              "column": 3
+            },
+            {
+              "title": "prefers-reduced-motion: static tier, no frames, no canvas",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-chromium",
+                  "projectName": "xb-lac-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3152,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:58.337Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-d64641e8d428171852c4",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 177,
+              "column": 3
+            },
+            {
+              "title": "WebGL2 unavailable: silent css fallback, the chat stays usable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-chromium",
+                  "projectName": "xb-lac-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3943,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:01.523Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-fdee673854d0ef38f9b1",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 194,
+              "column": 3
+            },
+            {
+              "title": "lost WebGL context: css fallback without a chat interruption",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-chromium",
+                  "projectName": "xb-lac-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1632,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:05.479Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-4333d50a48234cffacdb",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 223,
+              "column": 3
+            },
+            {
+              "title": "dark theme: same tier, no console errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-lac-chromium",
+                  "projectName": "xb-lac-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2132,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:52:07.129Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "e368e598121f4b3d7791-170cb23c1afff6d6db11",
+              "file": "xbrowser-lac.tmp.spec.ts",
+              "line": 255,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-05T14:51:54.879Z",
+    "duration": 14556.197,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "mode": "tier",
+  "label": "smoke-1440",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobile": false,
+  "gl": "d3d11",
+  "chromeArgs": [
+    "--use-angle=d3d11"
+  ],
+  "base": "http://localhost:3012",
+  "startedAt": "2026-09-05T14:33:24.591Z",
+  "core": {
+    "aiState": "idle",
+    "coreState": "idle",
+    "tier": "webgl",
+    "pref": "system",
+    "htmlMotion": "system",
+    "canvas": true,
+    "coreAnimations": 0,
+    "coreKeyframes": [
+      "none",
+      "none",
+      "none"
+    ],
+    "reducedMotion": false,
+    "coarse": false,
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "messages": 26,
+    "composerDisabled": false
+  },
+  "panelVisible": true,
+  "launcherVisible": false
+}

@@ -1,0 +1,25 @@
+[1/19] app-ai-setup@1440: 18 nodes
+[2/19] app-ai-setup@375: 8 nodes
+[3/19] app-alerts@1440: 10 nodes
+[4/19] app-attribution@1440: 10 nodes
+[5/19] app-billing@1440: 10 nodes
+[6/19] app-consent@1440: 10 nodes
+[7/19] app-consent-simulator@1440: 10 nodes
+[8/19] app-data-quality@1440: 11 nodes
+[9/19] app-destinations@1440: 10 nodes
+[10/19] app-events@1440: 10 nodes
+[11/19] app-events-explorer@1440: 10 nodes
+[12/19] app-events-matrix@1440: 10 nodes
+[13/19] app-events-test-lab@1440: 10 nodes
+[14/19] app-overview@1440: 10 nodes
+[15/19] app-releases@1440: 10 nodes
+[16/19] app-revenue-leaks@1440: 10 nodes
+[17/19] app-settings@1440: 10 nodes
+[18/19] app-team@1440: 17 nodes
+[19/19] app-usage@1440: 10 nodes
+wrote docs\qa\2026-09-05\followup\contrast\results-dark.json (204 evaluations)
+exit=0
+[1/1] app-data-quality@1440: 11 nodes
+merged 11 evaluations of 1 runs into docs\qa\2026-09-05\followup\contrast\results-dark.json (previous 2026-09-05T15:02:07.188Z)
+wrote docs\qa\2026-09-05\followup\contrast\results-dark.json (204 evaluations)
+rerun exit=0

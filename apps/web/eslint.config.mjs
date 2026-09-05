@@ -7,7 +7,8 @@ export default [
   ...nextVitals,
   ...base,
   {
-    ignores: [".next/**", "public/cdn/**", "next-env.d.ts"],
+    // `.next-analysis*`: output directories of analysis builds (NEXT_DIST_DIR, see next.config.ts)
+    ignores: [".next/**", ".next-analysis*/**", "public/cdn/**", "next-env.d.ts"],
   },
   {
     settings: { react: { version: "19.2.8" } },

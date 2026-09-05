@@ -1,0 +1,13 @@
+# Environment of the cross-browser matrix (task E2, 2026-09-05T14:34:08Z)
+OS: Microsoft Windows [Version 10.0.26200.9168]
+Node: v24.18.0
+pnpm: 11.21.0
+@playwright/test: Version 1.62.1
+Playwright registry: C:\Users\Soheil\AppData\Local/ms-playwright → chromium-1234 chromium_headless_shell-1234 ffmpeg-1011 firefox-1538 webkit-2336 winldd-1007 
+Expected revisions (playwright-core/browsers.json): chromium 1234, chromium-headless-shell 1234, firefox 1538, webkit 2336
+Production build under test: apps/web/.next BUILD_ID JkuZkqiqEn0HgN4FIDCyT
+Server: AI_DEV_FIXTURES=1 HOST_MARKETING=http://localhost:3013 HOST_APP=http://localhost:3013/app pnpm --filter @track-site/web start -p 3013 (server-3013.log)
+Edge: /c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe
+Google Chrome: not found
+System Firefox: /c/Program Files/Mozilla Firefox/firefox.exe
+Real iOS / Android devices, Safari on macOS: not available on this machine

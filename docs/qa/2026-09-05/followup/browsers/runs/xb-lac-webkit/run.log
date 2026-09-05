@@ -1,0 +1,174 @@
+
+Running 5 tests using 1 worker
+
+  x  1 [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate (5.6s)
+  x  2 [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas (4.6s)
+  x  3 [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable (10.9s)
+  x  4 [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption (5.9s)
+  x  5 [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors (5.0s)
+
+
+  1) [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate 
+
+    Error: no console errors on /app
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      172 |       expect(after.blobKeyframes.every((name: string) => name !== "none"), "css tier runs the drift keyframes").toBe(true);
+      173 |     }
+    > 174 |     expect(errors, "no console errors on /app").toEqual([]);
+          |                                                 ^
+      175 |   });
+      176 |
+      177 |   test("prefers-reduced-motion: static tier, no frames, no canvas", async ({ page }) => {
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-lac.tmp.spec.ts:174:49
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-97945-er-chosen-and-the-draw-rate-xb-lac-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      189 |     expect(probe.blobKeyframes.every((name: string) => name === "none")).toBe(true);
+      190 |     expect(probe.counters?.draws ?? 0).toBe(0);
+    > 191 |     expect(errors).toEqual([]);
+          |                    ^
+      192 |   });
+      193 |
+      194 |   test("WebGL2 unavailable: silent css fallback, the chat stays usable", async ({ page }) => {
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-lac.tmp.spec.ts:191:20
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-1132a-ic-tier-no-frames-no-canvas-xb-lac-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      218 |     await page.keyboard.type("x");
+      219 |     await page.keyboard.press("Backspace");
+    > 220 |     expect(errors).toEqual([]);
+          |                    ^
+      221 |   });
+      222 |
+      223 |   test("lost WebGL context: css fallback without a chat interruption", async ({ page }) => {
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-lac.tmp.spec.ts:220:20
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-4744d-lback-the-chat-stays-usable-xb-lac-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      250 |     // a forced loss may be echoed by the engine as a console message; anything else is a defect
+      251 |     const unexpected = errors.filter((e) => !/context lost|CONTEXT_LOST/i.test(e));
+    > 252 |     expect(unexpected).toEqual([]);
+          |                        ^
+      253 |   });
+      254 |
+      255 |   test("dark theme: same tier, no console errors", async ({ page }) => {
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-lac.tmp.spec.ts:252:24
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-8432a-without-a-chat-interruption-xb-lac-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      270 |     expect(probe.theme).toBe("dark");
+      271 |     expect(probe.tier).toMatch(/^(css|webgl)$/);
+    > 272 |     expect(errors).toEqual([]);
+          |                    ^
+      273 |   });
+      274 | });
+      275 |
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-lac.tmp.spec.ts:272:20
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-webkit\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-webkit\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-lac-webkit\xbrowser-lac.tmp-Living-AI-337d3-same-tier-no-console-errors-xb-lac-webkit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5 failed
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:153:3 › Living AI Core tiers › default motion: WebGL2 availability, the tier chosen and the draw rate 
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:177:3 › Living AI Core tiers › prefers-reduced-motion: static tier, no frames, no canvas 
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:194:3 › Living AI Core tiers › WebGL2 unavailable: silent css fallback, the chat stays usable 
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:223:3 › Living AI Core tiers › lost WebGL context: css fallback without a chat interruption 
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+exit=1

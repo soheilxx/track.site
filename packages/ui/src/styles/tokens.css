@@ -156,7 +156,8 @@
   --color-line-2: #3a3a42;
   --color-primary: #4d82ff;
   --color-primary-strong: #6d99ff;
-  --color-primary-soft: #16264d;
+  /* dark primary-soft: #101c40 keeps text-primary (4.69:1) and ink-3 (4.90:1) at AA on it; #16264d gave 4.20 / 4.39 (docs/qa/2026-09-05/followup/contrast) */
+  --color-primary-soft: #101c40;
   --color-primary-soft-2: #1c3061;
   --color-violet: #9a78ff;
   --color-violet-strong: #b094ff;
@@ -276,12 +277,17 @@
   --color-primary: var(--color-stage-primary);
   --color-on-primary: #0a0a0a;
   --color-primary-strong: #6d99ff;
-  --color-primary-soft: #16264d;
+  --color-primary-soft: #101c40;
   --color-primary-soft-2: #1c3061;
   --color-violet: #9a78ff;
+  --color-violet-strong: #b094ff;
   --color-violet-soft: #241a45;
+  --color-violet-soft-2: #2f235a;
   --color-cyan: #38c4de;
+  /* the stage re-scopes every accent token of the dark theme: without cyan-strong the light value (#086f86) rendered 2.6:1 on the stage */
+  --color-cyan-strong: #5fd2e8;
   --color-cyan-soft: #0d2a31;
+  --color-cyan-soft-2: #11383f;
   --color-ok: #3ccf6e;
   --color-ok-soft: #0a2b20;
   --color-warn: #f2a541;

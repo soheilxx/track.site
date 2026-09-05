@@ -1,0 +1,25 @@
+[2026-09-05T14:35:40.397Z] living-core lighthouse: base=http://localhost:3012 cli=C:/Users/Soheil/AppData/Local/npm-cache/_npx/ffe2131771d88588/node_modules/lighthouse/cli/index.js chrome=C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe runs=3 configs=off,system,full variants=docked,phone
+[2026-09-05T14:35:41.556Z] preference saved: ai_motion=off (html[data-ai-motion]="off" after reload)
+[2026-09-05T14:35:48.150Z] tier check off/docked: {"panelMounted":true,"coreMounted":true,"tier":"static","pref":"off","state":"idle","canvas":false,"htmlMotion":"off","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true}}
+[2026-09-05T14:36:00.710Z] app--off--docked--run1 exit=1 report=ok 12.4s perf=75 lcp=4657 tbt=337
+[2026-09-05T14:36:12.298Z] app--off--docked--run2 exit=1 report=ok 11.6s perf=79 lcp=5016 tbt=162
+[2026-09-05T14:36:24.508Z] app--off--docked--run3 exit=1 report=ok 12.2s perf=77 lcp=4912 tbt=221
+[2026-09-05T14:36:30.908Z] tier check off/phone: {"panelMounted":false,"coreMounted":false,"tier":null,"pref":null,"state":null,"canvas":false,"htmlMotion":"off","viewport":{"w":412,"h":823,"dpr":1.75,"coarse":true}}
+[2026-09-05T14:36:41.605Z] app--off--phone--run1 exit=1 report=ok 10.6s perf=83 lcp=4231 tbt=162
+[2026-09-05T14:36:52.500Z] app--off--phone--run2 exit=1 report=ok 10.9s perf=84 lcp=4224 tbt=150
+[2026-09-05T14:37:03.537Z] app--off--phone--run3 exit=1 report=ok 11.0s perf=83 lcp=4227 tbt=188
+[2026-09-05T14:37:04.593Z] preference saved: ai_motion=system (html[data-ai-motion]="system" after reload)
+[2026-09-05T14:37:11.165Z] tier check system/docked: {"panelMounted":true,"coreMounted":true,"tier":"webgl","pref":"system","state":"idle","canvas":true,"htmlMotion":"system","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true}}
+[2026-09-05T14:37:23.365Z] app--system--docked--run1 exit=1 report=ok 12.1s perf=70 lcp=4999 tbt=434
+[2026-09-05T14:37:34.950Z] app--system--docked--run2 exit=1 report=ok 11.6s perf=71 lcp=4993 tbt=430
+[2026-09-05T14:37:46.546Z] app--system--docked--run3 exit=1 report=ok 11.6s perf=71 lcp=4911 tbt=407
+[2026-09-05T14:37:52.925Z] tier check system/phone: {"panelMounted":false,"coreMounted":false,"tier":null,"pref":null,"state":null,"canvas":false,"htmlMotion":"system","viewport":{"w":412,"h":823,"dpr":1.75,"coarse":true}}
+[2026-09-05T14:38:03.903Z] app--system--phone--run1 exit=1 report=ok 10.9s perf=82 lcp=4240 tbt=200
+[2026-09-05T14:38:14.378Z] app--system--phone--run2 exit=1 report=ok 10.5s perf=84 lcp=4223 tbt=148
+[2026-09-05T14:38:24.990Z] app--system--phone--run3 exit=1 report=ok 10.6s perf=83 lcp=4384 tbt=145
+[2026-09-05T14:38:26.689Z] preference saved: ai_motion=full (html[data-ai-motion]="full" after reload)
+[2026-09-05T14:38:33.182Z] tier check full/docked: {"panelMounted":true,"coreMounted":true,"tier":"webgl","pref":"full","state":"idle","canvas":true,"htmlMotion":"full","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true}}
+[2026-09-05T14:38:45.014Z] app--full--docked--run1 exit=1 report=ok 11.7s perf=76 lcp=4996 tbt=269
+[2026-09-05T14:38:56.335Z] app--full--docked--run2 exit=1 report=ok 11.3s perf=71 lcp=4905 tbt=419
+[2026-09-05T14:39:07.885Z] app--full--docked--run3 exit=1 report=ok 11.5s perf=70 lcp=5050 tbt=433
+[2026-09-05T14:39:14.270Z] tier check full/phone: {"panelMounted":false,"coreMounted":false,"tier":null,"pref":null,"state":null,"canvas":false,"htmlMotion":"full","viewport":{"w":412,"h":823,"dpr":1.75,"coarse":true}}

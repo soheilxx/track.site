@@ -1,0 +1,9 @@
+$ next start "-p" "3011"
+▲ Next.js 16.3.4
+- Local:         http://localhost:3011
+- Network:       http://172.20.7.2:3011
+✓ Ready in 147ms
+✓ Running next.config.ts took 74ms
+C:\Users\Soheil\Downloads\track.site\apps\web:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @track-site/web@0.1.0 start: `next start "-p" "3011"`
+Exit status 1

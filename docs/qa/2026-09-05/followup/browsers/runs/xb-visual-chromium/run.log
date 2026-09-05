@@ -1,0 +1,18 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 375px matches the baseline (2.4s)
+  ok  2 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (2.5s)
+  ok  3 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (2.6s)
+  ok  4 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (2.9s)
+  ok  5 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (2.9s)
+  ok  6 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (3.0s)
+  ok  7 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (1.9s)
+  ok  8 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (2.3s)
+  ok  9 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.3s)
+  ok 10 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:122:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (1.5s)
+  ok 11 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (2.6s)
+  ok 12 [xb-visual-chromium] › e2e\visual-xb.tmp.spec.ts:136:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (2.1s)
+
+  12 passed (29.1s)
+exit=0

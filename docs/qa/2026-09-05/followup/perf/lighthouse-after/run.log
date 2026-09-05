@@ -1,0 +1,27 @@
+[2026-09-05T14:09:03.836Z] lighthouse runner: base=http://localhost:3011 chrome=C:\Users\Soheil\AppData\Local\ms-playwright\chromium_headless_shell-1234\chrome-headless-shell-win64\chrome-headless-shell.exe cli=C:\Users\Soheil\AppData\Local\npm-cache\_npx\ffe2131771d88588\node_modules\lighthouse\cli\index.js
+[2026-09-05T14:09:38.570Z] mobile http://localhost:3011/en -> home--mobile--run1 exit=1 report=ok 34.7s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:09:50.854Z] mobile http://localhost:3011/en -> home--mobile--run2 exit=1 report=ok 12.3s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:10:04.617Z] mobile http://localhost:3011/en -> home--mobile--run3 exit=1 report=ok 13.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:10:17.647Z] mobile http://localhost:3011/en/pricing -> pricing--mobile--run1 exit=1 report=ok 13.0s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:10:30.818Z] mobile http://localhost:3011/en/pricing -> pricing--mobile--run2 exit=1 report=ok 13.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:10:43.695Z] mobile http://localhost:3011/en/pricing -> pricing--mobile--run3 exit=1 report=ok 12.9s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:10:57.032Z] mobile http://localhost:3011/en/tracking-knowledge -> knowledge-hub--mobile--run1 exit=1 report=ok 13.3s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:11:10.081Z] mobile http://localhost:3011/en/tracking-knowledge -> knowledge-hub--mobile--run2 exit=1 report=ok 13.0s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:11:22.810Z] mobile http://localhost:3011/en/tracking-knowledge -> knowledge-hub--mobile--run3 exit=1 report=ok 12.7s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:11:35.820Z] mobile http://localhost:3011/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run1 exit=1 report=ok 13.0s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:11:48.026Z] mobile http://localhost:3011/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run2 exit=1 report=ok 12.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T14:12:00.400Z] mobile http://localhost:3011/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run3 exit=1 report=ok 12.4s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+runs finished: 12/12 succeeded
+summary written: C:\Users\Soheil\Downloads\track.site\docs\qa\2026-09-05\followup\perf\lighthouse-after\summary.json and summary.md (4 page/preset groups)

@@ -122,7 +122,7 @@ export function FlowNode({ x, y, width = 120, height = 44, label, sublabel, tone
         {label}
       </text>
       {sublabel ? (
-        <text x={x + width / 2} y={y + height / 2 + 12} textAnchor="middle" dominantBaseline="middle" className={cn("text-[10px]", emphasis ? "fill-on-primary/80" : "fill-ink-3")}>
+        <text x={x + width / 2} y={y + height / 2 + 12} textAnchor="middle" dominantBaseline="middle" className={cn("text-[10px]", emphasis ? "fill-on-primary/90" : "fill-ink-3")}>
           {sublabel}
         </text>
       ) : null}

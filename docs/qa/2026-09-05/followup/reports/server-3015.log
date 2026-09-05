@@ -1,0 +1,29 @@
+$ HOST_MARKETING=http://localhost:3015 HOST_APP=http://localhost:3015/app AI_DEV_FIXTURES=1 pnpm --filter @track-site/web start -p 3015
+started: 2026-09-05T15:12:37Z
+BUILD_ID: L4YIgwPErJhRJVZXJ4S5X
+server pid (pnpm wrapper): 18808
+$ next start "-p" "3015"
+▲ Next.js 16.3.4
+- Local:         http://localhost:3015
+- Network:       http://172.20.7.2:3015
+✓ Ready in 139ms
+✓ Running next.config.ts took 76ms
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+
+stopped: 2026-09-05T15:16:10Z (Stop-Process on the sh/pnpm/cmd/next processes whose command line contains 3015; Get-NetTCPConnection -LocalPort 3015 empty; no "next start" node process left)

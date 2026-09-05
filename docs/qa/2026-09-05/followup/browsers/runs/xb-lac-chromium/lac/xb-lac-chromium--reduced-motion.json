@@ -1,0 +1,36 @@
+{
+  "project": "xb-lac-chromium",
+  "case": "reduced-motion",
+  "at": "2026-09-05T14:52:01.340Z",
+  "probe": {
+    "tier": "static",
+    "state": "idle",
+    "pref": "system",
+    "htmlMotion": "system",
+    "theme": null,
+    "panelState": "idle",
+    "webgl2StrictLowPower": true,
+    "webgl2Lenient": true,
+    "canvas": null,
+    "coreCss": [
+      399,
+      224
+    ],
+    "blobKeyframes": [
+      "none",
+      "none",
+      "none"
+    ],
+    "runningAnimations": 0,
+    "reducedMotion": true,
+    "coarsePointer": false,
+    "dpr": 1,
+    "requestIdleCallback": "function",
+    "counters": {
+      "draws": 0,
+      "frames": 1
+    },
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36"
+  },
+  "consoleErrors": []
+}

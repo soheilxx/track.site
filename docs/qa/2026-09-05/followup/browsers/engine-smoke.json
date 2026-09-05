@@ -1,0 +1,41 @@
+{
+  "chromium": {
+    "executablePath": "C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\chromium-1234\\chrome-win64\\chrome.exe",
+    "launched": true,
+    "version": "151.0.7922.34",
+    "probe": {
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "webgl2_strict": true,
+      "webgl2_lenient": true,
+      "webgl1": true,
+      "reducedMotion": false,
+      "coarse": false,
+      "requestIdleCallback": "function",
+      "dpr": 1
+    },
+    "error": null
+  },
+  "firefox": {
+    "executablePath": "C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe",
+    "launched": false,
+    "version": null,
+    "probe": null,
+    "error": "browserType.launch: spawn UNKNOWN | Call log: | \u001b[2m  - <launching> C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\firefox-1538\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\Soheil\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-MRgI35 -juggler-pipe -silent\u001b[22m | "
+  },
+  "webkit": {
+    "executablePath": "C:\\Users\\Soheil\\AppData\\Local\\ms-playwright\\webkit-2336\\Playwright.exe",
+    "launched": true,
+    "version": "26.5",
+    "probe": {
+      "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+      "webgl2_strict": true,
+      "webgl2_lenient": true,
+      "webgl1": true,
+      "reducedMotion": false,
+      "coarse": false,
+      "requestIdleCallback": "undefined",
+      "dpr": 1
+    },
+    "error": null
+  }
+}

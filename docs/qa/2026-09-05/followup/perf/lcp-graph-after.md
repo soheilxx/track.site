@@ -1,0 +1,6 @@
+| Page (representative after-run) | Observed first paint | Requests finished before it (in the LCP graph) | Bytes in the graph (transfer) | Requests after it |
+| --- | ---: | --- | ---: | --- |
+| `/en` (`home--mobile--run1`) | 1201 ms | document 40.5 KB, 2 stylesheets 21.6 KB, 15 scripts 196.3 KB, 2 fonts 89.6 KB | 348.1 KB | 6 (RSC fetch 1.3 KB, RSC fetch 1.5 KB, script 10.3 KB, RSC fetch 1.7 KB, RSC fetch 5.9 KB, RSC fetch 17.5 KB) |
+| `/en/tracking-knowledge/consent-mode-v2-guide` (`knowledge-article-consent-mode-v2-guide--mobile--run1`) | 1179 ms | document 25.6 KB, 2 stylesheets 21.6 KB, 15 scripts 196.7 KB, 2 fonts 89.6 KB | 333.5 KB | 10 (RSC fetch 1.5 KB, RSC fetch 1.1 KB, RSC fetch 1.1 KB, RSC fetch 1.1 KB, RSC fetch 2.4 KB, RSC fetch 2.5 KB, RSC fetch 2.6 KB, RSC fetch 5.9 KB, script 2.4 KB, RSC fetch 18.8 KB) |
+| `/en/tracking-knowledge` (`knowledge-hub--mobile--run1`) | 529 ms | document 49.5 KB, 2 stylesheets 21.6 KB, 16 scripts 204.8 KB, 2 fonts 89.6 KB | 365.6 KB | 6 (RSC fetch 1.5 KB, RSC fetch 1.3 KB, RSC fetch 5.9 KB, RSC fetch 18.8 KB, RSC fetch 1.1 KB, script 2.4 KB) |
+| `/en/pricing` (`pricing--mobile--run1`) | 201 ms | document 49.7 KB, 2 stylesheets 21.6 KB, 15 scripts 198.6 KB, 2 fonts 89.6 KB | 359.6 KB | 6 (RSC fetch 1.5 KB, RSC fetch 1.3 KB, RSC fetch 5.9 KB, RSC fetch 18.8 KB, RSC fetch 2.4 KB, script 2.4 KB) |

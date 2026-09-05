@@ -1,0 +1,166 @@
+import { expect, test, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import fs from "node:fs";
+import path from "node:path";
+
+/**
+ * TEMPORARY (task E2, cross-browser matrix, 2026-09-05) — deleted after the run.
+ * Mobile emulation matrix: Playwright devices "iPhone 14" (WebKit) and "Pixel 7" (Chromium) on
+ * /en, /en/pricing (anonymous) and /app (stored owner session, Track AI bottom sheet opened).
+ * Checks: no horizontal page scroll, composer visible with the bottom sheet open, axe (wcag2a,
+ * wcag2aa, wcag22aa) without serious/critical violations. Results → XB_OUT/mobile/<project>--<page>.{json,png}.
+ * Runs only inside the `xb-mobile-*` projects of playwright.xbrowser.config.mjs (guard in the hook inserted by
+ * make-tmp-specs.mjs).
+ */
+const OUT = path.join(process.env.XB_OUT ?? path.resolve("test-results-xbrowser"), "mobile");
+
+const MEASURE = () => {
+  const doc = document.documentElement;
+  const vv = window.visualViewport;
+  const inScroller = (el: Element) => {
+    for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
+      const o = getComputedStyle(n).overflowX;
+      if (o === "auto" || o === "scroll" || o === "hidden" || o === "clip") return true;
+    }
+    return false;
+  };
+  const wide: string[] = [];
+  const limit = window.innerWidth + 1;
+  for (const el of Array.from(document.body.querySelectorAll<HTMLElement>("*"))) {
+    if (wide.length >= 12) break;
+    const cs = getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden" || cs.position === "fixed") continue;
+    const box = el.getBoundingClientRect();
+    if (box.width === 0 || box.right <= limit) continue;
+    if (inScroller(el)) continue;
+    const text = (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 40);
+    wide.push(`<${el.tagName.toLowerCase()}${el.id ? "#" + el.id : ""}> right=${Math.round(box.right)} ${text}`);
+  }
+  return {
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    scrollWidth: doc.scrollWidth,
+    clientWidth: doc.clientWidth,
+    bodyScrollWidth: document.body.scrollWidth,
+    visualViewport: vv ? { width: Math.round(vv.width), scale: vv.scale } : null,
+    dpr: window.devicePixelRatio,
+    coarsePointer: matchMedia("(pointer: coarse)").matches,
+    wideElements: wide,
+    ua: navigator.userAgent,
+  };
+};
+
+async function sweep(page: Page) {
+  await page.evaluate(async () => {
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const doc = document.scrollingElement ?? document.documentElement;
+    for (let y = 0; y < doc.scrollHeight; y += 600) {
+      window.scrollTo(0, y);
+      await wait(30);
+    }
+    window.scrollTo(0, 0);
+    await document.fonts.ready;
+    await wait(200);
+  });
+}
+
+async function axe(page: Page) {
+  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
+  const serious = results.violations.filter((v) => v.impact === "critical" || v.impact === "serious");
+  return {
+    violationsByImpact: results.violations.reduce<Record<string, number>>((acc, v) => {
+      acc[v.impact ?? "unknown"] = (acc[v.impact ?? "unknown"] ?? 0) + v.nodes.length;
+      return acc;
+    }, {}),
+    rules: results.violations.map((v) => `${v.impact}: ${v.id} (${v.nodes.length})`),
+    serious: serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.html.slice(0, 160)).join(" | ")}`),
+    passes: results.passes.length,
+    incomplete: results.incomplete.length,
+    axeVersion: results.testEngine.version,
+  };
+}
+
+async function record(page: Page, name: string, data: Record<string, unknown>) {
+  const project = test.info().project.name;
+  fs.mkdirSync(OUT, { recursive: true });
+  const file = path.join(OUT, `${project}--${name}`);
+  fs.writeFileSync(`${file}.json`, JSON.stringify({ project, page: name, at: new Date().toISOString(), ...data }, null, 2));
+  await page.screenshot({ path: `${file}.png`, fullPage: false }).catch(() => undefined);
+}
+
+function collectConsole(page: Page) {
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(`console.error: ${message.text()}`);
+  });
+  page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
+  return errors;
+}
+
+test.describe("marketing pages (anonymous visitor)", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+  for (const [name, route] of [
+    ["home", "/en"],
+    ["pricing", "/en/pricing"],
+  ] as const) {
+    test(`${route}: no horizontal scroll, axe without serious/critical violations`, async ({ page }) => {
+      const errors = collectConsole(page);
+      await page.goto(route);
+      await expect(page.locator("h1")).toBeVisible();
+      await sweep(page);
+      const measure = await page.evaluate(MEASURE);
+      const a11y = await axe(page);
+      await record(page, name, { measure, axe: a11y, consoleErrors: errors });
+      expect(measure.scrollWidth, "document.scrollWidth ≤ clientWidth").toBeLessThanOrEqual(measure.clientWidth);
+      expect(measure.visualViewport?.scale ?? 1).toBe(1);
+      expect(measure.wideElements).toEqual([]);
+      expect(a11y.serious).toEqual([]);
+    });
+  }
+});
+
+test.describe("dashboard (stored owner session)", () => {
+  test("/app: no horizontal scroll, composer visible with the bottom sheet open, axe without serious/critical violations", async ({ page }) => {
+    const errors = collectConsole(page);
+    await page.goto("/app");
+    await expect(page.getByTestId("app-shell")).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    const closed = await page.evaluate(MEASURE);
+    const axeClosed = await axe(page);
+    await record(page, "app-closed", { measure: closed, axe: axeClosed, consoleErrors: errors });
+    expect(closed.scrollWidth).toBeLessThanOrEqual(closed.clientWidth);
+    expect(closed.wideElements).toEqual([]);
+    expect(axeClosed.serious).toEqual([]);
+
+    const fab = page.getByTestId("assistant-fab");
+    await expect(fab).toBeVisible();
+    const fabBox = (await fab.boundingBox())!;
+    expect(fabBox.x + fabBox.width).toBeLessThanOrEqual(closed.innerWidth);
+    expect(fabBox.y + fabBox.height).toBeLessThanOrEqual(closed.innerHeight);
+    await fab.click();
+    const sheet = page.getByRole("dialog", { name: /Track AI/ });
+    await expect(sheet).toBeVisible();
+    const composer = page.getByTestId("assistant-composer");
+    await expect(composer).toBeVisible();
+    await page.waitForTimeout(400);
+    const open = await page.evaluate(MEASURE);
+    const sheetBox = (await sheet.boundingBox())!;
+    const composerBox = (await composer.boundingBox())!;
+    const axeOpen = await axe(page);
+    await record(page, "app-sheet-open", {
+      measure: open,
+      sheet: { x: sheetBox.x, y: sheetBox.y, width: sheetBox.width, height: sheetBox.height },
+      composer: { x: composerBox.x, y: composerBox.y, width: composerBox.width, height: composerBox.height, bottom: composerBox.y + composerBox.height },
+      axe: axeOpen,
+      consoleErrors: errors,
+    });
+    expect(open.scrollWidth).toBeLessThanOrEqual(open.clientWidth);
+    expect(Math.abs(sheetBox.height - open.innerHeight), "sheet is viewport-high").toBeLessThanOrEqual(2);
+    expect(composerBox.y + composerBox.height, "composer bottom inside the viewport").toBeLessThanOrEqual(open.innerHeight);
+    expect(composerBox.x + composerBox.width).toBeLessThanOrEqual(open.innerWidth);
+    expect(axeOpen.serious).toEqual([]);
+    await composer.click();
+    await expect(composer).toBeFocused();
+    expect(errors).toEqual([]);
+  });
+});

@@ -1,0 +1,235 @@
+
+Running 12 tests using 1 worker
+
+  x   1 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 375px matches the baseline (1ms)
+  x   2 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (1ms)
+  x   3 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (1ms)
+  x   4 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (1ms)
+  x   5 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (1ms)
+  x   6 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (1ms)
+  x   7 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (1ms)
+  x   8 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (1ms)
+  x   9 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1ms)
+  x  10 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (1ms)
+  x  11 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (1ms)
+  x  12 [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (1ms)
+
+
+  1) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-xbgmuD -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-YvKS44 -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2202c-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2202c-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2202c-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-A2Vs3F -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5499f--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5499f--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5499f--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-fUa6ud -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-o86ZEK -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-ad79e--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-ad79e--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-ad79e--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-82XQpH -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2ce1c-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2ce1c-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-2ce1c-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-X6kEEf -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-SyQcJD -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5e01d-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5e01d-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-5e01d-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-ubcqhe -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-564d3--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-564d3--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-564d3--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-O0wycO -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-1b9e9-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-1b9e9-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-public-pages-1b9e9-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-JEnWER -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-efe5b--375px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-efe5b--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-efe5b--375px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline 
+
+    Error: browserType.launch: spawn UNKNOWN
+    Call log:
+      - <launching> C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe -no-remote -headless -profile C:\Users\Soheil\AppData\Local\Temp\playwright_firefoxdev_profile-8iqTkF -juggler-pipe -silent
+
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-firefox\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-visual-firefox\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-firefox\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12 failed
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › home at 1440px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:130:7 › public pages (anonymous visitor) › login at 1440px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline 
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline 
+exit=1

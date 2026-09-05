@@ -1,0 +1,62 @@
+[
+  {
+    "page": "/en",
+    "total": 288283,
+    "gzip": 40129,
+    "brotli": 25633,
+    "dom": 136884,
+    "rscBytes": 151399,
+    "rscPushes": 8,
+    "svgCount": 58,
+    "svgBytes": 32375,
+    "rscSvgElements": 5,
+    "messagesInRsc": 70,
+    "jsonLd": 371,
+    "domNodes": 1207
+  },
+  {
+    "page": "/en/pricing",
+    "total": 579999,
+    "gzip": 49538,
+    "brotli": 27440,
+    "dom": 213747,
+    "rscBytes": 366252,
+    "rscPushes": 18,
+    "svgCount": 299,
+    "svgBytes": 60039,
+    "rscSvgElements": 339,
+    "messagesInRsc": 70,
+    "jsonLd": 4040,
+    "domNodes": 2310
+  },
+  {
+    "page": "/en/tracking-knowledge",
+    "total": 432087,
+    "gzip": 49009,
+    "brotli": 28577,
+    "dom": 264569,
+    "rscBytes": 167518,
+    "rscPushes": 1,
+    "svgCount": 80,
+    "svgBytes": 95499,
+    "rscSvgElements": 28,
+    "messagesInRsc": 70,
+    "jsonLd": 836,
+    "domNodes": 2194
+  },
+  {
+    "page": "/en/tracking-knowledge/consent-mode-v2-guide",
+    "total": 160455,
+    "gzip": 24841,
+    "brotli": 16166,
+    "dom": 83249,
+    "rscBytes": 77206,
+    "rscPushes": 4,
+    "svgCount": 23,
+    "svgBytes": 8298,
+    "rscSvgElements": 1,
+    "messagesInRsc": 70,
+    "jsonLd": 1721,
+    "domNodes": 660
+  }
+]

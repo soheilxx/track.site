@@ -98,7 +98,7 @@ export function FilterChips<T extends string = string>({ options, value, onValue
           <button key={option.value} type="button" aria-pressed={active} disabled={option.disabled} onClick={() => toggle(option.value)} className={chip(active, option.disabled)}>
             {active ? <Check className="size-3.5" aria-hidden="true" /> : null}
             {option.label}
-            {option.count !== undefined ? <span className={cn("text-xs tabular-nums", active ? "text-primary/80" : "text-ink-3")}>{option.count}</span> : null}
+            {option.count !== undefined ? <span className={cn("text-xs tabular-nums", active ? "text-primary" : "text-ink-3")}>{option.count}</span> : null}
           </button>
         );
       })}

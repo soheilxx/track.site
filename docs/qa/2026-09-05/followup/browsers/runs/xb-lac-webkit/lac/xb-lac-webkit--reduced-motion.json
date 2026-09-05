@@ -1,0 +1,38 @@
+{
+  "project": "xb-lac-webkit",
+  "case": "reduced-motion",
+  "at": "2026-09-05T14:52:21.625Z",
+  "probe": {
+    "tier": "static",
+    "state": "idle",
+    "pref": "system",
+    "htmlMotion": "system",
+    "theme": null,
+    "panelState": "idle",
+    "webgl2StrictLowPower": true,
+    "webgl2Lenient": true,
+    "canvas": null,
+    "coreCss": [
+      399,
+      224
+    ],
+    "blobKeyframes": [
+      "none",
+      "none",
+      "none"
+    ],
+    "runningAnimations": 0,
+    "reducedMotion": true,
+    "coarsePointer": false,
+    "dpr": 2,
+    "requestIdleCallback": "undefined",
+    "counters": {
+      "draws": 0,
+      "frames": 2
+    },
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+  },
+  "consoleErrors": [
+    "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored."
+  ]
+}

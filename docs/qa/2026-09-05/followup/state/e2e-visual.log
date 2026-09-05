@@ -1,0 +1,25 @@
+﻿
+Running 12 tests using 1 worker
+
+node.exe : (node:38880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+In C:\Users\Soheil\AppData\Roaming\npm\pnpm.ps1:24 Zeichen:5
++     & "node$exe"  "$basedir/node_modules/pnpm/bin/pnpm.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:38880) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 375px matches the baseline (2.5s)
+  ok  2 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (2.6s)
+  ok  3 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (2.8s)
+  ok  4 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (3.0s)
+  ok  5 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (2.9s)
+  ok  6 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (2.9s)
+  ok  7 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (2.0s)
+  ok  8 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (2.2s)
+  ok  9 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.3s)
+  ok 10 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (1.5s)
+  ok 11 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (1.6s)
+  ok 12 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (1.8s)
+
+  12 passed (27.8s)

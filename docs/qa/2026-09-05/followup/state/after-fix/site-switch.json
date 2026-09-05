@@ -1,0 +1,29 @@
+{
+  "otherSite": "E2E switch site",
+  "switched": {
+    "total": "0",
+    "scrollTop": 0,
+    "firstVisibleMessage": null,
+    "draft": "",
+    "panel": {
+      "left": 1040,
+      "top": 56,
+      "width": 400,
+      "height": 844
+    },
+    "url": "/app"
+  },
+  "restored": {
+    "total": "250",
+    "scrollTop": 21268,
+    "firstVisibleMessage": "fixture-241",
+    "draft": "",
+    "panel": {
+      "left": 1040,
+      "top": 56,
+      "width": 400,
+      "height": 844
+    },
+    "url": "/app"
+  }
+}

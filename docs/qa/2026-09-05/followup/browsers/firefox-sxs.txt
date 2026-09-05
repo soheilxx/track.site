@@ -1,0 +1,31 @@
+# Firefox 1538 (Playwright) cannot start on this machine — Side-by-Side (SxS) activation context failure
+
+Command (PowerShell, 2026-09-05 16:27 local):
+  Start-Process "$env:LOCALAPPDATA\ms-playwright\firefox-1538\firefox\firefox.exe" -ArgumentList "--version" -Wait
+Result:
+  Start-Process error: Dieser Befehl kann aufgrund des folgenden Fehlers nicht ausgeführt werden: Diese Anwendung konnte nicht
+  gestartet werden, da die Side-by-Side-Konfiguration ungültig ist. Weitere Informationen finden Sie im Anwendungsereignisprotokoll.
+  Weitere Details können auch mit dem Befehlszeilentool sxstrace.exe angezeigt werden.
+
+Application event log, provider SideBySide (two entries, 16:25:50 and 16:27:44):
+  Fehler beim Generieren des Aktivierungskontextes für "C:\Users\Soheil\AppData\Local\ms-playwright\firefox-1538\firefox\firefox.exe".
+  Die abhängige Assemblierung "mozglue,language="*",type="win32",version="1.0.0.0"" konnte nicht gefunden werden.
+  Verwenden Sie für eine detaillierte Diagnose das Programm "sxstrace.exe".
+
+Playwright (engine-smoke.json, e2e-firefox.log, runs/xb-visual-firefox, runs/xb-lac-firefox):
+  browserType.launch: spawn UNKNOWN
+  <launching> …\firefox-1538\firefox\firefox.exe -no-remote -headless -profile … -juggler-pipe -silent
+
+Installation state (ls, grep -a on the binaries):
+  INSTALLATION_COMPLETE and DEPENDENCIES_VALIDATED markers present; 53 files; firefox.exe 721 920 B, mozglue.dll 658 432 B, xul.dll 178 833 920 B
+  firefox.exe embeds 3 <assemblyIdentity> entries incl. a <dependentAssembly> on name="mozglue"; mozglue.dll embeds its own
+  assemblyIdentity name="mozglue" — the private assembly the OS reports as "not found" is present next to the executable.
+  `pnpm --filter @track-site/web exec playwright install firefox webkit` exits 0 without downloading (playwright-install.log):
+  the registry already holds the expected revisions firefox@1538 and webkit@2336 (playwright-core/browsers.json).
+
+Assessment: the activation-context generation fails on this Windows installation for a correct private assembly — the same
+symptom the full Playwright Chromium (chrome-win64) shows here ("Side-by-Side-Konfiguration ungültig", docs/16 §6.3), while
+chrome-headless-shell and WebKit (Playwright.exe, no SxS dependency on a private assembly) start. A forced re-download was not
+attempted: the binaries are intact and the failure is in the OS, not in the download. Firefox evidence needs another machine
+(or the Linux CI runner of defect D14). A system Firefox exists (C:\Program Files\Mozilla Firefox\firefox.exe) but Playwright
+can only drive its own patched build.

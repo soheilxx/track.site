@@ -1,0 +1,18 @@
+﻿
+Running 2 tests using 2 workers
+
+node.exe : (node:15680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+In C:\Users\Soheil\AppData\Roaming\npm\pnpm.ps1:24 Zeichen:5
++     & "node$exe"  "$basedir/node_modules/pnpm/bin/pnpm.mjs" $args
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:15680) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  1 [chromium] › e2e\app-xb.tmp.spec.ts:712:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript
+  ok 2 [chromium] › e2e\app.spec.ts:689:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript (6.0s)
+
+  1 skipped
+  1 passed (7.4s)

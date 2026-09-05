@@ -1,5 +1,3 @@
-"use client";
-
 import { Sparkles } from "lucide-react";
 import { Button, Status, cn } from "@track-site/ui";
 import { EventRowCompact, HEALTH_TONE, HealthBars, HealthExplanation, MetricTile, MiniFlow, ViewTitle, type DemoViewProps } from "../parts";
@@ -58,7 +56,7 @@ export function OverviewView({ state, copy, dispatch, interactive, playback }: D
           <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-card)] border border-violet-soft-2 bg-violet-soft px-3 py-2">
             <Sparkles className="size-4 shrink-0 text-violet" aria-hidden="true" />
             <p className="min-w-[10rem] flex-1 text-small text-ink">{rec.count > 0 ? plural(copy.ai.overviewHint, rec.count) : copy.ai.overviewDone}</p>
-            <Button size="sm" variant="secondary" onClick={() => dispatch({ type: "view", view: "ai" })}>
+            <Button size="sm" variant="secondary" onClick={dispatch ? () => dispatch({ type: "view", view: "ai" }) : undefined}>
               {copy.ai.open}
             </Button>
           </div>

@@ -1,0 +1,1643 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "C:/Users/Soheil/Downloads/track.site/docs/qa/2026-09-05/followup/browsers/playwright.xbrowser.config.mjs",
+      "--project=xb-func-chromium",
+      "--update-snapshots=none"
+    ],
+    "configFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\playwright.xbrowser.config.mjs",
+    "rootDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-webkit",
+        "name": "xb-func-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-chromium",
+        "name": "xb-func-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-chromium",
+        "name": "xb-visual-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-webkit",
+        "name": "xb-visual-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-firefox",
+        "name": "xb-visual-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-chromium",
+        "name": "xb-lac-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-webkit",
+        "name": "xb-lac-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-firefox",
+        "name": "xb-lac-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-webkit-iphone14",
+        "name": "xb-mobile-webkit-iphone14",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-func-chromium",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-chromium-pixel7",
+        "name": "xb-mobile-chromium-pixel7",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\runs\\xb-func-chromium\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "none",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "app-xb.tmp.spec.ts",
+      "file": "app-xb.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "sign-in",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 46,
+          "column": 6,
+          "specs": [
+            {
+              "title": "signs in with the seeded owner, lists sites and opens the shop connection page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5600,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:37.171Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-3eea0efd7768337cb984",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 49,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "dashboard",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 65,
+          "column": 6,
+          "specs": [
+            {
+              "title": "the module pages render one h1 each inside the shell for the signed-in owner",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 10072,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:42.940Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-0be5f5798f59df290c9d",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 66,
+              "column": 3
+            },
+            {
+              "title": "redirects the renamed dashboard paths permanently",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 146,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:53.035Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-ac5b9ee89e3e1ac78990",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 88,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "alerts & incident mode",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 103,
+          "column": 6,
+          "specs": [
+            {
+              "title": "renders /app/settings/alerts with Incident Mode, channels, rules and an honest history state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 744,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:53.199Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-c581bc98343db7fc15bf",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 104,
+              "column": 3
+            },
+            {
+              "title": "creates a webhook channel and a rule with a plain-language preview, then removes both",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2360,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:53.957Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-e877cd05f1e833235708",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "saves the per-user AI motion preference and exposes it on the dashboard root",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1423,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:56.334Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-4335e4779227c0be21b2",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 177,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "viewport-fixed shell",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 203,
+          "column": 6,
+          "specs": [
+            {
+              "title": "keeps the document at viewport height with independent scroll areas and the Track AI panel docked on desktop",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1342,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:57.774Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-64cfb430c1f03656aeeb",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 204,
+              "column": 3
+            },
+            {
+              "title": "opens the command palette with Ctrl+K and navigates",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 706,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:59.129Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-f86440a62886375fa4a3",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 264,
+              "column": 3
+            },
+            {
+              "title": "shows the launcher in the safe area and a full-height bottom sheet on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 766,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:49:59.847Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-e21b79bdbe541e2ef472",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 275,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "responsive header",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 296,
+          "column": 6,
+          "specs": [
+            {
+              "title": "at 320 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 546,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:00.625Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-ab170b21cfa3d347cdaf",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 301,
+              "column": 5
+            },
+            {
+              "title": "at 375 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 512,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:01.180Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-8d3e8372799807d57fef",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 301,
+              "column": 5
+            },
+            {
+              "title": "at 768 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 590,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:01.701Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-32b37cff4b9555f8fb91",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 301,
+              "column": 5
+            },
+            {
+              "title": "below `sm` the command palette opens from the navigation drawer",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 598,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:02.304Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-f2faa67e47a742e1330c",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 336,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "keyboard focus in the header",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 345,
+          "column": 6,
+          "specs": [
+            {
+              "title": "the workspace switcher triggers and the account menu render a visible focus ring",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 964,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:02.915Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-4df43b0a0cf8e9710c0b",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 348,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Track AI panel",
+          "file": "app-xb.tmp.spec.ts",
+          "line": 382,
+          "column": 6,
+          "specs": [
+            {
+              "title": "keeps the shell exactly viewport-high with a 250-message conversation and windows the list",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1241,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:03.891Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-87d44e8a34a646853060",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 383,
+              "column": 3
+            },
+            {
+              "title": "motion preference off produces no animated frame: the core reports the static tier",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1220,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:05.146Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-0f235070821cecad7afb",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 424,
+              "column": 3
+            },
+            {
+              "title": "prefers-reduced-motion renders the static tier from the server on, without an animation flash",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 727,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:06.380Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-96b21f9a999486102db1",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 471,
+              "column": 3
+            },
+            {
+              "title": "exposes the activity live region, the motion state and the setup workspace targets",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 801,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:07.126Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "7d4227fd6e026563d6dc-09f44c806635b363af1a",
+              "file": "app-xb.tmp.spec.ts",
+              "line": 489,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "marketing-xb.tmp.spec.ts",
+      "file": "marketing-xb.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "marketing site",
+          "file": "marketing-xb.tmp.spec.ts",
+          "line": 37,
+          "column": 6,
+          "specs": [
+            {
+              "title": "serves all six programme locales",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 16,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:08.096Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-a2f2a43129a7f235385c",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "home renders with lang=\"en\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2452,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:08.130Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-3ec5112bba1ec65c3f6c",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "home renders with lang=\"de\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2219,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:10.599Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-1b59b004ea8dbd964652",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "home renders with lang=\"fr\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2185,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:12.832Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-fd65eef859036d974391",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "home renders with lang=\"es\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2022,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:15.030Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-0f52c7437053e0077cfd",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "home renders with lang=\"it\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2036,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:17.061Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-e63f1d5d0772a69fd5d0",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "home renders with lang=\"nl\", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2116,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:19.107Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-106bb6ca3f92142fd56a",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 43,
+              "column": 5
+            },
+            {
+              "title": "unprefixed URLs redirect permanently to English and keep the query string",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 44,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:25.123Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-233f80ee20de8cac204a",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "the language switcher leads to the same page in the other language",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1433,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:25.181Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-bc2db464dede1ed9eb50",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2059,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:26.629Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-8bc1877dc5d0459f093d",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "old blog URLs redirect permanently and directly to Tracking Knowledge, query string included",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 42,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:28.701Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-88b06c50824a737ba3bf",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 197,
+              "column": 3
+            },
+            {
+              "title": "pricing never shows invented amounts: either Stripe prices or the honest empty state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 430,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:28.754Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-f21b4f93a8bfc6da52bc",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 215,
+              "column": 3
+            },
+            {
+              "title": "legal pages carry the operator identity from the environment or state that it is missing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 283,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:29.194Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-6d02371628a8d0a26fd4",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 224,
+              "column": 3
+            },
+            {
+              "title": "the sitemap index points to a pages and a knowledge sitemap per locale",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-func-chromium",
+                  "projectName": "xb-func-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 104,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:50:29.490Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b09ee6a4fac77572dc07-cdd14e66f0ae3da729c9",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 230,
+              "column": 3
+            }
+          ],
+          "suites": [
+            {
+              "title": "responsive layout",
+              "file": "marketing-xb.tmp.spec.ts",
+              "line": 59,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "/fr at 320 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 498,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:21.233Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-85efb7436c5b5f38afd4",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/en at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 593,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:21.743Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-bde1e456b1d2c8ef15c9",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/nl at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 636,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:22.349Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-e580d1a01b363b9e2c78",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/en at 1280 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 603,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:22.994Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-818038a24bf1499a1ca2",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/fr/pricing at 320 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 498,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:23.606Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-122e11c56f1e1448f474",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/de/pricing at 768 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 489,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:24.116Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-db2f65c33d31f59272c2",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                },
+                {
+                  "title": "/nl/pricing at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "xb-func-chromium",
+                      "projectName": "xb-func-chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 496,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-09-05T14:50:24.616Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "b09ee6a4fac77572dc07-bb9a603bcc3c9a2185c8",
+                  "file": "marketing-xb.tmp.spec.ts",
+                  "line": 73,
+                  "column": 7
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-05T14:49:36.598Z",
+    "duration": 53320.092000000004,
+    "expected": 39,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,43 @@
+
+Running 3 tests using 1 worker
+
+  ok 1 [xb-mobile-webkit-iphone14] › e2e\xbrowser-mobile.tmp.spec.ts:137:5 › marketing pages (anonymous visitor) › /en: no horizontal scroll, axe without serious/critical violations (4.2s)
+  ok 2 [xb-mobile-webkit-iphone14] › e2e\xbrowser-mobile.tmp.spec.ts:137:5 › marketing pages (anonymous visitor) › /en/pricing: no horizontal scroll, axe without serious/critical violations (5.1s)
+  x  3 [xb-mobile-webkit-iphone14] › e2e\xbrowser-mobile.tmp.spec.ts:154:3 › dashboard (stored owner session) › /app: no horizontal scroll, composer visible with the bottom sheet open, axe without serious/critical violations (8.0s)
+
+
+  1) [xb-mobile-webkit-iphone14] › e2e\xbrowser-mobile.tmp.spec.ts:154:3 › dashboard (stored owner session) › /app: no horizontal scroll, composer visible with the bottom sheet open, axe without serious/critical violations 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored.",
+    + ]
+
+      193 |     await composer.click();
+      194 |     await expect(composer).toBeFocused();
+    > 195 |     expect(errors).toEqual([]);
+          |                    ^
+      196 |   });
+      197 | });
+      198 |
+        at C:\Users\Soheil\Downloads\track.site\apps\web\e2e\xbrowser-mobile.tmp.spec.ts:195:20
+
+    Error Context: ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-mobile-webkit-iphone14\xbrowser-mobile.tmp-dashbo-f912c-serious-critical-violations-xb-mobile-webkit-iphone14\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-mobile-webkit-iphone14\xbrowser-mobile.tmp-dashbo-f912c-serious-critical-violations-xb-mobile-webkit-iphone14\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ..\..\..\..\AppData\Local\Temp\claude\C--Users-Soheil-Downloads\c4e10eac-a8e9-429a-81d6-317c47246f54\scratchpad\xbrowser\xb-mobile-webkit-iphone14\xbrowser-mobile.tmp-dashbo-f912c-serious-critical-violations-xb-mobile-webkit-iphone14\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [xb-mobile-webkit-iphone14] › e2e\xbrowser-mobile.tmp.spec.ts:154:3 › dashboard (stored owner session) › /app: no horizontal scroll, composer visible with the bottom sheet open, axe without serious/critical violations 
+  2 passed (19.2s)
+exit=1

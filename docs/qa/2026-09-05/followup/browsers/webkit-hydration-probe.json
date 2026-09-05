@@ -1,0 +1,28 @@
+[
+  {
+    "case": "sign-in, immediately after goto",
+    "msAfterGoto": 355,
+    "msHydrated": null,
+    "hydratedAtFill": false,
+    "outcome": "no navigation; email value now: \"\"; alert: \"Enter a valid e-mail address. | \""
+  },
+  {
+    "case": "sign-in, after hydration",
+    "msAfterGoto": 209,
+    "msHydrated": 476,
+    "hydratedAtFill": true,
+    "outcome": "navigated to http://localhost:3013/app"
+  },
+  {
+    "case": "bottom sheet, immediately after goto",
+    "msHydrated": null,
+    "hydratedAtClick": false,
+    "outcome": "sheet visible, height 740"
+  },
+  {
+    "case": "bottom sheet, after hydration",
+    "msHydrated": 553,
+    "hydratedAtClick": true,
+    "outcome": "sheet visible, height 740"
+  }
+]

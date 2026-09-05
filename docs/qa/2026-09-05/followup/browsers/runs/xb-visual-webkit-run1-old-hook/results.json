@@ -1,0 +1,843 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "C:/Users/Soheil/Downloads/track.site/docs/qa/2026-09-05/followup/browsers/playwright.xbrowser.config.mjs",
+      "--project=xb-visual-webkit",
+      "--update-snapshots=none"
+    ],
+    "configFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\playwright.xbrowser.config.mjs",
+    "rootDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-webkit",
+        "name": "xb-func-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-func-chromium",
+        "name": "xb-func-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(marketing|app)-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-chromium",
+        "name": "xb-visual-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-webkit",
+        "name": "xb-visual-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-visual-firefox",
+        "name": "xb-visual-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/visual-xb\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-chromium",
+        "name": "xb-lac-chromium",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-webkit",
+        "name": "xb-lac-webkit",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-lac-firefox",
+        "name": "xb-lac-firefox",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-lac\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-webkit-iphone14",
+        "name": "xb-mobile-webkit-iphone14",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/xbrowser/xb-visual-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "xb-mobile-chromium-pixel7",
+        "name": "xb-mobile-chromium-pixel7",
+        "testDir": "C:/Users/Soheil/Downloads/track.site/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/xbrowser-mobile\\.tmp\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\followup\\browsers\\runs\\xb-visual-webkit\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "none",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "visual-xb.tmp.spec.ts",
+      "file": "visual-xb.tmp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "public pages (anonymous visitor)",
+          "file": "visual-xb.tmp.spec.ts",
+          "line": 116,
+          "column": 6,
+          "specs": [
+            {
+              "title": "home at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4551,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  9975 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: home-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(home-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  9975 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: home-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(home-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:127:9",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                          "column": 22,
+                          "line": 106
+                        },
+                        "snippet": "  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                            "column": 22,
+                            "line": 106
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  9975 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: home-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(home-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 9975 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n\n  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:127:9"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:02.226Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "home-375-expected.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\__screenshots__\\home-375-visual-win32.png"
+                        },
+                        {
+                          "name": "home-375-actual.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\\home-375-actual.png"
+                        },
+                        {
+                          "name": "home-375-diff.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\\home-375-diff.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-06b75--375px-matches-the-baseline-xb-visual-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                        "column": 22,
+                        "line": 106
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-d1bad3074990084ed38a",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "home at 1440px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2605,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:07.717Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-b2fb9eb87cb875f90e87",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "pricing at 375px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2787,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:10.401Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-4cce28ea35f17fdc2848",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "pricing at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 3266,
+                      "error": {
+                        "message": "Error: route.fulfill: Fetch response has been disposed",
+                        "stack": "Error: route.fulfill: Fetch response has been disposed\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:21:17",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                          "column": 17,
+                          "line": 21
+                        },
+                        "snippet": "  19 |       const headers = { ...response.headers() };\n  20 |       delete headers[\"strict-transport-security\"];\n> 21 |       if (headers[\"content-security-policy\"]) headers[\"content-security-policy\"] = headers[\"content-security-policy\"].replace(/;\\s*upgrade-insecure-requests/, \"\");\n     |                 ^\n  22 |       await route.fulfill({ response, headers });\n  23 |     } catch {\n  24 |       // a request still in flight when the test ends (Next.js route prefetch): not a test failure"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                            "column": 17,
+                            "line": 21
+                          },
+                          "message": "Error: route.fulfill: Fetch response has been disposed\n\n  19 |       const headers = { ...response.headers() };\n  20 |       delete headers[\"strict-transport-security\"];\n> 21 |       if (headers[\"content-security-policy\"]) headers[\"content-security-policy\"] = headers[\"content-security-policy\"].replace(/;\\s*upgrade-insecure-requests/, \"\");\n     |                 ^\n  22 |       await route.fulfill({ response, headers });\n  23 |     } catch {\n  24 |       // a request still in flight when the test ends (Next.js route prefetch): not a test failure\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:21:17"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:13.200Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-3938a-1440px-matches-the-baseline-xb-visual-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                        "column": 17,
+                        "line": 21
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-18756350d153c5f258ba",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "knowledge-hub at 375px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3429,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:16.995Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-f16d74ced7a9fe3afccf",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "knowledge-hub at 1440px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5004,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:20.526Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-b19b320f1c193af6d6ba",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "article-consent-mode-v2-guide at 375px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 3551,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13209 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: article-consent-mode-v2-guide-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(article-consent-mode-v2-guide-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13209 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: article-consent-mode-v2-guide-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(article-consent-mode-v2-guide-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:127:9",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                          "column": 22,
+                          "line": 106
+                        },
+                        "snippet": "  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                            "column": 22,
+                            "line": 106
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13209 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: article-consent-mode-v2-guide-375.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(article-consent-mode-v2-guide-375.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13209 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n\n  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:127:9"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:25.542Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "article-consent-mode-v2-guide-375-expected.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\__screenshots__\\article-consent-mode-v2-guide-375-visual-win32.png"
+                        },
+                        {
+                          "name": "article-consent-mode-v2-guide-375-actual.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\\article-consent-mode-v2-guide-375-actual.png"
+                        },
+                        {
+                          "name": "article-consent-mode-v2-guide-375-diff.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\\article-consent-mode-v2-guide-375-diff.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-public-pages-8320c--375px-matches-the-baseline-xb-visual-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                        "column": 22,
+                        "line": 106
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-118e65c3428025107b1b",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "article-consent-mode-v2-guide at 1440px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3472,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:29.838Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-ff81c5aabddf144fcd00",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "login at 375px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1992,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:33.421Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-1da1d73e84e3779a8f50",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            },
+            {
+              "title": "login at 1440px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2304,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:35.425Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-54698a5785b3f05f55d2",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 122,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "dashboard (stored owner session)",
+          "file": "visual-xb.tmp.spec.ts",
+          "line": 133,
+          "column": 6,
+          "specs": [
+            {
+              "title": "app-overview at 375px matches the baseline",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3525,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:37.739Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-e71a68481857e664491e",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "app-overview at 1440px matches the baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "xb-visual-webkit",
+                  "projectName": "xb-visual-webkit",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4401,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13545 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: app-overview-1440.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(app-overview-1440.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13545 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: app-overview-1440.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(app-overview-1440.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:140:9",
+                        "location": {
+                          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                          "column": 22,
+                          "line": 106
+                        },
+                        "snippet": "  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                            "column": 22,
+                            "line": 106
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  13545 pixels (ratio 0.02 of all image pixels) are different.\n\n  Snapshot: app-overview-1440.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(app-overview-1440.png)\" with timeout 5000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 13545 pixels (ratio 0.02 of all image pixels) are different.\u001b[22m\n\n\n  104 |     await wait(250);\n  105 |   });\n> 106 | }\n      |  ^\n  107 |\n  108 | async function clipFor(page: Page, width: number) {\n  109 |   const height = await page.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));\n    at snapshot (C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:106:22)\n    at C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts:140:9"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-05T14:51:41.278Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "app-overview-1440-expected.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\__screenshots__\\app-overview-1440-visual-win32.png"
+                        },
+                        {
+                          "name": "app-overview-1440-actual.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\\app-overview-1440-actual.png"
+                        },
+                        {
+                          "name": "app-overview-1440-diff.png",
+                          "contentType": "image/png",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\\app-overview-1440-diff.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\xbrowser\\xb-visual-webkit\\visual-xb.tmp-dashboard-st-278b9-1440px-matches-the-baseline-xb-visual-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\Soheil\\Downloads\\track.site\\apps\\web\\e2e\\visual-xb.tmp.spec.ts",
+                        "column": 22,
+                        "line": 106
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "56644273a8167ce9fccf-1627f93e580986c66b7a",
+              "file": "visual-xb.tmp.spec.ts",
+              "line": 136,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-05T14:51:01.827Z",
+    "duration": 44214.311,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

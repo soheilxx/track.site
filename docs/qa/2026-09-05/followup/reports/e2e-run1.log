@@ -1,0 +1,76 @@
+$ E2E_BASE_URL=http://localhost:3015 E2E_ENGINES= pnpm --filter @track-site/web test:e2e 
+BUILD_ID served: 
+started: 2026-09-05T15:12:39Z
+
+$ playwright test
+
+Running 55 tests using 3 workers
+
+(node:44948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [setup] › e2e\auth.setup.ts:12:1 › signs in as the seeded owner and stores the session (3.6s)
+(node:6624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  4 [chromium] › e2e\marketing.spec.ts:15:3 › marketing site › serves all six programme locales (7ms)
+  ok  5 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="en", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.5s)
+  ok  2 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 375px matches the baseline (3.0s)
+  ok  3 [chromium] › e2e\app.spec.ts:29:3 › sign-in › signs in with the seeded owner, lists sites and opens the shop connection page (4.9s)
+  ok  6 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="de", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.9s)
+  ok  7 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (3.8s)
+  ok  9 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="fr", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.9s)
+  ok 10 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (3.0s)
+  ok  8 [chromium] › e2e\app.spec.ts:46:3 › dashboard › the module pages render one h1 each inside the shell for the signed-in owner (5.6s)
+  ok 13 [chromium] › e2e\app.spec.ts:68:3 › dashboard › redirects the renamed dashboard paths permanently (171ms)
+  ok 11 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="es", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.8s)
+  ok 14 [chromium] › e2e\app.spec.ts:84:3 › alerts & incident mode › renders /app/settings/alerts with Incident Mode, channels, rules and an honest history state (834ms)
+  ok 12 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (3.4s)
+  ok 15 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="it", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.9s)
+  ok 16 [chromium] › e2e\app.spec.ts:112:3 › alerts & incident mode › creates a webhook channel and a rule with a plain-language preview, then removes both (3.1s)
+  ok 19 [chromium] › e2e\app.spec.ts:157:3 › alerts & incident mode › saves the per-user AI motion preference and exposes it on the dashboard root (1.7s)
+  ok 17 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (3.6s)
+  ok 18 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="nl", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.8s)
+  ok 20 [chromium] › e2e\app.spec.ts:184:3 › viewport-fixed shell › keeps the document at viewport height with independent scroll areas and the Track AI panel docked on desktop (1.6s)
+  ok 22 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /fr at 320 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (951ms)
+  ok 23 [chromium] › e2e\app.spec.ts:244:3 › viewport-fixed shell › opens the command palette with Ctrl+K and navigates (712ms)
+  ok 24 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /en at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (737ms)
+  ok 25 [chromium] › e2e\app.spec.ts:255:3 › viewport-fixed shell › shows the launcher in the safe area and a full-height bottom sheet on mobile (848ms)
+  ok 26 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /nl at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (816ms)
+  ok 27 [chromium] › e2e\app.spec.ts:281:5 › responsive header › at 320 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it (638ms)
+  ok 28 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /en at 1280 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (858ms)
+  ok 21 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (3.7s)
+  ok 29 [chromium] › e2e\app.spec.ts:281:5 › responsive header › at 375 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it (729ms)
+  ok 30 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /fr/pricing at 320 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (699ms)
+  ok 32 [chromium] › e2e\app.spec.ts:281:5 › responsive header › at 768 px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it (619ms)
+  ok 33 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /de/pricing at 768 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (608ms)
+  ok 34 [chromium] › e2e\app.spec.ts:316:3 › responsive header › below `sm` the command palette opens from the navigation drawer (660ms)
+  ok 35 [chromium] › e2e\marketing.spec.ts:50:7 › marketing site › responsive layout › /nl/pricing at 1024 px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame (696ms)
+  ok 37 [chromium] › e2e\marketing.spec.ts:93:3 › marketing site › unprefixed URLs redirect permanently to English and keep the query string (77ms)
+  ok 31 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (2.2s)
+  ok 36 [chromium] › e2e\app.spec.ts:328:3 › keyboard focus in the header › the workspace switcher triggers and the account menu render a visible focus ring (992ms)
+  ok 38 [chromium] › e2e\marketing.spec.ts:110:3 › marketing site › the language switcher leads to the same page in the other language (2.4s)
+  ok 40 [chromium] › e2e\app.spec.ts:363:3 › Track AI panel › keeps the shell exactly viewport-high with a 250-message conversation and windows the list (1.9s)
+  ok 39 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (3.9s)
+  ok 42 [chromium] › e2e\app.spec.ts:404:3 › Track AI panel › motion preference off produces no animated frame: the core reports the static tier (2.0s)
+  ok 44 [chromium] › e2e\app.spec.ts:451:3 › Track AI panel › prefers-reduced-motion renders the static tier from the server on, without an animation flash (938ms)
+  ok 43 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.8s)
+  ok 41 [chromium] › e2e\marketing.spec.ts:126:3 › marketing site › Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card (3.7s)
+  ok 47 [chromium] › e2e\marketing.spec.ts:174:3 › marketing site › old blog URLs redirect permanently and directly to Tracking Knowledge, query string included (215ms)
+  ok 45 [chromium] › e2e\app.spec.ts:469:3 › Track AI panel › exposes the activity live region, the motion state and the setup workspace targets (1.1s)
+  ok 48 [chromium] › e2e\marketing.spec.ts:192:3 › marketing site › pricing never shows invented amounts: either Stripe prices or the honest empty state (819ms)
+  ok 50 [chromium] › e2e\marketing.spec.ts:201:3 › marketing site › legal pages carry the operator identity from the environment or state that it is missing (424ms)
+  ok 51 [chromium] › e2e\marketing.spec.ts:207:3 › marketing site › the sitemap index points to a pages and a knowledge sitemap per locale (137ms)
+  ok 46 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (2.1s)
+  ok 52 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (1.8s)
+  ok 49 [chromium] › e2e\app.spec.ts:528:3 › mobile on-screen keyboard › the sheet follows the visual viewport: composer and last message stay visible above the keyboard, nothing shifts (3.4s)
+  ok 54 [chromium] › e2e\app.spec.ts:654:3 › Track AI state across routes and sites › the transcript, the scroll position, the draft and the panel geometry survive a route change (1.5s)
+  ok 53 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (2.0s)
+  ok 55 [chromium] › e2e\app.spec.ts:689:3 › Track AI state across routes and sites › a site switch confirms the new context visibly and never shows the other site's transcript (2.1s)
+
+  55 passed (41.5s)
+
+finished: 2026-09-05T15:13:22Z
+exit code: 0

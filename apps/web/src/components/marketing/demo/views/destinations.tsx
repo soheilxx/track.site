@@ -24,7 +24,7 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
               key={s.id}
               type="button"
               aria-pressed={pressed}
-              onClick={() => dispatch({ type: "platform", platform: s.id })}
+              onClick={() => dispatch?.({ type: "platform", platform: s.id })}
               className={cn(
                 "flex min-h-11 shrink-0 items-center gap-2 rounded-[var(--radius-control)] border px-3 text-small font-medium transition-colors duration-[var(--motion-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                 pressed ? "border-primary bg-primary-soft text-ink" : "border-line bg-surface text-ink-2 hover:bg-surface-2 hover:text-ink",
@@ -65,7 +65,7 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
           <Alert tone="warn" className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="min-w-[10rem] flex-1">{plural(c.heldHint, selected.heldCurrency)}</span>
-              <Button size="sm" variant="secondary" onClick={() => dispatch({ type: "view", view: "ai" })}>
+              <Button size="sm" variant="secondary" onClick={() => dispatch?.({ type: "view", view: "ai" })}>
                 {c.openAi}
               </Button>
             </div>

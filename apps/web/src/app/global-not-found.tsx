@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ThemeScript } from "@/components/theme-script";
 import { DEFAULT_LOCALE } from "@/i18n/routing";
 import { bodyClassName, fontClassName } from "./fonts";
-import "./globals.css";
+import "./marketing.css";
 
 export const metadata: Metadata = {
   title: "Page not found · Track",

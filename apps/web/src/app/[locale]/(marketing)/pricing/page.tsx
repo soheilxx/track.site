@@ -12,8 +12,8 @@ import { IntervalProvider, IntervalToggle } from "@/components/marketing/pricing
 import { OverageSection } from "@/components/marketing/pricing/overage-section";
 import { PlanCards } from "@/components/marketing/pricing/plan-cards";
 import { PricingFaq } from "@/components/marketing/pricing/pricing-faq";
-import { CONTACT_SALES_HREF, fill, formatInteger, formatList, signupHref } from "@/components/marketing/pricing/pricing-helpers";
-import { PricingTools } from "@/components/marketing/pricing/pricing-tools";
+import { CONTACT_SALES_HREF, fill, formatInteger, formatList, planHrefMap, signupHref } from "@/components/marketing/pricing/pricing-helpers";
+import { PricingToolsLazy } from "@/components/marketing/pricing/pricing-tools-lazy";
 import { PricingSection } from "@/components/marketing/pricing/section";
 import { TrialNote } from "@/components/marketing/pricing/trial-note";
 import { PRICING_COPY, pick } from "@/lib/marketing-copy";
@@ -33,6 +33,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
  * Layout: focused hero with the interval toggle → three main cards → tax note → Enterprise stage →
  * included-in-every-plan list → plan finder + calculator stage → comparison matrix → event
  * definition with diagram → overage and cost control → trial strip → FAQ → closing CTA.
+ *
+ * Hydration budget: the plan cards and the matrix CTAs receive their signup links resolved here
+ * (`planHrefMap`), and the finder/calculator stage is a lazily hydrated island with a server-rendered
+ * initial state, so the tariff catalogue and the tools stay out of the page's hydration bundle.
  */
 export default async function PricingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -93,7 +97,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
 
         <section aria-label={c.plansLabel} className="bg-ground">
           <Container width="wide" className="py-12 md:py-16">
-            <PlanCards locale={locale} plans={paid} copy={c.plan} trial={{ planId: trial.planId, days: trial.days }} />
+            <PlanCards locale={locale} plans={paid} copy={c.plan} trial={{ planId: trial.planId, days: trial.days }} hrefs={planHrefMap(paid)} />
             <div className="mt-6 flex items-start gap-2 text-small text-ink-3">
               <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <p>
@@ -114,7 +118,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         </PricingSection>
 
         <PricingSection id="tools" title={c.tools.title} text={c.tools.text} width="wide">
-          <PricingTools locale={locale} plans={paid} finder={c.finder} calculator={c.calculator} thresholds={usage.thresholds} />
+          <PricingToolsLazy locale={locale} plans={paid} finder={c.finder} calculator={c.calculator} thresholds={usage.thresholds} />
         </PricingSection>
 
         <PricingSection id="compare" title={c.matrix.title} text={c.matrix.text} tone="muted" width="wide">

@@ -9,8 +9,11 @@ import type { PricingCopy } from "@/lib/marketing-copy/types";
  */
 export function EventDefinition({ text, notCounted, copy }: { text: string; notCounted: string[]; copy: PricingCopy["events"] }) {
   const n = copy.nodes;
-  const trackX = 140;
-  const trackW = 124;
+  // the Track node grows with its localized sublabel (measured 4.6–5.3 px per character at 10 px: en 117.5, de 141.6,
+  // nl 147.5 px) and moves left to keep ≥ 28 px for the fan-out curves, so "angenommen · einmal gezählt" never runs
+  // past the solid node onto the ground (docs/qa/2026-09-05/followup/contrast: white on #f7f7f5 at the ends)
+  const trackW = Math.max(124, Math.ceil(n.trackSub.length * 5.2) + 8);
+  const trackX = Math.min(140, Math.max(112, 288 - trackW));
   const chipX = 316;
   const chipW = 96;
   const chipH = 30;

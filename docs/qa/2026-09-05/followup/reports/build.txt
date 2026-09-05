@@ -1,0 +1,213 @@
+$ pnpm --filter @track-site/web build
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T15:11:09Z
+
+$ node scripts/sync-sdk.mjs
+sdk synced (3 files) -> public/cdn/v1
+$ pnpm --filter @track-site/sdk build && node scripts/sync-sdk.mjs && next build
+$ tsx scripts/build.ts
+warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+tracker.js built: 36689 bytes (raw), keys: none
+sdk synced (3 files) -> public/cdn/v1
+▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.ts took 73ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.4s
+  Running TypeScript ...
+  Finished TypeScript in 28.3s ...
+  Collecting page data using 7 workers ...
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+  Generating static pages using 7 workers (0/715) ...
+  Generating static pages using 7 workers (178/715) 
+  Generating static pages using 7 workers (357/715) 
+  Generating static pages using 7 workers (536/715) 
+✓ Generating static pages using 7 workers (715/715) in 10.4s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├   /[locale]
+│ ├ ● /en
+│ ├ ● /de
+│ ├ ● /fr
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/accept-invitation/[id]
+├ ƒ /[locale]/contact
+├   /[locale]/data-processing
+│ ├ ● /en/data-processing
+│ ├ ● /de/data-processing
+│ ├ ● /fr/data-processing
+│ └ ● [+3 more paths]
+├   /[locale]/demo
+│ ├ ● /en/demo
+│ ├ ● /de/demo
+│ ├ ● /fr/demo
+│ └ ● [+3 more paths]
+├   /[locale]/docs
+│ ├ ● /en/docs
+│ ├ ● /de/docs
+│ ├ ● /fr/docs
+│ └ ● [+3 more paths]
+├   /[locale]/features
+│ ├ ● /en/features
+│ ├ ● /de/features
+│ ├ ● /fr/features
+│ └ ● [+3 more paths]
+├   /[locale]/features/[slug]
+│ ├ ● /en/features/ai-setup
+│ ├ ● /en/features/server-side-tracking
+│ ├ ● /en/features/event-debugger
+│ └ ● [+33 more paths]
+├   /[locale]/forgot-password
+│ ├ ● /en/forgot-password
+│ ├ ● /de/forgot-password
+│ ├ ● /fr/forgot-password
+│ └ ● [+3 more paths]
+├   /[locale]/how-it-works
+│ ├ ● /en/how-it-works
+│ ├ ● /de/how-it-works
+│ ├ ● /fr/how-it-works
+│ └ ● [+3 more paths]
+├   /[locale]/imprint
+│ ├ ● /en/imprint
+│ ├ ● /de/imprint
+│ ├ ● /fr/imprint
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/integrations
+├   /[locale]/integrations/[slug]
+│ ├ ● /en/integrations/meta
+│ ├ ● /en/integrations/google-ads
+│ ├ ● /en/integrations/google-analytics
+│ └ ● [+147 more paths]
+├ ƒ /[locale]/login
+├   /[locale]/opengraph-image
+│ ├ ● /en/opengraph-image
+│ ├ ● /de/opengraph-image
+│ ├ ● /fr/opengraph-image
+│ └ ● [+3 more paths]
+├   /[locale]/pricing
+│ ├ ● /en/pricing
+│ ├ ● /de/pricing
+│ ├ ● /fr/pricing
+│ └ ● [+3 more paths]
+├   /[locale]/privacy
+│ ├ ● /en/privacy
+│ ├ ● /de/privacy
+│ ├ ● /fr/privacy
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/reset-password
+├   /[locale]/security
+│ ├ ● /en/security
+│ ├ ● /de/security
+│ ├ ● /fr/security
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/signup
+├ ƒ /[locale]/status
+├   /[locale]/subprocessors
+│ ├ ● /en/subprocessors
+│ ├ ● /de/subprocessors
+│ ├ ● /fr/subprocessors
+│ └ ● [+3 more paths]
+├   /[locale]/support
+│ ├ ● /en/support
+│ ├ ● /de/support
+│ ├ ● /fr/support
+│ └ ● [+3 more paths]
+├   /[locale]/terms
+│ ├ ● /en/terms
+│ ├ ● /de/terms
+│ ├ ● /fr/terms
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/tracking-knowledge
+├   /[locale]/tracking-knowledge/[slug]
+│ ├ ● /en/tracking-knowledge/meta-conversions-api-deduplication
+│ ├ ● /en/tracking-knowledge/server-side-tracking-explained
+│ ├ ● /en/tracking-knowledge/consent-mode-v2-guide
+│ └ ● [+177 more paths]
+├   /[locale]/tracking-knowledge/[slug]/card.png
+│ ├ ● /en/tracking-knowledge/meta-conversions-api-deduplication/card.png
+│ ├ ● /en/tracking-knowledge/server-side-tracking-explained/card.png
+│ ├ ● /en/tracking-knowledge/consent-mode-v2-guide/card.png
+│ └ ● [+177 more paths]
+├   /[locale]/tracking-knowledge/card.png
+│ ├ ● /en/tracking-knowledge/card.png
+│ ├ ● /de/tracking-knowledge/card.png
+│ ├ ● /fr/tracking-knowledge/card.png
+│ └ ● [+3 more paths]
+├ ○ /[locale]/tracking-knowledge/feed.xml
+├ ƒ /[locale]/two-factor
+├ ƒ /[locale]/verify-email
+├ ƒ /api/ai/chat
+├ ƒ /api/ai/confirm
+├ ƒ /api/ai/credential
+├ ƒ /api/ai/dev-fixture
+├ ƒ /api/ai/health
+├ ƒ /api/ai/wizard
+├ ƒ /api/app/events/explorer
+├ ƒ /api/app/events/test-lab/[runId]
+├ ƒ /api/auth/[...all]
+├ ƒ /api/health
+├ ƒ /api/knowledge/feedback
+├ ƒ /api/oauth/[provider]/callback
+├ ƒ /api/privacy/dsar/[id]
+├ ƒ /api/stripe/webhook
+├ ƒ /app
+├ ƒ /app/ai-setup
+├ ƒ /app/billing
+├ ƒ /app/billing/usage
+├ ƒ /app/consent
+├ ƒ /app/consent/simulator
+├ ƒ /app/data-quality
+├ ƒ /app/data-quality/revenue-leaks
+├ ƒ /app/destinations
+├ ƒ /app/events
+├ ƒ /app/events/explorer
+├ ƒ /app/events/matrix
+├ ƒ /app/events/test-lab
+├ ƒ /app/insights
+├ ƒ /app/insights/attribution
+├ ƒ /app/insights/audiences
+├ ƒ /app/oauth/[provider]/start
+├ ƒ /app/onboarding
+├ ƒ /app/onboarding/organization
+├ ƒ /app/releases
+├ ƒ /app/releases/[versionId]
+├ ƒ /app/settings
+├ ƒ /app/settings/alerts
+├ ƒ /app/sites
+├ ƒ /app/sites/[siteId]
+├ ƒ /app/sites/[siteId]/destinations
+├ ƒ /app/sites/[siteId]/destinations/[integrationId]
+├ ƒ /app/sites/[siteId]/destinations/new
+├ ƒ /app/sites/[siteId]/setup
+├ ƒ /app/sites/[siteId]/shop
+├ ƒ /app/team
+├ ƒ /app/team/audit
+├ ○ /apple-icon.png
+├ ƒ /cdn/v1/c/[...path]
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└   /sitemaps/[name]
+  ├ ● /sitemaps/pages-en.xml
+  ├ ● /sitemaps/knowledge-en.xml
+  ├ ● /sitemaps/pages-de.xml
+  └ ● [+9 more paths]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+
+finished: 2026-09-05T15:12:03Z
+exit code: 0
+BUILD_ID: L4YIgwPErJhRJVZXJ4S5X

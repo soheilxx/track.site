@@ -7,6 +7,7 @@ import { ACTIVE_LOCALES, ALL_LOCALES, DEFAULT_LOCALE, type AppLocale } from "@/i
 import { KNOWLEDGE_LABELS, type KnowledgeLabels } from "./marketing-copy/knowledge-labels";
 import { pick } from "./marketing-copy/pick";
 import type { LocalizedCopy } from "./marketing-copy/types";
+import { articlePath } from "./knowledge-routes";
 import { buildSearchIndex, extractHeadings, plainTextFromMarkdown, search, type FacetCounts, type HubQuery, type HubTaxonomy, type SearchDocument, type SearchIndex } from "./knowledge-search";
 
 /**
@@ -18,7 +19,7 @@ import { buildSearchIndex, extractHeadings, plainTextFromMarkdown, search, type 
 
 /** Fixed product name of the knowledge area — identical in every language (supplement §6). */
 export const KNOWLEDGE_NAME = "Tracking Knowledge";
-export const KNOWLEDGE_PATH = "/tracking-knowledge";
+export { KNOWLEDGE_PATH, articlePath } from "./knowledge-routes";
 
 /**
  * A label in every programme locale (`null` until translated). The texts live in
@@ -161,10 +162,6 @@ export function authorFor(key: string, locale: string): Author & { key: string; 
   if (!record) return { key: resolved, name: key, displayName: key, role: constantLabel(""), bio: constantLabel("") };
   const names = (AUTHOR_DISPLAY_NAMES as Record<string, LocalizedLabel | undefined>)[resolved];
   return { key: resolved, ...record, displayName: names ? labelFor(names, locale) : record.name };
-}
-
-export function articlePath(slug: string): string {
-  return `${KNOWLEDGE_PATH}/${slug}`;
 }
 
 /** Localized alt text of the generated 1200×630 social card. */

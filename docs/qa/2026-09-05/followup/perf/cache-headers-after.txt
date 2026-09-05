@@ -1,0 +1,7 @@
+/icon.svg -> Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/apple-icon.png -> Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/manifest.webmanifest -> Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/brand/logo.svg -> Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+/en/tracking-knowledge/card.png -> Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+/en/tracking-knowledge/consent-mode-v2-guide/card.png -> Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+/en -> Cache-Control: s-maxage=31536000

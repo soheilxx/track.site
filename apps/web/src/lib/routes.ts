@@ -1,5 +1,6 @@
 import { ACTIVE_LOCALES, DEFAULT_LOCALE, type AppLocale } from "../i18n/routing";
 import { INTEGRATIONS } from "./integrations-catalog";
+import { KNOWLEDGE_PATH } from "./knowledge-routes";
 
 /**
  * Indexable marketing routes as locale-neutral paths. Every public URL is served under a locale
@@ -8,8 +9,7 @@ import { INTEGRATIONS } from "./integrations-catalog";
  */
 export const FEATURE_PAGES = ["ai-setup", "server-side-tracking", "event-debugger", "data-quality", "consent", "attribution"] as const;
 
-/** Fixed product name and path of the knowledge area (formerly "Blog"); identical in every language. */
-export const KNOWLEDGE_PATH = "/tracking-knowledge";
+export { KNOWLEDGE_PATH } from "./knowledge-routes";
 
 export const STATIC_MARKETING_ROUTES: Array<{ path: string; changeFrequency: "daily" | "weekly" | "monthly"; priority: number }> = [
   { path: "/", changeFrequency: "weekly", priority: 1 },

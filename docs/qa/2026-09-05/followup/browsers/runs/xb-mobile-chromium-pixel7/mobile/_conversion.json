@@ -1,0 +1,62 @@
+[
+  {
+    "file": "xb-mobile-chromium-pixel7--app-closed.webp",
+    "sourcePx": [
+      1082,
+      2202
+    ],
+    "outputPx": [
+      1082,
+      2202
+    ],
+    "bytes": 96886,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-chromium-pixel7--app-sheet-open.webp",
+    "sourcePx": [
+      1082,
+      2202
+    ],
+    "outputPx": [
+      1082,
+      2202
+    ],
+    "bytes": 103826,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-chromium-pixel7--home.webp",
+    "sourcePx": [
+      1082,
+      2202
+    ],
+    "outputPx": [
+      1082,
+      2202
+    ],
+    "bytes": 121050,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  },
+  {
+    "file": "xb-mobile-chromium-pixel7--pricing.webp",
+    "sourcePx": [
+      1082,
+      2202
+    ],
+    "outputPx": [
+      1082,
+      2202
+    ],
+    "bytes": 106584,
+    "quality": 82,
+    "scale": 1,
+    "fits": true
+  }
+]

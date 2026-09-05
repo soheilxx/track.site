@@ -1,0 +1,10 @@
+$ next start "-p" "3013"
+⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+▲ Next.js 16.3.4
+- Local:         http://localhost:3013
+- Network:       http://172.20.7.2:3013
+✓ Ready in 149ms
+✓ Running next.config.ts took 83ms
+C:\Users\Soheil\Downloads\track.site\apps\web:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @track-site/web@0.1.0 start: `next start "-p" "3013"`
+Exit status 4294967295

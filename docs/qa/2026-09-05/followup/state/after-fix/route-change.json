@@ -1,0 +1,28 @@
+{
+  "before": {
+    "total": "250",
+    "scrollTop": 10616,
+    "firstVisibleMessage": "fixture-120",
+    "draft": "Draft kept across routes",
+    "panel": {
+      "left": 1040,
+      "top": 56,
+      "width": 400,
+      "height": 844
+    },
+    "url": "/app?ai_fixture=long-conversation"
+  },
+  "after": {
+    "total": "250",
+    "scrollTop": 10616,
+    "firstVisibleMessage": "fixture-120",
+    "draft": "Draft kept across routes",
+    "panel": {
+      "left": 1040,
+      "top": 56,
+      "width": 400,
+      "height": 844
+    },
+    "url": "/app"
+  }
+}

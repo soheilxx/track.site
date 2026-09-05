@@ -1,0 +1,44 @@
+{
+  "project": "xb-mobile-webkit-iphone14",
+  "page": "app-sheet-open",
+  "at": "2026-09-05T14:53:08.359Z",
+  "measure": {
+    "innerWidth": 390,
+    "innerHeight": 664,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "bodyScrollWidth": 390,
+    "visualViewport": {
+      "width": 390,
+      "scale": 1
+    },
+    "dpr": 3,
+    "coarsePointer": true,
+    "wideElements": [],
+    "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Mobile/15E148 Safari/604.1"
+  },
+  "sheet": {
+    "x": 0,
+    "y": 0,
+    "width": 390,
+    "height": 664
+  },
+  "composer": {
+    "x": 16,
+    "y": 596,
+    "width": 306,
+    "height": 56,
+    "bottom": 652
+  },
+  "axe": {
+    "violationsByImpact": {},
+    "rules": [],
+    "serious": [],
+    "passes": 23,
+    "incomplete": 1,
+    "axeVersion": "4.13.0"
+  },
+  "consoleErrors": [
+    "console.error: Viewport argument key \"interactive-widget\" not recognized and ignored."
+  ]
+}

@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicPlan } from "@/server/pricing";
 import { useBillingInterval } from "./interval";
-import { fill, formatAmount, formatInteger, signupHref } from "./pricing-helpers";
+import { fill, formatAmount, formatInteger, type PlanHrefs } from "./pricing-format";
 
 export interface PlanCardsProps {
   locale: string;
@@ -14,6 +14,8 @@ export interface PlanCardsProps {
   plans: PublicPlan[];
   copy: PricingCopy["plan"];
   trial: { planId: string; days: number };
+  /** signup links per plan and interval, resolved on the server (`planHrefMap()`), so the cards follow the toggle without the tariff catalogue */
+  hrefs: Record<string, PlanHrefs>;
 }
 
 /**
@@ -21,20 +23,20 @@ export interface PlanCardsProps {
  * CTA, the central event limit with the other hard limits, then at most six purchase-deciding
  * highlights (exactly one localised list per plan). Growth is subtly highlighted as recommended.
  */
-export function PlanCards({ locale, plans, copy, trial }: PlanCardsProps) {
+export function PlanCards({ locale, plans, copy, trial, hrefs }: PlanCardsProps) {
   const { interval } = useBillingInterval();
   return (
     <ul className="grid gap-6 lg:grid-cols-3">
       {plans.map((p) => (
         <li key={p.id} className="flex">
-          <PlanCard plan={p} locale={locale} copy={copy} interval={interval} trial={trial} />
+          <PlanCard plan={p} locale={locale} copy={copy} interval={interval} trial={trial} hrefs={hrefs[p.id] ?? { monthly: "/signup", yearly: "/signup" }} />
         </li>
       ))}
     </ul>
   );
 }
 
-function PlanCard({ plan: p, locale, copy, interval, trial }: { plan: PublicPlan; locale: string; copy: PricingCopy["plan"]; interval: "monthly" | "yearly"; trial: { planId: string; days: number } }) {
+function PlanCard({ plan: p, locale, copy, interval, trial, hrefs }: { plan: PublicPlan; locale: string; copy: PricingCopy["plan"]; interval: "monthly" | "yearly"; trial: { planId: string; days: number }; hrefs: PlanHrefs }) {
   const price = interval === "monthly" ? p.monthly : p.yearly;
   const headingId = `plan-${p.id}-title`;
   const retention = p.limits.retentionMonths != null ? fill(copy.months, { n: formatInteger(p.limits.retentionMonths, locale) }) : p.limits.retentionDays != null ? fill(copy.days, { n: formatInteger(p.limits.retentionDays, locale) }) : "–";
@@ -70,7 +72,7 @@ function PlanCard({ plan: p, locale, copy, interval, trial }: { plan: PublicPlan
         ) : null}
       </div>
 
-      <Link href={signupHref(p.id, interval)} className={cn(buttonVariants({ variant: p.recommended ? "primary" : "secondary", size: "lg" }), "mt-6 w-full")}>
+      <Link href={hrefs[interval]} className={cn(buttonVariants({ variant: p.recommended ? "primary" : "secondary", size: "lg" }), "mt-6 w-full")}>
         {fill(copy.choose, { plan: p.name })}
       </Link>
       <p className="mt-2 min-h-5 text-center text-micro text-ink-3">{p.id === trial.planId ? fill(copy.trialHint, { days: formatInteger(trial.days, locale) }) : null}</p>

@@ -1,0 +1,40 @@
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/16-release-report.md (2026-09-05T15:17:59Z)
+checked 109 unique references in docs/16-release-report.md: {"exact":98,"glob":7,"docs-shorthand":3,"relative-to-apps/web":1}
+  ok (glob) line 34 apps/web/scripts/qa/*.mjs
+  ok (glob) line 132 packages/catalog/src/*.ts
+  ok (docs-shorthand) line 155 docs/11
+  ok (glob) line 233 apps/web/e2e/__screenshots__/<snapshot>-visual-<platform>.png
+  ok (glob) line 247 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-{chromium,webkit}/lac/*.json
+  ok (glob) line 288 apps/web/src/lib/legal-copy/*
+  ok (docs-shorthand) line 288 docs/07
+  ok (relative-to-apps/web) line 304 scripts/i18n-parity.mjs
+  ok (glob) line 319 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-webkit/lac/*.json
+  ok (docs-shorthand) line 329 docs/12
+  ok (glob) line 384 apps/web/scripts/qa/{bundle-analysis,island-check,sourcemap-attribution,living-core-*}.mjs
+exit code: 0
+
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/15-living-ai-core.md
+checked 14 unique references in docs/15-living-ai-core.md: {"exact":12,"glob":2}
+  ok (glob) line 69 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-{chromium,webkit}/lac/*.json
+  ok (glob) line 76 apps/web/scripts/qa/living-core-*.mjs
+exit code: 0
+
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/11-track-redesign-program.md
+checked 23 unique references in docs/11-track-redesign-program.md: {"exact":17,"missing":4,"glob":2}
+  MISSING line 10 [code-path] apps/web/src/lib/marketing-copy.ts
+  MISSING line 14 [code-path] apps/web/content/blog/{en,de}
+  MISSING line 14 [code-path] apps/web/src/lib/blog.ts
+  MISSING line 17 [code-path] apps/web/src/app/[locale]/page.tsx
+  ok (glob) line 50 docs/qa/<date>
+  ok (glob) line 89 packages/ai/src/scope*.ts
+exit code: 1
+
+$ find docs/qa/2026-09-05/followup -name '*.webp' | wc -l; find docs/qa/2026-09-05/followup -name '*.webp' -size +150k | wc -l; find docs/qa/2026-09-05/followup -type f | wc -l; du -sb docs/qa/2026-09-05/followup
+32
+0
+305
+103075632	docs/qa/2026-09-05/followup
+$ ls apps/web/e2e/*.tmp.spec.ts
+ls: cannot access 'apps/web/e2e/*.tmp.spec.ts': No such file or directory
+
+note: the 4 missing references in docs/11 are in its §1 "As-is (verified 2026-09-03)" table (lines 10, 14, 17) and name files of the pre-redesign tree that the redesign removed (marketing-copy.ts, content/blog, blog.ts, [locale]/page.tsx) — historical record, unchanged by the follow-up run; docs/16 and docs/15: 0 missing.

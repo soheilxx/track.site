@@ -1,0 +1,2 @@
+$ next start "-p" "3014"
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />

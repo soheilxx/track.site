@@ -19,7 +19,7 @@ export default async function MarketingLayout({ children, params }: { children: 
       <a href="#main" className="skip-link">
         {shell.skipToContent}
       </a>
-      <MarketingHeader />
+      <MarketingHeader copy={shell} />
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {children}
       </main>

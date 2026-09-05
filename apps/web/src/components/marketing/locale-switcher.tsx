@@ -6,8 +6,6 @@ import { useCallback, useEffect, useId, useRef, useState, type FocusEvent, type 
 import { cn } from "@track-site/ui";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ACTIVE_LOCALES, LOCALE_COOKIE, LOCALE_NAMES, type AppLocale } from "@/i18n/routing";
-import { pick } from "@/lib/marketing-copy/pick";
-import { HEADER_COPY } from "@/lib/marketing-copy/shared";
 import { switchTarget, useLocalizedPaths } from "./localized-paths";
 
 /**
@@ -26,8 +24,8 @@ import { switchTarget, useLocalizedPaths } from "./localized-paths";
  */
 export interface LocaleSwitcherProps {
   variant?: "menu" | "inline";
-  /** Accessible name ("Language"); defaults to the header copy of the current locale. */
-  label?: string;
+  /** Accessible name ("Language"), resolved by the server-rendered parent (header, footer, auth frame). */
+  label: string;
   className?: string;
   /** Called after a language link is activated (the mobile drawer closes itself). */
   onNavigate?: () => void;
@@ -39,7 +37,7 @@ export function LocaleSwitcher({ variant = "menu", label, className, onNavigate 
   const locale = useLocale();
   const pathname = usePathname();
   const localized = useLocalizedPaths();
-  const name = label ?? pick(locale, HEADER_COPY).language;
+  const name = label;
   const [open, setOpen] = useState(false);
   const focusFirst = useRef(false);
   const root = useRef<HTMLDivElement>(null);

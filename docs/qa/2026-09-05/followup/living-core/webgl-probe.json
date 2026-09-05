@@ -1,0 +1,95 @@
+{
+  "probedAt": "2026-09-05T14:26:49.153Z",
+  "results": [
+    {
+      "id": "default",
+      "args": [],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "vendor": "Google Inc. (Google)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 236,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    {
+      "id": "angle-d3d11",
+      "args": [
+        "--use-angle=d3d11"
+      ],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x00009A49) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (Intel)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 270,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    {
+      "id": "angle-d3d11-ignore-blocklist",
+      "args": [
+        "--use-angle=d3d11",
+        "--ignore-gpu-blocklist"
+      ],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics (0x00009A49) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (Intel)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 255,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    {
+      "id": "angle-gl",
+      "args": [
+        "--use-angle=gl"
+      ],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics, OpenGL 4.5.0)",
+      "vendor": "Google Inc. (Intel)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 402,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    {
+      "id": "enable-gpu-rasterization",
+      "args": [
+        "--enable-gpu-rasterization",
+        "--ignore-gpu-blocklist"
+      ],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "vendor": "Google Inc. (Google)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 193,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    {
+      "id": "swiftshader-unsafe",
+      "args": [
+        "--enable-unsafe-swiftshader"
+      ],
+      "ok": true,
+      "strictWebgl2": true,
+      "relaxedWebgl2": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "vendor": "Google Inc. (Google)",
+      "err": null,
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "ms": 207,
+      "executablePath": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    }
+  ]
+}

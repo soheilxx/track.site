@@ -1,7 +1,6 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { Button, FieldError, Input, Label } from "@track-site/ui";
 import { useRouter } from "@/i18n/navigation";
@@ -20,16 +19,16 @@ export interface DomainStartFormCopy {
 /**
  * Domain entry that starts the onboarding: the value is validated (format only — no site analysis),
  * carried into signup via the query string and session storage, and the AI setup picks it up.
- * `copy` comes from the page's typed copy module; without it the form reads the message catalog.
+ * `copy` comes from the page's typed copy module (server-rendered); the form deliberately reads no
+ * message catalog on the client, so the public pages ship no message-format runtime.
  */
-export function DomainStartForm({ copy }: { copy?: DomainStartFormCopy }) {
-  const t = useTranslations("home");
+export function DomainStartForm({ copy }: { copy: DomainStartFormCopy }) {
   const id = useId();
   const router = useRouter();
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const texts: DomainStartFormCopy = copy ?? { label: t("domainLabel"), placeholder: t("domainPlaceholder"), help: t("domainHelp"), cta: t("cta"), invalid: `${t("domainLabel")}: ${t("domainPlaceholder")}` };
+  const texts = copy;
   const inputId = `${id}-domain`;
   const helpId = `${id}-help`;
   const errorId = `${id}-error`;

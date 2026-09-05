@@ -1,5 +1,3 @@
-"use client";
-
 import { Globe, Server } from "lucide-react";
 import type { ReactNode } from "react";
 import { ConsentGate, Diagram, FlowEdge, FlowNode, SignalDot, Status, cn, toneDot, type NodeTone, type Tone } from "@track-site/ui";
@@ -8,11 +6,11 @@ import type { DemoAction, DemoEventRecord, DemoState, HealthPartValue } from "./
 import type { DemoConsent, DemoHealthTone, DemoOrigin, DemoOutcome } from "./model";
 import { fill } from "./text";
 
-/** Props every view receives. `interactive` is false for the server-rendered placeholder. */
+/** Props every view receives. `interactive` is false (and `dispatch` absent) for the server-rendered placeholder. */
 export interface DemoViewProps {
   state: DemoState;
   copy: DemoCopy;
-  dispatch: (action: DemoAction) => void;
+  dispatch?: (action: DemoAction) => void;
   interactive: boolean;
   playback: DemoPlayback;
 }

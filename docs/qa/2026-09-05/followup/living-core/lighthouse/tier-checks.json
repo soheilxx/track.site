@@ -1,0 +1,92 @@
+{
+  "off/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "static",
+    "pref": "off",
+    "state": "idle",
+    "canvas": false,
+    "htmlMotion": "off",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    }
+  },
+  "off/phone": {
+    "panelMounted": false,
+    "coreMounted": false,
+    "tier": null,
+    "pref": null,
+    "state": null,
+    "canvas": false,
+    "htmlMotion": "off",
+    "viewport": {
+      "w": 412,
+      "h": 823,
+      "dpr": 1.75,
+      "coarse": true
+    }
+  },
+  "system/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "webgl",
+    "pref": "system",
+    "state": "idle",
+    "canvas": true,
+    "htmlMotion": "system",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    }
+  },
+  "system/phone": {
+    "panelMounted": false,
+    "coreMounted": false,
+    "tier": null,
+    "pref": null,
+    "state": null,
+    "canvas": false,
+    "htmlMotion": "system",
+    "viewport": {
+      "w": 412,
+      "h": 823,
+      "dpr": 1.75,
+      "coarse": true
+    }
+  },
+  "full/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "webgl",
+    "pref": "full",
+    "state": "idle",
+    "canvas": true,
+    "htmlMotion": "full",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    }
+  },
+  "full/phone": {
+    "panelMounted": false,
+    "coreMounted": false,
+    "tier": null,
+    "pref": null,
+    "state": null,
+    "canvas": false,
+    "htmlMotion": "full",
+    "viewport": {
+      "w": 412,
+      "h": 823,
+      "dpr": 1.75,
+      "coarse": true
+    }
+  }
+}

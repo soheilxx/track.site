@@ -1,0 +1,3 @@
+headers entries: 6
+/(.*) → Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https:… | Strict-Transport-Security: max-age=63072000; includeSubDomains; preload…
+/cdn/:path* → 

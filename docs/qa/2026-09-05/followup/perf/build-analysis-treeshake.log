@@ -1,0 +1,715 @@
+﻿▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.ts took 71ms
+- Experiments (use with caution):
+  ✓ globalNotFound
+  ✓ turbopackRemoveUnusedExports
+  ✓ turbopackRemoveUnusedImports
+
+  Creating an optimized production build ...
+node.exe : Found 50 warnings while optimizing generated CSS:
+In Zeile:1 Zeichen:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Found 50 warnin... generated CSS::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Issue #1:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--\18 \3 3us-9\3 �\)\] {[22m
+[2m│[22m     border-radius: var(--3us-9�);
+[2m┆[22m                          [33m[2m^--[22m Unexpected token Delim('\u{18}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--X\2 �\1 us-chip\)\] {[22m
+
+Issue #2:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--X\2 �\1 us-chip\)\] {[22m
+[2m│[22m     border-radius: var(--X�us-chip);
+[2m┆[22m                           [33m[2m^--[22m Unexpected token Delim('\u{2}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius\13 \8 �trol\)\] {[22m
+
+Issue #3:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius\13 \8 �trol\)\] {[22m
+[2m│[22m     border-radius: var(--radius�trol);
+[2m┆[22m                                [33m[2m^--[22m Unexpected token Delim('\u{13}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\5 \7 �\f rol-sm\)\] {[22m
+
+Issue #4:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\5 \7 �\f rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol-sm);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{5}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\5 \7 �\1c rol-sm\)\] {[22m
+
+Issue #5:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\5 \7 �\1c rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol-sm);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{5}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\7 \7 �\f rol-sm\)\] {[22m
+
+Issue #6:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\7 \7 �\f rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol-sm);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\7 \7 �\1c rol-sm\)\] {[22m
+
+Issue #7:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\7 \7 �\1c rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol-sm);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\10 \7 �\1e rol\)\] {[22m
+
+Issue #8:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\10 \7 �\1e rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{10}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\11 \2 �\14 rol\)\] {[22m
+
+Issue #9:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\11 \2 �\14 rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�rol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{11}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\,\5 �rol\)\] {[22m
+
+Issue #10:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-4\6 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-4�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{6}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-7\!�\7 rol\)\] {[22m
+
+Issue #11:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-7\!�\7 rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-7!�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('!')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-9\3 �\19 \)\] {[22m
+
+Issue #12:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-9\3 �\19 \)\] {[22m
+[2m│[22m     border-radius: var(--radius-9�);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{3}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-9\3 �rol\)\] {[22m
+
+Issue #13:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-9\3 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-9�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{3}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\:\3 �rol\)\] {[22m
+
+Issue #14:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\:\3 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-:�rol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Colon[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\?\18 �rol\)\] {[22m
+
+Issue #15:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\?\18 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-?�rol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('?')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-K\5 brol\)\] {[22m
+
+Issue #16:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-K\5 brol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-Kbrol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{5}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-L\6 �rol\)\] {[22m
+
+Issue #17:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-L\6 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-L�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{6}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-M\7 �rol-sm\)\] {[22m
+
+Issue #18:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-M\7 �rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-M�rol-sm);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-O\7 �rol-sm\)\] {[22m
+
+Issue #19:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-O\7 �rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-O�rol-sm);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-a�A\)\] {[22m
+
+Issue #20:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-b\18 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-b�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{18}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-card\)\] {[22m
+
+Issue #21:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-p\10 \5 �\)\] {[22m
+[2m│[22m     border-radius: var(--radius-p�);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{10}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-panel\)\] {[22m
+
+Issue #22:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-pn\18 \#\)\] {[22m
+[2m│[22m     border-radius: var(--radius-pn#);
+[2m┆[22m                                   [33m[2m^--[22m Unexpected token Delim('\u{18}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-t\2 brol\)\] {[22m
+
+Issue #23:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-t\2 brol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-tbrol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{2}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\|���\)\] {[22m
+
+Issue #24:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\|���\)\] {[22m
+[2m│[22m     border-radius: var(--radius-| � );
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('|')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\|��\%\)\] {[22m
+
+Issue #25:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-\|��\%\)\] {[22m
+[2m│[22m     border-radius: var(--radius-| �%);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('|')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-����\)\] {[22m
+
+Issue #26:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-���\1a \)\] {[22m
+[2m│[22m     border-radius: var(--radius-� �);
+[2m┆[22m                                    [33m[2m^--[22m Unexpected token Delim('\u{1a}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-���\)\] {[22m
+
+Issue #27:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\1 �\14 rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{1}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\2 brol\)\] {[22m
+
+Issue #28:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\2 brol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�brol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{2}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\2 �rol\)\] {[22m
+
+Issue #29:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\2 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{2}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\6 �\1e rol\)\] {[22m
+
+Issue #30:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\6 �\1e rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{6}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\6 �rol\)\] {[22m
+
+Issue #31:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\6 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{6}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\7 �rol\)\] {[22m
+
+Issue #32:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\7 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\7 �rol-sm\)\] {[22m
+
+Issue #33:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\7 �rol-sm\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol-sm);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{7}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\8 �rol\)\] {[22m
+
+Issue #34:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\8 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{8}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\17 �rol\)\] {[22m
+
+Issue #35:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\17 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{17}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\1e �rol\)\] {[22m
+
+Issue #36:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\1e �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-��rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('\u{1e}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\%�rol\)\] {[22m
+
+Issue #37:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius-�\%�rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius-�%�rol);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token Delim('%')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius0\1b qrol\)\] {[22m
+
+Issue #38:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius0\1b qrol\)\] {[22m
+[2m│[22m     border-radius: var(--radius0qrol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{1b}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius�\12 �rol\)\] {[22m
+
+Issue #39:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--radius�\12 �rol\)\] {[22m
+[2m│[22m     border-radius: var(--radius��rol);
+[2m┆[22m                                 [33m[2m^--[22m Unexpected token Delim('\u{12}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--�\1 0us-w\8 �\8 rol\)\] {[22m
+
+Issue #40:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--�\1 0us-w\8 �\8 rol\)\] {[22m
+[2m│[22m     border-radius: var(--�0us-w�rol);
+[2m┆[22m                           [33m[2m^--[22m Unexpected token Delim('\u{1}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-\[var\(--�\1f �us-chip\)\] {[22m
+
+Issue #41:
+[2m│   }[22m
+[2m│   .rounded-\[var\(--�\1f �us-chip\)\] {[22m
+[2m│[22m     border-radius: var(--��us-chip);
+[2m┆[22m                           [33m[2m^--[22m Unexpected token Delim('\u{1f}')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .rounded-full {[22m
+
+Issue #42:
+[2m│   }[22m
+[2m│   .bg-\[�\7 \!\] {[22m
+[2m│[22m     background-color: �!;
+[2m┆[22m                         [33m[2m^--[22m Unexpected token Delim('!')[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .bg-bad {[22m
+
+Issue #43:
+[2m│   }[22m
+[2m│   .duration-\[var\(--mo\"\]\)\<\/script\>\<script\>self\.__next_f\.push\(\[1\,\"tion-fast\)\] {[22m
+[2m│[22m     --tw-duration: var(--mo"])</script><script>self.__next_f.push([1,"tion-fast);
+[2m┆[22m                            [33m[2m^--[22m Unexpected token 
+String("])</script><script>self.__next_f.push([1,")[39m
+[2m┆[22m
+[2m│     transition-duration: var(--mo"])</script><script>self.__next_f.push([1,"tion-fast);[22m
+[2m│   }[22m
+
+Issue #44:
+[2m│   .duration-\[var\(--mo\"\]\)\<\/script\>\<script\>self\.__next_f\.push\(\[1\,\"tion-fast\)\] {[22m
+[2m│     --tw-duration: var(--mo"])</script><script>self.__next_f.push([1,"tion-fast);[22m
+[2m│[22m     transition-duration: var(--mo"])</script><script>self.__next_f.push([1,"tion-fast);
+[2m┆[22m                                  [33m[2m^--[22m Unexpected token 
+String("])</script><script>self.__next_f.push([1,")[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .duration-\[var\(--motion-base\)\] {[22m
+
+Issue #45:
+[2m│   }[22m
+[2m│   .duration-\[var\(--motion-fa\"\]\)\<\/script\>\<script\>self\.__next_f\.push\(\[1\,\"st\)\] {[22m
+[2m│[22m     --tw-duration: var(--motion-fa"])</script><script>self.__next_f.push([1,"st);
+[2m┆[22m                                   [33m[2m^--[22m Unexpected token 
+String("])</script><script>self.__next_f.push([1,")[39m
+[2m┆[22m
+[2m│     transition-duration: var(--motion-fa"])</script><script>self.__next_f.push([1,"st);[22m
+[2m│   }[22m
+
+Issue #46:
+[2m│   .duration-\[var\(--motion-fa\"\]\)\<\/script\>\<script\>self\.__next_f\.push\(\[1\,\"st\)\] {[22m
+[2m│     --tw-duration: var(--motion-fa"])</script><script>self.__next_f.push([1,"st);[22m
+[2m│[22m     transition-duration: var(--motion-fa"])</script><script>self.__next_f.push([1,"st);
+[2m┆[22m                                         [33m[2m^--[22m Unexpected token 
+String("])</script><script>self.__next_f.push([1,")[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .duration-\[var\(--motion-fast\)\] {[22m
+
+Issue #47:
+[2m│   }[22m
+[2m│   .\[-\:\1 G�Q\] {[22m
+[2m│[22m     -: G Q;
+[2m┆[22m            [33m[2m^--[22m Unexpected token Semicolon[39m
+[2m┆[22m
+[2m│   }[22m
+[2m│   .\[app-\:���\] {[22m
+
+Issue #48:
+[2m│     font-size: 13px;[22m
+[2m│   }[22m
+[2m│[22m   .\[\&\:\:-webkit-E\1 �\12 -marker\]\:hidden::-webkit-E�-marker {
+[2m┆[22m                                                         [33m[2m^--[22m Unexpected token 
+Delim('\u{1}')[39m
+[2m┆[22m
+[2m│     display: none;[22m
+[2m│   }[22m
+
+Issue #49:
+[2m│     line-height: var(--tw-leading, var(--text-2xl--line-height));[22m
+[2m│   }[22m
+[2m│[22m   .\[\\u0026\\u003esection\:first-child\\u003eh2\]\:mt-0:is(\u0026\u003esection:first-child\u003eh2) {
+[2m┆[22m                                                                                 [33m[2m^--[22m 
+'first-childu003eh2' is not recognized as a valid pseudo-class. Did you mean '::first-childu003eh2' (pseudo-element) 
+or is this a typo?[39m
+[2m┆[22m
+[2m│     margin-top: 0px;[22m
+[2m│   }[22m
+
+Issue #50:
+[2m│     margin-top: calc(var(--spacing) * 2);[22m
+[2m│   }[22m
+[2m│[22m   .\[\&\>U��\8 \:first-child\>h2\]\:mt-0 > U �:first-child > h2 {
+[2m┆[22m                                               [33m[2m^--[22m Unexpected token Delim('\u{8}')[39m
+[2m┆[22m
+[2m│     margin-top: 0px;[22m
+[2m│   }[22m
+
+✓ Compiled successfully in 28.3s
+  Running TypeScript ...
+  Finished TypeScript in 19.1s ...
+  Collecting page data using 7 workers ...
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+  Generating static pages using 7 workers (0/715) ...
+  Generating static pages using 7 workers (178/715) 
+  Generating static pages using 7 workers (357/715) 
+  Generating static pages using 7 workers (536/715) 
+✓ Generating static pages using 7 workers (715/715) in 11.9s
+Turbopack build encountered 2 warnings:
+./apps/web/src/app/globals.css:2:122224
+Warning: Parsing CSS source code failed
+  [90m1 |[0m ...
+  Finalizing page optimization ...
+[33m[1m>[0m [90m2 |[0m ...26_pre\]\:text-\[[35m13[0mpx\]:is(u0026 
+pre){font-size:[35m13[0mpx}.\[\\u0026\:\:-webkit-details-marke...
+  [90m  |[0m                                                [33m[1m^[0m
+  [90m3 |[0m ...
+
+'first-childu003eh2' is not recognized as a valid pseudo-class. Did you mean '::first-childu003eh2' (pseudo-element) 
+or is this a typo?
+
+Generated code of PostCSS transform of file content of apps/web/src/app/globals.css:
+./apps/web/src/app/globals.css:2:122224
+  [90m1 |[0m ...
+[33m[1m>[0m [90m2 |[0m ...26_pre\]\:text-\[[35m13[0mpx\]:is(u0026 
+pre){font-size:[35m13[0mpx}.\[\\u0026\:\:-webkit-details-marke...
+  [90m  |[0m                                                [33m[1m^[0m
+  [90m3 |[0m ...
+
+Import trace:
+  Client Component Browser:
+    ./apps/web/src/app/globals.css [Client Component Browser]
+    ./apps/web/src/app/app/layout.tsx [Server Component]
+
+
+./apps/web/src/app/marketing.css:2:115696
+Warning: Parsing CSS source code failed
+  [90m1 |[0m ...
+[33m[1m>[0m [90m2 |[0m ...26_pre\]\:text-\[[35m13[0mpx\]:is(u0026 
+pre){font-size:[35m13[0mpx}.\[\\u0026\:\:-webkit-details-marke...
+  [90m  |[0m                                                [33m[1m^[0m
+  [90m3 |[0m ...
+
+'first-childu003eh2' is not recognized as a valid pseudo-class. Did you mean '::first-childu003eh2' (pseudo-element) 
+or is this a typo?
+
+Generated code of PostCSS transform of file content of apps/web/src/app/marketing.css:
+./apps/web/src/app/marketing.css:2:115696
+  [90m1 |[0m ...
+[33m[1m>[0m [90m2 |[0m ...26_pre\]\:text-\[[35m13[0mpx\]:is(u0026 
+pre){font-size:[35m13[0mpx}.\[\\u0026\:\:-webkit-details-marke...
+  [90m  |[0m                                                [33m[1m^[0m
+  [90m3 |[0m ...
+
+Import trace:
+  Client Component Browser:
+    ./apps/web/src/app/marketing.css [Client Component Browser]
+    ./apps/web/src/app/[locale]/layout.tsx [Server Component]
+
+
+
+Route (app)
+┌ ○ /_not-found
+├   /[locale]
+│ ├ ● /en
+│ ├ ● /de
+│ ├ ● /fr
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/accept-invitation/[id]
+├ ƒ /[locale]/contact
+├   /[locale]/data-processing
+│ ├ ● /en/data-processing
+│ ├ ● /de/data-processing
+│ ├ ● /fr/data-processing
+│ └ ● [+3 more paths]
+├   /[locale]/demo
+│ ├ ● /en/demo
+│ ├ ● /de/demo
+│ ├ ● /fr/demo
+│ └ ● [+3 more paths]
+├   /[locale]/docs
+│ ├ ● /en/docs
+│ ├ ● /de/docs
+│ ├ ● /fr/docs
+│ └ ● [+3 more paths]
+├   /[locale]/features
+│ ├ ● /en/features
+│ ├ ● /de/features
+│ ├ ● /fr/features
+│ └ ● [+3 more paths]
+├   /[locale]/features/[slug]
+│ ├ ● /en/features/ai-setup
+│ ├ ● /en/features/server-side-tracking
+│ ├ ● /en/features/event-debugger
+│ └ ● [+33 more paths]
+├   /[locale]/forgot-password
+│ ├ ● /en/forgot-password
+│ ├ ● /de/forgot-password
+│ ├ ● /fr/forgot-password
+│ └ ● [+3 more paths]
+├   /[locale]/how-it-works
+│ ├ ● /en/how-it-works
+│ ├ ● /de/how-it-works
+│ ├ ● /fr/how-it-works
+│ └ ● [+3 more paths]
+├   /[locale]/imprint
+│ ├ ● /en/imprint
+│ ├ ● /de/imprint
+│ ├ ● /fr/imprint
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/integrations
+├   /[locale]/integrations/[slug]
+│ ├ ● /en/integrations/meta
+│ ├ ● /en/integrations/google-ads
+│ ├ ● /en/integrations/google-analytics
+│ └ ● [+147 more paths]
+├ ƒ /[locale]/login
+├   /[locale]/opengraph-image
+│ ├ ● /en/opengraph-image
+│ ├ ● /de/opengraph-image
+│ ├ ● /fr/opengraph-image
+│ └ ● [+3 more paths]
+├   /[locale]/pricing
+│ ├ ● /en/pricing
+│ ├ ● /de/pricing
+│ ├ ● /fr/pricing
+│ └ ● [+3 more paths]
+├   /[locale]/privacy
+│ ├ ● /en/privacy
+│ ├ ● /de/privacy
+│ ├ ● /fr/privacy
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/reset-password
+├   /[locale]/security
+│ ├ ● /en/security
+│ ├ ● /de/security
+│ ├ ● /fr/security
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/signup
+├ ƒ /[locale]/status
+├   /[locale]/subprocessors
+│ ├ ● /en/subprocessors
+│ ├ ● /de/subprocessors
+│ ├ ● /fr/subprocessors
+│ └ ● [+3 more paths]
+├   /[locale]/support
+│ ├ ● /en/support
+│ ├ ● /de/support
+│ ├ ● /fr/support
+│ └ ● [+3 more paths]
+├   /[locale]/terms
+│ ├ ● /en/terms
+│ ├ ● /de/terms
+│ ├ ● /fr/terms
+│ └ ● [+3 more paths]
+├ ƒ /[locale]/tracking-knowledge
+├   /[locale]/tracking-knowledge/[slug]
+│ ├ ● /en/tracking-knowledge/meta-conversions-api-deduplication
+│ ├ ● /en/tracking-knowledge/server-side-tracking-explained
+│ ├ ● /en/tracking-knowledge/consent-mode-v2-guide
+│ └ ● [+177 more paths]
+├   /[locale]/tracking-knowledge/[slug]/card.png
+│ ├ ● /en/tracking-knowledge/meta-conversions-api-deduplication/card.png
+│ ├ ● /en/tracking-knowledge/server-side-tracking-explained/card.png
+│ ├ ● /en/tracking-knowledge/consent-mode-v2-guide/card.png
+│ └ ● [+177 more paths]
+├   /[locale]/tracking-knowledge/card.png
+│ ├ ● /en/tracking-knowledge/card.png
+│ ├ ● /de/tracking-knowledge/card.png
+│ ├ ● /fr/tracking-knowledge/card.png
+│ └ ● [+3 more paths]
+├ ○ /[locale]/tracking-knowledge/feed.xml
+├ ƒ /[locale]/two-factor
+├ ƒ /[locale]/verify-email
+├ ƒ /api/ai/chat
+├ ƒ /api/ai/confirm
+├ ƒ /api/ai/credential
+├ ƒ /api/ai/dev-fixture
+├ ƒ /api/ai/health
+├ ƒ /api/ai/wizard
+├ ƒ /api/app/events/explorer
+├ ƒ /api/app/events/test-lab/[runId]
+├ ƒ /api/auth/[...all]
+├ ƒ /api/health
+├ ƒ /api/knowledge/feedback
+├ ƒ /api/oauth/[provider]/callback
+├ ƒ /api/privacy/dsar/[id]
+├ ƒ /api/stripe/webhook
+├ ƒ /app
+├ ƒ /app/ai-setup
+├ ƒ /app/billing
+├ ƒ /app/billing/usage
+├ ƒ /app/consent
+├ ƒ /app/consent/simulator
+├ ƒ /app/data-quality
+├ ƒ /app/data-quality/revenue-leaks
+├ ƒ /app/destinations
+├ ƒ /app/events
+├ ƒ /app/events/explorer
+├ ƒ /app/events/matrix
+├ ƒ /app/events/test-lab
+├ ƒ /app/insights
+├ ƒ /app/insights/attribution
+├ ƒ /app/insights/audiences
+├ ƒ /app/oauth/[provider]/start
+├ ƒ /app/onboarding
+├ ƒ /app/onboarding/organization
+├ ƒ /app/releases
+├ ƒ /app/releases/[versionId]
+├ ƒ /app/settings
+├ ƒ /app/settings/alerts
+├ ƒ /app/sites
+├ ƒ /app/sites/[siteId]
+├ ƒ /app/sites/[siteId]/destinations
+├ ƒ /app/sites/[siteId]/destinations/[integrationId]
+├ ƒ /app/sites/[siteId]/destinations/new
+├ ƒ /app/sites/[siteId]/setup
+├ ƒ /app/sites/[siteId]/shop
+├ ƒ /app/team
+├ ƒ /app/team/audit
+├ ○ /apple-icon.png
+├ ƒ /cdn/v1/c/[...path]
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└   /sitemaps/[name]
+  ├ ● /sitemaps/pages-en.xml
+  ├ ● /sitemaps/knowledge-en.xml
+  ├ ● /sitemaps/pages-de.xml
+  └ ● [+9 more paths]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

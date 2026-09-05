@@ -1,0 +1,38 @@
+[
+  {
+    "label": "strip none (control, via route hook)",
+    "upgradedRequests": 52,
+    "scrollWidth": 320,
+    "demoState": "static",
+    "h1Font": "Bricolage Grotesque, Bricolage",
+    "hydrated": true,
+    "linkNavigation": "http://localhost:3013/en/tracking-knowledge → http://localhost:3013/en/tracking-knowledge/server-side-tracking-explained"
+  },
+  {
+    "label": "strip HSTS only",
+    "upgradedRequests": 52,
+    "scrollWidth": 320,
+    "demoState": "static",
+    "h1Font": "Bricolage Grotesque, Bricolage",
+    "hydrated": true,
+    "linkNavigation": "http://localhost:3013/en/tracking-knowledge → http://localhost:3013/en/tracking-knowledge/server-side-tracking-explained"
+  },
+  {
+    "label": "strip CSP upgrade-insecure-requests only",
+    "upgradedRequests": 0,
+    "scrollWidth": 320,
+    "demoState": "static",
+    "h1Font": "Bricolage Grotesque, Bricolage",
+    "hydrated": true,
+    "linkNavigation": "http://localhost:3013/en/tracking-knowledge → http://localhost:3013/en/tracking-knowledge/server-side-tracking-explained"
+  },
+  {
+    "label": "strip both",
+    "upgradedRequests": 0,
+    "scrollWidth": 320,
+    "demoState": "static",
+    "h1Font": "Bricolage Grotesque, Bricolage",
+    "hydrated": true,
+    "linkNavigation": "http://localhost:3013/en/tracking-knowledge → http://localhost:3013/en/tracking-knowledge/server-side-tracking-explained"
+  }
+]

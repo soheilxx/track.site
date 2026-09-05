@@ -1,0 +1,30 @@
+== xb-func-webkit (14:46:48Z)
+  35 passed (2.7m)
+exit=1
+== xb-func-chromium (14:49:35Z)
+  39 passed (53.3s)
+exit=0
+== xb-visual-chromium (14:50:30Z)
+  12 passed (29.1s)
+exit=0
+== xb-visual-webkit (14:51:00Z)
+  8 passed (44.2s)
+exit=1
+== xb-visual-firefox (14:51:46Z)
+    [xb-visual-firefox] › e2e\visual-xb.tmp.spec.ts:144:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline 
+exit=1
+== xb-lac-chromium (14:51:53Z)
+  5 passed (14.6s)
+exit=0
+== xb-lac-webkit (14:52:09Z)
+    [xb-lac-webkit] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+exit=1
+== xb-lac-firefox (14:52:48Z)
+    [xb-lac-firefox] › e2e\xbrowser-lac.tmp.spec.ts:255:3 › Living AI Core tiers › dark theme: same tier, no console errors 
+exit=1
+== xb-mobile-webkit-iphone14 (14:52:51Z)
+  2 passed (19.2s)
+exit=1
+== xb-mobile-chromium-pixel7 (14:53:12Z)
+  3 passed (10.7s)
+exit=0

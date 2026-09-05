@@ -1,10 +1,10 @@
-import { Check, ChevronDown, Minus } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { FeatureGroup, PlanId } from "@track-site/catalog";
 import { Tab, TabList, TabPanel, Table, Tabs, Td, Th, THead, Tr } from "@track-site/ui";
 import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { FeatureMatrix, PublicPlan } from "@/server/pricing";
 import { PlanCta } from "./plan-cta";
-import { fill, formatAmount, formatInteger } from "./pricing-helpers";
+import { fill, formatAmount, formatInteger, planHrefMap } from "./pricing-helpers";
 
 type Cell = { kind: "bool"; value: boolean } | { kind: "text"; value: string };
 interface Row {
@@ -35,8 +35,10 @@ export interface ComparisonMatrixProps {
 export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: ComparisonMatrixProps) {
   const groups = buildGroups(plans, matrix, copy, locale);
   const defaultPlan = plans.find((p) => p.recommended)?.id ?? plans[0]?.id ?? "starter";
+  const hrefs = planHrefMap(plans);
   return (
     <>
+      <CellSymbols />
       <div className="hidden md:block">
         <Table stack={false} caption={copy.title} className="min-w-[44rem]" wrapperClassName="rounded-[var(--radius-card)] border border-line bg-surface">
           <THead>
@@ -78,7 +80,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
               <td className="px-4 py-4" />
               {plans.map((p) => (
                 <td key={p.id} className="px-4 py-4 text-center">
-                  <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="sm" />
+                  <PlanCta hrefs={hrefs[p.id] ?? { monthly: "/signup", yearly: "/signup" }} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="sm" />
                 </td>
               ))}
             </tr>
@@ -133,7 +135,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
                 })}
               </div>
               <div className="mt-5">
-                <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="md" className="w-full whitespace-normal text-center" />
+                <PlanCta hrefs={hrefs[p.id] ?? { monthly: "/signup", yearly: "/signup" }} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="md" className="w-full whitespace-normal text-center" />
               </div>
             </TabPanel>
           ))}
@@ -143,16 +145,38 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
   );
 }
 
+/**
+ * The two cell glyphs (lucide `check` / `minus` paths) defined once as symbols; every cell references
+ * them with `<use>` instead of repeating the whole SVG — 336 inline icons (42 rows × 4 plans, desktop
+ * table + mobile view) were ~60 KB of HTML and RSC payload on the pricing page before.
+ */
+function CellSymbols() {
+  return (
+    <svg aria-hidden="true" focusable="false" width={0} height={0} className="absolute size-0 overflow-hidden">
+      <symbol id="pricing-cell-yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+      <symbol id="pricing-cell-no" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14" />
+      </symbol>
+    </svg>
+  );
+}
+
 function CellView({ cell, copy }: { cell: Cell; copy: PricingCopy["matrix"] }) {
   if (cell.kind === "text") return <span className="font-medium text-ink tabular-nums">{cell.value}</span>;
   return cell.value ? (
     <>
-      <Check className="mx-auto inline size-4 text-primary" aria-hidden="true" strokeWidth={2.5} />
+      <svg className="mx-auto inline size-4 text-primary" aria-hidden="true" focusable="false">
+        <use href="#pricing-cell-yes" />
+      </svg>
       <span className="sr-only">{copy.included}</span>
     </>
   ) : (
     <>
-      <Minus className="mx-auto inline size-4 text-ink-3" aria-hidden="true" />
+      <svg className="mx-auto inline size-4 text-ink-3" aria-hidden="true" focusable="false">
+        <use href="#pricing-cell-no" />
+      </svg>
       <span className="sr-only">{copy.notIncluded}</span>
     </>
   );

@@ -45,11 +45,11 @@ export function AiSetupView({ state, copy, dispatch }: DemoViewProps) {
               <legend className="text-small font-medium text-ink">{c.question}</legend>
               <div className="mt-1 grid gap-x-3 @xl:grid-cols-3">
                 {DEMO_CURRENCIES.map((currency) => (
-                  <Radio key={currency} name={`${id}-currency`} value={currency} checked={setup.choice === currency} onChange={() => dispatch({ type: "choose", currency })} label={c.options[currency]} />
+                  <Radio key={currency} name={`${id}-currency`} value={currency} checked={setup.choice === currency} onChange={() => dispatch?.({ type: "choose", currency })} label={c.options[currency]} />
                 ))}
               </div>
             </fieldset>
-            <Button className="mt-3" disabled={setup.status !== "chosen"} onClick={() => dispatch({ type: "confirm" })}>
+            <Button className="mt-3" disabled={setup.status !== "chosen"} onClick={() => dispatch?.({ type: "confirm" })}>
               {c.confirm}
             </Button>
           </>
