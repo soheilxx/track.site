@@ -65,6 +65,17 @@ const fail = (url: string, problem: string) => findings.push({ url, problem });
 
 const count = (html: string, re: RegExp) => (html.match(re) ?? []).length;
 const attr = (html: string, re: RegExp) => html.match(re)?.[1] ?? null;
+/** HTML entities as React renders them in attributes (&#x27; &quot; &amp; …) back to text, so lengths match what users and crawlers see. */
+const decodeEntities = (s: string) =>
+  s
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const metaContent = (html: string, key: "name" | "property", value: string) => attr(html, new RegExp(`<meta\\s+${key}="${escapeRe(value)}"\\s+content="([^"]*)"`, "i")) ?? attr(html, new RegExp(`<meta\\s+content="([^"]*)"\\s+${key}="${escapeRe(value)}"`, "i"));
 
@@ -85,11 +96,14 @@ async function checkPage(locale: string, neutralPath: string, opts: { jsonLd: bo
   const html = await res.text();
   const lang = attr(html, /<html[^>]*\slang="([^"]+)"/i);
   if (lang !== locale) fail(url, `<html lang> is ${lang ?? "missing"}, expected ${locale}`);
-  const titles = count(html, /<title[^>]*>[^<]+<\/title>/gi);
+  // only the document title in <head> counts; inline SVG <title> elements in the body are accessible names, not page titles
+  const head = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? html;
+  const titles = count(head, /<title[^>]*>[^<]+<\/title>/gi);
   if (titles !== 1) fail(url, `expected one <title>, found ${titles}`);
-  const title = attr(html, /<title[^>]*>([^<]+)<\/title>/i) ?? "";
+  const title = decodeEntities(attr(head, /<title[^>]*>([^<]+)<\/title>/i) ?? "");
   if (title.length < 10 || title.length > 70) fail(url, `title length ${title.length} (10–70)`);
-  const description = metaContent(html, "name", "description");
+  // lengths are measured on the decoded text: an apostrophe is one character, not the six of its HTML entity
+  const description = decodeEntities(metaContent(html, "name", "description") ?? "");
   if (!description) fail(url, "missing meta description");
   else if (description.length < 50 || description.length > 170) fail(url, `description length ${description.length} (50–170)`);
   const canonical = attr(html, /<link\s+rel="canonical"\s+href="([^"]+)"/i) ?? attr(html, /<link\s+href="([^"]+)"\s+rel="canonical"/i);
@@ -111,13 +125,14 @@ async function checkPage(locale: string, neutralPath: string, opts: { jsonLd: bo
   if (neutralPath.startsWith(KNOWLEDGE) && !/"@type":\s*"BreadcrumbList"/.test(html)) fail(url, "missing BreadcrumbList JSON-LD");
   if (/\bBlog\b/.test(html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, " "))) fail(url, 'visible "Blog" label (must be "Tracking Knowledge")');
   if (opts.article) {
-    if (!/"@type":\s*"BlogPosting"/.test(html)) fail(url, "missing BlogPosting JSON-LD");
+    // reference and tutorial articles publish TechArticle by design (docs/13); both are article schemas
+    if (!/"@type":\s*"(BlogPosting|TechArticle)"/.test(html)) fail(url, "missing BlogPosting/TechArticle JSON-LD");
     if (!/<time[\s>]/i.test(html)) fail(url, "missing <time> for the publication date");
   }
   if (neutralPath.startsWith(KNOWLEDGE)) {
     const ogImage = metaContent(html, "property", "og:image");
     if (!ogImage || !/^https?:\/\//.test(ogImage)) fail(url, `og:image missing or not absolute (${ogImage ?? "none"})`);
-    else if (!ogImage.includes("/opengraph-image")) fail(url, `og:image ${ogImage} is not the generated social card`);
+    else if (!/\/tracking-knowledge(\/[a-z0-9-]+)?\/card\.png$/.test(ogImage)) fail(url, `og:image ${ogImage} is not the generated social card`);
     if (!metaContent(html, "property", "og:image:alt")) fail(url, "missing og:image:alt");
     if (metaContent(html, "name", "twitter:card") !== "summary_large_image") fail(url, "twitter:card is not summary_large_image");
   }

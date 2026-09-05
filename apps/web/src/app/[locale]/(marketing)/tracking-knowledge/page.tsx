@@ -20,7 +20,8 @@ export async function generateMetadata({ params, searchParams }: { params: Promi
   const { locale } = await params;
   const c = hubCopy(locale);
   const query = parseHubQuery(await searchParams, KNOWLEDGE_TAXONOMY);
-  const image = { url: absoluteUrl(`${KNOWLEDGE_PATH}/opengraph-image`, locale), width: CARD_SIZE.width, height: CARD_SIZE.height, alt: knowledgeCopy(locale).cardAlt };
+  // the localized 1200×630 card is served by ./card.png/route.tsx (stable URL, see release report defect D1)
+  const image = { url: absoluteUrl(`${KNOWLEDGE_PATH}/card.png`, locale), width: CARD_SIZE.width, height: CARD_SIZE.height, alt: knowledgeCopy(locale).cardAlt };
   const description = seoDescription(c.meta.description);
   const topic = query.topic ? topicLabel(query.topic, locale) : null;
   const title = query.q ? seoTitle(fill(c.meta.searchTitle, { q: query.q })) : topic ? seoTitle(`${topic} · ${KNOWLEDGE_NAME}`) : seoTitle(KNOWLEDGE_NAME);

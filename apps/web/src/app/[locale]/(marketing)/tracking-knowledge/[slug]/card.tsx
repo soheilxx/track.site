@@ -9,7 +9,6 @@ import { CARD_CONTENT_TYPE, CARD_SIZE, SocialCard } from "../social-card";
  * published article at build time; the page metadata references this route by absolute URL with a
  * localized alt text. No image files are stored in the repo.
  */
-export const dynamic = "force-static";
 export const size = CARD_SIZE;
 export const contentType = CARD_CONTENT_TYPE;
 export const alt = `Track ${KNOWLEDGE_NAME}`;
@@ -20,7 +19,7 @@ export async function generateStaticParams() {
   return params;
 }
 
-export default async function ArticleSocialCard({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export async function renderArticleSocialCard({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return new Response("not found", { status: 404 });
   const article = await getArticle(locale, slug);

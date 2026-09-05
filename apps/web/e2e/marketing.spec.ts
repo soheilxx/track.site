@@ -126,7 +126,7 @@ test.describe("marketing site", () => {
   test("Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card", async ({ page }) => {
     await page.goto("/en/tracking-knowledge");
     await expect(page.locator("h1")).toHaveText("Tracking Knowledge");
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/opengraph-image/);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/card\.png$/);
     const first = page.locator("main a[href^='/en/tracking-knowledge/']:not([href$='.xml']):not([href*='?'])").first();
     await expect(first).toBeVisible();
     await first.click();
@@ -147,7 +147,7 @@ test.describe("marketing site", () => {
     const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
     expect(jsonLd.some((t) => /"@type":"(BlogPosting|TechArticle)"/.test(t) && /"publisher":\{"@type":"Organization","name":"Track"/.test(t))).toBe(true);
     expect(jsonLd.some((t) => /"@type":"BreadcrumbList"/.test(t) && t.includes('"name":"Tracking Knowledge"'))).toBe(true);
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/[a-z0-9-]+\/opengraph-image/);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^https?:\/\/.+\/en\/tracking-knowledge\/[a-z0-9-]+\/card\.png$/);
     await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute("content", /Tracking Knowledge/);
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
     await expect(page.locator("time").first()).toBeVisible();

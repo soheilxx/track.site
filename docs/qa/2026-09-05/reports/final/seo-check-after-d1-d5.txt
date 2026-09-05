@@ -1,0 +1,2 @@
+$ tsx scripts/seo-check.ts
+SEO check passed: 336 pages in en/de/fr/es/it/nl, redirects, robots, sitemap index and feeds OK (4476 ms)

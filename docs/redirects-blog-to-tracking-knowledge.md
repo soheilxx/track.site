@@ -1,19 +1,19 @@
 # Redirect matrix: Blog → Tracking Knowledge
 
-Generated 2026-09-03 by `node apps/web/scripts/redirect-matrix.mjs` from `apps/web/content/knowledge/**`. Do not edit by hand — re-run the script after adding, renaming or translating articles.
+Generated 2026-09-05 by `node apps/web/scripts/redirect-matrix.mjs` from `apps/web/content/knowledge/**`. Do not edit by hand — re-run the script after adding, renaming or translating articles.
 
 ## Rules
 
 - Every old URL gets a **permanent (308/301) redirect straight to its final target** — no chains, no loops. The unprefixed English URLs (`/blog/...`) point directly at `/en/tracking-knowledge/...` instead of passing through `/en/blog/...`.
 - Query strings (UTM parameters, `?category=`) are preserved by Next.js automatically.
-- Rules are defined in `apps/web/src/lib/routes.ts` (`KNOWLEDGE_LEGACY_REDIRECTS`) and applied by `apps/web/next.config.ts` `redirects()`; they run before the locale proxy. Active locales: `en`, `de`; default `en`.
+- Rules are defined in `apps/web/src/lib/routes.ts` (`KNOWLEDGE_LEGACY_REDIRECTS`) and applied by `apps/web/next.config.ts` `redirects()`; they run before the locale proxy. Active locales: `en`, `de`, `fr`, `es`, `it`, `nl`; default `en`.
 - `generic` rows are covered by the pattern rules (`/blog` → `/en/tracking-knowledge`, `/blog/feed.xml` → `/en/tracking-knowledge/feed.xml`, `/blog/:slug` → `/en/tracking-knowledge/:slug`, and `/:locale/blog[/feed.xml|/:slug]` → `/:locale/tracking-knowledge[...]`).
 - `explicit` rows are articles whose localized slug differs from the old shared slug; each needs an entry in `KNOWLEDGE_SLUG_REDIRECTS` (checked by this script).
 - The old `/[locale]/blog` routes no longer exist in the app; only these redirects answer them.
 
 ## Summary
 
-- 96 old URLs: 6 index/feed URLs, 90 article URLs (2 locales × 30 topics + 30 unprefixed English).
+- 224 old URLs: 14 index/feed URLs, 210 article URLs (6 locales × 30 topics + 30 unprefixed English).
 - 0 explicit slug redirects required, 0 missing.
 
 ## Matrix
@@ -26,6 +26,14 @@ Generated 2026-09-03 by `node apps/web/scripts/redirect-matrix.mjs` from `apps/w
 | `/en/blog/feed.xml` | `/en/tracking-knowledge/feed.xml` | generic |  |
 | `/de/blog` | `/de/tracking-knowledge` | generic |  |
 | `/de/blog/feed.xml` | `/de/tracking-knowledge/feed.xml` | generic |  |
+| `/fr/blog` | `/fr/tracking-knowledge` | generic |  |
+| `/fr/blog/feed.xml` | `/fr/tracking-knowledge/feed.xml` | generic |  |
+| `/es/blog` | `/es/tracking-knowledge` | generic |  |
+| `/es/blog/feed.xml` | `/es/tracking-knowledge/feed.xml` | generic |  |
+| `/it/blog` | `/it/tracking-knowledge` | generic |  |
+| `/it/blog/feed.xml` | `/it/tracking-knowledge/feed.xml` | generic |  |
+| `/nl/blog` | `/nl/tracking-knowledge` | generic |  |
+| `/nl/blog/feed.xml` | `/nl/tracking-knowledge/feed.xml` | generic |  |
 | `/blog/ad-blockers-itp-measurement` | `/en/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
 | `/en/blog/ad-blockers-itp-measurement` | `/en/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
 | `/blog/affiliate-postbacks-s2s` | `/en/tracking-knowledge/affiliate-postbacks-s2s` | generic |  |
@@ -116,3 +124,123 @@ Generated 2026-09-03 by `node apps/web/scripts/redirect-matrix.mjs` from `apps/w
 | `/de/blog/tiktok-events-api-setup` | `/de/tracking-knowledge/tiktok-events-api-setup` | generic |  |
 | `/de/blog/tracking-health-score` | `/de/tracking-knowledge/tracking-health-score` | generic |  |
 | `/de/blog/woocommerce-server-side-tracking` | `/de/tracking-knowledge/woocommerce-server-side-tracking` | generic |  |
+| `/fr/blog/ad-blockers-itp-measurement` | `/fr/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
+| `/fr/blog/affiliate-postbacks-s2s` | `/fr/tracking-knowledge/affiliate-postbacks-s2s` | generic |  |
+| `/fr/blog/ai-assistant-tag-management-safety` | `/fr/tracking-knowledge/ai-assistant-tag-management-safety` | generic |  |
+| `/fr/blog/click-ids-attribution-windows` | `/fr/tracking-knowledge/click-ids-attribution-windows` | generic |  |
+| `/fr/blog/consent-mode-v2-guide` | `/fr/tracking-knowledge/consent-mode-v2-guide` | generic |  |
+| `/fr/blog/data-retention-policy-tracking` | `/fr/tracking-knowledge/data-retention-policy-tracking` | generic |  |
+| `/fr/blog/dedup-event-id-order-id` | `/fr/tracking-knowledge/dedup-event-id-order-id` | generic |  |
+| `/fr/blog/dsar-deletion-tracking-data` | `/fr/tracking-knowledge/dsar-deletion-tracking-data` | generic |  |
+| `/fr/blog/event-taxonomy-standard-events` | `/fr/tracking-knowledge/event-taxonomy-standard-events` | generic |  |
+| `/fr/blog/first-party-tracking-domains` | `/fr/tracking-knowledge/first-party-tracking-domains` | generic |  |
+| `/fr/blog/ga4-measurement-protocol-eu` | `/fr/tracking-knowledge/ga4-measurement-protocol-eu` | generic |  |
+| `/fr/blog/google-ads-enhanced-conversions` | `/fr/tracking-knowledge/google-ads-enhanced-conversions` | generic |  |
+| `/fr/blog/kill-switch-incident-playbook` | `/fr/tracking-knowledge/kill-switch-incident-playbook` | generic |  |
+| `/fr/blog/lead-gen-tracking-b2b` | `/fr/tracking-knowledge/lead-gen-tracking-b2b` | generic |  |
+| `/fr/blog/linkedin-conversions-api-b2b` | `/fr/tracking-knowledge/linkedin-conversions-api-b2b` | generic |  |
+| `/fr/blog/meta-conversions-api-deduplication` | `/fr/tracking-knowledge/meta-conversions-api-deduplication` | generic |  |
+| `/fr/blog/microsoft-conversions-api-uet` | `/fr/tracking-knowledge/microsoft-conversions-api-uet` | generic |  |
+| `/fr/blog/migrating-from-gtm` | `/fr/tracking-knowledge/migrating-from-gtm` | generic |  |
+| `/fr/blog/offline-conversions-crm` | `/fr/tracking-knowledge/offline-conversions-crm` | generic |  |
+| `/fr/blog/pii-in-tracking-data` | `/fr/tracking-knowledge/pii-in-tracking-data` | generic |  |
+| `/fr/blog/reddit-pinterest-snapchat-capi` | `/fr/tracking-knowledge/reddit-pinterest-snapchat-capi` | generic |  |
+| `/fr/blog/server-side-tracking-explained` | `/fr/tracking-knowledge/server-side-tracking-explained` | generic |  |
+| `/fr/blog/shopify-server-side-purchases` | `/fr/tracking-knowledge/shopify-server-side-purchases` | generic |  |
+| `/fr/blog/shopware-6-tracking` | `/fr/tracking-knowledge/shopware-6-tracking` | generic |  |
+| `/fr/blog/signed-configuration-supply-chain` | `/fr/tracking-knowledge/signed-configuration-supply-chain` | generic |  |
+| `/fr/blog/subscription-saas-events` | `/fr/tracking-knowledge/subscription-saas-events` | generic |  |
+| `/fr/blog/tcf-2-2-gpp-gpc` | `/fr/tracking-knowledge/tcf-2-2-gpp-gpc` | generic |  |
+| `/fr/blog/tiktok-events-api-setup` | `/fr/tracking-knowledge/tiktok-events-api-setup` | generic |  |
+| `/fr/blog/tracking-health-score` | `/fr/tracking-knowledge/tracking-health-score` | generic |  |
+| `/fr/blog/woocommerce-server-side-tracking` | `/fr/tracking-knowledge/woocommerce-server-side-tracking` | generic |  |
+| `/es/blog/ad-blockers-itp-measurement` | `/es/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
+| `/es/blog/affiliate-postbacks-s2s` | `/es/tracking-knowledge/affiliate-postbacks-s2s` | generic |  |
+| `/es/blog/ai-assistant-tag-management-safety` | `/es/tracking-knowledge/ai-assistant-tag-management-safety` | generic |  |
+| `/es/blog/click-ids-attribution-windows` | `/es/tracking-knowledge/click-ids-attribution-windows` | generic |  |
+| `/es/blog/consent-mode-v2-guide` | `/es/tracking-knowledge/consent-mode-v2-guide` | generic |  |
+| `/es/blog/data-retention-policy-tracking` | `/es/tracking-knowledge/data-retention-policy-tracking` | generic |  |
+| `/es/blog/dedup-event-id-order-id` | `/es/tracking-knowledge/dedup-event-id-order-id` | generic |  |
+| `/es/blog/dsar-deletion-tracking-data` | `/es/tracking-knowledge/dsar-deletion-tracking-data` | generic |  |
+| `/es/blog/event-taxonomy-standard-events` | `/es/tracking-knowledge/event-taxonomy-standard-events` | generic |  |
+| `/es/blog/first-party-tracking-domains` | `/es/tracking-knowledge/first-party-tracking-domains` | generic |  |
+| `/es/blog/ga4-measurement-protocol-eu` | `/es/tracking-knowledge/ga4-measurement-protocol-eu` | generic |  |
+| `/es/blog/google-ads-enhanced-conversions` | `/es/tracking-knowledge/google-ads-enhanced-conversions` | generic |  |
+| `/es/blog/kill-switch-incident-playbook` | `/es/tracking-knowledge/kill-switch-incident-playbook` | generic |  |
+| `/es/blog/lead-gen-tracking-b2b` | `/es/tracking-knowledge/lead-gen-tracking-b2b` | generic |  |
+| `/es/blog/linkedin-conversions-api-b2b` | `/es/tracking-knowledge/linkedin-conversions-api-b2b` | generic |  |
+| `/es/blog/meta-conversions-api-deduplication` | `/es/tracking-knowledge/meta-conversions-api-deduplication` | generic |  |
+| `/es/blog/microsoft-conversions-api-uet` | `/es/tracking-knowledge/microsoft-conversions-api-uet` | generic |  |
+| `/es/blog/migrating-from-gtm` | `/es/tracking-knowledge/migrating-from-gtm` | generic |  |
+| `/es/blog/offline-conversions-crm` | `/es/tracking-knowledge/offline-conversions-crm` | generic |  |
+| `/es/blog/pii-in-tracking-data` | `/es/tracking-knowledge/pii-in-tracking-data` | generic |  |
+| `/es/blog/reddit-pinterest-snapchat-capi` | `/es/tracking-knowledge/reddit-pinterest-snapchat-capi` | generic |  |
+| `/es/blog/server-side-tracking-explained` | `/es/tracking-knowledge/server-side-tracking-explained` | generic |  |
+| `/es/blog/shopify-server-side-purchases` | `/es/tracking-knowledge/shopify-server-side-purchases` | generic |  |
+| `/es/blog/shopware-6-tracking` | `/es/tracking-knowledge/shopware-6-tracking` | generic |  |
+| `/es/blog/signed-configuration-supply-chain` | `/es/tracking-knowledge/signed-configuration-supply-chain` | generic |  |
+| `/es/blog/subscription-saas-events` | `/es/tracking-knowledge/subscription-saas-events` | generic |  |
+| `/es/blog/tcf-2-2-gpp-gpc` | `/es/tracking-knowledge/tcf-2-2-gpp-gpc` | generic |  |
+| `/es/blog/tiktok-events-api-setup` | `/es/tracking-knowledge/tiktok-events-api-setup` | generic |  |
+| `/es/blog/tracking-health-score` | `/es/tracking-knowledge/tracking-health-score` | generic |  |
+| `/es/blog/woocommerce-server-side-tracking` | `/es/tracking-knowledge/woocommerce-server-side-tracking` | generic |  |
+| `/it/blog/ad-blockers-itp-measurement` | `/it/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
+| `/it/blog/affiliate-postbacks-s2s` | `/it/tracking-knowledge/affiliate-postbacks-s2s` | generic |  |
+| `/it/blog/ai-assistant-tag-management-safety` | `/it/tracking-knowledge/ai-assistant-tag-management-safety` | generic |  |
+| `/it/blog/click-ids-attribution-windows` | `/it/tracking-knowledge/click-ids-attribution-windows` | generic |  |
+| `/it/blog/consent-mode-v2-guide` | `/it/tracking-knowledge/consent-mode-v2-guide` | generic |  |
+| `/it/blog/data-retention-policy-tracking` | `/it/tracking-knowledge/data-retention-policy-tracking` | generic |  |
+| `/it/blog/dedup-event-id-order-id` | `/it/tracking-knowledge/dedup-event-id-order-id` | generic |  |
+| `/it/blog/dsar-deletion-tracking-data` | `/it/tracking-knowledge/dsar-deletion-tracking-data` | generic |  |
+| `/it/blog/event-taxonomy-standard-events` | `/it/tracking-knowledge/event-taxonomy-standard-events` | generic |  |
+| `/it/blog/first-party-tracking-domains` | `/it/tracking-knowledge/first-party-tracking-domains` | generic |  |
+| `/it/blog/ga4-measurement-protocol-eu` | `/it/tracking-knowledge/ga4-measurement-protocol-eu` | generic |  |
+| `/it/blog/google-ads-enhanced-conversions` | `/it/tracking-knowledge/google-ads-enhanced-conversions` | generic |  |
+| `/it/blog/kill-switch-incident-playbook` | `/it/tracking-knowledge/kill-switch-incident-playbook` | generic |  |
+| `/it/blog/lead-gen-tracking-b2b` | `/it/tracking-knowledge/lead-gen-tracking-b2b` | generic |  |
+| `/it/blog/linkedin-conversions-api-b2b` | `/it/tracking-knowledge/linkedin-conversions-api-b2b` | generic |  |
+| `/it/blog/meta-conversions-api-deduplication` | `/it/tracking-knowledge/meta-conversions-api-deduplication` | generic |  |
+| `/it/blog/microsoft-conversions-api-uet` | `/it/tracking-knowledge/microsoft-conversions-api-uet` | generic |  |
+| `/it/blog/migrating-from-gtm` | `/it/tracking-knowledge/migrating-from-gtm` | generic |  |
+| `/it/blog/offline-conversions-crm` | `/it/tracking-knowledge/offline-conversions-crm` | generic |  |
+| `/it/blog/pii-in-tracking-data` | `/it/tracking-knowledge/pii-in-tracking-data` | generic |  |
+| `/it/blog/reddit-pinterest-snapchat-capi` | `/it/tracking-knowledge/reddit-pinterest-snapchat-capi` | generic |  |
+| `/it/blog/server-side-tracking-explained` | `/it/tracking-knowledge/server-side-tracking-explained` | generic |  |
+| `/it/blog/shopify-server-side-purchases` | `/it/tracking-knowledge/shopify-server-side-purchases` | generic |  |
+| `/it/blog/shopware-6-tracking` | `/it/tracking-knowledge/shopware-6-tracking` | generic |  |
+| `/it/blog/signed-configuration-supply-chain` | `/it/tracking-knowledge/signed-configuration-supply-chain` | generic |  |
+| `/it/blog/subscription-saas-events` | `/it/tracking-knowledge/subscription-saas-events` | generic |  |
+| `/it/blog/tcf-2-2-gpp-gpc` | `/it/tracking-knowledge/tcf-2-2-gpp-gpc` | generic |  |
+| `/it/blog/tiktok-events-api-setup` | `/it/tracking-knowledge/tiktok-events-api-setup` | generic |  |
+| `/it/blog/tracking-health-score` | `/it/tracking-knowledge/tracking-health-score` | generic |  |
+| `/it/blog/woocommerce-server-side-tracking` | `/it/tracking-knowledge/woocommerce-server-side-tracking` | generic |  |
+| `/nl/blog/ad-blockers-itp-measurement` | `/nl/tracking-knowledge/ad-blockers-itp-measurement` | generic |  |
+| `/nl/blog/affiliate-postbacks-s2s` | `/nl/tracking-knowledge/affiliate-postbacks-s2s` | generic |  |
+| `/nl/blog/ai-assistant-tag-management-safety` | `/nl/tracking-knowledge/ai-assistant-tag-management-safety` | generic |  |
+| `/nl/blog/click-ids-attribution-windows` | `/nl/tracking-knowledge/click-ids-attribution-windows` | generic |  |
+| `/nl/blog/consent-mode-v2-guide` | `/nl/tracking-knowledge/consent-mode-v2-guide` | generic |  |
+| `/nl/blog/data-retention-policy-tracking` | `/nl/tracking-knowledge/data-retention-policy-tracking` | generic |  |
+| `/nl/blog/dedup-event-id-order-id` | `/nl/tracking-knowledge/dedup-event-id-order-id` | generic |  |
+| `/nl/blog/dsar-deletion-tracking-data` | `/nl/tracking-knowledge/dsar-deletion-tracking-data` | generic |  |
+| `/nl/blog/event-taxonomy-standard-events` | `/nl/tracking-knowledge/event-taxonomy-standard-events` | generic |  |
+| `/nl/blog/first-party-tracking-domains` | `/nl/tracking-knowledge/first-party-tracking-domains` | generic |  |
+| `/nl/blog/ga4-measurement-protocol-eu` | `/nl/tracking-knowledge/ga4-measurement-protocol-eu` | generic |  |
+| `/nl/blog/google-ads-enhanced-conversions` | `/nl/tracking-knowledge/google-ads-enhanced-conversions` | generic |  |
+| `/nl/blog/kill-switch-incident-playbook` | `/nl/tracking-knowledge/kill-switch-incident-playbook` | generic |  |
+| `/nl/blog/lead-gen-tracking-b2b` | `/nl/tracking-knowledge/lead-gen-tracking-b2b` | generic |  |
+| `/nl/blog/linkedin-conversions-api-b2b` | `/nl/tracking-knowledge/linkedin-conversions-api-b2b` | generic |  |
+| `/nl/blog/meta-conversions-api-deduplication` | `/nl/tracking-knowledge/meta-conversions-api-deduplication` | generic |  |
+| `/nl/blog/microsoft-conversions-api-uet` | `/nl/tracking-knowledge/microsoft-conversions-api-uet` | generic |  |
+| `/nl/blog/migrating-from-gtm` | `/nl/tracking-knowledge/migrating-from-gtm` | generic |  |
+| `/nl/blog/offline-conversions-crm` | `/nl/tracking-knowledge/offline-conversions-crm` | generic |  |
+| `/nl/blog/pii-in-tracking-data` | `/nl/tracking-knowledge/pii-in-tracking-data` | generic |  |
+| `/nl/blog/reddit-pinterest-snapchat-capi` | `/nl/tracking-knowledge/reddit-pinterest-snapchat-capi` | generic |  |
+| `/nl/blog/server-side-tracking-explained` | `/nl/tracking-knowledge/server-side-tracking-explained` | generic |  |
+| `/nl/blog/shopify-server-side-purchases` | `/nl/tracking-knowledge/shopify-server-side-purchases` | generic |  |
+| `/nl/blog/shopware-6-tracking` | `/nl/tracking-knowledge/shopware-6-tracking` | generic |  |
+| `/nl/blog/signed-configuration-supply-chain` | `/nl/tracking-knowledge/signed-configuration-supply-chain` | generic |  |
+| `/nl/blog/subscription-saas-events` | `/nl/tracking-knowledge/subscription-saas-events` | generic |  |
+| `/nl/blog/tcf-2-2-gpp-gpc` | `/nl/tracking-knowledge/tcf-2-2-gpp-gpc` | generic |  |
+| `/nl/blog/tiktok-events-api-setup` | `/nl/tracking-knowledge/tiktok-events-api-setup` | generic |  |
+| `/nl/blog/tracking-health-score` | `/nl/tracking-knowledge/tracking-health-score` | generic |  |
+| `/nl/blog/woocommerce-server-side-tracking` | `/nl/tracking-knowledge/woocommerce-server-side-tracking` | generic |  |

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import type { BillingInterval } from "@track-site/catalog";
@@ -52,6 +52,7 @@ export interface PlanCardsProps {
  * the others step back), so the customer lands on what they picked without choosing again.
  */
 export function PlanCards({ plans, currentPlanId, status, hasCustomer, preselected = null }: PlanCardsProps) {
+  const locale = useLocale();
   const t = useTranslations("app.billing");
   const stored = useStoredPlanSelection();
   // the query string wins; without it the selection the onboarding remembered in this tab applies
@@ -103,7 +104,7 @@ export function PlanCards({ plans, currentPlanId, status, hasCustomer, preselect
               </ul>
               <div className="mt-auto pt-4">
                 {p.contactSales ? (
-                  <Link href="/contact?topic=enterprise" className="text-sm font-medium text-primary hover:underline">
+                  <Link href={`/${locale}/contact?topic=enterprise`} className="text-sm font-medium text-primary hover:underline">
                     {t("contactSales")}
                   </Link>
                 ) : current ? null : (

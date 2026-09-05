@@ -35,9 +35,9 @@ export async function generateStaticParams() {
   return params;
 }
 
-/** Absolute URL of the article's generated 1200×630 social card (`opengraph-image.tsx` next to this page). */
+/** Absolute URL of the article's generated 1200×630 social card (`card.png/route.tsx`, a stable route instead of the hashed opengraph-image convention). */
 function socialCardUrl(locale: string, slug: string): string {
-  return absoluteUrl(`${articlePath(slug)}/opengraph-image`, locale);
+  return absoluteUrl(`${articlePath(slug)}/card.png`, locale);
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {

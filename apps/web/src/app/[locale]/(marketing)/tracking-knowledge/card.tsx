@@ -8,7 +8,6 @@ import { knowledgeCopy } from "./copy";
 import { CARD_CONTENT_TYPE, CARD_SIZE, SocialCard } from "./social-card";
 
 /** Locale-specific social card of the Tracking Knowledge index. */
-export const dynamic = "force-static";
 export const size = CARD_SIZE;
 export const contentType = CARD_CONTENT_TYPE;
 export const alt = `Track ${KNOWLEDGE_NAME}`;
@@ -17,7 +16,7 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function KnowledgeIndexSocialCard({ params }: { params: Promise<{ locale: string }> }) {
+export async function renderKnowledgeIndexSocialCard({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) return new Response("not found", { status: 404 });
   const c = knowledgeCopy(locale);
