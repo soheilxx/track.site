@@ -492,8 +492,8 @@ export function DestinationWizard(props: WizardProps) {
                   onDone={(m, ok) => {
                     setMsg({ tone: ok ? "ok" : "bad", text: m });
                     if (ok) {
-                      const v = /version (\d+)/.exec(m)?.[1];
-                      setPublished(v ? Number(v) : review.version_to);
+                      // the confirmation message is localized; the reviewed target version is the authoritative number
+                      setPublished(review.version_to);
                       setReview(null);
                     }
                   }}
