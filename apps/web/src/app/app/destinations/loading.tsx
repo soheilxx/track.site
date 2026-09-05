@@ -7,7 +7,8 @@ export default async function DestinationsHealthLoading() {
   return (
     <div className="space-y-6" aria-busy="true">
       <div>
-        <h1 className="font-display text-2xl font-semibold text-ink">{t("title")}</h1>
+        {/* the streaming skeleton must not add a second document heading: the real h1 arrives with the page */}
+        <p className="font-display text-2xl font-semibold text-ink" aria-hidden="true">{t("title")}</p>
         <p className="mt-1 max-w-3xl text-sm text-ink-3">{t("intro")}</p>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
