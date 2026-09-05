@@ -1,0 +1,234 @@
+import { describe, expect, it } from "vitest";
+import { CORE_STATE_PRIORITY, PARAM_KEYS, STATE_PARAMS, createCoreStateMachine, resolveCoreState, type CoreSignals } from "./state-machine";
+import { CORE_STATES, type CoreState } from "./types";
+
+/** Injected clock: the machine never reads the wall clock. */
+function clock(start = 0) {
+  let t = start;
+  return { now: () => t, set: (value: number) => void (t = value) };
+}
+
+const SIGNAL: Record<Exclude<CoreState, "idle">, keyof CoreSignals> = {
+  blocked: "blocked",
+  approval_required: "approvalRequired",
+  working: "working",
+  streaming: "streaming",
+  success: "success",
+  listening: "listening",
+};
+
+describe("resolveCoreState", () => {
+  it("is idle without any signal", () => {
+    expect(resolveCoreState({})).toBe("idle");
+    expect(resolveCoreState({ working: false, listening: false })).toBe("idle");
+  });
+
+  it("maps every signal to its state", () => {
+    for (const state of CORE_STATES) {
+      if (state === "idle") continue;
+      expect(resolveCoreState({ [SIGNAL[state]]: true })).toBe(state);
+    }
+  });
+
+  it("applies the fixed priority error/blocked > approval > working > streaming > success > listening > idle for every pair", () => {
+    expect(CORE_STATE_PRIORITY).toEqual(["blocked", "approval_required", "working", "streaming", "success", "listening", "idle"]);
+    const ranked = CORE_STATE_PRIORITY.filter((s): s is Exclude<CoreState, "idle"> => s !== "idle");
+    for (let i = 0; i < ranked.length; i++) {
+      for (let j = i + 1; j < ranked.length; j++) {
+        const higher = ranked[i]!;
+        const lower = ranked[j]!;
+        expect(resolveCoreState({ [SIGNAL[higher]]: true, [SIGNAL[lower]]: true })).toBe(higher);
+      }
+    }
+  });
+});
+
+describe("state table", () => {
+  it("idle breathes with 14–18 s per cycle at a low amplitude", () => {
+    expect(STATE_PARAMS.idle.period).toBeGreaterThanOrEqual(14);
+    expect(STATE_PARAMS.idle.period).toBeLessThanOrEqual(18);
+    expect(STATE_PARAMS.idle.amplitude).toBeLessThanOrEqual(0.4);
+  });
+
+  it("approval nearly stops and shows the amber outline; blocked contracts with the edge accent; nothing strobes", () => {
+    expect(STATE_PARAMS.approval_required.speed).toBeLessThan(0.1);
+    expect(STATE_PARAMS.approval_required.outline).toBe(1);
+    expect(STATE_PARAMS.blocked.speed).toBeLessThan(0.2);
+    expect(STATE_PARAMS.blocked.contract).toBeGreaterThan(0.5);
+    expect(STATE_PARAMS.blocked.edge).toBe(1);
+    for (const state of CORE_STATES) expect(STATE_PARAMS[state].speed).toBeLessThanOrEqual(2);
+  });
+
+  it("listening leans one shape with a cyan halo; working merges; streaming only adds a light flow", () => {
+    expect(STATE_PARAMS.listening.lean).toBe(1);
+    expect(STATE_PARAMS.listening.halo).toBeGreaterThan(0.5);
+    expect(STATE_PARAMS.working.merge).toBe(1);
+    expect(STATE_PARAMS.streaming.glow).toBeGreaterThan(STATE_PARAMS.working.glow);
+    expect(STATE_PARAMS.streaming.merge).toBeLessThan(0.5);
+  });
+});
+
+describe("createCoreStateMachine", () => {
+  it("commits a requested state only after the hysteresis window", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now });
+    expect(m.sample().state).toBe("idle");
+    m.request("working");
+    expect(m.sample().state).toBe("idle");
+    c.set(100);
+    expect(m.sample().state).toBe("idle");
+    c.set(150);
+    expect(m.sample().state).toBe("working");
+    expect(m.current()).toBe("working");
+  });
+
+  it("debounces bursts of backend events: a flip within the window restarts the wait", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now });
+    m.request("working");
+    c.set(50);
+    m.request("idle"); // back to the committed state → nothing pending
+    c.set(120);
+    m.request("working");
+    c.set(200);
+    expect(m.sample().state).toBe("idle");
+    c.set(270);
+    expect(m.sample().state).toBe("working");
+  });
+
+  it("interpolates every parameter over 400–700 ms without a jump", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    m.request("working");
+    const start = m.sample();
+    expect(start.state).toBe("working");
+    expect(start.progress).toBe(0);
+    for (const key of PARAM_KEYS) expect(start.params[key]).toBeCloseTo(STATE_PARAMS.idle[key], 6);
+
+    let previous = start.params.merge;
+    for (let t = 25; t < 550; t += 25) {
+      c.set(t);
+      const s = m.sample();
+      expect(s.progress).toBeGreaterThan(0);
+      expect(s.progress).toBeLessThan(1);
+      expect(s.params.merge).toBeGreaterThanOrEqual(previous);
+      previous = s.params.merge;
+    }
+    c.set(399);
+    expect(m.sample().progress).toBeLessThan(1);
+    c.set(550);
+    const done = m.sample();
+    expect(done.progress).toBe(1);
+    for (const key of PARAM_KEYS) expect(done.params[key]).toBeCloseTo(STATE_PARAMS.working[key], 6);
+    c.set(700);
+    expect(m.sample().progress).toBe(1);
+  });
+
+  it("continues an interrupted transition from the current values (no flicker)", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    m.request("working");
+    m.sample();
+    c.set(275); // half-way
+    const mid = m.sample();
+    expect(mid.params.merge).toBeGreaterThan(0.3);
+    expect(mid.params.merge).toBeLessThan(0.7);
+    m.request("idle");
+    const afterCommit = m.sample();
+    expect(afterCommit.state).toBe("idle");
+    expect(afterCommit.from).toBe("working");
+    expect(afterCommit.params.merge).toBeCloseTo(mid.params.merge, 6);
+    c.set(275 + 550);
+    expect(m.sample().params.merge).toBeCloseTo(0, 6);
+  });
+
+  it("never restarts a transition on repeated identical requests (no per-token reaction while streaming)", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    m.request("streaming");
+    m.sample();
+    let last = 0;
+    for (let t = 10; t <= 540; t += 10) {
+      c.set(t);
+      m.request("streaming");
+      const s = m.sample();
+      expect(s.progress).toBeGreaterThanOrEqual(last);
+      last = s.progress;
+    }
+    c.set(550);
+    expect(m.sample().progress).toBe(1);
+    expect(m.sample().from).toBe("idle");
+  });
+
+  it("runs success as a one-shot wave of 600–900 ms and then returns to idle", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    m.request("success");
+    const s0 = m.sample();
+    expect(s0.state).toBe("success");
+    expect(s0.wave).toBe(0);
+    c.set(400);
+    expect(m.sample().wave).toBeCloseTo(0.5, 6);
+    c.set(799);
+    const almost = m.sample();
+    expect(almost.state).toBe("success");
+    expect(almost.wave).toBeLessThan(1);
+    c.set(800);
+    const back = m.sample();
+    expect(back.state).toBe("idle");
+    expect(back.from).toBe("success");
+    expect(back.wave).toBe(-1);
+    c.set(800 + 550);
+    const settled = m.sample();
+    expect(settled.progress).toBe(1);
+    for (const key of PARAM_KEYS) expect(settled.params[key]).toBeCloseTo(STATE_PARAMS.idle[key], 6);
+  });
+
+  it("integrates the breathing phase with the state's speed (approval almost stops, never snaps)", () => {
+    const idle = clock();
+    const busy = clock();
+    const a = createCoreStateMachine({ now: idle.now, debounceMs: 0 });
+    const b = createCoreStateMachine({ now: busy.now, debounceMs: 0 });
+    b.request("approval_required");
+    let phaseA = 0;
+    let phaseB = 0;
+    let previousB = 0;
+    for (let t = 0; t <= 10_000; t += 50) {
+      idle.set(t);
+      busy.set(t);
+      phaseA = a.sample().phase;
+      phaseB = b.sample().phase;
+      expect(phaseB).toBeGreaterThanOrEqual(previousB);
+      expect(phaseB - previousB).toBeLessThan(0.01);
+      previousB = phaseB;
+    }
+    expect(phaseA).toBeCloseTo(10 / STATE_PARAMS.idle.period, 2);
+    expect(phaseB / phaseA).toBeLessThan(0.1);
+  });
+
+  it("is deterministic for the same clock sequence", () => {
+    const run = () => {
+      const c = clock();
+      const m = createCoreStateMachine({ now: c.now });
+      const out: number[] = [];
+      const steps: [number, CoreState][] = [
+        [0, "listening"],
+        [300, "working"],
+        [900, "streaming"],
+        [1600, "success"],
+        [2600, "idle"],
+      ];
+      for (const [t, state] of steps) {
+        c.set(t);
+        m.request(state);
+        for (let dt = 0; dt < 300; dt += 33) {
+          c.set(t + dt);
+          const s = m.sample();
+          out.push(s.params.merge, s.params.glow, s.phase, s.wave);
+        }
+      }
+      return out;
+    };
+    expect(run()).toEqual(run());
+  });
+});

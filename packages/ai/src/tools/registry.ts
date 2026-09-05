@@ -11,11 +11,19 @@ import type { AgentContext } from "../context.ts";
  */
 export type ToolKind = "read" | "draft" | "confirm";
 
+/**
+ * `external` marks tools whose output carries content from outside the trust boundary (website
+ * HTML signals, event data, vendor responses, delivery logs). The agent wraps such outputs in an
+ * `<untrusted>` block before the model sees them; `internal` (default) outputs are Track's own state.
+ */
+export type ToolTrust = "internal" | "external";
+
 export interface ToolDefinition<I extends z.ZodObject<z.ZodRawShape>, O> {
   name: string;
   description: string;
   kind: ToolKind;
   permission: Permission;
+  trust?: ToolTrust;
   input: I;
   handler: (args: z.infer<I>, ctx: AgentContext) => Promise<O>;
 }
@@ -25,6 +33,7 @@ export interface RegisteredTool {
   description: string;
   kind: ToolKind;
   permission: Permission;
+  trust: ToolTrust;
   jsonSchema: Record<string, unknown>;
   validate: (args: unknown) => { ok: true; value: unknown } | { ok: false; error: string };
   run: (args: unknown, ctx: AgentContext) => Promise<Result<unknown>>;
@@ -79,6 +88,7 @@ export function defineTool<I extends z.ZodObject<z.ZodRawShape>, O>(def: ToolDef
     description: def.description,
     kind: def.kind,
     permission: def.permission,
+    trust: def.trust ?? "internal",
     jsonSchema,
     validate: (args) => {
       const parsed = def.input.safeParse(args);
@@ -112,6 +122,20 @@ export class ToolRegistry {
   }
   list(): RegisteredTool[] {
     return Array.from(this.tools.values());
+  }
+  /**
+   * Selection-time allow-list: keeps only registered tools the role may run (the same RBAC check
+   * `run` applies), optionally restricted by kind. Confirmation-gated tools are never selectable
+   * for the model — they are executed by the approval route after the user clicked the approval card.
+   */
+  select(names: string[], options: { role: string; kinds?: ToolKind[]; includeConfirm?: boolean }): string[] {
+    const kinds = options.kinds ?? ["read", "draft", "confirm"];
+    return names.filter((n) => {
+      const t = this.tools.get(n);
+      if (!t || !kinds.includes(t.kind)) return false;
+      if (t.kind === "confirm" && !options.includeConfirm) return false;
+      return can(options.role as OrgRole, t.permission);
+    });
   }
   /** OpenAI function tool definitions for a subset of names. */
   openaiTools(names: string[]): Array<{ type: "function"; name: string; description: string; parameters: Record<string, unknown>; strict: true }> {

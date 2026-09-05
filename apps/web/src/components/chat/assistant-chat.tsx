@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, Bot, Send } from "lucide-react";
+import { AlertTriangle, ArrowDown, Bot, Check, Loader2, Send, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
@@ -8,13 +8,29 @@ import { Alert, Button, EmptyState, buttonVariants, cn } from "@track-site/ui";
 import { useAssistant } from "./assistant-store";
 import { UiCardView } from "./cards";
 import { ApprovalCard, InputComponentView, SecureCredentialCard } from "./inputs";
-import type { ChatMessage } from "./types";
+import type { ActivityView, ChatError, ChatMessage } from "./types";
 import { WizardPanel } from "./wizard";
 
 /** Messages rendered at once; older ones are folded behind "Show earlier" so long conversations never grow the DOM unbounded (supplement §9 ≈ 200). */
 const WINDOW = 150;
 const AT_BOTTOM_PX = 32;
 const MAX_COMPOSER_LINES = 4;
+
+type Translate = ReturnType<typeof useTranslations<"assistant">>;
+
+/** Localized activity sentence for one real tool run / job state (`assistant.activity.<kind>.<phase>`), with safe params only. */
+export function activityText(t: Translate, a: ActivityView): string {
+  const key = `activity.${a.sentence}`;
+  const reason = a.params.reason && t.has(`reason.${a.params.reason}`) ? t(`reason.${a.params.reason}`) : a.params.reason ? t("reason.UNKNOWN") : "";
+  if (!t.has(key)) return t(a.phase === "started" ? "activity.generic.started" : a.phase === "completed" ? "activity.generic.completed" : a.phase === "blocked" ? "activity.generic.blocked" : "activity.generic.failed", { missing: "", reason });
+  return t(key, { missing: (a.params.missing ?? []).join(", "), reason });
+}
+
+/** Errors are shown by code from the namespace; the server's English text is only a fallback for codes without a translation. */
+export function errorText(t: Translate, error: ChatError): string {
+  if (t.has(`error.${error.code}`)) return t(`error.${error.code}`);
+  return error.message || t("error.FAILED");
+}
 
 /** Site + environment the assistant works on, with a visible confirmation whenever the context changes. */
 export function AssistantContextLine() {
@@ -66,11 +82,33 @@ export function AssistantModeToggle() {
   );
 }
 
+/** Activity sentences bound to real tool runs; the icon and the text carry the state, never colour alone. */
+function ActivityList({ activities }: { activities: ActivityView[] }) {
+  const t = useTranslations("assistant");
+  if (!activities.length) return null;
+  return (
+    <ul className="space-y-1 text-xs" aria-live="polite" aria-label={t("activityRegion")} data-testid="assistant-activity">
+      {activities.map((a) => (
+        <li key={a.runId} className={cn("flex items-start gap-2", a.phase === "failed" ? "text-bad" : a.phase === "blocked" ? "text-warn" : "text-ink-2")} data-phase={a.phase}>
+          <span className="mt-0.5 shrink-0" aria-hidden="true">
+            {a.phase === "started" ? <Loader2 className="size-3.5 animate-spin text-primary" data-motion="essential" /> : a.phase === "completed" ? <Check className="size-3.5 text-ok" /> : a.phase === "blocked" ? <AlertTriangle className="size-3.5" /> : <XCircle className="size-3.5" />}
+          </span>
+          <span>
+            <span className="sr-only">{t(`state.phase.${a.phase}`)}: </span>
+            {activityText(t, a)}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /** Scrollable conversation: the only element of the panel that scrolls. Autoscroll only when the reader is at the end. */
 export function AssistantMessages() {
   const t = useTranslations("chat");
   const ts = useTranslations("shell.assistant");
-  const { chat, load, siteId, send, mode, aiEnabled, locale, saveScroll, dismissApproval, dismissCredential } = useAssistant();
+  const ta = useTranslations("assistant");
+  const { chat, load, siteId, send, mode, aiEnabled, locale, saveScroll, dismissApproval, dismissCredential, applyEvents } = useAssistant();
   // the host keys this component by site id, so every site starts with a fresh window and scroll state
   const listRef = useRef<HTMLDivElement>(null);
   const atBottom = useRef(true);
@@ -104,12 +142,12 @@ export function AssistantMessages() {
   }, [messageCount]);
 
   // autoscroll (DOM only) when the reader is already at the end; otherwise the "new messages" hint is derived below
-  const activityCount = chat.tools.length;
+  const activityCount = chat.activities.length;
   useEffect(() => {
     const el = listRef.current;
     if (!el || !restored.current || !atBottom.current) return;
     el.scrollTop = el.scrollHeight;
-  }, [messageCount, activityCount, chat.status, chat.approval, chat.credential, chat.error, chat.notice]);
+  }, [messageCount, activityCount, chat.status, chat.stage, chat.pending, chat.approval, chat.credential, chat.error, chat.notice]);
 
   // the scroll position is persisted in the layout-level store (debounced: one write per pause, not per tick)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -154,6 +192,8 @@ export function AssistantMessages() {
 
   const visible = chat.messages.slice(-shown);
   const earlier = chat.messages.length - visible.length;
+  const stageText = chat.status === "idle" ? null : chat.status === "reconnecting" ? ta("stream.reconnecting") : chat.status === "sending" ? ta("stream.sending") : chat.stage && ta.has(`stage.${chat.stage}`) ? ta(`stage.${chat.stage}`) : chat.status === "streaming" ? ta("stage.answer_streaming") : ta("stage.model_request");
+  const published = chat.activities.some((a) => a.activity === "publish" && a.phase === "completed");
   return (
     <>
       <div ref={listRef} onScroll={onScroll} className="relative h-full space-y-4 overflow-y-auto overscroll-contain px-4 py-4" data-testid="assistant-messages" aria-busy={chat.loaded === "loading" || undefined}>
@@ -182,26 +222,35 @@ export function AssistantMessages() {
         {visible.map((m) => (
           <MessageView key={m.id} message={m} siteId={siteId} onChoice={(_field, _values, label) => void send(label)} onSend={(text) => void send(text)} />
         ))}
-        {chat.tools.length ? (
-          <ul className="space-y-1 text-xs text-ink-3" aria-live="polite">
-            {chat.tools.map((tl) => (
-              <li key={tl.callId} className="flex items-center gap-2">
-                {/* the status is never colour alone: the dot is decorative, the text names the state */}
-                <span aria-hidden="true" className={cn("inline-block size-2 rounded-full", tl.status === "running" ? "animate-pulse bg-primary" : tl.status === "ok" ? "bg-ok" : "bg-bad")} />
-                <span className="font-mono">{tl.name}</span>
-                <span className={cn(tl.status === "error" ? "text-bad" : "text-ink-3")}>· {ts(`toolStatus.${tl.status}`)}</span>
-                {tl.summary ? <span className="truncate">· {tl.summary}</span> : null}
-              </li>
-            ))}
-          </ul>
+        <ActivityList activities={chat.activities} />
+        {chat.pending ? (
+          <div className="flex gap-3" data-testid="assistant-pending">
+            <span className="mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-ink-2">
+              <Bot className="size-4" aria-hidden="true" />
+            </span>
+            <div className="min-w-0 flex-1 space-y-3">
+              <p className="whitespace-pre-line text-sm text-ink">{chat.pending.text}</p>
+              {chat.pending.cards.map((c, i) => (
+                <UiCardView key={i} card={c} />
+              ))}
+            </div>
+          </div>
         ) : null}
-        {chat.status !== "idle" ? (
-          <p className="text-xs text-ink-3" aria-live="polite">
-            {chat.status === "thinking" ? t("thinking") : chat.status === "tools" ? t("working") : t("writing")}
+        {stageText ? (
+          <p className="text-xs text-ink-3" aria-live="polite" data-testid="assistant-stage">
+            {stageText}
           </p>
         ) : null}
-        {chat.notice ? <Alert tone="warn">{chat.notice}</Alert> : null}
-        {chat.error ? <Alert tone="bad">{chat.error}</Alert> : null}
+        {chat.notice ? <Alert tone="warn">{ta(`stream.${chat.notice}`)}</Alert> : null}
+        {chat.error ? <Alert tone="bad">{errorText(ta, chat.error)}</Alert> : null}
+        {published ? (
+          <p className="text-xs text-ink-3">
+            {ta("approval.rollbackHint")}{" "}
+            <Link href="/app/releases" className="font-medium text-primary underline-offset-2 hover:underline">
+              {ta("approval.openReleases")}
+            </Link>
+          </p>
+        ) : null}
         {chat.credential ? (
           <SecureCredentialCard
             request={chat.credential}
@@ -213,14 +262,20 @@ export function AssistantMessages() {
           />
         ) : null}
         {chat.approval ? (
-          <ApprovalCard
-            approval={chat.approval}
-            siteId={siteId}
-            onDone={(msg) => {
-              dismissApproval();
-              void send(msg);
-            }}
-          />
+          <>
+            <p className="text-xs text-warn" aria-live="polite">
+              {ta("activity.confirmation.required")}
+            </p>
+            <ApprovalCard
+              approval={chat.approval}
+              siteId={siteId}
+              onEvents={applyEvents}
+              onDone={(msg) => {
+                dismissApproval();
+                void send(msg);
+              }}
+            />
+          </>
         ) : null}
       </div>
       {hasNew ? (
@@ -238,7 +293,7 @@ export function AssistantMessages() {
 export function AssistantComposer() {
   const t = useTranslations("chat");
   const ts = useTranslations("shell.assistant");
-  const { chat, send, setDraft, composerRef, mode, siteId } = useAssistant();
+  const { chat, send, setDraft, setComposerFocused, composerRef, mode, siteId } = useAssistant();
   const lastUi = [...chat.messages].reverse().find((m) => m.ui)?.ui ?? null;
   const quickActions = lastUi?.quick_actions ?? [];
   const busy = chat.status !== "idle";
@@ -290,6 +345,8 @@ export function AssistantComposer() {
           value={chat.draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKeyDown}
+          onFocus={() => setComposerFocused(true)}
+          onBlur={() => setComposerFocused(false)}
           placeholder={t("placeholder")}
           className="min-h-11 w-full flex-1 resize-none rounded-[var(--radius-control)] border border-line-2 bg-surface px-3 py-2 text-sm leading-6 text-ink shadow-none transition-[border-color,box-shadow,background-color] duration-[var(--motion-fast)] ease-out placeholder:text-ink-3 hover:border-ink-3 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-surface-2 disabled:opacity-60"
           rows={1}

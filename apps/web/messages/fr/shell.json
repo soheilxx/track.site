@@ -119,6 +119,14 @@
         "running": "en cours",
         "ok": "terminé",
         "error": "échoué"
+      },
+      "motion": {
+        "pause": "Mettre en pause le mouvement de l'IA",
+        "resume": "Activer le mouvement de l'IA",
+        "paused": "Mouvement de l'IA en pause. Votre réglage est enregistré.",
+        "resumed": "Le mouvement de l'IA suit à nouveau le réglage de votre système.",
+        "error": "Le réglage du mouvement n'a pas pu être enregistré.",
+        "saving": "Enregistrement du réglage du mouvement…"
       }
     },
     "user": {

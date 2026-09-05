@@ -193,3 +193,294 @@ html[data-dashboard] > body {
     break-inside: avoid;
   }
 }
+
+/*
+ * Living AI Core (redesign supplement §9, docs/15-living-ai-core.md): the decorative ambient layer
+ * of the Track AI panel. Fixed geometry (absolute, inset 0, `contain: strict`, own compositing
+ * layer) — nothing here affects layout, scroll, focus or hit areas. Only transform and opacity
+ * move. The elements carry `data-motion="essential"` because the component resolves the motion
+ * preference itself (tiers `static` / `css` / `webgl`, per-user setting `data-pref`): the static
+ * tier never runs keyframes, `off` also disables the state cross-fades.
+ */
+@layer components {
+  .lac {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+    isolation: isolate;
+    transform: translateZ(0);
+    --lac-accent: transparent;
+    --lac-t: 600ms;
+  }
+  .lac[data-pref="off"],
+  .lac[data-pref="off"] * {
+    transition: none !important;
+    animation: none !important;
+  }
+  .lac-core {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 14rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 32%, transparent 100%);
+  }
+  .lac[data-mode="onboarding"] .lac-core {
+    height: 24rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  }
+  /* tier 1: static gradient from the theme tokens (also the accessibility mode) */
+  .lac-base {
+    position: absolute;
+    inset: 0;
+    opacity: 0.85;
+    background:
+      radial-gradient(60% 90% at 18% 30%, var(--color-primary-soft) 0%, transparent 70%),
+      radial-gradient(50% 80% at 42% 18%, var(--color-violet-soft) 0%, transparent 70%),
+      radial-gradient(45% 70% at 30% 75%, var(--color-cyan-soft) 0%, transparent 70%);
+    transition: opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-mode="onboarding"] .lac-base {
+    background:
+      radial-gradient(55% 70% at 44% 46%, var(--color-primary-soft) 0%, transparent 70%),
+      radial-gradient(45% 60% at 60% 36%, var(--color-violet-soft) 0%, transparent 70%),
+      radial-gradient(40% 55% at 50% 66%, var(--color-cyan-soft) 0%, transparent 70%);
+  }
+  .lac[data-state="working"] .lac-base,
+  .lac[data-state="streaming"] .lac-base,
+  .lac[data-state="listening"] .lac-base {
+    opacity: 1;
+  }
+  .lac[data-state="blocked"] .lac-base,
+  .lac[data-state="approval_required"] .lac-base {
+    opacity: 0.6;
+  }
+  /* tier 2: three radial-gradient shapes, keyframes on the inner element, state offsets on the wrapper */
+  .lac-css {
+    position: absolute;
+    inset: 0;
+    transition: opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-tier="webgl"] .lac-css {
+    opacity: 0;
+  }
+  .lac-blob {
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    opacity: 0;
+    transition:
+      transform var(--lac-t) var(--ease-flow-track),
+      opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-tier="css"] .lac-blob {
+    opacity: 1;
+  }
+  .lac-blob > i {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  .lac-blob-a {
+    width: 58%;
+    top: -12%;
+    left: -8%;
+  }
+  .lac-blob-a > i {
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-primary) 20%, transparent) 0%, color-mix(in srgb, var(--color-primary) 8%, transparent) 40%, transparent 68%);
+  }
+  .lac-blob-b {
+    width: 50%;
+    top: -18%;
+    left: 18%;
+  }
+  .lac-blob-b > i {
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-violet) 18%, transparent) 0%, color-mix(in srgb, var(--color-violet) 7%, transparent) 40%, transparent 68%);
+  }
+  .lac-blob-c {
+    width: 44%;
+    top: 30%;
+    left: 4%;
+  }
+  .lac-blob-c > i {
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-cyan) 16%, transparent) 0%, color-mix(in srgb, var(--color-cyan) 6%, transparent) 40%, transparent 68%);
+  }
+  .lac[data-mode="onboarding"] .lac-blob-a {
+    top: 6%;
+    left: 16%;
+  }
+  .lac[data-mode="onboarding"] .lac-blob-b {
+    top: 0;
+    left: 40%;
+  }
+  .lac[data-mode="onboarding"] .lac-blob-c {
+    top: 34%;
+    left: 30%;
+  }
+  @keyframes lac-drift-a {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    32% {
+      transform: translate3d(4%, -6%, 0) scale(1.05);
+    }
+    64% {
+      transform: translate3d(-3%, 5%, 0) scale(0.96);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes lac-drift-b {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    38% {
+      transform: translate3d(-5%, 7%, 0) scale(1.06);
+    }
+    70% {
+      transform: translate3d(4%, -4%, 0) scale(0.95);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  @keyframes lac-drift-c {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    28% {
+      transform: translate3d(6%, -8%, 0) scale(1.04);
+    }
+    58% {
+      transform: translate3d(-4%, -3%, 0) scale(1.08);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  .lac[data-tier="css"] .lac-blob-a > i {
+    animation: lac-drift-a 16s ease-in-out infinite;
+  }
+  .lac[data-tier="css"] .lac-blob-b > i {
+    animation: lac-drift-b 17.5s ease-in-out infinite;
+  }
+  .lac[data-tier="css"] .lac-blob-c > i {
+    animation: lac-drift-c 14.5s ease-in-out infinite;
+  }
+  .lac[data-state="listening"] .lac-blob-c {
+    transform: translate3d(14%, 22%, 0) scale(1.08);
+  }
+  .lac[data-state="working"] .lac-blob-a {
+    transform: translate3d(10%, 6%, 0) scale(1.06);
+  }
+  .lac[data-state="working"] .lac-blob-b {
+    transform: translate3d(-6%, 14%, 0) scale(1.1);
+  }
+  .lac[data-state="working"] .lac-blob-c {
+    transform: translate3d(18%, -8%, 0) scale(1.04);
+  }
+  .lac[data-state="streaming"] .lac-blob-b {
+    transform: translate3d(-3%, 6%, 0) scale(1.04);
+  }
+  .lac[data-state="approval_required"] .lac-blob > i,
+  .lac[data-state="blocked"] .lac-blob > i {
+    animation-play-state: paused;
+  }
+  .lac[data-state="approval_required"] .lac-blob {
+    opacity: 0.8;
+  }
+  .lac[data-state="blocked"] .lac-blob-a {
+    transform: translate3d(8%, 10%, 0) scale(0.8);
+  }
+  .lac[data-state="blocked"] .lac-blob-b {
+    transform: translate3d(-8%, 12%, 0) scale(0.8);
+  }
+  .lac[data-state="blocked"] .lac-blob-c {
+    transform: translate3d(6%, -10%, 0) scale(0.8);
+  }
+  /* cyan halo towards the composer (listening) */
+  .lac-halo {
+    position: absolute;
+    right: 20%;
+    bottom: -30%;
+    left: 20%;
+    height: 70%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-cyan) 22%, transparent), transparent);
+    opacity: 0;
+    transition: opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-state="listening"] .lac-halo {
+    opacity: 1;
+  }
+  /* one restrained emerald expansion wave (success; the shader draws its own on the webgl tier) */
+  .lac-wave {
+    position: absolute;
+    top: 22%;
+    left: 12%;
+    width: 36%;
+    aspect-ratio: 1 / 1;
+    border: 2px solid color-mix(in srgb, var(--color-ok) 55%, transparent);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  .lac[data-mode="onboarding"] .lac-wave {
+    top: 30%;
+    left: 32%;
+  }
+  @keyframes lac-wave {
+    0% {
+      opacity: 0.6;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+  .lac[data-tier="css"][data-state="success"] .lac-wave {
+    animation: lac-wave 800ms var(--ease-out-track) 1 both;
+  }
+  /* tier 3: the canvas fades in over the CSS shapes and out again on a downgrade */
+  .lac-gl {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-tier="webgl"] .lac-gl {
+    opacity: 1;
+  }
+  /* static state accents at the panel edges (all tiers): amber outline, muted red/amber edge, emerald */
+  .lac-edge {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    box-shadow:
+      inset 0 0 0 1px var(--lac-accent),
+      inset 0 0 32px -12px var(--lac-accent);
+    transition: opacity var(--lac-t) var(--ease-flow-track);
+  }
+  .lac[data-state="approval_required"] .lac-edge {
+    --lac-accent: var(--color-warn);
+    opacity: 0.75;
+  }
+  .lac[data-state="blocked"] .lac-edge {
+    --lac-accent: color-mix(in srgb, var(--color-bad) 65%, var(--color-warn));
+    opacity: 0.6;
+  }
+  .lac[data-tier="static"][data-state="success"] .lac-edge {
+    --lac-accent: var(--color-ok);
+    opacity: 0.5;
+  }
+}

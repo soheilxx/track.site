@@ -119,6 +119,14 @@
         "running": "running",
         "ok": "done",
         "error": "failed"
+      },
+      "motion": {
+        "pause": "Pause AI motion",
+        "resume": "Turn AI motion on",
+        "paused": "AI motion paused. Your setting is saved.",
+        "resumed": "AI motion follows your system setting again.",
+        "error": "The motion setting could not be saved.",
+        "saving": "Saving motion setting…"
       }
     },
     "user": {

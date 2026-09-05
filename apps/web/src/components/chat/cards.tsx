@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, ChevronDown, Circle, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { UiCard } from "@track-site/ai";
 import { Badge, Button, Card, cn } from "@track-site/ui";
@@ -8,6 +9,7 @@ import { Badge, Button, Card, cn } from "@track-site/ui";
 const TONE: Record<string, string> = { neutral: "border-line", ok: "border-ok/40 bg-ok-soft", warn: "border-warn/40 bg-warn-soft", bad: "border-bad/40 bg-bad-soft" };
 
 export function UiCardView({ card, onChoice }: { card: UiCard; onChoice?: (field: string, values: string[], label: string) => void }) {
+  const t = useTranslations("assistant");
   switch (card.type) {
     case "info":
       return (
@@ -46,10 +48,10 @@ export function UiCardView({ card, onChoice }: { card: UiCard; onChoice?: (field
               <li key={e.name} className="flex items-center justify-between gap-2 px-4 py-2 text-sm">
                 <span className="font-mono text-xs text-ink">{e.name}</span>
                 <span className="flex items-center gap-2 text-xs text-ink-3">
-                  {e.critical ? <Badge tone="warn">critical</Badge> : null}
+                  {e.critical ? <Badge tone="warn">{t("cards.critical")}</Badge> : null}
                   <span>{e.capture}</span>
                   {e.source ? <span>· {e.source}</span> : null}
-                  <Badge tone={e.enabled ? "ok" : "neutral"}>{e.enabled ? "on" : "off"}</Badge>
+                  <Badge tone={e.enabled ? "ok" : "neutral"}>{e.enabled ? t("cards.on") : t("cards.off")}</Badge>
                 </span>
               </li>
             ))}
@@ -66,9 +68,9 @@ export function UiCardView({ card, onChoice }: { card: UiCard; onChoice?: (field
             <table className="w-full text-sm">
               <thead className="bg-surface-2 text-left text-xs uppercase tracking-wide text-ink-3">
                 <tr>
-                  <th className="px-4 py-2">Event</th>
-                  <th className="px-4 py-2">Vendor event</th>
-                  <th className="px-4 py-2">Enabled</th>
+                  <th className="px-4 py-2">{t("cards.event")}</th>
+                  <th className="px-4 py-2">{t("cards.vendorEvent")}</th>
+                  <th className="px-4 py-2">{t("cards.enabledColumn")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,7 +78,7 @@ export function UiCardView({ card, onChoice }: { card: UiCard; onChoice?: (field
                   <tr key={r.event} className="border-t border-line">
                     <td className="px-4 py-2 font-mono text-xs">{r.event}</td>
                     <td className="px-4 py-2 font-mono text-xs">{r.vendor_event}</td>
-                    <td className="px-4 py-2">{r.enabled ? <Check className="h-4 w-4 text-ok" aria-label="enabled" /> : <X className="h-4 w-4 text-ink-3" aria-label="disabled" />}</td>
+                    <td className="px-4 py-2">{r.enabled ? <Check className="h-4 w-4 text-ok" aria-label={t("cards.enabled")} /> : <X className="h-4 w-4 text-ink-3" aria-label={t("cards.disabled")} />}</td>
                   </tr>
                 ))}
               </tbody>
@@ -132,7 +134,7 @@ export function UiCardView({ card, onChoice }: { card: UiCard; onChoice?: (field
             <div className="mt-3 border-t border-line pt-3 text-xs text-ink-3">
               {card.recipients.map((r) => (
                 <p key={r.name}>
-                  <span className="font-medium text-ink">{r.name}</span> ({r.type}, {r.purpose}): {r.events.join(", ") || "no events"}
+                  <span className="font-medium text-ink">{r.name}</span> ({r.type}, {r.purpose}): {r.events.join(", ") || t("cards.noEvents")}
                 </p>
               ))}
             </div>
@@ -171,6 +173,7 @@ function StatusDot({ status }: { status: "pending" | "ok" | "failed" | "skipped"
 }
 
 function SnippetCard({ title, code, note }: { title: string; code: string; note: string | null }) {
+  const t = useTranslations("assistant");
   const [copied, setCopied] = useState(false);
   return (
     <Card className="p-4">
@@ -192,7 +195,7 @@ function SnippetCard({ title, code, note }: { title: string; code: string; note:
             }
           }}
         >
-          {copied ? "Copied" : "Copy"}
+          {copied ? t("cards.copied") : t("cards.copy")}
         </Button>
         {note ? <span className="text-xs text-ink-3">{note}</span> : null}
       </div>
@@ -201,6 +204,7 @@ function SnippetCard({ title, code, note }: { title: string; code: string; note:
 }
 
 function ChoiceCard({ card, onChoice }: { card: Extract<UiCard, { type: "choice" }>; onChoice?: (field: string, values: string[], label: string) => void }) {
+  const t = useTranslations("assistant");
   const [selected, setSelected] = useState<string[]>([]);
   return (
     <Card className="p-4">
@@ -221,7 +225,7 @@ function ChoiceCard({ card, onChoice }: { card: Extract<UiCard, { type: "choice"
             >
               <span className="flex items-center gap-2 text-sm font-medium text-ink">
                 {o.label}
-                {o.recommended ? <Badge tone="primary">recommended</Badge> : null}
+                {o.recommended ? <Badge tone="primary">{t("cards.recommended")}</Badge> : null}
               </span>
               {o.description ? <span className="mt-1 block text-xs text-ink-3">{o.description}</span> : null}
             </button>
@@ -230,7 +234,7 @@ function ChoiceCard({ card, onChoice }: { card: Extract<UiCard, { type: "choice"
       </div>
       {card.multiple ? (
         <Button size="sm" className="mt-3" disabled={selected.length === 0} onClick={() => onChoice?.(card.field, selected, selected.map((v) => card.options.find((o) => o.value === v)?.label ?? v).join(", "))}>
-          Continue <ChevronDown className="h-4 w-4 -rotate-90" aria-hidden="true" />
+          {t("cards.continue")} <ChevronDown className="h-4 w-4 -rotate-90" aria-hidden="true" />
         </Button>
       ) : null}
     </Card>

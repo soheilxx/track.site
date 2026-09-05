@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { IconButton, cn } from "@track-site/ui";
 import { AssistantComposer, AssistantContextLine, AssistantMessages, AssistantModeToggle } from "@/components/chat/assistant-chat";
 import { PANEL_MAX_WIDTH, PANEL_MIN_WIDTH, useAssistant } from "@/components/chat/assistant-store";
+import { useAssistantUiState, type AssistantUiState } from "@/components/chat/assistant-ui-state";
 import { AssistantPanel } from "./assistant-panel";
 
 /**
@@ -22,6 +23,9 @@ import { AssistantPanel } from "./assistant-panel";
 export function AssistantHost() {
   const t = useTranslations("shell.assistant");
   const { open, presentation, width, setWidth, setOpen, focusComposer, siteId } = useAssistant();
+  // motion-relevant state (idle | listening | working | streaming | approval_required | success | blocked), derived from
+  // real events with hysteresis; exposed on the panel container for the Living AI Core (ambient slot) and tests
+  const { state: aiState } = useAssistantUiState();
   const titleId = useId();
 
   const content = (extra: ReactNode) => (
@@ -59,6 +63,7 @@ export function AssistantHost() {
         aria-labelledby={titleId}
         data-testid="assistant-panel"
         data-state={open === null ? "default" : "open"}
+        data-ai-state={aiState}
         className={cn("relative hidden min-h-0 shrink-0 flex-col border-l border-line bg-surface", open === null ? "xl:flex" : "lg:flex")}
         style={{ width }}
       >
@@ -73,7 +78,7 @@ export function AssistantHost() {
   }
 
   return (
-    <AssistantOverlay open={open === true} onClose={() => setOpen(false)} labelledBy={titleId} variant={presentation} onOpened={focusComposer}>
+    <AssistantOverlay open={open === true} onClose={() => setOpen(false)} labelledBy={titleId} variant={presentation} onOpened={focusComposer} aiState={aiState}>
       {content(
         <IconButton label={t("close")} onClick={() => setOpen(false)} data-testid="assistant-close">
           <X className="size-5" aria-hidden="true" />
@@ -134,7 +139,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
  * document, focus trap, Escape, focus restore. The sheet follows `visualViewport` (height + offset)
  * so the composer stays above the on-screen keyboard.
  */
-function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, children }: { open: boolean; onClose: () => void; labelledBy: string; variant: "drawer" | "sheet"; onOpened?: () => void; children: ReactNode }) {
+function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, aiState, children }: { open: boolean; onClose: () => void; labelledBy: string; variant: "drawer" | "sheet"; onOpened?: () => void; aiState: AssistantUiState; children: ReactNode }) {
   const panelRef = useRef<HTMLDivElement>(null);
   // the overlay only opens from client interaction, so `document` exists whenever it renders; the guard keeps SSR safe
   const [canPortal] = useState(() => typeof document !== "undefined");
@@ -212,6 +217,7 @@ function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, childr
         tabIndex={-1}
         data-testid="assistant-panel"
         data-state="open"
+        data-ai-state={aiState}
         className={cn("relative flex min-h-0 flex-col bg-surface text-ink shadow-pop outline-none", variant === "drawer" ? "h-full w-[400px] max-w-full border-l border-line" : "h-dvh w-full")}
         style={variant === "sheet" ? { willChange: "transform" } : undefined}
       >

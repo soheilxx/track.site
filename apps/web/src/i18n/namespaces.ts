@@ -37,3 +37,5 @@ registerNamespace("billing-usage");
 registerNamespace("team");
 
 registerNamespace("alerts");
+
+registerNamespace("assistant");

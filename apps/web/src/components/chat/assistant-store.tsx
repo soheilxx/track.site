@@ -1,9 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
-import type { AssistantUiResponse } from "@track-site/ai";
-import { readSse, type ChatMessage, type ChatStatus, type CredentialRequestView, type PendingApprovalView, type ToolActivity } from "./types";
+import type { UiEvent } from "@track-site/ai";
+import { EMPTY_CHAT, applyUiEvent, applyUiEvents, startTurn, type ChatState } from "./chat-reducer";
+import { readSse, type ChatMessage } from "./types";
+import { parseUiEvent } from "./ui-events";
 import { setViewerPreference, useMediaQuery, useViewerPreference } from "./viewer-preferences";
 
 /**
@@ -13,9 +14,14 @@ import { setViewerPreference, useMediaQuery, useViewerPreference } from "./viewe
  * chat components are presentational and can mount/unmount freely. State is keyed by site id so a
  * site or tenant switch never mixes conversations; the visible context line confirms the switch.
  *
- * Extension point for phase 6: `activity` events (activity.*, job.progress) arrive through the
- * same SSE reader — add them to `ChatState` here and render them in the panel's `activity` slot.
+ * The stream is consumed through the browser-facing contract only (`parseUiEvent` → `applyUiEvent`):
+ * activity sentences bound to real tool runs, real job stages, the released final answer, approval
+ * references and errors. Every turn carries a client-generated idempotency key; if the connection
+ * drops the same turn is resumed by id from the last applied sequence number, so no tool ever runs
+ * twice and no frame is applied twice.
  */
+export type { ChatState } from "./chat-reducer";
+
 export interface AssistantSite {
   id: string;
   name: string;
@@ -29,20 +35,6 @@ export interface AssistantEnvironment {
   kind: "production" | "staging" | "development";
   name: string;
   testMode: boolean;
-}
-
-export interface ChatState {
-  messages: ChatMessage[];
-  status: ChatStatus;
-  tools: ToolActivity[];
-  approval: PendingApprovalView | null;
-  credential: CredentialRequestView | null;
-  notice: string | null;
-  error: string | null;
-  draft: string;
-  loaded: "idle" | "loading" | "ready" | "failed";
-  /** Last known scroll offset of the message list (restored when the list mounts again). */
-  scrollTop: number | null;
 }
 
 export type PanelPresentation = "docked" | "drawer" | "sheet";
@@ -72,9 +64,13 @@ export interface AssistantApi {
   load: () => void;
   send: (text: string) => Promise<void>;
   setDraft: (text: string) => void;
+  /** composer focus = "listening" for the Living AI Core (a deliberate interaction, not every keystroke) */
+  setComposerFocused: (focused: boolean) => void;
   saveScroll: (top: number | null) => void;
   dismissApproval: () => void;
   dismissCredential: () => void;
+  /** contract events returned by the approval route (activity of the confirmed action) */
+  applyEvents: (events: UiEvent[]) => void;
 }
 
 export const PANEL_MIN_WIDTH = 380;
@@ -85,8 +81,9 @@ const OPEN_KEY = "ts-assistant-open";
 const OPEN_BY_DEFAULT = "(min-width: 80rem)";
 const DOCKED = "(min-width: 64rem)";
 const DRAWER = "(min-width: 48rem)";
-
-const EMPTY: ChatState = { messages: [], status: "idle", tools: [], approval: null, credential: null, notice: null, error: null, draft: "", loaded: "idle", scrollTop: null };
+/** one initial request plus two resumes of the same turn */
+const MAX_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 700;
 
 const AssistantContext = createContext<AssistantApi | null>(null);
 
@@ -94,8 +91,16 @@ function clampWidth(px: number): number {
   return Math.min(PANEL_MAX_WIDTH, Math.max(PANEL_MIN_WIDTH, Math.round(px)));
 }
 
+/** Idempotency key of a turn (uuid; the server validates the format). */
+function newTurnId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const hex = (n: number) => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join("");
+  return `${hex(8)}-${hex(4)}-4${hex(3)}-${((8 + Math.floor(Math.random() * 4)) as number).toString(16)}${hex(3)}-${hex(12)}`;
+}
+
+const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
 export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled, locale, children }: { sites: AssistantSite[]; activeSiteId: string | null; environment: AssistantEnvironment | null; aiEnabled: boolean; locale: string; children: ReactNode }) {
-  const t = useTranslations("chat");
   const [boundSiteId, setBoundSiteId] = useState<string | null>(null);
   const siteId = boundSiteId && sites.some((s) => s.id === boundSiteId) ? boundSiteId : activeSiteId;
   const site = useMemo(() => sites.find((s) => s.id === siteId) ?? null, [sites, siteId]);
@@ -136,13 +141,13 @@ export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled,
   }, []);
 
   const patch = useCallback((id: string, fn: (state: ChatState) => ChatState) => {
-    setChats((all) => ({ ...all, [id]: fn(all[id] ?? EMPTY) }));
+    setChats((all) => ({ ...all, [id]: fn(all[id] ?? EMPTY_CHAT) }));
   }, []);
 
   const load = useCallback(() => {
     if (!siteId) return;
     const id = siteId;
-    if ((chatsRef.current[id] ?? EMPTY).loaded !== "idle" || loadingRef.current.has(id)) return;
+    if ((chatsRef.current[id] ?? EMPTY_CHAT).loaded !== "idle" || loadingRef.current.has(id)) return;
     loadingRef.current.add(id);
     patch(id, (s) => ({ ...s, loaded: "loading" }));
     fetch(`/api/ai/chat?siteId=${encodeURIComponent(id)}`)
@@ -150,78 +155,74 @@ export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled,
       .then((b: { ok: boolean; messages?: ChatMessage[] }) => {
         patch(id, (s) => ({ ...s, loaded: "ready", messages: b.ok && b.messages ? b.messages.filter((m) => m.role === "user" || m.role === "assistant") : s.messages }));
       })
-      .catch(() => patch(id, (s) => ({ ...s, loaded: "failed", error: t("loadFailed") })))
+      .catch(() => patch(id, (s) => ({ ...s, loaded: "failed", error: { code: "LOAD_FAILED", message: "", retryable: true } })))
       .finally(() => loadingRef.current.delete(id));
-  }, [siteId, patch, t]);
+  }, [siteId, patch]);
 
   const send = useCallback(
     async (text: string) => {
       const id = siteId;
       if (!id) return;
       const trimmed = text.trim();
-      const current = chatsRef.current[id] ?? EMPTY;
+      const current = chatsRef.current[id] ?? EMPTY_CHAT;
       if (!trimmed || current.status !== "idle") return;
-      patch(id, (s) => ({ ...s, error: null, notice: null, approval: null, draft: "", status: "thinking", tools: [], messages: [...s.messages, { id: `local-${Date.now()}`, role: "user", content: trimmed, ui: null, createdAt: new Date().toISOString() }] }));
-      try {
-        const res = await fetch("/api/ai/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ siteId: id, message: trimmed }) });
+      const turnId = newTurnId();
+      patch(id, (s) => startTurn(s, { turnId, text: trimmed, now: Date.now() }));
+      let lastSeq = 0;
+      let finished = false;
+      for (let attempt = 0; attempt < MAX_ATTEMPTS && !finished; attempt++) {
+        if (attempt > 0) {
+          patch(id, (s) => ({ ...s, status: "reconnecting", notice: "reconnecting" }));
+          await wait(RETRY_DELAY_MS * attempt);
+        }
+        let res: Response;
+        try {
+          // the same turn id resumes the running turn on the server from the last applied sequence number
+          res = await fetch("/api/ai/chat", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ siteId: id, message: trimmed, turnId, afterSeq: lastSeq }) });
+        } catch {
+          continue;
+        }
         if (!res.ok) {
           const body = (await res.json().catch(() => ({}))) as { message?: string; code?: string };
-          patch(id, (s) => ({ ...s, error: body.code === "NOT_CONNECTED" ? t("notConfigured") : (body.message ?? t("failed")), status: "idle" }));
-          if (body.code === "NOT_CONNECTED") setMode("wizard");
+          const code = typeof body.code === "string" ? body.code : "FAILED";
+          patch(id, (s) => ({ ...s, status: "idle", turnId: null, notice: null, error: { code, message: body.message ?? "", retryable: false } }));
+          if (code === "NOT_CONNECTED") setMode("wizard");
           return;
         }
-        await readSse(res, (e) => {
-          switch (e.type) {
-            case "assistant.progress":
-              patch(id, (s) => ({ ...s, status: e.phase === "tools" ? "tools" : e.phase === "streaming" ? "streaming" : "thinking" }));
-              break;
-            case "tool.started":
-              patch(id, (s) => ({ ...s, tools: [...s.tools, { callId: String(e.callId), name: String(e.name), status: "running", summary: null }] }));
-              break;
-            case "tool.completed":
-              patch(id, (s) => ({ ...s, tools: s.tools.map((x) => (x.callId === e.callId ? { ...x, status: e.ok ? "ok" : "error", summary: String(e.summary ?? "") } : x)) }));
-              break;
-            case "ui.final": {
-              const ui = e.ui as AssistantUiResponse;
-              patch(id, (s) => ({ ...s, messages: [...s.messages, { id: `a-${Date.now()}`, role: "assistant", content: ui.message, ui, createdAt: new Date().toISOString() }] }));
-              break;
+        if (attempt > 0) patch(id, (s) => ({ ...s, notice: "resumed", status: "working" }));
+        try {
+          await readSse(res, (frame) => {
+            if (frame.id !== null) {
+              if (frame.id <= lastSeq) return;
+              lastSeq = frame.id;
             }
-            case "ui.approval":
-              patch(id, (s) => ({ ...s, approval: { approvalId: String(e.approvalId), action: String(e.action), summary: (e.summary as PendingApprovalView["summary"]) ?? {}, expiresAt: String(e.expiresAt) } }));
-              break;
-            case "ui.credential":
-              patch(id, (s) => ({ ...s, credential: e.component as CredentialRequestView }));
-              break;
-            case "dlp.notice":
-              patch(id, (s) => ({ ...s, notice: String(e.message) }));
-              break;
-            case "error":
-              patch(id, (s) => ({ ...s, error: String(e.message) }));
-              break;
-            default:
-              // unknown or internal stream events are ignored (phase 6 adds the allow-listed activity.* events here)
-              break;
-          }
-        });
-      } catch {
-        patch(id, (s) => ({ ...s, error: t("failed") }));
-      } finally {
-        patch(id, (s) => ({ ...s, status: "idle" }));
+            const event = parseUiEvent(frame.data);
+            if (!event) return;
+            if (event.type === "done") finished = true;
+            const now = Date.now();
+            patch(id, (s) => ({ ...applyUiEvent(s, event, now), lastSeq }));
+          });
+        } catch {
+          /* connection dropped mid-stream: the loop resumes the same turn */
+        }
       }
+      if (!finished) patch(id, (s) => ({ ...s, status: "idle", turnId: null, stage: null, notice: null, error: { code: "STREAM_LOST", message: "", retryable: true } }));
     },
-    [siteId, patch, t],
+    [siteId, patch],
   );
 
   const setDraft = useCallback((text: string) => siteId && patch(siteId, (s) => ({ ...s, draft: text })), [siteId, patch]);
+  const setComposerFocused = useCallback((focused: boolean) => siteId && patch(siteId, (s) => (s.composerFocused === focused ? s : { ...s, composerFocused: focused })), [siteId, patch]);
   const saveScroll = useCallback((top: number | null) => siteId && patch(siteId, (s) => (s.scrollTop === top ? s : { ...s, scrollTop: top })), [siteId, patch]);
   const dismissApproval = useCallback(() => siteId && patch(siteId, (s) => ({ ...s, approval: null })), [siteId, patch]);
   const dismissCredential = useCallback(() => siteId && patch(siteId, (s) => ({ ...s, credential: null })), [siteId, patch]);
+  const applyEvents = useCallback((events: UiEvent[]) => siteId && patch(siteId, (s) => applyUiEvents(s, events, Date.now())), [siteId, patch]);
   const bindSite = useCallback((id: string | null) => setBoundSiteId(id), []);
 
-  const chat = (siteId && chats[siteId]) || EMPTY;
+  const chat = (siteId && chats[siteId]) || EMPTY_CHAT;
   const value = useMemo<AssistantApi>(
-    () => ({ sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, composerRef, focusComposer, mode, setMode, chat, load, send, setDraft, saveScroll, dismissApproval, dismissCredential }),
-    [sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, focusComposer, mode, chat, load, send, setDraft, saveScroll, dismissApproval, dismissCredential],
+    () => ({ sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, composerRef, focusComposer, mode, setMode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents }),
+    [sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, focusComposer, mode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents],
   );
   return <AssistantContext.Provider value={value}>{children}</AssistantContext.Provider>;
 }

@@ -119,6 +119,14 @@
         "running": "läuft",
         "ok": "fertig",
         "error": "fehlgeschlagen"
+      },
+      "motion": {
+        "pause": "KI-Bewegung pausieren",
+        "resume": "KI-Bewegung einschalten",
+        "paused": "KI-Bewegung pausiert. Deine Einstellung ist gespeichert.",
+        "resumed": "KI-Bewegung folgt wieder deiner Systemeinstellung.",
+        "error": "Die Bewegungseinstellung konnte nicht gespeichert werden.",
+        "saving": "Bewegungseinstellung wird gespeichert…"
       }
     },
     "user": {

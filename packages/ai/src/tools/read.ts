@@ -80,6 +80,7 @@ export const inspectSite = defineTool({
   name: "inspect_site",
   description: "Fetches a public page of the site's primary domain (the home page by default) and returns technology signals (platform, CMP, existing tags, data layer). Signals are evidence; the user must confirm.",
   kind: "read",
+  trust: "external",
   permission: "sites.read",
   input: z.object({ path: z.string().max(200).nullable().describe("path on the site's primary domain starting with '/', e.g. /checkout; null = home page. Other hosts are rejected") }),
   handler: async (args, ctx) => {
@@ -104,6 +105,7 @@ export const detectSiteStack = defineTool({
   name: "detect_site_stack",
   description: "Combines the site inspection with the recorded platform/business type and returns a recommendation with confidence and the simplest installation method (snippet, app/plugin or server API).",
   kind: "read",
+  trust: "external",
   permission: "sites.read",
   input: z.object({}),
   handler: async (_args, ctx) => {
@@ -154,6 +156,7 @@ export const analyzeRecentEventHealth = defineTool({
   name: "analyze_recent_event_health",
   description: "Aggregated event health for the last 24 hours: received, accepted, dropped by reason, duplicates, deliveries, last browser/server event and the tracking health score. No raw events.",
   kind: "read",
+  trust: "external",
   permission: "events.read",
   input: z.object({ hours: z.number().int().min(1).max(168).nullable() }),
   handler: async (args, ctx) => {
@@ -191,6 +194,7 @@ export const showDeliveryErrors = defineTool({
   name: "show_delivery_errors",
   description: "Most recent failed, retrying, dead or skipped deliveries (newest first) with error class, code and redacted message; successes are excluded before the limit is applied (no payloads, no secrets).",
   kind: "read",
+  trust: "external",
   permission: "events.read",
   input: z.object({
     integration_id: z.string().uuid().nullable().describe("integration id (UUID) from the integrations list in the context block or list_integrations; null = all destinations of the site"),

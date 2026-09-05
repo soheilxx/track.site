@@ -1,0 +1,10 @@
+export { LivingAICore } from "./living-ai-core";
+export { AssistantAmbient } from "./assistant-ambient";
+export { AiMotionControl } from "./motion-control";
+export { useCoreState, deriveCoreSignals, SUCCESS_HOLD_MS } from "./use-core-state";
+export { createCoreStateMachine, resolveCoreState, CORE_STATE_PRIORITY, STATE_PARAMS } from "./state-machine";
+export type { CoreParams, CoreSample, CoreSignals, CoreStateMachine } from "./state-machine";
+export { selectTier, effectiveMotion, createFrameBudget } from "./tier";
+export { useAiMotionPreference, useReducedMotionPreference } from "./preference";
+export { CORE_STATES, CORE_MOTIONS, isCoreState, isCoreMotion } from "./types";
+export type { CoreMode, CoreMotion, CoreState, CoreTier, LivingAICoreProps } from "./types";

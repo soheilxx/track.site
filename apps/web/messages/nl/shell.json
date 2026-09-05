@@ -119,6 +119,14 @@
         "running": "bezig",
         "ok": "klaar",
         "error": "mislukt"
+      },
+      "motion": {
+        "pause": "AI-beweging pauzeren",
+        "resume": "AI-beweging inschakelen",
+        "paused": "AI-beweging gepauzeerd. Je instelling is opgeslagen.",
+        "resumed": "AI-beweging volgt weer je systeeminstelling.",
+        "error": "De bewegingsinstelling kon niet worden opgeslagen.",
+        "saving": "Bewegingsinstelling wordt opgeslagen…"
       }
     },
     "user": {

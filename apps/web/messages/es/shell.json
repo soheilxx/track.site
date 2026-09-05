@@ -119,6 +119,14 @@
         "running": "en curso",
         "ok": "hecho",
         "error": "fallido"
+      },
+      "motion": {
+        "pause": "Pausar el movimiento de la IA",
+        "resume": "Activar el movimiento de la IA",
+        "paused": "Movimiento de la IA en pausa. Tu ajuste se ha guardado.",
+        "resumed": "El movimiento de la IA vuelve a seguir la configuración de tu sistema.",
+        "error": "No se pudo guardar el ajuste de movimiento.",
+        "saving": "Guardando el ajuste de movimiento…"
       }
     },
     "user": {

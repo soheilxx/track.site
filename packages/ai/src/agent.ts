@@ -1,21 +1,26 @@
+import { randomUUID } from "node:crypto";
 import type OpenAI from "openai";
 import { redactDeep } from "@track-site/core";
 import type { AgentContext } from "./context.ts";
-import { redactToolOutput } from "./dlp.ts";
+import { redactToolOutput, wrapUntrusted } from "./dlp.ts";
 import type { ModelRouting } from "./openai.ts";
+import { evaluateScope, filterToolsForTurn, refusalUi, setupSummaryFromContextBlock, type ScopeDomain, type ScopeRefusalReason } from "./scope.ts";
 import { CONFIRM_TOOLS, READ_ONLY_TOOLS } from "./state-machine.ts";
 import type { ToolRegistry } from "./tools/registry.ts";
+import { factsOf } from "./ui-events.ts";
 import { assistantUiJsonSchema, assistantUiResponseSchema, type AssistantUiResponse } from "./ui-schema.ts";
 
 /**
- * One assistant turn on the OpenAI Responses API: streaming, strict function calling with
- * server-side execution, structured final answer, bounded tool/time/token budget, no implicit
- * retries of mutating tools, and a fallback model for read-only turns.
+ * One assistant turn on the OpenAI Responses API: scope gate before any tool is selectable,
+ * streaming, strict function calling with server-side execution, structured final answer, bounded
+ * tool/time/token budget, no implicit retries of mutating tools, and a fallback model for
+ * read-only turns. The events below are internal; the browser only ever sees what
+ * `createUiEventFilter` (ui-events.ts) maps from them.
  */
 export type AgentEvent =
-  | { type: "assistant.progress"; phase: "thinking" | "streaming" | "tools"; detail: string | null }
+  | { type: "assistant.progress"; phase: "gate" | "thinking" | "streaming" | "tools"; detail: string | null }
   | { type: "tool.started"; callId: string; name: string; args: Record<string, unknown> }
-  | { type: "tool.completed"; callId: string; name: string; ok: boolean; code: string; summary: string; durationMs: number }
+  | { type: "tool.completed"; callId: string; name: string; ok: boolean; code: string; summary: string; durationMs: number; missing: string[]; stage: string | null }
   | { type: "ui.final"; ui: AssistantUiResponse; usage: TokenUsage; model: string }
   | { type: "error"; code: string; message: string; retryable: boolean };
 
@@ -46,11 +51,21 @@ export interface TurnInput {
   maxOutputTokens?: number;
   safetyIdentifier: string;
   promptCacheKey: string;
+  /** client-generated idempotency key of the turn; generated when absent */
+  turnId?: string;
+  /** site status from the server session (suspended/archived sites are read-only for the assistant) */
+  siteStatus?: string | null;
   /**
    * hook for persisting tool runs (audit). `result.data` is the unredacted handler output so the app can keep
    * approval tokens and ids for the UI confirmation; consumers must redact it before persisting or showing it.
    */
   onToolRun?: (run: { callId: string; name: string; args: Record<string, unknown>; result: { ok: boolean; code: string; data: unknown }; durationMs: number }) => Promise<void>;
+}
+
+export interface TurnGate {
+  allowed: boolean;
+  reason: ScopeRefusalReason | null;
+  domain: ScopeDomain | null;
 }
 
 export interface TurnResult {
@@ -59,6 +74,10 @@ export interface TurnResult {
   model: string;
   toolCalls: number;
   error: { code: string; message: string } | null;
+  turnId: string;
+  gate: TurnGate;
+  /** the tools that were actually offered to the model after the role/site/task allow-list */
+  toolNames: string[];
 }
 
 type InputItem =
@@ -78,23 +97,40 @@ function summarize(data: unknown): string {
   return text.length > 240 ? `${text.slice(0, 240)}…` : text;
 }
 
+const TOOL_OUTPUT_MAX_CHARS = 20_000;
+
 export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
   const { ctx, client, registry, emit } = input;
+  const turnId = input.turnId ?? randomUUID();
+  const usage: TokenUsage = { input: 0, output: 0, cached: 0 };
+  let model = input.models.primary;
+
+  // scope gate: deterministic, before any tool is selectable and before the model is called
+  emit({ type: "assistant.progress", phase: "gate", detail: null });
+  const verdict = evaluateScope({ message: input.userMessage, history: input.history });
+  if (!verdict.allowed) {
+    const ui = refusalUi({ reason: verdict.reason, locale: ctx.locale, setup: setupSummaryFromContextBlock(input.contextBlock) });
+    ctx.logger.info({ turnId, reason: verdict.reason }, "ai.scope.refused");
+    emit({ type: "ui.final", ui, usage, model });
+    return { ui, usage, model, toolCalls: 0, error: null, turnId, gate: { allowed: false, reason: verdict.reason, domain: null }, toolNames: [] };
+  }
+  const toolNames = filterToolsForTurn(input.toolNames, { role: ctx.role, siteStatus: input.siteStatus, domain: verdict.domain, registry });
+  const gate: TurnGate = { allowed: true, reason: null, domain: verdict.domain };
+
   const maxToolCalls = input.maxToolCalls ?? 8;
   const deadline = Date.now() + (input.timeoutMs ?? 45_000);
-  const usage: TokenUsage = { input: 0, output: 0, cached: 0 };
-  const exposesWrites = input.toolNames.some((n) => !READ_ONLY_TOOLS.includes(n));
-  const tools = registry.openaiTools(input.toolNames);
+  const exposesWrites = toolNames.some((n) => !READ_ONLY_TOOLS.includes(n));
+  const tools = registry.openaiTools(toolNames);
   const items: InputItem[] = [...input.history.slice(-12).map((h) => ({ role: h.role, content: h.content })), { role: "user", content: `${input.contextBlock}\n\n${input.userMessage}` }];
-  let model = input.models.primary;
   let toolCalls = 0;
   let wroteSomething = false;
   let incompleteRetried = false;
+  const done = (ui: AssistantUiResponse | null, error: TurnResult["error"]): TurnResult => ({ ui, usage, model, toolCalls, error, turnId, gate, toolNames });
 
   for (let iteration = 0; iteration < maxToolCalls + 2; iteration++) {
     if (Date.now() > deadline) {
       emit({ type: "error", code: "TIMEOUT", message: "The assistant took too long. The setup state was saved; please try again.", retryable: true });
-      return { ui: null, usage, model, toolCalls, error: { code: "TIMEOUT", message: "turn timeout" } };
+      return done(null, { code: "TIMEOUT", message: "turn timeout" });
     }
     emit({ type: "assistant.progress", phase: "thinking", detail: null });
     let response: OpenAI.Responses.Response;
@@ -124,7 +160,7 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
       }
       const message = status === 429 ? "The AI provider is rate limiting requests. Please try again in a moment." : "The AI provider is unavailable. Your setup state is saved; you can continue with the form-based wizard.";
       emit({ type: "error", code: retryable ? "PROVIDER_UNAVAILABLE" : "PROVIDER_ERROR", message, retryable });
-      return { ui: null, usage, model, toolCalls, error: { code: retryable ? "PROVIDER_UNAVAILABLE" : "PROVIDER_ERROR", message } };
+      return done(null, { code: retryable ? "PROVIDER_UNAVAILABLE" : "PROVIDER_ERROR", message });
     }
     if (response.usage) {
       usage.input += response.usage.input_tokens ?? 0;
@@ -151,10 +187,12 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
         emit({ type: "tool.started", callId: call.call_id, name: call.name, args: redactDeep(args) });
         let result: { ok: boolean; code: string; message: string; data: unknown; retryable: boolean; version: number };
         let handlerData: unknown = null;
-        if (!tool || !input.toolNames.includes(call.name)) {
+        if (!tool || !toolNames.includes(call.name)) {
           result = { ok: false, code: "FORBIDDEN", message: "tool not available in this step", data: null, retryable: false, version: 1 };
-        } else if (CONFIRM_TOOLS.includes(call.name) && !("approval_token" in args && typeof args.approval_token === "string" && args.approval_token.length > 0)) {
-          result = { ok: false, code: "CONFIRMATION_REQUIRED", message: "this action needs an explicit user confirmation through the approval component", data: null, retryable: false, version: 1 };
+        } else if (tool.kind === "confirm" || CONFIRM_TOOLS.includes(call.name)) {
+          // confirmation-gated actions are executed by the approval route after the user clicked the approval
+          // card; the model never runs them, whatever it passes as approval_token (a chat "yes" is not a token)
+          result = { ok: false, code: "CONFIRMATION_REQUIRED", message: "this action needs an explicit user confirmation through the approval card; prepare the change, answer with requires_confirmation=true and wait for the user", data: null, retryable: false, version: 1 };
         } else {
           const r = await tool.run(args, ctx);
           // the model only ever sees the redacted copy (data and message alike: error texts can echo vendor
@@ -164,10 +202,13 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
           if (r.ok && tool.kind !== "read") wroteSomething = true;
         }
         const durationMs = Date.now() - started;
-        emit({ type: "tool.completed", callId: call.call_id, name: call.name, ok: result.ok, code: result.code, summary: summarize(result.data ?? result.message), durationMs });
+        const facts = factsOf(result.data);
+        emit({ type: "tool.completed", callId: call.call_id, name: call.name, ok: result.ok, code: result.code, summary: summarize(result.data ?? result.message), durationMs, missing: facts.missing, stage: facts.stage });
         await input.onToolRun?.({ callId: call.call_id, name: call.name, args: redactDeep(args), result: { ok: result.ok, code: result.code, data: handlerData }, durationMs });
         items.push({ type: "function_call", call_id: call.call_id, name: call.name, arguments: call.arguments });
-        items.push({ type: "function_call_output", call_id: call.call_id, output: JSON.stringify(result).slice(0, 20_000) });
+        const serialized = JSON.stringify(result).slice(0, TOOL_OUTPUT_MAX_CHARS);
+        // website signals, event data, vendor responses and logs are untrusted input: delimited, instructed, already redacted key-aware
+        items.push({ type: "function_call_output", call_id: call.call_id, output: tool?.trust === "external" ? wrapUntrusted(`tool:${call.name}`, serialized, TOOL_OUTPUT_MAX_CHARS, { redact: false }) : serialized });
       }
       continue;
     }
@@ -178,12 +219,12 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
         continue;
       }
       emit({ type: "error", code: "PROVIDER_ERROR", message: "The assistant could not complete its answer.", retryable: true });
-      return { ui: null, usage, model, toolCalls, error: { code: "PROVIDER_ERROR", message: `incomplete: ${response.incomplete_details?.reason ?? "unknown"}` } };
+      return done(null, { code: "PROVIDER_ERROR", message: `incomplete: ${response.incomplete_details?.reason ?? "unknown"}` });
     }
     const refusal = (response.output ?? []).flatMap((o) => ((o as { content?: Array<{ type: string; refusal?: string }> }).content ?? [])).find((c) => c.type === "refusal");
     if (refusal) {
       emit({ type: "error", code: "POLICY_BLOCKED", message: "The assistant declined this request.", retryable: false });
-      return { ui: null, usage, model, toolCalls, error: { code: "POLICY_BLOCKED", message: "refusal" } };
+      return done(null, { code: "POLICY_BLOCKED", message: "refusal" });
     }
     const text = outputTextOf(response);
     let parsed: unknown;
@@ -204,13 +245,13 @@ export async function runAgentTurn(input: TurnInput): Promise<TurnResult> {
       // outside production the schema issues are shown so that setup problems are diagnosable without log access
       const detail = process.env.APP_ENV === "production" ? "" : ` (${issues.join("; ").slice(0, 240)})`;
       emit({ type: "error", code: "PROVIDER_ERROR", message: `The assistant returned an invalid answer.${detail}`, retryable: true });
-      return { ui: null, usage, model, toolCalls, error: { code: "PROVIDER_ERROR", message: `schema validation failed: ${issues.join("; ")}`.slice(0, 300) } };
+      return done(null, { code: "PROVIDER_ERROR", message: `schema validation failed: ${issues.join("; ")}`.slice(0, 300) });
     }
     emit({ type: "ui.final", ui: ui.data, usage, model });
-    return { ui: ui.data, usage, model, toolCalls, error: null };
+    return done(ui.data, null);
   }
   emit({ type: "error", code: "RATE_LIMITED", message: "Too many tool calls in one turn.", retryable: false });
-  return { ui: null, usage, model, toolCalls, error: { code: "RATE_LIMITED", message: "tool budget exhausted" } };
+  return done(null, { code: "RATE_LIMITED", message: "tool budget exhausted" });
 }
 
 /** Streams a response, emitting progress, and resolves with the final Response object. */
@@ -240,6 +281,7 @@ async function streamResponse(client: OpenAI, params: OpenAI.Responses.ResponseC
       case "error":
         throw Object.assign(new Error(event.message ?? "stream error"), { status: 500 });
       default:
+        // reasoning summaries, item deltas and every other provider event stay inside the server
         break;
     }
   }
@@ -247,11 +289,32 @@ async function streamResponse(client: OpenAI, params: OpenAI.Responses.ResponseC
   return final;
 }
 
-/** Limits the model cannot see in the strict JSON schema are applied leniently instead of rejecting the whole answer. */
-function clampUiAnswer(parsed: unknown): unknown {
+/** Input components that ask the user a question (as opposed to the credential/OAuth action cards, which are not questions). */
+const QUESTION_INPUTS: ReadonlySet<string> = new Set(["text", "url", "pixel_id", "yes_no"]);
+
+/**
+ * Limits the model cannot see in the strict JSON schema are applied leniently instead of rejecting
+ * the whole answer; the chat rules "one central question or decision at a time" and "at most four
+ * quick actions" are enforced here as well (one choice card, no second question as an input
+ * component next to it, ≤ 4 quick actions, ≤ 6 cards).
+ */
+export function clampUiAnswer(parsed: unknown): unknown {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return parsed;
   const o = { ...(parsed as Record<string, unknown>) };
-  if (Array.isArray(o.cards) && o.cards.length > 6) o.cards = o.cards.slice(0, 6);
+  let choiceSeen = false;
+  if (Array.isArray(o.cards)) {
+    o.cards = o.cards
+      .filter((c) => {
+        if (!c || typeof c !== "object" || (c as { type?: unknown }).type !== "choice") return true;
+        if (choiceSeen) return false;
+        choiceSeen = true;
+        return true;
+      })
+      .slice(0, 6);
+  }
+  // a choice card is the one central decision of the answer: a question-type input next to it is dropped
+  const inputType = (o.input_component as { type?: unknown } | null | undefined)?.type;
+  if (choiceSeen && typeof inputType === "string" && QUESTION_INPUTS.has(inputType)) o.input_component = { type: "none" };
   if (Array.isArray(o.quick_actions) && o.quick_actions.length > 4) o.quick_actions = o.quick_actions.slice(0, 4);
   if (typeof o.progress_percent === "number") o.progress_percent = Math.max(0, Math.min(100, Math.round(o.progress_percent)));
   return o;

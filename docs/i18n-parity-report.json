@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T10:02:24.992Z",
+  "generatedAt": "2026-09-04T10:56:33.494Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -33,7 +33,7 @@
       "events": 426,
       "insights": 232,
       "releases": 350,
-      "shell": 139,
+      "shell": 145,
       "team": 283
     },
     "copyModules": [

@@ -283,6 +283,7 @@ export const validateIntegrationCredentials = defineTool({
   name: "validate_integration_credentials",
   description: "Validates the stored credentials and public identifiers of a destination against the vendor API (cheapest read or validate-only call), updates the destination status and health and returns the vendor's verdict. Never returns secrets.",
   kind: "draft",
+  trust: "external",
   permission: "integrations.manage",
   input: z.object({ integration_id: integrationIdSchema }),
   handler: async (args, ctx) => {
@@ -312,6 +313,7 @@ export const getDestinationStatus = defineTool({
   name: "get_destination_status",
   description: "Full status of one destination: connector requirements, stored credential references, draft configuration (mode, mappings, test mode), health, delivery counts for the last 7 days and the most recent delivery attempts with redacted errors.",
   kind: "read",
+  trust: "external",
   permission: "integrations.read",
   input: z.object({ integration_id: integrationIdSchema }),
   handler: async (args, ctx) => {
@@ -350,6 +352,7 @@ export const sendDestinationTestEvent = defineTool({
   name: "send_destination_test_event",
   description: "Sends a flagged synthetic test event (with full consent) through the real pipeline and waits for the delivery attempt to this destination, returning the vendor result (status, error class, redacted preview). Uses the destination's test mode / test event code; never sends live conversions.",
   kind: "draft",
+  trust: "external",
   permission: "events.read",
   input: z.object({ integration_id: integrationIdSchema, event_name: z.string().max(64).describe("canonical event name to send, e.g. purchase or page_view") }),
   handler: async (args, ctx) => {
