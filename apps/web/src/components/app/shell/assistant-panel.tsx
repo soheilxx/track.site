@@ -11,9 +11,12 @@ import { AiMotionControl } from "./living-ai-core/motion-control";
  *  - `ambient`  — the Living AI Core layer (docs/15-living-ai-core.md): painted behind the header and
  *                 the panel edges, `aria-hidden`, `pointer-events: none`, absolutely positioned and
  *                 isolated so it never changes layout, scroll position, focus or hit areas. Defaults
- *                 to `<AssistantAmbient/>`, which binds the core to the assistant store (needs
- *                 `<AssistantProvider>`); pass your own `<LivingAICore …/>` or `false` for none;
+ *                 to `<AssistantAmbient/>`, which binds the core to the panel's one motion state
+ *                 source, `useAssistantUiState()` — the same value the host writes to `data-ai-state`
+ *                 (needs `<AssistantProvider>`); pass your own `<LivingAICore …/>` or `false` for none;
  *  - `activity` — localized activity sentences bound to real job states (activity.*, job.progress);
+ *                 the slot is a plain container, the content owns its polite live region so the
+ *                 region exists before the first sentence arrives (`<AssistantActivityFeed/>`);
  *  - `actions`  — header controls (mode toggle, minimise/close); the accessible pause / turn-on
  *                 control for the ambient motion (`motionControl`) is appended by default;
  *  - `context`  — the visible site/environment context line that confirms every switch.
@@ -59,7 +62,7 @@ export function AssistantPanel({ title, subtitle, context, actions, ambient, mot
         {context ? <div className="mt-2 text-xs text-ink-2">{context}</div> : null}
       </header>
       {activity ? (
-        <div className="shrink-0 border-b border-line px-4 py-2 text-xs text-ink-2" data-slot="activity" aria-live="polite">
+        <div className="shrink-0" data-slot="activity">
           {activity}
         </div>
       ) : null}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T10:56:33.494Z",
+  "generatedAt": "2026-09-05T09:13:52.337Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -21,6 +21,7 @@
     "messages": {
       "alerts": 323,
       "app": 330,
+      "assistant": 179,
       "auth": 71,
       "billing-usage": 175,
       "chat": 68,
@@ -33,7 +34,7 @@
       "events": 426,
       "insights": 232,
       "releases": 350,
-      "shell": 145,
+      "shell": 148,
       "team": 283
     },
     "copyModules": [
@@ -86,6 +87,11 @@
               "extra": []
             },
             "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "assistant": {
               "file": true,
               "missing": [],
               "extra": []
@@ -229,6 +235,11 @@
               "missing": [],
               "extra": []
             },
+            "assistant": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "auth": {
               "file": true,
               "missing": [],
@@ -364,6 +375,11 @@
               "extra": []
             },
             "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "assistant": {
               "file": true,
               "missing": [],
               "extra": []
@@ -507,6 +523,11 @@
               "missing": [],
               "extra": []
             },
+            "assistant": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "auth": {
               "file": true,
               "missing": [],
@@ -642,6 +663,11 @@
               "extra": []
             },
             "app": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "assistant": {
               "file": true,
               "missing": [],
               "extra": []

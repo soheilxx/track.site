@@ -30,9 +30,21 @@ export interface ChatState {
   loaded: "idle" | "loading" | "ready" | "failed";
   /** Last known scroll offset of the message list (restored when the list mounts again). */
   scrollTop: number | null;
+  /**
+   * First-run setup (supplement §9): the site has no published configuration yet, so Track AI
+   * starts large and central on the setup page (`SetupStage`) and docks back into its fixed panel
+   * position after the verified `publish` activity. Set by the setup page from the server-side
+   * fact; cleared by the reducer. It only shapes the presentation — the workspace moves are bound
+   * to `guided` / `guidedTurnId` (a turn started on the setup page), never to this flag alone.
+   */
+  firstRun: boolean;
+  /** the setup workspace (`/app/ai-setup`) is mounted: the workspace moves are active for turns started here */
+  guided: boolean;
+  /** the running turn started on the setup page — its moves stay active after a move navigated away */
+  guidedTurnId: string | null;
 }
 
-export const EMPTY_CHAT: ChatState = { messages: [], status: "idle", turnId: null, lastSeq: 0, activities: [], stage: null, pending: null, approval: null, credential: null, error: null, notice: null, outcome: null, draft: "", composerFocused: false, loaded: "idle", scrollTop: null };
+export const EMPTY_CHAT: ChatState = { messages: [], status: "idle", turnId: null, lastSeq: 0, activities: [], stage: null, pending: null, approval: null, credential: null, error: null, notice: null, outcome: null, draft: "", composerFocused: false, loaded: "idle", scrollTop: null, firstRun: false, guided: false, guidedTurnId: null };
 
 const MAX_ACTIVITIES = 12;
 
@@ -51,8 +63,18 @@ export function startTurn(state: ChatState, input: { turnId: string; text: strin
     notice: null,
     outcome: null,
     draft: "",
+    guidedTurnId: state.guided ? input.turnId : null,
     messages: [...state.messages, { id: `local-${input.turnId}`, role: "user", content: input.text, ui: null, createdAt: new Date(input.now).toISOString() }],
   };
+}
+
+/**
+ * A localized system note of the panel: the outcome of a card the user operated (credential stored,
+ * confirmation executed or cancelled). It is a `system` entry of the local transcript — never a user
+ * message, never sent to the server (the routes keep their own audit entries).
+ */
+export function addNote(state: ChatState, input: { text: string; note: NonNullable<ChatMessage["note"]>; now: number }): ChatState {
+  return { ...state, messages: [...state.messages, { id: `note-${input.now}-${state.messages.length}`, role: "system", content: input.text, ui: null, createdAt: new Date(input.now).toISOString(), note: input.note }] };
 }
 
 function upsertActivity(list: ActivityView[], next: ActivityView): ActivityView[] {
@@ -70,9 +92,12 @@ export function applyUiEvent(state: ChatState, event: UiEvent, now: number): Cha
     case "activity.started":
       return { ...state, status: "working", activities: upsertActivity(state.activities, { runId: event.runId, activity: event.activity, sentence: event.sentence, phase: "started", params: event.params, at: now }) };
     case "activity.completed":
-      return { ...state, activities: upsertActivity(state.activities, { runId: event.runId, activity: event.activity, sentence: event.sentence, phase: "completed", params: event.params, at: now }) };
+      // a verified publish ends the first-run setup: the assistant docks back into its fixed panel position
+      return { ...state, firstRun: event.activity === "publish" ? false : state.firstRun, activities: upsertActivity(state.activities, { runId: event.runId, activity: event.activity, sentence: event.sentence, phase: "completed", params: event.params, at: now }) };
     case "activity.blocked":
     case "activity.failed":
+      // every blocked/failed run is recorded as the last outcome; the motion derivations (`assistant-ui-state.ts`,
+      // the Living AI Core) exclude a block that only asks for the user's confirmation — that is the approval flow
       return { ...state, outcome: { kind: "blocked", at: now }, activities: upsertActivity(state.activities, { runId: event.runId, activity: event.activity, sentence: event.sentence, phase: event.type === "activity.blocked" ? "blocked" : "failed", params: event.params, at: now }) };
     case "job.progress":
       return { ...state, status: state.status === "streaming" ? "streaming" : "working", stage: event.stage };
@@ -95,7 +120,7 @@ export function applyUiEvent(state: ChatState, event: UiEvent, now: number): Cha
     case "error":
       return { ...state, error: { code: event.code, message: event.message, retryable: event.retryable }, outcome: { kind: "blocked", at: now } };
     case "done":
-      return { ...state, status: "idle", stage: null, pending: null, turnId: null, notice: null };
+      return { ...state, status: "idle", stage: null, pending: null, turnId: null, notice: null, guidedTurnId: null };
     default:
       return state;
   }

@@ -15,7 +15,7 @@ export type TurnEvent = AgentEvent | { type: "ui.approval"; approvalId: string; 
  * One chat turn: DLP -> context block from the authoritative state -> agent loop with the
  * step/role tool subset -> persistence of redacted messages, tool runs and pending approvals.
  */
-export async function runChatTurn(ctx: OrgContext, siteId: string, userMessage: string, emit: (e: TurnEvent) => void): Promise<{ ui: AssistantUiResponse | null; error: string | null }> {
+export async function runChatTurn(ctx: OrgContext, siteId: string, userMessage: string, emit: (e: TurnEvent) => void, options: { turnId?: string } = {}): Promise<{ ui: AssistantUiResponse | null; error: string | null }> {
   const session = await getOrCreateChatSession(ctx.organization.id, siteId, ctx.user.id, ctx.user.locale);
   const agentCtx = await buildAgentContext(ctx, siteId, session.id);
   if (!agentCtx) return { ui: null, error: "site not found" };
@@ -46,6 +46,9 @@ export async function runChatTurn(ctx: OrgContext, siteId: string, userMessage: 
   const e = env();
   const result = await runAgentTurn({
     ctx: agentCtx,
+    turnId: options.turnId,
+    // paused/deleted sites are read-only for the assistant (filterToolsForTurn); the status comes from the server row, never the client
+    siteStatus: site?.status ?? null,
     client: openai(),
     models: modelRouting(),
     registry,

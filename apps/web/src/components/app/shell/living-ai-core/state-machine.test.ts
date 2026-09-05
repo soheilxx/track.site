@@ -69,36 +69,37 @@ describe("state table", () => {
 });
 
 describe("createCoreStateMachine", () => {
-  it("commits a requested state only after the hysteresis window", () => {
+  it("commits a requested state on the next sample and adds no hold of its own (hysteresis belongs to the panel's state source)", () => {
     const c = clock();
     const m = createCoreStateMachine({ now: c.now });
     expect(m.sample().state).toBe("idle");
     m.request("working");
-    expect(m.sample().state).toBe("idle");
-    c.set(100);
-    expect(m.sample().state).toBe("idle");
-    c.set(150);
+    // a request alone changes nothing: the frame loop samples the machine
+    expect(m.current()).toBe("idle");
     expect(m.sample().state).toBe("working");
     expect(m.current()).toBe("working");
+    // the source already debounced the state, so a further request is likewise committed at once
+    c.set(20);
+    m.request("streaming");
+    expect(m.sample().state).toBe("streaming");
+    expect(m.current()).toBe("streaming");
   });
 
-  it("debounces bursts of backend events: a flip within the window restarts the wait", () => {
+  it("drops a request that returns to the committed state before it was sampled", () => {
     const c = clock();
     const m = createCoreStateMachine({ now: c.now });
     m.request("working");
-    c.set(50);
     m.request("idle"); // back to the committed state → nothing pending
-    c.set(120);
-    m.request("working");
-    c.set(200);
-    expect(m.sample().state).toBe("idle");
-    c.set(270);
-    expect(m.sample().state).toBe("working");
+    c.set(50);
+    const s = m.sample();
+    expect(s.state).toBe("idle");
+    expect(s.from).toBe("idle");
+    expect(s.progress).toBe(1);
   });
 
   it("interpolates every parameter over 400–700 ms without a jump", () => {
     const c = clock();
-    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    const m = createCoreStateMachine({ now: c.now });
     m.request("working");
     const start = m.sample();
     expect(start.state).toBe("working");
@@ -126,7 +127,7 @@ describe("createCoreStateMachine", () => {
 
   it("continues an interrupted transition from the current values (no flicker)", () => {
     const c = clock();
-    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    const m = createCoreStateMachine({ now: c.now });
     m.request("working");
     m.sample();
     c.set(275); // half-way
@@ -144,7 +145,7 @@ describe("createCoreStateMachine", () => {
 
   it("never restarts a transition on repeated identical requests (no per-token reaction while streaming)", () => {
     const c = clock();
-    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    const m = createCoreStateMachine({ now: c.now });
     m.request("streaming");
     m.sample();
     let last = 0;
@@ -162,7 +163,7 @@ describe("createCoreStateMachine", () => {
 
   it("runs success as a one-shot wave of 600–900 ms and then returns to idle", () => {
     const c = clock();
-    const m = createCoreStateMachine({ now: c.now, debounceMs: 0 });
+    const m = createCoreStateMachine({ now: c.now });
     m.request("success");
     const s0 = m.sample();
     expect(s0.state).toBe("success");
@@ -184,11 +185,50 @@ describe("createCoreStateMachine", () => {
     for (const key of PARAM_KEYS) expect(settled.params[key]).toBeCloseTo(STATE_PARAMS.idle[key], 6);
   });
 
+  it("lets the success wave complete before a state requested meanwhile applies (the source may release success after 500 ms)", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now });
+    m.request("success");
+    m.sample();
+    c.set(300);
+    m.request("idle");
+    const held = m.sample();
+    expect(held.state).toBe("success");
+    expect(held.wave).toBeCloseTo(0.375, 6);
+    c.set(600);
+    m.request("listening"); // the latest request wins once the wave has completed
+    expect(m.sample().state).toBe("success");
+    c.set(800);
+    const after = m.sample();
+    expect(after.state).toBe("listening");
+    expect(after.from).toBe("success");
+    expect(after.wave).toBe(-1);
+    expect(after.progress).toBe(0);
+    c.set(800 + 550);
+    const settled = m.sample();
+    expect(settled.progress).toBe(1);
+    for (const key of PARAM_KEYS) expect(settled.params[key]).toBeCloseTo(STATE_PARAMS.listening[key], 6);
+  });
+
+  it("returns to idle after the wave when a request made during it was withdrawn", () => {
+    const c = clock();
+    const m = createCoreStateMachine({ now: c.now });
+    m.request("success");
+    m.sample();
+    c.set(200);
+    m.request("blocked");
+    m.request("success"); // back to the committed state → the pending leave is cancelled
+    c.set(800);
+    const after = m.sample();
+    expect(after.state).toBe("idle");
+    expect(after.from).toBe("success");
+  });
+
   it("integrates the breathing phase with the state's speed (approval almost stops, never snaps)", () => {
     const idle = clock();
     const busy = clock();
-    const a = createCoreStateMachine({ now: idle.now, debounceMs: 0 });
-    const b = createCoreStateMachine({ now: busy.now, debounceMs: 0 });
+    const a = createCoreStateMachine({ now: idle.now });
+    const b = createCoreStateMachine({ now: busy.now });
     b.request("approval_required");
     let phaseA = 0;
     let phaseB = 0;

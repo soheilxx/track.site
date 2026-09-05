@@ -1,18 +1,21 @@
 import type { CoreState } from "./types";
 
 /**
- * Deterministic UI state machine of the Living AI Core (supplement §9 "Ereignisgesteuerte
+ * Deterministic visual state machine of the Living AI Core (supplement §9 "Ereignisgesteuerte
  * Zustandslogik"). Pure TypeScript with an injectable clock: no timers, no DOM, no React — the
  * renderer samples it once per frame and writes the result into shader uniforms or CSS variables.
  *
  *  - competing states resolve by the fixed priority
- *    `blocked > approval_required > working > streaming > success > listening > idle`;
- *  - a requested state is committed only after it persisted for `debounceMs` (hysteresis against
- *    bursts of backend events); repeating the current state never restarts anything (no per-token
- *    reaction while streaming);
+ *    `blocked > approval_required > working > streaming > success > listening > idle`
+ *    (`resolveCoreState`, the same order the panel's state source uses);
+ *  - the machine adds **no hold of its own**: hysteresis lives in the one state source of the panel
+ *    (`useAssistantUiState`, 500 ms minimum hold per state), so a requested state is committed at
+ *    the next `sample()` and the host's `data-ai-state` and the core never drift apart. Repeating
+ *    the current state never restarts anything (no per-token reaction while streaming);
  *  - a committed change interpolates every visual parameter from its *current* value to the target
  *    over `transitionMs` (400–700 ms window), so an interrupted transition never jumps or flickers;
- *  - `success` is a one-shot: an expansion wave of `successMs` (600–900 ms), then a soft return to idle;
+ *  - `success` is a one-shot: an expansion wave of `successMs` (600–900 ms) that always completes —
+ *    a state requested meanwhile is committed when the wave ends (idle when nothing was requested);
  *  - the breathing phase is integrated over time with the state's speed factor, so slowing down
  *    (approval, blocked) never snaps a shape to a new position.
  */
@@ -130,14 +133,16 @@ export interface CoreMachineOptions {
   now: () => number;
   /** 400–700 ms per supplement; default 550 */
   transitionMs?: number;
-  /** hysteresis before a requested state is committed; default 150 */
-  debounceMs?: number;
   /** duration of the one-shot success wave, 600–900 ms; default 800 */
   successMs?: number;
 }
 
 export interface CoreStateMachine {
-  /** Asks for a state; it is committed on the next `sample()` after `debounceMs`. Repeating the current target is a no-op. */
+  /**
+   * Asks for a state; it is committed on the next `sample()` — or, while a success wave runs, on the
+   * sample that completes the wave. Repeating the current target is a no-op (and cancels a request
+   * that has not been committed yet).
+   */
   request(state: CoreState): void;
   /** Advances the clock and returns the visual parameters for now. */
   sample(): CoreSample;
@@ -158,14 +163,14 @@ export function lerpParams(a: CoreParams, b: CoreParams, t: number): CoreParams 
 export function createCoreStateMachine(options: CoreMachineOptions): CoreStateMachine {
   const now = options.now;
   const transitionMs = options.transitionMs ?? 550;
-  const debounceMs = options.debounceMs ?? 150;
   const successMs = options.successMs ?? 800;
 
   let target: CoreState = "idle";
   let from: CoreState = "idle";
   let fromParams: CoreParams = { ...STATE_PARAMS.idle };
   let startedAt = -Infinity;
-  let pending: { state: CoreState; at: number } | null = null;
+  /** requested but not yet committed state (never equal to `target`) */
+  let pending: CoreState | null = null;
   let waveStart = -Infinity;
   let phase = 0;
   let lastTime: number | null = null;
@@ -180,33 +185,23 @@ export function createCoreStateMachine(options: CoreMachineOptions): CoreStateMa
     target = state;
     startedAt = t;
     if (state === "success") waveStart = t;
+    pending = null;
   };
 
   return {
     request(state) {
-      if (state === target && !pending) return;
-      if (pending?.state === state) return;
-      if (state === target) {
-        pending = null;
-        return;
-      }
-      pending = { state, at: now() };
+      pending = state === target ? null : state;
     },
     current: () => target,
     sample() {
       const t = now();
-      if (pending && t - pending.at >= debounceMs) {
-        commit(pending.state, t);
-        pending = null;
+      if (target === "success" && t - waveStart >= successMs) {
+        // the one-shot completed: continue with what was requested meanwhile, otherwise return to idle
+        commit(pending ?? "idle", t);
+      } else if (pending !== null && target !== "success") {
+        commit(pending, t);
       }
-      let wave = -1;
-      if (target === "success") {
-        wave = clamp01((t - waveStart) / successMs);
-        if (wave >= 1) {
-          commit("idle", t);
-          wave = -1;
-        }
-      }
+      const wave = target === "success" ? clamp01((t - waveStart) / successMs) : -1;
       const progress = progressAt(t);
       current = lerpParams(fromParams, STATE_PARAMS[target], easeInOut(progress));
       const dt = lastTime === null ? 0 : Math.max(0, t - lastTime) / 1000;

@@ -11,6 +11,14 @@ export const dynamic = "force-dynamic";
 
 const bodySchema = z.object({ siteId: z.string().uuid(), approvalId: z.string().min(3).max(120) });
 
+function sameOrigin(req: NextRequest): boolean {
+  const site = req.headers.get("sec-fetch-site");
+  if (site && site !== "same-origin" && site !== "none") return false;
+  const origin = req.headers.get("origin");
+  const host = req.headers.get("host");
+  return !origin || !host || origin.endsWith(host);
+}
+
 /**
  * Executes a confirmation-gated action after the user clicked the approval card. The approval id
  * references the server-side, single-use, action-bound token; a chat "yes" never reaches this route.
@@ -21,6 +29,8 @@ const bodySchema = z.object({ siteId: z.string().uuid(), approvalId: z.string().
 export async function POST(req: NextRequest) {
   const ctx = await getOrgContext();
   if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  // a mutation behind a cookie session: same-origin only, like the chat route
+  if (!sameOrigin(req)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, code: "VALIDATION_ERROR" }, { status: 400 });
   if (!(await siteBelongsToOrg(ctx.organization.id, parsed.data.siteId))) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
@@ -48,5 +58,6 @@ export async function POST(req: NextRequest) {
   await appendMessage(ctx.organization.id, session.id, { role: "system", content: result.ok ? `${pending.action} confirmed and executed${verified === null ? "" : verified ? "; backend state verified" : "; backend state NOT verified"}` : `${pending.action} failed: ${result.code}` });
   const events = confirmActivityEvents({ turnId: `confirm:${parsed.data.approvalId}`, runId, action: pending.action, ok: result.ok, code: result.code, verified, missing: result.ok ? [] : factsOf(result.data).missing });
   const next = pending.action === "publish_config_version" ? { rollback: "/app/releases", diagnostics: "/app/events" } : { releases: "/app/releases" };
-  return NextResponse.json({ ...result, data, verified, events, next }, { status: result.ok ? 200 : 409 });
+  // the handler's message can echo a vendor/database response: only the redacted text leaves the server
+  return NextResponse.json({ ...result, message: redactToolOutput(result.message), data, verified, events, next }, { status: result.ok ? 200 : 409 });
 }

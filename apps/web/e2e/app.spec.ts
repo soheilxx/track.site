@@ -261,7 +261,150 @@ test.describe("viewport-fixed shell", () => {
     const height = await sheet.evaluate((el) => el.getBoundingClientRect().height);
     expect(Math.abs(height - 740)).toBeLessThanOrEqual(2);
     await expect(page.getByTestId("assistant-composer")).toBeVisible();
+    // the composer sits inside the sheet, above the safe area, and the sheet itself never scrolls as a whole
+    const composerBox = await page.getByTestId("assistant-composer").boundingBox();
+    expect(composerBox).not.toBeNull();
+    expect(composerBox!.y + composerBox!.height).toBeLessThanOrEqual(740);
     await page.keyboard.press("Escape");
     await expect(sheet).toHaveCount(0);
+  });
+});
+
+/** Server-confirmed status announcements of the header motion control (shell.assistant.motion, en). */
+const MOTION_PAUSED = "AI motion paused. Your setting is saved.";
+const MOTION_RESUMED = "AI motion follows your system setting again.";
+
+/** Running CSS/Web animations whose target lives inside the Living AI Core. */
+const coreAnimations = () =>
+  document.getAnimations().filter((a) => {
+    const target = (a.effect as KeyframeEffect | null)?.target;
+    return target instanceof Element && target.closest(".lac") !== null;
+  }).length;
+
+test.describe("Track AI panel", () => {
+  test("keeps the shell exactly viewport-high with a 250-message conversation and windows the list", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    // dev-only synthetic transcript (apps/web/src/app/api/ai/dev-fixture, 404 in production)
+    await page.goto("/app?ai_fixture=long-conversation");
+    const list = page.getByTestId("assistant-messages");
+    await expect(list).toHaveAttribute("data-total", "250");
+    await expect(list).toHaveAttribute("data-virtualized", "true");
+    const metrics = await page.evaluate(() => {
+      const el = document.querySelector<HTMLElement>('[data-testid="assistant-messages"]')!;
+      const shell = document.querySelector<HTMLElement>('[data-testid="app-shell"]')!;
+      return {
+        documentFits: document.documentElement.scrollHeight <= window.innerHeight + 1,
+        shellHeight: Math.round(shell.getBoundingClientRect().height),
+        innerHeight: window.innerHeight,
+        listScrolls: el.scrollHeight > el.clientHeight,
+        rendered: document.querySelectorAll("[data-message-id]").length,
+      };
+    });
+    expect(metrics.documentFits).toBe(true);
+    expect(Math.abs(metrics.shellHeight - metrics.innerHeight)).toBeLessThanOrEqual(1);
+    expect(metrics.listScrolls).toBe(true);
+    expect(metrics.rendered).toBeGreaterThan(0);
+    expect(metrics.rendered).toBeLessThan(250);
+    await expect(page.getByTestId("assistant-composer")).toBeVisible();
+    // the last message is in view at the end of the list
+    await expect(page.locator('[data-message-id="fixture-249"]')).toBeVisible();
+    // scrolling to the top brings the first message into the window and the position stays put (no autoscroll away from the reader)
+    await list.evaluate((el) => {
+      el.scrollTop = 0;
+    });
+    await expect(page.locator('[data-message-id="fixture-0"]')).toBeVisible();
+    await page.waitForTimeout(400);
+    expect(await list.evaluate((el) => el.scrollTop)).toBe(0);
+    // the page still does not scroll
+    expect(
+      await page.evaluate(() => document.documentElement.scrollHeight <= window.innerHeight + 1),
+    ).toBe(true);
+  });
+
+  test("motion preference off produces no animated frame: the core reports the static tier", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/app");
+    const core = page.getByTestId("living-ai-core");
+    await expect(core).toBeAttached();
+    const html = page.locator("html");
+    // an aborted earlier run may have left the preference paused: the same control turns it on again
+    if ((await html.getAttribute("data-ai-motion")) === "off") {
+      await page.getByTestId("assistant-motion-toggle").click();
+      await expect(html).toHaveAttribute("data-ai-motion", "system");
+      await expect(page.getByText(MOTION_RESUMED)).toBeAttached();
+    }
+    await expect(core).toHaveAttribute("data-tier", /^(css|webgl)$/);
+    // the header control pauses the motion at once (optimistic attribute) and persists `off` per user:
+    // the status announcement arrives only after the server confirmed the save, so reloads never race it
+    await page.getByTestId("assistant-motion-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-ai-motion", "off");
+    await expect(page.getByText(MOTION_PAUSED)).toBeAttached();
+    await expect(core).toHaveAttribute("data-tier", "static");
+    await expect(core).toHaveAttribute("data-pref", "off");
+    // (a function cannot travel as an evaluate argument: the counter runs as its own evaluate)
+    const frames = await page.evaluate(() => {
+      const blobs = Array.from(document.querySelectorAll<HTMLElement>(".lac-blob > i"));
+      return {
+        canvas: document.querySelector("canvas.lac-gl") !== null,
+        keyframes: blobs.map((b) => getComputedStyle(b).animationName),
+      };
+    });
+    const running = await page.evaluate(coreAnimations);
+    expect(frames.canvas).toBe(false);
+    expect(frames.keyframes.length).toBeGreaterThan(0);
+    expect(frames.keyframes.every((name) => name === "none")).toBe(true);
+    expect(running).toBe(0);
+    // the setting survives a reload (server-side preference) …
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-ai-motion", "off");
+    await expect(page.getByTestId("living-ai-core")).toHaveAttribute("data-tier", "static");
+    // … and the same control turns the motion on again (system default)
+    await page.getByTestId("assistant-motion-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-ai-motion", "system");
+    await expect(page.getByTestId("living-ai-core")).toHaveAttribute("data-tier", /^(css|webgl)$/);
+    // wait for the persisted `system` before the next spec loads the dashboard
+    await expect(page.getByText(MOTION_RESUMED)).toBeAttached();
+  });
+
+  test("prefers-reduced-motion renders the static tier from the server on, without an animation flash", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/app");
+    const core = page.getByTestId("living-ai-core");
+    await expect(core).toHaveAttribute("data-tier", "static");
+    await expect(core).toHaveAttribute("data-pref", "system");
+    await expect(core).toHaveAttribute("data-state", "idle");
+    expect(await page.evaluate(coreAnimations)).toBe(0);
+    expect(await page.locator("canvas.lac-gl").count()).toBe(0);
+    // server HTML already carries the static tier: the chat is readable before hydration and nothing animates on load
+    const html = await (await page.request.get("/app")).text();
+    expect(html).toContain('data-tier="static"');
+    expect(html).not.toContain("<canvas");
+  });
+
+  test("exposes the activity live region, the motion state and the setup workspace targets", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/app/ai-setup");
+    const panel = page.getByTestId("assistant-panel");
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAttribute("data-ai-state", "idle");
+    const feed = page.getByTestId("assistant-activity");
+    await expect(feed).toBeAttached();
+    await expect(feed).toHaveAttribute("aria-live", "polite");
+    await expect(feed).toHaveAttribute("data-count", "0");
+    // the workspace the assistant's moves reveal: the setup workspace and its current step card
+    await expect(page.locator('[data-focus-target="setup-workspace"]')).toBeVisible();
+    await expect(page.getByTestId("assistant-announcer")).toHaveAttribute("aria-live", "polite");
+    // the panel's composer is focusable from the workspace without leaving the page
+    await page.getByRole("button", { name: "Open Track AI" }).first().click();
+    await expect(page.getByTestId("assistant-composer")).toBeFocused();
   });
 });

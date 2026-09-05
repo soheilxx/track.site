@@ -63,7 +63,17 @@ describe("inputsFromChat (facts trace back to contract events or real UI interac
     expect(inputsFromChat(chat({ status: "streaming", stage: "answer_streaming" }))).toMatchObject({ working: false, streaming: true });
     expect(inputsFromChat(chat({ status: "idle", stage: null, activities: [{ runId: "r", activity: "site_check", sentence: "site_check.started", phase: "started", params: {}, at: 0 }] })).working).toBe(false);
     expect(inputsFromChat(chat({ status: "working", activities: [{ runId: "r", activity: "publish", sentence: "generic.blocked", phase: "blocked", params: {}, at: 0 }] })).blocked).toBe(true);
+    // a confirmation hold is an approval, not a failure; a blocked outcome next to a pending approval is not an error either
+    expect(inputsFromChat(chat({ status: "working", activities: [{ runId: "r", activity: "publish", sentence: "generic.blocked", phase: "blocked", params: { reason: "CONFIRMATION_REQUIRED" }, at: 0 }] })).blocked).toBe(false);
     expect(inputsFromChat(chat({ outcome: { kind: "blocked", at: 1 } })).blocked).toBe(true);
+    expect(inputsFromChat(chat({ outcome: { kind: "blocked", at: 1 }, approval: { approvalId: "a", action: "publish_config_version", summary: {}, expiresAt: "x" } })).blocked).toBe(false);
+    // the reducer records a confirmation hold as a blocked outcome; once the approval card is dismissed the turn is simply working again
+    expect(inputsFromChat(chat({ status: "working", outcome: { kind: "blocked", at: 1 }, activities: [{ runId: "r", activity: "publish", sentence: "generic.blocked", phase: "blocked", params: { reason: "CONFIRMATION_REQUIRED" }, at: 0 }] }))).toMatchObject({ blocked: false, working: true });
+    // a resumed turn is working even before its next event arrives
+    expect(inputsFromChat(chat({ status: "reconnecting" })).working).toBe(true);
+    expect(inputsFromChat(chat({ status: "working" })).working).toBe(true);
+    // success only once the turn is at rest
+    expect(inputsFromChat(chat({ status: "working", outcome: { kind: "success", at: 42 } })).successAt).toBeNull();
     expect(inputsFromChat(chat({ error: { code: "TIMEOUT", message: "", retryable: true } })).error).toBe(true);
     expect(inputsFromChat(chat({ approval: { approvalId: "a", action: "publish_config_version", summary: { changes: [], recipients: [] }, expiresAt: "x" } })).approvalRequired).toBe(true);
     expect(inputsFromChat(chat({ outcome: { kind: "success", at: 42 } })).successAt).toBe(42);

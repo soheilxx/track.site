@@ -27,8 +27,12 @@ describe("chat reducer (allow-listed events → chat state)", () => {
     ]);
     expect(s.activities[1]!.params).toEqual({ missing: ["snippet_verified"], reason: "INVALID_STATE" });
     expect(s.outcome).toEqual({ kind: "blocked", at: 1_400 });
-    // a real failure counts as blocked for the motion state as well
+    // a real failure counts as blocked for the motion state as well; a confirmation hold is recorded too but the
+    // motion derivation (`inputsFromChat`) treats it as part of the approval flow, never as an error
     expect(run([{ type: "activity.failed", turnId: "t1", runId: "c", activity: "generic", sentence: "generic.failed", params: { reason: "PROVIDER_ERROR" } }]).outcome?.kind).toBe("blocked");
+    const held = run([{ type: "activity.blocked", turnId: "t1", runId: "c", activity: "publish", sentence: "generic.blocked", params: { reason: "CONFIRMATION_REQUIRED" } }]);
+    expect(held.outcome?.kind).toBe("blocked");
+    expect(held.activities[0]).toMatchObject({ runId: "c", phase: "blocked", params: { reason: "CONFIRMATION_REQUIRED" } });
   });
 
   it("tracks real job stages and released assistant output before the final answer", () => {

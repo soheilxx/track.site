@@ -430,6 +430,10 @@ html[data-dashboard] > body {
     border-radius: 50%;
     opacity: 0;
     transform: scale(0.5);
+    /* the state source may release `success` after its 500 ms hold: leaving early retracts the ring instead of popping it away */
+    transition:
+      transform var(--lac-t) var(--ease-flow-track),
+      opacity var(--lac-t) var(--ease-flow-track);
   }
   .lac[data-mode="onboarding"] .lac-wave {
     top: 30%;

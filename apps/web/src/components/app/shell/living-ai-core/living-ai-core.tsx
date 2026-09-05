@@ -58,6 +58,8 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
   useEffect(() => {
     modeRef.current = mode;
   }, [mode]);
+  // the state arrives already debounced from the panel's one source (`useAssistantUiState`, 500 ms hold):
+  // the machine commits it at the next frame without a hold of its own and only lets a running success wave finish
   useEffect(() => {
     getMachine().request(state);
   }, [state]);

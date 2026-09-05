@@ -6,13 +6,48 @@ export interface ChatMessage {
   content: string;
   ui: AssistantUiResponse | null;
   createdAt: string;
+  /**
+   * Client-side system note (`role: "system"`): the localized outcome of a card the user operated
+   * in the panel — secure credential stored, confirmation executed or cancelled. It is never sent
+   * to the server (the routes keep their own audit entries) and never shown as the user's words.
+   */
+  note?: "credential" | "approval";
 }
 
+export interface ApprovalChange {
+  summary: string;
+  op: string;
+}
+
+export interface ApprovalRecipient {
+  name: string;
+  type: string;
+  purpose: string;
+  events: string[];
+}
+
+/** The diff summary arrives from the stream (validated) or from the wizard tool result (loose); the card normalises both. */
 export interface PendingApprovalView {
   approvalId: string;
   action: string;
-  summary: { changes: Array<{ summary: string; op: "add" | "remove" | "change" }>; recipients: Array<{ name: string; type: string; purpose: string; events: string[] }> };
+  summary: { changes?: ApprovalChange[] | unknown; recipients?: ApprovalRecipient[] | unknown };
   expiresAt: string;
+}
+
+const isObject = (v: unknown): v is Record<string, unknown> => Boolean(v) && typeof v === "object" && !Array.isArray(v);
+
+export function approvalChanges(value: unknown): ApprovalChange[] {
+  return Array.isArray(value) ? value.filter(isObject).map((c) => ({ summary: typeof c.summary === "string" ? c.summary : "", op: typeof c.op === "string" ? c.op : "change" })) : [];
+}
+
+export function approvalRecipients(value: unknown): ApprovalRecipient[] {
+  return Array.isArray(value)
+    ? value.flatMap((r) => {
+        if (typeof r === "string") return [{ name: r, type: "", purpose: "", events: [] }];
+        if (!isObject(r)) return [];
+        return [{ name: typeof r.name === "string" ? r.name : "", type: typeof r.type === "string" ? r.type : "", purpose: typeof r.purpose === "string" ? r.purpose : "", events: Array.isArray(r.events) ? r.events.filter((e): e is string => typeof e === "string") : [] }];
+      })
+    : [];
 }
 
 export interface CredentialRequestView {

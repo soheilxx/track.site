@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useAssistant } from "./assistant-store";
 import type { ChatState } from "./chat-reducer";
 
@@ -43,15 +43,21 @@ export function resolveUiState(inputs: UiStateInputs, now: number, successHoldMs
 /** Reads the motion-relevant facts from the chat state; every fact traces back to a contract event or a real UI interaction. */
 export function inputsFromChat(chat: ChatState): UiStateInputs {
   const running = chat.status !== "idle";
-  const activityBlocked = chat.activities.some((a) => a.phase === "blocked" || a.phase === "failed");
+  // a tool run held for a confirmation (`CONFIRMATION_REQUIRED`) is part of the approval flow, not a failure:
+  // the approval card is the authoritative status and the state must never show the error edge for it
+  const failedRun = chat.activities.some((a) => (a.phase === "blocked" || a.phase === "failed") && a.params.reason !== "CONFIRMATION_REQUIRED");
+  const confirmationHold = chat.activities.some((a) => a.phase === "blocked" && a.params.reason === "CONFIRMATION_REQUIRED");
   return {
     error: chat.error !== null,
-    // a blocked/failed activity keeps the state while the turn is running; afterwards the final answer (or its absence) decides
-    blocked: chat.outcome?.kind === "blocked" || (running && activityBlocked),
+    // a verified blocked outcome counts only while no approval is pending and it did not stem from a confirmation hold
+    blocked: failedRun || (chat.outcome?.kind === "blocked" && chat.approval === null && !confirmationHold),
     approvalRequired: chat.approval !== null,
-    working: running && (chat.activities.some((a) => a.phase === "started") || (chat.stage !== null && chat.status !== "streaming") || chat.status === "sending" || chat.status === "reconnecting"),
+    // the store enters `working` only from real events (activity.started, job.progress, a resumed turn); `sending` and
+    // `reconnecting` are the request itself in flight
+    working: chat.status === "sending" || chat.status === "working" || chat.status === "reconnecting",
     streaming: running && chat.status === "streaming",
-    successAt: chat.outcome?.kind === "success" ? chat.outcome.at : null,
+    // a success is celebrated only once the turn is at rest and nothing in it failed
+    successAt: !running && chat.outcome?.kind === "success" && chat.error === null && !failedRun ? chat.outcome.at : null,
     listening: chat.composerFocused || chat.draft.trim().length > 0,
   };
 }
@@ -77,6 +83,7 @@ export class UiStateDebouncer {
   private since: number;
   private target: AssistantUiState = "idle";
   private handle: unknown = null;
+  private disposed = false;
   private readonly listeners = new Set<() => void>();
 
   constructor(
@@ -95,6 +102,8 @@ export class UiStateDebouncer {
   }
 
   push(target: AssistantUiState): void {
+    // a disposed debouncer (unmounted hook) never changes state again, so a late push cannot notify stale listeners
+    if (this.disposed) return;
     this.target = target;
     if (target === this.state) {
       this.cancel();
@@ -120,6 +129,7 @@ export class UiStateDebouncer {
   }
 
   dispose(): void {
+    this.disposed = true;
     this.cancel();
     this.listeners.clear();
   }
@@ -156,22 +166,20 @@ export function useAssistantUiState(options: UseAssistantUiStateOptions = {}): {
     () => debouncer.current,
     () => "idle" as const,
   );
-  const inputs = inputsFromChat(chat);
-  const inputsKey = JSON.stringify(inputs);
-  const inputsRef = useRef(inputs);
-  inputsRef.current = inputs;
+  // the facts are re-derived whenever the store changes; a push with an unchanged target is a no-op in the debouncer,
+  // so per-keystroke store updates never restart or flicker anything
+  const inputs = useMemo(() => inputsFromChat(chat), [chat]);
 
   useEffect(() => {
-    const evaluate = () => debouncer.push(resolveUiState(inputsRef.current, clock.now(), successHoldMs));
+    const evaluate = () => debouncer.push(resolveUiState(inputs, clock.now(), successHoldMs));
     evaluate();
     // success is transient: re-evaluate once its hold expires so the state settles to listening/idle
-    const successAt = inputsRef.current.successAt;
-    const remaining = successAt === null ? -1 : successAt + successHoldMs - clock.now();
+    const remaining = inputs.successAt === null ? -1 : inputs.successAt + successHoldMs - clock.now();
     const handle = remaining > 0 ? clock.setTimeout(evaluate, remaining + 1) : null;
     return () => {
       if (handle !== null) clock.clearTimeout(handle);
     };
-  }, [inputsKey, debouncer, clock, successHoldMs]);
+  }, [inputs, debouncer, clock, successHoldMs]);
 
   useEffect(() => () => debouncer.dispose(), [debouncer]);
 

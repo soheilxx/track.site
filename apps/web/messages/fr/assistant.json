@@ -1,6 +1,7 @@
 {
   "assistant": {
     "activityRegion": "Activité de Track AI",
+    "messagesRegion": "Conversation avec Track AI",
     "activity": {
       "generic": {
         "started": "J'effectue une vérification.",
@@ -120,7 +121,14 @@
       "confirmGeneric": "Confirmer",
       "cancel": "Annuler",
       "rollbackHint": "Besoin d'annuler ? La page Releases propose un retour arrière en un clic.",
-      "openReleases": "Ouvrir Releases"
+      "openReleases": "Ouvrir Releases",
+      "result": {
+        "published": "La version {version} est publiée et vérifiée comme active.",
+        "publishedUnverified": "La version {version} a été publiée, mais le backend ne la signale pas encore comme active. Vérifiez la page Releases.",
+        "executed": "Confirmé et exécuté : {action}.",
+        "failed": "Non exécuté : {action}. Raison : {reason}.",
+        "cancelled": "Annulé. Rien n'a été modifié."
+      }
     },
     "credential": {
       "help": "Stocké chiffré dans le coffre. Jamais partagé avec l'assistant, jamais réaffiché.",
@@ -129,7 +137,9 @@
       "store": "Enregistrer en sécurité",
       "stored": "Identifiant enregistré ({masked}). Validation : {validation}. Statut : {status}.",
       "notChecked": "non vérifié",
-      "storeFailed": "Impossible d'enregistrer l'identifiant."
+      "storeFailed": "Impossible d'enregistrer l'identifiant.",
+      "waiting": "Une carte d'identifiants sécurisée attend votre saisie.",
+      "open": "Ouvrir la carte"
     },
     "input": {
       "send": "Envoyer",
@@ -154,6 +164,30 @@
       "vendorEvent": "Événement fournisseur",
       "enabledColumn": "Activé",
       "noEvents": "aucun événement"
+    },
+    "feed": {
+      "earlier": "{n} vérifications précédentes terminées"
+    },
+    "nextAction": {
+      "retry": "Réessayer",
+      "askMissing": "Demander ce qui manque encore",
+      "askMissingMessage": "Que manque-t-il encore pour terminer cette action ?",
+      "openCredentialCard": "Ouvrir la carte d'identifiants sécurisée",
+      "openApproval": "Vérifier la confirmation",
+      "openDestinations": "Ouvrir Destinations",
+      "openReleases": "Ouvrir Releases",
+      "openBilling": "Ouvrir Facturation",
+      "openTeam": "Ouvrir Équipe et accès",
+      "openConsent": "Ouvrir Consentement et confidentialité"
+    },
+    "scope": {
+      "title": "Track AI reste dans le cadre de votre configuration Track"
+    },
+    "note": {
+      "continueMessage": "L'identifiant est enregistré. Merci de continuer la configuration."
+    },
+    "announce": {
+      "newMessage": "Track AI : {text}"
     }
   }
 }

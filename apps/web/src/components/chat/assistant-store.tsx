@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { UiEvent } from "@track-site/ai";
-import { EMPTY_CHAT, applyUiEvent, applyUiEvents, startTurn, type ChatState } from "./chat-reducer";
+import { EMPTY_CHAT, addNote as addNoteToChat, applyUiEvent, applyUiEvents, startTurn, type ChatState } from "./chat-reducer";
 import { readSse, type ChatMessage } from "./types";
 import { parseUiEvent } from "./ui-events";
 import { setViewerPreference, useMediaQuery, useViewerPreference } from "./viewer-preferences";
@@ -71,6 +71,12 @@ export interface AssistantApi {
   dismissCredential: () => void;
   /** contract events returned by the approval route (activity of the confirmed action) */
   applyEvents: (events: UiEvent[]) => void;
+  /** localized system note (outcome of the credential/approval card the user operated); a `system` transcript entry, never a user message and never sent */
+  addNote: (text: string, note: NonNullable<ChatMessage["note"]>) => void;
+  /** the setup workspace of `siteId` is mounted (workspace moves active for turns started there) */
+  setGuided: (siteId: string, active: boolean) => void;
+  /** server-side fact from the setup page: the site has no published configuration (first-run setup) */
+  setFirstRun: (siteId: string, active: boolean) => void;
 }
 
 export const PANEL_MIN_WIDTH = 380;
@@ -99,6 +105,28 @@ function newTurnId(): string {
 }
 
 const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/**
+ * Name of a synthetic transcript requested through `?ai_fixture=<name>` (e2e only). The fixture
+ * endpoint answers 404 outside development/test, so in production the store simply loads the real
+ * conversation; the parameter itself carries no data and is never persisted.
+ */
+function fixtureName(): string | null {
+  if (typeof location === "undefined") return null;
+  const value = new URLSearchParams(location.search).get("ai_fixture");
+  return value && /^[a-z0-9-]{1,40}$/.test(value) ? value : null;
+}
+
+/** Loads the conversation of a site — a dev fixture when requested and available, otherwise the real transcript. */
+async function fetchMessages(siteId: string): Promise<{ ok: boolean; messages?: ChatMessage[] }> {
+  const fixture = fixtureName();
+  if (fixture) {
+    const res = await fetch(`/api/ai/dev-fixture?siteId=${encodeURIComponent(siteId)}&fixture=${encodeURIComponent(fixture)}`);
+    if (res.ok) return (await res.json()) as { ok: boolean; messages?: ChatMessage[] };
+  }
+  const res = await fetch(`/api/ai/chat?siteId=${encodeURIComponent(siteId)}`);
+  return (await res.json()) as { ok: boolean; messages?: ChatMessage[] };
+}
 
 export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled, locale, children }: { sites: AssistantSite[]; activeSiteId: string | null; environment: AssistantEnvironment | null; aiEnabled: boolean; locale: string; children: ReactNode }) {
   const [boundSiteId, setBoundSiteId] = useState<string | null>(null);
@@ -150,9 +178,8 @@ export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled,
     if ((chatsRef.current[id] ?? EMPTY_CHAT).loaded !== "idle" || loadingRef.current.has(id)) return;
     loadingRef.current.add(id);
     patch(id, (s) => ({ ...s, loaded: "loading" }));
-    fetch(`/api/ai/chat?siteId=${encodeURIComponent(id)}`)
-      .then((r) => r.json())
-      .then((b: { ok: boolean; messages?: ChatMessage[] }) => {
+    fetchMessages(id)
+      .then((b) => {
         patch(id, (s) => ({ ...s, loaded: "ready", messages: b.ok && b.messages ? b.messages.filter((m) => m.role === "user" || m.role === "assistant") : s.messages }));
       })
       .catch(() => patch(id, (s) => ({ ...s, loaded: "failed", error: { code: "LOAD_FAILED", message: "", retryable: true } })))
@@ -206,7 +233,7 @@ export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled,
           /* connection dropped mid-stream: the loop resumes the same turn */
         }
       }
-      if (!finished) patch(id, (s) => ({ ...s, status: "idle", turnId: null, stage: null, notice: null, error: { code: "STREAM_LOST", message: "", retryable: true } }));
+      if (!finished) patch(id, (s) => ({ ...s, status: "idle", turnId: null, guidedTurnId: null, stage: null, notice: null, error: { code: "STREAM_LOST", message: "", retryable: true } }));
     },
     [siteId, patch],
   );
@@ -217,12 +244,15 @@ export function AssistantProvider({ sites, activeSiteId, environment, aiEnabled,
   const dismissApproval = useCallback(() => siteId && patch(siteId, (s) => ({ ...s, approval: null })), [siteId, patch]);
   const dismissCredential = useCallback(() => siteId && patch(siteId, (s) => ({ ...s, credential: null })), [siteId, patch]);
   const applyEvents = useCallback((events: UiEvent[]) => siteId && patch(siteId, (s) => applyUiEvents(s, events, Date.now())), [siteId, patch]);
+  const addNote = useCallback((text: string, note: NonNullable<ChatMessage["note"]>) => siteId && patch(siteId, (s) => addNoteToChat(s, { text, note, now: Date.now() })), [siteId, patch]);
   const bindSite = useCallback((id: string | null) => setBoundSiteId(id), []);
+  const setGuided = useCallback((id: string, active: boolean) => patch(id, (s) => (s.guided === active ? s : { ...s, guided: active })), [patch]);
+  const setFirstRun = useCallback((id: string, active: boolean) => patch(id, (s) => (s.firstRun === active ? s : { ...s, firstRun: active })), [patch]);
 
   const chat = (siteId && chats[siteId]) || EMPTY_CHAT;
   const value = useMemo<AssistantApi>(
-    () => ({ sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, composerRef, focusComposer, mode, setMode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents }),
-    [sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, focusComposer, mode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents],
+    () => ({ sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, composerRef, focusComposer, mode, setMode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents, addNote, setGuided, setFirstRun }),
+    [sites, siteId, site, environment, aiEnabled, locale, bindSite, open, presentation, width, setOpen, toggle, setWidth, focusComposer, mode, chat, load, send, setDraft, setComposerFocused, saveScroll, dismissApproval, dismissCredential, applyEvents, addNote, setGuided, setFirstRun],
   );
   return <AssistantContext.Provider value={value}>{children}</AssistantContext.Provider>;
 }
@@ -240,5 +270,25 @@ export function AssistantSiteBinding({ siteId }: { siteId: string }) {
     bindSite(siteId);
     return () => bindSite(null);
   }, [siteId, bindSite]);
+  return null;
+}
+
+/**
+ * Setup-workspace binding: the panel works on this site, the workspace moves are active while the
+ * page is mounted (`guided`), and the server-side first-run fact (no published configuration) is
+ * handed to the store so the assistant starts large and central and docks back after the verified
+ * publish. `firstRun` is only ever raised here; the reducer lowers it on `publish.completed`.
+ */
+export function AssistantSetupBinding({ siteId, firstRun }: { siteId: string; firstRun: boolean }) {
+  const { bindSite, setGuided, setFirstRun } = useAssistant();
+  useEffect(() => {
+    bindSite(siteId);
+    setGuided(siteId, true);
+    if (firstRun) setFirstRun(siteId, true);
+    return () => {
+      setGuided(siteId, false);
+      bindSite(null);
+    };
+  }, [siteId, firstRun, bindSite, setGuided, setFirstRun]);
   return null;
 }

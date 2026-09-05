@@ -108,7 +108,6 @@
       "noSite": "Track AI braucht eine Site, an der es arbeiten kann.",
       "noSiteAction": "Site anlegen",
       "newMessages": "Neue Nachrichten anzeigen",
-      "showEarlier": "{n} frühere Nachrichten anzeigen",
       "composerHint": "Enter sendet, Shift+Enter fügt eine Zeile ein.",
       "loading": "Track AI wird geladen…",
       "contextSwitched": "Track AI arbeitet jetzt an {site}.",
@@ -165,7 +164,13 @@
         "createSite": "Site anlegen",
         "openAssistant": "Track AI öffnen",
         "step": "Aktueller Schritt: {step}",
-        "progress": "{pct} % abgeschlossen"
+        "progress": "{pct} % abgeschlossen",
+        "stage": {
+          "eyebrow": "Track AI · Ersteinrichtung",
+          "dockedTitle": "Deine Konfiguration ist live",
+          "dockedText": "Track AI arbeitet im Seitenpanel weiter: Diagnosen, Änderungen und Tests sind nur eine Nachricht entfernt.",
+          "open": "Track AI öffnen"
+        }
       },
       "insights": {
         "title": "Insights",

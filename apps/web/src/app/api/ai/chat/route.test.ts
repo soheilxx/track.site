@@ -20,6 +20,7 @@ const EXPIRES_AT = new Date(APPROVAL.claims.expiresAt).toISOString();
 const UI = { message: `Saved ${SECRET}`, intent: "configuration", stage: "destinations", current_step: "destinations", progress_percent: 40, status: "ok", cards: [], input_component: { type: "none" }, quick_actions: [], completed_steps: ["site"], missing_fields: [], warnings: [], requires_confirmation: false, confirmation_summary: null, tool_result_summary: null, next_best_action: null };
 
 const aiConfigured = vi.fn(() => true);
+const listMessages = vi.fn(async (): Promise<Array<{ id: string; role: string; content: string; ui: null; createdAt: string }>> => []);
 const runChatTurn = vi.fn(async (_ctx: unknown, _siteId: string, _message: string, emit: (e: unknown) => void) => {
   emit({ type: "assistant.progress", phase: "thinking", detail: null });
   emit({ type: "tool.started", callId: "call_1", name: "inspect_site", args: { path: "/", token: SECRET } });
@@ -33,12 +34,12 @@ const runChatTurn = vi.fn(async (_ctx: unknown, _siteId: string, _message: strin
 vi.mock("server-only", () => ({}));
 vi.mock("@/server/session", () => ({ getOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
 vi.mock("@/server/ai/context", () => ({ aiConfigured: () => aiConfigured(), siteBelongsToOrg: async () => true }));
-vi.mock("@/server/ai/chat-store", () => ({ getOrCreateChatSession: async () => ({ id: "sess1", summary: {} }), listMessages: async () => [] }));
+vi.mock("@/server/ai/chat-store", () => ({ getOrCreateChatSession: async () => ({ id: "sess1", summary: {} }), listMessages: () => listMessages() }));
 vi.mock("@/server/ai/turn", () => ({ runChatTurn: (...args: unknown[]) => runChatTurn(...(args as Parameters<typeof runChatTurn>)) }));
 vi.mock("@/server/db", () => ({ logger: { child: () => ({ warn: () => undefined, error: () => undefined, info: () => undefined }) } }));
 vi.mock("@track-site/ai", () => ({ TurnRegistry: registry.TurnRegistry, createUiEventFilter: uiEvents.createUiEventFilter }));
 
-const { POST } = await import("./route");
+const { GET, POST } = await import("./route");
 
 function request(body: unknown, headers: Record<string, string> = {}) {
   return new Request("http://localhost/api/ai/chat", { method: "POST", headers: { "content-type": "application/json", "sec-fetch-site": "same-origin", ...headers }, body: JSON.stringify(body) }) as unknown as Parameters<typeof POST>[0];
@@ -80,6 +81,27 @@ describe("chat route stream contract", () => {
   it("refuses cross-origin posts", async () => {
     const res = await POST(request({ siteId: SITE_ID, message: "hi" }, { "sec-fetch-site": "cross-site" }));
     expect(res.status).toBe(403);
+  });
+
+  it("returns only the conversation as history — system/tool audit rows with internal diagnostics stay on the server", async () => {
+    listMessages.mockResolvedValueOnce([
+      { id: "m1", role: "user", content: "check my site", ui: null, createdAt: "2026-09-04T10:00:00.000Z" },
+      { id: "m2", role: "system", content: `assistant error: PROVIDER_ERROR — schema validation failed: message: Expected string, received ${SECRET}`, ui: null, createdAt: "2026-09-04T10:00:01.000Z" },
+      { id: "m3", role: "tool", content: '{"raw":"vendor payload"}', ui: null, createdAt: "2026-09-04T10:00:02.000Z" },
+      { id: "m4", role: "assistant", content: "Your site looks fine.", ui: null, createdAt: "2026-09-04T10:00:03.000Z" },
+    ]);
+    const req = new Request(`http://localhost/api/ai/chat?siteId=${SITE_ID}`);
+    const res = await GET(Object.assign(req, { nextUrl: new URL(req.url) }) as unknown as Parameters<typeof GET>[0]);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { ok: boolean; messages: Array<{ id: string; role: string }> };
+    expect(body.messages.map((m) => [m.id, m.role])).toEqual([
+      ["m1", "user"],
+      ["m4", "assistant"],
+    ]);
+    const text = JSON.stringify(body);
+    expect(text).not.toContain("schema validation");
+    expect(text).not.toContain("vendor payload");
+    expect(text).not.toContain(SECRET);
   });
 
   it("streams only allow-listed, redacted events with sequence ids and a final done", async () => {

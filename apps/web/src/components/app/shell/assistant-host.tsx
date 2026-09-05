@@ -5,10 +5,12 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { IconButton, cn } from "@track-site/ui";
-import { AssistantComposer, AssistantContextLine, AssistantMessages, AssistantModeToggle } from "@/components/chat/assistant-chat";
+import { AssistantActivityFeed, AssistantComposer, AssistantContextLine, AssistantMessages, AssistantModeToggle } from "@/components/chat/assistant-chat";
 import { PANEL_MAX_WIDTH, PANEL_MIN_WIDTH, useAssistant } from "@/components/chat/assistant-store";
 import { useAssistantUiState, type AssistantUiState } from "@/components/chat/assistant-ui-state";
+import { useWorkspaceMoves } from "@/components/chat/use-workspace-moves";
 import { AssistantPanel } from "./assistant-panel";
+import { AssistantAmbient } from "./living-ai-core/assistant-ambient";
 
 /**
  * Hosts the Track AI panel in the three presentations of the viewport-fixed shell (supplement §9):
@@ -19,13 +21,23 @@ import { AssistantPanel } from "./assistant-panel";
  *    so the on-screen keyboard never covers the composer or the last message.
  * The conversation state lives in the AssistantProvider (layout level), so switching presentation,
  * minimising or navigating never loses messages, running jobs or the scroll position.
+ *
+ * The host also runs the workspace moves (supplement §9 "Inhaltlich sinnvolle Bewegung"): in a
+ * setup context the activity events navigate the main area to the page they concern and focus its
+ * target (site structure, credential/mapping cards, event explorer, config diff) — deterministic,
+ * once per tool run, and reported on the container as `data-ai-move`.
  */
 export function AssistantHost() {
   const t = useTranslations("shell.assistant");
-  const { open, presentation, width, setWidth, setOpen, focusComposer, siteId } = useAssistant();
+  const { open, presentation, width, setWidth, setOpen, focusComposer, siteId, chat } = useAssistant();
   // motion-relevant state (idle | listening | working | streaming | approval_required | success | blocked), derived from
   // real events with hysteresis; exposed on the panel container for the Living AI Core (ambient slot) and tests
   const { state: aiState } = useAssistantUiState();
+  // one continuous ambient motion in the shell (supplement §9): while the first-run stage of the setup page animates its
+  // onboarding core, the panel's core renders on the static tier; at the dock (verified publish) or off the setup page
+  // the panel's core takes over
+  const stageLive = chat.guided && chat.firstRun;
+  const move = useWorkspaceMoves();
   const titleId = useId();
 
   const content = (extra: ReactNode) => (
@@ -47,8 +59,8 @@ export function AssistantHost() {
           {extra}
         </>
       }
-      ambient={null}
-      activity={null}
+      ambient={<AssistantAmbient active={!stageLive} />}
+      activity={<AssistantActivityFeed />}
       composer={<AssistantComposer />}
     >
       {/* keyed by site: a site or tenant switch starts a fresh list (window, scroll, "new messages" state), never mixed data */}
@@ -64,6 +76,7 @@ export function AssistantHost() {
         data-testid="assistant-panel"
         data-state={open === null ? "default" : "open"}
         data-ai-state={aiState}
+        data-ai-move={move ?? undefined}
         className={cn("relative hidden min-h-0 shrink-0 flex-col border-l border-line bg-surface", open === null ? "xl:flex" : "lg:flex")}
         style={{ width }}
       >
@@ -78,7 +91,7 @@ export function AssistantHost() {
   }
 
   return (
-    <AssistantOverlay open={open === true} onClose={() => setOpen(false)} labelledBy={titleId} variant={presentation} onOpened={focusComposer} aiState={aiState}>
+    <AssistantOverlay open={open === true} onClose={() => setOpen(false)} labelledBy={titleId} variant={presentation} onOpened={focusComposer} aiState={aiState} move={move}>
       {content(
         <IconButton label={t("close")} onClick={() => setOpen(false)} data-testid="assistant-close">
           <X className="size-5" aria-hidden="true" />
@@ -139,7 +152,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([t
  * document, focus trap, Escape, focus restore. The sheet follows `visualViewport` (height + offset)
  * so the composer stays above the on-screen keyboard.
  */
-function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, aiState, children }: { open: boolean; onClose: () => void; labelledBy: string; variant: "drawer" | "sheet"; onOpened?: () => void; aiState: AssistantUiState; children: ReactNode }) {
+function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, aiState, move, children }: { open: boolean; onClose: () => void; labelledBy: string; variant: "drawer" | "sheet"; onOpened?: () => void; aiState: AssistantUiState; move: string | null; children: ReactNode }) {
   const panelRef = useRef<HTMLDivElement>(null);
   // the overlay only opens from client interaction, so `document` exists whenever it renders; the guard keeps SSR safe
   const [canPortal] = useState(() => typeof document !== "undefined");
@@ -218,6 +231,7 @@ function AssistantOverlay({ open, onClose, labelledBy, variant, onOpened, aiStat
         data-testid="assistant-panel"
         data-state="open"
         data-ai-state={aiState}
+        data-ai-move={move ?? undefined}
         className={cn("relative flex min-h-0 flex-col bg-surface text-ink shadow-pop outline-none", variant === "drawer" ? "h-full w-[400px] max-w-full border-l border-line" : "h-dvh w-full")}
         style={variant === "sheet" ? { willChange: "transform" } : undefined}
       >

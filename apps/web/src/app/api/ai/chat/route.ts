@@ -38,7 +38,9 @@ export async function GET(req: NextRequest) {
   const siteId = req.nextUrl.searchParams.get("siteId") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(siteId) || !(await siteBelongsToOrg(ctx.organization.id, siteId))) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
   const session = await getOrCreateChatSession(ctx.organization.id, siteId, ctx.user.id, ctx.user.locale);
-  const messages = await listMessages(ctx.organization.id, session.id);
+  // only the conversation leaves the server: system/tool rows are the internal audit trail (error codes, provider
+  // diagnostics, confirmation notes) and never reach the browser (supplement §9 "keine internen Logs")
+  const messages = (await listMessages(ctx.organization.id, session.id)).filter((m) => m.role === "user" || m.role === "assistant");
   return NextResponse.json({ ok: true, sessionId: session.id, aiEnabled: aiConfigured(), messages }, { headers: { "cache-control": "no-store" } });
 }
 
@@ -75,7 +77,7 @@ export async function POST(req: NextRequest) {
       for (const event of filter.map(internal)) emit(event);
     };
     try {
-      await runChatTurn(ctx, siteId, message, forward);
+      await runChatTurn(ctx, siteId, message, forward, { turnId });
     } catch (e) {
       forward({ type: "error", code: "INTERNAL_ERROR", message: "The assistant failed unexpectedly.", retryable: true });
       log.error({ err: e instanceof Error ? e.message : String(e) }, "ai.chat.turn_failed");

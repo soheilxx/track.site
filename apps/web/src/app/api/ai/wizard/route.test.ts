@@ -81,6 +81,22 @@ describe("wizard route tool run persistence", () => {
     expect(audited.result.data).toEqual({ saved: true, token: "[redacted:secret]", integration_id: DRAFT_ID });
   });
 
+  it("runs the typed tools without the AI provider (rule-based wizard stays available when OpenAI is unavailable)", async () => {
+    // the mocked context module exposes no OpenAI client and no provider check; the route must not need either
+    const previous = process.env.OPENAI_API_KEY;
+    delete process.env.OPENAI_API_KEY;
+    try {
+      runTool.mockResolvedValueOnce({ ok: true, code: "OK", data: { saved: true } });
+      const res = await POST(request({ siteId: SITE_ID, tool: "set_business_profile_draft", args: { business_type: "ecommerce" } }));
+      expect(res.status).toBe(200);
+      expect((await res.json()).ok).toBe(true);
+      expect(runTool).toHaveBeenCalledTimes(1);
+      expect(recordToolRun).toHaveBeenCalledTimes(1);
+    } finally {
+      if (previous !== undefined) process.env.OPENAI_API_KEY = previous;
+    }
+  });
+
   it("refuses confirmation-gated tools and records nothing", async () => {
     const res = await POST(request({ siteId: SITE_ID, tool: "publish_config_version", args: { draft_id: DRAFT_ID } }));
     expect(res.status).toBe(428);

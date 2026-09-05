@@ -108,7 +108,6 @@
       "noSite": "Track AI heeft een site nodig om aan te werken.",
       "noSiteAction": "Een site aanmaken",
       "newMessages": "Nieuwe berichten tonen",
-      "showEarlier": "{n} eerdere berichten tonen",
       "composerHint": "Enter verzendt, Shift+Enter voegt een regel toe.",
       "loading": "Track AI wordt geladen…",
       "contextSwitched": "Track AI werkt nu aan {site}.",
@@ -165,7 +164,13 @@
         "createSite": "Site aanmaken",
         "openAssistant": "Track AI openen",
         "step": "Huidige stap: {step}",
-        "progress": "{pct}% voltooid"
+        "progress": "{pct}% voltooid",
+        "stage": {
+          "eyebrow": "Track AI · eerste installatie",
+          "dockedTitle": "Je configuratie is live",
+          "dockedText": "Track AI gaat verder in het zijpaneel: diagnoses, wijzigingen en tests zijn maar één bericht verwijderd.",
+          "open": "Track AI openen"
+        }
       },
       "insights": {
         "title": "Insights",

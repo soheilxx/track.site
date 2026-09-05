@@ -1,6 +1,7 @@
 {
   "assistant": {
     "activityRegion": "Track-AI-Aktivität",
+    "messagesRegion": "Track-AI-Unterhaltung",
     "activity": {
       "generic": {
         "started": "Ich führe eine Prüfung aus.",
@@ -120,7 +121,14 @@
       "confirmGeneric": "Bestätigen",
       "cancel": "Abbrechen",
       "rollbackHint": "Rückgängig machen? Unter Releases gibt es den One-Click-Rollback.",
-      "openReleases": "Releases öffnen"
+      "openReleases": "Releases öffnen",
+      "result": {
+        "published": "Version {version} ist veröffentlicht und als aktiv verifiziert.",
+        "publishedUnverified": "Version {version} wurde veröffentlicht, das Backend meldet sie aber noch nicht als aktiv. Prüfe die Releases.",
+        "executed": "Bestätigt und ausgeführt: {action}.",
+        "failed": "Nicht ausgeführt: {action}. Grund: {reason}.",
+        "cancelled": "Abgebrochen. Nichts wurde geändert."
+      }
     },
     "credential": {
       "help": "Verschlüsselt im Tresor gespeichert. Nie mit dem Assistenten geteilt, nie wieder angezeigt.",
@@ -129,7 +137,9 @@
       "store": "Sicher speichern",
       "stored": "Zugangsdaten gespeichert ({masked}). Validierung: {validation}. Status: {status}.",
       "notChecked": "nicht geprüft",
-      "storeFailed": "Die Zugangsdaten konnten nicht gespeichert werden."
+      "storeFailed": "Die Zugangsdaten konnten nicht gespeichert werden.",
+      "waiting": "Eine sichere Credential-Karte wartet auf deine Eingabe.",
+      "open": "Karte öffnen"
     },
     "input": {
       "send": "Senden",
@@ -154,6 +164,30 @@
       "vendorEvent": "Anbieter-Event",
       "enabledColumn": "Aktiv",
       "noEvents": "keine Events"
+    },
+    "feed": {
+      "earlier": "{n} frühere Prüfungen abgeschlossen"
+    },
+    "nextAction": {
+      "retry": "Erneut versuchen",
+      "askMissing": "Fragen, was noch fehlt",
+      "askMissingMessage": "Was fehlt noch, damit das abgeschlossen werden kann?",
+      "openCredentialCard": "Sichere Credential-Karte öffnen",
+      "openApproval": "Bestätigung prüfen",
+      "openDestinations": "Destinations öffnen",
+      "openReleases": "Releases öffnen",
+      "openBilling": "Abrechnung öffnen",
+      "openTeam": "Team & Zugriff öffnen",
+      "openConsent": "Consent & Datenschutz öffnen"
+    },
+    "scope": {
+      "title": "Track AI bleibt bei deinem Track-Setup"
+    },
+    "note": {
+      "continueMessage": "Die Zugangsdaten sind gespeichert. Bitte mach mit dem Setup weiter."
+    },
+    "announce": {
+      "newMessage": "Track AI: {text}"
     }
   }
 }

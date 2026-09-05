@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, Button, Card, Input, Label, Select } from "@track-site/ui";
+import { useAssistant } from "./assistant-store";
 import { ApprovalCard, SecureCredentialCard } from "./inputs";
 import type { CredentialRequestView, PendingApprovalView } from "./types";
 
@@ -27,11 +28,12 @@ const CONNECTORS = ["meta", "google_ads", "ga4", "tiktok", "microsoft", "linkedi
  * Rule-based wizard: the same typed tools, driven by forms instead of the model. It is the
  * fallback when the AI provider is unavailable and the transparent expert path.
  */
-export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: string; aiEnabled: boolean }) {
+export function WizardPanel({ siteId, aiEnabled, refreshToken = 0 }: { siteId: string; locale: string; aiEnabled: boolean; /** bump to re-read the setup state (e.g. after an assistant activity completed) */ refreshToken?: number }) {
   const t = useTranslations("chat.wizard");
+  const { applyEvents } = useAssistant();
   const [state, setState] = useState<SetupStateView | null>(null);
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<{ tone: "ok" | "bad" | "info"; text: string } | null>(null);
+  const [message, setMessage] = useState<{ tone: "ok" | "bad" | "info" | "warn"; text: string } | null>(null);
   const [approval, setApproval] = useState<PendingApprovalView | null>(null);
   const [credential, setCredential] = useState<CredentialRequestView | null>(null);
   const [lastIntegration, setLastIntegration] = useState<{ id: string; type: string; ids: Array<{ key: string; label: string; example: string; pattern: string }> } | null>(null);
@@ -45,7 +47,7 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
     void callTool<SetupStateView>(siteId, "get_setup_state").then((r) => {
       if (r.ok && r.data) setState(r.data);
     });
-  }, [siteId]);
+  }, [siteId, refreshToken]);
 
   const run = async (tool: string, args: Record<string, unknown>, okText: string) => {
     setBusy(true);
@@ -84,7 +86,7 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
       ) : null}
 
       {step === "platform" ? (
-        <StepCard title={t("platformTitle")} text={t("platformText")}>
+        <StepCard title={t("platformTitle")} text={t("platformText")} focusTarget="setup-site">
           <Button variant="secondary" size="sm" disabled={busy} onClick={async () => {
             const r = await callTool<{ platform: string; platform_confidence: number; cmp_detected: string }>(siteId, "detect_site_stack");
             setMessage(r.ok && r.data ? { tone: "info", text: t("detected", { platform: r.data.platform, confidence: Math.round(r.data.platform_confidence * 100), cmp: r.data.cmp_detected }) } : { tone: "bad", text: r.message });
@@ -102,7 +104,7 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
       ) : null}
 
       {step === "installation" ? (
-        <StepCard title={t("installTitle")} text={t("installText")}>
+        <StepCard title={t("installTitle")} text={t("installText")} focusTarget="setup-site">
           <div className="flex flex-wrap gap-2">
             <Button disabled={busy} onClick={() => run("verify_snippet_installation", {}, t("checked"))}>
               {t("checkInstall")}
@@ -145,7 +147,7 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
       ) : null}
 
       {step === "destinations" ? (
-        <StepCard title={t("destTitle")} text={t("destText")}>
+        <StepCard title={t("destTitle")} text={t("destText")} focusTarget="setup-destinations">
           <form
             className="flex flex-col gap-2 sm:flex-row sm:items-end"
             onSubmit={async (e) => {
@@ -228,9 +230,9 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
       ) : null}
 
       {step === "review" || step === "publish" ? (
-        <StepCard title={t("publishTitle")} text={t("publishText")}>
+        <StepCard title={t("publishTitle")} text={t("publishText")} focusTarget="setup-review">
           {approval ? (
-            <ApprovalCard approval={approval} siteId={siteId} onDone={(msg, ok) => { setApproval(null); setMessage({ tone: ok ? "ok" : "bad", text: msg }); void refresh(); }} />
+            <ApprovalCard approval={approval} siteId={siteId} onEvents={applyEvents} onDone={(msg, ok, outcome) => { setApproval(null); setMessage({ tone: outcome.kind === "cancelled" ? "info" : !ok ? "bad" : outcome.verified === false ? "warn" : "ok", text: msg }); void refresh(); }} />
           ) : (
             <Button
               disabled={busy}
@@ -260,9 +262,10 @@ export function WizardPanel({ siteId, aiEnabled }: { siteId: string; locale: str
   );
 }
 
-function StepCard({ title, text, children }: { title: string; text: string; children: React.ReactNode }) {
+/** `focusTarget` makes the step reachable by the workspace moves (`data-focus-target`, focusable, ring while revealed). */
+function StepCard({ title, text, focusTarget, children }: { title: string; text: string; focusTarget?: string; children: React.ReactNode }) {
   return (
-    <Card className="p-4">
+    <Card className="p-4 outline-none data-[revealed]:ring-2 data-[revealed]:ring-primary data-[revealed]:ring-offset-2 data-[revealed]:ring-offset-surface" data-focus-target={focusTarget} tabIndex={focusTarget ? -1 : undefined}>
       <p className="text-sm font-semibold text-ink">{title}</p>
       <p className="mt-1 text-sm text-ink-3">{text}</p>
       <div className="mt-3">{children}</div>

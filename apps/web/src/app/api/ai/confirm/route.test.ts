@@ -59,6 +59,7 @@ describe("confirm route: execution, backend verification and contract events", (
     activeVersion.mockClear();
     recordToolRun.mockClear();
     appendMessage.mockClear();
+    takePendingApproval.mockClear();
   });
 
   it("executes with the server-side token, verifies the active version and returns verified activity events", async () => {
@@ -80,7 +81,7 @@ describe("confirm route: execution, backend verification and contract events", (
     const audited = (recordToolRun.mock.calls[0] as unknown as [string, string, { args: Record<string, unknown>; result: { data: unknown } }])[2];
     expect(audited.args.approval_token).toBe("[approval]");
     expect(JSON.stringify(audited)).not.toContain(TOKEN.slice(0, 20));
-    expect(appendMessage.mock.calls[0]![2]).toMatchObject({ role: "system", content: "publish_config_version confirmed and executed; backend state verified" });
+    expect((appendMessage.mock.calls[0] as unknown as [string, string, { role: string; content: string }])[2]).toMatchObject({ role: "system", content: "publish_config_version confirmed and executed; backend state verified" });
   });
 
   it("reports a publish the backend does not show as active yet as blocked, not as success", async () => {
@@ -89,7 +90,7 @@ describe("confirm route: execution, backend verification and contract events", (
     expect(body.ok).toBe(true);
     expect(body.verified).toBe(false);
     expect(body.events[1]).toMatchObject({ type: "activity.blocked", sentence: "generic.blocked", params: { reason: "VERIFICATION_FAILED" } });
-    expect(appendMessage.mock.calls[0]![2]).toMatchObject({ content: "publish_config_version confirmed and executed; backend state NOT verified" });
+    expect((appendMessage.mock.calls[0] as unknown as [string, string, { role: string; content: string }])[2]).toMatchObject({ content: "publish_config_version confirmed and executed; backend state NOT verified" });
   });
 
   it("returns 409 with a blocked activity when the token was already used", async () => {
@@ -109,5 +110,22 @@ describe("confirm route: execution, backend verification and contract events", (
     expect(res.status).toBe(409);
     expect((await res.json()).code).toBe("APPROVAL_INVALID");
     expect(runTool).not.toHaveBeenCalled();
+  });
+
+  it("refuses cross-origin requests before touching the approval", async () => {
+    const req = new Request("http://localhost/api/ai/confirm", { method: "POST", headers: { "content-type": "application/json", "sec-fetch-site": "cross-site" }, body: JSON.stringify({ siteId: SITE_ID, approvalId: "call_2" }) }) as unknown as Parameters<typeof POST>[0];
+    const res = await POST(req);
+    expect(res.status).toBe(403);
+    expect(takePendingApproval).not.toHaveBeenCalled();
+    expect(runTool).not.toHaveBeenCalled();
+  });
+
+  it("redacts the handler's failure message before it leaves the server", async () => {
+    runTool.mockResolvedValueOnce({ ok: false, code: "PROVIDER_ERROR", message: `vendor said: invalid token ${TOKEN}`, data: null });
+    const res = await POST(request({ siteId: SITE_ID, approvalId: "call_2" }));
+    expect(res.status).toBe(409);
+    const body = (await res.json()) as Body & { message: string };
+    expect(body.message).toContain("vendor said");
+    expect(JSON.stringify(body)).not.toContain(TOKEN.slice(0, 20));
   });
 });

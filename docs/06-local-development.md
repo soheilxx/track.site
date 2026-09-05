@@ -56,7 +56,7 @@ Demo login after seed (only when `SEED_DEMO=true`): `owner@acme.test` / `Demo-Pa
 | `pnpm test` | unit, no DB |
 | `pnpm test:integration` | Postgres integration; DB name must end with `_test` |
 | `pnpm test:contract` | connector contract tests against mock vendor servers |
-| `pnpm test:e2e` | Playwright against a production build of `apps/web` |
+| `pnpm test:e2e` | Playwright against a production build of `apps/web` (`next start` with `AI_DEV_FIXTURES=1` so the dev-only Track AI fixture route answers; seeded demo organization) |
 | `pnpm sdk:budget` | SDK bundle size gate (<= 30 KB gzip) |
 | `pnpm seo:check` | title, description, canonical, hreflang, JSON-LD, broken links |
 | `pnpm load:collector` | load test against the collector (`docs/performance-baseline.md`) |

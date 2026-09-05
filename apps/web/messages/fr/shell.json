@@ -108,7 +108,6 @@
       "noSite": "Track AI a besoin d’un site sur lequel travailler.",
       "noSiteAction": "Créer un site",
       "newMessages": "Afficher les nouveaux messages",
-      "showEarlier": "Afficher {n} messages précédents",
       "composerHint": "Entrée envoie, Maj+Entrée ajoute une ligne.",
       "loading": "Chargement de Track AI…",
       "contextSwitched": "Track AI travaille maintenant sur {site}.",
@@ -165,7 +164,13 @@
         "createSite": "Créer un site",
         "openAssistant": "Ouvrir Track AI",
         "step": "Étape actuelle : {step}",
-        "progress": "{pct} % terminé"
+        "progress": "{pct} % terminé",
+        "stage": {
+          "eyebrow": "Track AI · première configuration",
+          "dockedTitle": "Votre configuration est en ligne",
+          "dockedText": "Track AI continue dans le panneau latéral : diagnostics, modifications et tests restent à un message de distance.",
+          "open": "Ouvrir Track AI"
+        }
       },
       "insights": {
         "title": "Insights",

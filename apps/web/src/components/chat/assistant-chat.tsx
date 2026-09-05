@@ -1,20 +1,26 @@
 "use client";
 
-import { AlertTriangle, ArrowDown, Bot, Check, Loader2, Send, XCircle } from "lucide-react";
+import { AlertTriangle, ArrowDown, Bot, Check, Loader2, Lock, Send, ShieldCheck, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { Alert, Button, EmptyState, buttonVariants, cn } from "@track-site/ui";
 import { useAssistant } from "./assistant-store";
 import { UiCardView } from "./cards";
+import { revealTarget } from "./focus-target";
 import { ApprovalCard, InputComponentView, SecureCredentialCard } from "./inputs";
+import { nextActionFor, type NextAction } from "./next-action";
 import type { ActivityView, ChatError, ChatMessage } from "./types";
+import { ESTIMATED_ITEM_HEIGHT, VIRTUALIZE_FROM, anchorDelta, layoutItems, visibleRange } from "./virtual-list";
 import { WizardPanel } from "./wizard";
 
-/** Messages rendered at once; older ones are folded behind "Show earlier" so long conversations never grow the DOM unbounded (supplement §9 ≈ 200). */
-const WINDOW = 150;
 const AT_BOTTOM_PX = 32;
 const MAX_COMPOSER_LINES = 4;
+/** Activity sentences shown in the panel's feed; earlier completed checks fold into a count (the feed never scrolls). */
+const FEED_VISIBLE = 4;
+/** Off-topic and other refusals offer at most three allowed quick actions (supplement §9), every other answer at most four. */
+const QUICK_ACTIONS_MAX = 4;
+const QUICK_ACTIONS_REFUSAL_MAX = 3;
 
 type Translate = ReturnType<typeof useTranslations<"assistant">>;
 
@@ -31,6 +37,8 @@ export function errorText(t: Translate, error: ChatError): string {
   if (t.has(`error.${error.code}`)) return t(`error.${error.code}`);
   return error.message || t("error.FAILED");
 }
+
+export const isRefusal = (message: ChatMessage): boolean => message.role === "assistant" && (message.ui?.intent === "off_topic" || message.ui?.intent === "refusal");
 
 /** Site + environment the assistant works on, with a visible confirmation whenever the context changes. */
 export function AssistantContextLine() {
@@ -82,43 +90,138 @@ export function AssistantModeToggle() {
   );
 }
 
-/** Activity sentences bound to real tool runs; the icon and the text carry the state, never colour alone. */
-function ActivityList({ activities }: { activities: ActivityView[] }) {
+function lastUserMessage(messages: ChatMessage[]): string | null {
+  for (let i = messages.length - 1; i >= 0; i--) if (messages[i]!.role === "user") return messages[i]!.content;
+  return null;
+}
+
+function lastAssistantMessage(messages: ChatMessage[]): ChatMessage | null {
+  for (let i = messages.length - 1; i >= 0; i--) if (messages[i]!.role === "assistant") return messages[i]!;
+  return null;
+}
+
+/** Last entry the polite announcer reads out: an answer of Track AI or a system note of the panel (card outcome). */
+function lastAnnounceable(messages: ChatMessage[]): ChatMessage | null {
+  for (let i = messages.length - 1; i >= 0; i--) if (messages[i]!.role === "assistant" || messages[i]!.role === "system") return messages[i]!;
+  return null;
+}
+
+/** The next step under a blocked/failed sentence: a page, a card already in the panel, a retry or a question — never a percentage. */
+function NextActionControl({ action, busy, retryText, onSend }: { action: NextAction; busy: boolean; retryText: string | null; onSend: (text: string) => void }) {
+  const t = useTranslations("assistant.nextAction");
+  const cls = "mt-0.5 inline-flex min-h-6 items-center text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60";
+  switch (action.kind) {
+    case "link":
+      return (
+        <Link href={action.href} className={cls} data-next-action={action.label}>
+          {t(action.label)}
+        </Link>
+      );
+    case "reveal":
+      return (
+        <button type="button" className={cls} onClick={() => revealTarget(action.target)} data-next-action={action.label}>
+          {t(action.label)}
+        </button>
+      );
+    case "retry":
+      return (
+        <button type="button" className={cls} disabled={busy || !retryText} onClick={() => retryText && onSend(retryText)} data-next-action={action.label}>
+          {t("retry")}
+        </button>
+      );
+    case "ask":
+      return (
+        <button type="button" className={cls} disabled={busy} onClick={() => onSend(t("askMissingMessage"))} data-next-action={action.label}>
+          {t("askMissing")}
+        </button>
+      );
+  }
+}
+
+/**
+ * Activity feed of the panel (supplement §9 "Keine sichtbaren internen Gedankengänge"): the
+ * localized sentences of the current turn, one per real tool run (`data-run-id`), with the icon and
+ * text carrying the state — started, completed, blocked, failed — never a percentage. Blocked and
+ * failed runs name what is missing (safe server identifiers) and offer the next action. The live
+ * region is always present so that new sentences are announced politely; it collapses to zero
+ * height while there is nothing to show and never scrolls (only the message list does).
+ */
+export function AssistantActivityFeed() {
   const t = useTranslations("assistant");
-  if (!activities.length) return null;
+  const { chat, siteId, mode, send } = useAssistant();
+  const items = siteId && mode === "chat" ? chat.activities : [];
+  const visible = items.slice(-FEED_VISIBLE);
+  const earlier = items.length - visible.length;
+  const busy = chat.status !== "idle";
+  const retryText = lastUserMessage(chat.messages);
+  const pending = { credential: chat.credential !== null, approval: chat.approval !== null };
   return (
-    <ul className="space-y-1 text-xs" aria-live="polite" aria-label={t("activityRegion")} data-testid="assistant-activity">
-      {activities.map((a) => (
-        <li key={a.runId} className={cn("flex items-start gap-2", a.phase === "failed" ? "text-bad" : a.phase === "blocked" ? "text-warn" : "text-ink-2")} data-phase={a.phase}>
-          <span className="mt-0.5 shrink-0" aria-hidden="true">
-            {a.phase === "started" ? <Loader2 className="size-3.5 animate-spin text-primary" data-motion="essential" /> : a.phase === "completed" ? <Check className="size-3.5 text-ok" /> : a.phase === "blocked" ? <AlertTriangle className="size-3.5" /> : <XCircle className="size-3.5" />}
-          </span>
-          <span>
-            <span className="sr-only">{t(`state.phase.${a.phase}`)}: </span>
-            {activityText(t, a)}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div role="log" aria-live="polite" aria-label={t("activityRegion")} className={cn(visible.length ? "border-b border-line px-4 py-2 text-xs text-ink-2" : "h-0 overflow-hidden")} data-testid="assistant-activity" data-count={items.length}>
+      {visible.length ? (
+        <ul className="space-y-1.5">
+          {earlier > 0 ? (
+            <li className="text-ink-3" data-testid="assistant-activity-earlier">
+              {t("feed.earlier", { n: earlier })}
+            </li>
+          ) : null}
+          {visible.map((a) => {
+            const action = nextActionFor(a, pending);
+            return (
+              <li key={a.runId} id={`ai-run-${a.runId}`} data-run-id={a.runId} data-phase={a.phase} data-activity={a.activity} className={cn("flex items-start gap-2", a.phase === "failed" ? "text-bad" : a.phase === "blocked" ? "text-warn" : "text-ink-2")}>
+                <span className="mt-0.5 shrink-0" aria-hidden="true">
+                  {a.phase === "started" ? <Loader2 className="size-3.5 animate-spin text-primary" data-motion="essential" /> : a.phase === "completed" ? <Check className="size-3.5 text-ok" /> : a.phase === "blocked" ? <AlertTriangle className="size-3.5" /> : <XCircle className="size-3.5" />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p>
+                    <span className="sr-only">{t(`state.phase.${a.phase}`)}: </span>
+                    {activityText(t, a)}
+                  </p>
+                  {action ? <NextActionControl action={action} busy={busy} retryText={retryText} onSend={(text) => void send(text)} /> : null}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
-/** Scrollable conversation: the only element of the panel that scrolls. Autoscroll only when the reader is at the end. */
+/**
+ * Scrollable conversation: the only element of the panel that scrolls. Autoscroll only when the
+ * reader is at the end, otherwise the "Show new messages" pill. From `VIRTUALIZE_FROM` messages
+ * the list is windowed: only the messages around the viewport are in the DOM, spacers hold the
+ * measured heights of the rest, and a re-measured message above the viewport moves `scrollTop`
+ * by the same amount so the reader's position never jumps. New assistant answers are announced
+ * in a polite live region outside the scroll container.
+ */
 export function AssistantMessages() {
   const t = useTranslations("chat");
   const ts = useTranslations("shell.assistant");
   const ta = useTranslations("assistant");
-  const { chat, load, siteId, send, mode, aiEnabled, locale, saveScroll, dismissApproval, dismissCredential, applyEvents } = useAssistant();
+  const { chat, load, siteId, send, mode, aiEnabled, locale, saveScroll, dismissApproval, dismissCredential, applyEvents, addNote } = useAssistant();
   // the host keys this component by site id, so every site starts with a fresh window and scroll state
   const listRef = useRef<HTMLDivElement>(null);
   const atBottom = useRef(true);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [seenCount, setSeenCount] = useState(0);
-  const [shown, setShown] = useState(WINDOW);
+
+  // windowing state: measured heights per message id (state, read in render) and the viewport of the scroll container;
+  // `measuredRef` mirrors the heights for the observer callback only (never touched in render)
+  const [heights, setHeights] = useState<ReadonlyMap<string, number>>(() => new Map());
+  const measuredRef = useRef(new Map<string, number>());
+  const observerRef = useRef<ResizeObserver | null>(null);
+  const [view, setView] = useState<{ top: number; height: number }>(() => ({ top: chat.scrollTop ?? Number.MAX_SAFE_INTEGER, height: 640 }));
 
   useEffect(() => {
     load();
   }, [load, siteId]);
+
+  const syncView = useCallback(() => {
+    const el = listRef.current;
+    if (!el) return;
+    setView((v) => (v.top === el.scrollTop && v.height === el.clientHeight ? v : { top: el.scrollTop, height: el.clientHeight }));
+  }, []);
 
   // restore the saved scroll position when the list mounts (route change, panel reopened); otherwise start at the end
   const restored = useRef(false);
@@ -129,9 +232,14 @@ export function AssistantMessages() {
     if (chat.scrollTop !== null) el.scrollTop = chat.scrollTop;
     else el.scrollTop = el.scrollHeight;
     atBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight <= AT_BOTTOM_PX;
-  }, [chat.loaded, chat.scrollTop]);
+    // a restored position away from the end starts without the pill and shows it only for messages that arrive afterwards
+    setIsAtBottom(atBottom.current);
+    setSeenCount(chat.messages.length);
+    syncView();
+  }, [chat.loaded, chat.scrollTop, chat.messages.length, syncView]);
 
   const messageCount = chat.messages.length;
+  const virtual = messageCount >= VIRTUALIZE_FROM;
   const scrollToEnd = useCallback(() => {
     const el = listRef.current;
     if (!el) return;
@@ -139,7 +247,62 @@ export function AssistantMessages() {
     atBottom.current = true;
     setIsAtBottom(true);
     setSeenCount(messageCount);
-  }, [messageCount]);
+    syncView();
+  }, [messageCount, syncView]);
+
+  // one ResizeObserver measures the rendered messages (and the container's viewport); created lazily, released on unmount.
+  // A re-measured message that ends above the viewport moves `scrollTop` by its growth (DOM offsets, applied at once),
+  // then the new heights reach the layout through state.
+  const getObserver = useCallback(() => {
+    if (observerRef.current || typeof ResizeObserver === "undefined") return observerRef.current;
+    observerRef.current = new ResizeObserver((entries) => {
+      const el = listRef.current;
+      const updates: Array<[string, number]> = [];
+      let delta = 0;
+      let viewportChanged = false;
+      for (const entry of entries) {
+        const target = entry.target as HTMLElement;
+        if (target === el) {
+          viewportChanged = true;
+          continue;
+        }
+        const id = target.dataset.messageId;
+        if (!id) continue;
+        const height = Math.round(entry.borderBoxSize?.[0]?.blockSize ?? target.getBoundingClientRect().height);
+        const previous = measuredRef.current.get(id);
+        if (previous === height) continue;
+        if (el) delta += anchorDelta(target.offsetTop, previous ?? ESTIMATED_ITEM_HEIGHT, height, el.scrollTop);
+        measuredRef.current.set(id, height);
+        updates.push([id, height]);
+      }
+      if (el && delta !== 0 && !atBottom.current) el.scrollTop += delta;
+      if (updates.length)
+        setHeights((prev) => {
+          const next = new Map(prev);
+          for (const [id, height] of updates) next.set(id, height);
+          return next;
+        });
+      if (viewportChanged) syncView();
+    });
+    return observerRef.current;
+  }, [syncView]);
+  useEffect(() => () => observerRef.current?.disconnect(), []);
+  useEffect(() => {
+    const el = listRef.current;
+    const observer = virtual ? getObserver() : null;
+    if (!el || !observer) return;
+    observer.observe(el);
+    return () => observer.unobserve(el);
+  }, [virtual, getObserver]);
+  const measure = useCallback(
+    (el: HTMLDivElement | null) => {
+      const observer = el ? getObserver() : null;
+      if (!el || !observer) return;
+      observer.observe(el);
+      return () => observer.unobserve(el);
+    },
+    [getObserver],
+  );
 
   // autoscroll (DOM only) when the reader is already at the end; otherwise the "new messages" hint is derived below
   const activityCount = chat.activities.length;
@@ -147,7 +310,39 @@ export function AssistantMessages() {
     const el = listRef.current;
     if (!el || !restored.current || !atBottom.current) return;
     el.scrollTop = el.scrollHeight;
-  }, [messageCount, activityCount, chat.status, chat.stage, chat.pending, chat.approval, chat.credential, chat.error, chat.notice]);
+    syncView();
+  }, [messageCount, activityCount, heights, chat.status, chat.stage, chat.pending, chat.approval, chat.credential, chat.error, chat.notice, syncView]);
+
+  // the exact diff arrives as the approval card at the end of the list: reveal and focus it once per approval
+  // (never while the reader is typing — `revealTarget` leaves the focus in the composer)
+  const approvalId = chat.approval?.approvalId ?? null;
+  useEffect(() => {
+    if (!approvalId) return;
+    const el = listRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+      atBottom.current = true;
+      setIsAtBottom(true);
+      syncView();
+    }
+    const frame = requestAnimationFrame(() => revealTarget("approval-card"));
+    return () => cancelAnimationFrame(frame);
+  }, [approvalId, syncView]);
+
+  // polite announcement of every assistant answer (and every system note of the panel) that arrives after the conversation was loaded
+  const [announcement, setAnnouncement] = useState("");
+  const announced = useRef<{ ready: boolean; id: string | null }>({ ready: false, id: null });
+  useEffect(() => {
+    if (chat.loaded !== "ready") return;
+    const last = lastAnnounceable(chat.messages);
+    if (!announced.current.ready) {
+      announced.current = { ready: true, id: last?.id ?? null };
+      return;
+    }
+    if (!last || last.id === announced.current.id) return;
+    announced.current.id = last.id;
+    setAnnouncement(last.role === "system" ? last.content.slice(0, 240) : ta("announce.newMessage", { text: last.content.slice(0, 240) }));
+  }, [chat.loaded, chat.messages, ta]);
 
   // the scroll position is persisted in the layout-level store (debounced: one write per pause, not per tick)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -161,6 +356,7 @@ export function AssistantMessages() {
     atBottom.current = bottom;
     setIsAtBottom(bottom);
     if (bottom) setSeenCount(messageCount);
+    if (virtual) syncView();
     const top = bottom ? null : el.scrollTop;
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => saveScroll(top), 150);
@@ -190,21 +386,26 @@ export function AssistantMessages() {
     );
   }
 
-  const visible = chat.messages.slice(-shown);
-  const earlier = chat.messages.length - visible.length;
+  // window of messages to render: everything below the threshold, otherwise the measured range around the viewport
+  const layout = virtual
+    ? layoutItems(
+        chat.messages.map((m) => m.id),
+        heights,
+      )
+    : null;
+  const range = layout ? visibleRange(layout, view.top, view.height) : { start: 0, end: messageCount };
+  const topPad = layout ? layout.offsets[range.start]! : 0;
+  const bottomPad = layout ? layout.total - layout.offsets[range.end]! : 0;
+  const visible = chat.messages.slice(range.start, range.end);
+
   const stageText = chat.status === "idle" ? null : chat.status === "reconnecting" ? ta("stream.reconnecting") : chat.status === "sending" ? ta("stream.sending") : chat.stage && ta.has(`stage.${chat.stage}`) ? ta(`stage.${chat.stage}`) : chat.status === "streaming" ? ta("stage.answer_streaming") : ta("stage.model_request");
   const published = chat.activities.some((a) => a.activity === "publish" && a.phase === "completed");
   return (
     <>
-      <div ref={listRef} onScroll={onScroll} className="relative h-full space-y-4 overflow-y-auto overscroll-contain px-4 py-4" data-testid="assistant-messages" aria-busy={chat.loaded === "loading" || undefined}>
-        {chat.loaded === "loading" ? <p className="text-xs text-ink-3">{ts("loading")}</p> : null}
-        {earlier > 0 ? (
-          <div className="text-center">
-            <Button size="sm" variant="secondary" onClick={() => setShown((n) => n + WINDOW)}>
-              {ts("showEarlier", { n: earlier })}
-            </Button>
-          </div>
-        ) : null}
+      {/* the transcript scrolls on its own; as a named region with tabindex it stays reachable and scrollable by keyboard
+          even when no message in view carries a control (WCAG 2.1.1, axe scrollable-region-focusable) */}
+      <div ref={listRef} onScroll={onScroll} role="region" aria-label={ta("messagesRegion")} tabIndex={0} className="relative h-full overflow-y-auto overscroll-contain px-4 pt-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary" data-testid="assistant-messages" data-virtualized={virtual ? "true" : "false"} data-rendered={visible.length} data-total={messageCount} aria-busy={chat.loaded === "loading" || undefined}>
+        {chat.loaded === "loading" ? <p className="pb-4 text-xs text-ink-3">{ts("loading")}</p> : null}
         {chat.loaded === "ready" && chat.messages.length === 0 ? (
           <div className="mx-auto max-w-md py-8 text-center">
             <Bot className="mx-auto size-8 text-primary" aria-hidden="true" />
@@ -219,68 +420,77 @@ export function AssistantMessages() {
             </div>
           </div>
         ) : null}
+        {topPad > 0 ? <div style={{ height: topPad }} aria-hidden="true" data-testid="assistant-spacer-top" /> : null}
         {visible.map((m) => (
-          <MessageView key={m.id} message={m} siteId={siteId} onChoice={(_field, _values, label) => void send(label)} onSend={(text) => void send(text)} />
-        ))}
-        <ActivityList activities={chat.activities} />
-        {chat.pending ? (
-          <div className="flex gap-3" data-testid="assistant-pending">
-            <span className="mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-ink-2">
-              <Bot className="size-4" aria-hidden="true" />
-            </span>
-            <div className="min-w-0 flex-1 space-y-3">
-              <p className="whitespace-pre-line text-sm text-ink">{chat.pending.text}</p>
-              {chat.pending.cards.map((c, i) => (
-                <UiCardView key={i} card={c} />
-              ))}
-            </div>
+          <div key={m.id} ref={virtual ? measure : undefined} data-message-id={m.id} className="pb-4">
+            <MessageView message={m} siteId={siteId} busy={chat.status !== "idle"} onChoice={(_field, _values, label) => void send(label)} onSend={(text) => void send(text)} onNote={addNote} />
           </div>
-        ) : null}
-        {stageText ? (
-          <p className="text-xs text-ink-3" aria-live="polite" data-testid="assistant-stage">
-            {stageText}
-          </p>
-        ) : null}
-        {chat.notice ? <Alert tone="warn">{ta(`stream.${chat.notice}`)}</Alert> : null}
-        {chat.error ? <Alert tone="bad">{errorText(ta, chat.error)}</Alert> : null}
-        {published ? (
-          <p className="text-xs text-ink-3">
-            {ta("approval.rollbackHint")}{" "}
-            <Link href="/app/releases" className="font-medium text-primary underline-offset-2 hover:underline">
-              {ta("approval.openReleases")}
-            </Link>
-          </p>
-        ) : null}
-        {chat.credential ? (
-          <SecureCredentialCard
-            request={chat.credential}
-            siteId={siteId}
-            onStored={(msg) => {
-              dismissCredential();
-              void send(msg);
-            }}
-          />
-        ) : null}
-        {chat.approval ? (
-          <>
-            <p className="text-xs text-warn" aria-live="polite">
-              {ta("activity.confirmation.required")}
+        ))}
+        {bottomPad > 0 ? <div style={{ height: bottomPad }} aria-hidden="true" data-testid="assistant-spacer-bottom" /> : null}
+        <div className="space-y-4 pb-4">
+          {chat.pending ? (
+            <div className="flex gap-3" data-testid="assistant-pending">
+              <span className="mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-ink-2">
+                <Bot className="size-4" aria-hidden="true" />
+              </span>
+              <div className="min-w-0 flex-1 space-y-3">
+                <p className="whitespace-pre-line text-sm text-ink">{chat.pending.text}</p>
+                {chat.pending.cards.map((c, i) => (
+                  <UiCardView key={i} card={c} />
+                ))}
+              </div>
+            </div>
+          ) : null}
+          {stageText ? (
+            <p className="text-xs text-ink-3" aria-live="polite" data-testid="assistant-stage">
+              {stageText}
             </p>
-            <ApprovalCard
-              approval={chat.approval}
+          ) : null}
+          {chat.notice ? <Alert tone="warn">{ta(`stream.${chat.notice}`)}</Alert> : null}
+          {chat.error ? <Alert tone="bad">{errorText(ta, chat.error)}</Alert> : null}
+          {published ? (
+            <p className="text-xs text-ink-3">
+              {ta("approval.rollbackHint")}{" "}
+              <Link href="/app/releases" className="font-medium text-primary underline-offset-2 hover:underline">
+                {ta("approval.openReleases")}
+              </Link>
+            </p>
+          ) : null}
+          {/* card outcomes become localized system notes of the transcript — never a message in the user's name; the assistant is only ever addressed by a click or typed text of the user */}
+          {chat.credential ? (
+            <SecureCredentialCard
+              request={chat.credential}
               siteId={siteId}
-              onEvents={applyEvents}
-              onDone={(msg) => {
-                dismissApproval();
-                void send(msg);
+              onStored={(message) => {
+                dismissCredential();
+                addNote(message, "credential");
               }}
             />
-          </>
-        ) : null}
+          ) : null}
+          {chat.approval ? (
+            <>
+              <p className="text-xs text-warn" aria-live="polite">
+                {ta("activity.confirmation.required")}
+              </p>
+              <ApprovalCard
+                approval={chat.approval}
+                siteId={siteId}
+                onEvents={applyEvents}
+                onDone={(message) => {
+                  dismissApproval();
+                  addNote(message, "approval");
+                }}
+              />
+            </>
+          ) : null}
+        </div>
+      </div>
+      <div role="status" aria-live="polite" className="sr-only" data-testid="assistant-announcer">
+        {announcement}
       </div>
       {hasNew ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
-          <Button size="sm" variant="secondary" className="pointer-events-auto shadow-pop" onClick={scrollToEnd} leadingIcon={<ArrowDown className="size-4" aria-hidden="true" />}>
+          <Button size="sm" variant="secondary" className="pointer-events-auto shadow-pop" onClick={scrollToEnd} leadingIcon={<ArrowDown className="size-4" aria-hidden="true" />} data-testid="assistant-new-messages">
             {ts("newMessages")}
           </Button>
         </div>
@@ -293,9 +503,12 @@ export function AssistantMessages() {
 export function AssistantComposer() {
   const t = useTranslations("chat");
   const ts = useTranslations("shell.assistant");
+  const ta = useTranslations("assistant");
   const { chat, send, setDraft, setComposerFocused, composerRef, mode, siteId } = useAssistant();
-  const lastUi = [...chat.messages].reverse().find((m) => m.ui)?.ui ?? null;
-  const quickActions = lastUi?.quick_actions ?? [];
+  const last = lastAssistantMessage(chat.messages);
+  const lastUi = last?.ui ?? null;
+  // a refusal offers at most three allowed quick actions, every other answer at most four
+  const quickActions = (lastUi?.quick_actions ?? []).slice(0, last && isRefusal(last) ? QUICK_ACTIONS_REFUSAL_MAX : QUICK_ACTIONS_MAX);
   const busy = chat.status !== "idle";
 
   useLayoutEffect(() => {
@@ -326,10 +539,19 @@ export function AssistantComposer() {
 
   return (
     <div className="pb-safe">
+      {chat.credential ? (
+        <div className="flex items-center gap-2 px-4 pt-3 text-xs text-ink-2" data-testid="assistant-credential-entry">
+          <Lock className="size-3.5 shrink-0 text-primary" aria-hidden="true" />
+          <span className="min-w-0 flex-1">{ta("credential.waiting")}</span>
+          <button type="button" className="shrink-0 font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" onClick={() => revealTarget("credential-card")}>
+            {ta("credential.open")}
+          </button>
+        </div>
+      ) : null}
       {quickActions.length ? (
-        <div className="flex flex-wrap gap-2 px-4 pt-3">
-          {quickActions.slice(0, 4).map((q) => (
-            <Button key={q.id} size="sm" variant={q.kind === "primary" ? "primary" : "secondary"} onClick={() => void send(q.message)} disabled={busy}>
+        <div className="flex flex-wrap gap-2 px-4 pt-3" data-testid="assistant-quick-actions">
+          {quickActions.map((q) => (
+            <Button key={q.id} size="sm" variant={q.kind === "primary" ? "primary" : "secondary"} onClick={() => void send(q.message)} disabled={busy} data-testid="assistant-quick-action">
               {q.label}
             </Button>
           ))}
@@ -366,7 +588,8 @@ export function AssistantComposer() {
   );
 }
 
-function MessageView({ message, siteId, onChoice, onSend }: { message: ChatMessage; siteId: string; onChoice: (field: string, values: string[], label: string) => void; onSend: (text: string) => void }) {
+function MessageView({ message, siteId, busy, onChoice, onSend, onNote }: { message: ChatMessage; siteId: string; busy: boolean; onChoice: (field: string, values: string[], label: string) => void; onSend: (text: string) => void; onNote: (text: string, note: NonNullable<ChatMessage["note"]>) => void }) {
+  const ta = useTranslations("assistant");
   if (message.role === "user") {
     return (
       <div className="flex justify-end">
@@ -374,14 +597,42 @@ function MessageView({ message, siteId, onChoice, onSend }: { message: ChatMessa
       </div>
     );
   }
+  if (message.role === "system") {
+    // outcome of a card the user operated: a note of the panel, visibly neither the user's words nor an answer of Track AI;
+    // after a stored credential the conversation continues only on the user's click, with a visible, localized message
+    return (
+      <div className="flex justify-center" data-testid="assistant-system-note" data-note={message.note}>
+        <div className="max-w-[85%] rounded-[var(--radius-card)] border border-line bg-surface-2 px-3 py-2 text-center text-xs text-ink-2">
+          <p className="whitespace-pre-line">{message.content}</p>
+          {message.note === "credential" ? (
+            <button type="button" className="mt-1 inline-flex min-h-6 items-center font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60" disabled={busy} onClick={() => onSend(ta("note.continueMessage"))} data-testid="assistant-note-continue">
+              {ta("cards.continue")}
+            </button>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
   const ui = message.ui;
+  const refusal = isRefusal(message);
   return (
     <div className="flex gap-3">
       <span className="mt-1 inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-ink-2">
         <Bot className="size-4" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1 space-y-3">
-        <p className="whitespace-pre-line text-sm text-ink">{message.content}</p>
+        {refusal ? (
+          // off-topic / manipulation / secret intake: a short friendly refusal without any tool call, marked as in-scope guidance
+          <div className="rounded-[var(--radius-card)] border border-violet-soft-2 bg-violet-soft/40 px-3 py-2" data-testid="assistant-scope-notice" data-intent={ui?.intent}>
+            <p className="flex items-center gap-1.5 text-xs font-medium text-violet">
+              <ShieldCheck className="size-3.5" aria-hidden="true" />
+              {ta("scope.title")}
+            </p>
+            <p className="mt-1 whitespace-pre-line text-sm text-ink">{message.content}</p>
+          </div>
+        ) : (
+          <p className="whitespace-pre-line text-sm text-ink">{message.content}</p>
+        )}
         {ui?.warnings?.length ? (
           <ul className="space-y-1">
             {ui.warnings.map((w) => (
@@ -394,7 +645,7 @@ function MessageView({ message, siteId, onChoice, onSend }: { message: ChatMessa
         {ui?.cards.map((c, i) => (
           <UiCardView key={i} card={c} onChoice={onChoice} />
         ))}
-        {ui ? <InputComponentView component={ui.input_component} onSend={onSend} siteId={siteId} onCredentialStored={onSend} /> : null}
+        {ui ? <InputComponentView component={ui.input_component} onSend={onSend} siteId={siteId} onCredentialStored={(text) => onNote(text, "credential")} /> : null}
         {ui?.next_best_action ? <p className="text-xs text-ink-3">{ui.next_best_action}</p> : null}
       </div>
     </div>

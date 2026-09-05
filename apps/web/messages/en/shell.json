@@ -108,7 +108,6 @@
       "noSite": "Track AI needs a site to work on.",
       "noSiteAction": "Create a site",
       "newMessages": "Show new messages",
-      "showEarlier": "Show {n} earlier messages",
       "composerHint": "Enter sends, Shift+Enter adds a line.",
       "loading": "Loading Track AI…",
       "contextSwitched": "Track AI now works on {site}.",
@@ -165,7 +164,13 @@
         "createSite": "Create site",
         "openAssistant": "Open Track AI",
         "step": "Current step: {step}",
-        "progress": "{pct}% complete"
+        "progress": "{pct}% complete",
+        "stage": {
+          "eyebrow": "Track AI · first setup",
+          "dockedTitle": "Your configuration is live",
+          "dockedText": "Track AI continues in the side panel: diagnostics, changes and tests stay one message away.",
+          "open": "Open Track AI"
+        }
       },
       "insights": {
         "title": "Insights",

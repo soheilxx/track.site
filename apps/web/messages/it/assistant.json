@@ -1,0 +1,193 @@
+{
+  "assistant": {
+    "activityRegion": "Attività di Track AI",
+    "messagesRegion": "Conversazione con Track AI",
+    "activity": {
+      "generic": {
+        "started": "Sto eseguendo una verifica.",
+        "completed": "Verifica completata.",
+        "blocked": "L'azione non è ancora stata completata.",
+        "blocked_missing": "L'azione non è ancora stata completata. Manca ancora: {missing}",
+        "failed": "L'azione non è riuscita: {reason}"
+      },
+      "state_lookup": { "started": "Sto leggendo lo stato attuale della tua configurazione.", "completed": "Stato della configurazione caricato." },
+      "site_check": { "started": "Sto verificando il tuo sito web.", "completed": "Verifica del sito web completata." },
+      "stack_detection": { "started": "Sto rilevando il tuo sistema shop o CMS.", "completed": "Ho rilevato il tuo sistema shop o CMS." },
+      "snippet_verification": { "started": "Sto verificando se lo snippet Track è installato correttamente.", "completed": "Lo snippet Track è installato correttamente." },
+      "domain_verification": { "started": "Sto verificando la proprietà del tuo dominio.", "completed": "Proprietà del dominio verificata." },
+      "measurement_plan": { "started": "Sto creando un piano di misurazione per il tuo modello di business.", "completed": "Il piano di misurazione è nella tua bozza." },
+      "draft_update": { "started": "Sto aggiornando la tua bozza di configurazione.", "completed": "Bozza aggiornata." },
+      "destination_setup": { "started": "Sto preparando la destinazione nella tua bozza.", "completed": "Destinazione preparata nella bozza." },
+      "credential_request": { "started": "Sto preparando la scheda credenziali sicura.", "completed": "La scheda credenziali sicura è pronta. I segreti non passano mai dalla chat." },
+      "connection_validation": { "started": "Sto validando la connessione e gli ID inseriti.", "completed": "Connessione e ID validati." },
+      "test_event": { "started": "Sto inviando un evento di test controllato.", "completed": "L'evento di test è stato accettato." },
+      "processing_check": { "started": "Sto verificando se l'evento è stato elaborato e inoltrato correttamente.", "completed": "L'evento è stato elaborato e inoltrato correttamente." },
+      "signal_scan": { "started": "Sto cercando segnali mancanti, duplicati o errati.", "completed": "Verifica dei segnali completata." },
+      "diagnostics": { "started": "Sto eseguendo la diagnostica del tracking.", "completed": "Diagnostica completata." },
+      "consent_review": { "started": "Sto controllando le impostazioni del consenso.", "completed": "Impostazioni del consenso controllate." },
+      "change_review": { "started": "Sto controllando la bozza alla ricerca di problemi e modifiche.", "completed": "Revisione della bozza completata." },
+      "change_proposal": { "started": "Sto preparando la proposta di modifica.", "completed": "La proposta di modifica è pronta e attende la tua revisione." },
+      "publish": { "started": "La configurazione confermata è in fase di pubblicazione.", "completed": "La modifica è attiva ed è stata verificata con successo." },
+      "rollback": { "started": "Ripristino della versione precedente della configurazione.", "completed": "La versione precedente è di nuovo attiva ed è stata verificata." },
+      "destination_pause": { "started": "Modifica dello stato di consegna della destinazione.", "completed": "Lo stato di consegna della destinazione è stato modificato e verificato." },
+      "credential_change": { "started": "Applicazione della modifica delle credenziali.", "completed": "La modifica delle credenziali è attiva." },
+      "data_request": { "started": "Elaborazione della richiesta dati.", "completed": "La richiesta dati è stata completata." },
+      "live_conversion": { "started": "Invio della conversione reale confermata.", "completed": "La conversione reale è stata inviata e confermata." },
+      "confirmation": { "required": "Prima di modificare qualcosa in produzione, ho bisogno della tua conferma." },
+      "secret_intake": { "blocked": "Un valore simile a una credenziale è stato rimosso. I segreti vengono accettati solo tramite la scheda credenziali sicura." }
+    },
+    "stage": {
+      "scope_check": "Sto verificando la tua richiesta.",
+      "model_request": "Track AI sta lavorando alla tua richiesta.",
+      "tool_execution": "Le verifiche sono in corso.",
+      "answer_streaming": "Preparazione della risposta.",
+      "answer_validation": "Validazione della risposta.",
+      "queued": "In coda.",
+      "captured": "Acquisito.",
+      "accepted": "Accettato.",
+      "normalized": "Normalizzato.",
+      "policy_blocked": "Bloccato dalla policy sul consenso.",
+      "deduplicated": "Deduplicato.",
+      "routed": "Instradato.",
+      "delivered": "Consegnato.",
+      "rejected": "Rifiutato."
+    },
+    "reason": {
+      "VALIDATION_ERROR": "l'input non era valido",
+      "NOT_FOUND": "l'elemento non è stato trovato",
+      "UNAUTHORIZED": "non hai effettuato l'accesso",
+      "FORBIDDEN": "il tuo ruolo non consente questa azione",
+      "CONFLICT": "l'elemento è cambiato nel frattempo",
+      "RATE_LIMITED": "troppe richieste in poco tempo",
+      "ENTITLEMENT_EXCEEDED": "il limite del tuo piano è stato raggiunto",
+      "POLICY_BLOCKED": "bloccato dalla policy sul consenso o sui dati",
+      "CONFIRMATION_REQUIRED": "prima è necessaria la tua conferma",
+      "APPROVAL_INVALID": "la conferma non è più valida",
+      "INVALID_STATE": "lo stato attuale non consente questo passaggio",
+      "NOT_CONNECTED": "manca una connessione o una credenziale",
+      "PROVIDER_ERROR": "il servizio esterno ha restituito un errore",
+      "PROVIDER_UNAVAILABLE": "il servizio esterno non è disponibile",
+      "TIMEOUT": "l'operazione ha richiesto troppo tempo",
+      "INTERNAL_ERROR": "si è verificato un errore interno",
+      "VERIFICATION_FAILED": "il backend non segnala ancora la modifica come attiva",
+      "UNKNOWN": "un motivo sconosciuto"
+    },
+    "state": {
+      "idle": "Track AI è pronto.",
+      "listening": "Track AI è in ascolto.",
+      "working": "Track AI sta lavorando.",
+      "streaming": "Track AI sta rispondendo.",
+      "approval_required": "Track AI ha bisogno della tua conferma.",
+      "success": "Track AI ha completato l'azione.",
+      "blocked": "Track AI è bloccato.",
+      "phase": { "started": "In corso", "completed": "Fatto", "blocked": "Bloccato", "failed": "Non riuscito" }
+    },
+    "stream": {
+      "sending": "Invio del tuo messaggio…",
+      "reconnecting": "Connessione persa. Riconnessione senza ripetere alcuna azione…",
+      "resumed": "Riconnesso. Si riprende da dove il flusso si era interrotto."
+    },
+    "error": {
+      "TIMEOUT": "L'assistente ha impiegato troppo tempo. Lo stato della tua configurazione è salvato; riprova.",
+      "PROVIDER_UNAVAILABLE": "Il provider di IA non è disponibile al momento. Lo stato della tua configurazione è salvato; puoi continuare con il modulo guidato.",
+      "PROVIDER_ERROR": "L'assistente non è riuscito a completare la risposta. Riprova.",
+      "POLICY_BLOCKED": "L'assistente ha rifiutato questa richiesta.",
+      "RATE_LIMITED": "Troppe richieste in poco tempo. Attendi un momento.",
+      "INTERNAL_ERROR": "L'assistente ha avuto un errore imprevisto. I tuoi progressi sono salvati.",
+      "NOT_CONNECTED": "L'assistente IA non è configurato per questo ambiente. Usa invece il modulo guidato.",
+      "FORBIDDEN": "Il tuo ruolo non consente questa azione.",
+      "VALIDATION_ERROR": "La richiesta non era valida.",
+      "NOT_FOUND": "Il sito o la conversazione non sono stati trovati.",
+      "UNAUTHORIZED": "Effettua di nuovo l'accesso.",
+      "CONFLICT": "Qualcosa è cambiato nel frattempo. Riprova.",
+      "STREAM_LOST": "Non è stato possibile ripristinare la connessione. I tuoi progressi sono salvati; invia di nuovo il messaggio per continuare.",
+      "LOAD_FAILED": "Impossibile caricare la conversazione.",
+      "FAILED": "L'assistente non è raggiungibile al momento. I tuoi progressi sono salvati."
+    },
+    "approval": {
+      "title": "Conferma: {action}",
+      "action": {
+        "publish_config_version": "pubblicare la configurazione",
+        "rollback_config_version": "tornare a una versione precedente",
+        "activate_or_pause_destination": "mettere in pausa o attivare la destinazione",
+        "rotate_credential": "sostituire la credenziale",
+        "disconnect_integration": "scollegare la destinazione",
+        "send_live_conversion": "inviare una conversione reale",
+        "delete_or_export_data": "eliminare o esportare dati"
+      },
+      "recipients": "Destinatari: {list}",
+      "validUntil": "Valido fino alle {time}. Nulla cambia prima del tuo clic.",
+      "confirm": "Conferma e pubblica",
+      "confirmGeneric": "Conferma",
+      "cancel": "Annulla",
+      "rollbackHint": "Devi annullare? In Releases c'è il rollback con un clic.",
+      "openReleases": "Apri Releases",
+      "result": {
+        "published": "La versione {version} è pubblicata e verificata come attiva.",
+        "publishedUnverified": "La versione {version} è stata pubblicata, ma il backend non la segnala ancora come attiva. Controlla Releases.",
+        "executed": "Confermato ed eseguito: {action}.",
+        "failed": "Non eseguito: {action}. Motivo: {reason}.",
+        "cancelled": "Annullato. Non è cambiato nulla."
+      }
+    },
+    "credential": {
+      "help": "Salvato cifrato nella cassaforte. Mai condiviso con l'assistente, mai mostrato di nuovo.",
+      "show": "Mostra il valore",
+      "hide": "Nascondi il valore",
+      "store": "Salva in modo sicuro",
+      "stored": "Credenziale salvata ({masked}). Validazione: {validation}. Stato: {status}.",
+      "notChecked": "non verificato",
+      "storeFailed": "Impossibile salvare la credenziale.",
+      "waiting": "Una scheda credenziali sicura attende il tuo inserimento.",
+      "open": "Apri la scheda"
+    },
+    "input": {
+      "send": "Invia",
+      "yes": "Sì",
+      "no": "No",
+      "invalidFormat": "Formato non valido",
+      "expectedFormat": "Formato atteso come {example}",
+      "secretDetected": "Sembra un segreto. I segreti vengono accettati solo tramite la scheda credenziali sicura.",
+      "connectWith": "Collega con {provider}"
+    },
+    "cards": {
+      "recommended": "consigliato",
+      "continue": "Continua",
+      "copy": "Copia",
+      "copied": "Copiato",
+      "critical": "critico",
+      "on": "attivo",
+      "off": "disattivo",
+      "enabled": "attivato",
+      "disabled": "disattivato",
+      "event": "Evento",
+      "vendorEvent": "Evento del fornitore",
+      "enabledColumn": "Attivo",
+      "noEvents": "nessun evento"
+    },
+    "feed": {
+      "earlier": "{n} verifiche precedenti completate"
+    },
+    "nextAction": {
+      "retry": "Riprova",
+      "askMissing": "Chiedi cosa manca ancora",
+      "askMissingMessage": "Cosa manca ancora per completare questa azione?",
+      "openCredentialCard": "Apri la scheda credenziali sicura",
+      "openApproval": "Controlla la conferma",
+      "openDestinations": "Apri Destinazioni",
+      "openReleases": "Apri Releases",
+      "openBilling": "Apri Fatturazione",
+      "openTeam": "Apri Team e accessi",
+      "openConsent": "Apri Consenso e privacy"
+    },
+    "scope": {
+      "title": "Track AI resta nell'ambito del tuo setup Track"
+    },
+    "note": {
+      "continueMessage": "La credenziale è salvata. Continua con la configurazione, per favore."
+    },
+    "announce": {
+      "newMessage": "Track AI: {text}"
+    }
+  }
+}

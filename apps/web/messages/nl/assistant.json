@@ -1,0 +1,193 @@
+{
+  "assistant": {
+    "activityRegion": "Activiteit van Track AI",
+    "messagesRegion": "Gesprek met Track AI",
+    "activity": {
+      "generic": {
+        "started": "Ik voer een controle uit.",
+        "completed": "Controle afgerond.",
+        "blocked": "De actie kon nog niet worden afgerond.",
+        "blocked_missing": "De actie kon nog niet worden afgerond. Dit ontbreekt nog: {missing}",
+        "failed": "De actie is mislukt: {reason}"
+      },
+      "state_lookup": { "started": "Ik lees de huidige status van je installatie.", "completed": "Installatiestatus geladen." },
+      "site_check": { "started": "Ik controleer nu je website.", "completed": "Websitecontrole afgerond." },
+      "stack_detection": { "started": "Ik herken je shop- of CMS-systeem.", "completed": "Ik heb je shop- of CMS-systeem herkend." },
+      "snippet_verification": { "started": "Ik controleer of het Track-snippet correct is geïnstalleerd.", "completed": "Het Track-snippet is correct geïnstalleerd." },
+      "domain_verification": { "started": "Ik verifieer het eigendom van je domein.", "completed": "Domeineigendom geverifieerd." },
+      "measurement_plan": { "started": "Ik stel een meetplan op voor je bedrijfsmodel.", "completed": "Het meetplan staat in je concept." },
+      "draft_update": { "started": "Ik werk je installatieconcept bij.", "completed": "Concept bijgewerkt." },
+      "destination_setup": { "started": "Ik bereid de bestemming voor in je concept.", "completed": "Bestemming voorbereid in het concept." },
+      "credential_request": { "started": "Ik bereid de beveiligde credential-kaart voor.", "completed": "De beveiligde credential-kaart is klaar. Geheimen gaan nooit via de chat." },
+      "connection_validation": { "started": "Ik valideer de verbinding en de ingevoerde ID's.", "completed": "Verbinding en ID's gevalideerd." },
+      "test_event": { "started": "Ik verstuur een gecontroleerd testevent.", "completed": "Het testevent is geaccepteerd." },
+      "processing_check": { "started": "Ik controleer of het event correct is verwerkt en doorgestuurd.", "completed": "Het event is correct verwerkt en doorgestuurd." },
+      "signal_scan": { "started": "Ik zoek naar ontbrekende, dubbele of foutieve signalen.", "completed": "Signaalcontrole afgerond." },
+      "diagnostics": { "started": "Ik voer de trackingdiagnose uit.", "completed": "Diagnose afgerond." },
+      "consent_review": { "started": "Ik controleer de toestemmingsinstellingen.", "completed": "Toestemmingsinstellingen gecontroleerd." },
+      "change_review": { "started": "Ik controleer het concept op problemen en wijzigingen.", "completed": "Conceptcontrole afgerond." },
+      "change_proposal": { "started": "Ik bereid het wijzigingsvoorstel voor.", "completed": "Het wijzigingsvoorstel is klaar en wacht op je beoordeling." },
+      "publish": { "started": "De bevestigde configuratie wordt gepubliceerd.", "completed": "De wijziging is actief en is succesvol gecontroleerd." },
+      "rollback": { "started": "De vorige configuratieversie wordt hersteld.", "completed": "De vorige versie is weer actief en is gecontroleerd." },
+      "destination_pause": { "started": "De leveringsstatus van de bestemming wordt gewijzigd.", "completed": "De leveringsstatus van de bestemming is gewijzigd en gecontroleerd." },
+      "credential_change": { "started": "De wijziging van de inloggegevens wordt toegepast.", "completed": "De wijziging van de inloggegevens is actief." },
+      "data_request": { "started": "Het gegevensverzoek wordt verwerkt.", "completed": "Het gegevensverzoek is afgerond." },
+      "live_conversion": { "started": "De bevestigde live conversie wordt verstuurd.", "completed": "De live conversie is verstuurd en bevestigd." },
+      "confirmation": { "required": "Voordat er iets live wordt gewijzigd, heb ik je bevestiging nodig." },
+      "secret_intake": { "blocked": "Een waarde die op inloggegevens lijkt, is verwijderd. Geheimen worden alleen via de beveiligde credential-kaart geaccepteerd." }
+    },
+    "stage": {
+      "scope_check": "Ik controleer je verzoek.",
+      "model_request": "Track AI werkt aan je verzoek.",
+      "tool_execution": "De controles worden uitgevoerd.",
+      "answer_streaming": "Het antwoord wordt voorbereid.",
+      "answer_validation": "Het antwoord wordt gevalideerd.",
+      "queued": "In de wachtrij.",
+      "captured": "Vastgelegd.",
+      "accepted": "Geaccepteerd.",
+      "normalized": "Genormaliseerd.",
+      "policy_blocked": "Geblokkeerd door het toestemmingsbeleid.",
+      "deduplicated": "Ontdubbeld.",
+      "routed": "Gerouteerd.",
+      "delivered": "Afgeleverd.",
+      "rejected": "Afgewezen."
+    },
+    "reason": {
+      "VALIDATION_ERROR": "de invoer was ongeldig",
+      "NOT_FOUND": "het item is niet gevonden",
+      "UNAUTHORIZED": "je bent niet ingelogd",
+      "FORBIDDEN": "je rol staat deze actie niet toe",
+      "CONFLICT": "het item is intussen gewijzigd",
+      "RATE_LIMITED": "te veel verzoeken in korte tijd",
+      "ENTITLEMENT_EXCEEDED": "de limiet van je abonnement is bereikt",
+      "POLICY_BLOCKED": "geblokkeerd door het toestemmings- of gegevensbeleid",
+      "CONFIRMATION_REQUIRED": "eerst is je bevestiging nodig",
+      "APPROVAL_INVALID": "de bevestiging is niet meer geldig",
+      "INVALID_STATE": "de huidige status staat deze stap niet toe",
+      "NOT_CONNECTED": "er ontbreekt een verbinding of inloggegeven",
+      "PROVIDER_ERROR": "de externe dienst gaf een fout terug",
+      "PROVIDER_UNAVAILABLE": "de externe dienst is niet beschikbaar",
+      "TIMEOUT": "de bewerking duurde te lang",
+      "INTERNAL_ERROR": "er is een interne fout opgetreden",
+      "VERIFICATION_FAILED": "de backend meldt de wijziging nog niet als actief",
+      "UNKNOWN": "een onbekende reden"
+    },
+    "state": {
+      "idle": "Track AI is klaar.",
+      "listening": "Track AI luistert.",
+      "working": "Track AI werkt.",
+      "streaming": "Track AI antwoordt.",
+      "approval_required": "Track AI heeft je bevestiging nodig.",
+      "success": "Track AI heeft de actie afgerond.",
+      "blocked": "Track AI is geblokkeerd.",
+      "phase": { "started": "Bezig", "completed": "Klaar", "blocked": "Geblokkeerd", "failed": "Mislukt" }
+    },
+    "stream": {
+      "sending": "Je bericht wordt verstuurd…",
+      "reconnecting": "Verbinding verbroken. Opnieuw verbinden zonder een actie te herhalen…",
+      "resumed": "Opnieuw verbonden. We gaan verder waar de stream stopte."
+    },
+    "error": {
+      "TIMEOUT": "De assistent deed er te lang over. Je installatiestatus is opgeslagen; probeer het opnieuw.",
+      "PROVIDER_UNAVAILABLE": "De AI-provider is op dit moment niet beschikbaar. Je installatiestatus is opgeslagen; je kunt verder met het begeleide formulier.",
+      "PROVIDER_ERROR": "De assistent kon het antwoord niet afmaken. Probeer het opnieuw.",
+      "POLICY_BLOCKED": "De assistent heeft dit verzoek geweigerd.",
+      "RATE_LIMITED": "Te veel verzoeken in korte tijd. Wacht even.",
+      "INTERNAL_ERROR": "De assistent is onverwacht mislukt. Je voortgang is opgeslagen.",
+      "NOT_CONNECTED": "De AI-assistent is niet geconfigureerd voor deze omgeving. Gebruik in plaats daarvan het begeleide formulier.",
+      "FORBIDDEN": "Je rol staat deze actie niet toe.",
+      "VALIDATION_ERROR": "Het verzoek was ongeldig.",
+      "NOT_FOUND": "De site of het gesprek is niet gevonden.",
+      "UNAUTHORIZED": "Log opnieuw in.",
+      "CONFLICT": "Er is intussen iets gewijzigd. Probeer het opnieuw.",
+      "STREAM_LOST": "De verbinding kon niet worden hersteld. Je voortgang is opgeslagen; verstuur het bericht opnieuw om verder te gaan.",
+      "LOAD_FAILED": "Het gesprek kon niet worden geladen.",
+      "FAILED": "De assistent is op dit moment niet bereikbaar. Je voortgang is opgeslagen."
+    },
+    "approval": {
+      "title": "Bevestigen: {action}",
+      "action": {
+        "publish_config_version": "de configuratie publiceren",
+        "rollback_config_version": "terugrollen naar een vorige versie",
+        "activate_or_pause_destination": "de bestemming pauzeren of activeren",
+        "rotate_credential": "de inloggegevens vervangen",
+        "disconnect_integration": "de bestemming loskoppelen",
+        "send_live_conversion": "een live conversie versturen",
+        "delete_or_export_data": "gegevens verwijderen of exporteren"
+      },
+      "recipients": "Ontvangers: {list}",
+      "validUntil": "Geldig tot {time}. Er verandert niets voordat je klikt.",
+      "confirm": "Bevestigen en publiceren",
+      "confirmGeneric": "Bevestigen",
+      "cancel": "Annuleren",
+      "rollbackHint": "Ongedaan maken? Onder Releases vind je de rollback met één klik.",
+      "openReleases": "Releases openen",
+      "result": {
+        "published": "Versie {version} is gepubliceerd en als actief geverifieerd.",
+        "publishedUnverified": "Versie {version} is gepubliceerd, maar de backend meldt deze nog niet als actief. Controleer Releases.",
+        "executed": "Bevestigd en uitgevoerd: {action}.",
+        "failed": "Niet uitgevoerd: {action}. Reden: {reason}.",
+        "cancelled": "Geannuleerd. Er is niets gewijzigd."
+      }
+    },
+    "credential": {
+      "help": "Versleuteld opgeslagen in de kluis. Nooit gedeeld met de assistent, nooit meer getoond.",
+      "show": "Waarde tonen",
+      "hide": "Waarde verbergen",
+      "store": "Veilig opslaan",
+      "stored": "Inloggegevens opgeslagen ({masked}). Validatie: {validation}. Status: {status}.",
+      "notChecked": "niet gecontroleerd",
+      "storeFailed": "De inloggegevens konden niet worden opgeslagen.",
+      "waiting": "Een beveiligde credential-kaart wacht op je invoer.",
+      "open": "Kaart openen"
+    },
+    "input": {
+      "send": "Versturen",
+      "yes": "Ja",
+      "no": "Nee",
+      "invalidFormat": "Ongeldig formaat",
+      "expectedFormat": "Verwacht formaat zoals {example}",
+      "secretDetected": "Dit lijkt op een geheim. Geheimen worden alleen via de beveiligde credential-kaart geaccepteerd.",
+      "connectWith": "Verbinden met {provider}"
+    },
+    "cards": {
+      "recommended": "aanbevolen",
+      "continue": "Doorgaan",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd",
+      "critical": "kritiek",
+      "on": "aan",
+      "off": "uit",
+      "enabled": "ingeschakeld",
+      "disabled": "uitgeschakeld",
+      "event": "Event",
+      "vendorEvent": "Event van de aanbieder",
+      "enabledColumn": "Actief",
+      "noEvents": "geen events"
+    },
+    "feed": {
+      "earlier": "{n} eerdere controles voltooid"
+    },
+    "nextAction": {
+      "retry": "Opnieuw proberen",
+      "askMissing": "Vragen wat er nog ontbreekt",
+      "askMissingMessage": "Wat ontbreekt er nog om dit af te ronden?",
+      "openCredentialCard": "Beveiligde credential-kaart openen",
+      "openApproval": "Bevestiging bekijken",
+      "openDestinations": "Destinations openen",
+      "openReleases": "Releases openen",
+      "openBilling": "Facturering openen",
+      "openTeam": "Team & toegang openen",
+      "openConsent": "Toestemming & privacy openen"
+    },
+    "scope": {
+      "title": "Track AI blijft binnen je Track-setup"
+    },
+    "note": {
+      "continueMessage": "De inloggegevens zijn opgeslagen. Ga alsjeblieft verder met de setup."
+    },
+    "announce": {
+      "newMessage": "Track AI: {text}"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 {
   "assistant": {
     "activityRegion": "Track AI activity",
+    "messagesRegion": "Track AI conversation",
     "activity": {
       "generic": {
         "started": "Running a check.",
@@ -120,7 +121,14 @@
       "confirmGeneric": "Confirm",
       "cancel": "Cancel",
       "rollbackHint": "Need to undo it? Releases offers a one-click rollback.",
-      "openReleases": "Open Releases"
+      "openReleases": "Open Releases",
+      "result": {
+        "published": "Version {version} is published and verified as active.",
+        "publishedUnverified": "Version {version} was published, but the backend does not report it as active yet. Check Releases.",
+        "executed": "Confirmed and executed: {action}.",
+        "failed": "Not executed: {action}. Reason: {reason}.",
+        "cancelled": "Cancelled. Nothing was changed."
+      }
     },
     "credential": {
       "help": "Stored encrypted in the vault. Never shared with the assistant, never shown again.",
@@ -129,7 +137,9 @@
       "store": "Store securely",
       "stored": "Credential stored ({masked}). Validation: {validation}. Status: {status}.",
       "notChecked": "not checked",
-      "storeFailed": "Could not store the credential."
+      "storeFailed": "Could not store the credential.",
+      "waiting": "A secure credential card is waiting for your input.",
+      "open": "Open the card"
     },
     "input": {
       "send": "Send",
@@ -154,6 +164,30 @@
       "vendorEvent": "Vendor event",
       "enabledColumn": "Enabled",
       "noEvents": "no events"
+    },
+    "feed": {
+      "earlier": "{n} earlier checks done"
+    },
+    "nextAction": {
+      "retry": "Try again",
+      "askMissing": "Ask what is still missing",
+      "askMissingMessage": "What is still missing before this can be completed?",
+      "openCredentialCard": "Open the secure credential card",
+      "openApproval": "Review the confirmation",
+      "openDestinations": "Open Destinations",
+      "openReleases": "Open Releases",
+      "openBilling": "Open Billing",
+      "openTeam": "Open Team & Access",
+      "openConsent": "Open Consent & Privacy"
+    },
+    "scope": {
+      "title": "Track AI stays within your Track setup"
+    },
+    "note": {
+      "continueMessage": "The credential is saved. Please continue with the setup."
+    },
+    "announce": {
+      "newMessage": "Track AI: {text}"
     }
   }
 }
