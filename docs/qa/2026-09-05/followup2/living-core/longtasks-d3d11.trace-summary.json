@@ -1,0 +1,724 @@
+{
+  "traceFile": "C:/Users/Soheil/AppData/Local/Temp/claude/C--Users-Soheil-Downloads/c4e10eac-a8e9-429a-81d6-317c47246f54/scratchpad/trace/longtasks-d3d11.trace.json",
+  "traceBytes": 357814210,
+  "mainThread": "34784:43784",
+  "threadName": "CrRendererMain",
+  "totalEvents": 1632974,
+  "mainThreadEvents": 437990,
+  "topLevelTasks": 158971,
+  "spanSeconds": 240.9,
+  "mainThreadBusyMs": 51872,
+  "mainThreadBusyPercent": 21.5,
+  "taskDurationHistogram": {
+    "<4ms": 156146,
+    "4-8ms": 1769,
+    "8-16ms": 1050,
+    "16-32ms": 6,
+    "32-50ms": 0,
+    ">=50ms": 0
+  },
+  "longestTasks": [
+    {
+      "atS": 180.252,
+      "durationMs": 18.47,
+      "children": [
+        {
+          "name": "EventDispatch focusin",
+          "count": 1,
+          "ms": 12.25
+        },
+        {
+          "name": "RunMicrotasks",
+          "count": 1,
+          "ms": 11.66
+        },
+        {
+          "name": "FunctionCall _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 2,
+          "ms": 11.25
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 2,
+          "ms": 2.22
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 12,
+          "ms": 1.21
+        },
+        {
+          "name": "EventDispatch pointerdown",
+          "count": 1,
+          "ms": 0.74
+        }
+      ]
+    },
+    {
+      "atS": 180.252,
+      "durationMs": 18.41,
+      "children": [
+        {
+          "name": "EventDispatch focusin",
+          "count": 1,
+          "ms": 12.25
+        },
+        {
+          "name": "RunMicrotasks",
+          "count": 1,
+          "ms": 11.66
+        },
+        {
+          "name": "FunctionCall _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 2,
+          "ms": 11.25
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 2,
+          "ms": 2.22
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 12,
+          "ms": 1.21
+        },
+        {
+          "name": "EventDispatch pointerdown",
+          "count": 1,
+          "ms": 0.74
+        }
+      ]
+    },
+    {
+      "atS": 187.919,
+      "durationMs": 17.64,
+      "children": [
+        {
+          "name": "Commit",
+          "count": 1,
+          "ms": 15.73
+        },
+        {
+          "name": "Paint",
+          "count": 3,
+          "ms": 1.22
+        },
+        {
+          "name": "Layerize",
+          "count": 1,
+          "ms": 0.44
+        },
+        {
+          "name": "PrePaint",
+          "count": 2,
+          "ms": 0.29
+        },
+        {
+          "name": "FireAnimationFrame",
+          "count": 1,
+          "ms": 0.21
+        },
+        {
+          "name": "FunctionCall",
+          "count": 1,
+          "ms": 0.18
+        }
+      ]
+    },
+    {
+      "atS": 187.919,
+      "durationMs": 17.58,
+      "children": [
+        {
+          "name": "Commit",
+          "count": 1,
+          "ms": 15.73
+        },
+        {
+          "name": "Paint",
+          "count": 3,
+          "ms": 1.22
+        },
+        {
+          "name": "Layerize",
+          "count": 1,
+          "ms": 0.44
+        },
+        {
+          "name": "PrePaint",
+          "count": 2,
+          "ms": 0.29
+        },
+        {
+          "name": "FireAnimationFrame",
+          "count": 1,
+          "ms": 0.21
+        },
+        {
+          "name": "FunctionCall",
+          "count": 1,
+          "ms": 0.18
+        }
+      ]
+    },
+    {
+      "atS": 180.294,
+      "durationMs": 16.94,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 16.39
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 15.98
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 14.05
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 13.88
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 7,
+          "ms": 2.66
+        },
+        {
+          "name": "Layout",
+          "count": 4,
+          "ms": 1.7
+        }
+      ]
+    },
+    {
+      "atS": 180.294,
+      "durationMs": 16.88,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 16.39
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 15.98
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 14.05
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 13.88
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 7,
+          "ms": 2.66
+        },
+        {
+          "name": "Layout",
+          "count": 4,
+          "ms": 1.7
+        }
+      ]
+    },
+    {
+      "atS": 181.153,
+      "durationMs": 14.03,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 10.55
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 10.45
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 9.36
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 9.21
+        },
+        {
+          "name": "Paint",
+          "count": 3,
+          "ms": 2.04
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.38
+        }
+      ]
+    },
+    {
+      "atS": 181.153,
+      "durationMs": 13.99,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 10.55
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 10.45
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 9.36
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 9.21
+        },
+        {
+          "name": "Paint",
+          "count": 3,
+          "ms": 2.04
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.38
+        }
+      ]
+    },
+    {
+      "atS": 182.434,
+      "durationMs": 13.27,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.85
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.75
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.14
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.96
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 2.21
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.42
+        }
+      ]
+    },
+    {
+      "atS": 182.434,
+      "durationMs": 13.24,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.85
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.75
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.14
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.96
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 2.21
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.42
+        }
+      ]
+    },
+    {
+      "atS": 180.403,
+      "durationMs": 13.09,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.63
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.51
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.09
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.88
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.74
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.28
+        }
+      ]
+    },
+    {
+      "atS": 180.403,
+      "durationMs": 13.07,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.63
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.51
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.09
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.88
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.74
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.28
+        }
+      ]
+    },
+    {
+      "atS": 207.674,
+      "durationMs": 13.03,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.58
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.46
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.21
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.99
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.89
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.45
+        }
+      ]
+    },
+    {
+      "atS": 207.674,
+      "durationMs": 13.01,
+      "children": [
+        {
+          "name": "EventDispatch keypress",
+          "count": 1,
+          "ms": 12.58
+        },
+        {
+          "name": "EventDispatch textInput",
+          "count": 1,
+          "ms": 12.46
+        },
+        {
+          "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+          "count": 8,
+          "ms": 11.21
+        },
+        {
+          "name": "EventDispatch input",
+          "count": 1,
+          "ms": 10.99
+        },
+        {
+          "name": "Layout",
+          "count": 3,
+          "ms": 1.89
+        },
+        {
+          "name": "UpdateLayoutTree",
+          "count": 3,
+          "ms": 1.45
+        }
+      ]
+    },
+    {
+      "atS": 120.061,
+      "durationMs": 12.05,
+      "children": [
+        {
+          "name": "Receive mojo message",
+          "count": 1,
+          "ms": 11.71
+        },
+        {
+          "name": "EvaluateScript",
+          "count": 1,
+          "ms": 10.74
+        },
+        {
+          "name": "BlinkScheduler_PerformMicrotaskCheckpoint",
+          "count": 1,
+          "ms": 0
+        }
+      ]
+    }
+  ],
+  "topEventTypesByTotalMs": [
+    {
+      "name": "EventDispatch keypress",
+      "count": 1280,
+      "ms": 9548.7,
+      "maxMs": 16.39,
+      "meanMs": 7.46
+    },
+    {
+      "name": "EventDispatch textInput",
+      "count": 1280,
+      "ms": 9426.6,
+      "maxMs": 15.98,
+      "meanMs": 7.365
+    },
+    {
+      "name": "FunctionCall fI _next/static/chunks/0x8kzgkz_i9l-.js",
+      "count": 12882,
+      "ms": 8148.3,
+      "maxMs": 13.63,
+      "meanMs": 0.633
+    },
+    {
+      "name": "EventDispatch input",
+      "count": 1285,
+      "ms": 7825.6,
+      "maxMs": 13.88,
+      "meanMs": 6.09
+    },
+    {
+      "name": "FireAnimationFrame",
+      "count": 14453,
+      "ms": 3237.2,
+      "maxMs": 1.67,
+      "meanMs": 0.224
+    },
+    {
+      "name": "Commit",
+      "count": 14451,
+      "ms": 2860.7,
+      "maxMs": 15.73,
+      "meanMs": 0.198
+    },
+    {
+      "name": "FunctionCall",
+      "count": 14452,
+      "ms": 2684.7,
+      "maxMs": 0.86,
+      "meanMs": 0.186
+    },
+    {
+      "name": "Paint",
+      "count": 3884,
+      "ms": 2605.3,
+      "maxMs": 1.99,
+      "meanMs": 0.671
+    },
+    {
+      "name": "Layout",
+      "count": 3885,
+      "ms": 1890.7,
+      "maxMs": 1.09,
+      "meanMs": 0.487
+    },
+    {
+      "name": "UpdateLayoutTree",
+      "count": 3941,
+      "ms": 1311.9,
+      "maxMs": 1.23,
+      "meanMs": 0.333
+    },
+    {
+      "name": "Layerize",
+      "count": 14439,
+      "ms": 1247.6,
+      "maxMs": 2.17,
+      "meanMs": 0.086
+    },
+    {
+      "name": "PrePaint",
+      "count": 16666,
+      "ms": 1211.6,
+      "maxMs": 0.61,
+      "meanMs": 0.073
+    },
+    {
+      "name": "IntersectionObserverController::computeIntersections",
+      "count": 28929,
+      "ms": 864.3,
+      "maxMs": 0.45,
+      "meanMs": 0.03
+    },
+    {
+      "name": "EventDispatch keydown",
+      "count": 1295,
+      "ms": 349.9,
+      "maxMs": 10.29,
+      "meanMs": 0.27
+    },
+    {
+      "name": "EventDispatch keyup",
+      "count": 1295,
+      "ms": 247.4,
+      "maxMs": 0.48,
+      "meanMs": 0.191
+    },
+    {
+      "name": "BlinkScheduler_PerformMicrotaskCheckpoint",
+      "count": 74799,
+      "ms": 184.4,
+      "maxMs": 0.56,
+      "meanMs": 0.002
+    },
+    {
+      "name": "HitTest",
+      "count": 2658,
+      "ms": 168.7,
+      "maxMs": 0.32,
+      "meanMs": 0.063
+    },
+    {
+      "name": "Receive mojo message",
+      "count": 275,
+      "ms": 162.7,
+      "maxMs": 11.71,
+      "meanMs": 0.591
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "count": 1310,
+      "ms": 155.4,
+      "maxMs": 4.16,
+      "meanMs": 0.119
+    },
+    {
+      "name": "MinorGC",
+      "count": 136,
+      "ms": 144.6,
+      "maxMs": 2.21,
+      "meanMs": 1.063
+    },
+    {
+      "name": "V8.GC_MC_INCREMENTAL",
+      "count": 810,
+      "ms": 137.4,
+      "maxMs": 2.56,
+      "meanMs": 0.17
+    },
+    {
+      "name": "FunctionCall fF _next/static/chunks/0x8kzgkz_i9l-.js",
+      "count": 2755,
+      "ms": 135.9,
+      "maxMs": 0.67,
+      "meanMs": 0.049
+    },
+    {
+      "name": "V8.GC_SCAVENGER",
+      "count": 136,
+      "ms": 123.7,
+      "maxMs": 1.92,
+      "meanMs": 0.91
+    },
+    {
+      "name": "V8.GC_SCAVENGER_SCAVENGE",
+      "count": 136,
+      "ms": 120.4,
+      "maxMs": 1.9,
+      "meanMs": 0.886
+    },
+    {
+      "name": "RunMicrotasks",
+      "count": 1677,
+      "ms": 109.7,
+      "maxMs": 11.66,
+      "meanMs": 0.065
+    }
+  ]
+}

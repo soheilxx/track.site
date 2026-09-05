@@ -1,0 +1,304 @@
+$ pnpm test --force
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T16:52:49Z
+
+$ turbo run test "--force"
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running test in 16 packages
+   • Remote caching disabled
+
+@track-site/sdk:build: cache bypass, force executing c6618906c222abd5
+@track-site/core:test: cache bypass, force executing ee2e7ab9b436cdfb
+@track-site/catalog:test: cache bypass, force executing bb5b687d5d6d6f7f
+@track-site/sdk:test: cache bypass, force executing a8b882d182a2e798
+@track-site/events:test: cache bypass, force executing 56d21c27d445dc4e
+@track-site/policy:test: cache bypass, force executing 198682a6f93aa7f3
+@track-site/config:test: cache bypass, force executing b6c452af9de57778
+@track-site/db:test: cache bypass, force executing de141a8ed99aaac2
+@track-site/connectors:test: cache bypass, force executing ddc10aabf0bfedd8
+@track-site/analytics:test: cache bypass, force executing 17df46d33532ee79
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/core:test: $ vitest run
+@track-site/catalog:test: $ vitest run
+@track-site/sdk:test: $ vitest run
+@track-site/events:test: $ vitest run
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/policy:test: $ vitest run
+@track-site/config:test: $ vitest run -c vitest.config.ts
+@track-site/db:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/core:test: 
+@track-site/core:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/core
+@track-site/core:test: 
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/connectors:test: $ vitest run -c vitest.config.ts
+@track-site/analytics:test: $ vitest run -c vitest.config.ts
+@track-site/queue:test: cache bypass, force executing 13acd8e072482896
+@track-site/catalog:test: 
+@track-site/catalog:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/catalog
+@track-site/catalog:test: 
+@track-site/sdk:test: 
+@track-site/sdk:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/sdk
+@track-site/sdk:test: 
+@track-site/events:test: 
+@track-site/events:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/events
+@track-site/events:test: 
+@track-site/core:test:  ✓ src/url/scrub.test.ts (5 tests) 13ms
+@track-site/core:test:  ✓ src/ids/tracking-id.test.ts (6 tests) 33ms
+@track-site/policy:test: 
+@track-site/policy:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/policy
+@track-site/policy:test: 
+@track-site/config:test: 
+@track-site/config:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/config
+@track-site/config:test: 
+@track-site/core:test:  ✓ src/site-inspect.test.ts (4 tests) 12ms
+@track-site/core:test:  ✓ src/pii/detect.test.ts (7 tests) 499ms
+@track-site/core:test:      ✓ detects unprefixed base64 key material such as aws secret access keys  307ms
+@track-site/core:test:  ✓ src/retry.test.ts (6 tests) 14ms
+@track-site/core:test:  ✓ src/crypto/crypto.test.ts (7 tests) 85ms
+@track-site/core:test: 
+@track-site/core:test:  Test Files  6 passed (6)
+@track-site/core:test:       Tests  35 passed (35)
+@track-site/core:test:    Start at  18:52:52
+@track-site/core:test:    Duration  1.84s (transform 3.20s, setup 0ms, import 3.91s, tests 656ms, environment 1ms)
+@track-site/core:test: 
+@track-site/db:test: 
+@track-site/db:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/db
+@track-site/db:test: 
+@track-site/db:test: No test files found, exiting with code 0
+@track-site/db:test: 
+@track-site/db:test: include: src/**/*.test.ts
+@track-site/db:test: exclude:  src/**/*.integration.test.ts
+@track-site/db:test: 
+@track-site/catalog:test:  ✓ src/catalog.test.ts (20 tests) 153ms
+@track-site/catalog:test: 
+@track-site/catalog:test:  Test Files  1 passed (1)
+@track-site/catalog:test:       Tests  20 passed (20)
+@track-site/catalog:test:    Start at  18:52:52
+@track-site/catalog:test:    Duration  1.41s (transform 247ms, setup 0ms, import 308ms, tests 153ms, environment 0ms)
+@track-site/catalog:test: 
+@track-site/worker:test: cache bypass, force executing 2cb8af76b46307b3
+@track-site/connectors:test: 
+@track-site/connectors:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/connectors
+@track-site/connectors:test: 
+@track-site/collector:test: cache bypass, force executing 6256ced2399d50e6
+@track-site/queue:test: $ vitest run -c vitest.config.ts
+@track-site/analytics:test: 
+@track-site/analytics:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/analytics
+@track-site/analytics:test: 
+@track-site/events:test:  ✓ src/events.test.ts (8 tests) 46ms
+@track-site/events:test: 
+@track-site/events:test:  Test Files  1 passed (1)
+@track-site/events:test:       Tests  8 passed (8)
+@track-site/events:test:    Start at  18:52:53
+@track-site/events:test:    Duration  2.01s (transform 513ms, setup 0ms, import 985ms, tests 46ms, environment 0ms)
+@track-site/events:test: 
+@track-site/ai:test: cache bypass, force executing f73c9dbc92cffd04
+@track-site/policy:test:  ✓ src/policy.test.ts (17 tests) 32ms
+@track-site/policy:test: 
+@track-site/policy:test:  Test Files  1 passed (1)
+@track-site/policy:test:       Tests  17 passed (17)
+@track-site/policy:test:    Start at  18:52:53
+@track-site/policy:test:    Duration  2.20s (transform 571ms, setup 0ms, import 1.03s, tests 32ms, environment 0ms)
+@track-site/policy:test: 
+@track-site/config:test:  ✓ src/config.test.ts (7 tests) 51ms
+@track-site/config:test: 
+@track-site/config:test:  Test Files  1 passed (1)
+@track-site/config:test:       Tests  7 passed (7)
+@track-site/config:test:    Start at  18:52:53
+@track-site/config:test:    Duration  2.02s (transform 578ms, setup 0ms, import 954ms, tests 51ms, environment 0ms)
+@track-site/config:test: 
+@track-site/web:test: cache bypass, force executing 26373fff5db7447d
+@track-site/analytics:test:  ✓ src/analytics.test.ts (2 tests) 11ms
+@track-site/analytics:test: 
+@track-site/analytics:test:  Test Files  1 passed (1)
+@track-site/analytics:test:       Tests  2 passed (2)
+@track-site/analytics:test:    Start at  18:52:55
+@track-site/analytics:test:    Duration  1.81s (transform 349ms, setup 0ms, import 729ms, tests 11ms, environment 0ms)
+@track-site/analytics:test: 
+@track-site/connectors:test:  ✓ src/ssrf.test.ts (3 tests) 20ms
+@track-site/sdk:test:  ✓ src/util.test.ts (2 tests) 6ms
+@track-site/sdk:test:  ✓ src/storage.test.ts (2 tests) 10ms
+@track-site/collector:test: $ vitest run -c vitest.config.ts
+@track-site/worker:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/queue:test: 
+@track-site/queue:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/queue
+@track-site/queue:test: 
+@track-site/ai:test: $ vitest run -c vitest.config.ts
+@track-site/connectors:test:  ✓ src/matrix.test.ts (5 tests) 28ms
+@track-site/connectors:test: 
+@track-site/connectors:test:  Test Files  2 passed (2)
+@track-site/connectors:test:       Tests  8 passed (8)
+@track-site/connectors:test:    Start at  18:52:54
+@track-site/connectors:test:    Duration  3.12s (transform 2.12s, setup 0ms, import 3.62s, tests 48ms, environment 1ms)
+@track-site/connectors:test: 
+@track-site/sdk:test:  ✓ src/sdk.test.ts (8 tests) 700ms
+@track-site/sdk:test:      ✓ does nothing before consent and stores nothing, then sends after consent  311ms
+@track-site/sdk:test:      ✓ withdrawal clears identifiers and pending events; SPA navigation and selector triggers work  320ms
+@track-site/sdk:test: 
+@track-site/sdk:test:  Test Files  3 passed (3)
+@track-site/sdk:test:       Tests  12 passed (12)
+@track-site/sdk:test:    Start at  18:52:52
+@track-site/sdk:test:    Duration  4.95s (transform 507ms, setup 0ms, import 759ms, tests 716ms, environment 8.93s)
+@track-site/sdk:test: 
+@track-site/web:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/worker:test: 
+@track-site/worker:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/worker
+@track-site/worker:test: 
+@track-site/collector:test: 
+@track-site/collector:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/collector
+@track-site/collector:test: 
+@track-site/queue:test:  ✓ src/queue.test.ts (4 tests) 18ms
+@track-site/queue:test: 
+@track-site/queue:test:  Test Files  1 passed (1)
+@track-site/queue:test:       Tests  4 passed (4)
+@track-site/queue:test:    Start at  18:52:57
+@track-site/queue:test:    Duration  1.19s (transform 331ms, setup 0ms, import 783ms, tests 18ms, environment 0ms)
+@track-site/queue:test: 
+@track-site/ai:test: 
+@track-site/ai:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/ai
+@track-site/ai:test: 
+@track-site/web:test: 
+@track-site/web:test:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/web
+@track-site/web:test: 
+@track-site/collector:test:  ✓ src/shop-inbound.test.ts (13 tests) 21ms
+@track-site/ai:test:  ✓ src/turn-registry.test.ts (6 tests) 75ms
+@track-site/collector:test:  ✓ src/affiliate-inbound.test.ts (4 tests) 82ms
+@track-site/collector:test:  ✓ src/app.test.ts (7 tests) 336ms
+@track-site/collector:test: 
+@track-site/collector:test:  Test Files  3 passed (3)
+@track-site/collector:test:       Tests  24 passed (24)
+@track-site/collector:test:    Start at  18:52:58
+@track-site/collector:test:    Duration  2.21s (transform 1.66s, setup 0ms, import 3.64s, tests 438ms, environment 1ms)
+@track-site/collector:test: 
+@track-site/ai:test:  ✓ src/ui-events.test.ts (9 tests) 68ms
+@track-site/ai:test:  ✓ src/scope.test.ts (12 tests) 367ms
+@track-site/ai:test:  ✓ src/agent.test.ts (12 tests) 599ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/blobs.test.ts (7 tests) 558ms
+@track-site/web:test:      ✓ draws three to five shapes in cobalt, violet and cyan inside the region  480ms
+@track-site/worker:test:  ✓ src/jobs/alerts.test.ts (16 tests) 22ms
+@track-site/worker:test: 
+@track-site/worker:test:  Test Files  1 passed (1)
+@track-site/worker:test:       Tests  16 passed (16)
+@track-site/worker:test:    Start at  18:52:58
+@track-site/worker:test:    Duration  3.93s (transform 1.52s, setup 0ms, import 3.49s, tests 22ms, environment 1ms)
+@track-site/worker:test: 
+@track-site/web:test:  ✓ src/lib/brand-guard.test.ts (4 tests) 765ms
+@track-site/web:test:      ✓ finds no visible 'track.site' outside the allow-list in messages, components, app routes, marketing copy and knowledge  620ms
+@track-site/ai:test:  ✓ src/state-machine.test.ts (7 tests) 29ms
+@track-site/ai:test:  ✓ src/evals/injection.eval.test.ts (64 tests) 1828ms
+@track-site/ai:test:  ✓ src/tools/registry.test.ts (5 tests) 27ms
+@track-site/web:test:  ✓ src/lib/knowledge-search.test.ts (14 tests) 2308ms
+@track-site/web:test:      ✓ finds the published articles of both locales with typos and umlauts  2257ms
+@track-site/web:test:  ✓ src/i18n/routing.test.ts (4 tests) 645ms
+@track-site/web:test:      ✓ ships every message namespace with the English key set for every active locale  391ms
+@track-site/ai:test:  ✓ src/tools/normalize.test.ts (7 tests) 15ms
+@track-site/web:test:  ✓ src/i18n/namespaces.test.ts (4 tests) 2878ms
+@track-site/web:test:      ✓ ships every namespace for every active locale with identical keys and placeholders  2835ms
+@track-site/ai:test:  ✓ src/ai.test.ts (10 tests) 667ms
+@track-site/ai:test:      ✓ withholds approval tokens from the model-facing output  513ms
+@track-site/ai:test:  ✓ src/prompts.test.ts (2 tests) 12ms
+@track-site/ai:test:  ✓ src/ui-schema.test.ts (13 tests) 39ms
+@track-site/ai:test:  ✓ src/tools/destinations.test.ts (12 tests) 23ms
+@track-site/ai:test:  ✓ src/tools/read.test.ts (4 tests) 15ms
+@track-site/ai:test:  ✓ src/tools/draft.test.ts (7 tests) 38ms
+@track-site/ai:test: 
+@track-site/ai:test:  Test Files  14 passed (14)
+@track-site/ai:test:       Tests  170 passed (170)
+@track-site/ai:test:    Start at  18:52:59
+@track-site/ai:test:    Duration  7.38s (transform 8.24s, setup 0ms, import 27.14s, tests 3.80s, environment 3ms)
+@track-site/ai:test: 
+@track-site/web:test:  ✓ src/lib/knowledge-article.test.ts (11 tests) 85ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/living-ai-core.dom.test.tsx (24 tests) 417ms
+@track-site/web:test:  ✓ src/components/marketing/pricing/pricing-helpers.test.ts (13 tests) 67ms
+@track-site/web:test:  ✓ src/components/marketing/integrations/catalog.test.ts (37 tests) 315ms
+@track-site/web:test:  ✓ src/components/chat/assistant-chat.test.tsx (6 tests) 1306ms
+@track-site/web:test:      ✓ renders every message below the threshold and windows a 250-message conversation with spacers  584ms
+@track-site/web:test:      ✓ marks a refusal as in-scope guidance with at most three quick actions and announces new answers politely  304ms
+@track-site/web:test:  ✓ src/lib/format.test.ts (4 tests) 60ms
+@track-site/web:test:  ✓ src/components/app/shell/assistant-panel.test.tsx (9 tests) 326ms
+@track-site/web:test:  ✓ src/lib/marketing-copy/pick.test.ts (25 tests) 62ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/living-ai-core.ssr.test.tsx (4 tests) 64ms
+@track-site/web:test:  ✓ src/components/marketing/knowledge/article/mdx-components.test.tsx (2 tests) 74ms
+@track-site/web:test:  ✓ src/app/api/ai/chat/route.test.ts (6 tests) 66ms
+@track-site/web:test:  ✓ src/app/api/ai/confirm/route.test.ts (6 tests) 41ms
+@track-site/web:test:  ✓ src/components/marketing/render-smoke.test.tsx (3 tests) 1625ms
+@track-site/web:test:      ✓ home: hero with the demo placeholder, platforms, outcomes, flow, AI setup, use cases, trust, knowledge, pricing teaser and final CTA  331ms
+@track-site/web:test:      ✓ pricing: toggle, plan cards, enterprise panel, included strip, tools, comparison matrix, event definition, overage, trial and FAQ  337ms
+@track-site/web:test:      ✓ knowledge hub: hero + search, featured story, topic worlds, learning paths, guides, fresh lists, directory and product CTA  953ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/state-machine.test.ts (16 tests) 34ms
+@track-site/web:test:  ✓ src/server/consent-simulator.test.ts (16 tests) 38ms
+@track-site/web:test:  ✓ src/components/chat/ui-events.test.ts (3 tests) 40ms
+@track-site/web:test:  ✓ src/app/api/ai/dev-fixture/route.test.ts (3 tests) 36ms
+@track-site/web:test:  ✓ src/next.config.test.ts (5 tests) 32ms
+@track-site/web:test:  ✓ src/proxy.test.ts (5 tests) 26ms
+@track-site/web:test:  ✓ src/app/api/ai/wizard/route.test.ts (4 tests) 29ms
+@track-site/web:test:  ✓ src/components/marketing/features/copy.test.ts (6 tests) 25ms
+@track-site/web:test:  ✓ src/components/marketing/demo/state.test.ts (22 tests) 25ms
+@track-site/web:test:  ✓ src/lib/seo.test.ts (10 tests) 19ms
+@track-site/web:test:  ✓ src/server/releases.test.ts (19 tests) 51ms
+@track-site/web:test:  ✓ src/server/team.test.ts (16 tests) 35ms
+@track-site/web:test:  ✓ src/server/events-lineage.test.ts (12 tests) 21ms
+@track-site/web:test:  ✓ src/app/api/ai/dev-fixture/fixtures.test.ts (3 tests) 16ms
+@track-site/web:test:  ✓ src/components/marketing/pricing/plan-selection.test.ts (10 tests) 14ms
+@track-site/web:test:  ✓ src/server/insights-attribution.test.ts (12 tests) 18ms
+@track-site/web:test:  ✓ src/server/usage.test.ts (18 tests) 23ms
+@track-site/web:test:  ✓ src/components/chat/chat-reducer.test.ts (6 tests) 14ms
+@track-site/web:test:  ✓ src/server/data-quality.test.ts (10 tests) 20ms
+@track-site/web:test:  ✓ src/server/command-center.test.ts (10 tests) 19ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/upgrade-gate.test.ts (6 tests) 13ms
+@track-site/web:test:  ✓ src/components/chat/assistant-ui-state.test.ts (5 tests) 13ms
+@track-site/web:test:  ✓ src/server/mail/templates/templates.test.ts (3 tests) 11ms
+@track-site/web:test:  ✓ src/components/app/shell/living-ai-core/tier.test.ts (20 tests) 15ms
+@track-site/web:test:  ✓ src/server/ai/turn.test.ts (1 test) 15ms
+@track-site/web:test:  ✓ src/server/consent-coverage.test.ts (3 tests) 11ms
+@track-site/web:test:  ✓ src/components/marketing/demo/player.test.ts (5 tests) 11ms
+@track-site/web:test:  ✓ src/components/marketing/secondary/copy.test.ts (6 tests) 10ms
+@track-site/web:test:  ✓ src/server/destination-health.test.ts (15 tests) 15ms
+@track-site/web:test:  ✓ src/components/marketing/ui-client-boundary.test.ts (19 tests) 11ms
+@track-site/web:test:  ✓ src/server/consent-policy.test.ts (4 tests) 12ms
+@track-site/web:test:  ✓ src/components/auth/domain.test.ts (4 tests) 12ms
+@track-site/web:test:  ✓ src/lib/legal-copy/legal-copy.test.ts (3 tests) 13ms
+@track-site/web:test:  ✓ src/components/chat/workspace-moves.test.ts (5 tests) 18ms
+@track-site/web:test:  ✓ src/server/revenue-leaks.test.ts (5 tests) 11ms
+@track-site/web:test:  ✓ src/components/app/alerts/threshold.test.ts (6 tests) 12ms
+@track-site/web:test:  ✓ src/server/insights-legacy.test.ts (4 tests) 7ms
+@track-site/web:test:  ✓ src/components/chat/virtual-list.test.ts (4 tests) 9ms
+@track-site/web:test:  ✓ src/components/marketing/localized-paths.test.ts (3 tests) 4ms
+@track-site/web:test:  ✓ src/server/alerts.test.ts (6 tests) 9ms
+@track-site/web:test:  ✓ src/components/chat/next-action.test.ts (3 tests) 5ms
+@track-site/web:test:  ✓ src/lib/knowledge.test.ts (13 tests) 17006ms
+@track-site/web:test:      ✓ publishes 30 groups in every active locale, every group in every locale  2793ms
+@track-site/web:test:      ✓ has unique, URL-safe slugs and a translationGroupId per locale  813ms
+@track-site/web:test:      ✓ uses only catalogued topics, content types and levels and has the required fields  630ms
+@track-site/web:test:      ✓ keeps the same topic taxonomy across the language versions of a group  401ms
+@track-site/web:test:      ✓ resolves alternates per active locale so hreflang and the language switcher stay on the same article  1341ms
+@track-site/web:test:      ✓ uses the visible brand 'Track' in every article; 'track.site' only as a domain or address (supplement §2)  10771ms
+@track-site/web:test: 
+@track-site/web:test:  Test Files  60 passed (60)
+@track-site/web:test:       Tests  532 passed (532)
+@track-site/web:test:    Start at  18:52:59
+@track-site/web:test:    Duration  19.57s (transform 14.04s, setup 0ms, import 45.72s, tests 29.44s, environment 9.39s)
+@track-site/web:test: 
+
+ Tasks:    15 successful, 15 total
+Cached:    0 cached, 15 total
+  Time:    29.07s 
+
+ WARNING  no output files found for task @track-site/ai#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/analytics#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/catalog#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/collector#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/config#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/connectors#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/core#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/db#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/events#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/policy#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/queue#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/sdk#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/web#test. Please check your `outputs` key in `turbo.json`
+ WARNING  no output files found for task @track-site/worker#test. Please check your `outputs` key in `turbo.json`
+
+finished: 2026-09-05T16:53:19Z
+exit code: 0

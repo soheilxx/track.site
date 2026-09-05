@@ -7,7 +7,7 @@
  *
  *   longtasks  PerformanceObserver `longtask` entries (+ a Chrome trace for attribution) while the
  *              panel is open on /app on the WebGL tier: N s idle (no input), then N s of scrolling
- *              the main area and typing in the composer.
+ *              the main area (wheel only), then N s of typing in the composer (keys only).
  *   soak       30 min on /app with the panel open; every 20 s a real interaction cycles the motion
  *              state (composer focus/blur, an in-scope message with the provider stubbed → working /
  *              streaming / success or blocked, a further message that resets the turn); every 60 s
@@ -32,7 +32,7 @@
  * composer interaction and a contract event applied by the real store.
  *
  * Usage (from apps/web):
- *   node scripts/qa/living-core-budget.mjs --mode longtasks --base http://localhost:3012 --out <dir> [--gl d3d11|swiftshader] [--idle-s 120] [--interact-s 120] [--no-trace]
+ *   node scripts/qa/living-core-budget.mjs --mode longtasks --base http://localhost:3012 --out <dir> [--gl d3d11|swiftshader] [--idle-s 120] [--scroll-s 60] [--type-s 60] [--no-trace]
  *   node scripts/qa/living-core-budget.mjs --mode soak --base ... --out <dir> [--soak-min 30] [--sample-s 60] [--step-s 20]
  *   node scripts/qa/living-core-budget.mjs --mode motion --base ... --out <dir>
  *   node scripts/qa/living-core-budget.mjs --mode tier --base ... --out <dir> --viewport 1280x800 --mobile
@@ -46,7 +46,7 @@ export const SHELL = process.env.CHROME_PATH ?? "C:/Users/Soheil/AppData/Local/m
 const AUTH_FILE = path.resolve("e2e/.auth/owner.json");
 
 function parseArgs(argv) {
-  const a = { mode: "longtasks", base: "http://localhost:3012", out: null, gl: "d3d11", idleS: 120, interactS: 120, trace: true, soakMin: 30, sampleS: 60, stepS: 20, viewport: "1440x900", mobile: false, label: null };
+  const a = { mode: "longtasks", base: "http://localhost:3012", out: null, gl: "d3d11", idleS: 120, scrollS: 60, typeS: 60, trace: true, soakMin: 30, sampleS: 60, stepS: 20, viewport: "1440x900", mobile: false, label: null };
   for (let i = 0; i < argv.length; i++) {
     const k = argv[i];
     const v = () => argv[++i];
@@ -55,7 +55,9 @@ function parseArgs(argv) {
     else if (k === "--out") a.out = v();
     else if (k === "--gl") a.gl = v();
     else if (k === "--idle-s") a.idleS = Number(v());
-    else if (k === "--interact-s") a.interactS = Number(v());
+    else if (k === "--scroll-s") a.scrollS = Number(v());
+    else if (k === "--type-s") a.typeS = Number(v());
+    else if (k === "--interact-s") { a.scrollS = Number(v()) / 2; a.typeS = a.scrollS; }
     else if (k === "--no-trace") a.trace = false;
     else if (k === "--soak-min") a.soakMin = Number(v());
     else if (k === "--sample-s") a.sampleS = Number(v());
@@ -393,7 +395,7 @@ function attributeLongTasksFromTrace(traceFile, thresholdMs = 50) {
 async function runLongTasks() {
   const label = args.label ?? args.gl;
   const { browser, context, page } = await openBrowser();
-  const result = { mode: "longtasks", label, gl: args.gl, chromeArgs, shell: SHELL, base: args.base, startedAt: new Date().toISOString(), idleSeconds: args.idleS, interactSeconds: args.interactS, trace: args.trace };
+  const result = { mode: "longtasks", label, gl: args.gl, chromeArgs, shell: SHELL, base: args.base, startedAt: new Date().toISOString(), idleSeconds: args.idleS, scrollSeconds: args.scrollS, typeSeconds: args.typeS, trace: args.trace };
   const traceFile = args.trace ? path.join(process.env.LAC_TRACE_DIR ?? outDir, `longtasks-${label}.trace.json`) : null;
   try {
     await gotoApp(page);
@@ -416,40 +418,59 @@ async function runLongTasks() {
     result.core.idleEnd = await page.evaluate(READ_CORE);
     result.idle = { fromMs: idleFrom, toMs: idleTo, seconds: Math.round((idleTo - idleFrom) / 100) / 10, raf: idleCounters.raf, rafPerSecond: Math.round((idleCounters.raf.fired / ((idleTo - idleFrom) / 1000)) * 10) / 10, longTasks: summarizeLongTasks(idleCounters.longTasks, idleFrom, idleTo), transitions: idleCounters.transitions };
     log(`idle: rAF fired ${idleCounters.raf.fired} (${result.idle.rafPerSecond}/s), callback p50 ${idleCounters.raf.p50} ms p95 ${idleCounters.raf.p95} ms max ${idleCounters.raf.max} ms; long tasks ${result.idle.longTasks.count}`);
-    // ---- phase 2: scrolling the main area + typing in the composer
-    await page.evaluate("window.__lac.reset()");
-    const interactFrom = await page.evaluate("performance.now()");
+    // ---- phase 2: scrolling the main area (wheel events only); phase 3: typing in the composer (keys only)
     const main = page.getByTestId("app-main");
     const box = await main.boundingBox();
     const composer = page.locator("#track-ai-composer");
     const sentence = "Check whether the Track snippet is installed correctly on the shop and tell me what is still missing before publishing. ";
-    let scrolls = 0;
-    let typed = 0;
-    const until = Date.now() + args.interactS * 1000;
-    let dir = 1;
-    while (Date.now() < until) {
-      // ~1.5 s scrolling (wheel over the main area), then ~2 s typing in the composer, alternating
-      for (let i = 0; i < 6 && Date.now() < until; i++) {
-        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-        await page.mouse.wheel(0, 240 * dir);
-        scrolls++;
-        await sleep(220);
+    const runPhase = async (name, seconds, body) => {
+      await page.evaluate("window.__lac.reset()");
+      const from = await page.evaluate("performance.now()");
+      const stats = await body(Date.now() + seconds * 1000);
+      const to = await page.evaluate("performance.now()");
+      const counters = await page.evaluate(READ_COUNTERS);
+      result.core[`${name}End`] = await page.evaluate(READ_CORE);
+      const ph = { fromMs: from, toMs: to, seconds: Math.round((to - from) / 100) / 10, ...stats, raf: counters.raf, rafPerSecond: Math.round((counters.raf.fired / ((to - from) / 1000)) * 10) / 10, longTasks: summarizeLongTasks(counters.longTasks, from, to), transitions: counters.transitions.filter((t) => t.t >= from) };
+      result[name] = ph;
+      log(`${name}: ${Object.entries(stats).map(([k, v]) => `${k}=${v}`).join(", ")}; rAF fired ${counters.raf.fired} (${ph.rafPerSecond}/s), callback p50 ${counters.raf.p50} ms p95 ${counters.raf.p95} ms max ${counters.raf.max} ms; long tasks ${ph.longTasks.count}`);
+      return ph;
+    };
+    await runPhase("scroll", args.scrollS, async (until) => {
+      let scrolls = 0;
+      let dir = 1;
+      while (Date.now() < until) {
+        for (let i = 0; i < 8 && Date.now() < until; i++) {
+          await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+          await page.mouse.wheel(0, 240 * dir);
+          scrolls++;
+          await sleep(200);
+        }
+        dir = -dir;
       }
-      dir = -dir;
-      if (Date.now() < until) {
-        await composer.click();
-        await composer.pressSequentially(sentence.slice(0, 60), { delay: 30 });
-        typed += 60;
-        await page.keyboard.press("Control+A");
-        await page.keyboard.press("Backspace");
-        await composer.blur();
+      return { wheelEvents: scrolls };
+    });
+    await runPhase("type", args.typeS, async (until) => {
+      let typed = 0;
+      let sinceClear = 0;
+      await composer.click();
+      while (Date.now() < until) {
+        for (let i = 0; i < sentence.length && Date.now() < until; i += 40) {
+          const chunk = sentence.slice(i, i + 40);
+          await composer.pressSequentially(chunk, { delay: 30 });
+          typed += chunk.length;
+          sinceClear += chunk.length;
+        }
+        if (sinceClear >= sentence.length * 2) {
+          // clear the draft (a real Ctrl+A / Backspace) so the textarea never grows past a few lines
+          await page.keyboard.press("Control+A");
+          await page.keyboard.press("Backspace");
+          sinceClear = 0;
+        }
       }
-    }
-    const interactTo = await page.evaluate("performance.now()");
+      await composer.blur();
+      return { charactersTyped: typed };
+    });
     const interactCounters = await page.evaluate(READ_COUNTERS);
-    result.core.interactEnd = await page.evaluate(READ_CORE);
-    result.interact = { fromMs: interactFrom, toMs: interactTo, seconds: Math.round((interactTo - interactFrom) / 100) / 10, wheelEvents: scrolls, charactersTyped: typed, raf: interactCounters.raf, rafPerSecond: Math.round((interactCounters.raf.fired / ((interactTo - interactFrom) / 1000)) * 10) / 10, longTasks: summarizeLongTasks(interactCounters.longTasks, interactFrom, interactTo), transitions: interactCounters.transitions.filter((t) => t.t >= interactFrom) };
-    log(`interact: ${scrolls} wheel events, ${typed} characters; rAF fired ${interactCounters.raf.fired} (${result.interact.rafPerSecond}/s), callback p95 ${interactCounters.raf.p95} ms max ${interactCounters.raf.max} ms; long tasks ${result.interact.longTasks.count}`);
     if (traceFile) {
       await browser.stopTracing();
       const stat = fs.statSync(traceFile);
@@ -563,7 +584,7 @@ async function runSoak() {
     let nextSample = startedMs + args.sampleS * 1000;
     let nextStep = startedMs + args.stepS * 1000;
     let stepIndex = 0;
-    const gcMinutes = new Set([10, 20, 30, 40, 50, 60].filter((m) => m <= args.soakMin));
+    const gcMinutes = new Set([5, 10, 20, 30, 40, 50, 60].filter((m) => m <= args.soakMin));
     const gcDone = new Set();
     while (Date.now() < endMs) {
       const now = Date.now();

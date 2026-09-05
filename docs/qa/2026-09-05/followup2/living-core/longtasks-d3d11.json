@@ -1,0 +1,381 @@
+{
+  "mode": "longtasks",
+  "label": "d3d11",
+  "gl": "d3d11",
+  "chromeArgs": [
+    "--use-angle=d3d11"
+  ],
+  "shell": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe",
+  "base": "http://localhost:3016",
+  "startedAt": "2026-09-05T16:07:28.836Z",
+  "idleSeconds": 120,
+  "scrollSeconds": 60,
+  "typeSeconds": 60,
+  "trace": true,
+  "tierAfterLoad": "webgl",
+  "core": {
+    "idleStart": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "webgl",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": true,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "idleEnd": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "webgl",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": true,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "scrollEnd": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "webgl",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": true,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "typeEnd": {
+      "aiState": "listening",
+      "coreState": "listening",
+      "tier": "webgl",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": true,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    }
+  },
+  "idle": {
+    "fromMs": 8177.89999999851,
+    "toMs": 128189.19999999925,
+    "seconds": 120,
+    "raf": {
+      "requested": 7201,
+      "fired": 7201,
+      "count": 7201,
+      "mean": 0.152,
+      "p50": 0.1,
+      "p95": 0.3,
+      "p99": 0.3,
+      "max": 0.4,
+      "over16ms": 0,
+      "over50ms": 0,
+      "byCaller": {
+        "<anonymous> < http://localhost:3016/_next/static/chunks/1awk81wa18bb5.js < <anonymous>": 7201
+      }
+    },
+    "rafPerSecond": 60,
+    "longTasks": {
+      "count": 0,
+      "totalMs": 0,
+      "maxMs": 0,
+      "tasks": []
+    },
+    "transitions": [
+      {
+        "t": 3111,
+        "source": "panel",
+        "attr": "data-ai-state",
+        "value": "idle"
+      },
+      {
+        "t": 3111,
+        "source": "core",
+        "attr": "data-state",
+        "value": "idle"
+      },
+      {
+        "t": 3111,
+        "source": "core",
+        "attr": "data-tier",
+        "value": "webgl"
+      },
+      {
+        "t": 3111,
+        "source": "core",
+        "attr": "data-pref",
+        "value": "system"
+      }
+    ]
+  },
+  "scroll": {
+    "fromMs": 128251.09999999776,
+    "toMs": 188344.30000000075,
+    "seconds": 60.1,
+    "wheelEvents": 253,
+    "raf": {
+      "requested": 3605,
+      "fired": 3605,
+      "count": 3605,
+      "mean": 0.153,
+      "p50": 0.1,
+      "p95": 0.3,
+      "p99": 0.3,
+      "max": 0.4,
+      "over16ms": 0,
+      "over50ms": 0,
+      "byCaller": {
+        "<anonymous> < http://localhost:3016/_next/static/chunks/1awk81wa18bb5.js < <anonymous>": 3605
+      }
+    },
+    "rafPerSecond": 60,
+    "longTasks": {
+      "count": 0,
+      "totalMs": 0,
+      "maxMs": 0,
+      "tasks": []
+    },
+    "transitions": []
+  },
+  "type": {
+    "fromMs": 188368.09999999776,
+    "toMs": 249010.30000000075,
+    "seconds": 60.6,
+    "charactersTyped": 1280,
+    "raf": {
+      "requested": 3639,
+      "fired": 3639,
+      "count": 3639,
+      "mean": 0.144,
+      "p50": 0.1,
+      "p95": 0.3,
+      "p99": 0.3,
+      "max": 0.6,
+      "over16ms": 0,
+      "over50ms": 0,
+      "byCaller": {
+        "<anonymous> < http://localhost:3016/_next/static/chunks/1awk81wa18bb5.js < <anonymous>": 3639
+      }
+    },
+    "rafPerSecond": 60,
+    "longTasks": {
+      "count": 0,
+      "totalMs": 0,
+      "maxMs": 0,
+      "tasks": []
+    },
+    "transitions": [
+      {
+        "t": 188440,
+        "source": "core",
+        "attr": "data-state",
+        "value": "listening"
+      },
+      {
+        "t": 188440,
+        "source": "panel",
+        "attr": "data-ai-state",
+        "value": "listening"
+      }
+    ]
+  },
+  "traceFile": "C:\\Users\\Soheil\\AppData\\Local\\Temp\\claude\\C--Users-Soheil-Downloads\\c4e10eac-a8e9-429a-81d6-317c47246f54\\scratchpad\\trace\\longtasks-d3d11.trace.json",
+  "traceBytes": 357814210,
+  "traceAttribution": {
+    "mainThreads": [
+      "34784:43784"
+    ],
+    "eventCount": 1632974,
+    "tasksOver50ms": []
+  },
+  "counters": {
+    "listeners": {
+      "added": 4265,
+      "removed": 3938,
+      "net": 327,
+      "byType": {
+        "test": 0,
+        "pagehide": 1,
+        "pageshow": 2,
+        "error": 15,
+        "load": 3,
+        "abort": 2,
+        "auxclick": 5,
+        "beforetoggle": 2,
+        "cancel": 2,
+        "canplay": 2,
+        "canplaythrough": 2,
+        "click": 5,
+        "close": 2,
+        "contextmenu": 5,
+        "copy": 4,
+        "cut": 4,
+        "drag": 4,
+        "dragend": 4,
+        "dragenter": 4,
+        "dragexit": 4,
+        "dragleave": 4,
+        "dragover": 4,
+        "dragstart": 4,
+        "drop": 4,
+        "durationchange": 2,
+        "emptied": 2,
+        "encrypted": 2,
+        "ended": 2,
+        "fullscreenchange": 4,
+        "fullscreenerror": 4,
+        "gotpointercapture": 4,
+        "input": 4,
+        "invalid": 3,
+        "keydown": 5,
+        "keypress": 4,
+        "keyup": 4,
+        "loadeddata": 2,
+        "loadedmetadata": 2,
+        "loadstart": 2,
+        "lostpointercapture": 4,
+        "mousedown": 5,
+        "mousemove": 5,
+        "mouseout": 4,
+        "mouseover": 4,
+        "mouseup": 5,
+        "paste": 4,
+        "pause": 2,
+        "play": 2,
+        "playing": 2,
+        "pointercancel": 4,
+        "pointerdown": 5,
+        "pointermove": 4,
+        "pointerout": 4,
+        "pointerover": 4,
+        "pointerup": 5,
+        "progress": 2,
+        "ratechange": 2,
+        "reset": 4,
+        "resize": 2,
+        "seeked": 2,
+        "seeking": 2,
+        "stalled": 2,
+        "submit": 4,
+        "suspend": 2,
+        "timeupdate": 2,
+        "touchcancel": 5,
+        "touchend": 5,
+        "touchstart": 5,
+        "volumechange": 2,
+        "scroll": 3,
+        "toggle": 3,
+        "touchmove": 4,
+        "waiting": 2,
+        "wheel": 4,
+        "scrollend": 2,
+        "animationend": 4,
+        "animationiteration": 4,
+        "animationstart": 4,
+        "dblclick": 5,
+        "focusin": 4,
+        "focusout": 4,
+        "transitionrun": 4,
+        "transitionstart": 4,
+        "transitioncancel": 4,
+        "transitionend": 4,
+        "change": 8,
+        "compositionend": 4,
+        "textInput": 4,
+        "compositionstart": 4,
+        "compositionupdate": 4,
+        "unhandledrejection": 1,
+        "popstate": 1,
+        "visibilitychange": 1,
+        "webglcontextlost": 2,
+        "__playwright_global_listeners_check__": 1
+      },
+      "byTarget": {
+        "window": 20,
+        "element:script": 11,
+        "element:link": 2,
+        "document": 143,
+        "element:div": 143,
+        "element:textarea": 1,
+        "MediaQueryList": 4,
+        "element:details": 1,
+        "element:canvas": 2
+      }
+    },
+    "canvas": {
+      "contexts": {
+        "webgl2": 1
+      },
+      "lost": 0
+    },
+    "observers": {
+      "IntersectionObserver": {
+        "created": 2,
+        "disconnected": 0
+      },
+      "ResizeObserver": {
+        "created": 2,
+        "disconnected": 0
+      },
+      "MutationObserver": {
+        "created": 4,
+        "disconnected": 0
+      }
+    },
+    "domNodes": 792,
+    "longTaskObserverError": null
+  },
+  "finishedAt": "2026-09-05T16:12:17.872Z"
+}

@@ -28,23 +28,52 @@ const hostnameOf = (u: string | undefined) => {
   }
 };
 
-/** Strict but workable CSP: our own scripts, Stripe, and connect to ingest/cdn/OpenAI-free (server only). */
-const csp = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://js.stripe.com${isProd ? "" : " 'unsafe-eval'"}`,
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: blob: https:",
-  `connect-src 'self' ${origins(ingest)} ${origins(cdn)} https://api.stripe.com`,
-  "frame-src https://js.stripe.com https://hooks.stripe.com",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "object-src 'none'",
-  isProd ? "upgrade-insecure-requests" : "",
-]
-  .filter(Boolean)
-  .join("; ");
+/** `true` when the configured public origin is served over https (production / preview), `false` for http://localhost builds or an unset value. */
+export function isSecureOrigin(u: string | undefined): boolean {
+  if (!u) return false;
+  try {
+    return new URL(u).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+export interface CspInput {
+  /** `NODE_ENV === "production"` (drops `'unsafe-eval'`, which only the dev runtime needs) */
+  production: boolean;
+  /** the public origin (`HOST_MARKETING`) is https — the only case in which `upgrade-insecure-requests` is emitted */
+  secureOrigin: boolean;
+  ingest: string;
+  cdn: string;
+}
+
+/**
+ * Strict but workable CSP: our own scripts, Stripe, and connect to ingest/cdn/OpenAI-free (server only).
+ * `upgrade-insecure-requests` follows the scheme of the configured public origin, not NODE_ENV: WebKit
+ * applies the directive to `http://localhost` as well and upgrades every same-origin request of a local
+ * production build to https, which breaks every Safari / WebKit check of such a build (docs/16 D18);
+ * Chromium and Firefox exempt localhost. On an https origin the directive is harmless and wanted.
+ */
+export function buildContentSecurityPolicy({ production, secureOrigin, ingest, cdn }: CspInput): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline' https://js.stripe.com${production ? "" : " 'unsafe-eval'"}`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "img-src 'self' data: blob: https:",
+    `connect-src 'self' ${origins(ingest)} ${origins(cdn)} https://api.stripe.com`,
+    "frame-src https://js.stripe.com https://hooks.stripe.com",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+    secureOrigin ? "upgrade-insecure-requests" : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
+}
+
+const csp = buildContentSecurityPolicy({ production: isProd, secureOrigin: isSecureOrigin(process.env.HOST_MARKETING), ingest, cdn });
 
 /** Cache lifetimes of assets that only change with a deploy (favicons, manifest, brand files) and of generated social cards. */
 const STATIC_ASSET_CACHE = "public, max-age=86400, stale-while-revalidate=604800";

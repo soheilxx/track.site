@@ -1,0 +1,7 @@
+[2026-09-05T16:07:28.609Z] living-core-budget longtasks: base=http://localhost:3016 gl=d3d11 shell=C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe
+[2026-09-05T16:07:37.035Z] idle phase: 120 s (tier webgl, state idle)
+[2026-09-05T16:09:37.063Z] idle: rAF fired 7201 (60/s), callback p50 0.1 ms p95 0.3 ms max 0.4 ms; long tasks 0
+[2026-09-05T16:10:37.217Z] scroll: wheelEvents=253; rAF fired 3605 (60/s), callback p50 0.1 ms p95 0.3 ms max 0.4 ms; long tasks 0
+[2026-09-05T16:11:37.877Z] type: charactersTyped=1280; rAF fired 3639 (60/s), callback p50 0.1 ms p95 0.3 ms max 0.6 ms; long tasks 0
+[2026-09-05T16:12:17.870Z] trace: 1632974 events, 0 main-thread task(s) >= 50 ms
+[2026-09-05T16:12:17.963Z] done

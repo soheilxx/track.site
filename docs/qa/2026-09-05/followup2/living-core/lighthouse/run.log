@@ -1,0 +1,21 @@
+[2026-09-05T15:55:39.307Z] living-core lighthouse: base=http://localhost:3016 cli=C:/Users/Soheil/AppData/Local/npm-cache/_npx/ffe2131771d88588/node_modules/lighthouse/cli/index.js chrome=C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe runs=3 configs=off,system,full variants=docked
+[2026-09-05T15:55:42.204Z] preference saved: ai_motion=off (html[data-ai-motion]="off" after reload)
+[2026-09-05T15:55:58.094Z] tier check off/docked: {"panelMounted":true,"coreMounted":true,"tier":"static","pref":"off","state":"idle","canvas":false,"htmlMotion":"off","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true},"device":{"hardwareConcurrency":8,"deviceMemory":32,"saveData":false},"readyState":"complete","sinceNavigationMs":15623,"settledAfterMs":15437,"at6s":{"elapsedMs":6194,"tier":"static","canvas":false},"webglAtMs":null}
+[2026-09-05T15:56:10.933Z] app--off--docked--run1 exit=1 report=ok 12.7s perf=82 lcp=4606 tbt=107
+[2026-09-05T15:56:23.510Z] app--off--docked--run2 exit=1 report=ok 12.6s perf=79 lcp=4689 tbt=210
+[2026-09-05T15:56:36.124Z] app--off--docked--run3 exit=1 report=ok 12.6s perf=81 lcp=4757 tbt=99
+[2026-09-05T15:56:37.518Z] preference saved: ai_motion=system (html[data-ai-motion]="system" after reload)
+[2026-09-05T15:56:53.433Z] tier check system/docked: {"panelMounted":true,"coreMounted":true,"tier":"css","pref":"system","state":"idle","canvas":false,"htmlMotion":"system","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true},"device":{"hardwareConcurrency":8,"deviceMemory":32,"saveData":false},"readyState":"complete","sinceNavigationMs":15656,"settledAfterMs":15457,"at6s":{"elapsedMs":6190,"tier":"css","canvas":false},"webglAtMs":null}
+[2026-09-05T15:57:06.485Z] app--system--docked--run1 exit=1 report=ok 12.9s perf=80 lcp=5011 tbt=99
+[2026-09-05T15:57:18.701Z] app--system--docked--run2 exit=1 report=ok 12.2s perf=81 lcp=4872 tbt=82
+[2026-09-05T15:57:31.184Z] app--system--docked--run3 exit=1 report=ok 12.5s perf=80 lcp=5004 tbt=115
+[2026-09-05T15:57:32.804Z] preference saved: ai_motion=full (html[data-ai-motion]="full" after reload)
+[2026-09-05T15:57:39.504Z] tier check full/docked: {"panelMounted":true,"coreMounted":true,"tier":"webgl","pref":"full","state":"idle","canvas":true,"htmlMotion":"full","viewport":{"w":1280,"h":800,"dpr":2,"coarse":true},"device":{"hardwareConcurrency":8,"deviceMemory":32,"saveData":false},"readyState":"complete","sinceNavigationMs":6412,"settledAfterMs":6202,"at6s":{"elapsedMs":6199,"tier":"webgl","canvas":true},"webglAtMs":3105}
+[2026-09-05T15:57:52.162Z] app--full--docked--run1 exit=1 report=ok 12.6s perf=80 lcp=5050 tbt=90
+[2026-09-05T15:58:04.726Z] app--full--docked--run2 exit=1 report=ok 12.5s perf=80 lcp=5006 tbt=123
+[2026-09-05T15:58:17.190Z] app--full--docked--run3 exit=1 report=ok 12.4s perf=80 lcp=5008 tbt=95
+[2026-09-05T15:58:17.210Z] removed 1 leftover chrome-launcher temp profile(s)
+[2026-09-05T15:58:18.128Z] preference saved: ai_motion=system (html[data-ai-motion]="system" after reload)
+[2026-09-05T15:58:18.173Z] preference restored to system
+[2026-09-05T15:58:18.173Z] runs finished with 0 failure(s)
+[2026-09-05T15:58:18.230Z] summary written: 3 group(s), 2 delta(s)

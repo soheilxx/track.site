@@ -4,11 +4,14 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LivingAICore } from "./living-ai-core";
 import { CORE_STATES, type CoreMotion, type CoreState } from "./types";
+import { UPGRADE_MIN_ELAPSED_MS } from "./upgrade-gate";
 
 /*
- * Client behaviour of the Living AI Core in a DOM without a GPU: tier selection, the frame loop
- * with an injected clock and a hand-driven requestAnimationFrame, the frame-budget downgrade,
- * context loss, pausing, lifecycle cleanup and the geometry invariants (CLS 0).
+ * Client behaviour of the Living AI Core in a DOM without a GPU: tier selection, the upgrade timing
+ * gate (load, ≥ 3 s, idle), constrained devices, the frame loop with an injected clock and a
+ * hand-driven requestAnimationFrame, the frame-budget downgrade, context loss, pausing, lifecycle
+ * cleanup and the geometry invariants (CLS 0). Timers are Vitest's fake timers (setTimeout only);
+ * the injected clock is the navigation-start time base the gate measures against.
  */
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -66,6 +69,9 @@ function fakeMatchMedia(query: string): MediaQueryList {
   const matches = query.includes("reduced-motion") ? media.reduced : query.includes("coarse") ? media.coarse : false;
   return { matches, media: query, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent: () => false } as MediaQueryList;
 }
+
+/** Device signals (`readDeviceHints`) and the document's load state; reset to an unconstrained, loaded desktop before every test. */
+const device = { cores: 8 as number | undefined, deviceMemory: undefined as number | undefined, saveData: false, readyState: "complete" as DocumentReadyState };
 
 interface FakeGl {
   calls: string[];
@@ -133,6 +139,8 @@ interface Mounted {
 
 const clock = { t: 0 };
 const now = () => clock.t;
+/** The gate's 3 s mark on the injected clock. */
+const T_UPGRADE = UPGRADE_MIN_ELAPSED_MS;
 
 function mount(props: { state: CoreState; motion: CoreMotion; mode?: "docked" | "onboarding" }): Mounted {
   const container = document.createElement("div");
@@ -156,12 +164,20 @@ function mount(props: { state: CoreState; motion: CoreMotion; mode?: "docked" | 
   };
 }
 
+const drawn = () => gl?.calls.filter((c) => c === "drawArrays").length ?? 0;
+
 /**
- * Lets the idle callback, the lazy renderer import and the resulting state updates settle: while the
- * renderer loads, the canvas is mounted and the tier is still `css`; loading ends with `webgl` or
- * with the canvas removed (unavailable / failed). Polls because the import time depends on load.
+ * Opens the upgrade gate (document loaded, the injected clock at ≥ 3 s, the bridging timer, the idle
+ * callback) and lets the lazy renderer import, the first draw and the rAF-deferred tier flip settle:
+ * while the renderer loads, the canvas is mounted and the tier is still `css`; loading ends with
+ * `webgl` or with the canvas removed (unavailable / failed). Polls because the import time depends
+ * on load. A mount that never requests the renderer (static tier, constrained device) passes through.
  */
 async function settle(m: Mounted) {
+  if (clock.t < T_UPGRADE) clock.t = T_UPGRADE;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(T_UPGRADE);
+  });
   await act(async () => {
     flushIdle();
   });
@@ -169,7 +185,8 @@ async function settle(m: Mounted) {
     const loading = m.container.querySelector("canvas") !== null && m.core().dataset.tier === "css";
     if (!loading) break;
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2));
+      await vi.advanceTimersByTimeAsync(1);
+      tick(clock.t);
     });
   }
 }
@@ -187,10 +204,15 @@ beforeEach(() => {
   FakeResizeObserver.list = [];
   media.reduced = false;
   media.coarse = false;
+  device.cores = 8;
+  device.deviceMemory = undefined;
+  device.saveData = false;
+  device.readyState = "complete";
   gl = null;
   listeners.added = 0;
   listeners.removed = 0;
 
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
     raf.queue.set(++raf.id, cb);
     return raf.id;
@@ -208,6 +230,10 @@ beforeEach(() => {
   vi.stubGlobal("IntersectionObserver", FakeIntersectionObserver);
   vi.stubGlobal("ResizeObserver", FakeResizeObserver);
   window.matchMedia = fakeMatchMedia;
+  Object.defineProperty(navigator, "hardwareConcurrency", { configurable: true, get: () => device.cores });
+  Object.defineProperty(navigator, "deviceMemory", { configurable: true, get: () => device.deviceMemory });
+  Object.defineProperty(navigator, "connection", { configurable: true, get: () => (device.saveData ? { saveData: true } : undefined) });
+  Object.defineProperty(document, "readyState", { configurable: true, get: () => device.readyState });
   HTMLCanvasElement.prototype.getContext = function getContext() {
     return gl as unknown as RenderingContext | null;
   } as typeof HTMLCanvasElement.prototype.getContext;
@@ -234,10 +260,11 @@ afterEach(() => {
 /* ------------------------------------------------------------------ tests */
 
 describe("tier selection in the DOM", () => {
-  it("hydrates on the static tier and moves to CSS when WebGL is unavailable", async () => {
+  it("hydrates on the CSS tier and stays there when WebGL is unavailable", async () => {
     const m = mount({ state: "idle", motion: "full" });
     expect(m.core().dataset.tier).toBe("css"); // hydrated, renderer not requested yet → CSS
-    expect(idle.callbacks.size).toBe(1);
+    expect(idle.callbacks.size).toBe(0); // the gate waits for the 3 s mark first
+    expect(vi.getTimerCount()).toBe(1);
     await settle(m);
     expect(m.core().dataset.tier).toBe("css");
     expect(m.container.querySelector("canvas")).toBeNull();
@@ -245,17 +272,19 @@ describe("tier selection in the DOM", () => {
     m.unmount();
   });
 
-  it("stays static under prefers-reduced-motion, `reduced` and `off` without requesting a single frame", async () => {
+  it("stays static under prefers-reduced-motion, `reduced` and `off` without arming the gate or requesting a single frame", async () => {
     media.reduced = true;
     const a = mount({ state: "working", motion: "system" });
     expect(a.core().dataset.tier).toBe("static");
     expect(idle.callbacks.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
     a.unmount();
     media.reduced = false;
     for (const motion of ["reduced", "off"] as const) {
       const m = mount({ state: "working", motion });
       expect(m.core().dataset.tier).toBe("static");
       expect(idle.callbacks.size).toBe(0);
+      expect(vi.getTimerCount()).toBe(0);
       expect(m.container.querySelector("canvas")).toBeNull();
       m.unmount();
     }
@@ -280,23 +309,159 @@ describe("tier selection in the DOM", () => {
   });
 });
 
+describe("upgrade timing gate (D17)", () => {
+  it("keeps the CSS tier through the load window: no renderer request before the load event, the 3 s mark and an idle period", async () => {
+    gl = fakeGl();
+    device.readyState = "loading";
+    clock.t = 3500;
+    const m = mount({ state: "idle", motion: "system" });
+    expect(m.core().dataset.tier).toBe("css");
+    expect(idle.callbacks.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(m.container.querySelector("canvas")).toBeNull();
+    // the load event arrives after the 3 s mark: the idle callback is requested, nothing is loaded yet
+    device.readyState = "complete";
+    act(() => {
+      window.dispatchEvent(new Event("load"));
+    });
+    expect(idle.callbacks.size).toBe(1);
+    expect(m.container.querySelector("canvas")).toBeNull();
+    expect(gl.calls).toHaveLength(0);
+    await settle(m);
+    expect(m.core().dataset.tier).toBe("webgl");
+    m.unmount();
+  });
+
+  it("bridges the time to the 3 s mark with a timer and re-checks the injected clock when it fires", () => {
+    const m = mount({ state: "idle", motion: "system" }); // navigation start: t = 0, document loaded
+    expect(vi.getTimerCount()).toBe(1);
+    expect(idle.callbacks.size).toBe(0);
+    // the timer fires but the clock has not reached 3 s: re-armed, still no idle request
+    act(() => {
+      vi.advanceTimersByTime(T_UPGRADE);
+    });
+    expect(idle.callbacks.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(1);
+    clock.t = T_UPGRADE;
+    act(() => {
+      vi.advanceTimersByTime(T_UPGRADE);
+    });
+    expect(idle.callbacks.size).toBe(1);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(m.container.querySelector("canvas")).toBeNull(); // only the idle callback starts the load
+    m.unmount();
+    expect(idle.callbacks.size).toBe(0);
+    expect(idle.cancelled).toBe(1);
+  });
+
+  it("draws the first WebGL frame before the tier flips one frame later, so the cross-fade starts from a painted canvas", async () => {
+    gl = fakeGl();
+    clock.t = T_UPGRADE;
+    const m = mount({ state: "working", motion: "full" });
+    expect(idle.callbacks.size).toBe(1);
+    await act(async () => {
+      flushIdle();
+    });
+    // loading: canvas mounted (transparent), tier still css
+    expect(m.container.querySelector("canvas")).not.toBeNull();
+    expect(m.core().dataset.tier).toBe("css");
+    for (let i = 0; i < 500 && raf.queue.size === 0; i++) {
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+    }
+    expect(drawn()).toBe(1); // the first picture, before any tier change
+    expect(m.core().dataset.tier).toBe("css");
+    expect(raf.queue.size).toBe(1); // the deferred flip
+    act(() => tick(clock.t));
+    expect(m.core().dataset.tier).toBe("webgl");
+    expect(raf.queue.size).toBe(1); // the frame loop
+    m.unmount();
+  });
+});
+
+describe("constrained devices", () => {
+  const cases: Array<[label: string, apply: () => void]> = [
+    ["coarse pointer", () => void (media.coarse = true)],
+    ["data saver", () => void (device.saveData = true)],
+    ["≤ 4 GiB memory", () => void (device.deviceMemory = 4)],
+    ["≤ 4 cores", () => void (device.cores = 4)],
+  ];
+
+  it.each(cases)("%s: `system` stays on CSS without arming the gate, `full` upgrades", async (_label, apply) => {
+    apply();
+    gl = fakeGl();
+    clock.t = T_UPGRADE;
+    const a = mount({ state: "idle", motion: "system" });
+    expect(a.core().dataset.tier).toBe("css");
+    expect(idle.callbacks.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
+    await settle(a);
+    expect(a.core().dataset.tier).toBe("css");
+    expect(a.container.querySelector("canvas")).toBeNull();
+    expect(gl.calls).toHaveLength(0);
+    a.unmount();
+
+    const b = mount({ state: "idle", motion: "full" });
+    expect(idle.callbacks.size).toBe(1);
+    await settle(b);
+    expect(b.core().dataset.tier).toBe("webgl");
+    b.unmount();
+  });
+
+  it("unknown memory / core counts do not count as constrained", async () => {
+    device.cores = undefined;
+    device.deviceMemory = undefined;
+    gl = fakeGl();
+    clock.t = T_UPGRADE;
+    const m = mount({ state: "idle", motion: "system" });
+    await settle(m);
+    expect(m.core().dataset.tier).toBe("webgl");
+    m.unmount();
+  });
+
+  it("releases the renderer when `full` becomes `system` on a constrained device and gates a later `full` again", async () => {
+    media.coarse = true;
+    gl = fakeGl();
+    clock.t = T_UPGRADE;
+    const m = mount({ state: "idle", motion: "full" });
+    await settle(m);
+    expect(m.core().dataset.tier).toBe("webgl");
+    m.render({ state: "idle", motion: "system" });
+    expect(m.core().dataset.tier).toBe("css");
+    expect(m.container.querySelector("canvas")).toBeNull();
+    expect(gl.calls).toContain("loseContext");
+    expect(raf.queue.size).toBe(0);
+    expect(idle.callbacks.size).toBe(0);
+    // back to `full`: the idle gate runs again and the canvas cross-fades in from the CSS tier
+    m.render({ state: "idle", motion: "full" });
+    expect(m.core().dataset.tier).toBe("css");
+    expect(idle.callbacks.size).toBe(1);
+    gl = fakeGl();
+    await settle(m);
+    expect(m.core().dataset.tier).toBe("webgl");
+    m.unmount();
+  });
+});
+
 describe("enhanced renderer", () => {
-  it("loads WebGL after idle, draws with the injected clock and caps the effect at ~30 fps", async () => {
+  it("loads WebGL after the gate, draws with the injected clock and caps the effect at ~30 fps", async () => {
     gl = fakeGl();
     const m = mount({ state: "working", motion: "full" });
     await settle(m);
     expect(m.core().dataset.tier).toBe("webgl");
     expect(m.container.querySelector("canvas")).not.toBeNull();
     expect(gl.calls.filter((c) => c === "linkProgram")).toHaveLength(1);
-    const before = gl.calls.filter((c) => c === "drawArrays").length;
+    const before = drawn();
     // 60 Hz display for one second: at most ~30 rendered frames
+    const t0 = clock.t;
     for (let i = 1; i <= 60; i++) {
-      clock.t = i * (1000 / 60);
+      clock.t = t0 + i * (1000 / 60);
       tick(clock.t);
     }
-    const drawn = gl.calls.filter((c) => c === "drawArrays").length - before;
-    expect(drawn).toBeGreaterThanOrEqual(25);
-    expect(drawn).toBeLessThanOrEqual(31);
+    const frames = drawn() - before;
+    expect(frames).toBeGreaterThanOrEqual(25);
+    expect(frames).toBeLessThanOrEqual(31);
     m.unmount();
   });
 
@@ -305,7 +470,6 @@ describe("enhanced renderer", () => {
     const m = mount({ state: "idle", motion: "full" });
     await settle(m);
     expect(m.core().dataset.tier).toBe("webgl");
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     // every frame arrives 200 ms late (main thread contention)
     for (let i = 1; i <= 60 && m.core().dataset.tier === "webgl"; i++) {
       clock.t += 200;
@@ -323,6 +487,7 @@ describe("enhanced renderer", () => {
     expect(gl.calls).toContain("deleteProgram");
     // no further attempt in this mount
     expect(idle.callbacks.size).toBe(0);
+    expect(vi.getTimerCount()).toBe(0);
     m.unmount();
   });
 
@@ -337,6 +502,7 @@ describe("enhanced renderer", () => {
     expect(m.core().dataset.tier).toBe("css");
     expect(m.container.querySelector("canvas")).toBeNull();
     expect(raf.queue.size).toBe(0);
+    expect(idle.callbacks.size).toBe(0); // no retry in this mount
     m.unmount();
   });
 
@@ -355,7 +521,6 @@ describe("enhanced renderer", () => {
     gl = fakeGl();
     const m = mount({ state: "idle", motion: "full" });
     await settle(m);
-    const drawn = () => gl!.calls.filter((c) => c === "drawArrays").length;
     clock.t += 40;
     tick(clock.t);
     const visibleFrames = drawn();
@@ -403,7 +568,6 @@ describe("enhanced renderer", () => {
 
 describe("lifecycle cleanup", () => {
   it("releases rAF, idle callback, observers, listeners, timers, shaders, program and the context on unmount", async () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     gl = fakeGl();
     const canvasListeners = { added: 0, removed: 0 };
     const addCanvas = HTMLCanvasElement.prototype.addEventListener;
@@ -418,14 +582,7 @@ describe("lifecycle cleanup", () => {
     } as typeof removeCanvas;
     try {
       const m = mount({ state: "working", motion: "full" });
-      await act(async () => {
-        flushIdle();
-      });
-      for (let i = 0; i < 500 && m.core().dataset.tier !== "webgl"; i++) {
-        await act(async () => {
-          await vi.advanceTimersByTimeAsync(1);
-        });
-      }
+      await settle(m);
       expect(m.core().dataset.tier).toBe("webgl");
       expect(raf.queue.size).toBe(1);
       expect(FakeIntersectionObserver.list).toHaveLength(1);
@@ -455,14 +612,53 @@ describe("lifecycle cleanup", () => {
     }
   });
 
-  it("cancels a pending idle request and timers when unmounted before the renderer loaded", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const m = mount({ state: "idle", motion: "full" });
+  it("cancels the gate's timer, load listener or idle request when unmounted before the renderer loaded", () => {
+    // waiting for the 3 s mark
+    const a = mount({ state: "idle", motion: "full" });
+    expect(vi.getTimerCount()).toBe(1);
+    a.unmount();
+    expect(vi.getTimerCount()).toBe(0);
+
+    // waiting for the load event
+    device.readyState = "loading";
+    clock.t = T_UPGRADE;
+    const removeSpy = vi.spyOn(window, "removeEventListener");
+    const b = mount({ state: "idle", motion: "full" });
+    expect(idle.callbacks.size).toBe(0);
+    b.unmount();
+    expect(removeSpy.mock.calls.some((call) => call[0] === "load")).toBe(true);
+    act(() => {
+      window.dispatchEvent(new Event("load"));
+    });
+    expect(idle.callbacks.size).toBe(0);
+    device.readyState = "complete";
+
+    // waiting for the idle callback
+    const c = mount({ state: "idle", motion: "full" });
     expect(idle.callbacks.size).toBe(1);
-    m.unmount();
+    c.unmount();
     expect(idle.callbacks.size).toBe(0);
     expect(idle.cancelled).toBe(1);
     expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("cancels the deferred tier flip when unmounted between the first draw and the next frame", async () => {
+    gl = fakeGl();
+    clock.t = T_UPGRADE;
+    const m = mount({ state: "idle", motion: "full" });
+    await act(async () => {
+      flushIdle();
+    });
+    for (let i = 0; i < 500 && raf.queue.size === 0; i++) {
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+    }
+    expect(raf.queue.size).toBe(1);
+    m.unmount();
+    expect(raf.queue.size).toBe(0);
+    expect(raf.cancelled).toBe(1);
+    expect(gl.calls).toContain("loseContext");
   });
 });
 

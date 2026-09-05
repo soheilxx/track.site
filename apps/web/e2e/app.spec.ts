@@ -12,10 +12,30 @@ const LOGIN = "/en/login";
 /** Fresh browser state (no stored session) for the explicit sign-in test. */
 const SIGNED_OUT = { cookies: [], origins: [] };
 
+/**
+ * Waits until React has hydrated the login page (docs/16 D20). The inputs are server HTML until then;
+ * hydration re-registers them with react-hook-form, which resets their value to the default — text
+ * typed before that moment is lost (WebKit hydrates after Playwright's `fill`, Chromium before it).
+ * React marks every hydrated DOM node with a `__reactProps$…` key; `<html>` is the last node the
+ * root hydration pass completes before it commits, and the form's own key covers a lazily hydrated
+ * boundary. The same helper lives in `auth.setup.ts`.
+ */
+async function waitForLoginHydration(page: Page) {
+  await page.waitForFunction(() => {
+    const hydrated = (el: Element | null) => el !== null && Object.keys(el).some((key) => key.startsWith("__reactProps$"));
+    return hydrated(document.documentElement) && hydrated(document.querySelector("form"));
+  });
+}
+
 async function signIn(page: Page) {
   await page.goto(LOGIN);
-  await page.locator("input[name=email]").fill(email);
-  await page.locator("input[name=password]").fill(password);
+  await waitForLoginHydration(page);
+  const emailInput = page.locator("input[name=email]");
+  const passwordInput = page.locator("input[name=password]");
+  await emailInput.fill(email);
+  await passwordInput.fill(password);
+  await expect(emailInput).toHaveValue(email);
+  await expect(passwordInput).toHaveValue(password);
   await page.locator("form button[type=submit]").first().click();
   await page.waitForURL(/\/app/);
 }

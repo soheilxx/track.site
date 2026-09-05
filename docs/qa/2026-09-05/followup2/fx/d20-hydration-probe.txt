@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/web
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  17:43:43
+   Duration  1.22s (transform 29ms, setup 0ms, import 90ms, tests 69ms, environment 897ms)
+

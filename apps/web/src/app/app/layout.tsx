@@ -21,13 +21,28 @@ export const metadata: Metadata = {
   title: { default: "Track", template: "%s · Track" },
 };
 
-/** `interactive-widget=resizes-content` keeps the Track AI composer above the on-screen keyboard on Android; iOS is handled via `visualViewport`. */
+/**
+ * The dashboard viewport. `interactive-widget=resizes-content` keeps the Track AI composer above the
+ * on-screen keyboard on Android (Chromium ≥ 108; iOS is handled via `visualViewport`), but the key is
+ * Chromium-only and WebKit reports every unknown viewport key as a console error (docs/16 D21). It is
+ * therefore not part of the server-rendered meta: `INTERACTIVE_WIDGET_SCRIPT` below appends it before
+ * first paint where the engine exposes the VirtualKeyboard API (Chromium only), so Android keeps the
+ * resize behaviour and Safari / WebKit never parse the key.
+ */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  interactiveWidget: "resizes-content",
 };
+
+/**
+ * Inline head script (fixed literal, no user data): on Chromium-class engines it appends the
+ * `interactive-widget` key to the viewport meta as soon as the meta exists — synchronously when React
+ * streamed it before this script, otherwise at the next head mutation and, as a safety net, on
+ * DOMContentLoaded. Chromium re-processes the viewport meta on a content change, so the keyboard
+ * behaviour is identical to the build-time key; the key is only added once.
+ */
+const INTERACTIVE_WIDGET_SCRIPT = `(function(){if(!("virtualKeyboard" in navigator))return;var apply=function(){var m=document.querySelector('meta[name="viewport"]');if(!m)return false;if(m.content.indexOf("interactive-widget")<0)m.content+=", interactive-widget=resizes-content";return true};if(apply())return;var o=new MutationObserver(function(){if(apply())o.disconnect()});o.observe(document.head,{childList:true});document.addEventListener("DOMContentLoaded",function(){apply();o.disconnect()},{once:true})})();`;
 
 /**
  * Dashboard root layout (app.track.site). It renders its own `<html lang>`: the dashboard has no
@@ -82,6 +97,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     >
       <head>
         <ThemeScript />
+        <script dangerouslySetInnerHTML={{ __html: INTERACTIVE_WIDGET_SCRIPT }} />
       </head>
       <body className="bg-ground text-ink antialiased" data-dashboard="">
         <NextIntlClientProvider locale={locale} messages={messages}>

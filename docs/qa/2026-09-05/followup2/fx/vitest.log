@@ -1,0 +1,11 @@
+$ vitest run -c vitest.config.ts --passWithNoTests
+
+ RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/web
+
+
+ Test Files  60 passed (60)
+      Tests  532 passed (532)
+   Start at  17:42:42
+   Duration  15.38s (transform 8.67s, setup 0ms, import 32.91s, tests 22.23s, environment 4.47s)
+
+exit=0

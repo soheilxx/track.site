@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { layoutBlobs } from "./blobs";
-import { isCoarsePointer, useHydrated, useReducedMotionPreference } from "./preference";
+import { readDeviceHints, useHydrated, useReducedMotionPreference } from "./preference";
 import { createCoreStateMachine, type CoreStateMachine } from "./state-machine";
-import { createFrameBudget, effectiveMotion, frameInterval, renderScale, selectTier, type WebglStatus } from "./tier";
+import { createFrameBudget, effectiveMotion, frameInterval, isConstrainedDevice, renderScale, selectTier, webglPermitted, type WebglStatus } from "./tier";
 import type { CoreMode, LivingAICoreProps } from "./types";
+import { browserUpgradeEnv, scheduleWebglUpgrade } from "./upgrade-gate";
 import type { WebglRenderer } from "./webgl-renderer";
 
 /**
@@ -16,14 +17,18 @@ import type { WebglRenderer } from "./webgl-renderer";
  * the authoritative status; this layer only conveys *that* Track AI waits, listens, works, streams,
  * needs an approval, finished or is blocked.
  *
- * Tiers (progressive enhancement, see docs/15-living-ai-core.md):
+ * Tiers (progressive enhancement, see docs/15-living-ai-core.md §2):
  *  1. static  — SSR gradient from the theme tokens, visible before hydration; also the accessibility
  *               mode (`prefers-reduced-motion`, setting `reduced` / `off`): no continuous morphing,
  *               states are static colour accents;
  *  2. css     — three radial-gradient shapes moved by transform/opacity keyframes (globals.css);
- *  3. webgl   — WebGL2 metaballs, lazily loaded after idle, ≤ 30 fps (22 on coarse pointers),
- *               ≤ 1.5 DPR, uniforms only, paused when hidden or off-screen, downgraded silently on
- *               a persistently missed frame budget, context loss or init errors.
+ *               always the first animated tier after hydration, and the final tier on constrained /
+ *               mobile-class devices unless the setting is explicitly `full`;
+ *  3. webgl   — WebGL2 metaballs, requested only after the page is fully loaded, ≥ 3 s after
+ *               navigation start and an idle period (`upgrade-gate.ts`), cross-faded in over the
+ *               CSS shapes (`--lac-t`, 600 ms); ≤ 30 fps (22 on coarse pointers), ≤ 1.5 DPR,
+ *               uniforms only, paused when hidden or off-screen, downgraded silently on a
+ *               persistently missed frame budget, context loss or init errors.
  *
  * No React state is touched per frame: the frame loop samples the pure state machine with the
  * injected clock and writes shader uniforms. State changes only update data attributes.
@@ -36,11 +41,23 @@ const DOWNGRADE_FADE_MS = 700;
 export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
   const prefersReduced = useReducedMotionPreference();
   const hydrated = useHydrated();
+  // device signals are read once per mount; SSR sees "unknown" and paints the static tier regardless
+  const [hints] = useState(readDeviceHints);
   const [webgl, setWebgl] = useState<WebglStatus>("unknown");
   const [downgraded, setDowngraded] = useState(false);
   const animated = hydrated && effectiveMotion(motion, prefersReduced) === "animated";
-  const tier = selectTier({ motion, prefersReduced, hydrated, webgl, downgraded });
-  const engineOn = animated && (webgl === "loading" || webgl === "ready");
+  const constrained = isConstrainedDevice(hints);
+  const webglAllowed = webglPermitted(motion, hints);
+  const engineWanted = animated && webglAllowed;
+  const engineLive = webgl === "loading" || webgl === "ready";
+  // a preference change that turns the engine off (motion `off` / `reduced`, or `full` → `system` on a constrained
+  // device) forgets the renderer status right here (React's "adjust state on a prop change" pattern: the setter runs
+  // during render, once), so the engine effect's cleanup releases the renderer in this commit and a later change back
+  // goes through the gate and the cross-fade again instead of flipping the tier the moment the canvas mounts;
+  // failures (`unavailable`, `failed`) are kept — they are never retried within a mount
+  if (!engineWanted && engineLive) setWebgl("unknown");
+  const tier = selectTier({ motion, prefersReduced, hydrated, webgl, downgraded, constrained });
+  const engineOn = engineWanted && engineLive;
 
   const rootRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
@@ -64,23 +81,13 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
     getMachine().request(state);
   }, [state]);
 
-  // enhanced renderer: requested lazily after the browser is idle, never before hydration
+  // enhanced renderer: the CSS tier is on screen first; the upgrade is requested through the timing gate
+  // (document loaded, ≥ 3 s since navigation start, main thread idle) and never on a constrained device
+  // unless the setting is `full`
   useEffect(() => {
-    if (!animated || downgraded || webgl !== "unknown") return;
-    let cancelled = false;
-    const start = () => {
-      if (!cancelled) setWebgl("loading");
-    };
-    let idle: number | undefined;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    if (typeof requestIdleCallback === "function") idle = requestIdleCallback(start, { timeout: 1500 });
-    else timer = setTimeout(start, 300);
-    return () => {
-      cancelled = true;
-      if (idle !== undefined && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
-      if (timer !== undefined) clearTimeout(timer);
-    };
-  }, [animated, downgraded, webgl]);
+    if (!animated || !webglAllowed || downgraded || webgl !== "unknown") return;
+    return scheduleWebglUpgrade(browserUpgradeEnv(() => clockRef.current()), () => setWebgl("loading"));
+  }, [animated, webglAllowed, downgraded, webgl]);
 
   // after a frame-budget downgrade the canvas fades out on the CSS tier, then the context is released
   useEffect(() => {
@@ -103,12 +110,13 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
     let disposed = false;
     let renderer: WebglRenderer | null = null;
     let raf = 0;
+    let readyRaf = 0;
     let running = false;
     let halted = false;
     let last = -Infinity;
     let visible = typeof document === "undefined" || document.visibilityState !== "hidden";
     let intersecting = true;
-    const mobile = isCoarsePointer();
+    const mobile = hints.coarsePointer;
     const interval = frameInterval(mobile);
     const budget = createFrameBudget({ targetMs: interval });
     const isDark = () => document.documentElement.getAttribute("data-theme") === "dark";
@@ -128,6 +136,11 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
       stop();
       if (!disposed) setDowngraded(true);
     };
+    const draw = () => {
+      if (!renderer) return;
+      const sample = machine.sample();
+      renderer.draw(sample, layoutBlobs(sample, modeRef.current), isDark());
+    };
     const frame = () => {
       raf = 0;
       if (!running || !renderer) return;
@@ -139,8 +152,7 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
         return;
       }
       last = t;
-      const sample = machine.sample();
-      renderer.draw(sample, layoutBlobs(sample, modeRef.current), isDark());
+      draw();
     };
     const start = () => {
       if (running || disposed || halted || !renderer) return;
@@ -187,21 +199,31 @@ export function LivingAICore({ state, motion, mode, now }: LivingAICoreProps) {
           return;
         }
         resize();
-        setWebgl("ready");
-        sync();
+        // no visible jump: the first picture is drawn while the canvas is still transparent, and the tier flips one
+        // frame later so the browser has a computed style for the canvas — the CSS shapes and the canvas then
+        // cross-fade over --lac-t (globals.css)
+        draw();
+        readyRaf = requestAnimationFrame(() => {
+          readyRaf = 0;
+          if (disposed) return;
+          setWebgl("ready");
+          sync();
+        });
       })
       .catch(() => fail("unavailable"));
 
     return () => {
       disposed = true;
       stop();
+      if (readyRaf) cancelAnimationFrame(readyRaf);
+      readyRaf = 0;
       document.removeEventListener("visibilitychange", onVisibility);
       io?.disconnect();
       ro?.disconnect();
       renderer?.dispose();
       renderer = null;
     };
-  }, [engineOn]);
+  }, [engineOn, hints.coarsePointer]);
 
   return (
     <div ref={rootRef} className="lac" data-state={state} data-tier={tier} data-mode={mode} data-pref={motion} data-motion="essential" aria-hidden="true" data-testid="living-ai-core">

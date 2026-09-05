@@ -20,10 +20,14 @@ const sign = (v, d = 0) => (v == null ? "n/a" : `${v > 0 ? "+" : ""}${v.toFixed(
 const yes = (b) => (b == null ? "n/a" : b ? "yes" : "no");
 const L = [];
 const p = (s = "") => L.push(s);
+const serverLog = fs.readdirSync(dir).find((f) => /^server-\d+\.log$/.test(f)) ?? null;
+const serverPort = serverLog ? serverLog.match(/\d+/)[0] : "?";
+const PHASES = { idle: "idle, no input", scroll: (ph) => `scrolling the main area (${ph.wheelEvents} wheel events)`, type: (ph) => `typing in the composer (${ph.charactersTyped} chars)`, interact: (ph) => `scroll + type (${ph.wheelEvents} wheel events, ${ph.charactersTyped} chars)` };
+const phasesOf = (r) => Object.keys(PHASES).filter((k) => r[k]);
 
 p("# Living AI Core — budget evidence (docs/15 §4, supplement §9 acceptance criteria)");
 p();
-p(`Generated ${new Date().toISOString()} by \`apps/web/scripts/qa/living-core-report.mjs\` from the artifacts in this directory; the analysis at the end is \`summary-notes.md\`, appended verbatim. Every number in the generated sections comes from the named JSON/CSV file. Browser for every check: the chromium headless shell of Playwright's \`chromium\` project (path in each JSON's \`shell\`), stored owner session \`apps/web/e2e/.auth/owner.json\`, production build served on port 3012 (\`server-3012.log\`).`);
+p(`Generated ${new Date().toISOString()} by \`apps/web/scripts/qa/living-core-report.mjs\` from the artifacts in this directory; the analysis at the end is \`summary-notes.md\`, appended verbatim. Every number in the generated sections comes from the named JSON/CSV file. Browser for every check: the chromium headless shell of Playwright's \`chromium\` project (path in each JSON's \`shell\`), stored owner session \`apps/web/e2e/.auth/owner.json\`, production build served on port ${serverPort} (\`${serverLog ?? "server log missing"}\`).`);
 p();
 
 // ---- WebGL probe
@@ -54,7 +58,7 @@ if (tierFiles.length) {
 }
 
 // ---- (a) long tasks
-const ltFiles = fs.readdirSync(dir).filter((f) => /^longtasks-.*\.json$/.test(f)).sort();
+const ltFiles = fs.readdirSync(dir).filter((f) => /^longtasks-.*\.json$/.test(f) && !/trace-summary/.test(f)).sort();
 p("## (a) Idle long tasks with the panel open on /app, WebGL tier (`longtasks-<label>.json`)");
 p();
 if (ltFiles.length) {
@@ -64,11 +68,14 @@ if (ltFiles.length) {
   p("| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |");
   for (const f of ltFiles) {
     const r = read(f);
-    for (const phase of ["idle", "interact"]) {
+    let prevTier = r.core.idleStart?.tier ?? "?";
+    for (const phase of phasesOf(r)) {
       const ph = r[phase];
-      if (!ph) continue;
-      const tier = phase === "idle" ? `${r.core.idleStart.tier} → ${r.core.idleEnd.tier}` : `${r.core.idleEnd.tier} → ${r.core.interactEnd.tier}`;
-      p(`| ${r.label} | ${r.gl} | ${tier} | ${phase === "idle" ? "idle, no input" : `scroll + type (${ph.wheelEvents} wheel events, ${ph.charactersTyped} chars)`} | ${ph.seconds} s | ${ph.raf.fired} (${ph.rafPerSecond}) | ${fmt(ph.raf.p50, 2)} / ${fmt(ph.raf.p95, 2)} / ${fmt(ph.raf.p99, 2)} / ${fmt(ph.raf.max, 2)} ms | ${ph.raf.over16ms} / ${ph.raf.over50ms} | **${ph.longTasks.count}** | ${ph.longTasks.count ? `${ph.longTasks.maxMs.toFixed(1)} ms` : "—"} |`);
+      const endTier = r.core[`${phase}End`]?.tier ?? "?";
+      const tier = `${prevTier} → ${endTier}`;
+      prevTier = endTier;
+      const desc = typeof PHASES[phase] === "function" ? PHASES[phase](ph) : PHASES[phase];
+      p(`| ${r.label} | ${r.gl} | ${tier} | ${desc} | ${ph.seconds} s | ${ph.raf.fired} (${ph.rafPerSecond}) | ${fmt(ph.raf.p50, 2)} / ${fmt(ph.raf.p95, 2)} / ${fmt(ph.raf.p99, 2)} / ${fmt(ph.raf.max, 2)} ms | ${ph.raf.over16ms} / ${ph.raf.over50ms} | **${ph.longTasks.count}** | ${ph.longTasks.count ? `${ph.longTasks.maxMs.toFixed(1)} ms` : "—"} |`);
     }
   }
   p();
@@ -77,9 +84,8 @@ if (ltFiles.length) {
     p(`### ${r.label}: every long task > 50 ms (\`${f}\`)`);
     p();
     let any = false;
-    for (const phase of ["idle", "interact"]) {
+    for (const phase of phasesOf(r)) {
       const ph = r[phase];
-      if (!ph) continue;
       for (const t of ph.longTasks.tasks) {
         any = true;
         p(`- ${phase} +${(t.startMs / 1000).toFixed(1)} s: **${t.durationMs} ms**, PerformanceObserver attribution: ${t.attribution.map((a) => `${a.name}/${a.containerType}${a.containerSrc ? ` ${a.containerSrc}` : ""}${a.containerName ? ` ${a.containerName}` : ""}`).join("; ") || "none"}`);
@@ -96,9 +102,9 @@ if (ltFiles.length) {
       }
       p();
     } else if (r.traceAttributionError) p(`Trace attribution failed: ${r.traceAttributionError}`);
-    p(`rAF callers during the interaction phase (wrapper caller key → callbacks requested): ${Object.entries(r.interact?.raf.byCaller ?? {}).map(([k, v]) => `\`${k}\` ${v}`).join(", ") || "n/a"}.`);
+    p(`rAF callers during the last interaction phase (wrapper caller key → callbacks requested): ${Object.entries((r.type ?? r.interact)?.raf.byCaller ?? {}).map(([k, v]) => `\`${k}\` ${v}`).join(", ") || "n/a"}.`);
     p();
-    p(`State/tier transitions during the run: ${[...(r.idle?.transitions ?? []), ...(r.interact?.transitions ?? [])].filter((t) => t.attr !== "data-pref").map((t) => `${t.source}.${t.attr}=${t.value}@${(t.t / 1000).toFixed(1)}s`).join(", ")}.`);
+    p(`State/tier transitions during the run: ${phasesOf(r).flatMap((k) => r[k].transitions ?? []).filter((t) => t.attr !== "data-pref").map((t) => `${t.source}.${t.attr}=${t.value}@${(t.t / 1000).toFixed(1)}s`).join(", ")}.`);
     p();
   }
 } else p("not run");

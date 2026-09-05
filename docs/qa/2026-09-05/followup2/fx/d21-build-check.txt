@@ -1,0 +1,18 @@
+--- files under .next/server containing the runtime script literal:
+.next/server/chunks/ssr/[root-of-the-server]__0o5_h6t._.js
+--- files under .next/server containing 'interactive-widget':
+.next/server/chunks/ssr/[root-of-the-server]__0o5_h6t._.js
+.next/server/chunks/ssr/[root-of-the-server]__0o5_h6t._.js.map
+.next/server/chunks/ssr/[root-of-the-server]__1q5vupv._.js
+.next/server/chunks/ssr/[root-of-the-server]__1q5vupv._.js.map
+--- files under .next/server containing the build-time key 'interactiveWidget':
+.next/server/chunks/ssr/[root-of-the-server]__1q5vupv._.js
+.next/server/chunks/ssr/[root-of-the-server]__1q5vupv._.js.map
+(end)
+--- context of 'interactiveWidget' in the chunk that carries it (is it Next's generic viewport resolver or the app layout?):
+"width":case"height":case"initialScale":case"minimumScale":case"maximumScale":case"userScalable":case"viewportFit":case"interactiveWidget":c[a]=b[a]}return c}({resolvedViewport:b,viewport:br(a)?await a:a})}return b}async function bp(a,b,c,d,e,f){let g=await
+Scalable&&d.push(`user-scalable=${a.userScalable?"yes":"no"}`),a.viewportFit&&d.push(`viewport-fit=${a.viewportFit}`),a.interactiveWidget&&d.push(`interactive-widget=${a.interactiveWidget}`),d.length&&b.push((0,aj.jsx)("meta",{name:"viewport",content:d.join
+--- does that chunk contain the dashboard layout's own viewport export (viewportFit + 'cover' next to 'resizes-content')?
+0
+--- the layout chunk with the runtime script: 'resizes-content' occurrences
+Of("interactive-widget")<0)m.content+=", interactive-widget=resizes-content";return true};if(apply())return;var o=n

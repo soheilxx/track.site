@@ -1,0 +1,17 @@
+# Task RP — gate run of follow-up 2 (2026-09-05, evening)
+
+Repository gates and the full Playwright suite on the working tree after the follow-up-2 tasks FX (D17 upgrade gate + device rule, D18 CSP gating, D20 hydration wait, D21 runtime viewport key) and MS (Living AI Core measurements, harness fixes): HEAD `caab018` plus 14 modified tracked files and 4 untracked paths (`git status --short`, docs/16 D23). Host: Windows 11, Node 24.18.0, pnpm 11.21.0. Scripts: `run-gates.sh` (gates, `NO_COLOR=1 CI=1`, turbo `--force` so nothing is replayed from the cache), `run-e2e.sh` (server on port 3017 with `HOST_MARKETING=http://localhost:3017 HOST_APP=http://localhost:3017/app AI_DEV_FIXTURES=1`, then `E2E_BASE_URL=http://localhost:3017 E2E_ENGINES= pnpm --filter @track-site/web test:e2e …`). Every number in docs/16 §11.2 points to one of these files.
+
+| Artifact | Command | Result |
+| --- | --- | --- |
+| `_gates.log` | timestamps and exit codes of the four gates, `BUILD_ID` before / after | typecheck, lint, test, build all exit 0; `9ZJAGzR3pMhmuGkmeGTk8` → `Oqin7qkrWeUgilSwQTrKM` |
+| `typecheck.txt` | `pnpm typecheck --force` | exit 0, 17 / 17 tasks, 0 cached |
+| `lint.txt` | `pnpm lint --force` | exit 0, 17 / 17 tasks, 0 cached |
+| `test.txt` | `pnpm test --force` | exit 0, 15 / 15 tasks, 0 cached; 855 tests: core 35, catalog 20, events 8, policy 17, config 7, analytics 2, connectors 8, sdk 12, queue 4, collector 24, worker 16, ai 170, web 532 (60 files) |
+| `build.txt` | `pnpm --filter @track-site/web build` | exit 0, compiled in 4.5 s, 715 / 715 static pages in 13.8 s, `BUILD_ID` `Oqin7qkrWeUgilSwQTrKM`; the known `CONFIG_SIGNING_PUBLIC_KEY` warning |
+| `server-3017.log` | `pnpm --filter @track-site/web start -p 3017` (HOST_* on 3017, `AI_DEV_FIXTURES=1`) | ready in 145 ms, `BUILD_ID` `Oqin7qkrWeUgilSwQTrKM` (`/_next/static/Oqin7qkrWeUgilSwQTrKM/_buildManifest.js` → 200 while serving); seven `The destination stream closed early` lines from navigations aborted by the tests (same message as in the earlier server logs); stopped at the end |
+| `e2e-run1.log` | `E2E_BASE_URL=http://localhost:3017 E2E_ENGINES= pnpm --filter @track-site/web test:e2e` | exit 0, **55 / 55 passed** in 39.0 s: 1 setup, 42 chromium, 12 visual; no baseline regenerated (`git status --short apps/web/e2e/__screenshots__` empty) |
+| `e2e-visual-run2.log` | same server, `--project=visual` | exit 0, **13 / 13 passed** (setup + 12 snapshots) in 29.8 s |
+| `check-links.txt` | `node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/16-release-report.md` (also docs/15, docs/11), then the file count / size / WebP count of `docs/qa/2026-09-05/followup2` | docs/16: 130 unique references, 0 missing; docs/15: 20, 0 missing; docs/11: 24, 4 missing (historical "as-is" references, unchanged); pack: 59 files, 0 WebP, byte size as recorded in the file (measured before this README's final edit) |
+
+Not run in this task: WebKit / Firefox projects (`E2E_ENGINES=` empty — Firefox cannot start here, D19; the WebKit re-run without the header-strip hook that would close D18 / D20 / D21 is owed), integration and contract tests (no change to db, queue, worker or connectors in follow-up 2), the SEO gate (no route / metadata change), Lighthouse of the marketing pages (unchanged since the first follow-up). The Living AI Core measurements of docs/16 §6.6 (follow-up 2) were taken on build `9ZJAGzR3pMhmuGkmeGTk8`, not on this gate build; the gate build differs only by the build itself (same working tree, no source change between the two builds).

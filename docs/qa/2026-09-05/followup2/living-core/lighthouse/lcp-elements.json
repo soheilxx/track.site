@@ -1,0 +1,191 @@
+[
+  {
+    "report": "app--full--docked--run1",
+    "lcpMs": 5050,
+    "fcpMs": 1675,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 66,
+      "elementRenderDelay": 322
+    }
+  },
+  {
+    "report": "app--full--docked--run2",
+    "lcpMs": 5006,
+    "fcpMs": 1674,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 64,
+      "elementRenderDelay": 325
+    }
+  },
+  {
+    "report": "app--full--docked--run3",
+    "lcpMs": 5008,
+    "fcpMs": 1675,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 51,
+      "elementRenderDelay": 331
+    }
+  },
+  {
+    "report": "app--off--docked--run1",
+    "lcpMs": 4606,
+    "fcpMs": 1696,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 436,
+      "elementRenderDelay": 383
+    }
+  },
+  {
+    "report": "app--off--docked--run2",
+    "lcpMs": 4689,
+    "fcpMs": 1683,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 91,
+      "elementRenderDelay": 360
+    }
+  },
+  {
+    "report": "app--off--docked--run3",
+    "lcpMs": 4757,
+    "fcpMs": 1678,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 74,
+      "elementRenderDelay": 310
+    }
+  },
+  {
+    "report": "app--system--docked--run1",
+    "lcpMs": 5011,
+    "fcpMs": 1676,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 80,
+      "elementRenderDelay": 351
+    }
+  },
+  {
+    "report": "app--system--docked--run2",
+    "lcpMs": 4872,
+    "fcpMs": 1681,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 75,
+      "elementRenderDelay": 330
+    }
+  },
+  {
+    "report": "app--system--docked--run3",
+    "lcpMs": 5004,
+    "fcpMs": 1673,
+    "lcpElement": {
+      "selector": "div.space-y-6 > section.grid > article.rounded-[var(--radius-panel)] > p.mt-2",
+      "label": "No configuration version is active in the Production environment, so t",
+      "rect": {
+        "top": 382,
+        "bottom": 462,
+        "left": 297,
+        "right": 583,
+        "width": 286,
+        "height": 80
+      }
+    },
+    "subparts": {
+      "timeToFirstByte": 50,
+      "elementRenderDelay": 332
+    }
+  }
+]

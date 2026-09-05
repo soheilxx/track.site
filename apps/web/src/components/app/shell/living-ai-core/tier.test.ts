@@ -1,8 +1,34 @@
 import { describe, expect, it } from "vitest";
-import { createFrameBudget, effectiveMotion, frameInterval, renderScale, selectTier, type TierInput } from "./tier";
+import { NO_DEVICE_HINTS, createFrameBudget, effectiveMotion, frameInterval, isConstrainedDevice, renderScale, selectTier, webglPermitted, type DeviceHints, type TierInput } from "./tier";
 import { CORE_MOTIONS } from "./types";
 
 const base: TierInput = { motion: "system", prefersReduced: false, hydrated: true, webgl: "ready", downgraded: false };
+
+describe("isConstrainedDevice / webglPermitted", () => {
+  const cases: Array<[label: string, hints: Partial<DeviceHints>, constrained: boolean]> = [
+    ["no signals", {}, false],
+    ["coarse pointer", { coarsePointer: true }, true],
+    ["data saver", { saveData: true }, true],
+    ["4 GiB", { deviceMemory: 4 }, true],
+    ["2 GiB", { deviceMemory: 2 }, true],
+    ["8 GiB", { deviceMemory: 8 }, false],
+    ["4 cores", { hardwareConcurrency: 4 }, true],
+    ["8 cores", { hardwareConcurrency: 8 }, false],
+    ["unknown memory and cores", { deviceMemory: null, hardwareConcurrency: null }, false],
+  ];
+  it.each(cases)("%s", (_label, hints, constrained) => {
+    expect(isConstrainedDevice({ ...NO_DEVICE_HINTS, ...hints })).toBe(constrained);
+  });
+
+  it("permits the WebGL tier on unconstrained devices and, for `full` only, on constrained ones", () => {
+    const mobile: DeviceHints = { ...NO_DEVICE_HINTS, coarsePointer: true };
+    for (const motion of CORE_MOTIONS) expect(webglPermitted(motion, NO_DEVICE_HINTS)).toBe(true);
+    expect(webglPermitted("full", mobile)).toBe(true);
+    expect(webglPermitted("system", mobile)).toBe(false);
+    expect(webglPermitted("reduced", mobile)).toBe(false);
+    expect(webglPermitted("off", mobile)).toBe(false);
+  });
+});
 
 describe("effectiveMotion", () => {
   it("follows the OS for `system`, is static for `reduced` and `off`, animated for `full` even under an OS reduce", () => {
@@ -33,6 +59,14 @@ describe("selectTier", () => {
     expect(selectTier(base)).toBe("webgl");
     expect(selectTier({ ...base, downgraded: true })).toBe("css");
     expect(selectTier({ ...base, motion: "full", prefersReduced: true })).toBe("webgl");
+  });
+
+  it("keeps constrained (mobile-class) devices on CSS unless the setting is explicitly `full`", () => {
+    expect(selectTier({ ...base, constrained: true })).toBe("css");
+    expect(selectTier({ ...base, constrained: true, motion: "full" })).toBe("webgl");
+    expect(selectTier({ ...base, constrained: true, motion: "full", downgraded: true })).toBe("css");
+    expect(selectTier({ ...base, constrained: true, motion: "off" })).toBe("static");
+    expect(selectTier({ ...base, constrained: false })).toBe("webgl");
   });
 });
 

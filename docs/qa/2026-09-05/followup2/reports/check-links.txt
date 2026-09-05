@@ -1,0 +1,34 @@
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/16-release-report.md
+checked 130 unique references in docs/16-release-report.md: {"exact":118,"glob":8,"docs-shorthand":3,"relative-to-apps/web":1}
+  ok (glob) line 10 apps/web/scripts/qa/living-core-*.mjs
+  ok (glob) line 35 apps/web/scripts/qa/*.mjs
+  ok (glob) line 135 packages/catalog/src/*.ts
+  ok (docs-shorthand) line 158 docs/11
+  ok (glob) line 236 apps/web/e2e/__screenshots__/<snapshot>-visual-<platform>.png
+  ok (glob) line 250 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-{chromium,webkit}/lac/*.json
+  ok (glob) line 301 apps/web/src/lib/legal-copy/*
+  ok (docs-shorthand) line 301 docs/07
+  ok (relative-to-apps/web) line 317 scripts/i18n-parity.mjs
+  ok (glob) line 332 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-webkit/lac/*.json
+  ok (docs-shorthand) line 343 docs/12
+  ok (glob) line 398 apps/web/scripts/qa/{bundle-analysis,island-check,sourcemap-attribution,living-core-*}.mjs
+
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/15-living-ai-core.md
+checked 20 unique references in docs/15-living-ai-core.md: {"exact":18,"glob":2}
+  ok (glob) line 85 docs/qa/2026-09-05/followup/browsers/runs/xb-lac-{chromium,webkit}/lac/*.json
+  ok (glob) line 92 apps/web/scripts/qa/living-core-*.mjs
+
+$ node docs/qa/2026-09-05/reports/final/check-links.mjs . docs/11-track-redesign-program.md
+checked 24 unique references in docs/11-track-redesign-program.md: {"exact":18,"missing":4,"glob":2}
+  MISSING line 10 [code-path] apps/web/src/lib/marketing-copy.ts
+  MISSING line 14 [code-path] apps/web/content/blog/{en,de}
+  MISSING line 14 [code-path] apps/web/src/lib/blog.ts
+  MISSING line 17 [code-path] apps/web/src/app/[locale]/page.tsx
+  ok (glob) line 50 docs/qa/<date>
+  ok (glob) line 89 packages/ai/src/scope*.ts
+
+$ find docs/qa/2026-09-05/followup2 -type f | wc -l; du -sb docs/qa/2026-09-05/followup2; find docs/qa/2026-09-05/followup2 -name '*.webp' | wc -l
+59
+10854587	docs/qa/2026-09-05/followup2
+0
+generated: 2026-09-05T17:01:00Z

@@ -1,0 +1,30 @@
+$ E2E_BASE_URL=http://localhost:3017 E2E_ENGINES= pnpm --filter @track-site/web test:e2e --project=visual
+BUILD_ID served: 
+started: 2026-09-05T16:57:03Z
+
+$ playwright test "--project=visual"
+
+Running 13 tests using 1 worker
+
+(node:44204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [setup] › e2e\auth.setup.ts:27:1 › signs in as the seeded owner and stores the session (2.8s)
+(node:14856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 375px matches the baseline (2.5s)
+  ok  3 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (2.4s)
+  ok  4 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (2.4s)
+  ok  5 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (2.7s)
+  ok  6 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (2.8s)
+  ok  7 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (2.8s)
+  ok  8 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (1.9s)
+  ok  9 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (2.1s)
+  ok 10 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.3s)
+  ok 11 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (1.4s)
+  ok 12 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (1.6s)
+  ok 13 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (1.7s)
+
+  13 passed (29.8s)
+
+finished: 2026-09-05T16:57:34Z
+exit code: 0

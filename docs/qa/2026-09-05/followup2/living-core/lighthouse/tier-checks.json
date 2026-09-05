@@ -1,0 +1,89 @@
+{
+  "off/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "static",
+    "pref": "off",
+    "state": "idle",
+    "canvas": false,
+    "htmlMotion": "off",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    },
+    "device": {
+      "hardwareConcurrency": 8,
+      "deviceMemory": 32,
+      "saveData": false
+    },
+    "readyState": "complete",
+    "sinceNavigationMs": 15623,
+    "settledAfterMs": 15437,
+    "at6s": {
+      "elapsedMs": 6194,
+      "tier": "static",
+      "canvas": false
+    },
+    "webglAtMs": null
+  },
+  "system/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "css",
+    "pref": "system",
+    "state": "idle",
+    "canvas": false,
+    "htmlMotion": "system",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    },
+    "device": {
+      "hardwareConcurrency": 8,
+      "deviceMemory": 32,
+      "saveData": false
+    },
+    "readyState": "complete",
+    "sinceNavigationMs": 15656,
+    "settledAfterMs": 15457,
+    "at6s": {
+      "elapsedMs": 6190,
+      "tier": "css",
+      "canvas": false
+    },
+    "webglAtMs": null
+  },
+  "full/docked": {
+    "panelMounted": true,
+    "coreMounted": true,
+    "tier": "webgl",
+    "pref": "full",
+    "state": "idle",
+    "canvas": true,
+    "htmlMotion": "full",
+    "viewport": {
+      "w": 1280,
+      "h": 800,
+      "dpr": 2,
+      "coarse": true
+    },
+    "device": {
+      "hardwareConcurrency": 8,
+      "deviceMemory": 32,
+      "saveData": false
+    },
+    "readyState": "complete",
+    "sinceNavigationMs": 6412,
+    "settledAfterMs": 6202,
+    "at6s": {
+      "elapsedMs": 6199,
+      "tier": "webgl",
+      "canvas": true
+    },
+    "webglAtMs": 3105
+  }
+}

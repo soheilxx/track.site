@@ -1,0 +1,6 @@
+BUILD_ID=9ZJAGzR3pMhmuGkmeGTk8
+HOST_MARKETING at build (root .env scheme): HOST_MARKETING=http://localhost
+--- Content-Security-Policy header value in .next/routes-manifest.json:
+default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' http://localhost:3100 http://localhost:3000 https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+contains upgrade-insecure-requests: false
+header keys: Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, Strict-Transport-Security

@@ -1,0 +1,15 @@
+$ next start "-p" "3016"
+▲ Next.js 16.3.4
+- Local:         http://localhost:3016
+- Network:       http://172.20.7.2:3016
+✓ Ready in 142ms
+✓ Running next.config.ts took 78ms
+<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}
+⨯ Error: The destination stream closed early.
+    at ignore-listed frames {
+  digest: '1371865492'
+}

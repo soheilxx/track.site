@@ -1,0 +1,5 @@
+[2026-09-05T16:12:37.781Z] living-core-budget motion: base=http://localhost:3016 gl=d3d11 shell=C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe
+[2026-09-05T16:12:53.917Z] reduced-motion: tier=static pref=system rAF fired in 10017 ms: 0 (requested 0), canvas=false, core animations=0, keyframes=["none","none","none"]
+[2026-09-05T16:13:23.554Z] off: tier webgl -> static; rAF fired in 10013 ms: 0 (requested 0); after reload tier=static pref=off rAF fired in 10004 ms: 0; canvas=false; ssr static=true
+[2026-09-05T16:13:23.677Z] restored: data-ai-motion=system, tier=webgl
+[2026-09-05T16:13:23.790Z] done

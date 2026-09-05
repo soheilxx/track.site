@@ -99,12 +99,27 @@ async function verifyTier(config, variantId) {
   const page = await context.newPage();
   try {
     await page.goto(new URL(args.page, args.base).toString(), { waitUntil: "load" });
-    await page.waitForTimeout(6000);
-    const r = await page.evaluate(() => {
+    // The WebGL tier is an upgrade requested only after load + 3 s + an idle callback (docs/15 §2, D17):
+    // poll for up to 15 s, keep the reading at 6 s (the previous fixed wait) and the settled reading.
+    const READ = () => {
       const core = document.querySelector('[data-testid="living-ai-core"]');
       const panel = document.querySelector('[data-testid="assistant-panel"]');
-      return { panelMounted: Boolean(panel), coreMounted: Boolean(core), tier: core ? core.getAttribute("data-tier") : null, pref: core ? core.getAttribute("data-pref") : null, state: core ? core.getAttribute("data-state") : null, canvas: document.querySelector("canvas.lac-gl") !== null, htmlMotion: document.documentElement.getAttribute("data-ai-motion"), viewport: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio, coarse: matchMedia("(pointer: coarse)").matches } };
-    });
+      const nav = navigator;
+      return { panelMounted: Boolean(panel), coreMounted: Boolean(core), tier: core ? core.getAttribute("data-tier") : null, pref: core ? core.getAttribute("data-pref") : null, state: core ? core.getAttribute("data-state") : null, canvas: document.querySelector("canvas.lac-gl") !== null, htmlMotion: document.documentElement.getAttribute("data-ai-motion"), viewport: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio, coarse: matchMedia("(pointer: coarse)").matches }, device: { hardwareConcurrency: nav.hardwareConcurrency ?? null, deviceMemory: nav.deviceMemory ?? null, saveData: nav.connection ? Boolean(nav.connection.saveData) : null }, readyState: document.readyState, sinceNavigationMs: Math.round(performance.now()) };
+    };
+    const started = Date.now();
+    let r = null;
+    let at6s = null;
+    let webglAtMs = null;
+    for (;;) {
+      const elapsed = Date.now() - started;
+      r = await page.evaluate(READ);
+      if (elapsed >= 6000 && !at6s) at6s = { elapsedMs: elapsed, tier: r.tier, canvas: r.canvas };
+      if (r.tier === "webgl" && webglAtMs == null) webglAtMs = elapsed;
+      if ((r.tier === "webgl" && at6s) || (elapsed >= 6000 && !r.coreMounted) || elapsed >= 15000) break;
+      await page.waitForTimeout(500);
+    }
+    r = { ...r, settledAfterMs: Date.now() - started, at6s, webglAtMs };
     log(`tier check ${config}/${variantId}: ${JSON.stringify(r)}`);
     return r;
   } finally {

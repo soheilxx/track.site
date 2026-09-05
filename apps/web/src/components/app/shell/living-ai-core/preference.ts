@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { NO_DEVICE_HINTS, type DeviceHints } from "./tier";
 import { isCoreMotion, type CoreMotion } from "./types";
 
 /**
@@ -64,4 +65,27 @@ export function useHydrated(): boolean {
 export function isCoarsePointer(): boolean {
   if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
   return window.matchMedia("(pointer: coarse)").matches;
+}
+
+interface NavigatorHints {
+  connection?: { saveData?: boolean };
+  deviceMemory?: number;
+  hardwareConcurrency?: number;
+}
+
+const finiteOrNull = (value: unknown): number | null => (typeof value === "number" && Number.isFinite(value) ? value : null);
+
+/**
+ * Device signals for the tier decision (`isConstrainedDevice`), read once per mount on the client.
+ * On the server (Node also exposes a `navigator`) everything is unknown, so SSR never depends on it.
+ */
+export function readDeviceHints(): DeviceHints {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return NO_DEVICE_HINTS;
+  const nav = navigator as Navigator & NavigatorHints;
+  return {
+    coarsePointer: isCoarsePointer(),
+    saveData: nav.connection?.saveData === true,
+    deviceMemory: finiteOrNull(nav.deviceMemory),
+    hardwareConcurrency: finiteOrNull(nav.hardwareConcurrency),
+  };
 }

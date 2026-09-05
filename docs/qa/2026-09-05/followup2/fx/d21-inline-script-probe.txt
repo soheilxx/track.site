@@ -1,0 +1,5 @@
+D21 inline script parses OK, length 481
+chromium-like: width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content
+webkit-like  : width=device-width, initial-scale=1, viewport-fit=cover
+late meta     : width=device-width, initial-scale=1, interactive-widget=resizes-content
+idempotent    : width=device-width, initial-scale=1, interactive-widget=resizes-content

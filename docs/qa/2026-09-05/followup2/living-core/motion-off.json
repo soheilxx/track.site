@@ -1,0 +1,307 @@
+{
+  "mode": "motion",
+  "gl": "d3d11",
+  "chromeArgs": [
+    "--use-angle=d3d11"
+  ],
+  "shell": "C:/Users/Soheil/AppData/Local/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe",
+  "base": "http://localhost:3016",
+  "startedAt": "2026-09-05T16:12:37.782Z",
+  "windowSeconds": 10,
+  "reducedMotion": {
+    "core": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "static",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": false,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": true,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "coreBeforeWindow": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "static",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": false,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": true,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "windowMs": 10017,
+    "raf": {
+      "requested": 0,
+      "fired": 0,
+      "count": 0,
+      "mean": null,
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "max": null,
+      "over16ms": 0,
+      "over50ms": 0,
+      "byCaller": {}
+    },
+    "canvasContexts": {
+      "contexts": {},
+      "lost": 0
+    },
+    "transitions": [
+      {
+        "t": 1403,
+        "source": "panel",
+        "attr": "data-ai-state",
+        "value": "idle"
+      },
+      {
+        "t": 1404,
+        "source": "core",
+        "attr": "data-state",
+        "value": "idle"
+      },
+      {
+        "t": 1404,
+        "source": "core",
+        "attr": "data-tier",
+        "value": "static"
+      },
+      {
+        "t": 1404,
+        "source": "core",
+        "attr": "data-pref",
+        "value": "system"
+      }
+    ],
+    "ssrStaticTier": true,
+    "ssrHasCanvas": false,
+    "ssrMotionAttr": "system"
+  },
+  "off": {
+    "tierBeforeToggle": "webgl",
+    "coreBeforeToggle": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "webgl",
+      "pref": "system",
+      "htmlMotion": "system",
+      "canvas": true,
+      "coreAnimations": 5,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "tierAfterToggle": "static",
+    "coreAtOff": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "static",
+      "pref": "off",
+      "htmlMotion": "off",
+      "canvas": false,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "windowMs": 10013,
+    "raf": {
+      "requested": 0,
+      "fired": 0,
+      "count": 0,
+      "mean": null,
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "max": null,
+      "over16ms": 0,
+      "over50ms": 0,
+      "byCaller": {}
+    },
+    "canvasContexts": {
+      "contexts": {
+        "webgl2": 1
+      },
+      "lost": 1
+    },
+    "transitions": [
+      {
+        "t": 3217,
+        "source": "panel",
+        "attr": "data-ai-state",
+        "value": "idle"
+      },
+      {
+        "t": 3217,
+        "source": "core",
+        "attr": "data-state",
+        "value": "idle"
+      },
+      {
+        "t": 3217,
+        "source": "core",
+        "attr": "data-tier",
+        "value": "webgl"
+      },
+      {
+        "t": 3217,
+        "source": "core",
+        "attr": "data-pref",
+        "value": "system"
+      },
+      {
+        "t": 3292,
+        "source": "core",
+        "attr": "data-tier",
+        "value": "static"
+      },
+      {
+        "t": 3292,
+        "source": "core",
+        "attr": "data-pref",
+        "value": "off"
+      }
+    ],
+    "coreAfterWindow": {
+      "aiState": "idle",
+      "coreState": "idle",
+      "tier": "static",
+      "pref": "off",
+      "htmlMotion": "off",
+      "canvas": false,
+      "coreAnimations": 0,
+      "coreKeyframes": [
+        "none",
+        "none",
+        "none"
+      ],
+      "reducedMotion": false,
+      "coarse": false,
+      "viewport": {
+        "w": 1440,
+        "h": 900,
+        "dpr": 1
+      },
+      "messages": 26,
+      "composerDisabled": false
+    },
+    "reload": {
+      "core": {
+        "aiState": "idle",
+        "coreState": "idle",
+        "tier": "static",
+        "pref": "off",
+        "htmlMotion": "off",
+        "canvas": false,
+        "coreAnimations": 0,
+        "coreKeyframes": [
+          "none",
+          "none",
+          "none"
+        ],
+        "reducedMotion": false,
+        "coarse": false,
+        "viewport": {
+          "w": 1440,
+          "h": 900,
+          "dpr": 1
+        },
+        "messages": 26,
+        "composerDisabled": false
+      },
+      "windowMs": 10004,
+      "raf": {
+        "requested": 0,
+        "fired": 0,
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "over16ms": 0,
+        "over50ms": 0,
+        "byCaller": {}
+      },
+      "coreAfterWindow": {
+        "aiState": "idle",
+        "coreState": "idle",
+        "tier": "static",
+        "pref": "off",
+        "htmlMotion": "off",
+        "canvas": false,
+        "coreAnimations": 0,
+        "coreKeyframes": [
+          "none",
+          "none",
+          "none"
+        ],
+        "reducedMotion": false,
+        "coarse": false,
+        "viewport": {
+          "w": 1440,
+          "h": 900,
+          "dpr": 1
+        },
+        "messages": 26,
+        "composerDisabled": false
+      }
+    },
+    "ssrStaticTier": true,
+    "ssrHasCanvas": false,
+    "ssrMotionAttr": "off"
+  },
+  "restored": {
+    "htmlMotion": "system",
+    "tier": "webgl"
+  },
+  "finishedAt": "2026-09-05T16:13:23.789Z"
+}

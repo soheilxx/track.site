@@ -17,6 +17,40 @@ export interface TierInput {
   webgl: WebglStatus;
   /** the frame budget was missed persistently: stay on CSS for the rest of the mount */
   downgraded: boolean;
+  /** mobile-class / constrained device (`isConstrainedDevice`): CSS tier unless the setting is explicitly `full` */
+  constrained?: boolean;
+}
+
+/**
+ * Device signals that keep a mobile-class or constrained device on the CSS tier (docs/15 §2). All are
+ * feature detection, no user-agent sniffing; unknown values (`null`) never count as constrained.
+ */
+export interface DeviceHints {
+  /** `(pointer: coarse)` */
+  coarsePointer: boolean;
+  /** `navigator.connection.saveData` */
+  saveData: boolean;
+  /** `navigator.deviceMemory` (GiB, Chromium only) */
+  deviceMemory: number | null;
+  /** `navigator.hardwareConcurrency` */
+  hardwareConcurrency: number | null;
+}
+
+export const NO_DEVICE_HINTS: DeviceHints = { coarsePointer: false, saveData: false, deviceMemory: null, hardwareConcurrency: null };
+
+/** Coarse pointer, data saver, ≤ 4 GiB of memory or ≤ 4 logical cores → constrained. */
+export function isConstrainedDevice(hints: DeviceHints): boolean {
+  return (
+    hints.coarsePointer ||
+    hints.saveData ||
+    (hints.deviceMemory !== null && hints.deviceMemory <= 4) ||
+    (hints.hardwareConcurrency !== null && hints.hardwareConcurrency <= 4)
+  );
+}
+
+/** Whether the WebGL tier may be attempted at all: never on a constrained device unless the user chose `full` explicitly. */
+export function webglPermitted(motion: CoreMotion, hints: DeviceHints): boolean {
+  return motion === "full" || !isConstrainedDevice(hints);
 }
 
 /**
@@ -35,6 +69,7 @@ export function selectTier(input: TierInput): CoreTier {
   if (!input.hydrated) return "static";
   if (effectiveMotion(input.motion, input.prefersReduced) === "static") return "static";
   if (input.downgraded) return "css";
+  if (input.constrained && input.motion !== "full") return "css";
   return input.webgl === "ready" ? "webgl" : "css";
 }
 
