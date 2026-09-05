@@ -1,0 +1,30 @@
+navigationStart http://localhost:3002/en frame 1774E29DF3B53DE8EAE3661D39916F57
+      41.3 ms  commitNavigationEnd
+      42.1 ms  CommitLoad
+     115.9 ms  MarkDOMContent
+     115.9 ms  domContentLoadedEventEnd
+     347.9 ms  domComplete
+     348.1 ms  loadEventEnd
+     348.1 ms  MarkLoad
+    2188.5 ms  firstContentfulPaint
+    2188.5 ms  firstPaint
+    2188.5 ms  largestContentfulPaint::Candidate size=60536 type=text node=P class='mt-5 text-lg text-ink-2'
+screenshots: 23 first at 56.3 ms; sizes: 56.3ms=1636B 66.0ms=1640B 83.5ms=1640B 2188.8ms=34684B 2203.4ms=34684B 2219.3ms=34684B 2236.4ms=34676B 2252.9ms=34676B
+     329.8 ms  TimerFire timeout= id=1 dur=0.4
+     439.5 ms  TimerInstall timeout=2400 id=2 dur=
+      68.6 ms  RunTask dur=45.8 
+     115.8 ms  RunTask dur=23.0 
+     116.0 ms  UpdateLayoutTree dur=22.8 
+     151.2 ms  RunTask dur=52.7 
+     151.2 ms  EvaluateScript dur=51.4 http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js
+     211.5 ms  RunTask dur=117.7 
+     211.8 ms  Layout dur=117.3 
+     402.8 ms  RunTask dur=22.4 
+     402.8 ms  FunctionCall dur=22.0 http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js
+frame/paint events per 250 ms bucket until FCP:
+       0 ms: {"NeedsBeginFrameChanged":5,"Commit":3,"DrawFrame":7,"UpdateLayoutTree":2,"Layout":1}
+     250 ms: {"Layout":1}
+    1000 ms: {"RequestMainThreadFrame":1,"BeginMainThreadFrame":1,"UpdateLayoutTree":1,"Layout":1,"PrePaint":1,"Paint":2,"Commit":9,"NeedsBeginFrameChanged":2,"DrawFrame":1,"ActivateLayerTree":1}
+    1250 ms: {"NeedsBeginFrameChanged":2,"Commit":3}
+    2000 ms: {"RequestMainThreadFrame":1,"BeginMainThreadFrame":1,"PrePaint":1,"Commit":4,"DrawFrame":4,"NeedsBeginFrameChanged":2}
+font-related events: RemoteFontLoaded 139.3ms RemoteFontLoaded | 139.5ms RemoteFontLoaded | 139.5ms RemoteFontLoaded | 140.5ms RemoteFontLoaded

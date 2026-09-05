@@ -1,0 +1,226 @@
+{
+  "url": "http://localhost:3001/app/consent/simulator",
+  "timestamp": "2026-09-05T10:09:57.007Z",
+  "testEngine": {
+    "name": "axe-core",
+    "version": "4.13.0"
+  },
+  "testRunner": {
+    "name": "axe"
+  },
+  "testEnvironment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "windowWidth": 375,
+    "windowHeight": 900,
+    "orientationAngle": 0,
+    "orientationType": "portrait-primary"
+  },
+  "toolOptions": {
+    "runOnly": {
+      "type": "tag",
+      "values": [
+        "wcag2a",
+        "wcag2aa",
+        "wcag22aa"
+      ]
+    },
+    "reporter": "v1"
+  },
+  "violations": [],
+  "incomplete": [],
+  "passes": [
+    {
+      "id": "aria-allowed-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-conditional-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-deprecated-role",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-hidden-body",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "aria-hidden-focus",
+      "impact": null,
+      "nodes": 154
+    },
+    {
+      "id": "aria-prohibited-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-required-attr",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-roles",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-valid-attr-value",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-valid-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "button-name",
+      "impact": null,
+      "nodes": 10
+    },
+    {
+      "id": "bypass",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "color-contrast",
+      "impact": null,
+      "nodes": 23
+    },
+    {
+      "id": "definition-list",
+      "impact": null,
+      "nodes": 2
+    },
+    {
+      "id": "dlitem",
+      "impact": null,
+      "nodes": 28
+    },
+    {
+      "id": "document-title",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "duplicate-id-aria",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "form-field-multiple-labels",
+      "impact": null,
+      "nodes": 12
+    },
+    {
+      "id": "html-has-lang",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "html-lang-valid",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "label",
+      "impact": null,
+      "nodes": 6
+    },
+    {
+      "id": "link-name",
+      "impact": null,
+      "nodes": 4
+    },
+    {
+      "id": "list",
+      "impact": null,
+      "nodes": 6
+    },
+    {
+      "id": "listitem",
+      "impact": null,
+      "nodes": 23
+    },
+    {
+      "id": "meta-viewport",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "nested-interactive",
+      "impact": null,
+      "nodes": 103
+    },
+    {
+      "id": "scrollable-region-focusable",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "select-name",
+      "impact": null,
+      "nodes": 6
+    },
+    {
+      "id": "target-size",
+      "impact": null,
+      "nodes": 25
+    },
+    {
+      "id": "td-headers-attr",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "th-has-data-cells",
+      "impact": null,
+      "nodes": 1
+    }
+  ],
+  "inapplicable": [
+    "area-alt",
+    "aria-braille-equivalent",
+    "aria-command-name",
+    "aria-input-field-name",
+    "aria-meter-name",
+    "aria-progressbar-name",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-tab-name",
+    "aria-toggle-field-name",
+    "aria-tooltip-name",
+    "blink",
+    "frame-focusable-content",
+    "frame-title-unique",
+    "frame-title",
+    "html-xml-lang-mismatch",
+    "image-alt",
+    "input-button-name",
+    "input-image-alt",
+    "link-in-text-block",
+    "marquee",
+    "meta-refresh",
+    "object-alt",
+    "role-img-alt",
+    "server-side-image-map",
+    "summary-name",
+    "svg-img-alt",
+    "valid-lang",
+    "video-caption",
+    "no-autoplay-audio"
+  ],
+  "counts": {
+    "violations": 0,
+    "incomplete": 0,
+    "passes": 31,
+    "inapplicable": 30
+  }
+}

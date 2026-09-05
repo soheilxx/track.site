@@ -1,0 +1,8 @@
+routes: 1, widths: 320,375,768,1024,1440,1920
+[320] app-consent-simulator 200 7075ms 
+[1024] app-consent-simulator 200 2454ms 
+[768] app-consent-simulator 200 10385ms 
+[375] app-consent-simulator 200 11953ms 
+[1920] app-consent-simulator 200 11239ms 
+[1440] app-consent-simulator 200 16220ms 
+done in 27s

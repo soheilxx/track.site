@@ -1,0 +1,21 @@
+
+Running 13 tests using 1 worker
+
+  ok  1 [setup] › e2e\auth.setup.ts:12:1 › signs in as the seeded owner and stores the session (2.1s)
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-375-visual-win32.png is re-generated, writing actual.
+  ok  2 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 375px matches the baseline (3.1s)
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-1440-visual-win32.png is re-generated, writing actual.
+  ok  3 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (4.2s)
+  ok  4 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (2.4s)
+  ok  5 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (2.5s)
+  ok  6 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (2.8s)
+  ok  7 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (2.8s)
+  ok  8 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (1.9s)
+  ok  9 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (2.1s)
+  ok 10 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.3s)
+  ok 11 [visual] › e2e\visual.spec.ts:99:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (1.5s)
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\app-overview-375-visual-win32.png is re-generated, writing actual.
+  ok 12 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (1.9s)
+  ok 13 [visual] › e2e\visual.spec.ts:113:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (1.7s)
+
+  13 passed (31.7s)

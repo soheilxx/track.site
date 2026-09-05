@@ -1,0 +1,518 @@
+{
+  "url": "http://localhost:3001/en/security",
+  "timestamp": "2026-09-05T10:09:04.348Z",
+  "testEngine": {
+    "name": "axe-core",
+    "version": "4.13.0"
+  },
+  "testRunner": {
+    "name": "axe"
+  },
+  "testEnvironment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "windowWidth": 375,
+    "windowHeight": 900,
+    "orientationAngle": 0,
+    "orientationType": "portrait-primary"
+  },
+  "toolOptions": {
+    "runOnly": {
+      "type": "tag",
+      "values": [
+        "wcag2a",
+        "wcag2aa",
+        "wcag22aa"
+      ]
+    },
+    "reporter": "v1"
+  },
+  "violations": [],
+  "incomplete": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": "bgGradient",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div aria-hidden=\"true\" class=\"grid-dots pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]\"></div>",
+                  "target": [
+                    ".\\[mask-image\\:radial-gradient\\(ellipse_at_top\\,black\\,transparent_70\\%\\)\\]"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element's background color could not be determined due to a background gradient"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<p class=\"font-semibold tracking-wide text-primary uppercase\">Security</p>",
+          "target": [
+            ".tracking-wide.text-primary.uppercase"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": "bgGradient",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div aria-hidden=\"true\" class=\"grid-dots pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]\"></div>",
+                  "target": [
+                    ".\\[mask-image\\:radial-gradient\\(ellipse_at_top\\,black\\,transparent_70\\%\\)\\]"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element's background color could not be determined due to a background gradient"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<h1 class=\"max-w-4xl font-display font-semibold text-ink mt-4\">Security</h1>",
+          "target": [
+            "h1"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "13.5pt (18px)",
+                "fontWeight": "normal",
+                "messageKey": "bgGradient",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div aria-hidden=\"true\" class=\"grid-dots pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]\"></div>",
+                  "target": [
+                    ".\\[mask-image\\:radial-gradient\\(ellipse_at_top\\,black\\,transparent_70\\%\\)\\]"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element's background color could not be determined due to a background gradient"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<p class=\"mt-5 max-w-text text-lg text-ink-2\">How Track protects customer data: architecture, controls and the guarantees you can verify in the product.</p>",
+          "target": [
+            ".mt-5.text-lg.max-w-text"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": "bgGradient",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div aria-hidden=\"true\" class=\"grid-dots pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]\"></div>",
+                  "target": [
+                    ".\\[mask-image\\:radial-gradient\\(ellipse_at_top\\,black\\,transparent_70\\%\\)\\]"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element's background color could not be determined due to a background gradient"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<p class=\"mt-4 text-small text-ink-3\">Last updated: 2026-09-03</p>",
+          "target": [
+            ".mt-4:nth-child(4)"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "9.8pt (13px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<text x=\"91\" y=\"38\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"text-[13px] font-semibold fill-primary\">Signed config</text>",
+          "target": [
+            "text[y=\"38\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "7.5pt (10px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<text x=\"91\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"text-[10px] fill-ink-3\">Ed25519 · fail closed</text>",
+          "target": [
+            "text[y=\"54\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "9.8pt (13px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<text x=\"71\" y=\"153\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"text-[13px] font-semibold fill-ink\">Website</text>",
+          "target": [
+            "text[x=\"71\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "9.8pt (13px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<text x=\"241\" y=\"148\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"text-[13px] font-semibold fill-ink\">Collector</text>",
+          "target": [
+            ".fill-ink[x=\"241\"][y=\"148\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "7.5pt (10px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<text x=\"241\" y=\"164\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"text-[10px] fill-ink-3\">origin · rate limit · HMAC</text>",
+          "target": [
+            ".text-\\[10px\\][x=\"241\"][y=\"164\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "contrastRatio": 0,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": "bgOverlap",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element's background color could not be determined because it is overlapped by another element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<figcaption class=\"mt-3 text-sm text-ink-3\">Signed configuration reaches the browser, events reach the collector, and only events that pass the policy reach a destination. Vendor credentials leave the vault only inside the worker.</figcaption>",
+          "target": [
+            "figcaption"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        }
+      ]
+    }
+  ],
+  "passes": [
+    {
+      "id": "aria-allowed-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-conditional-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-deprecated-role",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "aria-hidden-body",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "aria-hidden-focus",
+      "impact": null,
+      "nodes": 15
+    },
+    {
+      "id": "aria-prohibited-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-required-attr",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "aria-roles",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "aria-valid-attr-value",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "aria-valid-attr",
+      "impact": null,
+      "nodes": 21
+    },
+    {
+      "id": "button-name",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "bypass",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 99
+    },
+    {
+      "id": "document-title",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "duplicate-id-aria",
+      "impact": null,
+      "nodes": 19
+    },
+    {
+      "id": "html-has-lang",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "html-lang-valid",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "link-name",
+      "impact": null,
+      "nodes": 40
+    },
+    {
+      "id": "list",
+      "impact": null,
+      "nodes": 8
+    },
+    {
+      "id": "listitem",
+      "impact": null,
+      "nodes": 41
+    },
+    {
+      "id": "meta-viewport",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "nested-interactive",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "scrollable-region-focusable",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "summary-name",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "svg-img-alt",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "target-size",
+      "impact": null,
+      "nodes": 42
+    },
+    {
+      "id": "td-headers-attr",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "th-has-data-cells",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "valid-lang",
+      "impact": null,
+      "nodes": 6
+    }
+  ],
+  "inapplicable": [
+    "area-alt",
+    "aria-braille-equivalent",
+    "aria-command-name",
+    "aria-input-field-name",
+    "aria-meter-name",
+    "aria-progressbar-name",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-tab-name",
+    "aria-toggle-field-name",
+    "aria-tooltip-name",
+    "blink",
+    "definition-list",
+    "dlitem",
+    "form-field-multiple-labels",
+    "frame-focusable-content",
+    "frame-title-unique",
+    "frame-title",
+    "html-xml-lang-mismatch",
+    "image-alt",
+    "input-button-name",
+    "input-image-alt",
+    "label",
+    "link-in-text-block",
+    "marquee",
+    "meta-refresh",
+    "object-alt",
+    "role-img-alt",
+    "select-name",
+    "server-side-image-map",
+    "video-caption",
+    "no-autoplay-audio"
+  ],
+  "counts": {
+    "violations": 0,
+    "incomplete": 1,
+    "passes": 29,
+    "inapplicable": 32
+  }
+}

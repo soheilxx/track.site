@@ -1,5 +1,5 @@
 import { Check, ShieldCheck } from "lucide-react";
-import { ProductStage, buttonVariants } from "@track-site/ui";
+import { ProductStage, buttonVariants, cn } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 import type { PricingCopy } from "@/lib/marketing-copy/types";
 import type { PublicPlan } from "@/server/pricing";
@@ -22,11 +22,12 @@ export function EnterprisePanel({ plan, copy }: { plan: PublicPlan; copy: Pricin
           <p className="mt-6 font-display text-4xl font-bold tracking-tight text-ink">{copy.price}</p>
           <p className="mt-1 text-small text-ink-3">{plan.audience}</p>
           <p className="mt-6 max-w-text text-body text-ink-2">{copy.text}</p>
+          {/* the CTAs may wrap onto two lines instead of overflowing the panel at 320 px (fr: "Contacter l’équipe commerciale") */}
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={CONTACT_SALES_HREF} className={buttonVariants({ size: "lg" })}>
+            <Link href={CONTACT_SALES_HREF} className={cn(buttonVariants({ size: "lg" }), "max-w-full whitespace-normal text-center")}>
               {copy.cta}
             </Link>
-            <Link href="/demo" className={buttonVariants({ variant: "secondary", size: "lg" })}>
+            <Link href="/demo" className={cn(buttonVariants({ variant: "secondary", size: "lg" }), "max-w-full whitespace-normal text-center")}>
               {copy.secondary}
             </Link>
           </div>

@@ -47,3 +47,5 @@ next-env.d.ts
 .vercel
 .env*
 apps/web/e2e/.auth/
+docs/qa/**/lighthouse/**/*.html
+docs/qa/**/recheck/**/*.html

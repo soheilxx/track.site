@@ -14,6 +14,7 @@ export const KNOWLEDGE_ARTICLE_COPY_NL: KnowledgeArticleCopy = {
   callouts: { note: "Opmerking", warning: "Waarschuwing", privacy: "Privacy", practice: "In de praktijk" },
   code: { copy: "Code kopiëren", copied: "Gekopieerd" },
   steps: "Stappen",
+  table: "Tabel",
   checklist: { open: "Te doen", done: "Gedaan" },
   sources: { heading: "Primaire bronnen", text: "Documentatie en standaarden waarop dit artikel is gebaseerd." },
   legal: "Dit artikel biedt algemene informatie, geen juridisch advies. Raadpleeg voor jouw specifieke situatie een jurist die gespecialiseerd is in gegevensbescherming.",

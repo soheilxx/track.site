@@ -30,14 +30,15 @@ export async function MarketingFooter({ locale: localeProp, variant = "full" }: 
         {columns.map((column) => {
           const headingId = `footer-${column.key ?? column.title}`;
           return (
-            <nav key={headingId} aria-labelledby={headingId}>
+            <nav key={headingId} aria-labelledby={headingId} className="min-w-0">
               <p id={headingId} className="text-small font-semibold text-ink">
                 {column.title}
               </p>
-              <ul className="mt-4 space-y-1">
+              {/* long single-word labels (nl "Verwerkersovereenkomst") hyphenate or break inside the ~8 rem column at `lg` instead of scrolling the page */}
+              <ul className="mt-4 space-y-1 [overflow-wrap:anywhere] hyphens-auto">
                 {column.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="inline-flex min-h-8 items-center rounded-sm text-small text-ink-3 underline-offset-4 transition-colors duration-[var(--motion-fast)] ease-out hover:text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11">
+                    <Link href={link.href} className="inline-flex min-h-8 max-w-full items-center rounded-sm text-small text-ink-3 underline-offset-4 transition-colors duration-[var(--motion-fast)] ease-out hover:text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11">
                       {link.label}
                     </Link>
                   </li>

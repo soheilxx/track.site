@@ -1050,6 +1050,8 @@ export interface KnowledgeArticleCopy {
   callouts: { note: string; warning: string; privacy: string; practice: string };
   code: { copy: string; copied: string };
   steps: string;
+  /** Accessible name of the horizontal scroll region around a table that is wider than the text column. */
+  table: string;
   /** Visually hidden state of a GFM task-list item (`- [ ]` / `- [x]`), read before the item text. */
   checklist: { open: string; done: string };
   sources: { heading: string; text: string };

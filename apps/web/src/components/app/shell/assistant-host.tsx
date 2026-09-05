@@ -140,7 +140,7 @@ function ResizeHandle({ width, onChange, label, valueText }: { width: number; on
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onKeyDown={onKeyDown}
-      className="absolute inset-y-0 -left-1 z-10 w-2 cursor-col-resize touch-none outline-none hover:bg-primary-soft-2 focus-visible:bg-primary-soft-2 focus-visible:outline-2 focus-visible:outline-primary"
+      className="absolute inset-y-0 -left-1 z-10 w-2 cursor-col-resize touch-none hover:bg-primary-soft-2 focus-visible:bg-primary-soft-2 focus-visible:outline-2 focus-visible:outline-primary"
     />
   );
 }

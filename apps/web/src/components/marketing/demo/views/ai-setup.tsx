@@ -43,7 +43,7 @@ export function AiSetupView({ state, copy, dispatch }: DemoViewProps) {
             ) : null}
             <fieldset className="mt-4 min-w-0">
               <legend className="text-small font-medium text-ink">{c.question}</legend>
-              <div className="mt-1 grid gap-x-3 sm:grid-cols-3">
+              <div className="mt-1 grid gap-x-3 @xl:grid-cols-3">
                 {DEMO_CURRENCIES.map((currency) => (
                   <Radio key={currency} name={`${id}-currency`} value={currency} checked={setup.choice === currency} onChange={() => dispatch({ type: "choose", currency })} label={c.options[currency]} />
                 ))}

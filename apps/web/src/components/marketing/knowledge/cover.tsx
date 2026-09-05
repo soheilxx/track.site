@@ -557,7 +557,6 @@ export function Cover({ topic, groupId, title, size, className }: CoverProps) {
     <svg
       viewBox={`0 0 ${w} ${h}`}
       width="100%"
-      height="auto"
       role={labelled ? "img" : undefined}
       aria-label={labelled ? title : undefined}
       aria-hidden={labelled ? undefined : "true"}

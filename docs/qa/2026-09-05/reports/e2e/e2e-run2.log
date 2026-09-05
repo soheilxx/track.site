@@ -1,0 +1,35 @@
+$ playwright test "--grep-invert" "phase 6|soak"
+
+Running 28 tests using 2 workers
+
+  ok  1 [setup] › e2e\auth.setup.ts:12:1 › signs in as the seeded owner and stores the session (2.8s)
+  ok  3 [chromium] › e2e\marketing.spec.ts:15:3 › marketing site › serves all six programme locales (7ms)
+  ok  2 [chromium] › e2e\app.spec.ts:26:3 › sign-in › signs in with the seeded owner, lists sites and opens the shop connection page (2.3s)
+  ok  4 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="en", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.9s)
+  ok  6 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="de", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (3.0s)
+  ok  5 [chromium] › e2e\app.spec.ts:43:3 › dashboard › the module pages render one h1 each inside the shell for the signed-in owner (4.9s)
+  ok  8 [chromium] › e2e\app.spec.ts:65:3 › dashboard › redirects the renamed dashboard paths permanently (117ms)
+  ok  9 [chromium] › e2e\app.spec.ts:81:3 › alerts & incident mode › renders /app/settings/alerts with Incident Mode, channels, rules and an honest history state (798ms)
+  ok  7 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="fr", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.9s)
+  ok 10 [chromium] › e2e\app.spec.ts:109:3 › alerts & incident mode › creates a webhook channel and a rule with a plain-language preview, then removes both (2.6s)
+  ok 11 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="es", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (2.8s)
+  ok 12 [chromium] › e2e\app.spec.ts:154:3 › alerts & incident mode › saves the per-user AI motion preference and exposes it on the dashboard root (1.4s)
+  ok 14 [chromium] › e2e\app.spec.ts:181:3 › viewport-fixed shell › keeps the document at viewport height with independent scroll areas and the Track AI panel docked on desktop (1.6s)
+  ok 15 [chromium] › e2e\app.spec.ts:241:3 › viewport-fixed shell › opens the command palette with Ctrl+K and navigates (833ms)
+  ok 13 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="it", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (3.4s)
+  ok 16 [chromium] › e2e\app.spec.ts:252:3 › viewport-fixed shell › shows the launcher in the safe area and a full-height bottom sheet on mobile (771ms)
+  ok 18 [chromium] › e2e\app.spec.ts:281:3 › Track AI panel › keeps the shell exactly viewport-high with a 250-message conversation and windows the list (1.5s)
+  ok 19 [chromium] › e2e\app.spec.ts:322:3 › Track AI panel › motion preference off produces no animated frame: the core reports the static tier (1.5s)
+  ok 17 [chromium] › e2e\marketing.spec.ts:20:5 › marketing site › home renders with lang="nl", one h1, self canonical, hreflang alternates for six locales + x-default and no serious accessibility violations (3.4s)
+  ok 21 [chromium] › e2e\marketing.spec.ts:36:3 › marketing site › unprefixed URLs redirect permanently to English and keep the query string (113ms)
+  ok 20 [chromium] › e2e\app.spec.ts:364:3 › Track AI panel › prefers-reduced-motion renders the static tier from the server on, without an animation flash (830ms)
+  ok 23 [chromium] › e2e\app.spec.ts:382:3 › Track AI panel › exposes the activity live region, the motion state and the setup workspace targets (1.3s)
+  ok 22 [chromium] › e2e\marketing.spec.ts:53:3 › marketing site › the language switcher leads to the same page in the other language (2.4s)
+  ok 24 [chromium] › e2e\marketing.spec.ts:69:3 › marketing site › Tracking Knowledge index lists articles and an article renders with the article template, BlogPosting/TechArticle + BreadcrumbList JSON-LD and a large social card (2.3s)
+  ok 25 [chromium] › e2e\marketing.spec.ts:116:3 › marketing site › old blog URLs redirect permanently and directly to Tracking Knowledge, query string included (43ms)
+  ok 26 [chromium] › e2e\marketing.spec.ts:134:3 › marketing site › pricing never shows invented amounts: either Stripe prices or the honest empty state (508ms)
+  ok 27 [chromium] › e2e\marketing.spec.ts:143:3 › marketing site › legal pages carry the operator identity from the environment or state that it is missing (289ms)
+  ok 28 [chromium] › e2e\marketing.spec.ts:149:3 › marketing site › the sitemap index points to a pages and a knowledge sitemap per locale (106ms)
+
+  28 passed (29.2s)
+exit=0

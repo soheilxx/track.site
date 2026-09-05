@@ -87,7 +87,9 @@ export default async function ConsentSimulatorPage({ searchParams }: { searchPar
         {tc("siteContext", { site: site.name })} · <span className="font-mono text-ink-3">{site.trackingId}</span>
       </p>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-        <Card className="self-start lg:sticky lg:top-0">
+        {/* sticky only within the visible height of the main scroll area (header 3.5 rem + 1.5 rem above and below): a form taller
+            than the viewport scrolls inside the card, so "Run simulation" is reachable without scrolling to the end of the results */}
+        <Card className="self-start lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3.5rem-3rem)] lg:overflow-y-auto lg:overscroll-contain">
           <CardHeader>
             <CardTitle>{t("form.title")}</CardTitle>
           </CardHeader>

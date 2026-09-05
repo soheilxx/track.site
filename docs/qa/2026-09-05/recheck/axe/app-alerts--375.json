@@ -1,0 +1,206 @@
+{
+  "url": "http://localhost:3006/app/settings/alerts",
+  "timestamp": "2026-09-05T11:08:02.689Z",
+  "testEngine": {
+    "name": "axe-core",
+    "version": "4.13.0"
+  },
+  "testRunner": {
+    "name": "axe"
+  },
+  "testEnvironment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "windowWidth": 375,
+    "windowHeight": 900,
+    "orientationAngle": 0,
+    "orientationType": "portrait-primary"
+  },
+  "toolOptions": {
+    "runOnly": {
+      "type": "tag",
+      "values": [
+        "wcag2a",
+        "wcag2aa",
+        "wcag22aa"
+      ]
+    },
+    "reporter": "v1"
+  },
+  "violations": [],
+  "incomplete": [],
+  "passes": [
+    {
+      "id": "aria-allowed-attr",
+      "impact": null,
+      "nodes": 20
+    },
+    {
+      "id": "aria-conditional-attr",
+      "impact": null,
+      "nodes": 20
+    },
+    {
+      "id": "aria-deprecated-role",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-hidden-body",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "aria-hidden-focus",
+      "impact": null,
+      "nodes": 39
+    },
+    {
+      "id": "aria-prohibited-attr",
+      "impact": null,
+      "nodes": 20
+    },
+    {
+      "id": "aria-required-attr",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-roles",
+      "impact": null,
+      "nodes": 5
+    },
+    {
+      "id": "aria-valid-attr-value",
+      "impact": null,
+      "nodes": 20
+    },
+    {
+      "id": "aria-valid-attr",
+      "impact": null,
+      "nodes": 20
+    },
+    {
+      "id": "button-name",
+      "impact": null,
+      "nodes": 14
+    },
+    {
+      "id": "bypass",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "color-contrast",
+      "impact": null,
+      "nodes": 19
+    },
+    {
+      "id": "document-title",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "duplicate-id-aria",
+      "impact": null,
+      "nodes": 7
+    },
+    {
+      "id": "form-field-multiple-labels",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "html-has-lang",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "html-lang-valid",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "link-name",
+      "impact": null,
+      "nodes": 7
+    },
+    {
+      "id": "list",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "listitem",
+      "impact": null,
+      "nodes": 2
+    },
+    {
+      "id": "meta-viewport",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "nested-interactive",
+      "impact": null,
+      "nodes": 28
+    },
+    {
+      "id": "scrollable-region-focusable",
+      "impact": null,
+      "nodes": 1
+    },
+    {
+      "id": "select-name",
+      "impact": null,
+      "nodes": 3
+    },
+    {
+      "id": "target-size",
+      "impact": null,
+      "nodes": 24
+    }
+  ],
+  "inapplicable": [
+    "area-alt",
+    "aria-braille-equivalent",
+    "aria-command-name",
+    "aria-input-field-name",
+    "aria-meter-name",
+    "aria-progressbar-name",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-tab-name",
+    "aria-toggle-field-name",
+    "aria-tooltip-name",
+    "blink",
+    "definition-list",
+    "dlitem",
+    "frame-focusable-content",
+    "frame-title-unique",
+    "frame-title",
+    "html-xml-lang-mismatch",
+    "image-alt",
+    "input-button-name",
+    "input-image-alt",
+    "label",
+    "link-in-text-block",
+    "marquee",
+    "meta-refresh",
+    "object-alt",
+    "role-img-alt",
+    "server-side-image-map",
+    "summary-name",
+    "svg-img-alt",
+    "td-headers-attr",
+    "th-has-data-cells",
+    "valid-lang",
+    "video-caption",
+    "no-autoplay-audio"
+  ],
+  "counts": {
+    "violations": 0,
+    "incomplete": 0,
+    "passes": 26,
+    "inapplicable": 35
+  }
+}

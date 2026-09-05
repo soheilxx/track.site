@@ -30,8 +30,9 @@ export const HEALTH_TONE: Record<DemoHealthTone, Tone> = { ok: "ok", warn: "warn
 
 export function MetricTile({ label, value, className }: { label: string; value: number; className?: string }) {
   return (
-    <div className={cn("min-w-0 rounded-[var(--radius-control)] border border-line bg-surface px-3 py-2", className)}>
-      <p className="text-micro leading-tight font-medium tracking-wide text-ink-3 uppercase">{label}</p>
+    <div className={cn("min-w-0 rounded-[var(--radius-control)] border border-line bg-surface px-2.5 py-2 @xl:px-3", className)}>
+      {/* a long single word (nl "Geaccepteerd", es "Entregados") hyphenates or breaks inside a narrow tile; overflowing text would be painted under the next tile */}
+      <p className="min-w-0 text-micro leading-tight font-medium tracking-wide text-ink-3 uppercase hyphens-auto [overflow-wrap:anywhere]">{label}</p>
       <p className="mt-0.5 font-display text-xl font-semibold text-ink tabular-nums">{value}</p>
     </div>
   );
@@ -67,7 +68,7 @@ export function OutcomeStatus({ outcome, copy, className }: { outcome: DemoOutco
 export function EventRowCompact({ event, copy, className }: { event: DemoEventRecord; copy: DemoCopy; className?: string }) {
   return (
     <li className={cn("flex items-center gap-2 py-1.5 text-small", className)}>
-      <span className="hidden w-16 shrink-0 font-mono text-micro text-ink-3 sm:inline">{event.time}</span>
+      <span className="hidden w-16 shrink-0 font-mono text-micro text-ink-3 @xl:inline">{event.time}</span>
       <span className="min-w-0 flex-1 truncate font-medium text-ink">{event.name}</span>
       <OriginBadge origin={event.origin} copy={copy} />
       <OutcomeStatus outcome={event.outcome} copy={copy} />

@@ -36,7 +36,6 @@ export function Diagram({ width, height, title, description, caption, className,
       <svg
         viewBox={`0 0 ${width} ${height}`}
         width="100%"
-        height="auto"
         role={labelled ? "img" : undefined}
         aria-hidden={labelled ? undefined : "true"}
         aria-labelledby={labelled ? `${id}-title` : undefined}

@@ -1,0 +1,98 @@
+$ pnpm test:integration --concurrency=1   (second run: packages serialised, see test-integration-run1-parallel.txt for the parallel run that deadlocked in the shared global-setup)
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T11:35:48Z
+
+$ turbo run test:integration "--concurrency=1"
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running test:integration in 16 packages
+   • Remote caching disabled
+
+@track-site/sdk:build: cache hit, replaying logs c6618906c222abd5
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/db:test:integration: cache bypass, force executing fc256744b2727c01
+@track-site/db:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/db:test:integration: 
+@track-site/db:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/db
+@track-site/db:test:integration: 
+@track-site/db:test:integration:  ✓ src/repositories/config.integration.test.ts (3 tests) 915ms
+@track-site/db:test:integration:      ✓ draft -> lint -> publish (signed) -> rollback with audit + outbox  566ms
+@track-site/db:test:integration:  ✓ src/rls.integration.test.ts (5 tests) 1250ms
+@track-site/db:test:integration:      ✓ allocates unique, valid ids under concurrency and never recycles them  870ms
+@track-site/db:test:integration: 
+@track-site/db:test:integration:  Test Files  2 passed (2)
+@track-site/db:test:integration:       Tests  8 passed (8)
+@track-site/db:test:integration:    Start at  13:35:50
+@track-site/db:test:integration:    Duration  6.13s (transform 395ms, setup 0ms, import 1.82s, tests 2.17s, environment 0ms)
+@track-site/db:test:integration: 
+@track-site/queue:test:integration: cache bypass, force executing 054d32b5444d0665
+@track-site/queue:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/queue:test:integration: 
+@track-site/queue:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/queue
+@track-site/queue:test:integration: 
+@track-site/queue:test:integration:  ✓ src/pg-queue.integration.test.ts (3 tests) 1429ms
+@track-site/queue:test:integration:      ✓ enqueue is durable and receive uses visibility timeouts  579ms
+@track-site/queue:test:integration:      ✓ many concurrent consumers never receive the same message twice  839ms
+@track-site/queue:test:integration: 
+@track-site/queue:test:integration:  Test Files  1 passed (1)
+@track-site/queue:test:integration:       Tests  3 passed (3)
+@track-site/queue:test:integration:    Start at  13:35:57
+@track-site/queue:test:integration:    Duration  4.66s (transform 277ms, setup 0ms, import 932ms, tests 1.43s, environment 0ms)
+@track-site/queue:test:integration: 
+@track-site/analytics:test:integration: cache bypass, force executing 9fddf35d1e6ca1e3
+@track-site/analytics:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/analytics:test:integration: 
+@track-site/analytics:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/analytics
+@track-site/analytics:test:integration: 
+@track-site/analytics:test:integration:  ✓ src/pg-event-store.integration.test.ts (2 tests) 352ms
+@track-site/analytics:test:integration: 
+@track-site/analytics:test:integration:  Test Files  1 passed (1)
+@track-site/analytics:test:integration:       Tests  2 passed (2)
+@track-site/analytics:test:integration:    Start at  13:36:03
+@track-site/analytics:test:integration:    Duration  3.89s (transform 447ms, setup 0ms, import 1.20s, tests 352ms, environment 0ms)
+@track-site/analytics:test:integration: 
+@track-site/collector:test:integration: cache bypass, force executing 3a167a45803a7e9b
+@track-site/collector:test:integration: $ vitest run -c vitest.integration.config.ts --passWithNoTests
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/collector
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration: No test files found, exiting with code 0
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration: include: src/**/*.integration.test.ts
+@track-site/collector:test:integration: exclude:  **/node_modules/**, **/.git/**
+@track-site/collector:test:integration: 
+@track-site/worker:test:integration: cache bypass, force executing 618ec59e4f18b7fc
+@track-site/worker:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/worker:test:integration: 
+@track-site/worker:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/worker
+@track-site/worker:test:integration: 
+@track-site/worker:test:integration:  ✓ src/pipeline.integration.test.ts (6 tests) 1146ms
+@track-site/worker:test:integration:      ✓ stores consented events, strips marketing ids without marketing consent, dedups and routes to the webhook  412ms
+@track-site/worker:test:integration: 
+@track-site/worker:test:integration:  Test Files  1 passed (1)
+@track-site/worker:test:integration:       Tests  6 passed (6)
+@track-site/worker:test:integration:    Start at  13:36:09
+@track-site/worker:test:integration:    Duration  5.74s (transform 897ms, setup 0ms, import 2.06s, tests 1.15s, environment 0ms)
+@track-site/worker:test:integration: 
+@track-site/web:test:integration: cache bypass, force executing 9d60cffd9b983197
+@track-site/web:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/web:test:integration: 
+@track-site/web:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/web
+@track-site/web:test:integration: 
+@track-site/web:test:integration:  ✓ src/server/usage.integration.test.ts (3 tests) 364ms
+@track-site/web:test:integration: 
+@track-site/web:test:integration:  Test Files  1 passed (1)
+@track-site/web:test:integration:       Tests  3 passed (3)
+@track-site/web:test:integration:    Start at  13:36:16
+@track-site/web:test:integration:    Duration  4.10s (transform 529ms, setup 0ms, import 1.36s, tests 364ms, environment 0ms)
+@track-site/web:test:integration: 
+
+ Tasks:    7 successful, 7 total
+Cached:    1 cached, 7 total
+  Time:    31.751s 
+
+
+finished: 2026-09-05T11:36:21Z
+exit code: 0

@@ -121,7 +121,8 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
                         {g.rows.map((r) => (
                           <li key={r.key} className="flex items-start justify-between gap-4 text-small">
                             <span className="text-ink-2">{r.label}</span>
-                            <span className="shrink-0 text-right">
+                            {/* `min-w-0`, not `shrink-0`: a long value ("18 € par 1 000 000 événements") wraps instead of scrolling the page at 320 px */}
+                            <span className="min-w-0 text-right">
                               <CellView cell={r.cells[p.id]} copy={copy} />
                             </span>
                           </li>
@@ -132,7 +133,7 @@ export function ComparisonMatrix({ locale, plans, matrix, copy, labels }: Compar
                 })}
               </div>
               <div className="mt-5">
-                <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="md" className="w-full" />
+                <PlanCta planId={p.id} contactSales={p.contactSales} recommended={p.recommended} labels={labels} size="md" className="w-full whitespace-normal text-center" />
               </div>
             </TabPanel>
           ))}

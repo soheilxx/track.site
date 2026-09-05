@@ -1,0 +1,24 @@
+
+Running 12 tests using 1 worker
+
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-375-visual-win32.png is re-generated, writing actual.
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-375-visual-win32.png is re-generated, writing actual.
+  ok  1 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › home at 375px matches the baseline (4.0s)
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-1440-visual-win32.png is re-generated, writing actual.
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\home-1440-visual-win32.png is re-generated, writing actual.
+  ok  2 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (4.1s)
+  ok  3 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (3.9s)
+  ok  4 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (4.2s)
+  ok  5 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (4.4s)
+  ok  6 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (4.7s)
+  ok  7 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (2.6s)
+  ok  8 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (3.1s)
+  ok  9 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › login at 375px matches the baseline (1.8s)
+  ok 10 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (2.0s)
+  ok 11 [visual] › e2e\visual.spec.ts:106:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (3.4s)
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\app-overview-1440-visual-win32.png is re-generated, writing actual.
+C:\Users\Soheil\Downloads\track.site\apps\web\e2e\__screenshots__\app-overview-1440-visual-win32.png is re-generated, writing actual.
+  ok 12 [visual] › e2e\visual.spec.ts:106:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (3.3s)
+
+  12 passed (43.7s)
+exit=0

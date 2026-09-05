@@ -1,0 +1,54 @@
+$ pnpm typecheck --force
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T11:30:49Z
+
+$ turbo run typecheck "--force"
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running typecheck in 16 packages
+   • Remote caching disabled
+
+@track-site/ui:typecheck: cache bypass, force executing 7e27a27c360ab90c
+@track-site/catalog:typecheck: cache bypass, force executing 961e9073dbc7952c
+@track-site/core:typecheck: cache bypass, force executing 9529d75f312f9be2
+@track-site/sdk:build: cache bypass, force executing c6618906c222abd5
+@track-site/sdk:typecheck: cache bypass, force executing 6b691da6705d2395
+@track-site/testing:typecheck: cache bypass, force executing df3b3a8f7ddf7f82
+@track-site/events:typecheck: cache bypass, force executing d0f227c35c14cf98
+@track-site/policy:typecheck: cache bypass, force executing ccbd335fa5eee56f
+@track-site/config:typecheck: cache bypass, force executing 3c53a65ffad149ae
+@track-site/connectors:typecheck: cache bypass, force executing 30ce7bae4bf06666
+@track-site/ui:typecheck: $ tsc --noEmit
+@track-site/catalog:typecheck: $ tsc --noEmit
+@track-site/core:typecheck: $ tsc --noEmit
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:typecheck: $ tsc --noEmit
+@track-site/testing:typecheck: $ tsc --noEmit
+@track-site/events:typecheck: $ tsc --noEmit
+@track-site/policy:typecheck: $ tsc --noEmit
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/config:typecheck: $ tsc --noEmit
+@track-site/connectors:typecheck: $ tsc --noEmit
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/db:typecheck: cache bypass, force executing 077addcd73b9cdd5
+@track-site/queue:typecheck: cache bypass, force executing 6110aa150e33e586
+@track-site/analytics:typecheck: cache bypass, force executing b1be84583137b396
+@track-site/db:typecheck: $ tsc --noEmit
+@track-site/queue:typecheck: $ tsc --noEmit
+@track-site/collector:typecheck: cache bypass, force executing 1751406108365c02
+@track-site/ai:typecheck: cache bypass, force executing f50b530298180481
+@track-site/analytics:typecheck: $ tsc --noEmit
+@track-site/worker:typecheck: cache bypass, force executing ea53bc9558b1d4e9
+@track-site/collector:typecheck: $ tsc --noEmit
+@track-site/web:typecheck: cache bypass, force executing 2bfa49012d6d44ce
+@track-site/ai:typecheck: $ tsc --noEmit
+@track-site/worker:typecheck: $ tsc --noEmit
+@track-site/web:typecheck: $ tsc --noEmit
+
+ Tasks:    17 successful, 17 total
+Cached:    0 cached, 17 total
+  Time:    17.439s 
+
+
+finished: 2026-09-05T11:31:07Z
+exit code: 0

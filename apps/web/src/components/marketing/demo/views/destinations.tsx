@@ -14,8 +14,8 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
   const fixture = platformFixture(state.platform);
   const c = copy.destinations;
   return (
-    <div className="grid gap-3 md:grid-cols-[minmax(0,12.5rem)_1fr] md:gap-4">
-      <div role="group" aria-label={c.pick} className="flex gap-2 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0">
+    <div className="grid gap-3 @2xl:grid-cols-[minmax(0,12.5rem)_minmax(0,1fr)] @2xl:gap-4">
+      <div role="group" aria-label={c.pick} className="flex gap-2 overflow-x-auto pb-1 @2xl:flex-col @2xl:overflow-visible @2xl:pb-0">
         {statuses.map((s) => {
           const f = platformFixture(s.id);
           const pressed = s.id === state.platform;
@@ -38,7 +38,7 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
           );
         })}
       </div>
-      <div className="min-w-0 rounded-[var(--radius-card)] border border-line bg-surface p-3 sm:p-4">
+      <div className="min-w-0 rounded-[var(--radius-card)] border border-line bg-surface p-3 @xl:p-4">
         <div className="flex flex-wrap items-center gap-3">
           <PlatformMark id={fixture.id} name={fixture.name} />
           <ViewTitle>{fixture.name}</ViewTitle>
@@ -46,7 +46,7 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
             {c.health[selected.tone]}
           </Status>
         </div>
-        <dl className="mt-4 grid gap-x-4 gap-y-3 text-small sm:grid-cols-2">
+        <dl className="mt-4 grid gap-x-4 gap-y-3 text-small @xl:grid-cols-2">
           <Fact label={c.lastDelivery}>{selected.lastDelivery ? `${selected.lastDelivery.name} · ${selected.lastDelivery.time}` : c.none}</Fact>
           <Fact label={c.modes}>{c.browserServer}</Fact>
           <Fact label={c.dedupKey}>
@@ -64,7 +64,7 @@ export function DestinationsView({ state, copy, dispatch }: DemoViewProps) {
         {selected.heldCurrency > 0 ? (
           <Alert tone="warn" className="mt-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="min-w-0 flex-1">{plural(c.heldHint, selected.heldCurrency)}</span>
+              <span className="min-w-[10rem] flex-1">{plural(c.heldHint, selected.heldCurrency)}</span>
               <Button size="sm" variant="secondary" onClick={() => dispatch({ type: "view", view: "ai" })}>
                 {c.openAi}
               </Button>

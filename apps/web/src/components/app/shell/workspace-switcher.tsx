@@ -69,7 +69,7 @@ export function WorkspaceSwitcher({ organization, organizations, workspace, onSi
       <Menu
         label={t("workspace.switchOrganization")}
         triggerLabel={`${t("workspace.organization")}: ${organization?.name ?? t("workspace.noOrganization")}`}
-        triggerClassName="max-w-40 sm:max-w-56"
+        triggerClassName="max-w-40 px-2 sm:max-w-56 sm:px-2.5"
         disabled={pending}
         sections={[
           {
@@ -81,16 +81,17 @@ export function WorkspaceSwitcher({ organization, organizations, workspace, onSi
       >
         <Building2 className="size-4 shrink-0 text-ink-3" aria-hidden="true" />
         <span className="hidden truncate sm:inline">{organization?.name ?? t("workspace.noOrganization")}</span>
-        <ChevronsUpDown className="size-3.5 shrink-0 text-ink-3" aria-hidden="true" />
+        <ChevronsUpDown className="hidden size-3.5 shrink-0 text-ink-3 sm:inline" aria-hidden="true" />
       </Menu>
-      <span aria-hidden="true" className="text-ink-3">
+      <span aria-hidden="true" className="hidden text-ink-3 sm:inline">
         /
       </span>
-      <Tooltip content={site ? `${t("workspace.trackingId")} ${site.trackingId}: ${t("workspace.trackingIdHelp")}` : t("workspace.noSite")} side="bottom">
+      {/* `min-w-0` down the chain (tooltip wrapper → menu root → trigger) lets the site name truncate instead of pushing the header past the viewport */}
+      <Tooltip content={site ? `${t("workspace.trackingId")} ${site.trackingId}: ${t("workspace.trackingIdHelp")}` : t("workspace.noSite")} side="bottom" className="min-w-0">
         <Menu
           label={t("workspace.switchSite")}
           triggerLabel={`${t("workspace.site")}: ${site ? `${site.name} ${site.trackingId}` : t("workspace.noSite")}`}
-          triggerClassName="max-w-48 sm:max-w-72"
+          triggerClassName="max-w-48 px-2 sm:max-w-72 sm:px-2.5"
           disabled={pending || !organization}
           sections={[
             {
@@ -117,7 +118,7 @@ export function WorkspaceSwitcher({ organization, organizations, workspace, onSi
           <Globe className="size-4 shrink-0 text-ink-3" aria-hidden="true" />
           <span className="truncate">{site?.name ?? t("workspace.noSite")}</span>
           {site ? (
-            <span className="hidden font-mono text-xs font-normal text-ink-3 md:inline" data-testid="active-tracking-id">
+            <span className="hidden font-mono text-xs font-normal text-ink-3 lg:inline" data-testid="active-tracking-id">
               {site.trackingId}
             </span>
           ) : null}

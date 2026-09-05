@@ -1,0 +1,262 @@
+{
+  "/en": {
+    "baseline": [
+      {
+        "ttfb": 15,
+        "docEnd": 1608,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 2065,
+        "fcp": 1832,
+        "cssEnd": 980,
+        "lcp": {
+          "t": 1832,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 81,
+        "docEnd": 1611,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 2604,
+        "fcp": 2300,
+        "cssEnd": 988,
+        "lcp": {
+          "t": 2300,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-fonts": [
+      {
+        "ttfb": 16,
+        "docEnd": 772,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 1487,
+        "fcp": 1156,
+        "cssEnd": 633,
+        "lcp": {
+          "t": 1156,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 15,
+        "docEnd": 767,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 1478,
+        "fcp": 1320,
+        "cssEnd": 609,
+        "lcp": {
+          "t": 1320,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-scripts": [
+      {
+        "ttfb": 12,
+        "docEnd": 1525,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 2405,
+        "fcp": 2092,
+        "cssEnd": 1213,
+        "lcp": {
+          "t": 2092,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 17,
+        "docEnd": 1465,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 2488,
+        "fcp": 2084,
+        "cssEnd": 983,
+        "lcp": {
+          "t": 2084,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-fonts-no-scripts": [
+      {
+        "ttfb": 67,
+        "docEnd": 750,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 2491,
+        "fcp": 1312,
+        "cssEnd": 687,
+        "lcp": {
+          "t": 1312,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 19,
+        "docEnd": 777,
+        "docTransfer": 93661,
+        "docDecoded": 460806,
+        "dcl": 1742,
+        "fcp": 1044,
+        "cssEnd": 604,
+        "lcp": {
+          "t": 1044,
+          "size": 61019,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ]
+  },
+  "/en/pricing": {
+    "baseline": [
+      {
+        "ttfb": 22,
+        "docEnd": 1859,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 2199,
+        "fcp": 1860,
+        "cssEnd": 971,
+        "lcp": {
+          "t": 1860,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 25,
+        "docEnd": 1921,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 2373,
+        "fcp": 1856,
+        "cssEnd": 955,
+        "lcp": {
+          "t": 1856,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-fonts": [
+      {
+        "ttfb": 37,
+        "docEnd": 908,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 1561,
+        "fcp": 936,
+        "cssEnd": 627,
+        "lcp": {
+          "t": 936,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 19,
+        "docEnd": 951,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 1810,
+        "fcp": 1288,
+        "cssEnd": 644,
+        "lcp": {
+          "t": 1288,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-scripts": [
+      {
+        "ttfb": 21,
+        "docEnd": 1609,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 2135,
+        "fcp": 1780,
+        "cssEnd": 996,
+        "lcp": {
+          "t": 1780,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 22,
+        "docEnd": 1598,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 2538,
+        "fcp": 2244,
+        "cssEnd": 1206,
+        "lcp": {
+          "t": 2244,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ],
+    "no-fonts-no-scripts": [
+      {
+        "ttfb": 23,
+        "docEnd": 794,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 1428,
+        "fcp": 1108,
+        "cssEnd": 622,
+        "lcp": {
+          "t": 1108,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      },
+      {
+        "ttfb": 19,
+        "docEnd": 791,
+        "docTransfer": 103607,
+        "docDecoded": 820724,
+        "dcl": 1424,
+        "fcp": 1104,
+        "cssEnd": 587,
+        "lcp": {
+          "t": 1104,
+          "size": 72198,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2"
+        }
+      }
+    ]
+  }
+}

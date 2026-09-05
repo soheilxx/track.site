@@ -38,7 +38,7 @@ export function UserMenu({ user, role, onLogout }: { user: ShellUser; role: OrgR
       <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
         {initials(user.name, user.email)}
       </span>
-      <ChevronDown className="size-3.5 text-ink-3" aria-hidden="true" />
+      <ChevronDown className="hidden size-3.5 text-ink-3 sm:inline" aria-hidden="true" />
     </Menu>
   );
 }

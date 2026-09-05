@@ -1,0 +1,1789 @@
+{
+  "generatedAt": "2026-09-05T10:13:24.683Z",
+  "lighthouseVersion": "13.4.1",
+  "targets": {
+    "a11y": 95,
+    "bp": 95,
+    "seo": 95,
+    "perf": 95,
+    "lcp": 2500,
+    "cls": 0.1
+  },
+  "pages": [
+    {
+      "key": "app-overview--mobile",
+      "id": "app-overview",
+      "preset": "mobile",
+      "url": "http://localhost:3002/app",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\app-overview--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\app-overview--mobile--run1.report.html",
+          "id": "app-overview",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/app",
+          "fetchTime": "2026-09-05T09:53:33.631Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 72,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 54
+          },
+          "metrics": {
+            "lcp": 4818.698999999999,
+            "tbt": 396.9999999999991,
+            "cls": 0,
+            "si": 2906.545059998887,
+            "fcp": 1531.9139999999998,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 72,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 54
+        },
+        "metrics": {
+          "lcp": 4818.698999999999,
+          "tbt": 396.9999999999991,
+          "cls": 0,
+          "si": 2906.545059998887,
+          "fcp": 1531.9139999999998,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": false,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "app-overview--mobile--run1.report.json",
+      "opportunities": [
+        {
+          "id": "server-response-time",
+          "title": "Reduce initial server response time",
+          "score": 0,
+          "displayValue": "Root document took 1,280 ms",
+          "metricSavings": {
+            "FCP": 1200,
+            "LCP": 1200
+          },
+          "savingsRank": 1200,
+          "resources": [
+            "http://localhost:3002/app"
+          ]
+        },
+        {
+          "id": "document-latency-insight",
+          "title": "Document request latency",
+          "score": 0,
+          "displayValue": "Est savings of 1,180 ms",
+          "metricSavings": {
+            "FCP": 1200,
+            "LCP": 1200
+          },
+          "savingsRank": 1200,
+          "resources": []
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 129 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 750
+          },
+          "savingsRank": 750,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/39irnht9mexlf.js (103.7 KB, wasted 103.6 KB)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 25.4 KB)"
+          ]
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "score": 0,
+          "displayValue": "1.3 s",
+          "metricSavings": {
+            "TBT": 500
+          },
+          "savingsRank": 500,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "http://localhost:3002/app",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js",
+            "Unattributable"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "displayValue": "2.1 s",
+          "metricSavings": {
+            "TBT": 400
+          },
+          "savingsRank": 400,
+          "resources": []
+        }
+      ],
+      "failingAudits": {
+        "seo": [
+          {
+            "id": "is-crawlable",
+            "weight": 4.043478260869565,
+            "score": 0,
+            "title": "Page is blocked from indexing",
+            "displayValue": null,
+            "items": [
+              "http://localhost:3002/robots.txt:2"
+            ]
+          },
+          {
+            "id": "meta-description",
+            "weight": 1,
+            "score": 0,
+            "title": "Document does not have a meta description",
+            "displayValue": null,
+            "items": []
+          }
+        ]
+      }
+    },
+    {
+      "key": "home--desktop",
+      "id": "home",
+      "preset": "desktop",
+      "url": "http://localhost:3002/en",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--desktop--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--desktop--run1.report.html",
+          "id": "home",
+          "preset": "desktop",
+          "run": 1,
+          "url": "http://localhost:3002/en",
+          "fetchTime": "2026-09-05T09:52:41.223Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "desktop",
+          "scores": {
+            "performance": 99,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 835.6399999999999,
+            "tbt": 34.99999999999994,
+            "cls": 0.0009466388386737473,
+            "si": 611.3565012198874,
+            "fcp": 469.81999999999994,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 99,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 835.6399999999999,
+          "tbt": 34.99999999999994,
+          "cls": 0.0009466388386737473,
+          "si": 611.3565012198874,
+          "fcp": 469.81999999999994,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "representativeRun": "home--desktop--run1.report.json",
+      "opportunities": [
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 80 ms",
+          "metricSavings": {
+            "FCP": 100,
+            "LCP": 100
+          },
+          "savingsRank": 100,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 131 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 51 ms)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "0.8 s",
+          "metricSavings": {
+            "TBT": 50
+          },
+          "savingsRank": 50,
+          "resources": []
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "2 long tasks found",
+          "metricSavings": {
+            "TBT": 50
+          },
+          "savingsRank": 50,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js (75 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (70 ms)"
+          ]
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 22 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 50
+          },
+          "savingsRank": 50,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 22.4 KB)"
+          ]
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 50
+          },
+          "savingsRank": 50,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "home--mobile",
+      "id": "home",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run1.report.html",
+          "id": "home",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en",
+          "fetchTime": "2026-09-05T09:46:04.521Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 77,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 5129.865,
+            "tbt": 162,
+            "cls": 0,
+            "si": 3701.535087138437,
+            "fcp": 1519.946,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run2.report.html",
+          "id": "home",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en",
+          "fetchTime": "2026-09-05T09:46:21.704Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 70,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4729.436,
+            "tbt": 438.0545000000002,
+            "cls": 0,
+            "si": 2957.9493054016148,
+            "fcp": 2039.2179999999998,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home--mobile--run3.report.html",
+          "id": "home",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en",
+          "fetchTime": "2026-09-05T09:46:37.421Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 83,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4611.740000000001,
+            "tbt": 90.71750000000065,
+            "cls": 0,
+            "si": 2245.2525500013708,
+            "fcp": 1512.87,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 77,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4729.436,
+          "tbt": 162,
+          "cls": 0,
+          "si": 2957.9493054016148,
+          "fcp": 1519.946,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "home--mobile--run1.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 23 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 250
+          },
+          "savingsRank": 260,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 22.5 KB)"
+          ]
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 220 ms",
+          "metricSavings": {
+            "FCP": 200,
+            "LCP": 200
+          },
+          "savingsRank": 200,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 460 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 160 ms)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "1.7 s",
+          "metricSavings": {
+            "TBT": 150
+          },
+          "savingsRank": 150,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "0.8 s",
+          "metricSavings": {
+            "TBT": 150
+          },
+          "savingsRank": 150,
+          "resources": [
+            "http://localhost:3002/en",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "home-de--mobile",
+      "id": "home-de",
+      "preset": "mobile",
+      "url": "http://localhost:3002/de",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run1.report.html",
+          "id": "home-de",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/de",
+          "fetchTime": "2026-09-05T09:51:28.384Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 76,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4906.432000000001,
+            "tbt": 239,
+            "cls": 0,
+            "si": 3733.899941775441,
+            "fcp": 1515.1440000000002,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run2.report.html",
+          "id": "home-de",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/de",
+          "fetchTime": "2026-09-05T09:51:50.752Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 72,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 5218.620000000001,
+            "tbt": 317.27600000000007,
+            "cls": 0,
+            "si": 3772.865161533932,
+            "fcp": 1517.448,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\home-de--mobile--run3.report.html",
+          "id": "home-de",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/de",
+          "fetchTime": "2026-09-05T09:52:17.218Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 73,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4934.135999999999,
+            "tbt": 324,
+            "cls": 0,
+            "si": 3716.0921646652127,
+            "fcp": 1515.712,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 73,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4934.135999999999,
+          "tbt": 317.27600000000007,
+          "cls": 0,
+          "si": 3733.899941775441,
+          "fcp": 1515.712,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "home-de--mobile--run3.report.json",
+      "opportunities": [
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 450
+          },
+          "savingsRank": 450,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 23 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 400
+          },
+          "savingsRank": 400,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 22.5 KB)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "displayValue": "2.1 s",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "1.0 s",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": [
+            "http://localhost:3002/de",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "7 long tasks found",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": [
+            "http://localhost:3002/de (312 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (273 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (98 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (93 ms)"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "integrations--mobile",
+      "id": "integrations",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en/integrations",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run1.report.html",
+          "id": "integrations",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en/integrations",
+          "fetchTime": "2026-09-05T09:49:43.710Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 78,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4419.015999999999,
+            "tbt": 207,
+            "cls": 0,
+            "si": 4107.005713478496,
+            "fcp": 1787.5079999999998,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run2.report.html",
+          "id": "integrations",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en/integrations",
+          "fetchTime": "2026-09-05T09:49:59.646Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 76,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4874.5599999999995,
+            "tbt": 229,
+            "cls": 0,
+            "si": 3716.5349519988254,
+            "fcp": 1518.64,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\integrations--mobile--run3.report.html",
+          "id": "integrations",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en/integrations",
+          "fetchTime": "2026-09-05T09:50:24.021Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 75,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4529.052,
+            "tbt": 327.4870000000001,
+            "cls": 0,
+            "si": 3807.5105000782364,
+            "fcp": 1530.0259999999998,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 76,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4529.052,
+          "tbt": 229,
+          "cls": 0,
+          "si": 3807.5105000782364,
+          "fcp": 1530.0259999999998,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "integrations--mobile--run2.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 29 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 350
+          },
+          "savingsRank": 350,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 28.7 KB)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "1.5 s",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "0.7 s",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/en/integrations",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "5 long tasks found",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (279 ms)",
+            "http://localhost:3002/en/integrations (171 ms)",
+            "http://localhost:3002/en/integrations (54 ms)",
+            "Unattributable (50 ms)"
+          ]
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 240 ms",
+          "metricSavings": {
+            "FCP": 250,
+            "LCP": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 459 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 159 ms)"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "knowledge-article-consent-mode-v2-guide--mobile",
+      "id": "knowledge-article-consent-mode-v2-guide",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run1.report.html",
+          "id": "knowledge-article-consent-mode-v2-guide",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+          "fetchTime": "2026-09-05T09:48:54.625Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 82,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4034.2360000000003,
+            "tbt": 218,
+            "cls": 0,
+            "si": 2706.218509882042,
+            "fcp": 1882.118,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run2.report.html",
+          "id": "knowledge-article-consent-mode-v2-guide",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+          "fetchTime": "2026-09-05T09:49:12.336Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 83,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4446.098,
+            "tbt": 93.5,
+            "cls": 0,
+            "si": 2262.2356280012978,
+            "fcp": 1514.732,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-article-consent-mode-v2-guide--mobile--run3.report.html",
+          "id": "knowledge-article-consent-mode-v2-guide",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+          "fetchTime": "2026-09-05T09:49:29.284Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 83,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4539.047999999999,
+            "tbt": 106.5,
+            "cls": 0,
+            "si": 2280.1543859987514,
+            "fcp": 1524.0320000000002,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 83,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4446.098,
+          "tbt": 106.5,
+          "cls": 0,
+          "si": 2280.1543859987514,
+          "fcp": 1524.0320000000002,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "knowledge-article-consent-mode-v2-guide--mobile--run2.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 27 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 400
+          },
+          "savingsRank": 400,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 27.3 KB)"
+          ]
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 300 ms",
+          "metricSavings": {
+            "FCP": 300,
+            "LCP": 300
+          },
+          "savingsRank": 300,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 457 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 157 ms)"
+          ]
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "0.8 s",
+          "metricSavings": {
+            "TBT": 200
+          },
+          "savingsRank": 200,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 150
+          },
+          "savingsRank": 150,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "1.5 s",
+          "metricSavings": {
+            "TBT": 100
+          },
+          "savingsRank": 100,
+          "resources": []
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "knowledge-hub--mobile",
+      "id": "knowledge-hub",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en/tracking-knowledge",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run1.report.html",
+          "id": "knowledge-hub",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en/tracking-knowledge",
+          "fetchTime": "2026-09-05T09:47:50.342Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 78,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4812.4664999999995,
+            "tbt": 146,
+            "cls": 0,
+            "si": 3922.5662740015077,
+            "fcp": 1696.4189999999999,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run2.report.html",
+          "id": "knowledge-hub",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en/tracking-knowledge",
+          "fetchTime": "2026-09-05T09:48:16.150Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 83,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4545.983,
+            "tbt": 57,
+            "cls": 0,
+            "si": 2454.5334119984277,
+            "fcp": 1671.3220000000001,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\knowledge-hub--mobile--run3.report.html",
+          "id": "knowledge-hub",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en/tracking-knowledge",
+          "fetchTime": "2026-09-05T09:48:36.506Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 80,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4613.420999999999,
+            "tbt": 135,
+            "cls": 0,
+            "si": 3860.76263399858,
+            "fcp": 1667.8069999999998,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 80,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4613.420999999999,
+          "tbt": 135,
+          "cls": 0,
+          "si": 3860.76263399858,
+          "fcp": 1671.3220000000001,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "knowledge-hub--mobile--run3.report.json",
+      "opportunities": [
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 270 ms",
+          "metricSavings": {
+            "FCP": 250,
+            "LCP": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 459 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 159 ms)"
+          ]
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 29 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 200
+          },
+          "savingsRank": 200,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 28.6 KB)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "1.4 s",
+          "metricSavings": {
+            "TBT": 150
+          },
+          "savingsRank": 150,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "0.7 s",
+          "metricSavings": {
+            "TBT": 150
+          },
+          "savingsRank": 150,
+          "resources": [
+            "http://localhost:3002/en/tracking-knowledge",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "5 long tasks found",
+          "metricSavings": {
+            "TBT": 150
+          },
+          "savingsRank": 150,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (185 ms)",
+            "http://localhost:3002/en/tracking-knowledge (105 ms)",
+            "http://localhost:3002/en/tracking-knowledge (91 ms)",
+            "http://localhost:3002/en/tracking-knowledge (78 ms)"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "login--mobile",
+      "id": "login",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en/login",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run1.report.html",
+          "id": "login",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en/login",
+          "fetchTime": "2026-09-05T09:50:41.799Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 79,
+            "accessibility": 100,
+            "best-practices": 92,
+            "seo": 63
+          },
+          "metrics": {
+            "lcp": 4741.256,
+            "tbt": 236.5,
+            "cls": 0,
+            "si": 2234.926508001292,
+            "fcp": 1361.216,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run2.report.html",
+          "id": "login",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en/login",
+          "fetchTime": "2026-09-05T09:50:56.597Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 70,
+            "accessibility": 100,
+            "best-practices": 92,
+            "seo": 63
+          },
+          "metrics": {
+            "lcp": 4403.044,
+            "tbt": 535.0000000000018,
+            "cls": 0,
+            "si": 2751.595007921131,
+            "fcp": 1689.022,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\login--mobile--run3.report.html",
+          "id": "login",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en/login",
+          "fetchTime": "2026-09-05T09:51:12.064Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 79,
+            "accessibility": 100,
+            "best-practices": 92,
+            "seo": 63
+          },
+          "metrics": {
+            "lcp": 4749.737,
+            "tbt": 201.0000000000009,
+            "cls": 0,
+            "si": 2259.25816799889,
+            "fcp": 1364.782,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 79,
+          "accessibility": 100,
+          "best-practices": 92,
+          "seo": 63
+        },
+        "metrics": {
+          "lcp": 4741.256,
+          "tbt": 236.5,
+          "cls": 0,
+          "si": 2259.25816799889,
+          "fcp": 1364.782,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": false,
+        "seo": false,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "login--mobile--run1.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 94 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 600
+          },
+          "savingsRank": 620,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/3q02uj3y4r8r8.js (77.8 KB, wasted 67.4 KB)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 27.1 KB)"
+          ]
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 390 ms",
+          "metricSavings": {
+            "FCP": 400,
+            "LCP": 400
+          },
+          "savingsRank": 400,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 456 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 156 ms)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimizes main-thread work",
+          "score": 1,
+          "displayValue": "1.3 s",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "0.8 s",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "http://localhost:3002/en/login",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js",
+            "Unattributable"
+          ]
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "6 long tasks found",
+          "metricSavings": {
+            "TBT": 250
+          },
+          "savingsRank": 250,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (199 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (134 ms)",
+            "http://localhost:3002/en/login (64 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (55 ms)"
+          ]
+        }
+      ],
+      "failingAudits": {
+        "best-practices": [
+          {
+            "id": "errors-in-console",
+            "weight": 1,
+            "score": 0,
+            "title": "Browser errors were logged to the console",
+            "displayValue": null,
+            "items": [
+              "rendering"
+            ]
+          },
+          {
+            "id": "inspector-issues",
+            "weight": 1,
+            "score": 0,
+            "title": "Issues were logged in the `Issues` panel in Chrome Devtools",
+            "displayValue": null,
+            "items": []
+          }
+        ],
+        "seo": [
+          {
+            "id": "is-crawlable",
+            "weight": 4.043478260869565,
+            "score": 0,
+            "title": "Page is blocked from indexing",
+            "displayValue": null,
+            "items": [
+              "http://localhost:3002/robots.txt:5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "pricing--desktop",
+      "id": "pricing",
+      "preset": "desktop",
+      "url": "http://localhost:3002/en/pricing",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--desktop--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--desktop--run1.report.html",
+          "id": "pricing",
+          "preset": "desktop",
+          "run": 1,
+          "url": "http://localhost:3002/en/pricing",
+          "fetchTime": "2026-09-05T09:53:07.207Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "desktop",
+          "scores": {
+            "performance": 99,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 919.1779999999999,
+            "tbt": 6.5,
+            "cls": 0,
+            "si": 732.8016166666494,
+            "fcp": 566.0889999999999,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 99,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 919.1779999999999,
+          "tbt": 6.5,
+          "cls": 0,
+          "si": 732.8016166666494,
+          "fcp": 566.0889999999999,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "representativeRun": "pricing--desktop--run1.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 29 KiB",
+          "metricSavings": {
+            "FCP": 50,
+            "LCP": 100
+          },
+          "savingsRank": 100,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 29.0 KB)"
+          ]
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "displayValue": "Est savings of 120 ms",
+          "metricSavings": {
+            "FCP": 100,
+            "LCP": 100
+          },
+          "savingsRank": 100,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/24r3va1wcpe5d.css (20.8 KB, wasted 132 ms)",
+            "http://localhost:3002/_next/static/chunks/37-grltg1q_wr.css (2.1 KB, wasted 52 ms)"
+          ]
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 50,
+            "LCP": 50
+          },
+          "savingsRank": 50,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": null,
+          "metricSavings": {
+            "LCP": 0
+          },
+          "savingsRank": 0,
+          "resources": []
+        }
+      ],
+      "failingAudits": {}
+    },
+    {
+      "key": "pricing--mobile",
+      "id": "pricing",
+      "preset": "mobile",
+      "url": "http://localhost:3002/en/pricing",
+      "runs": [
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run1.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run1.report.html",
+          "id": "pricing",
+          "preset": "mobile",
+          "run": 1,
+          "url": "http://localhost:3002/en/pricing",
+          "fetchTime": "2026-09-05T09:46:51.322Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 67,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4710.4439999999995,
+            "tbt": 376,
+            "cls": 0,
+            "si": 4792.34597253488,
+            "fcp": 2565.2219999999998,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run2.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run2.report.html",
+          "id": "pricing",
+          "preset": "mobile",
+          "run": 2,
+          "url": "http://localhost:3002/en/pricing",
+          "fetchTime": "2026-09-05T09:47:11.015Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 84,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 3844.0120000000006,
+            "tbt": 227.24700000000007,
+            "cls": 0,
+            "si": 1534.506,
+            "fcp": 1534.506,
+            "inp": null
+          }
+        },
+        {
+          "file": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run3.report.json",
+          "html": "C:\\Users\\Soheil\\Downloads\\track.site\\docs\\qa\\2026-09-05\\lighthouse\\pricing--mobile--run3.report.html",
+          "id": "pricing",
+          "preset": "mobile",
+          "run": 3,
+          "url": "http://localhost:3002/en/pricing",
+          "fetchTime": "2026-09-05T09:47:31.926Z",
+          "lighthouseVersion": "13.4.1",
+          "runtimeError": null,
+          "runWarnings": [],
+          "throttlingMethod": "simulate",
+          "formFactor": "mobile",
+          "scores": {
+            "performance": 75,
+            "accessibility": 100,
+            "best-practices": 96,
+            "seo": 100
+          },
+          "metrics": {
+            "lcp": 4584.628,
+            "tbt": 309.5000000000002,
+            "cls": 0,
+            "si": 2043.876,
+            "fcp": 2043.876,
+            "inp": null
+          }
+        }
+      ],
+      "medians": {
+        "scores": {
+          "performance": 75,
+          "accessibility": 100,
+          "best-practices": 96,
+          "seo": 100
+        },
+        "metrics": {
+          "lcp": 4584.628,
+          "tbt": 309.5000000000002,
+          "cls": 0,
+          "si": 2043.876,
+          "fcp": 2043.876,
+          "inp": null
+        }
+      },
+      "checks": {
+        "accessibility": true,
+        "best-practices": true,
+        "seo": true,
+        "performance": false,
+        "lcp": false,
+        "cls": true
+      },
+      "representativeRun": "pricing--mobile--run3.report.json",
+      "opportunities": [
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 29 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 450
+          },
+          "savingsRank": 460,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (71.8 KB, wasted 29.0 KB)"
+          ]
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "displayValue": "3.6 s",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": []
+        },
+        {
+          "id": "bootup-time",
+          "title": "JavaScript execution time",
+          "score": 1,
+          "displayValue": "1.1 s",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": [
+            "http://localhost:3002/en/pricing",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js",
+            "Unattributable",
+            "http://localhost:3002/_next/static/chunks/42dfmdvax0djp.js"
+          ]
+        },
+        {
+          "id": "long-tasks",
+          "title": "Avoid long main-thread tasks",
+          "score": 1,
+          "displayValue": "6 long tasks found",
+          "metricSavings": {
+            "TBT": 300
+          },
+          "savingsRank": 300,
+          "resources": [
+            "http://localhost:3002/en/pricing (759 ms)",
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (331 ms)",
+            "http://localhost:3002/en/pricing (212 ms)",
+            "http://localhost:3002/en/pricing (77 ms)"
+          ]
+        },
+        {
+          "id": "legacy-javascript-insight",
+          "title": "Legacy JavaScript",
+          "score": 0,
+          "displayValue": "Est savings of 14 KiB",
+          "metricSavings": {
+            "FCP": 0,
+            "LCP": 150
+          },
+          "savingsRank": 150,
+          "resources": [
+            "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js (wasted 13.6 KB)"
+          ]
+        }
+      ],
+      "failingAudits": {}
+    }
+  ]
+}

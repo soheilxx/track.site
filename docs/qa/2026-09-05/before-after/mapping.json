@@ -1,0 +1,171 @@
+{
+  "before": {
+    "server": "http://localhost:3004",
+    "tree": "C:/Users/Soheil/Downloads/track-site-before",
+    "commit": "0f0f5b5"
+  },
+  "after": {
+    "server": "http://localhost:3005",
+    "tree": "C:/Users/Soheil/Downloads/track.site",
+    "commit": "85fe3b7"
+  },
+  "widths": [
+    375,
+    768,
+    1440,
+    1920
+  ],
+  "files": "<page>/{before,after}-<width>[-partN].webp",
+  "pages": {
+    "home-en": {
+      "before": "http://localhost:3004/",
+      "after": "http://localhost:3005/en",
+      "auth": false,
+      "note": null
+    },
+    "home-de": {
+      "before": "http://localhost:3004/de",
+      "after": "http://localhost:3005/de",
+      "auth": false,
+      "note": null
+    },
+    "home-fr": {
+      "before": null,
+      "after": "http://localhost:3005/fr",
+      "auth": false,
+      "note": "locale fr did not exist in the before build"
+    },
+    "home-es": {
+      "before": null,
+      "after": "http://localhost:3005/es",
+      "auth": false,
+      "note": "locale es did not exist in the before build"
+    },
+    "home-it": {
+      "before": null,
+      "after": "http://localhost:3005/it",
+      "auth": false,
+      "note": "locale it did not exist in the before build"
+    },
+    "home-nl": {
+      "before": null,
+      "after": "http://localhost:3005/nl",
+      "auth": false,
+      "note": "locale nl did not exist in the before build"
+    },
+    "pricing-en": {
+      "before": "http://localhost:3004/pricing",
+      "after": "http://localhost:3005/en/pricing",
+      "auth": false,
+      "note": null
+    },
+    "pricing-de": {
+      "before": "http://localhost:3004/de/pricing",
+      "after": "http://localhost:3005/de/pricing",
+      "auth": false,
+      "note": null
+    },
+    "pricing-fr": {
+      "before": null,
+      "after": "http://localhost:3005/fr/pricing",
+      "auth": false,
+      "note": "locale fr did not exist in the before build"
+    },
+    "pricing-es": {
+      "before": null,
+      "after": "http://localhost:3005/es/pricing",
+      "auth": false,
+      "note": "locale es did not exist in the before build"
+    },
+    "pricing-it": {
+      "before": null,
+      "after": "http://localhost:3005/it/pricing",
+      "auth": false,
+      "note": "locale it did not exist in the before build"
+    },
+    "pricing-nl": {
+      "before": null,
+      "after": "http://localhost:3005/nl/pricing",
+      "auth": false,
+      "note": "locale nl did not exist in the before build"
+    },
+    "knowledge-en": {
+      "before": "http://localhost:3004/blog",
+      "after": "http://localhost:3005/en/tracking-knowledge",
+      "auth": false,
+      "note": null
+    },
+    "knowledge-de": {
+      "before": "http://localhost:3004/de/blog",
+      "after": "http://localhost:3005/de/tracking-knowledge",
+      "auth": false,
+      "note": null
+    },
+    "article-consent-mode-v2-guide-en": {
+      "before": "http://localhost:3004/blog/consent-mode-v2-guide",
+      "after": "http://localhost:3005/en/tracking-knowledge/consent-mode-v2-guide",
+      "auth": false,
+      "note": null
+    },
+    "article-consent-mode-v2-guide-de": {
+      "before": "http://localhost:3004/de/blog/consent-mode-v2-guide",
+      "after": "http://localhost:3005/de/tracking-knowledge/consent-mode-v2-guide",
+      "auth": false,
+      "note": null
+    },
+    "features-en": {
+      "before": "http://localhost:3004/features",
+      "after": "http://localhost:3005/en/features",
+      "auth": false,
+      "note": null
+    },
+    "integrations-en": {
+      "before": "http://localhost:3004/integrations",
+      "after": "http://localhost:3005/en/integrations",
+      "auth": false,
+      "note": null
+    },
+    "login-en": {
+      "before": "http://localhost:3004/login",
+      "after": "http://localhost:3005/en/login",
+      "auth": false,
+      "note": null
+    },
+    "login-de": {
+      "before": "http://localhost:3004/de/login",
+      "after": "http://localhost:3005/de/login",
+      "auth": false,
+      "note": null
+    },
+    "signup-en": {
+      "before": "http://localhost:3004/signup",
+      "after": "http://localhost:3005/en/signup",
+      "auth": false,
+      "note": null
+    },
+    "signup-de": {
+      "before": "http://localhost:3004/de/signup",
+      "after": "http://localhost:3005/de/signup",
+      "auth": false,
+      "note": null
+    },
+    "app-overview": {
+      "before": "http://localhost:3004/app",
+      "after": "http://localhost:3005/app",
+      "auth": true,
+      "note": null
+    },
+    "app-events-explorer": {
+      "before": "http://localhost:3004/app/debugger",
+      "after": "http://localhost:3005/app/events/explorer",
+      "auth": true,
+      "note": null
+    },
+    "app-releases": {
+      "before": null,
+      "after": "http://localhost:3005/app/releases",
+      "auth": true,
+      "note": "route does not exist in the before build (404)"
+    }
+  }
+}

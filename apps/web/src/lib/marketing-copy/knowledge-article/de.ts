@@ -13,6 +13,7 @@ export const KNOWLEDGE_ARTICLE_COPY_DE: KnowledgeArticleCopy = {
   callouts: { note: "Hinweis", warning: "Warnung", privacy: "Datenschutz", practice: "In der Praxis" },
   code: { copy: "Code kopieren", copied: "Kopiert" },
   steps: "Schritte",
+  table: "Tabelle",
   checklist: { open: "Offen", done: "Erledigt" },
   sources: { heading: "Primärquellen", text: "Dokumentationen und Standards, auf denen dieser Artikel beruht." },
   legal: "Dieser Artikel bietet allgemeine Informationen, keine Rechtsberatung. Wende dich für deinen konkreten Fall an deine Datenschutzberatung.",

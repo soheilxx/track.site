@@ -1,0 +1,54 @@
+[2026-09-05T09:45:58.307Z] lighthouse runner: base=http://localhost:3002 chrome=C:\Users\Soheil\AppData\Local\ms-playwright\chromium_headless_shell-1234\chrome-headless-shell-win64\chrome-headless-shell.exe cli=C:\Users\Soheil\AppData\Local\npm-cache\_npx\ffe2131771d88588\node_modules\lighthouse\cli\index.js
+auth cookies from e2e/.auth/owner.json: ts.session_token (values not logged)
+[2026-09-05T09:46:16.645Z] mobile http://localhost:3002/en -> home--mobile--run1 exit=1 report=ok 18.3s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:46:32.932Z] mobile http://localhost:3002/en -> home--mobile--run2 exit=1 report=ok 16.3s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:46:46.442Z] mobile http://localhost:3002/en -> home--mobile--run3 exit=1 report=ok 13.5s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:47:04.668Z] mobile http://localhost:3002/en/pricing -> pricing--mobile--run1 exit=1 report=ok 18.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:47:25.504Z] mobile http://localhost:3002/en/pricing -> pricing--mobile--run2 exit=1 report=ok 20.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:47:44.705Z] mobile http://localhost:3002/en/pricing -> pricing--mobile--run3 exit=1 report=ok 19.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:48:06.644Z] mobile http://localhost:3002/en/tracking-knowledge -> knowledge-hub--mobile--run1 exit=1 report=ok 21.9s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:48:30.023Z] mobile http://localhost:3002/en/tracking-knowledge -> knowledge-hub--mobile--run2 exit=1 report=ok 23.4s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:48:48.751Z] mobile http://localhost:3002/en/tracking-knowledge -> knowledge-hub--mobile--run3 exit=1 report=ok 18.7s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:49:06.336Z] mobile http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run1 exit=1 report=ok 17.6s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:49:23.099Z] mobile http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run2 exit=1 report=ok 16.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:49:39.882Z] mobile http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run3 exit=1 report=ok 16.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:49:55.529Z] mobile http://localhost:3002/en/integrations -> integrations--mobile--run1 exit=1 report=ok 15.6s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:50:14.605Z] mobile http://localhost:3002/en/integrations -> integrations--mobile--run2 exit=1 report=ok 19.1s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:50:36.922Z] mobile http://localhost:3002/en/integrations -> integrations--mobile--run3 exit=1 report=ok 22.3s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:50:51.618Z] mobile http://localhost:3002/en/login -> login--mobile--run1 exit=1 report=ok 14.7s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:51:07.324Z] mobile http://localhost:3002/en/login -> login--mobile--run2 exit=1 report=ok 15.7s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:51:22.383Z] mobile http://localhost:3002/en/login -> login--mobile--run3 exit=1 report=ok 15.1s
+  (non-zero exit after the report was written; stderr tail:   code: 'EPERM',)
+[2026-09-05T09:51:44.481Z] mobile http://localhost:3002/de -> home-de--mobile--run1 exit=1 report=ok 22.1s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:52:09.150Z] mobile http://localhost:3002/de -> home-de--mobile--run2 exit=1 report=ok 24.7s
+  (non-zero exit after the report was written; stderr tail:   code: 'EPERM',)
+[2026-09-05T09:52:34.558Z] mobile http://localhost:3002/de -> home-de--mobile--run3 exit=1 report=ok 25.4s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T09:52:58.281Z] desktop http://localhost:3002/en -> home--desktop--run1 exit=1 report=ok 23.7s
+  (non-zero exit after the report was written; stderr tail:   code: 'EPERM',)
+[2026-09-05T09:53:26.074Z] desktop http://localhost:3002/en/pricing -> pricing--desktop--run1 exit=1 report=ok 27.8s
+  (non-zero exit after the report was written; stderr tail:   code: 'EPERM',)
+[2026-09-05T09:53:47.516Z] mobile http://localhost:3002/app -> app-overview--mobile--run1 exit=1 report=ok 21.4s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+removed 6 leftover chrome-launcher temp profile(s) from C:\Users\Soheil\AppData\Local\Temp
+runs finished: 24/24 succeeded
+summary written: C:\Users\Soheil\Downloads\track.site\docs\qa\2026-09-05\lighthouse\summary.json and summary.md (10 page/preset groups)
+summary written: C:\Users\Soheil\Downloads\track.site\docs\qa\2026-09-05\lighthouse\summary.json and summary.md (10 page/preset groups)

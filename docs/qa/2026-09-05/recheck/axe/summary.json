@@ -1,0 +1,456 @@
+{
+  "generatedAt": "2026-09-05T11:21:19.503Z",
+  "baseUrl": "http://localhost:3006",
+  "byImpact": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "rules": [],
+  "runs": [
+    {
+      "slug": "app-ai-setup",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-ai-setup--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 24,
+        "inapplicable": 37
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 8,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-ai-setup",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-ai-setup--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 27,
+        "inapplicable": 34
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 18,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-alerts",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-alerts--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 26,
+        "inapplicable": 35
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "app-alerts",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-alerts--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 27,
+        "inapplicable": 34
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-attribution",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-attribution--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 28,
+        "inapplicable": 33
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "app-attribution",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-attribution--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 30,
+        "inapplicable": 31
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-consent-simulator",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-consent-simulator--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 31,
+        "inapplicable": 30
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "app-consent-simulator",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-consent-simulator--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 31,
+        "inapplicable": 30
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-destinations",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-destinations--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 26,
+        "inapplicable": 35
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "app-destinations",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-destinations--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 28,
+        "inapplicable": 33
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "app-overview",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-overview--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 27,
+        "inapplicable": 34
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "app-overview",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/app-overview--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 29,
+        "inapplicable": 32
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "de-home",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-home--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 32,
+        "inapplicable": 29
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 24,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "de-home",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-home--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 32,
+        "inapplicable": 29
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 28,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "de-knowledge-article-consent-mode-v2-guide",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-knowledge-article-consent-mode-v2-guide--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 31,
+        "inapplicable": 30
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 11,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "de-knowledge-article-consent-mode-v2-guide",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-knowledge-article-consent-mode-v2-guide--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 29,
+        "inapplicable": 32
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "de-pricing",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-pricing--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 35,
+        "inapplicable": 26
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 35,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "de-pricing",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/de-pricing--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 2,
+        "passes": 33,
+        "inapplicable": 28
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 35,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        },
+        {
+          "id": "th-has-data-cells",
+          "impact": "serious",
+          "nodes": 1,
+          "description": "Ensure that <th> elements and elements with role=columnheader/rowheader have data cells they describe"
+        }
+      ]
+    },
+    {
+      "slug": "en-home",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-home--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 32,
+        "inapplicable": 29
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 24,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "en-home",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-home--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 32,
+        "inapplicable": 29
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 29,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "en-knowledge-article-consent-mode-v2-guide",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-knowledge-article-consent-mode-v2-guide--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 31,
+        "inapplicable": 30
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "en-knowledge-article-consent-mode-v2-guide",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-knowledge-article-consent-mode-v2-guide--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 0,
+        "passes": 29,
+        "inapplicable": 32
+      },
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "slug": "en-pricing",
+      "width": 375,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-pricing--375.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 1,
+        "passes": 35,
+        "inapplicable": 26
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 35,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        }
+      ]
+    },
+    {
+      "slug": "en-pricing",
+      "width": 1440,
+      "file": "docs/qa/2026-09-05/recheck/axe/en-pricing--1440.json",
+      "counts": {
+        "violations": 0,
+        "incomplete": 2,
+        "passes": 33,
+        "inapplicable": 28
+      },
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 35,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds"
+        },
+        {
+          "id": "th-has-data-cells",
+          "impact": "serious",
+          "nodes": 1,
+          "description": "Ensure that <th> elements and elements with role=columnheader/rowheader have data cells they describe"
+        }
+      ]
+    }
+  ]
+}

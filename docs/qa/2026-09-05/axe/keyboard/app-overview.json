@@ -1,0 +1,1049 @@
+{
+  "slug": "app-overview",
+  "url": "http://localhost:3001/app",
+  "status": 200,
+  "finalUrl": "http://localhost:3001/app",
+  "loadMs": 2546,
+  "steps": [
+    {
+      "step": 1,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "#main",
+      "label": "Skip to content",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 37
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px",
+        "rect.y: -44 → 0"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-01.webp"
+    },
+    {
+      "step": 2,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Organization: Acme Demo",
+      "rect": {
+        "x": 16,
+        "y": 8,
+        "w": 144,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": false,
+      "diff": [],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-02.webp"
+    },
+    {
+      "step": 3,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Site: Acme Shop A7K2Q9",
+      "rect": {
+        "x": 169,
+        "y": 8,
+        "w": 184,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": false,
+      "diff": [],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-03.webp"
+    },
+    {
+      "step": 4,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Environment: Production",
+      "rect": {
+        "x": 366,
+        "y": 8,
+        "w": 147,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": false,
+      "diff": [],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-04.webp"
+    },
+    {
+      "step": 5,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Search or jump to… Ctrl K",
+      "rect": {
+        "x": 992,
+        "y": 10,
+        "w": 247,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-05.webp"
+    },
+    {
+      "step": 6,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": "assistant-launcher",
+      "href": null,
+      "label": "Close Track AI",
+      "rect": {
+        "x": 1247,
+        "y": 10,
+        "w": 105,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-06.webp"
+    },
+    {
+      "step": 7,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Account menu",
+      "rect": {
+        "x": 1360,
+        "y": 8,
+        "w": 64,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": false,
+      "diff": [],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-07.webp"
+    },
+    {
+      "step": 8,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app",
+      "label": "Track – Command Center",
+      "rect": {
+        "x": 16,
+        "y": 72,
+        "w": 87,
+        "h": 30
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-08.webp"
+    },
+    {
+      "step": 9,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app",
+      "label": "Command Center",
+      "rect": {
+        "x": 12,
+        "y": 119,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-09.webp"
+    },
+    {
+      "step": 10,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/ai-setup",
+      "label": "AI Setup",
+      "rect": {
+        "x": 12,
+        "y": 161,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-10.webp"
+    },
+    {
+      "step": 11,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/events",
+      "label": "Events",
+      "rect": {
+        "x": 12,
+        "y": 203,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-11.webp"
+    },
+    {
+      "step": 12,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/destinations",
+      "label": "Destinations",
+      "rect": {
+        "x": 12,
+        "y": 245,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-12.webp"
+    },
+    {
+      "step": 13,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/data-quality",
+      "label": "Data Quality",
+      "rect": {
+        "x": 12,
+        "y": 287,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-13.webp"
+    },
+    {
+      "step": 14,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/consent",
+      "label": "Consent & Privacy",
+      "rect": {
+        "x": 12,
+        "y": 329,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-14.webp"
+    },
+    {
+      "step": 15,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/insights",
+      "label": "Insights",
+      "rect": {
+        "x": 12,
+        "y": 371,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-15.webp"
+    },
+    {
+      "step": 16,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/releases",
+      "label": "Releases",
+      "rect": {
+        "x": 12,
+        "y": 413,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-16.webp"
+    },
+    {
+      "step": 17,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/team",
+      "label": "Team & Access",
+      "rect": {
+        "x": 12,
+        "y": 455,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-17.webp"
+    },
+    {
+      "step": 18,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/billing",
+      "label": "Billing",
+      "rect": {
+        "x": 12,
+        "y": 497,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-18.webp"
+    },
+    {
+      "step": 19,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/settings",
+      "label": "Settings",
+      "rect": {
+        "x": 12,
+        "y": 539,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-19.webp"
+    },
+    {
+      "step": 20,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/settings/alerts",
+      "label": "Alerts & Incident Mode",
+      "rect": {
+        "x": 12,
+        "y": 581,
+        "w": 215,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-20.webp"
+    },
+    {
+      "step": 21,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/ai-setup",
+      "label": "Open AI Setup",
+      "rect": {
+        "x": 769,
+        "y": 109,
+        "w": 120,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-21.webp"
+    },
+    {
+      "step": 22,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/events?site=52157aef-3295-434c-8eac-7f71a744f2c7",
+      "label": "Open Events",
+      "rect": {
+        "x": 897,
+        "y": 109,
+        "w": 111,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-22.webp"
+    },
+    {
+      "step": 23,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/sites/52157aef-3295-434c-8eac-7f71a744f2c7",
+      "label": "Site details",
+      "rect": {
+        "x": 909,
+        "y": 153,
+        "w": 99,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-23.webp"
+    },
+    {
+      "step": 24,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": "cc-next-action-cta",
+      "href": "/app/ai-setup",
+      "label": "Open AI Setup",
+      "rect": {
+        "x": 297,
+        "y": 410,
+        "w": 152,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-24.webp"
+    },
+    {
+      "step": 25,
+      "body": false,
+      "tag": "summary",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Why this action",
+      "rect": {
+        "x": 314,
+        "y": 467,
+        "w": 348,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-25.webp"
+    },
+    {
+      "step": 26,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/consent",
+      "label": "Warning Publish a consent policy The consent policy is still",
+      "rect": {
+        "x": 721,
+        "y": 259,
+        "w": 286,
+        "h": 162
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-26.webp"
+    },
+    {
+      "step": 27,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/sites/52157aef-3295-434c-8eac-7f71a744f2c7",
+      "label": "Suggestion Verify shop.acme.test The domain is not verified ",
+      "rect": {
+        "x": 721,
+        "y": 422,
+        "w": 286,
+        "h": 210
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-27.webp"
+    },
+    {
+      "step": 28,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Site",
+      "rect": {
+        "x": 320,
+        "y": 706,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-28.webp"
+    },
+    {
+      "step": 29,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Configuration",
+      "rect": {
+        "x": 544,
+        "y": 706,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-29.webp"
+    },
+    {
+      "step": 30,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Last event",
+      "rect": {
+        "x": 664,
+        "y": 706,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-30.webp"
+    },
+    {
+      "step": 31,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Health score",
+      "rect": {
+        "x": 820,
+        "y": 710,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-31.webp"
+    },
+    {
+      "step": 32,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Consent coverage",
+      "rect": {
+        "x": 967,
+        "y": 710,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-32.webp"
+    },
+    {
+      "step": 33,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Destinations",
+      "rect": {
+        "x": 385,
+        "y": 859,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-33.webp"
+    },
+    {
+      "step": 34,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Duplicate rate",
+      "rect": {
+        "x": 526,
+        "y": 863,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-34.webp"
+    },
+    {
+      "step": 35,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Delivery errors",
+      "rect": {
+        "x": 673,
+        "y": 863,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-35.webp"
+    },
+    {
+      "step": 36,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Queue lag",
+      "rect": {
+        "x": 805,
+        "y": 859,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-36.webp"
+    },
+    {
+      "step": 37,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Explain Plan usage",
+      "rect": {
+        "x": 960,
+        "y": 859,
+        "w": 24,
+        "h": 24
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-37.webp"
+    },
+    {
+      "step": 38,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/ai-setup",
+      "label": "Publish configuration",
+      "rect": {
+        "x": 497,
+        "y": 706,
+        "w": 166,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-38.webp"
+    },
+    {
+      "step": 39,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/app/events?site=52157aef-3295-434c-8eac-7f71a744f2c7",
+      "label": "Open Events",
+      "rect": {
+        "x": 672,
+        "y": 706,
+        "w": 111,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-39.webp"
+    },
+    {
+      "step": 40,
+      "body": false,
+      "tag": "div",
+      "role": "separator",
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Resize the Track AI panel",
+      "rect": {
+        "x": 1037,
+        "y": 56,
+        "w": 8,
+        "h": 844
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.background: rgba(0, 0, 0, 0) → rgb(214, 224, 255)"
+      ],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/screenshots/keyboard/app-overview/tab-40.webp"
+    }
+  ],
+  "summary": {
+    "steps": 40,
+    "focusedElements": 40,
+    "bodyFocus": 0,
+    "withoutVisibleIndicator": 4,
+    "notFocusVisible": 0
+  }
+}

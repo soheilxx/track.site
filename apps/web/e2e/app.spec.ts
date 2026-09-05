@@ -270,6 +270,81 @@ test.describe("viewport-fixed shell", () => {
   });
 });
 
+test.describe("responsive header", () => {
+  // Regression guard for the 2026-09-05 sweep finding: the shell grid sized itself to the header's min-content width
+  // (469 px at 320/375, 1104 px at 768) while the document has `overflow: hidden`, so the account menu, the launcher
+  // and page actions were outside the viewport with no way to scroll to them.
+  for (const width of [320, 375, 768]) {
+    test(`at ${width} px the shell is exactly viewport-wide and the site switcher, the Track AI launcher and the account menu stay inside it`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 740 });
+      await page.goto("/app");
+      await expect(page.getByTestId("app-shell")).toBeVisible();
+      const metrics = await page.evaluate(() => {
+        const shell = document.querySelector<HTMLElement>('[data-testid="app-shell"]')!;
+        const header = document.querySelector<HTMLElement>('[data-testid="app-header"]')!;
+        const main = document.querySelector<HTMLElement>('[data-testid="app-main"]')!;
+        return {
+          shellWidth: shell.getBoundingClientRect().width,
+          headerRight: header.getBoundingClientRect().right,
+          headerOverflow: header.scrollWidth - header.clientWidth,
+          mainOverflow: main.scrollWidth - main.clientWidth,
+          documentWidth: document.documentElement.scrollWidth,
+        };
+      });
+      expect(metrics.shellWidth).toBeLessThanOrEqual(width);
+      expect(metrics.headerRight).toBeLessThanOrEqual(width);
+      expect(metrics.headerOverflow).toBeLessThanOrEqual(1);
+      expect(metrics.mainOverflow).toBeLessThanOrEqual(1);
+      expect(metrics.documentWidth).toBeLessThanOrEqual(width);
+      for (const control of [page.getByRole("button", { name: /^Site:/ }), page.getByTestId("assistant-launcher"), page.getByRole("button", { name: "Account menu" })]) {
+        await expect(control).toBeVisible();
+        const box = (await control.boundingBox())!;
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(width);
+      }
+      // the page's primary action inside the scroll area is not cut on the right either
+      const cta = page.getByTestId("app-main").getByRole("link", { name: "Open AI Setup" }).first();
+      await expect(cta).toBeVisible();
+      const ctaBox = (await cta.boundingBox())!;
+      expect(ctaBox.x + ctaBox.width).toBeLessThanOrEqual(width);
+    });
+  }
+
+  test("below `sm` the command palette opens from the navigation drawer", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 740 });
+    await page.goto("/app");
+    await page.locator('button[aria-controls="app-nav-drawer"]').click();
+    await page.getByTestId("palette-trigger-drawer").click();
+    await expect(page.getByRole("dialog", { name: "Command palette" })).toBeVisible();
+  });
+});
+
+test.describe("keyboard focus in the header", () => {
+  // Regression guard for the 2026-09-05 keyboard check: `outline-none` on the menu triggers set `--tw-outline-style: none`,
+  // which the `focus-visible:outline-2` rule inherited, so the workspace switcher and the account menu had no focus ring.
+  test("the workspace switcher triggers and the account menu render a visible focus ring", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/app");
+    await expect(page.getByTestId("app-shell")).toBeVisible();
+    const seen: string[] = [];
+    for (let i = 0; i < 10 && seen.length < 4; i++) {
+      await page.keyboard.press("Tab");
+      const focused = await page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null;
+        if (!el) return null;
+        const cs = getComputedStyle(el);
+        return { label: el.getAttribute("aria-label") ?? "", focusVisible: el.matches(":focus-visible"), outlineStyle: cs.outlineStyle, outlineWidth: parseFloat(cs.outlineWidth) };
+      });
+      if (!focused || !/^(Organization|Site|Environment): |^Account menu$/.test(focused.label)) continue;
+      expect(focused.focusVisible, focused.label).toBe(true);
+      expect(focused.outlineStyle, focused.label).not.toBe("none");
+      expect(focused.outlineWidth, focused.label).toBeGreaterThanOrEqual(2);
+      seen.push(focused.label.split(":")[0]!);
+    }
+    expect(seen).toEqual(["Organization", "Site", "Environment", "Account menu"]);
+  });
+});
+
 /** Server-confirmed status announcements of the header motion control (shell.assistant.motion, en). */
 const MOTION_PAUSED = "AI motion paused. Your setting is saved.";
 const MOTION_RESUMED = "AI motion follows your system setting again.";

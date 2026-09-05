@@ -1,0 +1,2467 @@
+{
+  "/en": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 32,
+        "domContentLoaded": 93,
+        "load": 376
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 300
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 300
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 300,
+          "renderTime": 300,
+          "loadTime": 0,
+          "size": 60536,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Track collects your website events first-party, checks conse",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 126,
+          "duration": 148
+        },
+        {
+          "startTime": 290,
+          "duration": 69
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 46,
+          "end": 69,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 47,
+          "end": 70,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 47,
+          "end": 70,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 47,
+          "end": 70,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 48,
+          "end": 107,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 48,
+          "end": 96,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 48,
+          "end": 115,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 48,
+          "end": 107,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 48,
+          "end": 112,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 48,
+          "end": 108,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 49,
+          "end": 115,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 48,
+          "end": 89,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 47,
+          "end": 68,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 47,
+          "end": 70,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 30
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 18,
+        "domContentLoaded": 2640,
+        "load": 3175
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 2112
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 2112
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 2112,
+          "renderTime": 2112,
+          "loadTime": 0,
+          "size": 61019,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Track collects your website events first-party, checks conse",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 2782,
+          "duration": 384
+        },
+        {
+          "startTime": 3240,
+          "duration": 139
+        },
+        {
+          "startTime": 3718,
+          "duration": 93
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 190,
+          "end": 1416,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 190,
+          "end": 905,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 190,
+          "end": 2313,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 191,
+          "end": 1771,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 191,
+          "end": 2773,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 191,
+          "end": 2188,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 192,
+          "end": 2635,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 191,
+          "end": 2467,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 192,
+          "end": 2574,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 191,
+          "end": 2453,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 192,
+          "end": 2712,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 191,
+          "end": 1416,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 191,
+          "end": 422,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 191,
+          "end": 966,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 30
+    }
+  },
+  "/en/pricing": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 24,
+        "domContentLoaded": 87,
+        "load": 567
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 500
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 500
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 500,
+          "renderTime": 500,
+          "loadTime": 0,
+          "size": 72009,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Every plan includes browser and server-side tracking, all st",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 87,
+          "duration": 286
+        },
+        {
+          "startTime": 483,
+          "duration": 70
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 36,
+          "end": 50,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 36,
+          "end": 51,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 36,
+          "end": 58,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 36,
+          "end": 58,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 37,
+          "end": 95,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 37,
+          "end": 90,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 39,
+          "end": 105,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0jx_kjlv5_nyu.js",
+          "type": "script",
+          "start": 39,
+          "end": 106,
+          "size": 13723,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 39,
+          "end": 95,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 39,
+          "end": 105,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 39,
+          "end": 102,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 751,
+          "end": 756,
+          "size": 9322,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 36,
+          "end": 55,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 36,
+          "end": 58,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 28
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 16,
+        "domContentLoaded": 2247,
+        "load": 3148
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 1892
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 1892
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 1892,
+          "renderTime": 1892,
+          "loadTime": 0,
+          "size": 72198,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Every plan includes browser and server-side tracking, all st",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 2860,
+          "duration": 273
+        },
+        {
+          "startTime": 3338,
+          "duration": 72
+        },
+        {
+          "startTime": 3524,
+          "duration": 99
+        },
+        {
+          "startTime": 4749,
+          "duration": 51
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 213,
+          "end": 1430,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 215,
+          "end": 2322,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 215,
+          "end": 935,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 215,
+          "end": 1821,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 216,
+          "end": 2855,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 216,
+          "end": 2211,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 219,
+          "end": 2713,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0jx_kjlv5_nyu.js",
+          "type": "script",
+          "start": 219,
+          "end": 2824,
+          "size": 13723,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 218,
+          "end": 2509,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 219,
+          "end": 2666,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 218,
+          "end": 2572,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 4336,
+          "end": 4613,
+          "size": 9322,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 215,
+          "end": 449,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 215,
+          "end": 981,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 28
+    }
+  },
+  "/en/tracking-knowledge": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 86,
+        "domContentLoaded": 184,
+        "load": 389
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 332
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 332
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 332,
+          "renderTime": 332,
+          "loadTime": 0,
+          "size": 39690,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 max-w-text text-lg text-ink-2",
+          "text": "Server-side tracking, consent, deduplication and attribution",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 235,
+          "duration": 84
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 91,
+          "end": 135,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 91,
+          "end": 138,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 91,
+          "end": 141,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 91,
+          "end": 140,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 109,
+          "end": 190,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 109,
+          "end": 180,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 109,
+          "end": 233,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 109,
+          "end": 191,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 109,
+          "end": 231,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 109,
+          "end": 191,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 491,
+          "end": 497,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/14pz0afyjmqdc.js",
+          "type": "script",
+          "start": 110,
+          "end": 232,
+          "size": 9214,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 108,
+          "end": 148,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 108,
+          "end": 151,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 29
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 86,
+        "domContentLoaded": 2824,
+        "load": 3256
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 2360
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 2360
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 2360,
+          "renderTime": 2360,
+          "loadTime": 0,
+          "size": 39375,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 max-w-text text-lg text-ink-2",
+          "text": "Server-side tracking, consent, deduplication and attribution",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 1295,
+          "duration": 1041
+        },
+        {
+          "startTime": 2871,
+          "duration": 367
+        },
+        {
+          "startTime": 3416,
+          "duration": 58
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 186,
+          "end": 1369,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 186,
+          "end": 2287,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 186,
+          "end": 885,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 186,
+          "end": 1544,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 192,
+          "end": 2864,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 192,
+          "end": 2287,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 192,
+          "end": 2740,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 192,
+          "end": 2614,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 192,
+          "end": 2709,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 192,
+          "end": 2613,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 4105,
+          "end": 4369,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/14pz0afyjmqdc.js",
+          "type": "script",
+          "start": 193,
+          "end": 2863,
+          "size": 9214,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 191,
+          "end": 433,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 191,
+          "end": 1180,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 29
+    }
+  },
+  "/en/tracking-knowledge/consent-mode-v2-guide": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 24,
+        "domContentLoaded": 74,
+        "load": 182
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 288
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 288
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 288,
+          "renderTime": 288,
+          "loadTime": 0,
+          "size": 84912,
+          "url": null,
+          "tag": "H1",
+          "cls": "mt-4 max-w-4xl font-display text-h1 font-semibold text-ink",
+          "text": "Consent Mode v2 without the guesswork: purposes, signals and",
+          "font": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", Inter"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 116,
+          "duration": 65
+        },
+        {
+          "startTime": 182,
+          "duration": 71
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 37,
+          "end": 54,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 37,
+          "end": 59,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 59,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 59,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 38,
+          "end": 93,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 38,
+          "end": 88,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 38,
+          "end": 97,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 38,
+          "end": 94,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 38,
+          "end": 97,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 38,
+          "end": 95,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 379,
+          "end": 391,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 38,
+          "end": 81,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 38,
+          "end": 56,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 38,
+          "end": 60,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 31
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 15,
+        "domContentLoaded": 1978,
+        "load": 2896
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 1736
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 1736
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 1736,
+          "renderTime": 1736,
+          "loadTime": 0,
+          "size": 72362,
+          "url": null,
+          "tag": "H1",
+          "cls": "mt-4 max-w-4xl font-display text-h1 font-semibold text-ink",
+          "text": "Consent Mode v2 without the guesswork: purposes, signals and",
+          "font": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", Inter"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 2690,
+          "duration": 192
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 212,
+          "end": 1418,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 214,
+          "end": 2271,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 215,
+          "end": 954,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 215,
+          "end": 1790,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 221,
+          "end": 2686,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 221,
+          "end": 2131,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 225,
+          "end": 2593,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 224,
+          "end": 2439,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 226,
+          "end": 2547,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 225,
+          "end": 2453,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 3654,
+          "end": 3953,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 218,
+          "end": 1434,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 216,
+          "end": 471,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 217,
+          "end": 1016,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 31
+    }
+  },
+  "/en/integrations": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 169,
+        "domContentLoaded": 557,
+        "load": 686
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 544
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 544
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 544,
+          "renderTime": 544,
+          "loadTime": 0,
+          "size": 50700,
+          "url": null,
+          "tag": "H1",
+          "cls": "mt-3 font-display text-h1 text-ink",
+          "text": "Every platform with browser tag, server API and shared dedup",
+          "font": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", Inter"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 303,
+          "duration": 225
+        },
+        {
+          "startTime": 559,
+          "duration": 114
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 178,
+          "end": 211,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 178,
+          "end": 214,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 178,
+          "end": 214,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 179,
+          "end": 215,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 194,
+          "end": 462,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 194,
+          "end": 390,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 195,
+          "end": 474,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 194,
+          "end": 407,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 195,
+          "end": 474,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 194,
+          "end": 473,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2f3asu0mepzly.js",
+          "type": "script",
+          "start": 195,
+          "end": 475,
+          "size": 9378,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 918,
+          "end": 930,
+          "size": 9322,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 194,
+          "end": 230,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 194,
+          "end": 280,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 28
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 62,
+        "domContentLoaded": 1421,
+        "load": 3317
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 2788
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 2788
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 2788,
+          "renderTime": 2788,
+          "loadTime": 0,
+          "size": 50700,
+          "url": null,
+          "tag": "H1",
+          "cls": "mt-3 font-display text-h1 text-ink",
+          "text": "Every platform with browser tag, server API and shared dedup",
+          "font": "\"Bricolage Grotesque\", \"Bricolage Grotesque Fallback\", Inter"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 390,
+          "duration": 56
+        },
+        {
+          "startTime": 1464,
+          "duration": 1315
+        },
+        {
+          "startTime": 3065,
+          "duration": 236
+        },
+        {
+          "startTime": 3602,
+          "duration": 54
+        },
+        {
+          "startTime": 3679,
+          "duration": 60
+        },
+        {
+          "startTime": 3914,
+          "duration": 108
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 202,
+          "end": 1391,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 206,
+          "end": 2167,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 209,
+          "end": 893,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 216,
+          "end": 1469,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 350,
+          "end": 2743,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 350,
+          "end": 2308,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 358,
+          "end": 2586,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 350,
+          "end": 2340,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 359,
+          "end": 2540,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 350,
+          "end": 2433,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2f3asu0mepzly.js",
+          "type": "script",
+          "start": 366,
+          "end": 2649,
+          "size": 9378,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 4350,
+          "end": 4612,
+          "size": 9322,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 304,
+          "end": 557,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 305,
+          "end": 1281,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 28
+    }
+  },
+  "/en/login": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 54,
+        "domContentLoaded": 108,
+        "load": 299
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 224
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 224
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 224,
+          "renderTime": 224,
+          "loadTime": 0,
+          "size": 11433,
+          "url": null,
+          "tag": "SPAN",
+          "cls": "mt-0.5 block text-sm text-ink-3",
+          "text": "Event data is processed in the EU by default. Track acts as ",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 163,
+          "duration": 50
+        },
+        {
+          "startTime": 218,
+          "duration": 71
+        },
+        {
+          "startTime": 336,
+          "duration": 53
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 61,
+          "end": 79,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 61,
+          "end": 79,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 61,
+          "end": 79,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 61,
+          "end": 79,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/3q02uj3y4r8r8.js",
+          "type": "script",
+          "start": 67,
+          "end": 196,
+          "size": 85838,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 66,
+          "end": 151,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 66,
+          "end": 129,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2tz3_z7j76c0g.js",
+          "type": "script",
+          "start": 67,
+          "end": 169,
+          "size": 18614,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 66,
+          "end": 152,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0uyjei1ozmzfw.js",
+          "type": "script",
+          "start": 66,
+          "end": 167,
+          "size": 12438,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 66,
+          "end": 152,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 66,
+          "end": 152,
+          "size": 10793,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 65,
+          "end": 80,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 65,
+          "end": 84,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 44
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 39,
+        "domContentLoaded": 1077,
+        "load": 3675
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 1400
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 1400
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 1400,
+          "renderTime": 1400,
+          "loadTime": 0,
+          "size": 11581,
+          "url": null,
+          "tag": "SPAN",
+          "cls": "mt-0.5 block text-sm text-ink-3",
+          "text": "Event data is processed in the EU by default. Track acts as ",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 2772,
+          "duration": 882
+        },
+        {
+          "startTime": 3833,
+          "duration": 112
+        },
+        {
+          "startTime": 3992,
+          "duration": 177
+        },
+        {
+          "startTime": 4192,
+          "duration": 72
+        },
+        {
+          "startTime": 4920,
+          "duration": 60
+        },
+        {
+          "startTime": 4983,
+          "duration": 64
+        },
+        {
+          "startTime": 5469,
+          "duration": 98
+        },
+        {
+          "startTime": 5569,
+          "duration": 82
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 206,
+          "end": 1386,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 206,
+          "end": 2185,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 206,
+          "end": 934,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 206,
+          "end": 1759,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/3q02uj3y4r8r8.js",
+          "type": "script",
+          "start": 213,
+          "end": 3199,
+          "size": 85838,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 212,
+          "end": 2764,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 212,
+          "end": 2036,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2tz3_z7j76c0g.js",
+          "type": "script",
+          "start": 213,
+          "end": 2873,
+          "size": 18614,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 213,
+          "end": 2561,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0uyjei1ozmzfw.js",
+          "type": "script",
+          "start": 213,
+          "end": 2780,
+          "size": 12438,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 212,
+          "end": 2416,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 213,
+          "end": 2453,
+          "size": 10793,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 212,
+          "end": 449,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 212,
+          "end": 981,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 44
+    }
+  },
+  "/de": {
+    "unthrottled": {
+      "nav": {
+        "ttfb": 24,
+        "domContentLoaded": 90,
+        "load": 394
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 404
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 404
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 404,
+          "renderTime": 404,
+          "loadTime": 0,
+          "size": 59731,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Track erfasst deine Website-Events first-party, prüft Consen",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 130,
+          "duration": 76
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 83,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 64,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 64,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 38,
+          "end": 65,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 39,
+          "end": 97,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 39,
+          "end": 89,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 39,
+          "end": 99,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 39,
+          "end": 98,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 39,
+          "end": 106,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 39,
+          "end": 98,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 39,
+          "end": 107,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 39,
+          "end": 78,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 38,
+          "end": 62,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 38,
+          "end": 66,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 30
+    },
+    "throttled": {
+      "nav": {
+        "ttfb": 16,
+        "domContentLoaded": 3860,
+        "load": 3861
+      },
+      "paints": [
+        {
+          "name": "first-paint",
+          "t": 2924
+        },
+        {
+          "name": "first-contentful-paint",
+          "t": 2924
+        }
+      ],
+      "lcp": [
+        {
+          "startTime": 2924,
+          "renderTime": 2924,
+          "loadTime": 0,
+          "size": 60214,
+          "url": null,
+          "tag": "P",
+          "cls": "mt-5 text-lg text-ink-2",
+          "text": "Track erfasst deine Website-Events first-party, prüft Consen",
+          "font": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, -apple-sy"
+        }
+      ],
+      "cls": [],
+      "clsTotal": 0,
+      "longtasks": [
+        {
+          "startTime": 3501,
+          "duration": 347
+        },
+        {
+          "startTime": 4016,
+          "duration": 60
+        },
+        {
+          "startTime": 4334,
+          "duration": 132
+        }
+      ],
+      "fonts": [
+        "Inter 100 900 loaded",
+        "Inter 100 900 loaded",
+        "Inter Fallback normal loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 500 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 600 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque 700 loaded",
+        "Bricolage Grotesque Fallback normal loaded"
+      ],
+      "fontResources": [
+        {
+          "name": "/_next/static/media/017d9bea37084d9b-s.p.41rroleoq1br7.woff2",
+          "type": "link",
+          "start": 235,
+          "end": 1401,
+          "size": 41536,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/1bffadaabf893a1e-s.p.3-6t-g6q0vh0a.woff2",
+          "type": "link",
+          "start": 237,
+          "end": 2300,
+          "size": 85572,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/26daee0352f50a5f-s.p.2e115y8-hourl.woff2",
+          "type": "link",
+          "start": 242,
+          "end": 951,
+          "size": 19040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+          "type": "link",
+          "start": 244,
+          "end": 1588,
+          "size": 48732,
+          "render": "non-blocking"
+        }
+      ],
+      "scripts": [
+        {
+          "name": "/_next/static/chunks/0x8kzgkz_i9l-.js",
+          "type": "script",
+          "start": 250,
+          "end": 2812,
+          "size": 73715,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/42dfmdvax0djp.js",
+          "type": "script",
+          "start": 249,
+          "end": 2284,
+          "size": 35196,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/2uia7fl_7sthj.js",
+          "type": "script",
+          "start": 261,
+          "end": 2704,
+          "size": 17548,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tu2116so7ajv.js",
+          "type": "script",
+          "start": 259,
+          "end": 2406,
+          "size": 12362,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/1mssxbh5x3qrq.js",
+          "type": "script",
+          "start": 261,
+          "end": 2657,
+          "size": 10793,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/3wz2hk1qf6g0f.js",
+          "type": "script",
+          "start": 260,
+          "end": 2500,
+          "size": 10040,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/33oyapd8c4h79.js",
+          "type": "script",
+          "start": 262,
+          "end": 2734,
+          "size": 9322,
+          "render": "non-blocking"
+        },
+        {
+          "name": "/_next/static/chunks/0tt9kxqhjg2i7.js",
+          "type": "script",
+          "start": 248,
+          "end": 1650,
+          "size": 8771,
+          "render": "non-blocking"
+        }
+      ],
+      "css": [
+        {
+          "name": "/_next/static/chunks/37-grltg1q_wr.css",
+          "type": "link",
+          "start": 245,
+          "end": 499,
+          "size": 1324,
+          "render": "blocking"
+        },
+        {
+          "name": "/_next/static/chunks/24r3va1wcpe5d.css",
+          "type": "link",
+          "start": 246,
+          "end": 1246,
+          "size": 20403,
+          "render": "blocking"
+        }
+      ],
+      "requests": 30
+    }
+  }
+}

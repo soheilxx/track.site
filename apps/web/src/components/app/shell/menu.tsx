@@ -51,7 +51,10 @@ export interface MenuProps {
   "aria-describedby"?: string;
 }
 
-const ITEM = "flex w-full min-h-10 items-center gap-2.5 rounded-[var(--radius-control-sm)] px-2.5 py-2 text-left text-sm text-ink-2 outline-none transition-colors duration-[var(--motion-fast)] ease-out hover:bg-surface-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary pointer-coarse:min-h-11 data-[checked=true]:bg-primary-soft data-[checked=true]:text-primary aria-disabled:pointer-events-none aria-disabled:opacity-50";
+// No `outline-none` here: in Tailwind v4 it sets `--tw-outline-style: none`, which `focus-visible:outline-2` inherits
+// (`outline-style: var(--tw-outline-style)`), so the focus ring would never render. Browsers draw no outline on plain
+// `:focus` for buttons anyway; the visible ring is the `focus-visible:` rule (same pattern as the Button primitive).
+const ITEM = "flex w-full min-h-10 items-center gap-2.5 rounded-[var(--radius-control-sm)] px-2.5 py-2 text-left text-sm text-ink-2 transition-colors duration-[var(--motion-fast)] ease-out hover:bg-surface-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-primary pointer-coarse:min-h-11 data-[checked=true]:bg-primary-soft data-[checked=true]:text-primary aria-disabled:pointer-events-none aria-disabled:opacity-50";
 
 export function Menu({ label, children, triggerLabel, triggerClassName, header, sections, align = "start", panelClassName, disabled = false, triggerProps, "aria-describedby": describedBy }: MenuProps) {
   const id = useId();
@@ -131,7 +134,7 @@ export function Menu({ label, children, triggerLabel, triggerClassName, header, 
   };
 
   return (
-    <div ref={rootRef} className="relative inline-flex">
+    <div ref={rootRef} className="relative inline-flex min-w-0">
       <button
         ref={triggerRef}
         type="button"
@@ -141,7 +144,7 @@ export function Menu({ label, children, triggerLabel, triggerClassName, header, 
         aria-label={triggerLabel}
         aria-describedby={describedBy}
         disabled={disabled}
-        className={cn("inline-flex min-h-10 items-center gap-1.5 rounded-[var(--radius-control)] px-2.5 text-sm font-medium text-ink outline-none transition-colors duration-[var(--motion-fast)] ease-out hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 pointer-coarse:min-h-11", triggerClassName)}
+        className={cn("inline-flex min-h-10 min-w-0 items-center gap-1.5 rounded-[var(--radius-control)] px-2.5 text-sm font-medium text-ink transition-colors duration-[var(--motion-fast)] ease-out hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 pointer-coarse:min-h-11", triggerClassName)}
         onClick={() => (open ? close(false) : setOpen(true))}
         onKeyDown={onTriggerKeyDown}
         {...triggerProps}

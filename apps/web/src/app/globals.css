@@ -22,6 +22,19 @@ html[data-dashboard] > body {
   overscroll-behavior: none;
 }
 
+/*
+ * Implicit grid columns never exceed their container. A `grid` without `grid-template-columns` (the
+ * single-column state of every `lg:grid-cols-*` layout) gets an `auto` track that is sized by the
+ * min-content of its items: a card whose header row cannot wrap then widens the column past the main
+ * area, and because main clips horizontally its right edge is simply cut (2026-09-05 sweep: Command
+ * Center at 320 px, Incident Mode cards at 320 px). With the track fixed to the container the content
+ * wraps or truncates inside it instead — the same invariant the shell grid uses. Explicit
+ * `grid-cols-*` tracks are unaffected; the dashboard uses no implicit-column flows (`grid-flow-col`).
+ */
+html[data-dashboard] .grid {
+  grid-auto-columns: minmax(0, 1fr);
+}
+
 @layer utilities {
   /* mobile safe areas (launcher, bottom sheet composer) */
   .pb-safe {

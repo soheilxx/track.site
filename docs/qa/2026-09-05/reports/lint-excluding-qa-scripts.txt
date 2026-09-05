@@ -1,0 +1,7 @@
+$ pnpm exec eslint . --ignore-pattern "scripts/qa/**"   (apps/web only; the 14 errors of `pnpm lint` are confined to the untracked QA scripts apps/web/scripts/qa/*.mjs, see lint.txt)
+cwd: /c/Users/Soheil/Downloads/track.site/apps/web
+started: 2026-09-05T11:35:51Z
+
+
+finished: 2026-09-05T11:36:21Z
+exit code: 0

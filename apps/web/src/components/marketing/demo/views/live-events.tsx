@@ -21,12 +21,12 @@ export function LiveEventsView({ state, copy, dispatch, interactive, playback }:
           const open = state.expanded === e.key;
           const detailId = `${baseId}-${e.key}`;
           return (
-            <li key={e.key} className={cn(i >= 4 && "hidden md:block", i === 0 && interactive && playback.advanced && "motion-safe:starting:translate-y-1 motion-safe:starting:opacity-0 transition-[opacity,transform] duration-[var(--motion-slow)] ease-flow")}>
+            <li key={e.key} className={cn(i >= 4 && "hidden @2xl:block", i === 0 && interactive && playback.advanced && "motion-safe:starting:translate-y-1 motion-safe:starting:opacity-0 transition-[opacity,transform] duration-[var(--motion-slow)] ease-flow")}>
               <button type="button" aria-expanded={open} aria-controls={open ? detailId : undefined} onClick={() => dispatch({ type: "expand", key: open ? null : e.key })} className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left text-small transition-colors duration-[var(--motion-fast)] hover:bg-surface-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
-                <span className="hidden w-16 shrink-0 font-mono text-micro text-ink-3 sm:inline">{e.time}</span>
+                <span className="hidden w-16 shrink-0 font-mono text-micro text-ink-3 @xl:inline">{e.time}</span>
                 <span className="min-w-0 flex-1 truncate font-medium text-ink">{e.name}</span>
                 <OriginBadge origin={e.origin} copy={copy} />
-                <ConsentStatus consent={e.consent} copy={copy} className="hidden lg:inline-flex" />
+                <ConsentStatus consent={e.consent} copy={copy} className="hidden @2xl:inline-flex" />
                 <OutcomeStatus outcome={e.outcome} copy={copy} />
                 <ChevronDown className={cn("size-4 shrink-0 text-ink-3 transition-transform duration-[var(--motion-base)] ease-in-out", open && "rotate-180")} aria-hidden="true" />
                 <span className="sr-only">{open ? copy.events.detail.collapse : copy.events.detail.expand}</span>
@@ -46,7 +46,7 @@ function EventDetail({ id, event, copy }: { id: string; event: DemoEventRecord; 
   return (
     <div id={id} className="border-t border-line bg-surface-2/60 px-3 py-3 text-small">
       <p className="font-medium text-ink">{copy.events.reasons[event.reason]}</p>
-      <dl className="mt-2 grid gap-x-4 gap-y-1.5 sm:grid-cols-2">
+      <dl className="mt-2 grid gap-x-4 gap-y-1.5 @xl:grid-cols-2">
         <Row label={d.dedupLabel}>
           {copy.events.dedup[event.dedup]} <span className="font-mono text-micro text-ink-3">({d.eventId} {event.eventId})</span>
         </Row>

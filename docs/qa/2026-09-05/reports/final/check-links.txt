@@ -1,0 +1,11 @@
+checked 75 unique references in docs/16-release-report.md: {"exact":66,"glob":4,"docs-shorthand":3,"relative-to-apps/web":2}
+  ok (glob) line 29 apps/web/scripts/qa/*.mjs
+  ok (glob) line 125 packages/catalog/src/*.ts
+  ok (docs-shorthand) line 148 docs/11
+  ok (glob) line 209 apps/web/e2e/__screenshots__/<snapshot>-visual-<platform>.png
+  ok (glob) line 248 apps/web/src/lib/legal-copy/*
+  ok (docs-shorthand) line 248 docs/07
+  ok (relative-to-apps/web) line 263 scripts/qa/crawl.mjs
+  ok (relative-to-apps/web) line 264 scripts/i18n-parity.mjs
+  ok (docs-shorthand) line 283 docs/12
+evidence pack size: 189.73 MB (198941780 bytes, du -sb docs/qa/2026-09-05)

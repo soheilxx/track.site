@@ -182,7 +182,7 @@ export function IncidentMode({
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-[var(--radius-card)] border border-line bg-surface p-4">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <h3 className="text-base font-semibold text-ink">{t("destinations.title")}</h3>
             <Link
               href="/app/destinations"
@@ -249,7 +249,7 @@ export function IncidentMode({
           )}
         </div>
         <div className="rounded-[var(--radius-card)] border border-line bg-surface p-4">
-          <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <h3 className="text-base font-semibold text-ink">{t("environments.title")}</h3>
             <Link href="/app/releases" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               {t("environments.openReleases")}

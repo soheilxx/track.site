@@ -14,6 +14,7 @@ export const KNOWLEDGE_ARTICLE_COPY_IT: KnowledgeArticleCopy = {
   callouts: { note: "Nota", warning: "Attenzione", privacy: "Privacy", practice: "In pratica" },
   code: { copy: "Copia il codice", copied: "Copiato" },
   steps: "Passaggi",
+  table: "Tabella",
   checklist: { open: "Da fare", done: "Fatto" },
   sources: { heading: "Fonti primarie", text: "Documentazione e standard su cui si basa questo articolo." },
   legal: "Questo articolo fornisce informazioni generali, non consulenza legale. Per la tua situazione specifica rivolgiti al tuo consulente in materia di protezione dei dati.",

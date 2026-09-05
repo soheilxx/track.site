@@ -33,6 +33,63 @@ test.describe("marketing site", () => {
     });
   }
 
+  test.describe("responsive layout", () => {
+    // The route × width pairs that failed the 2026-09-05 sweep (docs/qa/2026-09-05/screenshots/responsive-sweep.md):
+    // hero CTA forcing the column past 320 px (fr), the demo's wide layout inside the ~520 px hero column at 1024 px,
+    // the nl footer link and pricing values/CTAs wider than their box, sr-only cells escaping the scrolling matrix.
+    const cases: ReadonlyArray<[locale: string, path: string, width: number]> = [
+      ["fr", "", 320],
+      ["en", "", 1024],
+      ["nl", "", 1024],
+      ["en", "", 1280],
+      ["fr", "/pricing", 320],
+      ["de", "/pricing", 768],
+      ["nl", "/pricing", 1024],
+    ];
+    for (const [locale, path, width] of cases) {
+      test(`/${locale}${path} at ${width} px: no horizontal page scroll, heading and CTA inside the viewport, demo content inside its frame`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`/${locale}${path}`);
+        await expect(page.locator("h1")).toBeVisible();
+        await page.evaluate(() => document.fonts.ready);
+        const doc = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth }));
+        expect(doc.scrollWidth).toBeLessThanOrEqual(doc.clientWidth);
+        const h1 = (await page.locator("h1").boundingBox())!;
+        expect(h1.x + h1.width).toBeLessThanOrEqual(width);
+        if (path !== "") return;
+        const cta = page.locator("form button[type=submit]").first();
+        const ctaBox = (await cta.boundingBox())!;
+        expect(ctaBox.x + ctaBox.width).toBeLessThanOrEqual(width);
+        // the hero demo (placeholder or hydrated island): nothing painted outside the frame, no label wider than its box;
+        // elements inside a horizontal scroller (the tab list) are intended to extend past the frame
+        const demo = page.locator("section[data-demo]");
+        await expect(demo).toBeVisible();
+        const offenders = await demo.evaluate((section) => {
+          const frame = section.getBoundingClientRect();
+          const inScroller = (el: Element) => {
+            for (let n = el.parentElement; n && n !== section; n = n.parentElement) {
+              const o = getComputedStyle(n).overflowX;
+              if (o === "auto" || o === "scroll") return true;
+            }
+            return false;
+          };
+          const bad: string[] = [];
+          for (const el of Array.from(section.querySelectorAll<HTMLElement>("p, span, button, li, a"))) {
+            const cs = getComputedStyle(el);
+            if (cs.display === "none" || cs.visibility === "hidden" || inScroller(el)) continue;
+            const box = el.getBoundingClientRect();
+            if (box.width === 0) continue;
+            const text = (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 40);
+            if (box.right > frame.right + 1 || box.left < frame.left - 1) bad.push(`outside frame: <${el.tagName.toLowerCase()}> ${text}`);
+            if (el.tagName === "P" && cs.overflowX === "visible" && el.scrollWidth > el.clientWidth + 1) bad.push(`overflowing text: <p> ${text}`);
+          }
+          return bad;
+        });
+        expect(offenders).toEqual([]);
+      });
+    }
+  });
+
   test("unprefixed URLs redirect permanently to English and keep the query string", async ({ request }) => {
     const root = await request.get("/", { maxRedirects: 0 });
     expect(root.status()).toBe(308);
@@ -105,7 +162,8 @@ test.describe("marketing site", () => {
     await expect(page.locator("footer")).not.toContainText(/track\.site/i);
     const logo = jsonLd.map((t) => /"publisher":\{[^}]*"logo":\{"@type":"ImageObject","url":"([^"]+)"/.exec(t)?.[1]).find(Boolean);
     expect(logo).toBeTruthy();
-    expect((await page.request.get(logo!)).status()).toBe(200);
+    // the prerendered JSON-LD carries the build-time HOST_MARKETING origin; fetch the asset from the server under test
+    expect((await page.request.get(new URL(logo!).pathname)).status()).toBe(200);
     // language switcher: the German link targets the German version of this article, not /de/<english-slug> blindly
     const deLink = page.locator('a[hreflang="de"][lang="de"]').first();
     await expect(deLink).toHaveAttribute("href", /^\/de\/tracking-knowledge\/[a-z0-9-]+$/);

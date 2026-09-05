@@ -16,8 +16,16 @@ export default defineConfig({
     trace: "retain-on-failure",
     locale: "en-US",
   },
+  // Visual regression baselines (e2e/visual.spec.ts): one file per snapshot name, project and platform under e2e/__screenshots__ (see e2e/README.md).
+  snapshotPathTemplate: "{testDir}/__screenshots__/{arg}-{projectName}-{platform}{ext}",
   projects: [
     { name: "setup", testMatch: /auth\.setup\.ts$/ },
-    { name: "chromium", use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE }, dependencies: ["setup"] },
+    { name: "chromium", use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE }, dependencies: ["setup"], testIgnore: /visual\.spec\.ts$/ },
+    {
+      name: "visual",
+      testMatch: /visual\.spec\.ts$/,
+      use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE, deviceScaleFactor: 1, timezoneId: "Europe/Berlin", contextOptions: { reducedMotion: "reduce" } },
+      dependencies: ["setup"],
+    },
   ],
 });

@@ -1,0 +1,76 @@
+$ turbo run lint
+• turbo 2.10.12
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running lint in 16 packages
+   • Remote caching disabled
+
+@track-site/ui:lint: cache miss, executing 269d2ecf55d900c2
+@track-site/sdk:build: cache hit, replaying logs e31739ebc17874ed
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/catalog:lint: cache hit, replaying logs 8cad391e06f87193
+@track-site/core:lint: cache hit, replaying logs e2ae2e7a7c13a2cd
+@track-site/sdk:lint: cache hit, replaying logs b74f90024628023c
+@track-site/testing:lint: cache hit, replaying logs bdbe04424b48e2df
+@track-site/events:lint: cache hit, replaying logs 983be8e76e33b0e3
+@track-site/catalog:lint: $ eslint src
+@track-site/config:lint: cache hit, replaying logs ea55af0cf29a3ad9
+@track-site/sdk:lint: $ eslint src
+@track-site/policy:lint: cache hit, replaying logs 56246d07cbdec7e4
+@track-site/testing:lint: $ eslint src
+@track-site/core:lint: $ eslint src
+@track-site/events:lint: $ eslint src
+@track-site/config:lint: $ eslint src
+@track-site/policy:lint: $ eslint src
+@track-site/connectors:lint: cache hit, replaying logs 0b94ee023720b4a8
+@track-site/worker:lint: cache hit, replaying logs 24a334c3478289e2
+@track-site/analytics:lint: cache hit, replaying logs bf1d7834379ac57d
+@track-site/connectors:lint: $ eslint src
+@track-site/db:lint: cache hit, replaying logs bcc88885efcd8eda
+@track-site/ai:lint: cache hit, replaying logs 30448d95acf65415
+@track-site/analytics:lint: $ eslint src
+@track-site/web:lint: cache miss, executing bfad9f197be7ec8e
+@track-site/db:lint: $ eslint src
+@track-site/ai:lint: $ eslint src
+@track-site/worker:lint: $ eslint src
+@track-site/queue:lint: cache hit, replaying logs cdbfcdac969ac946
+@track-site/queue:lint: $ eslint src
+@track-site/collector:lint: cache hit, replaying logs 4854822e6134cc1d
+@track-site/collector:lint: $ eslint src
+@track-site/ui:lint: $ eslint src
+@track-site/web:lint: $ eslint .
+@track-site/web:lint: 
+@track-site/web:lint: C:\Users\Soheil\Downloads\track.site\apps\web\scripts\qa\crawl.mjs
+@track-site/web:lint:   1061:11  error  Empty block statement                                                              no-empty
+@track-site/web:lint:   1062:3   error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   1066:3   error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   1091:9   error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   1113:33  error  Expected an assignment or function call and instead saw an expression              @typescript-eslint/no-unused-expressions
+@track-site/web:lint:   1141:3   error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint: 
+@track-site/web:lint: C:\Users\Soheil\Downloads\track.site\apps\web\scripts\qa\lighthouse.mjs
+@track-site/web:lint:    46:7   error  'here' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+@track-site/web:lint:   369:25  error  'lhr' is defined but never used. Allowed unused args must match /^_/u              @typescript-eslint/no-unused-vars
+@track-site/web:lint:   488:5   error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint: 
+@track-site/web:lint: C:\Users\Soheil\Downloads\track.site\apps\web\scripts\qa\responsive-a11y-sweep.mjs
+@track-site/web:lint:   474:5  error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   770:5  error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   777:5  error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   801:7  error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint:   807:3  error  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+@track-site/web:lint: 
+@track-site/web:lint: ✖ 14 problems (14 errors, 0 warnings)
+@track-site/web:lint: 
+@track-site/web:lint: [ELIFECYCLE] Command failed with exit code 1.
+@track-site/web#lint:  ERROR  command (C:\Users\Soheil\Downloads\track.site\apps\web) C:\Users\Soheil\AppData\Roaming\npm\pnpm.cmd run lint exited (1)
+
+ Tasks:    16 successful, 17 total
+Cached:    15 cached, 17 total
+  Time:    23.06s 
+Failed:    @track-site/web#lint
+
+ ERROR  run failed: command  exited (1)
+[ELIFECYCLE] Command failed with exit code 1.

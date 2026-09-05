@@ -1,0 +1,8 @@
+$ pnpm --filter @track-site/web knowledge:validate
+started: 2026-09-05T11:36:28Z
+
+$ node scripts/validate-knowledge-content.mjs && node scripts/migrate-knowledge-frontmatter.mjs --check
+knowledge content: 180 files, 30 groups, locales en/de/fr/es/it/nl, learning paths and featured story valid
+knowledge front matter: 180 files in de/en/es/fr/it/nl, 0 would change, 0 fields added, 0 internal /blog links rewritten
+
+exit code: 0

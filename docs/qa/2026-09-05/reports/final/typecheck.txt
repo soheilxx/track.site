@@ -1,0 +1,48 @@
+$ turbo run typecheck
+• turbo 2.10.12
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running typecheck in 16 packages
+   • Remote caching disabled
+
+@track-site/ui:typecheck: cache miss, executing 4eef2c69e5e3037b
+@track-site/events:typecheck: cache hit, replaying logs 115ae01bdba9442c
+@track-site/events:typecheck: $ tsc --noEmit
+@track-site/sdk:build: cache hit, replaying logs e31739ebc17874ed
+@track-site/catalog:typecheck: cache hit, replaying logs 68834f37fec35c57
+@track-site/catalog:typecheck: $ tsc --noEmit
+@track-site/core:typecheck: cache hit, replaying logs eb44bd533cfa6da1
+@track-site/sdk:typecheck: cache hit, replaying logs 8abd940dae9aa322
+@track-site/sdk:typecheck: $ tsc --noEmit
+@track-site/core:typecheck: $ tsc --noEmit
+@track-site/policy:typecheck: cache hit, replaying logs 4fea005179b134e8
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/policy:typecheck: $ tsc --noEmit
+@track-site/db:typecheck: cache hit, replaying logs 25eb262f41f459fb
+@track-site/db:typecheck: $ tsc --noEmit
+@track-site/connectors:typecheck: cache hit, replaying logs b5a17efcb2a8bdb9
+@track-site/config:typecheck: cache hit, replaying logs 3bcd39ab14f37c2a
+@track-site/queue:typecheck: cache hit, replaying logs bfa7a5411ccf8132
+@track-site/connectors:typecheck: $ tsc --noEmit
+@track-site/config:typecheck: $ tsc --noEmit
+@track-site/web:typecheck: cache miss, executing 8be9438553ff2da2
+@track-site/queue:typecheck: $ tsc --noEmit
+@track-site/analytics:typecheck: cache hit, replaying logs c14d08845cf00e03
+@track-site/collector:typecheck: cache hit, replaying logs 91384e92523cdec2
+@track-site/ai:typecheck: cache hit, replaying logs 70c727b6911a1c9b
+@track-site/collector:typecheck: $ tsc --noEmit
+@track-site/ai:typecheck: $ tsc --noEmit
+@track-site/analytics:typecheck: $ tsc --noEmit
+@track-site/testing:typecheck: cache hit, replaying logs df5e4d23ee2b31d3
+@track-site/worker:typecheck: cache hit, replaying logs e176df822d40b40b
+@track-site/testing:typecheck: $ tsc --noEmit
+@track-site/worker:typecheck: $ tsc --noEmit
+@track-site/ui:typecheck: $ tsc --noEmit
+@track-site/web:typecheck: $ tsc --noEmit
+
+ Tasks:    17 successful, 17 total
+Cached:    15 cached, 17 total
+  Time:    7.064s 
+

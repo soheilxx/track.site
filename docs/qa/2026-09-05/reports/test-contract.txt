@@ -1,0 +1,41 @@
+$ pnpm test:contract
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T11:32:21Z
+
+$ turbo run test:contract
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running test:contract in 16 packages
+   • Remote caching disabled
+
+@track-site/sdk:build: cache hit, replaying logs c6618906c222abd5
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/connectors:test:contract: cache bypass, force executing fef34bef59586a0e
+@track-site/connectors:test:contract: $ vitest run -c vitest.contract.config.ts
+@track-site/connectors:test:contract: 
+@track-site/connectors:test:contract:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/connectors
+@track-site/connectors:test:contract: 
+@track-site/connectors:test:contract:  ✓ src/vendors/meta.contract.test.ts (5 tests) 118ms
+@track-site/connectors:test:contract:  ✓ src/vendors/ga4.contract.test.ts (4 tests) 120ms
+@track-site/connectors:test:contract:  ✓ src/vendors/group2.contract.test.ts (5 tests) 229ms
+@track-site/connectors:test:contract:  ✓ src/vendors/group4.contract.test.ts (10 tests) 232ms
+@track-site/connectors:test:contract:  ✓ src/vendors/group3.contract.test.ts (5 tests) 293ms
+@track-site/connectors:test:contract:  ✓ src/webhook.contract.test.ts (5 tests) 420ms
+@track-site/connectors:test:contract:      ✓ classifies vendor failures, honours retry-after and never follows redirects  346ms
+@track-site/connectors:test:contract:  ✓ src/vendors/group1.contract.test.ts (29 tests) 698ms
+@track-site/connectors:test:contract: 
+@track-site/connectors:test:contract:  Test Files  7 passed (7)
+@track-site/connectors:test:contract:       Tests  63 passed (63)
+@track-site/connectors:test:contract:    Start at  13:32:23
+@track-site/connectors:test:contract:    Duration  1.94s (transform 2.26s, setup 0ms, import 5.83s, tests 2.11s, environment 1ms)
+@track-site/connectors:test:contract: 
+
+ Tasks:    2 successful, 2 total
+Cached:    1 cached, 2 total
+  Time:    3.076s 
+
+
+finished: 2026-09-05T11:32:25Z
+exit code: 0

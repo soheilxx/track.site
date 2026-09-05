@@ -54,30 +54,36 @@ export function AppShell({ user, organization, organizations, workspace, destina
   }, [assistant]);
   const assistantOpen = assistant.open === true;
 
+  // `grid-cols-[minmax(0,1fr)]`: the single column is exactly the viewport width. With an implicit `auto` column the
+  // header's min-content width (switcher + actions) would size the whole shell wider than the viewport, and because the
+  // document has `overflow: hidden` nothing beyond the right edge (account menu, launcher, page actions) could ever be reached.
   return (
-    <div data-testid="app-shell" className="grid h-dvh grid-rows-[auto_minmax(0,1fr)] bg-ground text-ink">
+    <div data-testid="app-shell" className="grid h-dvh grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)] bg-ground text-ink">
       <a href="#main" className="skip-link">
         {t("skipToContent")}
       </a>
-      <header className="flex h-14 shrink-0 items-center gap-1.5 border-b border-line bg-surface px-2 sm:gap-2 sm:px-4">
+      {/* Header budget: the actions on the right never shrink; the workspace switcher truncates. Below `sm` the palette
+          trigger moves into the navigation drawer, the launcher shows its icon only (the safe-area launcher carries the label),
+          the environment indicator sits in the main area below `md` and the palette / launcher labels appear from `lg`. */}
+      <header className="flex h-14 min-w-0 shrink-0 items-center gap-1 border-b border-line bg-surface px-2 sm:gap-2 sm:px-4" data-testid="app-header">
         <IconButton label={navOpen ? t("nav.closeMenu") : t("nav.openMenu")} className="lg:hidden" aria-expanded={navOpen} aria-controls="app-nav-drawer" onClick={() => setNavOpen(true)}>
           <MenuIcon className="size-5" aria-hidden="true" />
         </IconButton>
-        <Link href="/app" aria-label={t("brandHome")} className="mr-1 flex items-center rounded-[var(--radius-control-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:hidden">
+        <Link href="/app" aria-label={t("brandHome")} className="mr-0.5 flex shrink-0 items-center rounded-[var(--radius-control-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:mr-1 lg:hidden">
           <Brand size={26} textClassName="hidden text-base sm:inline" />
         </Link>
         <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-3">
           <WorkspaceSwitcher organization={organization} organizations={organizations} workspace={workspace} />
-          <div className="hidden sm:block">
+          <div className="hidden shrink-0 md:block">
             <EnvironmentIndicator siteId={workspace?.site?.id ?? null} environments={workspace?.environments ?? []} environment={workspace?.environment ?? null} />
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <Button variant="secondary" size="sm" className="hidden md:inline-flex" onClick={() => setPaletteOpen(true)} leadingIcon={<Search className="size-4" aria-hidden="true" />} aria-keyshortcuts="Control+K Meta+K">
+          <Button variant="secondary" size="sm" className="hidden lg:inline-flex" onClick={() => setPaletteOpen(true)} leadingIcon={<Search className="size-4" aria-hidden="true" />} aria-keyshortcuts="Control+K Meta+K">
             <span className="text-ink-3">{t("palette.trigger")}</span>
             <Kbd className="ml-2">Ctrl K</Kbd>
           </Button>
-          <IconButton label={t("palette.title")} className="md:hidden" onClick={() => setPaletteOpen(true)}>
+          <IconButton label={t("palette.title")} className="hidden sm:inline-flex lg:hidden" onClick={() => setPaletteOpen(true)}>
             <Search className="size-5" aria-hidden="true" />
           </IconButton>
           <Button
@@ -89,7 +95,7 @@ export function AppShell({ user, organization, organizations, workspace, destina
             leadingIcon={<Sparkles className="size-4" aria-hidden="true" />}
             data-testid="assistant-launcher"
           >
-            <span className="hidden sm:inline">{t("assistant.launcher")}</span>
+            <span className="hidden lg:inline">{t("assistant.launcher")}</span>
           </Button>
           <UserMenu user={user} role={organization?.role ?? null} onLogout={() => void logout()} />
         </div>
@@ -114,7 +120,7 @@ export function AppShell({ user, organization, organizations, workspace, destina
         {/* `relative`: the scroll area is the containing block of its absolutely positioned descendants (sr-only captions/headings, tooltips), otherwise they escape the clip and grow the document's scrollable overflow */}
         <main id="main" tabIndex={-1} className="relative min-h-0 min-w-0 overflow-y-auto overflow-x-clip outline-none" data-testid="app-main">
           <div className={cn("mx-auto w-full max-w-wide px-4 py-6 sm:px-6 lg:px-8", "pb-24 lg:pb-8")}>
-            <div className="mb-4 sm:hidden">
+            <div className="mb-4 md:hidden">
               <EnvironmentIndicator siteId={workspace?.site?.id ?? null} environments={workspace?.environments ?? []} environment={workspace?.environment ?? null} />
             </div>
             {children}
@@ -134,6 +140,21 @@ export function AppShell({ user, organization, organizations, workspace, destina
 
       <Sheet open={navOpen} onClose={() => setNavOpen(false)} side="left" title={t("nav.menuTitle")} closeLabel={t("nav.closeMenu")} className="max-w-xs">
         <div id="app-nav-drawer" className="-mx-2">
+          {/* below `sm` the header has no room for the palette trigger; it lives at the top of the drawer instead */}
+          <div className="mb-3 px-2 sm:hidden">
+            <Button
+              variant="secondary"
+              className="w-full justify-start"
+              leadingIcon={<Search className="size-4" aria-hidden="true" />}
+              data-testid="palette-trigger-drawer"
+              onClick={() => {
+                setNavOpen(false);
+                setPaletteOpen(true);
+              }}
+            >
+              <span className="text-ink-3">{t("palette.trigger")}</span>
+            </Button>
+          </div>
           <DashboardNav onNavigate={() => setNavOpen(false)} />
         </div>
       </Sheet>

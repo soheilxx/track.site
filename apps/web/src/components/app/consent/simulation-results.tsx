@@ -57,7 +57,8 @@ export async function SimulationResults({ result, policyLabel, countryName, loca
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
+      {/* as many stat cards per row as fit at ≥ 8.5 rem: the results column is ~22 rem when the Track AI panel is docked, where five fixed columns overflowed the card and the main area */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-4">
         <StatCard label={t("allowed")} value={formatNumber(summary.allowed, locale)} tone={summary.allowed ? "ok" : "neutral"} hint={t("stored")} />
         <StatCard label={t("reduced")} value={formatNumber(summary.reduced, locale)} tone={summary.reduced ? "warn" : "neutral"} hint={t("stored")} />
         <StatCard label={t("blocked")} value={formatNumber(summary.blocked, locale)} hint={t("stored")} />
@@ -72,9 +73,10 @@ export async function SimulationResults({ result, policyLabel, countryName, loca
           <CardTitle>{t("consentMode")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          {/* as many columns as fit at ≥ 13 rem each: four fixed columns squeezed "ad_personalization · denied" past the card when the Track AI panel is open */}
+          <ul className="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-2">
             {Object.entries(result.consentMode).map(([flag, value]) => (
-              <li key={flag} className="flex items-center justify-between gap-3 rounded-[var(--radius-control)] border border-line px-3 py-2">
+              <li key={flag} className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-[var(--radius-control)] border border-line px-3 py-2">
                 <span className="font-mono text-xs text-ink">{flag}</span>
                 <Status tone={value === "granted" ? "ok" : "neutral"} indicator="icon">
                   {t(value)}

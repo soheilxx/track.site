@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
-import { ConsentGate, DestinationChip, Diagram, FlowEdge, FlowNode, SignalDot, VisuallyHidden } from "@track-site/ui";
+import { ConsentGate, DestinationChip, Diagram, FlowEdge, FlowNode, ScrollRegion, SignalDot, VisuallyHidden } from "@track-site/ui";
 import { Link } from "@/i18n/navigation";
 import type { MdxComponents } from "@/lib/knowledge-article";
 import type { KnowledgeArticleCopy } from "@/lib/marketing-copy/knowledge-article";
@@ -57,10 +57,12 @@ export function articleMdxComponents(copy: KnowledgeArticleCopy): MdxComponents 
     return <ArticlePre labels={copy.code}>{children}</ArticlePre>;
   }
   function TableBlock({ className: _className, ...props }: ComponentProps<"table">) {
+    // ScrollRegion: keyboard-reachable (`tabindex` + `role="region"`) only while the table is wider than the
+    // column (axe `scrollable-region-focusable`), named with the localized "Table" label.
     return (
-      <div className="my-6 w-full min-w-0 overflow-x-auto">
+      <ScrollRegion label={copy.table} className="my-6">
         <table className="w-full border-collapse text-small" {...props} />
-      </div>
+      </ScrollRegion>
     );
   }
   function Th({ className: _className, ...props }: ComponentProps<"th">) {

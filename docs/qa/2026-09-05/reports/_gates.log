@@ -1,0 +1,9 @@
+host: DESKTOP-B84VQ5F; node v24.18.0; pnpm 11.21.0; HEAD 85fe3b7; started 2026-09-05T11:30:49Z
+typecheck exit 0 (2026-09-05T11:31:07Z)
+lint exit 1 (2026-09-05T11:31:41Z)
+test exit 0 (2026-09-05T11:32:11Z)
+test-integration exit 1 (2026-09-05T11:32:21Z)
+test-contract exit 0 (2026-09-05T11:32:25Z)
+build exit 0 (2026-09-05T11:33:03Z)
+all done 2026-09-05T11:33:03Z
+test-integration (serial) exit 0 (2026-09-05T11:36:21Z)

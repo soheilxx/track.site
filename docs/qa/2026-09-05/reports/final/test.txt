@@ -1,0 +1,277 @@
+$ turbo run test
+• turbo 2.10.12
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running test in 16 packages
+   • Remote caching disabled
+
+@track-site/sdk:build: cache hit, replaying logs e31739ebc17874ed
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/config:test: cache hit, replaying logs 8c6f3b39587a6453
+@track-site/catalog:test: cache hit, replaying logs 9477c1022e1fb1c6
+@track-site/events:test: cache hit, replaying logs 805cf2011c42f515
+@track-site/catalog:test: $ vitest run
+@track-site/config:test: $ vitest run -c vitest.config.ts
+@track-site/core:test: cache hit, replaying logs eff41ddce2099068
+@track-site/config:test: 
+@track-site/config:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/config[39m
+@track-site/config:test: 
+@track-site/config:test:  [32m✓[39m src/config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+@track-site/config:test: 
+@track-site/config:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/catalog:test: 
+@track-site/config:test: [2m      Tests [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+@track-site/config:test: [2m   Start at [22m 11:02:08
+@track-site/catalog:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/catalog[39m
+@track-site/config:test: [2m   Duration [22m 2.30s[2m (transform 774ms, setup 0ms, import 1.23s, tests 42ms, environment 0ms)[22m
+@track-site/catalog:test: 
+@track-site/config:test: 
+@track-site/catalog:test:  [32m✓[39m src/catalog.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+@track-site/catalog:test: 
+@track-site/catalog:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/catalog:test: [2m      Tests [22m [1m[32m20 passed[39m[22m[90m (20)[39m
+@track-site/catalog:test: [2m   Start at [22m 11:02:07
+@track-site/catalog:test: [2m   Duration [22m 1.78s[2m (transform 676ms, setup 0ms, import 839ms, tests 167ms, environment 0ms)[22m
+@track-site/catalog:test: 
+@track-site/db:test: cache hit, replaying logs 8ba3a796bbee65e1
+@track-site/sdk:test: cache hit, replaying logs c03b2703d4dd4463
+@track-site/connectors:test: cache hit, replaying logs 88a4467fc15ba03e
+@track-site/events:test: $ vitest run
+@track-site/policy:test: cache hit, replaying logs 24223891bbdeb65a
+@track-site/connectors:test: $ vitest run -c vitest.config.ts
+@track-site/connectors:test: 
+@track-site/connectors:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/connectors[39m
+@track-site/connectors:test: 
+@track-site/connectors:test:  [32m✓[39m src/ssrf.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+@track-site/connectors:test:  [32m✓[39m src/matrix.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+@track-site/connectors:test: 
+@track-site/connectors:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@track-site/connectors:test: [2m      Tests [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+@track-site/connectors:test: [2m   Start at [22m 11:02:09
+@track-site/connectors:test: [2m   Duration [22m 3.08s[2m (transform 1.40s, setup 0ms, import 2.76s, tests 89ms, environment 0ms)[22m
+@track-site/connectors:test: 
+@track-site/policy:test: $ vitest run
+@track-site/policy:test: 
+@track-site/policy:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/policy[39m
+@track-site/policy:test: 
+@track-site/policy:test:  [32m✓[39m src/policy.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@track-site/policy:test: 
+@track-site/policy:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/policy:test: [2m      Tests [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+@track-site/policy:test: [2m   Start at [22m 11:02:08
+@track-site/policy:test: [2m   Duration [22m 2.52s[2m (transform 1.11s, setup 0ms, import 1.61s, tests 25ms, environment 0ms)[22m
+@track-site/policy:test: 
+@track-site/events:test: 
+@track-site/events:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/events[39m
+@track-site/events:test: 
+@track-site/events:test:  [32m✓[39m src/events.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+@track-site/events:test: 
+@track-site/events:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/events:test: [2m      Tests [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+@track-site/events:test: [2m   Start at [22m 11:02:08
+@track-site/events:test: [2m   Duration [22m 2.06s[2m (transform 655ms, setup 0ms, import 972ms, tests 37ms, environment 0ms)[22m
+@track-site/events:test: 
+@track-site/db:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/db:test: 
+@track-site/db:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/db[39m
+@track-site/db:test: 
+@track-site/db:test: No test files found, exiting with code 0
+@track-site/db:test: 
+@track-site/db:test: [2minclude: [22m[33msrc/**/*.test.ts[39m
+@track-site/db:test: [2mexclude:  [22m[33msrc/**/*.integration.test.ts[39m
+@track-site/db:test: 
+@track-site/sdk:test: $ vitest run
+@track-site/sdk:test: 
+@track-site/sdk:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/sdk[39m
+@track-site/sdk:test: 
+@track-site/sdk:test:  [32m✓[39m src/storage.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@track-site/sdk:test:  [32m✓[39m src/util.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@track-site/sdk:test:  [32m✓[39m src/sdk.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 629[2mms[22m[39m
+@track-site/sdk:test: 
+@track-site/sdk:test: [2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+@track-site/sdk:test: [2m      Tests [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+@track-site/sdk:test: [2m   Start at [22m 11:02:08
+@track-site/sdk:test: [2m   Duration [22m 4.76s[2m (transform 238ms, setup 0ms, import 427ms, tests 643ms, environment 8.70s)[22m
+@track-site/sdk:test: 
+@track-site/web:test: cache miss, executing c8838697567e92b4
+@track-site/analytics:test: cache hit, replaying logs 29b8c596a81035d4
+@track-site/queue:test: cache hit, replaying logs 6c27106a83803ae6
+@track-site/queue:test: $ vitest run -c vitest.config.ts
+@track-site/queue:test: 
+@track-site/queue:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/queue[39m
+@track-site/queue:test: 
+@track-site/queue:test:  [32m✓[39m src/queue.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@track-site/queue:test: 
+@track-site/queue:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/queue:test: [2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+@track-site/queue:test: [2m   Start at [22m 11:02:12
+@track-site/queue:test: [2m   Duration [22m 1.24s[2m (transform 511ms, setup 0ms, import 948ms, tests 14ms, environment 0ms)[22m
+@track-site/queue:test: 
+@track-site/core:test: $ vitest run
+@track-site/core:test: 
+@track-site/core:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/core[39m
+@track-site/core:test: 
+@track-site/core:test:  [32m✓[39m src/ids/tracking-id.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@track-site/core:test:  [32m✓[39m src/crypto/crypto.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+@track-site/core:test:  [32m✓[39m src/url/scrub.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/core:test:  [32m✓[39m src/pii/detect.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 569[2mms[22m[39m
+@track-site/core:test:      [33m[2m✓[22m[39m detects unprefixed base64 key material such as aws secret access keys [33m 402[2mms[22m[39m
+@track-site/core:test:  [32m✓[39m src/retry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@track-site/core:test:  [32m✓[39m src/site-inspect.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/core:test: 
+@track-site/core:test: [2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+@track-site/core:test: [2m      Tests [22m [1m[32m35 passed[39m[22m[90m (35)[39m
+@track-site/core:test: [2m   Start at [22m 11:02:07
+@track-site/core:test: [2m   Duration [22m 1.28s[2m (transform 372ms, setup 0ms, import 667ms, tests 737ms, environment 1ms)[22m
+@track-site/core:test: 
+@track-site/analytics:test: $ vitest run -c vitest.config.ts
+@track-site/analytics:test: 
+@track-site/analytics:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/analytics[39m
+@track-site/analytics:test: 
+@track-site/analytics:test:  [32m✓[39m src/analytics.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/analytics:test: 
+@track-site/analytics:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/analytics:test: [2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@track-site/analytics:test: [2m   Start at [22m 11:02:09
+@track-site/analytics:test: [2m   Duration [22m 2.28s[2m (transform 729ms, setup 0ms, import 1.15s, tests 10ms, environment 0ms)[22m
+@track-site/analytics:test: 
+@track-site/collector:test: cache hit, replaying logs 82d9c3888d496fef
+@track-site/collector:test: $ vitest run -c vitest.config.ts
+@track-site/collector:test: 
+@track-site/collector:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/apps/collector[39m
+@track-site/collector:test: 
+@track-site/collector:test:  [32m✓[39m src/shop-inbound.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+@track-site/collector:test:  [32m✓[39m src/affiliate-inbound.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+@track-site/collector:test:  [32m✓[39m src/app.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 251[2mms[22m[39m
+@track-site/collector:test: 
+@track-site/collector:test: [2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+@track-site/collector:test: [2m      Tests [22m [1m[32m24 passed[39m[22m[90m (24)[39m
+@track-site/collector:test: [2m   Start at [22m 11:02:13
+@track-site/collector:test: [2m   Duration [22m 7.74s[2m (transform 2.32s, setup 0ms, import 15.30s, tests 571ms, environment 0ms)[22m
+@track-site/collector:test: 
+@track-site/ai:test: cache hit, replaying logs f37dec5617eda8ef
+@track-site/worker:test: cache hit, replaying logs 2f8e0975968662b4
+@track-site/worker:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/worker:test: 
+@track-site/worker:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/apps/worker[39m
+@track-site/worker:test: 
+@track-site/worker:test:  [32m✓[39m src/jobs/alerts.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@track-site/worker:test: 
+@track-site/worker:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+@track-site/worker:test: [2m      Tests [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+@track-site/worker:test: [2m   Start at [22m 11:02:13
+@track-site/worker:test: [2m   Duration [22m 5.41s[2m (transform 2.45s, setup 0ms, import 4.72s, tests 22ms, environment 0ms)[22m
+@track-site/worker:test: 
+@track-site/ai:test: $ vitest run -c vitest.config.ts
+@track-site/ai:test: 
+@track-site/ai:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/packages/ai[39m
+@track-site/ai:test: 
+@track-site/ai:test:  [32m✓[39m src/turn-registry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/ui-events.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 159[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/scope.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 313[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/ai.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 836[2mms[22m[39m
+@track-site/ai:test:      [33m[2m✓[22m[39m withholds approval tokens from the model-facing output [33m 635[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/agent.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 978[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/state-machine.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/evals/injection.eval.test.ts [2m([22m[2m64 tests[22m[2m)[22m[33m 1758[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/tools/registry.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/prompts.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/tools/normalize.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/ui-schema.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/tools/destinations.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/tools/read.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+@track-site/ai:test:  [32m✓[39m src/tools/draft.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+@track-site/ai:test: 
+@track-site/ai:test: [2m Test Files [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+@track-site/ai:test: [2m      Tests [22m [1m[32m170 passed[39m[22m[90m (170)[39m
+@track-site/ai:test: [2m   Start at [22m 11:02:13
+@track-site/ai:test: [2m   Duration [22m 8.16s[2m (transform 9.10s, setup 0ms, import 26.63s, tests 4.31s, environment 3ms)[22m
+@track-site/ai:test: 
+@track-site/web:test: $ vitest run -c vitest.config.ts --passWithNoTests
+@track-site/web:test: 
+@track-site/web:test: [1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90mC:/Users/Soheil/Downloads/track.site/apps/web[39m
+@track-site/web:test: 
+@track-site/web:test:  [32m✓[39m src/lib/brand-guard.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 414[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m finds no visible 'track.site' outside the allow-list in messages, components, app routes, marketing copy and knowledge [33m 354[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/knowledge-search.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 1089[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m finds the published articles of both locales with typos and umlauts [33m 1048[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/i18n/namespaces.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1812[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m ships every namespace for every active locale with identical keys and placeholders [33m 1798[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/living-ai-core/blobs.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 248[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/i18n/routing.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 271[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/assistant-panel.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 332[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/integrations/catalog.test.ts [2m([22m[2m37 tests[22m[2m)[22m[33m 318[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/living-ai-core/living-ai-core.dom.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 317[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/living-ai-core/living-ai-core.ssr.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/assistant-chat.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1183[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m renders every message below the threshold and windows a 250-message conversation with spacers [33m 589[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/pricing/pricing-helpers.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/knowledge-article.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/format.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/marketing-copy/pick.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/app/api/ai/chat/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/render-smoke.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1452[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m pricing: toggle, plan cards, enterprise panel, included strip, tools, comparison matrix, event definition, overage, trial and FAQ [33m 329[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m knowledge hub: hero + search, featured story, topic worlds, learning paths, guides, fresh lists, directory and product CTA [33m 837[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/knowledge/article/mdx-components.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/app/api/ai/confirm/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/living-ai-core/state-machine.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/consent-simulator.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/ui-events.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/app/api/ai/dev-fixture/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/app/api/ai/dev-fixture/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/proxy.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/app/api/ai/wizard/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/demo/state.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/features/copy.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/releases.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/events-lineage.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/team.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/seo.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/insights-attribution.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/chat-reducer.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/usage.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/data-quality.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/shell/living-ai-core/tier.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/pricing/plan-selection.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/ai/turn.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 14[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/assistant-ui-state.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/command-center.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/mail/templates/templates.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/ui-client-boundary.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/secondary/copy.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/workspace-moves.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/destination-health.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/alerts.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/consent-coverage.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/demo/player.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/auth/domain.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/legal-copy/legal-copy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/virtual-list.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/app/alerts/threshold.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/insights-legacy.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/marketing/localized-paths.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/revenue-leaks.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/server/consent-policy.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/components/chat/next-action.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@track-site/web:test:  [32m✓[39m src/lib/knowledge.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 13985[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m publishes 30 groups in every active locale, every group in every locale [33m 1117[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m has unique, URL-safe slugs and a translationGroupId per locale [33m 422[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m uses only catalogued topics, content types and levels and has the required fields [33m 366[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m keeps the same topic taxonomy across the language versions of a group [33m 341[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m resolves alternates per active locale so hreflang and the language switcher stay on the same article [33m 1117[2mms[22m[39m
+@track-site/web:test:      [33m[2m✓[22m[39m uses the visible brand 'Track' in every article; 'track.site' only as a domain or address (supplement §2) [33m 10355[2mms[22m[39m
+@track-site/web:test: 
+@track-site/web:test: [2m Test Files [22m [1m[32m58 passed[39m[22m[90m (58)[39m
+@track-site/web:test: [2m      Tests [22m [1m[32m500 passed[39m[22m[90m (500)[39m
+@track-site/web:test: [2m   Start at [22m 13:50:16
+@track-site/web:test: [2m   Duration [22m 14.74s[2m (transform 8.74s, setup 0ms, import 38.20s, tests 22.59s, environment 5.41s)[22m
+@track-site/web:test: 
+
+ Tasks:    15 successful, 15 total
+Cached:    14 cached, 15 total
+  Time:    15.943s 
+
+ WARNING  no output files found for task @track-site/web#test. Please check your `outputs` key in `turbo.json`

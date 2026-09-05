@@ -1,0 +1,1058 @@
+{
+  "slug": "en-home",
+  "url": "http://localhost:3006/en",
+  "status": 200,
+  "finalUrl": "http://localhost:3006/en",
+  "loadMs": 1693,
+  "steps": [
+    {
+      "step": 1,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "#main",
+      "label": "Skip to content",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 125,
+        "h": 37
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset -2px",
+        "rect.y: -44 → 0"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset -2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-01.webp"
+    },
+    {
+      "step": 2,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en",
+      "label": "Track – home",
+      "rect": {
+        "x": 152,
+        "y": 10,
+        "w": 89,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-02.webp"
+    },
+    {
+      "step": 3,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": "_R_4l5uivb_-product-button",
+      "testid": null,
+      "href": null,
+      "label": "Product",
+      "rect": {
+        "x": 416,
+        "y": 12,
+        "w": 97,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-03.webp"
+    },
+    {
+      "step": 4,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": "_R_4l5uivb_-integrations-button",
+      "testid": null,
+      "href": null,
+      "label": "Integrations",
+      "rect": {
+        "x": 516,
+        "y": 12,
+        "w": 124,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-04.webp"
+    },
+    {
+      "step": 5,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": "_R_4l5uivb_-resources-button",
+      "testid": null,
+      "href": null,
+      "label": "Resources",
+      "rect": {
+        "x": 644,
+        "y": 12,
+        "w": 115,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-05.webp"
+    },
+    {
+      "step": 6,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/pricing",
+      "label": "Pricing",
+      "rect": {
+        "x": 763,
+        "y": 12,
+        "w": 71,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-06.webp"
+    },
+    {
+      "step": 7,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Language: English",
+      "rect": {
+        "x": 1009,
+        "y": 12,
+        "w": 112,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-07.webp"
+    },
+    {
+      "step": 8,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/login",
+      "label": "Log in",
+      "rect": {
+        "x": 1128,
+        "y": 14,
+        "w": 65,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-08.webp"
+    },
+    {
+      "step": 9,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/signup",
+      "label": "Start free",
+      "rect": {
+        "x": 1201,
+        "y": 14,
+        "w": 87,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-09.webp"
+    },
+    {
+      "step": 10,
+      "body": false,
+      "tag": "input",
+      "role": null,
+      "id": "_R_8oinn5uivb_-domain",
+      "testid": null,
+      "href": null,
+      "label": "",
+      "rect": {
+        "x": 72,
+        "y": 611,
+        "w": 309,
+        "h": 48
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.boxShadow: none → rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.497935 -0.0206826 -0.224598 / 0.2) 0px 0px 0px 2px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+        "self.border: rgb(212, 212, 216) rgb(212, 212, 216) → rgb(31, 79, 224) rgb(31, 79, 224)"
+      ],
+      "focusedOutline": "none",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, oklab(0.497935 -0.0206826 -0.224598 / 0.2) 0px 0px 0px 2px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-10.webp"
+    },
+    {
+      "step": 11,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Start with your domain",
+      "rect": {
+        "x": 389,
+        "y": 611,
+        "w": 245,
+        "h": 48
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-11.webp"
+    },
+    {
+      "step": 12,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/how-it-works",
+      "label": "See how it works",
+      "rect": {
+        "x": 72,
+        "y": 825,
+        "w": 134,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-12.webp"
+    },
+    {
+      "step": 13,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Pause stream",
+      "rect": {
+        "x": 1223,
+        "y": 183,
+        "w": 40,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-13.webp"
+    },
+    {
+      "step": 14,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Next event",
+      "rect": {
+        "x": 1267,
+        "y": 183,
+        "w": 40,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-14.webp"
+    },
+    {
+      "step": 15,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Reset demo",
+      "rect": {
+        "x": 1311,
+        "y": 183,
+        "w": 40,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-15.webp"
+    },
+    {
+      "step": 16,
+      "body": false,
+      "tag": "button",
+      "role": "tab",
+      "id": "_r_4_-tab-overview",
+      "testid": null,
+      "href": null,
+      "label": "Overview",
+      "rect": {
+        "x": 703,
+        "y": 252,
+        "w": 88,
+        "h": 40
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-16.webp"
+    },
+    {
+      "step": 17,
+      "body": false,
+      "tag": "div",
+      "role": "tabpanel",
+      "id": "_r_4_-panel-overview",
+      "testid": null,
+      "href": null,
+      "label": "ACCEPTED 7 DELIVERED 5 DUPLICATES REMOVED 1 BLOCKED BY CONSE",
+      "rect": {
+        "x": 699,
+        "y": 308,
+        "w": 652,
+        "h": 563
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-17.webp"
+    },
+    {
+      "step": 18,
+      "body": false,
+      "tag": "summary",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "› How the score is calculated",
+      "rect": {
+        "x": 716,
+        "y": 690,
+        "w": 194,
+        "h": 32
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-18.webp"
+    },
+    {
+      "step": 19,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Open AI Setup",
+      "rect": {
+        "x": 1056,
+        "y": 826,
+        "w": 122,
+        "h": 36
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-19.webp"
+    },
+    {
+      "step": 20,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/meta",
+      "label": "M Meta Ads (Facebook & Instagram) Browser · Server · Offline",
+      "rect": {
+        "x": 152,
+        "y": 405,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-20.webp"
+    },
+    {
+      "step": 21,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/google-ads",
+      "label": "G Google Ads & YouTube Ads Browser · Server · Offline",
+      "rect": {
+        "x": 290,
+        "y": 405,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-21.webp"
+    },
+    {
+      "step": 22,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/tiktok",
+      "label": "T TikTok Ads Browser · Server · Offline",
+      "rect": {
+        "x": 428,
+        "y": 405,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-22.webp"
+    },
+    {
+      "step": 23,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/linkedin",
+      "label": "L LinkedIn Ads Browser · Server · Offline",
+      "rect": {
+        "x": 566,
+        "y": 405,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-23.webp"
+    },
+    {
+      "step": 24,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/reddit",
+      "label": "R Reddit Ads Browser · Server",
+      "rect": {
+        "x": 152,
+        "y": 503,
+        "w": 130,
+        "h": 73
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-24.webp"
+    },
+    {
+      "step": 25,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/microsoft",
+      "label": "MS Microsoft Advertising Browser · Server · Offline",
+      "rect": {
+        "x": 290,
+        "y": 503,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-25.webp"
+    },
+    {
+      "step": 26,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/pinterest",
+      "label": "P Pinterest Ads Browser · Server · Offline",
+      "rect": {
+        "x": 428,
+        "y": 503,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-26.webp"
+    },
+    {
+      "step": 27,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/snapchat",
+      "label": "S Snapchat Ads Browser · Server · Offline",
+      "rect": {
+        "x": 566,
+        "y": 503,
+        "w": 130,
+        "h": 89
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-27.webp"
+    },
+    {
+      "step": 28,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/google-analytics",
+      "label": "GA Google Analytics 4 Browser · Server",
+      "rect": {
+        "x": 720,
+        "y": 405,
+        "w": 272,
+        "h": 56
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-28.webp"
+    },
+    {
+      "step": 29,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/shopify",
+      "label": "Sh Shopify Browser · Server",
+      "rect": {
+        "x": 1016,
+        "y": 405,
+        "w": 272,
+        "h": 56
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-29.webp"
+    },
+    {
+      "step": 30,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/woocommerce",
+      "label": "Wo WooCommerce Browser · Server",
+      "rect": {
+        "x": 1016,
+        "y": 469,
+        "w": 272,
+        "h": 56
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-30.webp"
+    },
+    {
+      "step": 31,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations/shopware",
+      "label": "Sw Shopware 6 Browser · Server",
+      "rect": {
+        "x": 1016,
+        "y": 533,
+        "w": 272,
+        "h": 56
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-31.webp"
+    },
+    {
+      "step": 32,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/integrations",
+      "label": "All integrations",
+      "rect": {
+        "x": 152,
+        "y": 624,
+        "w": 120,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-32.webp"
+    },
+    {
+      "step": 33,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/how-it-works",
+      "label": "Read the full walkthrough",
+      "rect": {
+        "x": 124,
+        "y": 428,
+        "w": 190,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-33.webp"
+    },
+    {
+      "step": 34,
+      "body": false,
+      "tag": "button",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Copy snippet",
+      "rect": {
+        "x": 1210,
+        "y": 355,
+        "w": 112,
+        "h": 32
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-34.webp"
+    },
+    {
+      "step": 35,
+      "body": false,
+      "tag": "pre",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "<script async src=\"https://cdn.track.site/v1/tracker.js\" dat",
+      "rect": {
+        "x": 653,
+        "y": 394,
+        "w": 681,
+        "h": 66
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(77, 130, 255) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(77, 130, 255) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-35.webp"
+    },
+    {
+      "step": 36,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/features/ai-setup",
+      "label": "How Track AI works",
+      "rect": {
+        "x": 152,
+        "y": 428,
+        "w": 154,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-36.webp"
+    },
+    {
+      "step": 37,
+      "body": false,
+      "tag": "pre",
+      "role": "region",
+      "id": null,
+      "testid": null,
+      "href": null,
+      "label": "Draft v15 — review before publishing",
+      "rect": {
+        "x": 794,
+        "y": 312,
+        "w": 452,
+        "h": 83
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-37.webp"
+    },
+    {
+      "step": 38,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/security",
+      "label": "Security",
+      "rect": {
+        "x": 152,
+        "y": 428,
+        "w": 56,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-38.webp"
+    },
+    {
+      "step": 39,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/privacy",
+      "label": "Privacy",
+      "rect": {
+        "x": 232,
+        "y": 428,
+        "w": 50,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-39.webp"
+    },
+    {
+      "step": 40,
+      "body": false,
+      "tag": "a",
+      "role": null,
+      "id": null,
+      "testid": null,
+      "href": "/en/data-processing",
+      "label": "Data processing (DPA)",
+      "rect": {
+        "x": 306,
+        "y": 428,
+        "w": 151,
+        "h": 44
+      },
+      "inViewport": true,
+      "focusVisible": true,
+      "visibleIndicator": true,
+      "diff": [
+        "self.outline: none → solid 2px rgb(31, 79, 224) offset 2px"
+      ],
+      "focusedOutline": "solid 2px rgb(31, 79, 224) offset 2px",
+      "focusedBoxShadow": "none",
+      "sameAsPrevious": false,
+      "screenshot": "docs/qa/2026-09-05/recheck/screenshots/keyboard/en-home/tab-40.webp"
+    }
+  ],
+  "summary": {
+    "steps": 40,
+    "focusedElements": 40,
+    "bodyFocus": 0,
+    "withoutVisibleIndicator": 0,
+    "notFocusVisible": 0
+  }
+}

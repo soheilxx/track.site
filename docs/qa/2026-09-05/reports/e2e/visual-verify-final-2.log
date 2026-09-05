@@ -1,0 +1,18 @@
+
+Running 12 tests using 1 worker
+
+  ok  1 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › home at 375px matches the baseline (2.9s)
+  ok  2 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › home at 1440px matches the baseline (3.4s)
+  ok  3 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › pricing at 375px matches the baseline (3.0s)
+  ok  4 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › pricing at 1440px matches the baseline (4.8s)
+  ok  5 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › knowledge-hub at 375px matches the baseline (4.4s)
+  ok  6 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › knowledge-hub at 1440px matches the baseline (5.2s)
+  ok  7 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 375px matches the baseline (3.7s)
+  ok  8 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › article-consent-mode-v2-guide at 1440px matches the baseline (3.7s)
+  ok  9 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › login at 375px matches the baseline (2.1s)
+  ok 10 [visual] › e2e\visual.spec.ts:92:7 › public pages (anonymous visitor) › login at 1440px matches the baseline (3.2s)
+  ok 11 [visual] › e2e\visual.spec.ts:106:7 › dashboard (stored owner session) › app-overview at 375px matches the baseline (4.3s)
+  ok 12 [visual] › e2e\visual.spec.ts:106:7 › dashboard (stored owner session) › app-overview at 1440px matches the baseline (3.0s)
+
+  12 passed (45.5s)
+exit=0

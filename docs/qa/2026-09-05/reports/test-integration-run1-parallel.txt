@@ -1,0 +1,92 @@
+$ pnpm test:integration
+cwd: /c/Users/Soheil/Downloads/track.site
+started: 2026-09-05T11:32:11Z
+
+$ turbo run test:integration
+
+   • Packages in scope: @track-site/ai, @track-site/analytics, @track-site/catalog, @track-site/collector, @track-site/config, @track-site/connectors, @track-site/core, @track-site/db, @track-site/events, @track-site/policy, @track-site/queue, @track-site/sdk, @track-site/testing, @track-site/ui, @track-site/web, @track-site/worker
+   • Running test:integration in 16 packages
+   • Remote caching disabled
+
+@track-site/db:test:integration: cache bypass, force executing fc256744b2727c01
+@track-site/sdk:build: cache hit, replaying logs c6618906c222abd5
+@track-site/sdk:build: $ tsx scripts/build.ts
+@track-site/sdk:build: warning: no CONFIG_SIGNING_PUBLIC_KEY set; the built tracker will reject every config (fail closed)
+@track-site/sdk:build: tracker.js built: 36689 bytes (raw), keys: none
+@track-site/analytics:test:integration: cache bypass, force executing 9fddf35d1e6ca1e3
+@track-site/worker:test:integration: cache bypass, force executing 618ec59e4f18b7fc
+@track-site/queue:test:integration: cache bypass, force executing 054d32b5444d0665
+@track-site/collector:test:integration: cache bypass, force executing 3a167a45803a7e9b
+@track-site/web:test:integration: cache bypass, force executing 9d60cffd9b983197
+@track-site/db:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/analytics:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/worker:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/web:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/collector:test:integration: $ vitest run -c vitest.integration.config.ts --passWithNoTests
+@track-site/queue:test:integration: $ vitest run -c vitest.integration.config.ts
+@track-site/db:test:integration: 
+@track-site/db:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/db
+@track-site/db:test:integration: 
+@track-site/analytics:test:integration: 
+@track-site/analytics:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/analytics
+@track-site/analytics:test:integration: 
+@track-site/worker:test:integration: 
+@track-site/worker:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/worker
+@track-site/worker:test:integration: 
+@track-site/web:test:integration: 
+@track-site/web:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/web
+@track-site/web:test:integration: 
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/apps/collector
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration: No test files found, exiting with code 0
+@track-site/collector:test:integration: 
+@track-site/collector:test:integration: include: src/**/*.integration.test.ts
+@track-site/collector:test:integration: exclude:  **/node_modules/**, **/.git/**
+@track-site/collector:test:integration: 
+@track-site/queue:test:integration: 
+@track-site/queue:test:integration:  RUN  v4.1.11 C:/Users/Soheil/Downloads/track.site/packages/queue
+@track-site/queue:test:integration: 
+@track-site/web:test:integration: No test files found, exiting with code 1
+@track-site/web:test:integration: 
+@track-site/web:test:integration: include: src/**/*.integration.test.ts
+@track-site/web:test:integration: exclude:  **/node_modules/**, **/.git/**
+@track-site/web:test:integration: 
+@track-site/web:test:integration: 
+@track-site/web:test:integration: ⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+@track-site/web:test:integration: error: deadlock detected
+@track-site/web:test:integration:  ❯ ../../node_modules/.pnpm/pg-pool@3.14.0_pg@8.23.0/node_modules/pg-pool/index.js:45:11
+@track-site/web:test:integration:  ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+@track-site/web:test:integration:  ❯ Object.globalSetup [as setup] ../../packages/db/src/testing/global-setup.ts:30:7
+@track-site/web:test:integration:      28|     if (names.length) {
+@track-site/web:test:integration:      29|       await pool.query(`SET session_replication_role = replica`);
+@track-site/web:test:integration:      30|       await pool.query(`TRUNCATE ${names.join(", ")} CASCADE`);
+@track-site/web:test:integration:        |       ^
+@track-site/web:test:integration:      31|     }
+@track-site/web:test:integration:      32|   } finally {
+@track-site/web:test:integration:  ❯ TestProject._initializeGlobalSetup ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:10813:21
+@track-site/web:test:integration:  ❯ Vitest.initializeGlobalSetup ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13812:35
+@track-site/web:test:integration:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13655:6
+@track-site/web:test:integration:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13684:11
+@track-site/web:test:integration:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13546:19
+@track-site/web:test:integration:  ❯ startVitest ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:14621:8
+@track-site/web:test:integration:  ❯ start ../../node_modules/.pnpm/vitest@4.1.11_@types+node@2_a078e1b5fc0e7967277d4fe071df9bd8/node_modules/vitest/dist/chunks/cac.uFydS1Z4.js:2340:15
+@track-site/web:test:integration: 
+@track-site/web:test:integration: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+@track-site/web:test:integration: Serialized Error: { length: 329, severity: 'ERROR', code: '40P01', detail: 'Process 33828 waits for AccessExclusiveLock on relation 50357 of database 38720; blocked by process 26196.\nProcess 26196 waits for AccessExclusiveLock on relation 40044 of database 38720; blocked by process 33828.', hint: 'See server log for query details.', position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: undefined, table: undefined, dataType: undefined, constraint: undefined, file: 'deadlock.c', routine: 'DeadLockReport' }
+@track-site/web:test:integration: 
+@track-site/web:test:integration: 
+@track-site/web:test:integration: 
+@track-site/web:test:integration: [ELIFECYCLE] Command failed with exit code 1.
+@track-site/web#test:integration:  ERROR  command (C:\Users\Soheil\Downloads\track.site\apps\web) C:\Users\Soheil\AppData\Roaming\npm\pnpm.cmd run test:integration exited (1)
+
+ Tasks:    2 successful, 7 total
+Cached:    1 cached, 7 total
+  Time:    9.414s 
+Failed:    @track-site/web#test:integration
+
+ ERROR  run failed: command  exited (1)
+[ELIFECYCLE] Command failed with exit code 1.
+
+finished: 2026-09-05T11:32:21Z
+exit code: 1

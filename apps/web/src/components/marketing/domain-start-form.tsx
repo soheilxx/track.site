@@ -83,7 +83,9 @@ export function DomainStartForm({ copy }: { copy?: DomainStartFormCopy }) {
           {texts.help}
         </p>
       </div>
-      <Button type="submit" size="lg" loading={pending} className="sm:h-12">
+      {/* below `sm` the button spans the column and its label may wrap: a long localized label ("Commencer avec votre domaine")
+          must not force the hero column past a 320 px viewport */}
+      <Button type="submit" size="lg" loading={pending} className="w-full whitespace-normal sm:h-12 sm:w-auto sm:whitespace-nowrap">
         {texts.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </Button>
     </form>

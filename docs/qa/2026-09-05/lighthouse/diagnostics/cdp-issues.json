@@ -1,0 +1,321 @@
+{
+  "/en": {
+    "status": 200,
+    "url": "http://localhost:3002/en",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Track – AI-first tag manager and server-side event router",
+    "issues": [],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js"
+      }
+    ]
+  },
+  "/en/pricing": {
+    "status": 200,
+    "url": "http://localhost:3002/en/pricing",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Pricing · Track",
+    "issues": [],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/pricing"
+      }
+    ]
+  },
+  "/en/tracking-knowledge": {
+    "status": 200,
+    "url": "http://localhost:3002/en/tracking-knowledge",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Tracking Knowledge · Track",
+    "issues": [],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/tracking-knowledge"
+      }
+    ]
+  },
+  "/en/tracking-knowledge/consent-mode-v2-guide": {
+    "status": 200,
+    "url": "http://localhost:3002/en/tracking-knowledge/consent-mode-v2-guide",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Consent Mode v2 without the guesswork · Track",
+    "issues": [],
+    "console": []
+  },
+  "/en/integrations": {
+    "status": 200,
+    "url": "http://localhost:3002/en/integrations",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Integrations · Track",
+    "issues": [],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/integrations"
+      }
+    ]
+  },
+  "/en/login": {
+    "status": 200,
+    "url": "http://localhost:3002/en/login",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Welcome back · Track",
+    "issues": [
+      {
+        "code": "ContentSecurityPolicyIssue",
+        "violatedDirective": "script-src",
+        "isReportOnly": false,
+        "violationType": "kEvalViolation",
+        "source": {
+          "scriptId": "23",
+          "url": "http://localhost:3002/_next/static/chunks/3q02uj3y4r8r8.js",
+          "lineNumber": 0,
+          "columnNumber": 3937
+        }
+      }
+    ],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/en/login"
+      }
+    ]
+  },
+  "/de": {
+    "status": 200,
+    "url": "http://localhost:3002/de",
+    "lang": "de",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Track – AI-first Tag Manager und Server-Side Event Router",
+    "issues": [],
+    "console": [
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/de"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/de"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/de"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js"
+      },
+      {
+        "type": "error",
+        "text": "Error: <svg> attribute height: Expected length, \"auto\".",
+        "location": "http://localhost:3002/_next/static/chunks/0x8kzgkz_i9l-.js"
+      }
+    ]
+  },
+  "/app": {
+    "status": 200,
+    "url": "http://localhost:3002/app",
+    "lang": "en",
+    "scrollWidth": 412,
+    "clientWidth": 412,
+    "title": "Track",
+    "issues": [],
+    "console": []
+  }
+}

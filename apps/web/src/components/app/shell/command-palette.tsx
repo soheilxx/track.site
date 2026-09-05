@@ -74,7 +74,7 @@ export function CommandPalette({
         <Command.Input
           autoFocus
           placeholder={t("palette.placeholder")}
-          className="mb-2 h-11 w-full rounded-[var(--radius-control)] border border-line-2 bg-surface px-3 text-sm text-ink outline-none placeholder:text-ink-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="mb-2 h-11 w-full rounded-[var(--radius-control)] border border-line-2 bg-surface px-3 text-sm text-ink placeholder:text-ink-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         />
         <Command.List className="max-h-[min(24rem,50dvh)] overflow-y-auto pb-2 [&_[cmdk-group-heading]]:px-2.5 [&_[cmdk-group-heading]]:pb-1 [&_[cmdk-group-heading]]:pt-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-ink-3">
           <Command.Empty className="px-2.5 py-6 text-center text-sm text-ink-3">

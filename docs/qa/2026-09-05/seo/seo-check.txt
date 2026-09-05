@@ -1,0 +1,211 @@
+# command: SEO_BASE_URL=http://localhost:3003 pnpm --filter @track-site/web seo:check
+# started: 2026-09-05T09:41:28Z
+$ tsx scripts/seo-check.ts
+SEO check: 202 problem(s) on 336 pages (10037 ms)
+  http://localhost:3003/en/integrations — expected one <title>, found 2
+  http://localhost:3003/en — expected one <title>, found 3
+  http://localhost:3003/en/features — expected one <title>, found 9
+  http://localhost:3003/en/how-it-works — expected one <title>, found 9
+  http://localhost:3003/en/security — expected one <title>, found 2
+  http://localhost:3003/en/pricing — expected one <title>, found 2
+  http://localhost:3003/en/docs — expected one <title>, found 2
+  http://localhost:3003/en/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/en/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/en/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/en/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/en/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/en/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/en/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/en/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/en/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/en/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/en/status — expected one <title>, found 2
+  http://localhost:3003/en/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/en/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/de — expected one <title>, found 3
+  http://localhost:3003/de/features — expected one <title>, found 9
+  http://localhost:3003/de/how-it-works — expected one <title>, found 9
+  http://localhost:3003/de/integrations — expected one <title>, found 2
+  http://localhost:3003/de/pricing — expected one <title>, found 2
+  http://localhost:3003/de/security — expected one <title>, found 2
+  http://localhost:3003/de/status — expected one <title>, found 2
+  http://localhost:3003/de/docs — expected one <title>, found 2
+  http://localhost:3003/de/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/de/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/de/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/de/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/de/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/de/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/de/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/de/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/de/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/de/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/de/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/fr — expected one <title>, found 3
+  http://localhost:3003/fr/features — expected one <title>, found 9
+  http://localhost:3003/fr/how-it-works — expected one <title>, found 9
+  http://localhost:3003/fr/integrations — expected one <title>, found 2
+  http://localhost:3003/fr/pricing — expected one <title>, found 2
+  http://localhost:3003/fr/security — expected one <title>, found 2
+  http://localhost:3003/fr/status — expected one <title>, found 2
+  http://localhost:3003/fr/docs — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/fr/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/fr/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/event-taxonomy-standard-events — description length 175 (50–170)
+  http://localhost:3003/fr/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/dsar-deletion-tracking-data — description length 173 (50–170)
+  http://localhost:3003/fr/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/tcf-2-2-gpp-gpc — description length 174 (50–170)
+  http://localhost:3003/fr/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/fr/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/es — expected one <title>, found 3
+  http://localhost:3003/es/integrations — expected one <title>, found 2
+  http://localhost:3003/es/features — expected one <title>, found 9
+  http://localhost:3003/es/how-it-works — expected one <title>, found 9
+  http://localhost:3003/es/pricing — expected one <title>, found 2
+  http://localhost:3003/es/security — expected one <title>, found 2
+  http://localhost:3003/es/status — expected one <title>, found 2
+  http://localhost:3003/es/docs — expected one <title>, found 2
+  http://localhost:3003/es/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/es/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/es/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/es/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/es/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/es/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/es/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/es/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/es/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/es/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/es/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/it — expected one <title>, found 3
+  http://localhost:3003/it/how-it-works — expected one <title>, found 9
+  http://localhost:3003/it/features — expected one <title>, found 9
+  http://localhost:3003/it/integrations — expected one <title>, found 2
+  http://localhost:3003/it/pricing — expected one <title>, found 2
+  http://localhost:3003/it/security — expected one <title>, found 2
+  http://localhost:3003/it/status — expected one <title>, found 2
+  http://localhost:3003/it/docs — expected one <title>, found 2
+  http://localhost:3003/it/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/it/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/it/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/it/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/it/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/it/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/it/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/it/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/it/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/it/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/kill-switch-incident-playbook — description length 171 (50–170)
+  http://localhost:3003/it/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/it/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/nl — expected one <title>, found 3
+  http://localhost:3003/nl/how-it-works — expected one <title>, found 9
+  http://localhost:3003/nl/integrations — expected one <title>, found 2
+  http://localhost:3003/nl/features — expected one <title>, found 9
+  http://localhost:3003/nl/pricing — expected one <title>, found 2
+  http://localhost:3003/nl/security — expected one <title>, found 2
+  http://localhost:3003/nl/status — expected one <title>, found 2
+  http://localhost:3003/nl/docs — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/google-analytics — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/meta — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/google-ads — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/tiktok — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/linkedin — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/reddit — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/shopify — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/woocommerce — expected one <title>, found 2
+  http://localhost:3003/nl/integrations/shopware — expected one <title>, found 2
+  http://localhost:3003/nl/tracking-knowledge/affiliate-postbacks-s2s — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/click-ids-attribution-windows — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/data-retention-policy-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/dedup-event-id-order-id — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/event-taxonomy-standard-events — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/ga4-measurement-protocol-eu — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/google-ads-enhanced-conversions — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/linkedin-conversions-api-b2b — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/meta-conversions-api-deduplication — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/microsoft-conversions-api-uet — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/reddit-pinterest-snapchat-capi — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/shopify-server-side-purchases — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/shopware-6-tracking — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/tiktok-events-api-setup — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/tracking-health-score — missing BlogPosting JSON-LD
+  http://localhost:3003/nl/tracking-knowledge/woocommerce-server-side-tracking — missing BlogPosting JSON-LD
+C:\Users\Soheil\Downloads\track.site\apps\web:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @track-site/web@0.1.0 seo:check: `tsx scripts/seo-check.ts`
+Exit status 1
+# exit code: 1
+# finished: 2026-09-05T09:41:39Z

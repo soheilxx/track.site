@@ -1,0 +1,20 @@
+﻿[2026-09-05T11:15:52.798Z] lighthouse runner: base=http://localhost:3006 chrome=C:\Users\Soheil\AppData\Local\ms-playwright\chromium_headless_shell-1234\chrome-headless-shell-win64\chrome-headless-shell.exe cli=C:\Users\Soheil\AppData\Local\npm-cache\_npx\ffe2131771d88588\node_modules\lighthouse\cli\index.js
+auth cookies from e2e/.auth/owner.json: ts.session_token (values not logged)
+[2026-09-05T11:16:06.319Z] mobile http://localhost:3006/en -> home--mobile--run1 exit=1 report=ok 13.5s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:16:19.816Z] mobile http://localhost:3006/de -> home-de--mobile--run1 exit=1 report=ok 13.5s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:16:32.271Z] mobile http://localhost:3006/en/pricing -> pricing--mobile--run1 exit=1 report=ok 12.4s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:16:46.519Z] mobile http://localhost:3006/en/tracking-knowledge -> knowledge-hub--mobile--run1 exit=1 report=ok 14.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:16:57.763Z] mobile http://localhost:3006/en/tracking-knowledge/consent-mode-v2-guide -> knowledge-article-consent-mode-v2-guide--mobile--run1 exit=1 report=ok 11.2s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:17:09.401Z] mobile http://localhost:3006/en/integrations -> integrations--mobile--run1 exit=1 report=ok 11.6s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:17:20.202Z] mobile http://localhost:3006/en/login -> login--mobile--run1 exit=1 report=ok 10.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+[2026-09-05T11:17:32.050Z] mobile http://localhost:3006/app -> app-overview--mobile--run1 exit=1 report=ok 11.8s
+  (non-zero exit after the report was written; stderr tail:     at rmSync (node:fs:1222:18))
+runs finished: 8/8 succeeded
+summary written: C:\Users\Soheil\Downloads\track.site\docs\qa\2026-09-05\recheck\lighthouse\summary.json and summary.md (8 page/preset groups)
