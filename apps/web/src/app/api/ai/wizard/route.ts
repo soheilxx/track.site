@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { CONFIRM_TOOLS, buildToolRegistry, redactToolOutput } from "@track-site/ai";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { getOrCreateChatSession, recordToolRun, storePendingApproval } from "@/server/ai/chat-store";
 import { buildAgentContext, siteBelongsToOrg } from "@/server/ai/context";
 
@@ -14,8 +14,11 @@ const bodySchema = z.object({ siteId: z.string().uuid(), tool: z.string().regex(
  * Confirmation-gated tools are never callable here; they go through /api/ai/confirm.
  */
 export async function POST(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
+  // break-glass (docs/17 §4): a read-only support session gets no assistant — its tool reads and chat-session writes are neither
+  // page views audited with the grant id nor guarded by requireOrgContext's permission check
+  if (ctx.readOnly) return NextResponse.json({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access", message: "The AI assistant is not available in a read-only support session." }, { status: 403 });
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, code: "VALIDATION_ERROR" }, { status: 400 });
   if (CONFIRM_TOOLS.includes(parsed.data.tool)) return NextResponse.json({ ok: false, code: "CONFIRMATION_REQUIRED" }, { status: 428 });

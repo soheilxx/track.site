@@ -1,0 +1,138 @@
+{
+  "ops": {
+    "title": "Track Operations",
+    "skipToContent": "Vai al contenuto",
+    "brandHome": "Track Operations – Panoramica",
+    "backToDashboard": "Dashboard clienti",
+    "roleLabel": "Ruolo di piattaforma",
+    "roles": {
+      "PLATFORM_SUPPORT": "Supporto piattaforma",
+      "PLATFORM_ADMIN": "Admin piattaforma"
+    },
+    "nav": {
+      "label": "Operazioni",
+      "menuTitle": "Navigazione",
+      "openMenu": "Apri la navigazione",
+      "closeMenu": "Chiudi la navigazione",
+      "overview": "Panoramica",
+      "organisations": "Organizzazioni",
+      "breakGlass": "Break-glass",
+      "health": "Stato della piattaforma",
+      "revenue": "Ricavi",
+      "controls": "Controlli",
+      "inbox": "Posta in arrivo",
+      "growth": "Crescita",
+      "audit": "Audit",
+      "users": "Utenti di piattaforma",
+      "content": "Contenuti"
+    },
+    "environment": {
+      "label": "Ambiente",
+      "host": "Host",
+      "development": "Sviluppo",
+      "test": "Test",
+      "staging": "Staging",
+      "production": "Produzione",
+      "help": {
+        "development": "Sviluppo locale: dati sintetici, nessun cliente coinvolto.",
+        "test": "Ambiente di test: dati sintetici, nessun cliente coinvolto.",
+        "staging": "Staging: dati di preproduzione, nessun cliente coinvolto.",
+        "production": "Produzione: ogni azione qui riguarda clienti reali e viene registrata nell’audit."
+      }
+    },
+    "user": {
+      "menu": "Menu dell’account",
+      "signedInAs": "Accesso effettuato come",
+      "dashboard": "Apri la dashboard clienti",
+      "logout": "Esci"
+    },
+    "gate": {
+      "status": "403 · accesso negato",
+      "noRole": {
+        "title": "Nessun accesso alla piattaforma",
+        "text": "Il tuo account non ha un ruolo di piattaforma. Track Operations è riservato agli operatori di Track; un admin di piattaforma assegna i ruoli con il comando ops:grant e ogni assegnazione viene registrata nell’audit.",
+        "back": "Torna alla dashboard"
+      },
+      "twoFactor": {
+        "title": "Attiva prima l’autenticazione a due fattori",
+        "text": "Track Operations richiede l’autenticazione a due fattori a ogni operatore (step-up). Attivala per il tuo account, accedi di nuovo e torna su questa pagina.",
+        "back": "Torna alla dashboard"
+      },
+      "insufficientRole": {
+        "title": "È richiesto un admin di piattaforma",
+        "text": "Quest’area è riservata agli admin di piattaforma. Il supporto piattaforma vede organizzazioni, break-glass, stato della piattaforma, posta in arrivo, crescita, audit e contenuti.",
+        "back": "Torna alla panoramica"
+      }
+    },
+    "notFound": {
+      "title": "Pagina non trovata",
+      "text": "Questa pagina non esiste in Track Operations o è stata spostata.",
+      "back": "Torna alla panoramica"
+    },
+    "error": {
+      "title": "Qualcosa è andato storto",
+      "text": "L’errore è stato registrato. Riprova o torna alla panoramica.",
+      "retry": "Riprova",
+      "back": "Panoramica"
+    },
+    "placeholder": {
+      "title": "In preparazione",
+      "text": "Questo modulo è in costruzione. Qui non viene ancora misurato nulla, quindi non vengono mostrati numeri."
+    },
+    "overview": {
+      "modules": "Moduli",
+      "principles": "Regole operative",
+      "rules": {
+        "noRawData": "Nessun payload di eventi grezzo, nessun dato personale degli utenti finali, nessun segreto: solo viste aggregate e metadati.",
+        "breakGlass": "I dettagli di un cliente richiedono un’autorizzazione break-glass approvata e limitata nel tempo; anche allora in sola lettura, e ogni consultazione viene registrata nell’audit con l’id dell’autorizzazione.",
+        "audit": "Ogni modifica è un’azione server con verifica del ruolo, validazione, conferma esplicita e una voce di audit con tipo di attore «platform»."
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Panoramica",
+        "intro": "Lo stato dell’intera piattaforma a colpo d’occhio: cosa richiede attenzione, quali moduli esistono e le regole con cui lavora ogni operatore."
+      },
+      "organisations": {
+        "title": "Organizzazioni",
+        "intro": "Ogni organizzazione cliente con piano, siti, utilizzo e stato: metadati e aggregati, mai i suoi dati sugli eventi."
+      },
+      "breakGlass": {
+        "title": "Break-glass",
+        "intro": "Accesso limitato nel tempo, motivato e approvato ai dettagli di un’organizzazione: richieste, approvazioni, autorizzazioni attive e la loro traccia di audit."
+      },
+      "health": {
+        "title": "Stato della piattaforma",
+        "intro": "Heartbeat dei worker, code, successo delle consegne, dead letter e stato dei fornitori su tutti i clienti."
+      },
+      "revenue": {
+        "title": "Ricavi",
+        "intro": "Abbonamenti, ricavi mensili ricorrenti, prove, eccedenze e pagamenti falliti dal registro di fatturazione e da Stripe."
+      },
+      "controls": {
+        "title": "Controlli",
+        "intro": "Kill switch globali e per cliente, sospensioni e feature flag: ogni interruttore viene confermato e registrato nell’audit."
+      },
+      "inbox": {
+        "title": "Posta in arrivo",
+        "intro": "Richieste di contatto, demo e supporto dai moduli pubblici con stato, responsabile e tempo di gestione."
+      },
+      "growth": {
+        "title": "Crescita",
+        "intro": "Registrazioni, attivazione, configurazioni pubblicate e passaggio ai piani a pagamento: aggregati, nessun visitatore singolo."
+      },
+      "audit": {
+        "title": "Audit",
+        "intro": "Il registro di audit della piattaforma: ogni azione degli operatori con attore, destinazione, organizzazione e diff redatto."
+      },
+      "users": {
+        "title": "Utenti di piattaforma",
+        "intro": "Operatori con un ruolo di piattaforma, il loro stato a due fattori e la regola dei quattro occhi per l’assegnazione dei ruoli."
+      },
+      "content": {
+        "title": "Contenuti",
+        "intro": "Bacheca editoriale di Tracking Knowledge: stato ed età della revisione per lingua dal front matter, feedback dei lettori, percorsi di apprendimento, freschezza di sitemap e feed, copertura delle integrazioni. Sola lettura: i contenuti vivono in git."
+      }
+    }
+  }
+}

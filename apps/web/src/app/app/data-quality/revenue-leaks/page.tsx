@@ -6,6 +6,7 @@ import { sites } from "@track-site/db";
 import { EmptyState, buttonVariants } from "@track-site/ui";
 import { DataQualityHeader } from "@/components/app/data-quality/page-header";
 import { LeakControls, LeakReport, LeakSources } from "@/components/app/data-quality/revenue-leaks";
+import { isFeatureEnabled } from "@/server/flags";
 import { LEAK_RANGES, loadRevenueLeaks, type LeakKind, type LeakRange } from "@/server/revenue-leaks";
 import { requireOrgContext, withOrg } from "@/server/session";
 import { activeSite } from "@/server/workspace";
@@ -23,6 +24,24 @@ export default async function RevenueLeaksPage({ searchParams }: { searchParams:
   const q = await searchParams;
   const ctx = await requireOrgContext("events.read");
   const t = await getTranslations("dataQuality");
+  // feature flag `revenue_leaks.beta` (Track Operations → Controls): an honest "not enabled" state instead of the report
+  if (!(await isFeatureEnabled(ctx.organization.id, "revenue_leaks.beta"))) {
+    const tFlag = await getTranslations("opsControls.customer.featureOff");
+    return (
+      <div className="space-y-6">
+        <h1 className="font-display text-2xl font-semibold text-ink">{t("leaks.title")}</h1>
+        <EmptyState
+          title={tFlag("title")}
+          description={tFlag("text")}
+          action={
+            <Link href="/app/data-quality" className={buttonVariants({ variant: "secondary" })}>
+              {tFlag("back")}
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
   const workspace = await activeSite(ctx);
   if (!workspace.site) {
     return (

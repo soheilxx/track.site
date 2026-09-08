@@ -1,0 +1,309 @@
+{
+  "opsControls": {
+    "subnav": {
+      "label": "Sections des contrôles",
+      "overview": "Kill switch & suspensions",
+      "flags": "Feature flags",
+      "announcements": "Annonces"
+    },
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "never": "jamais",
+      "unknown": "inconnu",
+      "on": "Activé",
+      "off": "Désactivé",
+      "optional": "facultatif",
+      "noPlan": "aucun abonnement"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "errors": {
+      "forbidden": "Cette action nécessite le rôle d’administrateur de plateforme avec authentification à deux facteurs.",
+      "invalid": "Veuillez vérifier les champs signalés.",
+      "not_found": "Cette entrée n’existe pas (ou plus).",
+      "unchanged": "Rien à changer — l’état est déjà celui-ci.",
+      "confirmation": "Le mot de confirmation ne correspond pas.",
+      "reserved": "Les clés commençant par « platform. » sont réservées aux interrupteurs système.",
+      "exists": "Un flag avec cette clé existe déjà.",
+      "generic": "Cela n’a pas fonctionné. Veuillez réessayer."
+    },
+    "fieldErrors": {
+      "required": "Obligatoire.",
+      "invalid": "Valeur invalide.",
+      "long": "Trop long.",
+      "window": "La fin doit être postérieure au début.",
+      "not_found": "Aucune organisation avec ce slug ou cet identifiant.",
+      "reserved": "Préfixe réservé « platform. ».",
+      "exists": "Existe déjà.",
+      "confirmation": "Saisissez le mot exactement comme indiqué."
+    },
+    "notices": {
+      "killSwitchEngaged": "Kill switch enclenché. Le collecteur suspend l’ingestion, la livraison des configurations et les webhooks entrants en cinq secondes environ.",
+      "killSwitchReleased": "Kill switch relâché. Le collecteur reprend en cinq secondes environ.",
+      "suspended": "Organisation suspendue. L’ingestion et la livraison des configurations de ses sites s’arrêtent dans la fenêtre de cache du collecteur.",
+      "unsuspended": "Suspension levée.",
+      "flagCreated": "Flag créé.",
+      "flagRegistered": "Flag enregistré avec sa valeur par défaut du code.",
+      "flagUpdated": "Description enregistrée.",
+      "flagDefaultChanged": "Valeur par défaut modifiée. Les instances clientes la reprennent sous 60 secondes.",
+      "overrideSaved": "Surcharge enregistrée. L’organisation la reprend sous 60 secondes.",
+      "overrideRemoved": "Surcharge supprimée. L’organisation suit de nouveau la valeur par défaut sous 60 secondes.",
+      "announcementCreated": "Annonce créée.",
+      "announcementRevoked": "Annonce retirée. Elle disparaît des tableaux de bord à leur prochaine requête."
+    },
+    "maintenance": {
+      "title": "Mode maintenance du site marketing",
+      "text": "Hors périmètre des contrôles. Le site marketing n’a pas d’interrupteur de maintenance dans ce module ; cela nécessiterait une décision distincte (redirection au niveau de l’hébergement ou avis statique)."
+    },
+    "killSwitch": {
+      "title": "Kill switch global",
+      "intro": "Arrête tout le collecteur pour tous les tenants : les lots navigateur et serveur répondent 503, les manifestes de configuration portent le kill switch, les webhooks entrants boutique et affiliation répondent « paused ». Rien n’est supprimé ; les émetteurs réessaient plus tard.",
+      "state": {
+        "label": "Interrupteur plateforme",
+        "engaged": "Enclenché — ingestion suspendue",
+        "released": "Relâché — le trafic circule"
+      },
+      "updatedAt": "Dernière modification",
+      "env": {
+        "label": "KILL_SWITCH_GLOBAL",
+        "on": "défini pour ce processus web",
+        "off": "non défini pour ce processus web",
+        "hint": "La variable d’environnement KILL_SWITCH_GLOBAL est un interrupteur au niveau du déploiement qui exige un redémarrage ; le collecteur rapporte sa propre valeur sous « source ». L’interrupteur plateforme ici est stocké en base et lu par le collecteur toutes les cinq secondes."
+      },
+      "collector": {
+        "title": "Collecteur (en direct)",
+        "url": "Point de terminaison",
+        "status": "Statut HTTP",
+        "source": "Source du kill switch",
+        "sources": {
+          "env": "variable d’environnement",
+          "platform": "interrupteur plateforme",
+          "none": "non enclenché"
+        },
+        "error": "Erreur",
+        "checkedAt": "Vérifié",
+        "recheck": "Revérifier",
+        "unreachable": "Injoignable",
+        "invalid": "Réponse inattendue",
+        "paused": "Suspendu par le kill switch",
+        "ok": "Sain",
+        "degraded": "Dégradé"
+      },
+      "effects": "L’interrupteur touche toutes les organisations à la fois. Pour une seule organisation, utilisez la suspension ci-dessous ; pour un site ou un environnement, le mode incident du client.",
+      "engage": "Enclencher le kill switch",
+      "release": "Relâcher le kill switch",
+      "dialog": {
+        "engageTitle": "Enclencher le kill switch global ?",
+        "engageText": "Tous les tenants cessent d’envoyer des données en quelques secondes. Indiquez la raison (auditée) et saisissez le mot pour confirmer.",
+        "releaseTitle": "Relâcher le kill switch global ?",
+        "releaseText": "Le collecteur accepte de nouveau le trafic en quelques secondes. Indiquez la raison (auditée) et saisissez le mot pour confirmer.",
+        "reason": "Raison",
+        "reasonHint": "Incident, référence de ticket, observation. Au moins 3 caractères ; conservé dans le journal d’audit.",
+        "wordLabel": "Saisissez {word} pour confirmer",
+        "wordHint": "Exactement {word}, en majuscules — aucun autre mot n’est accepté.",
+        "engageConfirm": "Enclencher maintenant",
+        "releaseConfirm": "Relâcher maintenant"
+      }
+    },
+    "suspensions": {
+      "title": "Organisations suspendues",
+      "intro": "Le kill switch par tenant. Une organisation suspendue n’envoie plus de données (le collecteur la traite comme le kill switch du client pour chaque site) et ses membres sont exclus du tableau de bord et de l’API (403) jusqu’à la levée de la suspension. Métadonnées uniquement — aucune donnée d’événement n’est affichée ici.",
+      "activeCount": "{count} organisations actives",
+      "empty": "Aucune organisation n’est suspendue",
+      "emptyText": "Chaque organisation peut envoyer des données. Utilisez le formulaire pour en suspendre une.",
+      "table": {
+        "caption": "Organisations suspendues avec forfait, sites, date et raison",
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "sites": "Sites",
+        "suspendedAt": "Suspendue",
+        "reason": "Raison",
+        "actions": "Actions"
+      },
+      "unsuspend": "Lever la suspension",
+      "suspendForm": {
+        "title": "Suspendre une organisation",
+        "text": "Recherchez d’abord l’organisation par slug ou identifiant ; la suspension est confirmée dans une boîte de dialogue avec une raison obligatoire.",
+        "ref": "Slug ou identifiant d’organisation",
+        "refHint": "Slug exact (p. ex. acme-demo) ou l’UUID.",
+        "lookup": "Rechercher",
+        "notFound": "Aucune organisation avec ce slug ou cet identifiant."
+      },
+      "found": {
+        "plan": "Forfait",
+        "sites": "Sites",
+        "created": "Créée",
+        "alreadySuspended": "Déjà suspendue depuis le {when}"
+      },
+      "dialog": {
+        "suspendTitle": "Suspendre {name} ?",
+        "suspendText": "L’ingestion et la livraison des configurations de tous les sites de cette organisation s’arrêtent dans la fenêtre de cache du collecteur ; le tableau de bord et l’API répondent 403 à ses membres. La raison est auditée et visible dans le journal d’audit de l’organisation.",
+        "unsuspendTitle": "Lever la suspension de {name} ?",
+        "unsuspendText": "L’organisation peut de nouveau envoyer des données dans la fenêtre de cache du collecteur. Ceci est audité.",
+        "reason": "Raison",
+        "reasonHint": "Référence de ticket et ce qui s’est passé. Au moins 3 caractères.",
+        "suspendConfirm": "Suspendre l’organisation",
+        "unsuspendConfirm": "Lever la suspension",
+        "currentReason": "Raison de la suspension"
+      }
+    },
+    "flags": {
+      "title": "Feature flags",
+      "intro": "Valeurs par défaut globales avec surcharges par organisation. L’application cliente met une valeur en cache 60 secondes. Les clés lues par l’application sont enregistrées dans le code ; les clés créées ici n’agissent que lorsque l’application les lit.",
+      "empty": "Aucun flag",
+      "emptyText": "Aucun flag n’est stocké et aucun n’est enregistré dans l’application.",
+      "table": {
+        "caption": "Feature flags avec valeur par défaut, nombre de surcharges, source et dernière modification",
+        "key": "Clé",
+        "default": "Par défaut",
+        "overrides": "Surcharges",
+        "source": "Source",
+        "updated": "Modifié",
+        "actions": "Actions"
+      },
+      "source": {
+        "code": "lu par l’application",
+        "manual": "manuel",
+        "unregistered": "pas encore stocké"
+      },
+      "codeDefault": "défaut du code : {value}",
+      "register": "Stocker le flag",
+      "open": "Détails",
+      "create": {
+        "title": "Créer un flag",
+        "text": "Seuls les flags lus par l’application changent le comportement. Les clés réservées commencent par « platform. ».",
+        "key": "Clé",
+        "keyHint": "Minuscules, 2 à 64 caractères : lettres, chiffres, tiret bas, point, tiret. Exemple : reports.export",
+        "description": "Description",
+        "descriptionHint": "Ce que le flag contrôle et où. Affiché dans cette liste.",
+        "default": "Activé par défaut",
+        "submit": "Créer le flag"
+      },
+      "detail": {
+        "back": "Tous les flags",
+        "notFound": "Flag inconnu",
+        "notFoundText": "Aucun flag stocké ni enregistré dans le code avec cette clé.",
+        "unregisteredTitle": "Pas encore stocké",
+        "unregisteredText": "L’application lit ce flag avec sa valeur par défaut du code. Stockez-le depuis la liste pour changer la valeur par défaut ou ajouter des surcharges.",
+        "defaultTitle": "Valeur par défaut globale",
+        "defaultText": "S’applique à toute organisation sans surcharge. Toute modification est confirmée et auditée.",
+        "enable": "Activer par défaut",
+        "disable": "Désactiver par défaut",
+        "descriptionTitle": "Description",
+        "save": "Enregistrer la description",
+        "overridesTitle": "Surcharges par organisation",
+        "overridesText": "Une surcharge remplace la valeur par défaut pour une organisation. Les organisations sont désignées par slug ; aucune donnée d’événement n’est impliquée.",
+        "overridesEmpty": "Aucune surcharge — chaque organisation suit la valeur par défaut.",
+        "overridesCaption": "Surcharges avec organisation, valeur, raison et dernière modification",
+        "organisation": "Organisation",
+        "organisationHint": "Slug exact ou UUID.",
+        "value": "Valeur",
+        "valueLabel": "Valeur pour cette organisation",
+        "reason": "Raison",
+        "reasonHint": "Pourquoi cette organisation diffère (facultatif, audité).",
+        "updated": "Modifié",
+        "remove": "Supprimer",
+        "addTitle": "Ajouter ou remplacer une surcharge",
+        "addText": "Une surcharge par organisation et par flag ; enregistrer à nouveau la remplace.",
+        "submit": "Enregistrer la surcharge"
+      },
+      "dialog": {
+        "defaultTitle": "Changer la valeur par défaut de {key} ?",
+        "defaultText": "La valeur par défaut devient {value} pour toute organisation sans surcharge ({count} surcharges restent en place). Les instances clientes la reprennent sous 60 secondes.",
+        "defaultConfirm": "Changer la valeur par défaut",
+        "removeTitle": "Supprimer la surcharge pour {organisation} ?",
+        "removeText": "L’organisation suit de nouveau la valeur par défaut de {key} sous 60 secondes.",
+        "removeConfirm": "Supprimer la surcharge"
+      }
+    },
+    "announcements": {
+      "title": "Annonces",
+      "intro": "Bannières dans le tableau de bord client : textes localisés, gravité, fenêtre d’affichage en UTC et audience par forfait ou organisation. Les clients peuvent masquer une bannière par navigateur ; la retirer la supprime partout.",
+      "new": "Nouvelle annonce",
+      "empty": "Aucune annonce",
+      "emptyText": "Rien n’a encore été annoncé. Créez-en une pour afficher une bannière dans les tableaux de bord.",
+      "table": {
+        "caption": "Annonces avec statut, fenêtre, audience et actions",
+        "title": "Annonce",
+        "status": "Statut",
+        "window": "Fenêtre (UTC)",
+        "audience": "Audience",
+        "actions": "Actions"
+      },
+      "status": {
+        "scheduled": "Planifiée",
+        "active": "Active",
+        "ended": "Terminée",
+        "revoked": "Retirée"
+      },
+      "severity": {
+        "info": "Information",
+        "warn": "Avertissement",
+        "bad": "Incident"
+      },
+      "audience": {
+        "everyone": "Toutes les organisations",
+        "plans": "Forfaits : {plans}",
+        "organisations": "{count} organisations"
+      },
+      "window": {
+        "from": "à partir du {start}",
+        "until": "jusqu’au {end}",
+        "open": "sans fin",
+        "revoked": "retirée le {when}"
+      },
+      "link": "Lien",
+      "revoke": "Retirer",
+      "dialog": {
+        "revokeTitle": "Retirer « {title} » ?",
+        "revokeText": "La bannière disparaît de chaque tableau de bord à sa prochaine requête. Irréversible ; créez plutôt une nouvelle annonce.",
+        "revokeConfirm": "Retirer l’annonce"
+      },
+      "form": {
+        "title": "Nouvelle annonce",
+        "text": "L’anglais est obligatoire ; les autres langues reviennent à l’anglais dans le tableau de bord. Les heures sont en UTC.",
+        "back": "Toutes les annonces",
+        "created": "Annonce créée.",
+        "createAnother": "En créer une autre",
+        "severity": "Gravité",
+        "severityHint": "Information (bleu), avertissement (ambre) ou incident (rouge, annoncé de façon assertive).",
+        "textsTitle": "Textes",
+        "textsText": "Titre court, une ou deux phrases de texte. Pas de données personnelles, pas de secrets.",
+        "titleFor": "Titre ({locale})",
+        "bodyFor": "Texte ({locale})",
+        "windowTitle": "Fenêtre d’affichage",
+        "windowText": "Laissez la fin vide pour une bannière sans échéance ; retirez-la plus tard.",
+        "startsAt": "Début (UTC)",
+        "startsAtHint": "Vide = maintenant.",
+        "endsAt": "Fin (UTC)",
+        "endsAtHint": "Doit être postérieure au début.",
+        "linkUrl": "Lien",
+        "linkUrlHint": "URL https facultative, p. ex. une page de statut.",
+        "audienceTitle": "Audience",
+        "audienceText": "Rien de sélectionné = toutes les organisations. Avec des forfaits et des identifiants d’organisation, une organisation correspondant à l’un ou l’autre voit la bannière.",
+        "plans": "Forfaits",
+        "organisationIds": "Identifiants d’organisation",
+        "organisationIdsHint": "UUID, un par ligne ou séparés par des virgules ; chaque identifiant doit exister.",
+        "submit": "Créer l’annonce"
+      }
+    },
+    "customer": {
+      "featureOff": {
+        "title": "Non activé pour votre organisation",
+        "text": "Cette fonctionnalité est actuellement désactivée pour votre organisation. Rien n’est cassé et aucune donnée n’est perdue ; contactez le support si vous l’attendiez ici.",
+        "back": "Retour à la qualité des données"
+      },
+      "announcements": {
+        "region": "Annonces de la plateforme",
+        "dismiss": "Masquer l’annonce",
+        "open": "Ouvrir le lien"
+      }
+    }
+  }
+}

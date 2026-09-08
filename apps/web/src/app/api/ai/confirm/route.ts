@@ -3,7 +3,7 @@ import { z } from "zod";
 import { buildToolRegistry, confirmActivityEvents, factsOf, redactToolOutput } from "@track-site/ai";
 import { activeVersion, withTenant } from "@track-site/db";
 import { db } from "@/server/db";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { appendMessage, getOrCreateChatSession, recordToolRun, takePendingApproval } from "@/server/ai/chat-store";
 import { buildAgentContext, siteBelongsToOrg } from "@/server/ai/context";
 
@@ -27,8 +27,11 @@ function sameOrigin(req: NextRequest): boolean {
  * not confirm and can offer rollback / the next step.
  */
 export async function POST(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
+  // break-glass (docs/17 §4): a read-only support session gets no assistant — its tool reads and chat-session writes are neither
+  // page views audited with the grant id nor guarded by requireOrgContext's permission check
+  if (ctx.readOnly) return NextResponse.json({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access", message: "The AI assistant is not available in a read-only support session." }, { status: 403 });
   // a mutation behind a cookie session: same-origin only, like the chat route
   if (!sameOrigin(req)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));

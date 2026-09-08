@@ -1,0 +1,263 @@
+{
+  "opsRevenue": {
+    "context": {
+      "asOf": "Au {at}",
+      "period": "Période d’usage {period}",
+      "ledger": "Registre de facturation : dernier événement Stripe {at}",
+      "ledgerNone": "Registre de facturation : aucun événement webhook Stripe reçu pour l’instant",
+      "ledgerFailed": "{count, plural, one {# événement webhook en échec} other {# événements webhook en échec}}",
+      "stripe": {
+        "test": "Stripe en mode test",
+        "live": "Stripe en mode live",
+        "unknown": "Stripe configuré, mode inconnu",
+        "none": "Stripe non configuré"
+      }
+    },
+    "export": {
+      "subscriptions": "Exporter les abonnements (CSV)",
+      "overage": "Exporter les dépassements (CSV)",
+      "hint": "Chaque export est consigné dans le journal d’audit de la plateforme."
+    },
+    "kpis": {
+      "mrr": {
+        "label": "MRR",
+        "hint": "{count, plural, one {# abonnement tarifé} other {# abonnements tarifés}} au prix catalogue"
+      },
+      "arr": {
+        "label": "ARR",
+        "hint": "MRR × 12"
+      },
+      "paying": {
+        "label": "Abonnements payants",
+        "hint": "{monthly} mensuels · {yearly} annuels"
+      },
+      "atRisk": {
+        "label": "MRR à risque",
+        "hint": "{count, plural, one {# abonnement en retard ou impayé} other {# abonnements en retard ou impayés}}"
+      }
+    },
+    "plans": {
+      "title": "Revenus par forfait",
+      "intro": "Abonnements actifs par forfait du catalogue et par intervalle, valorisés aux prix catalogue du jour. Les essais et les paiements échoués sont indiqués pour contexte et ne comptent jamais dans le MRR.",
+      "caption": "Abonnements et MRR par forfait",
+      "columns": {
+        "plan": "Forfait",
+        "active": "Actifs",
+        "monthly": "Mensuels",
+        "yearly": "Annuels",
+        "trialing": "En essai",
+        "pastDue": "En retard",
+        "mrr": "MRR",
+        "share": "Part"
+      },
+      "customPrice": "Prix sur mesure — hors MRR",
+      "other": "Identifiant de forfait inconnu",
+      "empty": {
+        "title": "Aucun abonnement pour l’instant",
+        "text": "Le registre de facturation ne contient aucune ligne d’abonnement. Il se remplit via les webhooks Stripe dès que le premier checkout aboutit."
+      },
+      "excluded": {
+        "title": "Non tarifés",
+        "custom_price": "{count, plural, one {# abonnement Enterprise actif} other {# abonnements Enterprise actifs}} (prix contractuel)",
+        "unknown_plan": "{count, plural, one {# abonnement actif} other {# abonnements actifs}} sur un forfait inconnu du catalogue",
+        "unknown_interval": "{count, plural, one {# abonnement actif} other {# abonnements actifs}} sans intervalle de facturation"
+      }
+    },
+    "trials": {
+      "title": "Essais",
+      "intro": "Essai du catalogue : {days} jours de {plan}, {card}. Il ne se convertit jamais tout seul — un forfait payant exige un checkout explicite.",
+      "noCard": "sans carte bancaire",
+      "card": "carte bancaire requise",
+      "stats": {
+        "active": "En cours",
+        "endingSoon": "Se termine sous {days} jours",
+        "expired": "Terminé, encore marqué en essai"
+      },
+      "noData": {
+        "title": "Aucune donnée d’essai",
+        "text": "Aucun abonnement du registre de facturation ne porte d’état d’essai (statut « trialing » ou fin d’essai). Rien n’est comptabilisé."
+      },
+      "caption": "Essais en cours",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "trialEnd": "Fin de l’essai",
+        "remaining": "Restant",
+        "stripe": "Stripe"
+      },
+      "daysLeft": "{count, plural, =0 {se termine aujourd’hui} one {# jour} other {# jours}}",
+      "ended": "{count, plural, one {terminé il y a # jour} other {terminé il y a # jours}}",
+      "noEnd": "pas de date de fin"
+    },
+    "pastDue": {
+      "title": "En retard et impayés",
+      "intro": "Abonnements dont le paiement a échoué. La période de grâce vient du registre (sept jours après que Stripe a signalé le retard) ; ensuite, les limites strictes s’appliquent.",
+      "caption": "Abonnements en retard et impayés",
+      "graceOver": "délai de grâce dépassé : les limites strictes s’appliquent",
+      "empty": {
+        "title": "Aucun paiement échoué",
+        "text": "Aucun abonnement n’est en retard ou impayé actuellement."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "status": "Statut",
+        "grace": "Grâce jusqu’au",
+        "periodEnd": "Fin de période",
+        "mrr": "MRR à risque",
+        "stripe": "Stripe"
+      }
+    },
+    "cancellations": {
+      "title": "Résiliations",
+      "intro": "Abonnements résiliés selon la date de la demande de résiliation (canceled_at de Stripe), avec le MRR au prix catalogue qu’ils portaient. Les résiliations programmées sur des abonnements en cours sont listées à part.",
+      "window": "{days} derniers jours",
+      "lost": "{amount} de MRR",
+      "pending": "Programmées",
+      "pendingHint": "{amount} de MRR prend fin à la date programmée",
+      "recentTitle": "Résiliés au cours des {days} derniers jours",
+      "recentCaption": "Abonnements récemment résiliés",
+      "pendingTitle": "Résiliations programmées",
+      "pendingCaption": "Abonnements avec une résiliation programmée",
+      "emptyRecent": "Aucun abonnement n’a été résilié au cours des {days} derniers jours.",
+      "emptyPending": "Aucune résiliation n’est programmée.",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "interval": "Intervalle",
+        "canceledAt": "Résilié le",
+        "cancelAt": "Prend fin le",
+        "mrr": "MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "overage": {
+      "title": "Exposition aux dépassements",
+      "intro": "Organisations au-dessus de leur limite mensuelle d’événements sur la période {period} : packs au prix catalogue, ramenés à ce que la politique de dépassement de chaque organisation autorise la plateforme à facturer. Un prix catalogue n’est pas une facture.",
+      "total": "Exposition facturable",
+      "totalHint": "{list} au prix catalogue pour {count, plural, one {# organisation} other {# organisations}}",
+      "contractual": "{count, plural, one {# organisation} other {# organisations}} avec un dépassement contractuel (pas de prix catalogue)",
+      "caption": "Dépassement par organisation",
+      "empty": {
+        "title": "Aucun dépassement",
+        "text": "Aucune organisation ne dépasse sa limite d’événements sur la période {period}."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "billable": "Événements facturables",
+        "limit": "Limite",
+        "over": "Au-delà",
+        "packs": "Packs",
+        "list": "Prix catalogue",
+        "policy": "Politique",
+        "exposure": "Exposition"
+      },
+      "packInfo": "{packs} × {events}",
+      "policies": {
+        "allow": "Autoriser",
+        "cost_limit": "Plafond de coût",
+        "pause": "Suspendre"
+      },
+      "paused": "suspendu le {when}",
+      "contractualCell": "Contractuel"
+    },
+    "usage": {
+      "title": "Organisations les plus consommatrices",
+      "intro": "Les {count} organisations avec le plus d’événements facturables sur la période {period}, d’après les compteurs d’usage — des totaux seulement, aucune donnée d’événement.",
+      "caption": "Organisations classées par événements facturables",
+      "empty": {
+        "title": "Aucun compteur d’usage",
+        "text": "Aucune organisation n’a encore de compteurs d’usage pour la période {period}. Les compteurs sont écrits par le job d’usage."
+      },
+      "columns": {
+        "rank": "#",
+        "organisation": "Organisation",
+        "plan": "Forfait",
+        "billable": "Événements facturables",
+        "accepted": "Acceptés",
+        "limit": "Limite",
+        "used": "De la limite",
+        "sites": "Sites"
+      },
+      "noLimit": "sans plafond",
+      "noPlan": "pas d’abonnement"
+    },
+    "invoices": {
+      "title": "Factures récentes (Stripe)",
+      "intro": "Les dernières factures lues en direct dans Stripe avec la clé configurée. Les montants sont ceux de Stripe, dans la devise de la facture.",
+      "caption": "Factures Stripe récentes",
+      "notConfigured": {
+        "title": "Stripe non configuré",
+        "text": "Aucune clé secrète Stripe n’est définie dans cet environnement ; les factures ne peuvent donc pas être lues."
+      },
+      "forbidden": {
+        "title": "Non autorisé avec la clé actuelle",
+        "text": "La clé Stripe configurée est restreinte et n’a pas accès en lecture aux factures ({detail}). Ouvrez les factures dans le tableau de bord Stripe ou étendez les permissions de la clé."
+      },
+      "error": {
+        "title": "Stripe n’a pas répondu",
+        "text": "La liste des factures n’a pas pu être chargée ({detail}). Le reste de cette page provient du registre de facturation et n’est pas affecté."
+      },
+      "empty": {
+        "title": "Aucune facture",
+        "text": "Stripe n’a renvoyé aucune facture pour ce compte."
+      },
+      "more": "Stripe détient plus de factures que celles affichées ici.",
+      "columns": {
+        "number": "Numéro",
+        "organisation": "Organisation",
+        "status": "Statut",
+        "due": "Montant dû",
+        "paid": "Payé",
+        "created": "Créée le",
+        "dueDate": "Échéance",
+        "stripe": "Stripe"
+      },
+      "statuses": {
+        "draft": "Brouillon",
+        "open": "Ouverte",
+        "paid": "Payée",
+        "uncollectible": "Irrécouvrable",
+        "void": "Annulée",
+        "unknown": "Inconnu"
+      },
+      "unknownCustomer": "Absent du registre",
+      "noNumber": "sans numéro"
+    },
+    "stripe": {
+      "customer": "Client",
+      "subscription": "Abonnement",
+      "invoice": "Facture",
+      "opensNewTab": "ouvre le tableau de bord Stripe dans un nouvel onglet",
+      "noId": "pas d’identifiant Stripe"
+    },
+    "status": {
+      "none": "Aucun",
+      "trialing": "En essai",
+      "active": "Actif",
+      "past_due": "En retard",
+      "canceled": "Résilié",
+      "unpaid": "Impayé",
+      "incomplete": "Incomplet",
+      "incomplete_expired": "Incomplet, expiré",
+      "paused": "Suspendu"
+    },
+    "interval": {
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "unknown": "Inconnu"
+    },
+    "org": {
+      "suspended": "Suspendue"
+    },
+    "method": {
+      "title": "Comment ces chiffres sont calculés",
+      "mrr": "Le MRR additionne le prix catalogue de chaque abonnement au statut « active » : forfaits mensuels au prix mensuel, forfaits annuels à un douzième du prix annuel. Montants Stripe, remises, taxes et avoirs ne sont pas appliqués.",
+      "atRisk": "Le MRR à risque est le même calcul pour les abonnements en retard ou impayés.",
+      "trials": "Les essais ne comptent jamais dans le MRR. La section Essais ne montre que ce que le registre contient.",
+      "overage": "Le dépassement compare les compteurs d’usage de la période à la limite du forfait et aux packs du catalogue. La politique « Suspendre » ne facture rien ; « Plafond de coût » facture au plus les packs compris dans le plafond.",
+      "invoices": "Les factures sont lues en direct dans Stripe et sont les seuls montants Stripe de cette page. Rien ici n’est un chiffre comptabilisé ; le registre suit les webhooks Stripe."
+    }
+  }
+}

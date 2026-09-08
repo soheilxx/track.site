@@ -39,3 +39,16 @@ registerNamespace("team");
 registerNamespace("alerts");
 
 registerNamespace("assistant");
+
+registerNamespace("ops");
+registerNamespace("ops-break-glass");
+registerNamespace("ops-organisations");
+registerNamespace("ops-health");
+registerNamespace("ops-revenue");
+registerNamespace("ops-inbox");
+registerNamespace("ops-controls");
+registerNamespace("ops-audit");
+
+registerNamespace("ops-users");
+registerNamespace("ops-growth");
+registerNamespace("ops-content");

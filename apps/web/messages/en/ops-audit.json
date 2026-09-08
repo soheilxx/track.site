@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Every audit entry across the platform — customer teams, Track AI, system jobs, source keys and platform operators — with actor, action, organisation, target and redacted details. Search, filter, page and export; the log itself is append-only.",
+    "presets": {
+      "label": "Quick views",
+      "all": "All entries",
+      "platform": "Operator actions",
+      "breakGlass": "Break-glass trail",
+      "platformWide": "Platform-wide",
+      "roles": "Role changes"
+    },
+    "filters": {
+      "legend": "Filter",
+      "search": "Search",
+      "searchPlaceholder": "Action, target or request ID",
+      "actor": "Actor",
+      "everyone": "Everyone",
+      "operators": "Platform operators",
+      "kinds": "Actor kinds",
+      "otherUser": "User {id}",
+      "action": "Action",
+      "actionPlaceholder": "e.g. platform.organization",
+      "actionHint": "Exact action or prefix: “platform.organization” includes every action below it.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "ID or slug",
+      "target": "Target type",
+      "all": "All",
+      "scope": "Scope",
+      "scopes": {
+        "all": "All entries",
+        "platform_wide": "Platform-wide only (no organisation)",
+        "break_glass": "Break-glass trail"
+      },
+      "from": "From (UTC)",
+      "to": "To (UTC)",
+      "platformOnly": "Platform operator actions only",
+      "platformOnlyHint": "Entries whose actor is a platform operator (actor kind “platform”), regardless of organisation.",
+      "apply": "Apply",
+      "reset": "Reset",
+      "export": "Export CSV",
+      "exportHint": "The same filters and the same redacted key lists as this table, newest first, at most {max} rows; every export is recorded in the audit log."
+    },
+    "summary": {
+      "count": "{count} entries",
+      "countFiltered": "{count} matching entries",
+      "generated": "Loaded {date}",
+      "organization": "Organisation: {name}",
+      "deletedOrganization": "{id} (no longer exists)",
+      "unknownOrganization": "No organisation has the ID or slug “{input}”; nothing matches until you correct it.",
+      "actorFallback": "Actor: {name}",
+      "actorUnknown": "Actor: user {id} (no longer exists)"
+    },
+    "notes": {
+      "retention": "Entries are kept for {days} days by default; an organisation can set its own window for its audit log, and entries without an organisation follow the default. The retention job deletes older entries permanently, so an export is the only way to keep them longer.",
+      "redacted": "Values are redacted before they are stored and again before display; end-user personal data and secrets never appear here.",
+      "appendOnly": "The log is append-only: nothing here can be edited or deleted, and every CSV export is itself an entry."
+    },
+    "table": {
+      "caption": "Audit entries with time, actor, action, organisation, target and redacted details",
+      "when": "When",
+      "actor": "Actor",
+      "action": "Action",
+      "organization": "Organisation",
+      "target": "Target",
+      "details": "Details",
+      "platformWide": "Platform-wide",
+      "former": "Former member",
+      "formerOperator": "Former operator",
+      "openOrganization": "Open {name}",
+      "onlyOrganization": "Only this organisation",
+      "deletedOrganization": "Deleted organisation",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {Show # detail} other {Show # details}}",
+      "diff": "Diff",
+      "metadata": "Metadata",
+      "requestId": "Request",
+      "entryId": "Entry ID",
+      "truncated": "Further rows are not shown.",
+      "noDetails": "No details"
+    },
+    "actorKinds": {
+      "platform": "Platform operator",
+      "user": "Member",
+      "agent": "Track AI",
+      "system": "System",
+      "source_key": "Source key",
+      "unknown": "Unknown"
+    },
+    "categories": {
+      "platform": "Platform",
+      "team": "Team",
+      "organization": "Organisation",
+      "sites": "Sites",
+      "config": "Configuration",
+      "consent": "Consent",
+      "destinations": "Destinations",
+      "credentials": "Credentials",
+      "privacy": "Privacy",
+      "billing": "Billing",
+      "ai": "Track AI",
+      "other": "Other"
+    },
+    "empty": {
+      "title": "No audit entries yet",
+      "text": "Entries appear as soon as someone acts on the platform: a sign-up, a configuration change, an operator action.",
+      "filteredTitle": "No entry matches",
+      "filteredText": "Loosen the filters, widen the date range or clear the search."
+    },
+    "pagination": {
+      "nav": "Pages of the audit log",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {page}"
+    }
+  }
+}

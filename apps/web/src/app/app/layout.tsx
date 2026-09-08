@@ -4,11 +4,15 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/app/shell";
+import { AnnouncementsProvider } from "@/components/app/shell/announcements-banner";
+import { AssistantFeatureProvider } from "@/components/app/shell/assistant-host";
 import { AssistantProvider } from "@/components/chat/assistant-store";
 import { ThemeScript } from "@/components/theme-script";
 import { loadMessages } from "@/i18n/request";
 import { LOCALE_COOKIE, isLocale, routing } from "@/i18n/routing";
 import { aiConfigured } from "@/server/ai/context";
+import { activeAnnouncements } from "@/server/announcements";
+import { isFeatureEnabled } from "@/server/flags";
 import { readAiMotion } from "@/server/preferences";
 import { getOrgContext, getSession, listMemberships } from "@/server/session";
 import { activeSite, paletteDestinations } from "@/server/workspace";
@@ -71,14 +75,17 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       : routing.defaultLocale;
   const messages = await loadMessages(locale);
   const ctx = await getOrgContext();
-  const [workspace, organizations, destinations, aiMotion] = ctx
+  // shell notices and flag gates (Track Operations → Controls): announcements for the banner slot, `ai.assistant` for the panel
+  const [workspace, organizations, destinations, aiMotion, announcements, assistantEnabled] = ctx
     ? await Promise.all([
         activeSite(ctx),
         listMemberships(),
         paletteDestinations(ctx.organization.id),
         readAiMotion(ctx),
+        activeAnnouncements(ctx.organization.id, locale),
+        isFeatureEnabled(ctx.organization.id, "ai.assistant"),
       ])
-    : [null, [], [], "system" as const];
+    : [null, [], [], "system" as const, [], true];
   const environment = workspace?.environment
     ? {
         id: workspace.environment.id,
@@ -108,8 +115,10 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
             aiEnabled={aiConfigured()}
             locale={locale}
           >
+            <AssistantFeatureProvider enabled={assistantEnabled}>
+            <AnnouncementsProvider items={announcements}>
             <AppShell
-              user={{ name: session.user.name, email: session.user.email }}
+              user={{ name: session.user.name, email: session.user.email, platformRole: session.user.platformRole }}
               organization={
                 ctx
                   ? {
@@ -136,6 +145,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
             >
               {children}
             </AppShell>
+            </AnnouncementsProvider>
+            </AssistantFeatureProvider>
           </AssistantProvider>
         </NextIntlClientProvider>
       </body>

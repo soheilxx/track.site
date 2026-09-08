@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Cerrar",
+      "cancel": "Cancelar",
+      "none": "—",
+      "on": "Activada",
+      "off": "No activada",
+      "verified": "Verificado",
+      "unverified": "No verificado",
+      "former": "Cuenta anterior",
+      "metadata": "Solo metadatos: nombres, correos, roles, estado de la verificación en dos pasos y marcas de tiempo de las sesiones. Nunca tokens de sesión, direcciones IP, agentes de usuario ni datos de usuarios finales.",
+      "adminOnly": "Solo administradores de plataforma."
+    },
+    "roles": {
+      "NONE": "Sin rol de plataforma",
+      "PLATFORM_SUPPORT": "Soporte de plataforma",
+      "PLATFORM_ADMIN": "Administrador de plataforma"
+    },
+    "errors": {
+      "forbidden": "Tu rol de plataforma no permite esta acción.",
+      "invalid": "Revisa los campos marcados.",
+      "confirm_required": "Confirma primero la acción en el diálogo.",
+      "not_found": "No hay ninguna cuenta con esta dirección o id.",
+      "self": "No puedes cambiar tu propio rol de plataforma; debe hacerlo otro administrador de plataforma.",
+      "unchanged": "La cuenta ya tiene este rol.",
+      "lastAdmin": "Es el último administrador de plataforma; concede antes el rol de administrador a otra persona.",
+      "emailNotVerified": "La cuenta no ha verificado su dirección de correo; un rol de plataforma solo se concede a cuentas verificadas.",
+      "ticketRequired": "Eres el único administrador que puede decidir este cambio: un cambio autoaprobado requiere una referencia de ticket.",
+      "needsThirdAdmin": "Existe un segundo administrador de plataforma, pero no puede decidir sobre el cambio de su propio rol. Concede antes el rol de administrador a una tercera persona o usa el comando ops:grant.",
+      "duplicate": "Ya hay un cambio de rol para esta cuenta pendiente de decisión.",
+      "fourEyes": "Tú presentaste esta solicitud; debe aplicarla otro administrador de plataforma (cuatro ojos).",
+      "stale": "El rol de la cuenta cambió desde que se presentó la solicitud; recházala y presenta una nueva.",
+      "expired": "La solicitud caducó; presenta una nueva.",
+      "notPending": "La solicitud ya se decidió.",
+      "notOperator": "Las sesiones solo se revocan a operadores de plataforma; el directorio de clientes es de solo lectura.",
+      "generic": "La acción falló. Inténtalo de nuevo; el fallo ha quedado registrado."
+    },
+    "notices": {
+      "proposed": "Solicitud presentada. Debe aplicarla otro administrador de plataforma; caduca a los siete días.",
+      "applied": "Rol cambiado y registrado como autoaprobado. {count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}}",
+      "approved": "Rol cambiado. {count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}}",
+      "declined": "Solicitud rechazada y registrada.",
+      "withdrawn": "Solicitud retirada y registrada.",
+      "sessionsRevoked": "{count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}} La cuenta tiene que volver a iniciar sesión."
+    },
+    "overview": {
+      "intro": "Cuentas con rol de plataforma, su verificación en dos pasos y sus sesiones, y la regla de los cuatro ojos para conceder roles. Las cuentas de clientes aparecen en el directorio en modo de solo lectura.",
+      "directory": "Directorio de clientes",
+      "grant": "Conceder un rol de plataforma",
+      "rules": {
+        "title": "Estado de los cuatro ojos",
+        "admins": "{eligible} de {total, plural, one {# administrador de plataforma} other {# administradores de plataforma}} pueden decidir solicitudes.",
+        "eligibleHint": "Los administradores que deciden tienen el correo verificado{twoFactor, select, yes { y la verificación en dos pasos activada} other {}}.",
+        "on": "Un cambio de rol que presentes lo aplica otro administrador de plataforma.",
+        "off": "Eres el único administrador que decide: los cambios de rol que presentes se aplican de inmediato, se registran como autoaprobados y requieren una referencia de ticket.",
+        "bootstrap": "El primer administrador de plataforma se crea con el comando ops:grant; a partir de entonces los roles se cambian aquí.",
+        "signOut": "Cada cambio de rol elimina las sesiones guardadas de la cuenta (cierre de sesión forzado). Una sesión en caché puede seguir siendo válida hasta {minutes} minutos."
+      }
+    },
+    "requests": {
+      "title": "Cambios de rol pendientes",
+      "intro": "Las solicitudes esperan aquí hasta que otro administrador de plataforma las aplique o las rechace. Caducan a los siete días.",
+      "empty": "No hay cambios de rol pendientes.",
+      "caption": "Solicitudes de cambio de rol con cuenta, cambio, motivo, solicitante y decisiones disponibles",
+      "account": "Cuenta",
+      "change": "Cambio",
+      "changeValue": "{from} → {to}",
+      "reason": "Motivo",
+      "ticket": "Ticket",
+      "noTicket": "Sin referencia de ticket",
+      "proposer": "Presentada por",
+      "filed": "Presentada el {date}",
+      "expires": "Caduca el {date}",
+      "decision": "Decisión",
+      "states": {
+        "pending": "Pendiente",
+        "stale": "Obsoleta",
+        "expired": "Caducada"
+      },
+      "staleHint": "El rol de la cuenta cambió mientras tanto ({role}); esta solicitud solo puede rechazarse.",
+      "approve": "Aplicar",
+      "decline": "Rechazar",
+      "withdraw": "Retirar",
+      "cannot": {
+        "fourEyes": "Tú presentaste esta solicitud; la aplica otro administrador.",
+        "self": "Es tu propia cuenta.",
+        "stale": "El rol cambió mientras tanto.",
+        "expired": "Caducada.",
+        "lastAdmin": "Eliminaría al último administrador.",
+        "emailNotVerified": "Correo no verificado."
+      },
+      "dialog": {
+        "approveTitle": "¿Aplicar el cambio de rol de {name}?",
+        "approveText": "{from} → {to}. Se cierra la sesión de la cuenta en todas partes y el cambio queda registrado con ambos administradores en el registro de auditoría.",
+        "approveConfirm": "Aplicar cambio",
+        "declineTitle": "¿Rechazar el cambio de rol de {name}?",
+        "declineText": "Nada cambia para la cuenta; la decisión queda registrada en el registro de auditoría.",
+        "declineConfirm": "Rechazar",
+        "withdrawTitle": "¿Retirar tu solicitud para {name}?",
+        "withdrawText": "Nada cambia para la cuenta; la retirada queda registrada en el registro de auditoría.",
+        "withdrawConfirm": "Retirar",
+        "reason": "Nota",
+        "reasonHint": "Opcional, hasta {max} caracteres; se guarda en el registro de auditoría."
+      }
+    },
+    "operators": {
+      "title": "Operadores",
+      "caption": "Cuentas con rol de plataforma, su verificación en dos pasos y de correo, último inicio de sesión, sesiones activas y acciones disponibles",
+      "empty": "Todavía no hay usuarios de plataforma",
+      "emptyText": "Crea el primer administrador de plataforma con el comando ops:grant; los demás roles se conceden aquí.",
+      "count": "{count, plural, one {# operador} other {# operadores}}",
+      "columns": {
+        "account": "Cuenta",
+        "role": "Rol",
+        "security": "Seguridad",
+        "lastSignIn": "Último inicio de sesión",
+        "sessions": "Sesiones",
+        "since": "Desde",
+        "actions": "Acciones"
+      },
+      "twoFactor": "Dos pasos",
+      "email": "Correo",
+      "eligible": "Puede decidir solicitudes",
+      "notEligible": "No puede decidir solicitudes",
+      "memberOf": "{count, plural, one {Miembro de # organización} other {Miembro de # organizaciones}}",
+      "pending": "Cambio pendiente",
+      "noSession": "Sin sesión guardada",
+      "lastSeen": "activo {date}",
+      "activeSessions": "{count, plural, =0 {ninguna activa} one {# activa} other {# activas}}",
+      "changeRole": "Cambiar rol",
+      "revokeSessions": "Cerrar sesión en todas partes",
+      "self": "Tu propia cuenta: tu rol lo cambia otro administrador.",
+      "lastAdmin": "Último administrador de plataforma: no se puede degradar.",
+      "open": "Abrir {name}",
+      "openLabel": "Detalles"
+    },
+    "roleDialog": {
+      "title": "Cambiar el rol de plataforma de {name}",
+      "grantTitle": "Conceder un rol de plataforma",
+      "description": "Rol actual: {role}.",
+      "grantDescription": "La persona se registra primero como usuario normal y verifica el correo; después el rol se concede aquí.",
+      "email": "Dirección de correo",
+      "emailHint": "Dirección exacta de una cuenta existente y verificada.",
+      "role": "Nuevo rol",
+      "reason": "Motivo",
+      "reasonHint": "Al menos {min} caracteres, como máximo {max}. Se guarda en el registro de auditoría.",
+      "ticket": "Referencia de ticket",
+      "ticketHint": "Por ejemplo OPS-1234. Obligatoria cuando ningún otro administrador puede decidir (cambio autoaprobado).",
+      "modeProposal": "Cuatro ojos: esto presenta una solicitud que aplica otro administrador de plataforma.",
+      "modeSelf": "Eres el único administrador que puede decidir: el cambio se aplica de inmediato, se registra como autoaprobado y requiere una referencia de ticket.",
+      "signOut": "Se cierra la sesión de la cuenta en todas partes cuando se aplica el cambio.",
+      "submit": "Presentar solicitud",
+      "submitSelf": "Aplicar cambio"
+    },
+    "revokeDialog": {
+      "title": "¿Cerrar la sesión de {name} en todas partes?",
+      "text": "Se eliminan todas las sesiones guardadas de la cuenta; la persona tiene que volver a iniciar sesión (con verificación en dos pasos). La acción queda registrada en el registro de auditoría.",
+      "selfWarning": "Es tu propia cuenta: tu sesión también se cerrará.",
+      "cache": "Una sesión en caché puede seguir siendo válida hasta {minutes} minutos.",
+      "reason": "Motivo",
+      "reasonHint": "Al menos {min} caracteres; se guarda en el registro de auditoría.",
+      "confirm": "Cerrar sesión en todas partes"
+    },
+    "history": {
+      "title": "Cambios de rol recientes",
+      "intro": "Las {count} entradas de rol más recientes del registro de auditoría: solicitudes, cambios aplicados (consola y CLI), rechazos y retiradas.",
+      "empty": "Todavía no hay cambios de rol registrados.",
+      "caption": "Entradas de auditoría recientes sobre roles con fecha, actor, acción, cuenta y cambio",
+      "when": "Cuándo",
+      "actor": "Actor",
+      "action": "Acción",
+      "account": "Cuenta",
+      "change": "Cambio",
+      "actions": {
+        "propose": "Presentada",
+        "set": "Aplicado",
+        "decline": "Rechazada",
+        "withdraw": "Retirada"
+      },
+      "selfApproved": "autoaprobado",
+      "actorKinds": {
+        "platform": "Administrador de plataforma",
+        "system": "Sistema",
+        "unknown": "Desconocido"
+      },
+      "request": "Solicitud {id}",
+      "sessionsRevoked": "{count, plural, one {# sesión revocada} other {# sesiones revocadas}}",
+      "reason": "Motivo: {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Directorio de clientes",
+      "intro": "Cada cuenta con sus organizaciones y roles, verificación en dos pasos, creación y último inicio de sesión: metadatos de solo lectura, sin datos de usuarios finales.",
+      "back": "Usuarios de plataforma",
+      "filters": {
+        "legend": "Filtrar y ordenar",
+        "search": "Buscar",
+        "searchPlaceholder": "Nombre, correo o id",
+        "kind": "Cuentas",
+        "kinds": {
+          "all": "Todas",
+          "operators": "Con rol de plataforma",
+          "customers": "Solo clientes"
+        },
+        "twoFactor": "Dos pasos",
+        "twoFactorAll": "Todas",
+        "twoFactorOn": "Activada",
+        "twoFactorOff": "No activada",
+        "sort": "Ordenar por",
+        "sorts": {
+          "created": "Creación",
+          "name": "Nombre",
+          "email": "Correo",
+          "signin": "Último inicio de sesión"
+        },
+        "direction": "Dirección",
+        "asc": "Ascendente",
+        "desc": "Descendente",
+        "apply": "Aplicar",
+        "reset": "Restablecer"
+      },
+      "count": "{count, plural, one {# cuenta} other {# cuentas}}",
+      "countFiltered": "{count, plural, one {# cuenta coincidente} other {# cuentas coincidentes}}",
+      "operatorsCount": "{count} con rol de plataforma",
+      "caption": "Cuentas con membresías, roles, verificación en dos pasos y de correo, último inicio de sesión y fecha de creación",
+      "columns": {
+        "account": "Cuenta",
+        "memberships": "Organizaciones",
+        "security": "Seguridad",
+        "lastSignIn": "Último inicio de sesión",
+        "created": "Creada"
+      },
+      "noMemberships": "Sin organización",
+      "moreMemberships": "+{count} más",
+      "open": "Abrir {name}",
+      "empty": "Todavía no hay cuentas",
+      "emptyText": "Las cuentas aparecen aquí en cuanto se registra la primera persona.",
+      "emptyFiltered": "Ninguna cuenta coincide",
+      "emptyFilteredText": "Relaja los filtros o vacía la búsqueda.",
+      "pagination": {
+        "nav": "Páginas del directorio",
+        "previous": "Página anterior",
+        "next": "Página siguiente",
+        "page": "Página {page}"
+      },
+      "methods": "Último inicio de sesión: la sesión guardada más reciente (las filas desaparecen al cerrar sesión y en la limpieza, así que «sin sesión guardada» no significa que la persona nunca haya iniciado sesión). Activas: sesiones que no han caducado."
+    },
+    "detail": {
+      "back": "Todos los usuarios de plataforma",
+      "backDirectory": "Directorio de clientes",
+      "id": "ID",
+      "created": "Creada el {date}",
+      "updated": "Actualizada el {date}",
+      "generated": "Cargado el {date}",
+      "sections": {
+        "profile": "Cuenta",
+        "memberships": "Organizaciones",
+        "sessions": "Sesiones",
+        "requests": "Cambio de rol pendiente",
+        "audit": "Entradas de auditoría de esta cuenta"
+      },
+      "profile": {
+        "role": "Rol de plataforma",
+        "email": "Correo",
+        "verified": "Verificación del correo",
+        "twoFactor": "Dos pasos",
+        "twoFactorVerified": "Dos pasos verificados",
+        "twoFactorNotSetUp": "Sin configurar",
+        "passkeys": "{count, plural, =0 {Sin passkeys} one {# passkey} other {# passkeys}}",
+        "locale": "Idioma",
+        "updated": "Última actualización",
+        "customer": "Cuenta de cliente sin rol de plataforma: aquí de solo lectura."
+      },
+      "memberships": {
+        "caption": "Organizaciones a las que pertenece la cuenta, con rol y fecha de incorporación",
+        "organisation": "Organización",
+        "role": "Rol",
+        "joined": "Incorporación",
+        "suspended": "Suspendida",
+        "empty": "No es miembro de ninguna organización.",
+        "open": "Abrir {name}"
+      },
+      "sessions": {
+        "caption": "Sesiones guardadas de la cuenta con inicio, última actividad, caducidad, estado y organización activa",
+        "created": "Inicio de sesión",
+        "lastActive": "Última actividad",
+        "expires": "Caduca",
+        "state": "Estado",
+        "states": {
+          "active": "Activa",
+          "expired": "Caducada"
+        },
+        "organisation": "Organización activa",
+        "summary": "{active, plural, one {# sesión activa} other {# sesiones activas}} · {expired, plural, one {# caducada} other {# caducadas}}",
+        "empty": "No hay sesiones guardadas.",
+        "truncated": "Se muestran las {count} sesiones más recientes.",
+        "noSecrets": "Los tokens de sesión, las direcciones IP y los agentes de usuario nunca se muestran aquí."
+      },
+      "audit": {
+        "caption": "Entradas de auditoría dirigidas a esta cuenta con fecha, actor, acción y detalles censurados",
+        "when": "Cuándo",
+        "actor": "Actor",
+        "action": "Acción",
+        "details": "Detalles",
+        "show": "{count, plural, one {Mostrar # detalle} other {Mostrar # detalles}}",
+        "noDetails": "Sin detalles",
+        "empty": "No hay entradas de auditoría para esta cuenta.",
+        "limit": "Se muestran las {count} entradas más recientes; el módulo Auditoría tiene el registro completo."
+      }
+    }
+  }
+}

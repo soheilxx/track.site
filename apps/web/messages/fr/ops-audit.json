@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Chaque entrée d’audit de toute la plateforme – équipes clientes, Track AI, tâches système, clés source et opérateurs plateforme – avec acteur, action, organisation, cible et détails expurgés. Rechercher, filtrer, paginer et exporter ; le journal lui-même est en ajout seul.",
+    "presets": {
+      "label": "Vues rapides",
+      "all": "Toutes les entrées",
+      "platform": "Actions des opérateurs",
+      "breakGlass": "Trace break-glass",
+      "platformWide": "Plateforme entière",
+      "roles": "Changements de rôle"
+    },
+    "filters": {
+      "legend": "Filtrer",
+      "search": "Recherche",
+      "searchPlaceholder": "Action, cible ou ID de requête",
+      "actor": "Acteur",
+      "everyone": "Tout le monde",
+      "operators": "Opérateurs plateforme",
+      "kinds": "Types d’acteur",
+      "otherUser": "Utilisateur {id}",
+      "action": "Action",
+      "actionPlaceholder": "p. ex. platform.organization",
+      "actionHint": "Action exacte ou préfixe : « platform.organization » inclut toutes les actions en dessous.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "ID ou slug",
+      "target": "Type de cible",
+      "all": "Tous",
+      "scope": "Périmètre",
+      "scopes": {
+        "all": "Toutes les entrées",
+        "platform_wide": "Plateforme entière uniquement (sans organisation)",
+        "break_glass": "Trace break-glass"
+      },
+      "from": "Du (UTC)",
+      "to": "Au (UTC)",
+      "platformOnly": "Actions des opérateurs plateforme uniquement",
+      "platformOnlyHint": "Entrées dont l’acteur est un opérateur plateforme (type d’acteur « platform »), quelle que soit l’organisation.",
+      "apply": "Appliquer",
+      "reset": "Réinitialiser",
+      "export": "Exporter en CSV",
+      "exportHint": "Les mêmes filtres et les mêmes listes de clés expurgées que ce tableau, du plus récent au plus ancien, au plus {max} lignes ; chaque export est consigné dans le journal d’audit."
+    },
+    "summary": {
+      "count": "{count} entrées",
+      "countFiltered": "{count} entrées correspondantes",
+      "generated": "Chargé le {date}",
+      "organization": "Organisation : {name}",
+      "deletedOrganization": "{id} (n’existe plus)",
+      "unknownOrganization": "Aucune organisation n’a l’ID ou le slug « {input} » ; rien ne correspondra tant qu’il n’est pas corrigé.",
+      "actorFallback": "Acteur : {name}",
+      "actorUnknown": "Acteur : utilisateur {id} (n’existe plus)"
+    },
+    "notes": {
+      "retention": "Les entrées sont conservées {days} jours par défaut ; une organisation peut fixer sa propre fenêtre pour son journal d’audit, et les entrées sans organisation suivent la valeur par défaut. La tâche de rétention supprime définitivement les entrées plus anciennes : seul un export permet de les garder plus longtemps.",
+      "redacted": "Les valeurs sont expurgées avant l’enregistrement et de nouveau avant l’affichage ; les données personnelles d’utilisateurs finaux et les secrets n’apparaissent jamais ici.",
+      "appendOnly": "Le journal est en ajout seul : rien ici ne peut être modifié ni supprimé, et chaque export CSV est lui-même une entrée."
+    },
+    "table": {
+      "caption": "Entrées d’audit avec horodatage, acteur, action, organisation, cible et détails expurgés",
+      "when": "Quand",
+      "actor": "Acteur",
+      "action": "Action",
+      "organization": "Organisation",
+      "target": "Cible",
+      "details": "Détails",
+      "platformWide": "Plateforme entière",
+      "former": "Ancien membre",
+      "formerOperator": "Ancien opérateur",
+      "openOrganization": "Ouvrir {name}",
+      "onlyOrganization": "Cette organisation uniquement",
+      "deletedOrganization": "Organisation supprimée",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {Afficher # détail} other {Afficher # détails}}",
+      "diff": "Diff",
+      "metadata": "Métadonnées",
+      "requestId": "Requête",
+      "entryId": "ID de l’entrée",
+      "truncated": "Les lignes suivantes ne sont pas affichées.",
+      "noDetails": "Aucun détail"
+    },
+    "actorKinds": {
+      "platform": "Opérateur plateforme",
+      "user": "Membre",
+      "agent": "Track AI",
+      "system": "Système",
+      "source_key": "Clé source",
+      "unknown": "Inconnu"
+    },
+    "categories": {
+      "platform": "Plateforme",
+      "team": "Équipe",
+      "organization": "Organisation",
+      "sites": "Sites",
+      "config": "Configuration",
+      "consent": "Consentement",
+      "destinations": "Destinations",
+      "credentials": "Identifiants",
+      "privacy": "Confidentialité",
+      "billing": "Facturation",
+      "ai": "Track AI",
+      "other": "Autre"
+    },
+    "empty": {
+      "title": "Aucune entrée d’audit pour l’instant",
+      "text": "Les entrées apparaissent dès que quelqu’un agit sur la plateforme : une inscription, un changement de configuration, une action d’opérateur.",
+      "filteredTitle": "Aucune entrée ne correspond",
+      "filteredText": "Assouplissez les filtres, élargissez la période ou effacez la recherche."
+    },
+    "pagination": {
+      "nav": "Pages du journal d’audit",
+      "previous": "Page précédente",
+      "next": "Page suivante",
+      "page": "Page {page}"
+    }
+  }
+}

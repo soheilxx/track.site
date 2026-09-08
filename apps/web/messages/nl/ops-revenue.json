@@ -1,0 +1,263 @@
+{
+  "opsRevenue": {
+    "context": {
+      "asOf": "Stand {at}",
+      "period": "Gebruiksperiode {period}",
+      "ledger": "Factuurgrootboek: laatste Stripe-event {at}",
+      "ledgerNone": "Factuurgrootboek: nog geen Stripe-webhookevent ontvangen",
+      "ledgerFailed": "{count, plural, one {# webhookevent mislukt} other {# webhookevents mislukt}}",
+      "stripe": {
+        "test": "Stripe in testmodus",
+        "live": "Stripe in livemodus",
+        "unknown": "Stripe geconfigureerd, modus onbekend",
+        "none": "Stripe niet geconfigureerd"
+      }
+    },
+    "export": {
+      "subscriptions": "Abonnementen exporteren (CSV)",
+      "overage": "Meerverbruik exporteren (CSV)",
+      "hint": "Elke export wordt vastgelegd in het auditlog van het platform."
+    },
+    "kpis": {
+      "mrr": {
+        "label": "MRR",
+        "hint": "{count, plural, one {# geprijsd abonnement} other {# geprijsde abonnementen}} tegen lijstprijs"
+      },
+      "arr": {
+        "label": "ARR",
+        "hint": "MRR × 12"
+      },
+      "paying": {
+        "label": "Betalende abonnementen",
+        "hint": "{monthly} maandelijks · {yearly} jaarlijks"
+      },
+      "atRisk": {
+        "label": "MRR in gevaar",
+        "hint": "{count, plural, one {# abonnement achterstallig of onbetaald} other {# abonnementen achterstallig of onbetaald}}"
+      }
+    },
+    "plans": {
+      "title": "Omzet per abonnement",
+      "intro": "Actieve abonnementen per catalogusplan en interval, gewaardeerd tegen de lijstprijzen van vandaag. Proefperiodes en mislukte betalingen staan er ter context bij en tellen nooit mee in de MRR.",
+      "caption": "Abonnementen en MRR per plan",
+      "columns": {
+        "plan": "Plan",
+        "active": "Actief",
+        "monthly": "Maandelijks",
+        "yearly": "Jaarlijks",
+        "trialing": "Proef",
+        "pastDue": "Achterstallig",
+        "mrr": "MRR",
+        "share": "Aandeel"
+      },
+      "customPrice": "Prijs op maat — niet in de MRR",
+      "other": "Onbekend plan-id",
+      "empty": {
+        "title": "Nog geen abonnementen",
+        "text": "Het factuurgrootboek bevat geen abonnementsrijen. Het vult zich via Stripe-webhooks zodra de eerste checkout is afgerond."
+      },
+      "excluded": {
+        "title": "Niet geprijsd",
+        "custom_price": "{count, plural, one {# actief Enterprise-abonnement} other {# actieve Enterprise-abonnementen}} (contractprijs)",
+        "unknown_plan": "{count, plural, one {# actief abonnement} other {# actieve abonnementen}} op een plan dat de catalogus niet kent",
+        "unknown_interval": "{count, plural, one {# actief abonnement} other {# actieve abonnementen}} zonder factureringsinterval"
+      }
+    },
+    "trials": {
+      "title": "Proefperiodes",
+      "intro": "Catalogusproef: {days} dagen {plan}, {card}. Ze wordt nooit vanzelf betaald — een betaald plan vereist een expliciete checkout.",
+      "noCard": "geen kaart nodig",
+      "card": "kaart vereist",
+      "stats": {
+        "active": "Lopend",
+        "endingSoon": "Eindigt binnen {days} dagen",
+        "expired": "Beëindigd, nog als proef gemarkeerd"
+      },
+      "noData": {
+        "title": "Geen proefgegevens",
+        "text": "Geen enkel abonnement in het factuurgrootboek heeft een proefstatus (status ‘trialing’ of een einddatum van de proef). Er wordt niets geteld."
+      },
+      "caption": "Lopende proefperiodes",
+      "columns": {
+        "organisation": "Organisatie",
+        "plan": "Plan",
+        "trialEnd": "Proef eindigt",
+        "remaining": "Resterend",
+        "stripe": "Stripe"
+      },
+      "daysLeft": "{count, plural, =0 {eindigt vandaag} one {# dag} other {# dagen}}",
+      "ended": "{count, plural, one {# dag geleden beëindigd} other {# dagen geleden beëindigd}}",
+      "noEnd": "geen einddatum"
+    },
+    "pastDue": {
+      "title": "Achterstallig en onbetaald",
+      "intro": "Abonnementen waarvan de betaling is mislukt. De respijtperiode komt uit het grootboek (zeven dagen nadat Stripe achterstalligheid meldde); daarna gelden de harde limieten.",
+      "caption": "Achterstallige en onbetaalde abonnementen",
+      "graceOver": "respijtperiode verstreken – harde limieten gelden",
+      "empty": {
+        "title": "Geen mislukte betalingen",
+        "text": "Op dit moment is geen enkel abonnement achterstallig of onbetaald."
+      },
+      "columns": {
+        "organisation": "Organisatie",
+        "plan": "Plan",
+        "status": "Status",
+        "grace": "Respijt tot",
+        "periodEnd": "Einde periode",
+        "mrr": "MRR in gevaar",
+        "stripe": "Stripe"
+      }
+    },
+    "cancellations": {
+      "title": "Opzeggingen",
+      "intro": "Opgezegde abonnementen op de datum van het opzegverzoek (canceled_at van Stripe), met de MRR tegen lijstprijs die ze droegen. Geplande opzeggingen van lopende abonnementen staan apart.",
+      "window": "Laatste {days} dagen",
+      "lost": "{amount} MRR",
+      "pending": "Gepland",
+      "pendingHint": "{amount} MRR eindigt op de geplande datum",
+      "recentTitle": "Opgezegd in de laatste {days} dagen",
+      "recentCaption": "Recent opgezegde abonnementen",
+      "pendingTitle": "Geplande opzeggingen",
+      "pendingCaption": "Abonnementen met een geplande opzegging",
+      "emptyRecent": "In de laatste {days} dagen is geen abonnement opgezegd.",
+      "emptyPending": "Er is geen opzegging gepland.",
+      "columns": {
+        "organisation": "Organisatie",
+        "plan": "Plan",
+        "interval": "Interval",
+        "canceledAt": "Opgezegd",
+        "cancelAt": "Eindigt",
+        "mrr": "MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "overage": {
+      "title": "Blootstelling meerverbruik",
+      "intro": "Organisaties boven hun maandelijkse eventlimiet in periode {period}: pakketten tegen de lijstprijs van de catalogus, teruggebracht tot wat het meerverbruikbeleid van elke organisatie het platform laat factureren. Een lijstprijs is geen factuur.",
+      "total": "Factureerbare blootstelling",
+      "totalHint": "{list} tegen lijstprijs bij {count, plural, one {# organisatie} other {# organisaties}}",
+      "contractual": "{count, plural, one {# organisatie} other {# organisaties}} met contractueel meerverbruik (geen lijstprijs)",
+      "caption": "Meerverbruik per organisatie",
+      "empty": {
+        "title": "Geen meerverbruik",
+        "text": "Geen enkele organisatie zit in periode {period} boven haar eventlimiet."
+      },
+      "columns": {
+        "organisation": "Organisatie",
+        "plan": "Plan",
+        "billable": "Factureerbare events",
+        "limit": "Limiet",
+        "over": "Erboven",
+        "packs": "Pakketten",
+        "list": "Lijstprijs",
+        "policy": "Beleid",
+        "exposure": "Blootstelling"
+      },
+      "packInfo": "{packs} × {events}",
+      "policies": {
+        "allow": "Toestaan",
+        "cost_limit": "Kostenlimiet",
+        "pause": "Pauzeren"
+      },
+      "paused": "gepauzeerd op {when}",
+      "contractualCell": "Contractueel"
+    },
+    "usage": {
+      "title": "Organisaties met het hoogste gebruik",
+      "intro": "De {count} organisaties met de meeste factureerbare events in periode {period}, uit de gebruikstellers — alleen totalen, geen eventdata.",
+      "caption": "Organisaties gerangschikt op factureerbare events",
+      "empty": {
+        "title": "Geen gebruikstellers",
+        "text": "Nog geen enkele organisatie heeft gebruikstellers voor periode {period}. De tellers worden geschreven door de gebruiksjob."
+      },
+      "columns": {
+        "rank": "#",
+        "organisation": "Organisatie",
+        "plan": "Plan",
+        "billable": "Factureerbare events",
+        "accepted": "Geaccepteerd",
+        "limit": "Limiet",
+        "used": "Van limiet",
+        "sites": "Sites"
+      },
+      "noLimit": "geen plafond",
+      "noPlan": "geen abonnement"
+    },
+    "invoices": {
+      "title": "Recente facturen (Stripe)",
+      "intro": "De nieuwste facturen, live uit Stripe gelezen met de geconfigureerde sleutel. De bedragen zijn die van Stripe, in de valuta van de factuur.",
+      "caption": "Recente Stripe-facturen",
+      "notConfigured": {
+        "title": "Stripe niet geconfigureerd",
+        "text": "In deze omgeving is geen Stripe secret key ingesteld, dus facturen kunnen niet worden gelezen."
+      },
+      "forbidden": {
+        "title": "Niet toegestaan met de huidige sleutel",
+        "text": "De geconfigureerde Stripe-sleutel is beperkt en heeft geen leestoegang tot facturen ({detail}). Open de facturen in het Stripe-dashboard of breid de rechten van de sleutel uit."
+      },
+      "error": {
+        "title": "Stripe antwoordde niet",
+        "text": "De factuurlijst kon niet worden geladen ({detail}). De rest van deze pagina komt uit het factuurgrootboek en is niet getroffen."
+      },
+      "empty": {
+        "title": "Geen facturen",
+        "text": "Stripe gaf geen facturen terug voor dit account."
+      },
+      "more": "Stripe bevat meer facturen dan hier worden getoond.",
+      "columns": {
+        "number": "Nummer",
+        "organisation": "Organisatie",
+        "status": "Status",
+        "due": "Verschuldigd bedrag",
+        "paid": "Betaald",
+        "created": "Aangemaakt",
+        "dueDate": "Vervalt",
+        "stripe": "Stripe"
+      },
+      "statuses": {
+        "draft": "Concept",
+        "open": "Open",
+        "paid": "Betaald",
+        "uncollectible": "Oninbaar",
+        "void": "Vervallen",
+        "unknown": "Onbekend"
+      },
+      "unknownCustomer": "Niet in het grootboek",
+      "noNumber": "geen nummer"
+    },
+    "stripe": {
+      "customer": "Klant",
+      "subscription": "Abonnement",
+      "invoice": "Factuur",
+      "opensNewTab": "opent het Stripe-dashboard in een nieuw tabblad",
+      "noId": "geen Stripe-id"
+    },
+    "status": {
+      "none": "Geen",
+      "trialing": "Proef",
+      "active": "Actief",
+      "past_due": "Achterstallig",
+      "canceled": "Opgezegd",
+      "unpaid": "Onbetaald",
+      "incomplete": "Onvolledig",
+      "incomplete_expired": "Onvolledig, verlopen",
+      "paused": "Gepauzeerd"
+    },
+    "interval": {
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "unknown": "Onbekend"
+    },
+    "org": {
+      "suspended": "Geschorst"
+    },
+    "method": {
+      "title": "Hoe deze cijfers tot stand komen",
+      "mrr": "De MRR telt de lijstprijs uit de catalogus op van elk abonnement met status ‘active’: maandplannen tegen de maandprijs, jaarplannen tegen een twaalfde van de jaarprijs. Stripe-bedragen, kortingen, belastingen en creditnota’s worden niet toegepast.",
+      "atRisk": "MRR in gevaar is dezelfde berekening voor abonnementen die achterstallig of onbetaald zijn.",
+      "trials": "Proefperiodes tellen nooit mee in de MRR. De sectie Proefperiodes toont alleen wat het grootboek bevat.",
+      "overage": "Meerverbruik zet de gebruikstellers van de periode af tegen de planlimiet en de cataloguspakketten. Beleid ‘Pauzeren’ factureert niets; ‘Kostenlimiet’ factureert hoogstens de pakketten binnen de limiet.",
+      "invoices": "Facturen worden live uit Stripe gelezen en zijn de enige Stripe-bedragen op deze pagina. Niets hier is een geboekt cijfer; het grootboek volgt de Stripe-webhooks."
+    }
+  }
+}

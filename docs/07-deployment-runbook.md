@@ -32,7 +32,7 @@ Environments: development -> staging -> production, with separate OpenAI project
 
 1. CI green on the feature branch (all gates in `.github/workflows/ci.yml`).
 2. Migrations are expand/contract; `pnpm db:check` fails CI on drift.
-   - Migrations are hand-written SQL under `packages/db/drizzle/` (`--> statement-breakpoint`, idempotent DDL: `IF NOT EXISTS`, `DROP POLICY IF EXISTS` + `CREATE POLICY`, `ADD VALUE IF NOT EXISTS`) and registered in `drizzle/meta/_journal.json`; the migrator applies every journal entry whose `when` is newer than the last applied one, so an entry is added at the end and never reordered. Current list: 0000 baseline, 0001 RLS + partitions, 0002 credential kinds, 0003 shop connections, 0004 tariff catalogue, 0005 knowledge feedback, 0006 workspace preferences, 0007 event lineage + test lab runs, 0008 destination health snapshots, 0009 data-quality workflow + revenue reconciliation, 0010 release approvals + scheduled publish, 0012 approval policy + approval requests (0011 is unused), 0013 alert channels, rules and events (Alerts & Incident Mode).
+   - Migrations are hand-written SQL under `packages/db/drizzle/` (`--> statement-breakpoint`, idempotent DDL: `IF NOT EXISTS`, `DROP POLICY IF EXISTS` + `CREATE POLICY`, `ADD VALUE IF NOT EXISTS`) and registered in `drizzle/meta/_journal.json`; the migrator applies every journal entry whose `when` is newer than the last applied one, so an entry is added at the end and never reordered. Current list: 0000 baseline, 0001 RLS + partitions, 0002 credential kinds, 0003 shop connections, 0004 tariff catalogue, 0005 knowledge feedback, 0006 workspace preferences, 0007 event lineage + test lab runs, 0008 destination health snapshots, 0009 data-quality workflow + revenue reconciliation, 0010 release approvals + scheduled publish, 0012 approval policy + approval requests (0011 is unused), 0013 alert channels, rules and events (Alerts & Incident Mode), 0014 operator console foundation (role `tracksite_ops`, organisation suspension, feature flags + overrides, platform announcements, worker heartbeats, operator notes, contact-request workflow, break-glass additions; docs/17).
    - Parity gate: `pnpm --filter @track-site/db migrate` against a fresh `*_test` database, then `pnpm --filter @track-site/db migrate:check` (journal ↔ applied) and `pnpm --filter @track-site/db schema:check` (drizzle schema ↔ database columns, RLS and a policy on every tenant table). A tenant table = `organization_id` + org index + `ENABLE ROW LEVEL SECURITY` + policy `<table>_tenant_isolation … TO tracksite_app`.
 3. Deploy worker first, then collector, then web.
 4. Verify queue lag, DLQ size, delivery success rate, config activation < 60 s.
@@ -48,10 +48,32 @@ Environments: development -> staging -> production, with separate OpenAI project
 | Rotate master key | `pnpm --filter @track-site/core keys:rotate` re-wraps DEKs |
 | Backups | daily snapshots + PITR (35 days); restore test documented in `docs/ops/restore-tests.md` |
 | Incident | `docs/ops/incident-runbook.md` |
+| Operator console | `https://www.track.site/ops` (docs/17-operations-console.md); platform roles via `ops:grant`, see below |
+| `OPS_REQUIRE_2FA` | apps/web, default `true`: every `/ops` page and platform server action requires the operator's two-factor authentication (step-up). Set to `false` only in a local `.env`; `APP_ENV=production` always requires two-factor regardless of the value |
+
+### Operator access (Track Operations, `/ops`)
+
+Platform roles (`PLATFORM_SUPPORT`, `PLATFORM_ADMIN`) are granted only through the audited CLI in `packages/db`, never through the public API. The person signs up as a normal Track user and verifies the e-mail first; the console additionally requires two-factor authentication for the account (`OPS_REQUIRE_2FA`, always enforced in production).
+
+```bash
+# staging / local (DATABASE_URL from .env)
+pnpm --filter @track-site/db ops:grant --email <address> --role PLATFORM_ADMIN   # PLATFORM_ADMIN | PLATFORM_SUPPORT | NONE
+pnpm --filter @track-site/db ops:users                                             # list platform users (no secrets)
+
+# production: through the prod-env wrapper, so the pulled Vercel environment never touches the shell history
+npx vercel env pull <scratch>/.env.production --environment production --scope modernice
+node <scratch>/run-with-prod-env.mjs pnpm --filter @track-site/db migrate          # migration 0014 must be applied first
+node <scratch>/run-with-prod-env.mjs pnpm --filter @track-site/db ops:grant --email <owner address> --role PLATFORM_ADMIN
+node <scratch>/run-with-prod-env.mjs pnpm --filter @track-site/db ops:users
+```
+
+The wrapper (`run-with-prod-env.mjs`, kept outside the repository in the operator's scratch directory) loads the pulled variables into the child process and prints only the command's output. `ops:grant` refuses to run without an explicit `--email`, refuses to demote the last `PLATFORM_ADMIN` without `--force`, and writes an `audit_log` entry (`platform.role.set`, actor `system` / `cli:ops-grant`). Afterwards the account enrols two-factor and opens `/ops`; the first admin then grants further roles from the Platform users module (four eyes once a second admin exists; with exactly two eligible admins a third admin or the CLI is needed to change one of them).
+
+Local development: `SEED_DEMO=true pnpm db:seed` creates the platform admin `ops@acme.test` / `Demo-Password-123!` (verified, no two-factor, not a member of `acme-demo`), which works with `OPS_REQUIRE_2FA=false` in `.env`; `pnpm --filter @track-site/db ops:users` lists it. The customer dashboard shows a "Track Operations" entry in the account menu and the Ctrl/Cmd+K palette for accounts with a platform role; the console enforces the role and the two-factor rule again on every request.
 
 ## Worker jobs
 
-`apps/worker/src/jobs/index.ts` (`JOB_SCHEDULE`) runs these in-process on every worker; each job is idempotent and safe to run on several instances, a tick is skipped while the previous run of the same job is still going, and the worker `/health` endpoint lists every job with interval, run count, last run and last error.
+`apps/worker/src/jobs/index.ts` (`JOB_SCHEDULE`) runs these in-process on every worker; each job is idempotent and safe to run on several instances, a tick is skipped while the previous run of the same job is still going, and the worker `/health` endpoint lists every job with interval, run count, last run and last error. After every run the worker also upserts `worker_heartbeats` (job, last run, last success, last error, duration, host; migration 0014) for the operator console's Platform health page — a heartbeat that cannot be written is logged, never thrown.
 
 | Job | Interval | What it does | Feeds |
 | --- | --- | --- | --- |

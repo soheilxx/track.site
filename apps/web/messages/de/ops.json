@@ -1,0 +1,138 @@
+{
+  "ops": {
+    "title": "Track Operations",
+    "skipToContent": "Zum Inhalt springen",
+    "brandHome": "Track Operations – Übersicht",
+    "backToDashboard": "Kunden-Dashboard",
+    "roleLabel": "Plattformrolle",
+    "roles": {
+      "PLATFORM_SUPPORT": "Plattform-Support",
+      "PLATFORM_ADMIN": "Plattform-Admin"
+    },
+    "nav": {
+      "label": "Operations",
+      "menuTitle": "Navigation",
+      "openMenu": "Navigation öffnen",
+      "closeMenu": "Navigation schließen",
+      "overview": "Übersicht",
+      "organisations": "Organisationen",
+      "breakGlass": "Break-glass",
+      "health": "Plattformstatus",
+      "revenue": "Umsatz",
+      "controls": "Steuerung",
+      "inbox": "Posteingang",
+      "growth": "Wachstum",
+      "audit": "Audit",
+      "users": "Plattformnutzer",
+      "content": "Inhalte"
+    },
+    "environment": {
+      "label": "Umgebung",
+      "host": "Host",
+      "development": "Entwicklung",
+      "test": "Test",
+      "staging": "Staging",
+      "production": "Produktion",
+      "help": {
+        "development": "Lokale Entwicklung: synthetische Daten, keine Kunden betroffen.",
+        "test": "Testumgebung: synthetische Daten, keine Kunden betroffen.",
+        "staging": "Staging: Vorproduktionsdaten, keine Kunden betroffen.",
+        "production": "Produktion: Jede Aktion hier betrifft echte Kunden und wird auditiert."
+      }
+    },
+    "user": {
+      "menu": "Kontomenü",
+      "signedInAs": "Angemeldet als",
+      "dashboard": "Kunden-Dashboard öffnen",
+      "logout": "Abmelden"
+    },
+    "gate": {
+      "status": "403 · Zugriff verweigert",
+      "noRole": {
+        "title": "Kein Plattformzugriff",
+        "text": "Dein Konto hat keine Plattformrolle. Track Operations ist den Betreibern von Track vorbehalten; ein Plattform-Admin vergibt Rollen mit dem Befehl ops:grant, und jede Vergabe wird auditiert.",
+        "back": "Zurück zum Dashboard"
+      },
+      "twoFactor": {
+        "title": "Zuerst Zwei-Faktor-Authentifizierung aktivieren",
+        "text": "Track Operations verlangt von jeder Betreiberin und jedem Betreiber eine Zwei-Faktor-Authentifizierung (Step-up). Aktiviere sie für dein Konto, melde dich erneut an und kehre zu dieser Seite zurück.",
+        "back": "Zurück zum Dashboard"
+      },
+      "insufficientRole": {
+        "title": "Plattform-Admin erforderlich",
+        "text": "Dieser Bereich ist Plattform-Admins vorbehalten. Der Plattform-Support sieht Organisationen, Break-glass, Plattformstatus, Posteingang, Wachstum, Audit und Inhalte.",
+        "back": "Zurück zur Übersicht"
+      }
+    },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "text": "Diese Seite gibt es in Track Operations nicht oder sie wurde verschoben.",
+      "back": "Zurück zur Übersicht"
+    },
+    "error": {
+      "title": "Etwas ist schiefgelaufen",
+      "text": "Der Fehler wurde aufgezeichnet. Versuche es erneut oder gehe zurück zur Übersicht.",
+      "retry": "Erneut versuchen",
+      "back": "Übersicht"
+    },
+    "placeholder": {
+      "title": "In Vorbereitung",
+      "text": "Dieses Modul entsteht gerade. Es wird hier noch nichts gemessen, deshalb werden keine Zahlen angezeigt."
+    },
+    "overview": {
+      "modules": "Module",
+      "principles": "Betriebsregeln",
+      "rules": {
+        "noRawData": "Keine rohen Event-Payloads, keine personenbezogenen Daten von Endnutzern, keine Geheimnisse — nur aggregierte Ansichten und Metadaten.",
+        "breakGlass": "Mandantendetails brauchen eine genehmigte, zeitlich begrenzte Break-glass-Freigabe; auch dann nur lesend, und jeder Aufruf wird mit der Freigabe-ID auditiert.",
+        "audit": "Jede Änderung ist eine Server-Aktion mit Rollenprüfung, Validierung, ausdrücklicher Bestätigung und einem Audit-Eintrag mit Akteurstyp „platform“."
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Übersicht",
+        "intro": "Plattformweiter Status auf einen Blick: was Aufmerksamkeit braucht, welche Module es gibt und nach welchen Regeln jede Betreiberin und jeder Betreiber arbeitet."
+      },
+      "organisations": {
+        "title": "Organisationen",
+        "intro": "Jede Kundenorganisation mit Tarif, Sites, Nutzung und Status — Metadaten und Aggregate, nie ihre Eventdaten."
+      },
+      "breakGlass": {
+        "title": "Break-glass",
+        "intro": "Zeitlich begrenzter, begründeter und genehmigter Zugriff auf die Details einer Organisation: Anfragen, Genehmigungen, aktive Freigaben und ihre Audit-Spur."
+      },
+      "health": {
+        "title": "Plattformstatus",
+        "intro": "Worker-Heartbeats, Warteschlangen, Zustellerfolg, Dead Letters und Anbieterstatus über alle Mandanten."
+      },
+      "revenue": {
+        "title": "Umsatz",
+        "intro": "Abonnements, monatlich wiederkehrender Umsatz, Testphasen, Überschreitungen und fehlgeschlagene Zahlungen aus dem Abrechnungsbuch und Stripe."
+      },
+      "controls": {
+        "title": "Steuerung",
+        "intro": "Globale und mandantenbezogene Kill-Switches, Sperrungen und Feature-Flags — jeder Schalter wird bestätigt und auditiert."
+      },
+      "inbox": {
+        "title": "Posteingang",
+        "intro": "Kontakt-, Demo- und Support-Anfragen aus den öffentlichen Formularen mit Status, Zuständigkeit und Bearbeitungszeit."
+      },
+      "growth": {
+        "title": "Wachstum",
+        "intro": "Registrierungen, Aktivierung, veröffentlichte Konfigurationen und Wechsel zu bezahlten Tarifen — aggregiert, keine einzelnen Besucher."
+      },
+      "audit": {
+        "title": "Audit",
+        "intro": "Das Plattform-Audit-Log: jede Betreiberaktion mit Akteur, Ziel, Organisation und redigiertem Diff."
+      },
+      "users": {
+        "title": "Plattformnutzer",
+        "intro": "Betreiberinnen und Betreiber mit Plattformrolle, ihr Zwei-Faktor-Status und das Vier-Augen-Prinzip bei der Rollenvergabe."
+      },
+      "content": {
+        "title": "Inhalte",
+        "intro": "Redaktionsboard für Tracking Knowledge: Status und Review-Alter je Sprache aus dem Front Matter, Leserfeedback, Lernpfade, Aktualität von Sitemaps und Feeds, Integrationsabdeckung. Nur lesend — die Inhalte liegen in Git."
+      }
+    }
+  }
+}

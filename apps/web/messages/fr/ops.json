@@ -1,0 +1,138 @@
+{
+  "ops": {
+    "title": "Track Operations",
+    "skipToContent": "Aller au contenu",
+    "brandHome": "Track Operations – Vue d’ensemble",
+    "backToDashboard": "Tableau de bord client",
+    "roleLabel": "Rôle plateforme",
+    "roles": {
+      "PLATFORM_SUPPORT": "Support plateforme",
+      "PLATFORM_ADMIN": "Admin plateforme"
+    },
+    "nav": {
+      "label": "Opérations",
+      "menuTitle": "Navigation",
+      "openMenu": "Ouvrir la navigation",
+      "closeMenu": "Fermer la navigation",
+      "overview": "Vue d’ensemble",
+      "organisations": "Organisations",
+      "breakGlass": "Break-glass",
+      "health": "État de la plateforme",
+      "revenue": "Revenus",
+      "controls": "Contrôles",
+      "inbox": "Boîte de réception",
+      "growth": "Croissance",
+      "audit": "Audit",
+      "users": "Utilisateurs plateforme",
+      "content": "Contenu"
+    },
+    "environment": {
+      "label": "Environnement",
+      "host": "Hôte",
+      "development": "Développement",
+      "test": "Test",
+      "staging": "Staging",
+      "production": "Production",
+      "help": {
+        "development": "Développement local : données synthétiques, aucun client concerné.",
+        "test": "Environnement de test : données synthétiques, aucun client concerné.",
+        "staging": "Staging : données de préproduction, aucun client concerné.",
+        "production": "Production : chaque action ici concerne de vrais clients et est auditée."
+      }
+    },
+    "user": {
+      "menu": "Menu du compte",
+      "signedInAs": "Connecté en tant que",
+      "dashboard": "Ouvrir le tableau de bord client",
+      "logout": "Se déconnecter"
+    },
+    "gate": {
+      "status": "403 · accès refusé",
+      "noRole": {
+        "title": "Aucun accès plateforme",
+        "text": "Votre compte n’a pas de rôle plateforme. Track Operations est réservé aux opérateurs de Track ; un admin plateforme attribue les rôles avec la commande ops:grant, et chaque attribution est auditée.",
+        "back": "Retour au tableau de bord"
+      },
+      "twoFactor": {
+        "title": "Activez d’abord l’authentification à deux facteurs",
+        "text": "Track Operations exige l’authentification à deux facteurs pour chaque opérateur (step-up). Activez-la pour votre compte, reconnectez-vous et revenez sur cette page.",
+        "back": "Retour au tableau de bord"
+      },
+      "insufficientRole": {
+        "title": "Admin plateforme requis",
+        "text": "Cette zone est réservée aux admins plateforme. Le support plateforme voit les organisations, le break-glass, l’état de la plateforme, la boîte de réception, la croissance, l’audit et le contenu.",
+        "back": "Retour à la vue d’ensemble"
+      }
+    },
+    "notFound": {
+      "title": "Page introuvable",
+      "text": "Cette page n’existe pas dans Track Operations ou a été déplacée.",
+      "back": "Retour à la vue d’ensemble"
+    },
+    "error": {
+      "title": "Une erreur s’est produite",
+      "text": "L’erreur a été enregistrée. Réessayez ou revenez à la vue d’ensemble.",
+      "retry": "Réessayer",
+      "back": "Vue d’ensemble"
+    },
+    "placeholder": {
+      "title": "En préparation",
+      "text": "Ce module est en cours de construction. Rien n’est encore mesuré ici, aucun chiffre n’est donc affiché."
+    },
+    "overview": {
+      "modules": "Modules",
+      "principles": "Règles d’exploitation",
+      "rules": {
+        "noRawData": "Aucune charge utile d’événement brute, aucune donnée personnelle d’utilisateur final, aucun secret — uniquement des vues agrégées et des métadonnées.",
+        "breakGlass": "Les détails d’un client exigent une autorisation break-glass approuvée et limitée dans le temps ; même alors en lecture seule, et chaque consultation est auditée avec l’identifiant de l’autorisation.",
+        "audit": "Chaque modification est une action serveur avec vérification du rôle, validation, confirmation explicite et une entrée d’audit avec le type d’acteur « platform »."
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Vue d’ensemble",
+        "intro": "L’état de la plateforme en un coup d’œil : ce qui demande de l’attention, les modules existants et les règles que chaque opérateur applique."
+      },
+      "organisations": {
+        "title": "Organisations",
+        "intro": "Chaque organisation cliente avec son forfait, ses sites, son usage et son état — métadonnées et agrégats, jamais ses données d’événements."
+      },
+      "breakGlass": {
+        "title": "Break-glass",
+        "intro": "Accès limité dans le temps, justifié et approuvé aux détails d’une organisation : demandes, approbations, autorisations actives et leur piste d’audit."
+      },
+      "health": {
+        "title": "État de la plateforme",
+        "intro": "Heartbeats des workers, files d’attente, taux de livraison, dead letters et état des fournisseurs pour tous les clients."
+      },
+      "revenue": {
+        "title": "Revenus",
+        "intro": "Abonnements, revenu mensuel récurrent, essais, dépassements et paiements échoués issus du registre de facturation et de Stripe."
+      },
+      "controls": {
+        "title": "Contrôles",
+        "intro": "Kill switches globaux et par client, suspensions et feature flags — chaque bascule est confirmée et auditée."
+      },
+      "inbox": {
+        "title": "Boîte de réception",
+        "intro": "Demandes de contact, de démo et de support issues des formulaires publics avec statut, responsable et délai de traitement."
+      },
+      "growth": {
+        "title": "Croissance",
+        "intro": "Inscriptions, activation, configurations publiées et passage aux forfaits payants — agrégés, sans visiteurs individuels."
+      },
+      "audit": {
+        "title": "Audit",
+        "intro": "Le journal d’audit de la plateforme : chaque action d’opérateur avec acteur, cible, organisation et diff expurgé."
+      },
+      "users": {
+        "title": "Utilisateurs plateforme",
+        "intro": "Les opérateurs dotés d’un rôle plateforme, leur état à deux facteurs et la règle des quatre yeux pour l’attribution des rôles."
+      },
+      "content": {
+        "title": "Contenu",
+        "intro": "Tableau éditorial de Tracking Knowledge : statut et ancienneté de la relecture par langue d’après le front matter, retours des lecteurs, parcours d’apprentissage, fraîcheur des sitemaps et des flux, couverture des intégrations. Lecture seule : le contenu vit dans git."
+      }
+    }
+  }
+}

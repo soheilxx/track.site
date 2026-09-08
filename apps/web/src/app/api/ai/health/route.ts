@@ -1,13 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { aiConfigured, modelAvailability, modelRouting } from "@/server/ai/context";
 
 export const dynamic = "force-dynamic";
 
 /** AI status for the dashboard: configured, model availability per role, blockers (no key material). */
 export async function GET(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
   const force = req.nextUrl.searchParams.get("force") === "1" && ctx.role === "OWNER";
   const routing = modelRouting();
   const availability = aiConfigured() ? await modelAvailability(force) : null;

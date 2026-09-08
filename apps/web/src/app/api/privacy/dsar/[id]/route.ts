@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import { dataSubjectRequests, recordAudit } from "@track-site/db";
-import { getOrgContext, withOrg } from "@/server/session";
+import { requireApiOrgContext, withOrg } from "@/server/session";
 import { can } from "@track-site/core";
 
 export const dynamic = "force-dynamic";
@@ -9,8 +9,8 @@ export const dynamic = "force-dynamic";
 /** Downloads a completed export/portability report as JSON (audited). */
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
   if (!can(ctx.role, "privacy.dsar") || !/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   const row = await withOrg(ctx, async (tx) => {
     const r = (await tx.select().from(dataSubjectRequests).where(and(eq(dataSubjectRequests.id, id), eq(dataSubjectRequests.organizationId, ctx.organization.id))).limit(1))[0] ?? null;

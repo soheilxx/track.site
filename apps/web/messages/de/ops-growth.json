@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Registrierungen, Aktivierung, Retention, Tarifmix und Connectoren über alle Organisationen — Zähler und Quoten aus den eigenen Tabellen der Plattform, nie Event-Payloads oder Endnutzerdaten. Alle Kalenderwerte in UTC.",
+    "context": {
+      "asOf": "Stand {at}",
+      "organizations": "{count, plural, one {# Organisation} other {# Organisationen}}",
+      "users": "{count, plural, one {# Konto} other {# Konten}}",
+      "sites": "{count, plural, one {# Site} other {# Sites}}"
+    },
+    "sample": {
+      "title": "Kleine Zahlen",
+      "text": "Es gibt weniger als {min} Organisationen. Quoten werden der Vollständigkeit halber gezeigt, aber eine einzelne Organisation verschiebt sie um ganze Prozentpunkte — lesen Sie die Zähler, nicht die Prozente."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organisationen",
+        "hint": "{count, plural, one {# neu in den letzten 30 Tagen} other {# neu in den letzten 30 Tagen}}"
+      },
+      "newOrganizations": {
+        "label": "Neue Organisationen · 30 T",
+        "hint": "{delta} ggü. den vorherigen 30 Tagen ({previous})"
+      },
+      "active": {
+        "label": "Aktive Organisationen · 7 T / 30 T",
+        "hint": "{share7} / {share30} aller Organisationen, mit akzeptierten Events"
+      },
+      "paying": {
+        "label": "Zahlende Organisationen",
+        "hint": "{share} aller Organisationen · aktives Abonnement"
+      }
+    },
+    "signups": {
+      "title": "Registrierungen",
+      "intro": "Neue Konten und Organisationen nach Erstellungsdatum. Ein Konto, das eine Organisation anlegt, zählt in beiden Reihen; eingeladene Mitglieder zählen nur als Konten.",
+      "daily": {
+        "title": "Pro Tag · letzte {days} Tage"
+      },
+      "weekly": {
+        "title": "Pro Woche · letzte {weeks} Wochen"
+      },
+      "series": {
+        "organizations": "Organisationen",
+        "users": "Konten"
+      },
+      "chart": {
+        "daily": "Gruppierte Balken pro Tag: erstellte Organisationen und Konten. Die Tabelle unter dem Diagramm listet dieselben Werte.",
+        "weekly": "Gruppierte Balken pro ISO-Woche ab Montag: erstellte Organisationen und Konten. Die Tabelle unter dem Diagramm listet dieselben Werte."
+      },
+      "table": "Als Tabelle anzeigen",
+      "columns": {
+        "day": "Tag",
+        "week": "Woche ab",
+        "organizations": "Organisationen",
+        "users": "Konten"
+      },
+      "partial": "laufende Woche, noch nicht abgeschlossen",
+      "figures": {
+        "last7": "Letzte 7 Tage",
+        "last30": "Letzte 30 Tage",
+        "previous30": "Vorherige 30 Tage",
+        "accounts": "{count, plural, one {# Konto} other {# Konten}}"
+      },
+      "empty": {
+        "title": "Keine Registrierungen in diesem Zeitraum",
+        "text": "In den letzten 12 Wochen wurde kein Konto und keine Organisation erstellt."
+      }
+    },
+    "funnel": {
+      "title": "Aktivierungs-Funnel",
+      "intro": "Meilensteine, die jede Organisation erreichen kann, gemessen aus den Tabellen, die sie festhalten. Meilensteine sind unabhängig: Eine Organisation zählt auf einer Stufe, sobald sie diesen Meilenstein erreicht hat — unabhängig davon, ob sie die vorherigen passiert hat.",
+      "stages": {
+        "created": "Organisation erstellt",
+        "site": "Erste Site erstellt",
+        "verified": "Snippet verifiziert (Domain)",
+        "event": "Erstes akzeptiertes Event",
+        "destination": "Ziel verbunden",
+        "published": "Konfiguration veröffentlicht",
+        "paying": "Zahlend (aktives Abonnement)"
+      },
+      "columns": {
+        "stage": "Stufe",
+        "count": "Organisationen",
+        "step": "Der vorherigen Stufe",
+        "total": "Von allen",
+        "median": "Median seit Registrierung",
+        "recent": "Letzte {days} Tage",
+        "recentStep": "Der vorherigen Stufe (aktuell)"
+      },
+      "figures": {
+        "all": "Alle Organisationen",
+        "recent": "Erstellt in den letzten {days} Tagen"
+      },
+      "caption": "Aktivierungsstufen mit Anzahl Organisationen, Konversionsquoten und Median-Dauer seit Registrierung",
+      "note": "Quoten sind Verhältnisse von Zählern. „Der vorherigen Stufe“ kann 100 % überschreiten, weil Meilensteine unabhängig sind — eine Organisation kann ohne verifizierte Domain zahlen.",
+      "empty": {
+        "title": "Noch keine Organisationen",
+        "text": "Der Funnel füllt sich, sobald die erste Organisation erstellt ist."
+      }
+    },
+    "retention": {
+      "title": "Wöchentliche Retention",
+      "intro": "Organisationen nach Registrierungswoche (Montag, UTC) und der Anteil, der in jeder Woche nach der Registrierung noch akzeptierte Events sendet — Woche 0 sind die ersten sieben Tage. Gemessen aus den stündlichen Event-Aggregaten.",
+      "caption": "Wöchentliche Retention-Kohorten: Anteil jeder Registrierungswoche, der in den Wochen nach der Registrierung aktiv war",
+      "columns": {
+        "cohort": "Registrierungswoche",
+        "size": "Organisationen",
+        "week": "W{n}"
+      },
+      "cell": "{active} von {size} aktiv",
+      "state": {
+        "partial": "läuft noch",
+        "pending": "noch nicht begonnen"
+      },
+      "small": "kleine Kohorte",
+      "legend": {
+        "scale": "Dunklere Zellen bedeuten einen größeren aktiven Anteil der Kohorte; jede Zelle zeigt zusätzlich ihren Prozentwert.",
+        "partial": "Gestrichelte Zellen laufen noch — die Woche ist nicht für jede Organisation der Kohorte beendet.",
+        "small": "Kohorten mit weniger als {min} Organisationen sind markiert; eine Organisation verschiebt ihre Quote um einen großen Schritt."
+      },
+      "horizon": "Stündliche Aggregate liegen seit {at} vor.",
+      "horizonNone": "Noch keine stündlichen Aggregate vorhanden — Aktivität kann nicht gemessen werden.",
+      "empty": {
+        "title": "Keine Registrierungen in den letzten {weeks} Wochen",
+        "text": "Kohorten erscheinen, sobald eine Organisation innerhalb des Zeitfensters erstellt wird."
+      }
+    },
+    "planMix": {
+      "title": "Tarifmix",
+      "intro": "Organisationen nach Katalogtarif und Abonnementstatus aus dem Abrechnungs-Ledger. Organisationen ohne Ledger-Zeile haben nie einen Checkout gestartet.",
+      "caption": "Organisationen pro Tarif und Abonnementstatus",
+      "columns": {
+        "plan": "Tarif",
+        "organizations": "Organisationen",
+        "share": "Anteil",
+        "active": "Aktiv",
+        "trialing": "Testphase",
+        "pastDue": "Überfällig",
+        "canceled": "Gekündigt",
+        "other": "Sonstige"
+      },
+      "figures": {
+        "paying": "Zahlend"
+      },
+      "none": "Kein Abonnement",
+      "unknown": "Unbekannte Tarif-ID",
+      "empty": {
+        "title": "Noch keine Organisationen",
+        "text": "Der Tarifmix füllt sich, sobald die erste Organisation existiert."
+      }
+    },
+    "connectors": {
+      "title": "Genutzte Connectoren",
+      "intro": "Connector-Typen, sortiert nach Organisationen mit mindestens einem verbundenen Ziel dieses Typs. Nur Zähler von Integrationen — keine Kennungen, keine Zugangsdaten.",
+      "caption": "Connector-Typen nach nutzenden Organisationen",
+      "columns": {
+        "connector": "Connector",
+        "organizations": "Organisationen",
+        "connected": "Verbunden",
+        "paused": "Pausiert",
+        "error": "Fehler",
+        "notConnected": "Nicht verbunden"
+      },
+      "figures": {
+        "organizations": "Organisationen mit Ziel",
+        "connected": "Verbundene Integrationen"
+      },
+      "more": "{count, plural, one {# weiterer Connector-Typ mit weniger Organisationen ist nicht aufgeführt.} other {# weitere Connector-Typen mit weniger Organisationen sind nicht aufgeführt.}}",
+      "empty": {
+        "title": "Noch keine Ziele",
+        "text": "Connectoren erscheinen hier, sobald eine Organisation ein Ziel anlegt."
+      }
+    },
+    "method": {
+      "title": "Methode und Vorbehalte",
+      "items": {
+        "sources": "Registrierungen zählen Zeilen der Konto- und Organisationstabellen nach Erstellungsdatum; nichts wird gesampelt oder geschätzt.",
+        "milestones": "Funnel-Meilensteine: erste Site-Zeile; erste verifizierte Domain (domains.verified_at); erstes stündliches Aggregat mit akzeptierten Events; Erstellungsdatum eines aktuell verbundenen Ziels (ein wieder getrenntes Ziel zählt nicht); erste Konfigurationsveröffentlichung; Anlage eines aktiven Abonnements im Abrechnungs-Ledger.",
+        "proxies": "Die Zeitpunkte für Ziel und Zahlung sind Näherungen — Verbindung und Checkout selbst tragen keinen Zeitstempel —, ihre Median-Dauern sind daher ungefähr.",
+        "retention": "Retention und Aktivität beruhen auf den stündlichen Event-Aggregaten; wurden Aggregate durch Aufbewahrungsregeln gelöscht, wirken ältere Kohorten inaktiv. Der Aggregat-Horizont steht unter dem Raster.",
+        "noGeo": "Keine geografische Aufteilung: Track speichert kein Land für Konten oder Organisationen, daher wird keines gezeigt.",
+        "privacy": "Alles auf dieser Seite ist ein Zähler oder eine Quote über alle Organisationen. Keine Organisation, kein Konto, kein Besucher und kein Event wird identifiziert."
+      }
+    },
+    "overview": {
+      "title": "Kennzahlen",
+      "link": "Wachstum öffnen",
+      "asOf": "Stand {at}",
+      "sample": "Kleine Zahlen: weniger als {min} Organisationen.",
+      "unavailable": "Konnte nicht geladen werden — das Modul hat einen Fehler gemeldet. Details im Modul.",
+      "organizations": {
+        "label": "Organisationen",
+        "hint": "{count, plural, one {# Konto} other {# Konten}}"
+      },
+      "newOrganizations": {
+        "label": "Neue Organisationen · 30 T",
+        "hint": "{count} in den letzten 7 Tagen · {delta} ggü. den vorherigen 30 Tagen"
+      },
+      "active": {
+        "label": "Aktive Organisationen · 7 T / 30 T",
+        "hint": "Mit akzeptierten Events"
+      },
+      "paying": {
+        "label": "Zahlende Organisationen",
+        "hint": "Aktives Abonnement"
+      },
+      "health": {
+        "title": "Plattformstatus",
+        "link": "Plattformstatus öffnen",
+        "checkedAt": "Geprüft {at}",
+        "tiles": {
+          "collector": "Collector",
+          "worker": "Worker",
+          "queues": "Queues",
+          "deliveries": "Zustellungen · 24 h",
+          "database": "Datenbank"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Braucht Aufmerksamkeit",
+          "bad": "Beeinträchtigt",
+          "info": "Info",
+          "neutral": "Nicht gemessen"
+        }
+      },
+      "inbox": {
+        "title": "Posteingang",
+        "link": "Posteingang öffnen",
+        "notMeasured": "Nicht gemessen",
+        "failed": "Konnte nicht geladen werden",
+        "contacts": {
+          "label": "Kontaktanfragen",
+          "open": "{count, plural, one {# offen} other {# offen}}",
+          "detail": "{newCount} neu · {inProgress} in Bearbeitung"
+        },
+        "privacy": {
+          "label": "Datenschutzanfragen",
+          "open": "{count, plural, one {# offen} other {# offen}}",
+          "detail": "{overdue} überfällig · {dueSoon} bald fällig",
+          "unavailable": "Datenschutztabellen in dieser Installation nicht verfügbar"
+        },
+        "alerts": {
+          "label": "Alarme",
+          "open": "{count, plural, one {# offen} other {# offen}}",
+          "detail": "{critical} kritisch · letzte {days} Tage",
+          "unavailable": "Alarmtabellen in dieser Installation nicht verfügbar"
+        }
+      }
+    }
+  }
+}

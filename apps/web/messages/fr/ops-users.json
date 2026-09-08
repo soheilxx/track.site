@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Fermer",
+      "cancel": "Annuler",
+      "none": "—",
+      "on": "Activée",
+      "off": "Non activée",
+      "verified": "Vérifiée",
+      "unverified": "Non vérifiée",
+      "former": "Ancien compte",
+      "metadata": "Métadonnées uniquement : noms, e-mails, rôles, état de la double authentification et horodatages des sessions. Jamais de jetons de session, d’adresses IP, de user agents ni de données d’utilisateurs finaux.",
+      "adminOnly": "Réservé aux admins plateforme."
+    },
+    "roles": {
+      "NONE": "Aucun rôle plateforme",
+      "PLATFORM_SUPPORT": "Support plateforme",
+      "PLATFORM_ADMIN": "Admin plateforme"
+    },
+    "errors": {
+      "forbidden": "Votre rôle plateforme n’autorise pas cette action.",
+      "invalid": "Vérifiez les champs signalés.",
+      "confirm_required": "Confirmez d’abord l’action dans la boîte de dialogue.",
+      "not_found": "Aucun compte avec cette adresse ou cet identifiant.",
+      "self": "Vous ne pouvez pas modifier votre propre rôle plateforme — un autre admin plateforme doit le faire.",
+      "unchanged": "Le compte a déjà ce rôle.",
+      "lastAdmin": "C’est le dernier admin plateforme ; attribuez d’abord le rôle d’admin à quelqu’un d’autre.",
+      "emailNotVerified": "Le compte n’a pas vérifié son adresse e-mail ; un rôle plateforme n’est attribué qu’aux comptes vérifiés.",
+      "ticketRequired": "Vous êtes le seul admin à pouvoir décider de ce changement : une référence de ticket est obligatoire pour un changement auto-approuvé.",
+      "needsThirdAdmin": "Un second admin plateforme existe, mais il ne peut pas décider du changement de son propre rôle. Attribuez d’abord le rôle d’admin à une troisième personne ou utilisez la commande ops:grant.",
+      "duplicate": "Un changement de rôle pour ce compte attend déjà une décision.",
+      "fourEyes": "Vous avez déposé cette demande ; un autre admin plateforme doit l’appliquer (quatre yeux).",
+      "stale": "Le rôle du compte a changé depuis le dépôt de la demande ; refusez-la et déposez-en une nouvelle.",
+      "expired": "La demande a expiré ; déposez-en une nouvelle.",
+      "notPending": "La demande a déjà été tranchée.",
+      "notOperator": "Les sessions ne sont révoquées que pour les opérateurs plateforme ; l’annuaire clients est en lecture seule.",
+      "generic": "L’action a échoué. Réessayez ; l’échec a été enregistré."
+    },
+    "notices": {
+      "proposed": "Demande déposée. Un autre admin plateforme doit l’appliquer ; elle expire au bout de sept jours.",
+      "applied": "Rôle modifié et enregistré comme auto-approuvé. {count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}}",
+      "approved": "Rôle modifié. {count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}}",
+      "declined": "Demande refusée et enregistrée.",
+      "withdrawn": "Demande retirée et enregistrée.",
+      "sessionsRevoked": "{count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}} Le compte doit se reconnecter."
+    },
+    "overview": {
+      "intro": "Comptes dotés d’un rôle plateforme, leur double authentification et leurs sessions, et la règle des quatre yeux pour l’attribution des rôles. Les comptes clients figurent en lecture seule dans l’annuaire.",
+      "directory": "Annuaire clients",
+      "grant": "Attribuer un rôle plateforme",
+      "rules": {
+        "title": "État des quatre yeux",
+        "admins": "{eligible} sur {total, plural, one {# admin plateforme} other {# admins plateforme}} peuvent décider des demandes.",
+        "eligibleHint": "Les admins décideurs ont un e-mail vérifié{twoFactor, select, yes { et la double authentification activée} other {}}.",
+        "on": "Un changement de rôle que vous déposez est appliqué par un autre admin plateforme.",
+        "off": "Vous êtes le seul admin décideur : les changements de rôle que vous déposez sont appliqués immédiatement, enregistrés comme auto-approuvés et exigent une référence de ticket.",
+        "bootstrap": "Le premier admin plateforme est créé avec la commande ops:grant ; ensuite les rôles se modifient ici.",
+        "signOut": "Chaque changement de rôle supprime les sessions enregistrées du compte (déconnexion forcée). Une session en cache peut rester valide jusqu’à {minutes} minutes."
+      }
+    },
+    "requests": {
+      "title": "Changements de rôle en attente",
+      "intro": "Les demandes attendent ici qu’un autre admin plateforme les applique ou les refuse. Elles expirent au bout de sept jours.",
+      "empty": "Aucun changement de rôle en attente.",
+      "caption": "Demandes de changement de rôle avec compte, changement, motif, auteur et décisions possibles",
+      "account": "Compte",
+      "change": "Changement",
+      "changeValue": "{from} → {to}",
+      "reason": "Motif",
+      "ticket": "Ticket",
+      "noTicket": "Aucune référence de ticket",
+      "proposer": "Déposée par",
+      "filed": "Déposée le {date}",
+      "expires": "Expire le {date}",
+      "decision": "Décision",
+      "states": {
+        "pending": "En attente",
+        "stale": "Obsolète",
+        "expired": "Expirée"
+      },
+      "staleHint": "Le rôle du compte a changé entre-temps ({role}) ; cette demande ne peut plus qu’être refusée.",
+      "approve": "Appliquer",
+      "decline": "Refuser",
+      "withdraw": "Retirer",
+      "cannot": {
+        "fourEyes": "Vous avez déposé cette demande — un autre admin l’applique.",
+        "self": "C’est votre propre compte.",
+        "stale": "Rôle modifié entre-temps.",
+        "expired": "Expirée.",
+        "lastAdmin": "Supprimerait le dernier admin.",
+        "emailNotVerified": "E-mail non vérifié."
+      },
+      "dialog": {
+        "approveTitle": "Appliquer le changement de rôle pour {name} ?",
+        "approveText": "{from} → {to}. Le compte est déconnecté partout et le changement est enregistré avec les deux admins dans le journal d’audit.",
+        "approveConfirm": "Appliquer le changement",
+        "declineTitle": "Refuser le changement de rôle pour {name} ?",
+        "declineText": "Rien ne change pour le compte ; la décision est enregistrée dans le journal d’audit.",
+        "declineConfirm": "Refuser",
+        "withdrawTitle": "Retirer votre demande pour {name} ?",
+        "withdrawText": "Rien ne change pour le compte ; le retrait est enregistré dans le journal d’audit.",
+        "withdrawConfirm": "Retirer",
+        "reason": "Note",
+        "reasonHint": "Facultatif, jusqu’à {max} caractères ; enregistré dans le journal d’audit."
+      }
+    },
+    "operators": {
+      "title": "Opérateurs",
+      "caption": "Comptes dotés d’un rôle plateforme, leur double authentification et leur vérification, dernière connexion, sessions actives et actions disponibles",
+      "empty": "Aucun utilisateur plateforme pour l’instant",
+      "emptyText": "Créez le premier admin plateforme avec la commande ops:grant ; les rôles suivants s’attribuent ici.",
+      "count": "{count, plural, one {# opérateur} other {# opérateurs}}",
+      "columns": {
+        "account": "Compte",
+        "role": "Rôle",
+        "security": "Sécurité",
+        "lastSignIn": "Dernière connexion",
+        "sessions": "Sessions",
+        "since": "Depuis",
+        "actions": "Actions"
+      },
+      "twoFactor": "Double authentification",
+      "email": "E-mail",
+      "eligible": "Peut décider des demandes",
+      "notEligible": "Ne peut pas décider des demandes",
+      "memberOf": "{count, plural, one {Membre de # organisation} other {Membre de # organisations}}",
+      "pending": "Changement en attente",
+      "noSession": "Aucune session enregistrée",
+      "lastSeen": "actif {date}",
+      "activeSessions": "{count, plural, =0 {aucune active} one {# active} other {# actives}}",
+      "changeRole": "Changer le rôle",
+      "revokeSessions": "Déconnecter partout",
+      "self": "Votre propre compte : un autre admin change votre rôle.",
+      "lastAdmin": "Dernier admin plateforme : ne peut pas être rétrogradé.",
+      "open": "Ouvrir {name}",
+      "openLabel": "Détails"
+    },
+    "roleDialog": {
+      "title": "Changer le rôle plateforme de {name}",
+      "grantTitle": "Attribuer un rôle plateforme",
+      "description": "Rôle actuel : {role}.",
+      "grantDescription": "La personne s’inscrit d’abord comme utilisateur normal et vérifie son e-mail ; le rôle est ensuite attribué ici.",
+      "email": "Adresse e-mail",
+      "emailHint": "Adresse exacte d’un compte existant et vérifié.",
+      "role": "Nouveau rôle",
+      "reason": "Motif",
+      "reasonHint": "Au moins {min} caractères, au plus {max}. Enregistré dans le journal d’audit.",
+      "ticket": "Référence de ticket",
+      "ticketHint": "Par exemple OPS-1234. Obligatoire quand aucun autre admin ne peut décider (changement auto-approuvé).",
+      "modeProposal": "Quatre yeux : ceci dépose une demande qu’un autre admin plateforme applique.",
+      "modeSelf": "Vous êtes le seul admin à pouvoir décider : le changement est appliqué immédiatement, enregistré comme auto-approuvé et exige une référence de ticket.",
+      "signOut": "Le compte est déconnecté partout au moment où le changement est appliqué.",
+      "submit": "Déposer la demande",
+      "submitSelf": "Appliquer le changement"
+    },
+    "revokeDialog": {
+      "title": "Déconnecter {name} partout ?",
+      "text": "Chaque session enregistrée du compte est supprimée ; la personne doit se reconnecter (avec double authentification). L’action est enregistrée dans le journal d’audit.",
+      "selfWarning": "C’est votre propre compte : vous serez également déconnecté.",
+      "cache": "Une session en cache peut rester valide jusqu’à {minutes} minutes.",
+      "reason": "Motif",
+      "reasonHint": "Au moins {min} caractères ; enregistré dans le journal d’audit.",
+      "confirm": "Déconnecter partout"
+    },
+    "history": {
+      "title": "Changements de rôle récents",
+      "intro": "Les {count} entrées de rôle les plus récentes du journal d’audit — demandes, changements appliqués (console et CLI), refus et retraits.",
+      "empty": "Aucun changement de rôle enregistré pour l’instant.",
+      "caption": "Entrées d’audit récentes sur les rôles avec date, acteur, action, compte et changement",
+      "when": "Quand",
+      "actor": "Acteur",
+      "action": "Action",
+      "account": "Compte",
+      "change": "Changement",
+      "actions": {
+        "propose": "Déposée",
+        "set": "Appliqué",
+        "decline": "Refusée",
+        "withdraw": "Retirée"
+      },
+      "selfApproved": "auto-approuvé",
+      "actorKinds": {
+        "platform": "Admin plateforme",
+        "system": "Système",
+        "unknown": "Inconnu"
+      },
+      "request": "Demande {id}",
+      "sessionsRevoked": "{count, plural, one {# session révoquée} other {# sessions révoquées}}",
+      "reason": "Motif : {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Annuaire clients",
+      "intro": "Chaque compte avec ses organisations et ses rôles, sa double authentification, sa création et sa dernière connexion — métadonnées en lecture seule, aucune donnée d’utilisateur final.",
+      "back": "Utilisateurs plateforme",
+      "filters": {
+        "legend": "Filtrer et trier",
+        "search": "Recherche",
+        "searchPlaceholder": "Nom, e-mail ou identifiant",
+        "kind": "Comptes",
+        "kinds": {
+          "all": "Tous",
+          "operators": "Avec rôle plateforme",
+          "customers": "Clients uniquement"
+        },
+        "twoFactor": "Double authentification",
+        "twoFactorAll": "Toutes",
+        "twoFactorOn": "Activée",
+        "twoFactorOff": "Non activée",
+        "sort": "Trier par",
+        "sorts": {
+          "created": "Création",
+          "name": "Nom",
+          "email": "E-mail",
+          "signin": "Dernière connexion"
+        },
+        "direction": "Ordre",
+        "asc": "Croissant",
+        "desc": "Décroissant",
+        "apply": "Appliquer",
+        "reset": "Réinitialiser"
+      },
+      "count": "{count, plural, one {# compte} other {# comptes}}",
+      "countFiltered": "{count, plural, one {# compte correspondant} other {# comptes correspondants}}",
+      "operatorsCount": "{count} avec un rôle plateforme",
+      "caption": "Comptes avec leurs adhésions, rôles, double authentification et vérification, dernière connexion et date de création",
+      "columns": {
+        "account": "Compte",
+        "memberships": "Organisations",
+        "security": "Sécurité",
+        "lastSignIn": "Dernière connexion",
+        "created": "Créé"
+      },
+      "noMemberships": "Aucune organisation",
+      "moreMemberships": "+{count} autres",
+      "open": "Ouvrir {name}",
+      "empty": "Aucun compte pour l’instant",
+      "emptyText": "Les comptes apparaissent ici dès que la première personne s’inscrit.",
+      "emptyFiltered": "Aucun compte ne correspond",
+      "emptyFilteredText": "Assouplissez les filtres ou videz la recherche.",
+      "pagination": {
+        "nav": "Pages de l’annuaire",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {page}"
+      },
+      "methods": "Dernière connexion : session enregistrée la plus récente (les lignes disparaissent à la déconnexion et au nettoyage ; « aucune session enregistrée » ne signifie donc pas que la personne ne s’est jamais connectée). Actives : sessions non expirées."
+    },
+    "detail": {
+      "back": "Tous les utilisateurs plateforme",
+      "backDirectory": "Annuaire clients",
+      "id": "ID",
+      "created": "Créé le {date}",
+      "updated": "Mis à jour le {date}",
+      "generated": "Chargé le {date}",
+      "sections": {
+        "profile": "Compte",
+        "memberships": "Organisations",
+        "sessions": "Sessions",
+        "requests": "Changement de rôle en attente",
+        "audit": "Entrées d’audit pour ce compte"
+      },
+      "profile": {
+        "role": "Rôle plateforme",
+        "email": "E-mail",
+        "verified": "Vérification de l’e-mail",
+        "twoFactor": "Double authentification",
+        "twoFactorVerified": "Double authentification vérifiée",
+        "twoFactorNotSetUp": "Non configurée",
+        "passkeys": "{count, plural, =0 {Aucune passkey} one {# passkey} other {# passkeys}}",
+        "locale": "Langue",
+        "updated": "Dernière mise à jour",
+        "customer": "Compte client sans rôle plateforme : en lecture seule ici."
+      },
+      "memberships": {
+        "caption": "Organisations dont le compte est membre, avec rôle et date d’adhésion",
+        "organisation": "Organisation",
+        "role": "Rôle",
+        "joined": "Adhésion",
+        "suspended": "Suspendue",
+        "empty": "Membre d’aucune organisation.",
+        "open": "Ouvrir {name}"
+      },
+      "sessions": {
+        "caption": "Sessions enregistrées du compte avec connexion, dernière activité, expiration, état et organisation active",
+        "created": "Connexion",
+        "lastActive": "Dernière activité",
+        "expires": "Expire",
+        "state": "État",
+        "states": {
+          "active": "Active",
+          "expired": "Expirée"
+        },
+        "organisation": "Organisation active",
+        "summary": "{active, plural, one {# session active} other {# sessions actives}} · {expired, plural, one {# expirée} other {# expirées}}",
+        "empty": "Aucune session enregistrée.",
+        "truncated": "Les {count} sessions les plus récentes sont affichées.",
+        "noSecrets": "Les jetons de session, adresses IP et user agents ne sont jamais affichés ici."
+      },
+      "audit": {
+        "caption": "Entrées d’audit visant ce compte avec date, acteur, action et détails caviardés",
+        "when": "Quand",
+        "actor": "Acteur",
+        "action": "Action",
+        "details": "Détails",
+        "show": "{count, plural, one {Afficher # détail} other {Afficher # détails}}",
+        "noDetails": "Aucun détail",
+        "empty": "Aucune entrée d’audit pour ce compte.",
+        "limit": "Les {count} entrées les plus récentes sont affichées ; le module Audit contient le journal complet."
+      }
+    }
+  }
+}

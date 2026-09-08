@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Altas, activación, retención, mezcla de planes y conectores en todas las organizaciones: recuentos y tasas de las propias tablas de la plataforma, nunca cargas de eventos ni datos de usuarios finales. Todos los valores de calendario están en UTC.",
+    "context": {
+      "asOf": "A {at}",
+      "organizations": "{count, plural, one {# organización} other {# organizaciones}}",
+      "users": "{count, plural, one {# cuenta} other {# cuentas}}",
+      "sites": "{count, plural, one {# sitio} other {# sitios}}"
+    },
+    "sample": {
+      "title": "Cifras pequeñas",
+      "text": "Existen menos de {min} organizaciones. Las tasas se muestran por completitud, pero una sola organización las mueve varios puntos porcentuales: lea los recuentos, no los porcentajes."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organizaciones",
+        "hint": "{count, plural, one {# nueva en los últimos 30 días} other {# nuevas en los últimos 30 días}}"
+      },
+      "newOrganizations": {
+        "label": "Organizaciones nuevas · 30 d",
+        "hint": "{delta} frente a los 30 días anteriores ({previous})"
+      },
+      "active": {
+        "label": "Organizaciones activas · 7 d / 30 d",
+        "hint": "{share7} / {share30} de todas las organizaciones, con eventos aceptados"
+      },
+      "paying": {
+        "label": "Organizaciones de pago",
+        "hint": "{share} de todas las organizaciones · suscripción activa"
+      }
+    },
+    "signups": {
+      "title": "Altas",
+      "intro": "Cuentas y organizaciones nuevas por fecha de creación. Una cuenta que crea una organización cuenta en ambas series; los miembros invitados cuentan solo como cuentas.",
+      "daily": {
+        "title": "Por día · últimos {days} días"
+      },
+      "weekly": {
+        "title": "Por semana · últimas {weeks} semanas"
+      },
+      "series": {
+        "organizations": "Organizaciones",
+        "users": "Cuentas"
+      },
+      "chart": {
+        "daily": "Barras agrupadas por día: organizaciones y cuentas creadas. La tabla bajo el gráfico muestra los mismos valores.",
+        "weekly": "Barras agrupadas por semana ISO que empieza el lunes: organizaciones y cuentas creadas. La tabla bajo el gráfico muestra los mismos valores."
+      },
+      "table": "Mostrar como tabla",
+      "columns": {
+        "day": "Día",
+        "week": "Semana del",
+        "organizations": "Organizaciones",
+        "users": "Cuentas"
+      },
+      "partial": "semana en curso, sin terminar",
+      "figures": {
+        "last7": "Últimos 7 días",
+        "last30": "Últimos 30 días",
+        "previous30": "30 días anteriores",
+        "accounts": "{count, plural, one {# cuenta} other {# cuentas}}"
+      },
+      "empty": {
+        "title": "Sin altas en este periodo",
+        "text": "No se creó ninguna cuenta ni organización en las últimas 12 semanas."
+      }
+    },
+    "funnel": {
+      "title": "Embudo de activación",
+      "intro": "Hitos que toda organización puede alcanzar, medidos desde las tablas que los registran. Los hitos son independientes: una organización cuenta en una etapa en cuanto alcanza ese hito, haya pasado o no los anteriores.",
+      "stages": {
+        "created": "Organización creada",
+        "site": "Primer sitio creado",
+        "verified": "Snippet verificado (dominio)",
+        "event": "Primer evento aceptado",
+        "destination": "Destino conectado",
+        "published": "Configuración publicada",
+        "paying": "De pago (suscripción activa)"
+      },
+      "columns": {
+        "stage": "Etapa",
+        "count": "Organizaciones",
+        "step": "De la etapa anterior",
+        "total": "Del total",
+        "median": "Tiempo mediano desde el alta",
+        "recent": "Últimos {days} días",
+        "recentStep": "De la etapa anterior (reciente)"
+      },
+      "figures": {
+        "all": "Todas las organizaciones",
+        "recent": "Creadas en los últimos {days} días"
+      },
+      "caption": "Etapas de activación con número de organizaciones, tasas de conversión y tiempo mediano desde el alta",
+      "note": "Las tasas son cocientes de recuentos. «De la etapa anterior» puede superar el 100 % porque los hitos son independientes: una organización puede pagar sin dominio verificado.",
+      "empty": {
+        "title": "Aún no hay organizaciones",
+        "text": "El embudo se llena en cuanto se crea la primera organización."
+      }
+    },
+    "retention": {
+      "title": "Retención semanal",
+      "intro": "Organizaciones por semana de alta (lunes, UTC) y la proporción que sigue enviando eventos aceptados en cada semana posterior al alta; la semana 0 son los primeros siete días. Medido a partir de los agregados horarios de eventos.",
+      "caption": "Cohortes de retención semanal: proporción de cada semana de alta activa en las semanas posteriores al alta",
+      "columns": {
+        "cohort": "Semana de alta",
+        "size": "Organizaciones",
+        "week": "S{n}"
+      },
+      "cell": "{active} de {size} activas",
+      "state": {
+        "partial": "en curso",
+        "pending": "sin empezar"
+      },
+      "small": "cohorte pequeña",
+      "legend": {
+        "scale": "Las celdas más oscuras indican una mayor proporción activa de la cohorte; cada celda muestra además su porcentaje.",
+        "partial": "Las celdas discontinuas siguen en curso: la semana no ha terminado para todas las organizaciones de la cohorte.",
+        "small": "Las cohortes con menos de {min} organizaciones están marcadas; una sola organización mueve mucho su tasa."
+      },
+      "horizon": "Agregados horarios registrados desde {at}.",
+      "horizonNone": "Aún no hay agregados horarios registrados: la actividad no se puede medir.",
+      "empty": {
+        "title": "Sin altas en las últimas {weeks} semanas",
+        "text": "Las cohortes aparecen en cuanto se crea una organización dentro de la ventana."
+      }
+    },
+    "planMix": {
+      "title": "Mezcla de planes",
+      "intro": "Organizaciones por plan del catálogo y estado de suscripción según el libro de facturación. Las organizaciones sin fila en el libro nunca iniciaron un pago.",
+      "caption": "Organizaciones por plan y estado de suscripción",
+      "columns": {
+        "plan": "Plan",
+        "organizations": "Organizaciones",
+        "share": "Cuota",
+        "active": "Activa",
+        "trialing": "En prueba",
+        "pastDue": "Vencida",
+        "canceled": "Cancelada",
+        "other": "Otro"
+      },
+      "figures": {
+        "paying": "De pago"
+      },
+      "none": "Sin suscripción",
+      "unknown": "Id de plan desconocido",
+      "empty": {
+        "title": "Aún no hay organizaciones",
+        "text": "La mezcla de planes se llena en cuanto existe la primera organización."
+      }
+    },
+    "connectors": {
+      "title": "Conectores en uso",
+      "intro": "Tipos de conector ordenados por las organizaciones que tienen al menos un destino conectado de ese tipo. Solo recuentos de integraciones: sin identificadores ni credenciales.",
+      "caption": "Tipos de conector según las organizaciones que los usan",
+      "columns": {
+        "connector": "Conector",
+        "organizations": "Organizaciones",
+        "connected": "Conectadas",
+        "paused": "En pausa",
+        "error": "Error",
+        "notConnected": "No conectadas"
+      },
+      "figures": {
+        "organizations": "Organizaciones con destino",
+        "connected": "Integraciones conectadas"
+      },
+      "more": "{count, plural, one {# tipo de conector más con menos organizaciones no aparece en la lista.} other {# tipos de conector más con menos organizaciones no aparecen en la lista.}}",
+      "empty": {
+        "title": "Aún no hay destinos",
+        "text": "Los conectores aparecen aquí en cuanto una organización añade un destino."
+      }
+    },
+    "method": {
+      "title": "Método y salvedades",
+      "items": {
+        "sources": "Las altas cuentan filas de las tablas de cuentas y organizaciones por fecha de creación; nada se muestrea ni se estima.",
+        "milestones": "Hitos del embudo: primera fila de sitio; primer dominio verificado (domains.verified_at); primer agregado horario con eventos aceptados; fecha de creación de un destino actualmente conectado (un destino desconectado de nuevo no cuenta); primera publicación de configuración; creación de una suscripción activa en el libro de facturación.",
+        "proxies": "Los instantes de destino y de pago son aproximaciones —la conexión y el pago en sí no llevan marca de tiempo—, por lo que sus tiempos medianos son aproximados.",
+        "retention": "La retención y la actividad se basan en los agregados horarios de eventos; si las reglas de conservación purgaron agregados, las cohortes antiguas parecen inactivas. El horizonte de agregados se indica bajo la cuadrícula.",
+        "noGeo": "Sin desglose geográfico: Track no almacena país para cuentas ni organizaciones, así que no se muestra ninguno.",
+        "privacy": "Todo en esta página es un recuento o una tasa sobre todas las organizaciones. No se identifica ninguna organización, cuenta, visitante ni evento."
+      }
+    },
+    "overview": {
+      "title": "Cifras clave",
+      "link": "Abrir crecimiento",
+      "asOf": "A {at}",
+      "sample": "Cifras pequeñas: menos de {min} organizaciones.",
+      "unavailable": "No se pudo cargar: el módulo informó un error. Abra el módulo para ver los detalles.",
+      "organizations": {
+        "label": "Organizaciones",
+        "hint": "{count, plural, one {# cuenta} other {# cuentas}}"
+      },
+      "newOrganizations": {
+        "label": "Organizaciones nuevas · 30 d",
+        "hint": "{count} en los últimos 7 días · {delta} frente a los 30 días anteriores"
+      },
+      "active": {
+        "label": "Organizaciones activas · 7 d / 30 d",
+        "hint": "Con eventos aceptados"
+      },
+      "paying": {
+        "label": "Organizaciones de pago",
+        "hint": "Suscripción activa"
+      },
+      "health": {
+        "title": "Estado de la plataforma",
+        "link": "Abrir estado de la plataforma",
+        "checkedAt": "Comprobado {at}",
+        "tiles": {
+          "collector": "Colector",
+          "worker": "Worker",
+          "queues": "Colas",
+          "deliveries": "Entregas · 24 h",
+          "database": "Base de datos"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Requiere atención",
+          "bad": "Degradado",
+          "info": "Info",
+          "neutral": "No medido"
+        }
+      },
+      "inbox": {
+        "title": "Bandeja de entrada",
+        "link": "Abrir bandeja de entrada",
+        "notMeasured": "No medido",
+        "failed": "No se pudo cargar",
+        "contacts": {
+          "label": "Solicitudes de contacto",
+          "open": "{count, plural, one {# abierta} other {# abiertas}}",
+          "detail": "{newCount} nuevas · {inProgress} en curso"
+        },
+        "privacy": {
+          "label": "Solicitudes de privacidad",
+          "open": "{count, plural, one {# abierta} other {# abiertas}}",
+          "detail": "{overdue} vencidas · {dueSoon} vencen pronto",
+          "unavailable": "Tablas de privacidad no disponibles en este despliegue"
+        },
+        "alerts": {
+          "label": "Alertas",
+          "open": "{count, plural, one {# abierta} other {# abiertas}}",
+          "detail": "{critical} críticas · últimos {days} días",
+          "unavailable": "Tablas de alertas no disponibles en este despliegue"
+        }
+      }
+    }
+  }
+}

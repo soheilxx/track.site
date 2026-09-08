@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T09:13:52.337Z",
+  "generatedAt": "2026-09-08T15:06:20.932Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -33,9 +33,20 @@
       "destinations-health": 187,
       "events": 426,
       "insights": 232,
+      "ops": 82,
+      "ops-audit": 92,
+      "ops-break-glass": 124,
+      "ops-content": 173,
+      "ops-controls": 235,
+      "ops-growth": 152,
+      "ops-health": 254,
+      "ops-inbox": 218,
+      "ops-organisations": 339,
+      "ops-revenue": 179,
+      "ops-users": 249,
       "releases": 350,
-      "shell": 148,
-      "team": 283
+      "shell": 159,
+      "team": 284
     },
     "copyModules": [
       "AUTH_COPY",
@@ -147,6 +158,61 @@
               "extra": []
             },
             "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-audit": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-break-glass": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-content": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-controls": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-growth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-inbox": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-organisations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-revenue": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-users": {
               "file": true,
               "missing": [],
               "extra": []
@@ -295,6 +361,61 @@
               "missing": [],
               "extra": []
             },
+            "ops": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-audit": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-break-glass": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-content": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-controls": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-growth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-inbox": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-organisations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-revenue": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-users": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "releases": {
               "file": true,
               "missing": [],
@@ -435,6 +556,61 @@
               "extra": []
             },
             "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-audit": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-break-glass": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-content": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-controls": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-growth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-inbox": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-organisations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-revenue": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-users": {
               "file": true,
               "missing": [],
               "extra": []
@@ -583,6 +759,61 @@
               "missing": [],
               "extra": []
             },
+            "ops": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-audit": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-break-glass": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-content": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-controls": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-growth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-inbox": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-organisations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-revenue": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-users": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "releases": {
               "file": true,
               "missing": [],
@@ -723,6 +954,61 @@
               "extra": []
             },
             "insights": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-audit": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-break-glass": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-content": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-controls": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-growth": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-health": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-inbox": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-organisations": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-revenue": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "ops-users": {
               "file": true,
               "missing": [],
               "extra": []

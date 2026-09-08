@@ -12,8 +12,8 @@ import { DEFAULT_LOCALE, isLocale, routing } from "./i18n/routing";
  * language the visitor chose deliberately in the switcher (NEXT_LOCALE cookie), never by geo or
  * Accept-Language detection. Every programme locale is active, so a prefixed path is passed to
  * next-intl as is; should a locale ever be withdrawn from `ACTIVE_LOCALES`, its prefix is simply
- * unknown here and is redirected like any other unprefixed path. Dashboard, API, CDN, Next
- * internals and file-like paths are never redirected or localized.
+ * unknown here and is redirected like any other unprefixed path. Dashboard, operator console (/ops),
+ * API, CDN, Next internals and file-like paths are never redirected or localized.
  */
 const intl = createIntlMiddleware(routing);
 
@@ -31,8 +31,8 @@ const HOST_API = hostOf(process.env.HOST_API);
 const HOST_CDN = hostOf(process.env.HOST_CDN);
 const HOST_MARKETING = hostOf(process.env.HOST_MARKETING);
 
-/** Path prefixes that are served without a locale segment. */
-const UNLOCALIZED_PREFIXES = ["/app", "/api", "/cdn", "/_next"] as const;
+/** Path prefixes that are served without a locale segment (`/ops` is the operator console, docs/17). */
+const UNLOCALIZED_PREFIXES = ["/app", "/ops", "/api", "/cdn", "/_next"] as const;
 
 export function isUnlocalizedPath(pathname: string): boolean {
   return UNLOCALIZED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`)) || pathname.includes(".");

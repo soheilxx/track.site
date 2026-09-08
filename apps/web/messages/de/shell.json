@@ -79,7 +79,8 @@
         "manageSites": "Sites verwalten",
         "openAssistant": "Track AI öffnen",
         "closeAssistant": "Track AI schließen",
-        "logout": "Abmelden"
+        "logout": "Abmelden",
+        "operations": "Track Operations öffnen"
       },
       "modules": {
         "eventsMatrix": "Event Coverage Matrix",
@@ -133,7 +134,8 @@
       "account": "Konto",
       "signedInAs": "Angemeldet als",
       "role": "Rolle",
-      "logout": "Abmelden"
+      "logout": "Abmelden",
+      "operations": "Track Operations"
     },
     "roles": {
       "OWNER": "Inhaber",
@@ -153,6 +155,17 @@
       "text": "Der Fehler wurde aufgezeichnet. Versuche es erneut oder gehe zurück zum Command Center.",
       "retry": "Erneut versuchen",
       "back": "Command Center"
+    },
+    "supportAccess": {
+      "operatorTitle": "Support-Zugriff aktiv bis {until} (Zugriff {grant})",
+      "operatorText": "Du siehst {organization} rein lesend über einen Break-glass-Zugriff. Jeder Seitenaufruf wird im Audit-Log der Organisation festgehalten; Änderungen werden abgelehnt.",
+      "backToOps": "Zurück zu Track Operations",
+      "customerTitle": "Der Track-Support hat bis {until} Lesezugriff auf diese Organisation (Zugriff {grant})",
+      "customerText": "Ein genehmigter, zeitlich begrenzter Support-Zugriff ist aktiv: Track-Mitarbeitende sehen diesen Workspace, können aber nichts ändern, und jede geöffnete Seite wird in deinem Audit-Log festgehalten.",
+      "customerMultiple": "{count} Support-Zugriffe sind aktiv.",
+      "leave": "Support-Ansicht verlassen",
+      "leaving": "Wird verlassen …",
+      "openAudit": "Audit-Log öffnen"
     },
     "pages": {
       "aiSetup": {

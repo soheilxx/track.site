@@ -1,0 +1,284 @@
+{
+  "opsInbox": {
+    "sections": {
+      "label": "Sezioni della posta in arrivo",
+      "requests": "Richieste",
+      "privacy": "Richieste privacy",
+      "alerts": "Riepilogo avvisi",
+      "knowledge": "Feedback Knowledge"
+    },
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "working": "In corso…",
+      "never": "mai",
+      "none": "—",
+      "unassigned": "Non assegnata",
+      "you": "tu",
+      "openOrganization": "Apri organizzazione",
+      "aggregatesOnly": "Solo aggregati e metadati: nessun payload di eventi, nessun dato di utenti finali."
+    },
+    "errors": {
+      "forbidden": "Il tuo ruolo di piattaforma non lo consente.",
+      "invalid": "Controlla i campi evidenziati.",
+      "not_found": "Questa richiesta non esiste più.",
+      "unchanged": "Niente da cambiare: è già in questo stato.",
+      "invalid_transition": "Questo cambio di stato non è consentito dallo stato attuale.",
+      "confirmation_required": "Conferma prima l'azione.",
+      "invalid_assignee": "La persona assegnataria deve avere un ruolo di piattaforma.",
+      "mail_failed": "Impossibile inviare l'e-mail; il tentativo è stato registrato. Controlla il trasporto di posta e riprova.",
+      "generic": "Non ha funzionato. Riprova."
+    },
+    "kinds": {
+      "contact": "Contatto",
+      "demo": "Demo",
+      "support": "Supporto"
+    },
+    "status": {
+      "new": "Nuova",
+      "in_progress": "In lavorazione",
+      "done": "Conclusa",
+      "spam": "Spam"
+    },
+    "delivery": {
+      "delivered": "Inoltrata all'indirizzo della casella",
+      "failed": "Inoltro all'indirizzo della casella non riuscito",
+      "not_sent": "Non inoltrata (nessun indirizzo della casella configurato)"
+    },
+    "requests": {
+      "title": "Richieste di contatto, demo e supporto",
+      "intro": "Tutto ciò che arriva dai moduli pubblici, con stato, assegnatario e stato dell'inoltro. Le risposte partono via e-mail nella lingua di chi ha scritto; ogni cambio di stato, assegnazione e risposta viene registrato nell'audit.",
+      "summary": {
+        "label": "Richieste per stato",
+        "open": "Aperte",
+        "all": "Tutte"
+      },
+      "filters": {
+        "legend": "Filtri",
+        "status": "Stato",
+        "kind": "Tipo",
+        "assignee": "Assegnatario",
+        "search": "Cerca",
+        "searchPlaceholder": "Nome, e-mail o azienda",
+        "apply": "Applica filtri",
+        "reset": "Reimposta",
+        "all": "Tutte",
+        "open": "Aperte (nuove e in lavorazione)",
+        "everyone": "Chiunque",
+        "unassigned": "Non assegnate",
+        "me": "Assegnate a me"
+      },
+      "columns": {
+        "received": "Ricevuta",
+        "kind": "Tipo",
+        "from": "Da",
+        "message": "Messaggio",
+        "status": "Stato",
+        "assignee": "Assegnatario",
+        "delivery": "Inoltro",
+        "actions": "Azioni"
+      },
+      "open": "Apri",
+      "openLabel": "Apri la richiesta di {name}",
+      "caption": "Richieste di contatto, le più recenti per prime",
+      "count": "{count} richieste",
+      "countFiltered": "{count} richieste corrispondono ai filtri",
+      "empty": "Nessuna richiesta aperta",
+      "emptyText": "Le richieste dai moduli pubblici di contatto, demo e supporto compaiono qui non appena qualcuno ne invia una.",
+      "emptyFiltered": "Nessuna richiesta corrisponde a questi filtri",
+      "emptyFilteredText": "Allarga i filtri o reimpostali.",
+      "pagination": {
+        "nav": "Pagine delle richieste",
+        "previous": "Pagina precedente",
+        "next": "Pagina successiva",
+        "page": "Pagina {page}"
+      }
+    },
+    "detail": {
+      "back": "Torna alla posta in arrivo",
+      "title": "Richiesta {kind} di {name}",
+      "message": "Messaggio",
+      "facts": "Dettagli",
+      "email": "E-mail",
+      "company": "Azienda",
+      "locale": "Lingua",
+      "received": "Ricevuta",
+      "handled": "Gestita",
+      "forwarding": "Inoltro",
+      "organization": "Organizzazione al momento dell'invio",
+      "organizationNone": "Nessun accesso a un'organizzazione",
+      "userLinked": "Account con accesso effettuato",
+      "userLinkedYes": "Sì, chi ha scritto aveva effettuato l'accesso",
+      "userLinkedNo": "No, inviata in forma anonima",
+      "reference": "Riferimento",
+      "assignee": "Assegnatario",
+      "status": {
+        "title": "Stato",
+        "current": "Stato attuale",
+        "moveTo": "Segna come «{status}»",
+        "changed": "Stato aggiornato.",
+        "spamDialog": {
+          "title": "Segnare come spam?",
+          "description": "La richiesta scompare dalla vista delle richieste aperte e non è possibile rispondere finché non viene riaperta. L'operazione viene registrata nel registro di audit.",
+          "confirm": "Segna come spam"
+        }
+      },
+      "assign": {
+        "title": "Assegnatario",
+        "label": "Assegna a",
+        "save": "Salva",
+        "saved": "Assegnatario salvato.",
+        "takeOver": "Assegna a me"
+      },
+      "reply": {
+        "title": "Rispondi via e-mail",
+        "intro": "Il tuo testo viene inserito nel modello di risposta nella lingua di chi ha scritto: saluto, il tuo nome come firma e il riferimento {reference}. Il registro di audit annota che è stata inviata una risposta, non il suo testo.",
+        "language": "Inviata in {language}",
+        "recipient": "Destinatario",
+        "body": "La tua risposta",
+        "bodyHint": "Da 10 a 4.000 caratteri. Testo semplice; saluto e firma vengono aggiunti automaticamente.",
+        "send": "Invia risposta",
+        "spamBlocked": "Non è possibile rispondere alle richieste segnate come spam. Riapri prima la richiesta.",
+        "dialog": {
+          "title": "Inviare questa risposta?",
+          "description": "L'e-mail viene inviata a {email} con oggetto «{subject}». L'invio viene registrato nel registro di audit.",
+          "confirm": "Invia"
+        },
+        "sent": "Risposta inviata tramite {transport}.",
+        "sentFile": "Risposta scritta nella posta in uscita locale (nessun trasporto di posta configurato in questo ambiente)."
+      },
+      "trail": {
+        "title": "Cronologia",
+        "caption": "Azioni registrate su questa richiesta, le più recenti per prime",
+        "empty": "Nessuna azione di un operatore finora.",
+        "submitted": "Ricevuta tramite il modulo {kind}",
+        "actions": {
+          "status": "Stato modificato",
+          "assign": "Assegnatario modificato",
+          "reply": "Risposta inviata",
+          "replyFailed": "Risposta non riuscita",
+          "other": "Azione"
+        },
+        "statusChange": "{from} → {to}",
+        "assignedTo": "→ {name}",
+        "assignedNone": "→ non assegnata",
+        "replyDetail": "tramite {transport}, {locale}, {length} caratteri",
+        "replyError": "non inviata ({transport})",
+        "by": "da {name}",
+        "byUnknown": "da un ex operatore"
+      }
+    },
+    "privacy": {
+      "title": "Richieste privacy",
+      "intro": "Richieste degli interessati di ogni organizzazione: quante sono aperte, quali sono scadute e quando scade la prossima. Interessati, report e note restano nel centro privacy del cliente: gli operatori vedono solo numeri e date.",
+      "unavailable": "Tabelle privacy non disponibili",
+      "unavailableText": "Le tabelle delle richieste degli interessati non sono applicate a questo database, quindi non è possibile contare nulla.",
+      "totals": {
+        "label": "In tutte le organizzazioni",
+        "open": "Aperte",
+        "overdue": "Scadute",
+        "dueSoon": "In scadenza entro {days} giorni",
+        "completed30d": "Completate (30 giorni)",
+        "rejected30d": "Respinte (30 giorni)",
+        "failedJobs": "Job di cancellazione non riusciti",
+        "organizations": "Organizzazioni con richieste"
+      },
+      "byKind": "Richieste aperte per tipo",
+      "kinds": {
+        "export": "Accesso",
+        "delete": "Cancellazione",
+        "restrict": "Limitazione",
+        "rectify": "Rettifica",
+        "object": "Opposizione",
+        "portability": "Portabilità"
+      },
+      "columns": {
+        "organization": "Organizzazione",
+        "open": "Aperte",
+        "overdue": "Scadute",
+        "nextDue": "Prossima scadenza",
+        "completed": "Completate",
+        "rejected": "Respinte",
+        "total": "Totale",
+        "lastRequested": "Ultima richiesta",
+        "failedJobs": "Job di cancellazione non riusciti",
+        "actions": "Azioni"
+      },
+      "due": {
+        "overdue": "scaduta",
+        "soon": "in scadenza",
+        "later": "nei tempi"
+      },
+      "tenantPath": "I clienti gestiscono le loro richieste in Consenso e privacy (/app/consent) della propria dashboard.",
+      "caption": "Richieste degli interessati per organizzazione, le più urgenti per prime",
+      "empty": "Nessuna richiesta di interessati",
+      "emptyText": "Nessuna organizzazione ha ancora creato una richiesta di un interessato."
+    },
+    "alerts": {
+      "title": "Riepilogo avvisi",
+      "intro": "Eventi di avviso degli ultimi {days} giorni in tutte le organizzazioni, raggruppati per tipo e organizzazione: quanti sono scattati, quanti sono ancora aperti, quanti erano critici. I dettagli dei singoli eventi restano nella cronologia avvisi del cliente.",
+      "unavailable": "Tabelle degli avvisi non disponibili",
+      "unavailableText": "Le tabelle degli avvisi (migrazione 0013) non sono applicate a questo database, quindi non è possibile contare nulla.",
+      "totals": {
+        "label": "Ultimi {days} giorni",
+        "events": "Eventi",
+        "open": "Ancora aperti",
+        "critical": "Critici",
+        "organizations": "Organizzazioni interessate"
+      },
+      "byKind": "Per tipo",
+      "byOrganization": "Per organizzazione e tipo",
+      "kinds": {
+        "event_drop": "Calo di eventi",
+        "vendor_outage": "Interruzione del fornitore",
+        "credential_expiry": "Scadenza credenziali",
+        "consent_errors": "Errori di consenso",
+        "queue_lag": "Ritardo della coda",
+        "conversion_anomaly": "Anomalia delle conversioni"
+      },
+      "columns": {
+        "organization": "Organizzazione",
+        "kind": "Tipo",
+        "total": "Eventi",
+        "open": "Aperti",
+        "critical": "Critici",
+        "warning": "Avvertimento",
+        "last": "Ultimo scatto",
+        "actions": "Azioni"
+      },
+      "organizationDeleted": "Organizzazione eliminata",
+      "captionKinds": "Eventi di avviso per tipo",
+      "caption": "Eventi di avviso per organizzazione e tipo, più aperti per primi",
+      "empty": "Nessun avviso negli ultimi {days} giorni",
+      "emptyText": "In questo periodo nessuna regola di avviso di alcuna organizzazione è scattata."
+    },
+    "knowledge": {
+      "title": "Feedback Knowledge",
+      "intro": "Voti «Questo articolo ti è stato utile?» da Tracking Knowledge degli ultimi {days} giorni per articolo, quota di utilità più bassa per prima. I voti sono anonimi per progettazione: nessun indirizzo, nessuna sessione, nessun tenant; il riepilogo dice alla redazione soltanto quali articoli hanno bisogno di lavoro.",
+      "unavailable": "Tabella dei feedback non disponibile",
+      "unavailableText": "La tabella dei feedback Knowledge (migrazione 0005) non è applicata a questo database, quindi non è possibile contare nulla.",
+      "totals": {
+        "label": "Ultimi {days} giorni",
+        "votes": "Voti",
+        "helpful": "Utile",
+        "notHelpful": "Non utile",
+        "articles": "Articoli con voti"
+      },
+      "columns": {
+        "article": "Articolo",
+        "helpful": "Utile",
+        "notHelpful": "Non utile",
+        "share": "Quota di utilità",
+        "locales": "Lingue",
+        "last": "Ultimo voto",
+        "actions": "Azioni"
+      },
+      "unknownArticle": "Nessuna versione inglese trovata",
+      "openArticle": "Apri articolo",
+      "openArticleLabel": "Apri l'articolo «{title}»",
+      "caption": "Feedback per articolo, quota di utilità più bassa per prima",
+      "empty": "Nessun voto negli ultimi {days} giorni",
+      "emptyText": "Nessuno ha votato un articolo in questo periodo."
+    }
+  }
+}

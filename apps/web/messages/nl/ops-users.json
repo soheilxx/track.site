@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Sluiten",
+      "cancel": "Annuleren",
+      "none": "—",
+      "on": "Ingeschakeld",
+      "off": "Niet ingeschakeld",
+      "verified": "Geverifieerd",
+      "unverified": "Niet geverifieerd",
+      "former": "Voormalig account",
+      "metadata": "Alleen metadata: namen, e-mails, rollen, status van tweestapsverificatie en tijdstempels van sessies. Nooit sessietokens, IP-adressen, user agents of gegevens van eindgebruikers.",
+      "adminOnly": "Alleen platformbeheerders."
+    },
+    "roles": {
+      "NONE": "Geen platformrol",
+      "PLATFORM_SUPPORT": "Platformsupport",
+      "PLATFORM_ADMIN": "Platformbeheerder"
+    },
+    "errors": {
+      "forbidden": "Je platformrol staat deze actie niet toe.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "confirm_required": "Bevestig de actie eerst in het dialoogvenster.",
+      "not_found": "Geen account met dit adres of deze id.",
+      "self": "Je kunt je eigen platformrol niet wijzigen — dat moet een andere platformbeheerder doen.",
+      "unchanged": "Het account heeft deze rol al.",
+      "lastAdmin": "Dit is de laatste platformbeheerder; ken de beheerdersrol eerst aan iemand anders toe.",
+      "emailNotVerified": "Het account heeft zijn e-mailadres niet geverifieerd; een platformrol wordt alleen aan geverifieerde accounts toegekend.",
+      "ticketRequired": "Je bent de enige beheerder die over deze wijziging kan beslissen: een zelf goedgekeurde wijziging vereist een ticketreferentie.",
+      "needsThirdAdmin": "Er bestaat een tweede platformbeheerder, maar die kan niet beslissen over de wijziging van de eigen rol. Ken de beheerdersrol eerst aan een derde persoon toe of gebruik het commando ops:grant.",
+      "duplicate": "Voor dit account wacht al een rolwijziging op een beslissing.",
+      "fourEyes": "Je hebt dit verzoek ingediend; een andere platformbeheerder moet het toepassen (vier ogen).",
+      "stale": "De rol van het account is gewijzigd sinds het verzoek werd ingediend; wijs het af en dien een nieuw verzoek in.",
+      "expired": "Het verzoek is verlopen; dien een nieuw verzoek in.",
+      "notPending": "Over het verzoek is al beslist.",
+      "notOperator": "Sessies worden alleen bij platformoperators ingetrokken; de klantenlijst is alleen-lezen.",
+      "generic": "De actie is mislukt. Probeer het opnieuw; de fout is vastgelegd."
+    },
+    "notices": {
+      "proposed": "Verzoek ingediend. Een andere platformbeheerder moet het toepassen; het verloopt na zeven dagen.",
+      "applied": "Rol gewijzigd en vastgelegd als zelf goedgekeurd. {count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}}",
+      "approved": "Rol gewijzigd. {count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}}",
+      "declined": "Verzoek afgewezen en vastgelegd.",
+      "withdrawn": "Verzoek ingetrokken en vastgelegd.",
+      "sessionsRevoked": "{count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}} Het account moet opnieuw inloggen."
+    },
+    "overview": {
+      "intro": "Accounts met een platformrol, hun tweestapsverificatie en sessies, en de vierogenregel voor het toekennen van rollen. Klantaccounts staan alleen-lezen in de lijst.",
+      "directory": "Klantenlijst",
+      "grant": "Platformrol toekennen",
+      "rules": {
+        "title": "Status vier ogen",
+        "admins": "{eligible} van {total, plural, one {# platformbeheerder} other {# platformbeheerders}} kunnen over verzoeken beslissen.",
+        "eligibleHint": "Beslissende beheerders hebben een geverifieerde e-mail{twoFactor, select, yes { en ingeschakelde tweestapsverificatie} other {}}.",
+        "on": "Een rolwijziging die jij indient, wordt door een andere platformbeheerder toegepast.",
+        "off": "Je bent de enige beslissende beheerder: rolwijzigingen die jij indient, worden direct toegepast, vastgelegd als zelf goedgekeurd en vereisen een ticketreferentie.",
+        "bootstrap": "De eerste platformbeheerder wordt aangemaakt met het commando ops:grant; daarna worden rollen hier gewijzigd.",
+        "signOut": "Elke rolwijziging verwijdert de opgeslagen sessies van het account (geforceerd uitloggen). Een gecachte sessie kan tot {minutes} minuten geldig blijven."
+      }
+    },
+    "requests": {
+      "title": "Openstaande rolwijzigingen",
+      "intro": "Verzoeken wachten hier tot een andere platformbeheerder ze toepast of afwijst. Ze verlopen na zeven dagen.",
+      "empty": "Geen openstaande rolwijzigingen.",
+      "caption": "Verzoeken tot rolwijziging met account, wijziging, reden, indiener en beschikbare beslissingen",
+      "account": "Account",
+      "change": "Wijziging",
+      "changeValue": "{from} → {to}",
+      "reason": "Reden",
+      "ticket": "Ticket",
+      "noTicket": "Geen ticketreferentie",
+      "proposer": "Ingediend door",
+      "filed": "Ingediend {date}",
+      "expires": "Verloopt {date}",
+      "decision": "Beslissing",
+      "states": {
+        "pending": "Openstaand",
+        "stale": "Verouderd",
+        "expired": "Verlopen"
+      },
+      "staleHint": "De rol van het account is intussen gewijzigd ({role}); dit verzoek kan alleen nog worden afgewezen.",
+      "approve": "Toepassen",
+      "decline": "Afwijzen",
+      "withdraw": "Intrekken",
+      "cannot": {
+        "fourEyes": "Je hebt dit verzoek ingediend — een andere beheerder past het toe.",
+        "self": "Dit is je eigen account.",
+        "stale": "Rol intussen gewijzigd.",
+        "expired": "Verlopen.",
+        "lastAdmin": "Zou de laatste beheerder verwijderen.",
+        "emailNotVerified": "E-mail niet geverifieerd."
+      },
+      "dialog": {
+        "approveTitle": "Rolwijziging voor {name} toepassen?",
+        "approveText": "{from} → {to}. Het account wordt overal uitgelogd en de wijziging wordt met beide beheerders in het auditlog vastgelegd.",
+        "approveConfirm": "Wijziging toepassen",
+        "declineTitle": "Rolwijziging voor {name} afwijzen?",
+        "declineText": "Voor het account verandert er niets; de beslissing wordt in het auditlog vastgelegd.",
+        "declineConfirm": "Afwijzen",
+        "withdrawTitle": "Je verzoek voor {name} intrekken?",
+        "withdrawText": "Voor het account verandert er niets; de intrekking wordt in het auditlog vastgelegd.",
+        "withdrawConfirm": "Intrekken",
+        "reason": "Notitie",
+        "reasonHint": "Optioneel, maximaal {max} tekens; opgeslagen in het auditlog."
+      }
+    },
+    "operators": {
+      "title": "Operators",
+      "caption": "Accounts met een platformrol, hun tweestaps- en verificatiestatus, laatste login, actieve sessies en beschikbare acties",
+      "empty": "Nog geen platformgebruikers",
+      "emptyText": "Maak de eerste platformbeheerder aan met het commando ops:grant; verdere rollen worden hier toegekend.",
+      "count": "{count, plural, one {# operator} other {# operators}}",
+      "columns": {
+        "account": "Account",
+        "role": "Rol",
+        "security": "Beveiliging",
+        "lastSignIn": "Laatste login",
+        "sessions": "Sessies",
+        "since": "Sinds",
+        "actions": "Acties"
+      },
+      "twoFactor": "Tweestaps",
+      "email": "E-mail",
+      "eligible": "Kan over verzoeken beslissen",
+      "notEligible": "Kan niet over verzoeken beslissen",
+      "memberOf": "{count, plural, one {Lid van # organisatie} other {Lid van # organisaties}}",
+      "pending": "Wijziging openstaand",
+      "noSession": "Geen opgeslagen sessie",
+      "lastSeen": "actief {date}",
+      "activeSessions": "{count, plural, =0 {geen actief} one {# actief} other {# actief}}",
+      "changeRole": "Rol wijzigen",
+      "revokeSessions": "Overal uitloggen",
+      "self": "Je eigen account: een andere beheerder wijzigt je rol.",
+      "lastAdmin": "Laatste platformbeheerder: kan niet worden gedegradeerd.",
+      "open": "{name} openen",
+      "openLabel": "Details"
+    },
+    "roleDialog": {
+      "title": "Platformrol van {name} wijzigen",
+      "grantTitle": "Platformrol toekennen",
+      "description": "Huidige rol: {role}.",
+      "grantDescription": "De persoon registreert zich eerst als gewone gebruiker en verifieert de e-mail; daarna wordt de rol hier toegekend.",
+      "email": "E-mailadres",
+      "emailHint": "Exact adres van een bestaand, geverifieerd account.",
+      "role": "Nieuwe rol",
+      "reason": "Reden",
+      "reasonHint": "Minimaal {min} tekens, maximaal {max}. Opgeslagen in het auditlog.",
+      "ticket": "Ticketreferentie",
+      "ticketHint": "Bijvoorbeeld OPS-1234. Verplicht wanneer geen andere beheerder kan beslissen (zelf goedgekeurde wijziging).",
+      "modeProposal": "Vier ogen: dit dient een verzoek in dat een andere platformbeheerder toepast.",
+      "modeSelf": "Je bent de enige beheerder die kan beslissen: de wijziging wordt direct toegepast, vastgelegd als zelf goedgekeurd en vereist een ticketreferentie.",
+      "signOut": "Het account wordt overal uitgelogd zodra de wijziging wordt toegepast.",
+      "submit": "Verzoek indienen",
+      "submitSelf": "Wijziging toepassen"
+    },
+    "revokeDialog": {
+      "title": "{name} overal uitloggen?",
+      "text": "Elke opgeslagen sessie van het account wordt verwijderd; de persoon moet opnieuw inloggen (met tweestapsverificatie). De actie wordt in het auditlog vastgelegd.",
+      "selfWarning": "Dit is je eigen account: je wordt ook uitgelogd.",
+      "cache": "Een gecachte sessie kan tot {minutes} minuten geldig blijven.",
+      "reason": "Reden",
+      "reasonHint": "Minimaal {min} tekens; opgeslagen in het auditlog.",
+      "confirm": "Overal uitloggen"
+    },
+    "history": {
+      "title": "Recente rolwijzigingen",
+      "intro": "De nieuwste {count} rolvermeldingen in het auditlog — verzoeken, toegepaste wijzigingen (console en CLI), afwijzingen en intrekkingen.",
+      "empty": "Nog geen rolwijzigingen vastgelegd.",
+      "caption": "Recente auditvermeldingen over rolwijzigingen met tijdstip, actor, actie, account en wijziging",
+      "when": "Wanneer",
+      "actor": "Actor",
+      "action": "Actie",
+      "account": "Account",
+      "change": "Wijziging",
+      "actions": {
+        "propose": "Ingediend",
+        "set": "Toegepast",
+        "decline": "Afgewezen",
+        "withdraw": "Ingetrokken"
+      },
+      "selfApproved": "zelf goedgekeurd",
+      "actorKinds": {
+        "platform": "Platformbeheerder",
+        "system": "Systeem",
+        "unknown": "Onbekend"
+      },
+      "request": "Verzoek {id}",
+      "sessionsRevoked": "{count, plural, one {# sessie ingetrokken} other {# sessies ingetrokken}}",
+      "reason": "Reden: {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Klantenlijst",
+      "intro": "Elk account met zijn organisaties en rollen, tweestapsverificatie, aanmaakdatum en laatste login — alleen-lezen metadata, geen gegevens van eindgebruikers.",
+      "back": "Platformgebruikers",
+      "filters": {
+        "legend": "Filteren en sorteren",
+        "search": "Zoeken",
+        "searchPlaceholder": "Naam, e-mail of id",
+        "kind": "Accounts",
+        "kinds": {
+          "all": "Alle",
+          "operators": "Met platformrol",
+          "customers": "Alleen klanten"
+        },
+        "twoFactor": "Tweestaps",
+        "twoFactorAll": "Alle",
+        "twoFactorOn": "Ingeschakeld",
+        "twoFactorOff": "Niet ingeschakeld",
+        "sort": "Sorteren op",
+        "sorts": {
+          "created": "Aangemaakt",
+          "name": "Naam",
+          "email": "E-mail",
+          "signin": "Laatste login"
+        },
+        "direction": "Richting",
+        "asc": "Oplopend",
+        "desc": "Aflopend",
+        "apply": "Toepassen",
+        "reset": "Herstellen"
+      },
+      "count": "{count, plural, one {# account} other {# accounts}}",
+      "countFiltered": "{count, plural, one {# overeenkomend account} other {# overeenkomende accounts}}",
+      "operatorsCount": "{count} met een platformrol",
+      "caption": "Accounts met lidmaatschappen, rollen, tweestaps- en verificatiestatus, laatste login en aanmaakdatum",
+      "columns": {
+        "account": "Account",
+        "memberships": "Organisaties",
+        "security": "Beveiliging",
+        "lastSignIn": "Laatste login",
+        "created": "Aangemaakt"
+      },
+      "noMemberships": "Geen organisatie",
+      "moreMemberships": "+{count} meer",
+      "open": "{name} openen",
+      "empty": "Nog geen accounts",
+      "emptyText": "Accounts verschijnen hier zodra de eerste persoon zich registreert.",
+      "emptyFiltered": "Geen account komt overeen",
+      "emptyFilteredText": "Versoepel de filters of wis de zoekopdracht.",
+      "pagination": {
+        "nav": "Pagina’s van de lijst",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {page}"
+      },
+      "methods": "Laatste login: de nieuwste opgeslagen sessie (rijen verdwijnen bij uitloggen en opschonen, dus „geen opgeslagen sessie” betekent niet dat de persoon nooit is ingelogd). Actief: sessies die nog niet zijn verlopen."
+    },
+    "detail": {
+      "back": "Alle platformgebruikers",
+      "backDirectory": "Klantenlijst",
+      "id": "ID",
+      "created": "Aangemaakt {date}",
+      "updated": "Bijgewerkt {date}",
+      "generated": "Geladen {date}",
+      "sections": {
+        "profile": "Account",
+        "memberships": "Organisaties",
+        "sessions": "Sessies",
+        "requests": "Openstaande rolwijziging",
+        "audit": "Auditvermeldingen voor dit account"
+      },
+      "profile": {
+        "role": "Platformrol",
+        "email": "E-mail",
+        "verified": "E-mailverificatie",
+        "twoFactor": "Tweestaps",
+        "twoFactorVerified": "Tweestaps geverifieerd",
+        "twoFactorNotSetUp": "Niet ingesteld",
+        "passkeys": "{count, plural, =0 {Geen passkeys} one {# passkey} other {# passkeys}}",
+        "locale": "Taal",
+        "updated": "Laatst bijgewerkt",
+        "customer": "Klantaccount zonder platformrol: hier alleen-lezen."
+      },
+      "memberships": {
+        "caption": "Organisaties waarvan het account lid is, met rol en datum van toetreding",
+        "organisation": "Organisatie",
+        "role": "Rol",
+        "joined": "Toegetreden",
+        "suspended": "Opgeschort",
+        "empty": "Lid van geen enkele organisatie.",
+        "open": "{name} openen"
+      },
+      "sessions": {
+        "caption": "Opgeslagen sessies van het account met login, laatste activiteit, vervaldatum, status en actieve organisatie",
+        "created": "Ingelogd",
+        "lastActive": "Laatste activiteit",
+        "expires": "Verloopt",
+        "state": "Status",
+        "states": {
+          "active": "Actief",
+          "expired": "Verlopen"
+        },
+        "organisation": "Actieve organisatie",
+        "summary": "{active, plural, one {# actieve sessie} other {# actieve sessies}} · {expired, plural, one {# verlopen} other {# verlopen}}",
+        "empty": "Geen opgeslagen sessies.",
+        "truncated": "De {count} nieuwste sessies worden getoond.",
+        "noSecrets": "Sessietokens, IP-adressen en user agents worden hier nooit getoond."
+      },
+      "audit": {
+        "caption": "Auditvermeldingen gericht op dit account met tijdstip, actor, actie en geredigeerde details",
+        "when": "Wanneer",
+        "actor": "Actor",
+        "action": "Actie",
+        "details": "Details",
+        "show": "{count, plural, one {# detail tonen} other {# details tonen}}",
+        "noDetails": "Geen details",
+        "empty": "Geen auditvermeldingen voor dit account.",
+        "limit": "De {count} nieuwste vermeldingen worden getoond; de module Audit bevat het volledige log."
+      }
+    }
+  }
+}

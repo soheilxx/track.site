@@ -1,0 +1,330 @@
+{
+  "opsHealth": {
+    "intro": "Collector, Worker, Warteschlangen, Zustellungen, Stripe-Webhooks, Anbieter und Datenbank über alle Mandanten — gemessen, nie geschätzt; jede Quelle meldet ihren eigenen Zustand. Alle Zeiten in UTC.",
+    "refresh": {
+      "updatedAt": "Aktualisiert {time}",
+      "ago": "vor {seconds} s",
+      "auto": "Automatische Aktualisierung alle {seconds} s",
+      "paused": "Automatische Aktualisierung pausiert",
+      "now": "Jetzt aktualisieren",
+      "refreshing": "Wird aktualisiert",
+      "toggle": "Automatische Aktualisierung"
+    },
+    "overall": {
+      "label": "Gesamtstatus",
+      "ok": "Alle Prüfungen bestanden",
+      "warn": "Braucht Aufmerksamkeit",
+      "bad": "Beeinträchtigt",
+      "reasons": {
+        "collector": "Collector nicht erreichbar — die Erfassung ist möglicherweise ausgefallen",
+        "collector_kill_switch": "Globaler Kill-Switch aktiv — der Collector weist jedes Event ab",
+        "worker_stale": "Worker-Heartbeats veraltet — kein geplanter Job ist kürzlich gelaufen",
+        "worker_failing": "Mindestens ein Worker-Job schlägt fehl",
+        "worker_never": "Noch keine Worker-Heartbeats aufgezeichnet",
+        "database": "Datenbank nicht verfügbar",
+        "dead_letters": "Nicht wiedereingespielte Dead Letters in den Warteschlangen",
+        "queue_lag": "Warteschlangen-Rückstand älter als 15 Minuten",
+        "delivery_errors": "Hohe Zustell-Fehlerrate bei mindestens einem Connector",
+        "stripe_failures": "Stripe-Webhook-Events in den letzten 24 Stunden fehlgeschlagen",
+        "stripe_webhook_secret": "Stripe ist konfiguriert, aber das Webhook-Secret fehlt",
+        "ai": "Prüfung des KI-Anbieters fehlgeschlagen",
+        "billing_prices": "Stripe-Preiskonfiguration unvollständig",
+        "mail_domain": "Absender-Domain für E-Mails nicht verifiziert",
+        "snapshots_stale": "Jeder Snapshot des Ziel-Status ist veraltet",
+        "critical_alerts": "Offene kritische Alarme"
+      }
+    },
+    "tiles": {
+      "collector": "Collector",
+      "worker": "Worker",
+      "queues": "Warteschlangen",
+      "deliveries": "Zustellungen · 24 h",
+      "stripe": "Stripe-Webhooks",
+      "vendors": "Anbieter",
+      "database": "Datenbank",
+      "jobsFailing": "{count} fehlgeschlagen",
+      "jobsStale": "{count} veraltet",
+      "jobsOk": "{count} Jobs ok",
+      "ready": "{count} bereit",
+      "dead": "{count} Dead Letters",
+      "attempts": "{count} Versuche",
+      "errorRate": "{rate} Fehler",
+      "failedOf": "{failed} von {received} fehlgeschlagen",
+      "notMeasured": "Nicht gemessen",
+      "noAttempts": "Keine Versuche"
+    },
+    "states": {
+      "ok": "OK",
+      "degraded": "Beeinträchtigt",
+      "kill_switch": "Kill-Switch aktiv",
+      "unreachable": "Nicht erreichbar",
+      "timeout": "Zeitüberschreitung",
+      "invalid": "Ungültige Antwort",
+      "failing": "Fehlgeschlagen",
+      "stale": "Veraltet",
+      "never": "Kein Heartbeat",
+      "unavailable": "Nicht verfügbar",
+      "notConfigured": "Nicht konfiguriert",
+      "unknown": "Unbekannt"
+    },
+    "collector": {
+      "title": "Collector",
+      "intro": "Das eigene /health des Ingest-Dienstes, vom Konsolen-Server mit {seconds} s Timeout abgefragt.",
+      "host": "Host",
+      "http": "HTTP-Status",
+      "latency": "Latenz",
+      "db": "Collector-Datenbank",
+      "driver": "Queue-Treiber",
+      "ready": "Ingest-Warteschlange bereit",
+      "dlq": "Ingest-Dead-Letters",
+      "killSwitch": "Globaler Kill-Switch",
+      "reportedAt": "Uhr des Collectors",
+      "checkedAt": "Geprüft",
+      "dbStates": {
+        "ok": "OK",
+        "error": "Fehler",
+        "none": "Keine Datenbank"
+      },
+      "killOn": "Aktiv — Events werden mit 503 abgewiesen",
+      "killOff": "Aus",
+      "unreachableText": "Keine Antwort von {host} innerhalb des Timeouts. Die Erfassung ist möglicherweise ausgefallen, oder die Konsole erreicht das Collector-Netz nicht.",
+      "invalidText": "{host} hat geantwortet, aber nicht mit dem erwarteten JSON."
+    },
+    "worker": {
+      "title": "Worker-Jobs",
+      "intro": "Ein Heartbeat pro geplantem Job, vom Worker nach jedem Lauf geschrieben. Veraltet: kein Lauf seit mehr als dem doppelten Intervall. Fehlgeschlagen: der letzte Lauf endete mit einem Fehler.",
+      "columns": {
+        "job": "Job",
+        "state": "Status",
+        "lastRun": "Letzter Lauf",
+        "lastOk": "Letzter Erfolg",
+        "duration": "Dauer",
+        "interval": "Intervall",
+        "host": "Host",
+        "error": "Letzter Fehler"
+      },
+      "never": "Nie",
+      "unknownInterval": "Nicht im Zeitplan",
+      "noError": "Keiner",
+      "empty": "Noch keine Heartbeats — der Worker ist seit Migration 0014 nicht gelaufen oder erreicht die Datenbank nicht.",
+      "showError": "Fehler anzeigen",
+      "errorFor": "Letzter Fehler des Jobs {job}"
+    },
+    "queues": {
+      "title": "Warteschlangen und Dead Letters",
+      "intro": "Rückstand der persistenten Queue-Tabellen: bereit (jetzt verfügbar), geplant (Wiederholung oder Verzögerung), in Bearbeitung (von einem Worker gesperrt) und nicht wiedereingespielte Dead Letters pro Warteschlange.",
+      "driver": "Treiber",
+      "notMeasured": "Queue-Treiber „{driver}“: der Rückstand liegt außerhalb der Datenbank, diese Tabellen sind daher nicht maßgeblich.",
+      "columns": {
+        "queue": "Warteschlange",
+        "ready": "Bereit",
+        "scheduled": "Geplant",
+        "inFlight": "In Bearbeitung",
+        "oldest": "Älteste bereite",
+        "lag": "Verzögerung",
+        "dead": "Dead Letters",
+        "oldestDead": "Ältester Dead Letter"
+      },
+      "totals": "Gesamt",
+      "empty": "Keine wartenden Nachrichten und keine Dead Letters.",
+      "references": "{count} nicht wiedereingespielte Dead-Letter-Referenzen (für Mandanten sichtbar)"
+    },
+    "deliveries": {
+      "title": "Zustellungen pro Connector",
+      "intro": "Zustellversuche an jeden Zieltyp über alle Mandanten (delivery_attempts). Fehlerrate = (fehlgeschlagen + Wiederholung) / (erfolgreich + fehlgeschlagen + Wiederholung); übersprungene Versuche (Policy, Einwilligung, pausiert) zählen nicht.",
+      "window24h": "Letzte 24 h",
+      "window7d": "Letzte 7 Tage",
+      "columns": {
+        "connector": "Connector",
+        "tenants": "Organisationen",
+        "attempts": "Versuche",
+        "success": "Erfolgreich",
+        "failed": "Fehlgeschlagen",
+        "retry": "Wiederholung",
+        "skipped": "Übersprungen",
+        "errorRate": "Fehlerrate"
+      },
+      "totals": "Alle Connectoren",
+      "empty": "Keine Zustellversuche in den letzten 7 Tagen."
+    },
+    "destinations": {
+      "title": "Snapshots des Ziel-Status",
+      "intro": "Aggregate der Snapshots des Workers pro Ziel (destination_health_snapshots); ein Snapshot, der älter als {minutes} Minuten ist, gilt als veraltet.",
+      "snapshots": "Snapshots",
+      "fresh": "Aktuell",
+      "stale": "Veraltet",
+      "latest": "Neuester Snapshot",
+      "oldest": "Ältester Snapshot",
+      "organizations": "Organisationen",
+      "attempts": "Versuche im Zeitfenster",
+      "errorRate": "Fehlerrate",
+      "highErrorRate": "Ziele mit hoher Fehlerrate",
+      "withDeadLetters": "Ziele mit Dead Letters",
+      "queueReady": "Wartende Zustellungen",
+      "oldestQueued": "Älteste wartende",
+      "integrations": "Ziele nach Status",
+      "statuses": {
+        "draft": "Entwurf",
+        "not_connected": "Nicht verbunden",
+        "connected": "Verbunden",
+        "paused": "Pausiert",
+        "error": "Fehler"
+      },
+      "empty": "Noch keine Snapshots — der Job destination-health ist nicht gelaufen, oder es gibt kein Ziel."
+    },
+    "stripe": {
+      "title": "Stripe-Webhook-Journal",
+      "intro": "Die letzten {count} empfangenen Webhook-Events (stripe_events) mit Verarbeitungsstatus. Payloads werden nie gespeichert — nur Typ, Digest und Ergebnis.",
+      "notConfigured": "Stripe ist nicht konfiguriert (STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY). Das Journal zeigt trotzdem, was empfangen wurde.",
+      "webhookSecret": "Webhook-Secret",
+      "configured": "Konfiguriert",
+      "missing": "Fehlt — Signaturen können nicht geprüft werden",
+      "received24h": "Empfangen · 24 h",
+      "processed24h": "Verarbeitet · 24 h",
+      "failed24h": "Fehlgeschlagen · 24 h",
+      "pending": "Ausstehend (gesamt)",
+      "lastReceived": "Zuletzt empfangen",
+      "columns": {
+        "event": "Event",
+        "type": "Typ",
+        "organization": "Organisation",
+        "received": "Empfangen",
+        "processed": "Verarbeitet",
+        "state": "Status",
+        "error": "Fehler"
+      },
+      "states": {
+        "processed": "Verarbeitet",
+        "failed": "Fehlgeschlagen",
+        "pending": "Ausstehend"
+      },
+      "noOrganization": "Keine",
+      "noError": "Keiner",
+      "empty": "Noch keine Webhook-Events empfangen.",
+      "showError": "Fehler anzeigen",
+      "errorFor": "Fehler des Events {id}"
+    },
+    "vendors": {
+      "title": "Anbieter und Konfiguration",
+      "intro": "Dieselben nur lesenden Prüfungen wie /api/health, pro Instanz zehn Minuten zwischengespeichert.",
+      "checkedAt": "Geprüft",
+      "none": "Keine",
+      "ai": {
+        "label": "KI-Anbieter",
+        "states": {
+          "not_configured": "Nicht konfiguriert",
+          "ok": "Modelle verfügbar",
+          "invalid_key": "API-Schlüssel abgelehnt",
+          "unreachable": "Nicht erreichbar",
+          "models_missing": "Konfigurierte Modelle fehlen"
+        },
+        "available": "Verfügbare Modelle",
+        "missing": "Fehlende Modelle"
+      },
+      "mail": {
+        "label": "E-Mail",
+        "transport": {
+          "smtp": "SMTP",
+          "file": "Datei (Entwicklung)",
+          "resend": "Resend"
+        },
+        "domain": "Absender-Domain",
+        "domainState": "Domain-Status",
+        "domainStates": {
+          "verified": "Verifiziert",
+          "pending": "Verifizierung ausstehend",
+          "failed": "Verifizierung fehlgeschlagen",
+          "not_started": "Verifizierung nicht begonnen",
+          "temporary_failure": "Vorübergehender Fehler",
+          "sending_only_key": "Nur-Senden-Schlüssel — Domain-Prüfung nicht möglich",
+          "invalid_key": "API-Schlüssel abgelehnt",
+          "domain_missing": "Domain in Resend nicht gefunden",
+          "unreachable": "Resend nicht erreichbar"
+        }
+      },
+      "billing": {
+        "label": "Stripe-Preise",
+        "states": {
+          "not_configured": "Nicht konfiguriert",
+          "ok": "Alle Preis-Slots geprüft",
+          "prices_failing": "Preis-Slots fehlerhaft",
+          "prices_missing": "Preis-Slots fehlen",
+          "no_prices": "Kein Preis konfiguriert"
+        },
+        "ok": "Geprüft",
+        "missing": "Fehlend",
+        "failed": "Fehlerhaft",
+        "deprecated": "Veraltete Fallback-Namen"
+      },
+      "database": {
+        "label": "Datenbank-Probe",
+        "ok": "Erreichbar",
+        "down": "Nicht erreichbar",
+        "migrations": "Angewendete Migrationen"
+      }
+    },
+    "database": {
+      "title": "Datenbank",
+      "intro": "PostgreSQL-Statistiksichten: Zeilenzahlen sind Schätzungen des Planers, Größen enthalten Indizes und TOAST.",
+      "size": "Größe",
+      "version": "Version",
+      "connections": "Verbindungen",
+      "tableCount": "Tabellen",
+      "columns": {
+        "table": "Tabelle",
+        "rows": "Zeilen (geschätzt)",
+        "dead": "Tote Zeilen (geschätzt)",
+        "size": "Größe",
+        "vacuum": "Letztes Autovacuum"
+      },
+      "largest": "Die {count} größten Tabellen",
+      "never": "Nie",
+      "unavailable": "Statistiken nicht verfügbar — die Betreiberrolle konnte die Statistiksichten nicht lesen."
+    },
+    "errors": {
+      "title": "Aktuelle Alarme und Fehler",
+      "intro": "Die neuesten Alarm-Events über alle Mandanten und Audit-Einträge, deren Aktion einen Fehlschlag festhält (letzte 7 Tage). Details bleiben im Dashboard des jeweiligen Mandanten.",
+      "open": "Offene Alarme",
+      "critical": "kritisch",
+      "warning": "Warnung",
+      "info": "Info",
+      "alerts": {
+        "title": "Alarm-Events",
+        "columns": {
+          "when": "Wann",
+          "severity": "Schweregrad",
+          "kind": "Art",
+          "organization": "Organisation",
+          "state": "Status"
+        },
+        "openState": "Offen",
+        "resolved": "Gelöst {when}",
+        "empty": "Noch keine Alarm-Events."
+      },
+      "kinds": {
+        "event_drop": "Event-Einbruch",
+        "vendor_outage": "Anbieter-Ausfall",
+        "credential_expiry": "Ablauf von Zugangsdaten",
+        "consent_errors": "Einwilligungsfehler",
+        "queue_lag": "Warteschlangen-Verzögerung",
+        "conversion_anomaly": "Conversion-Anomalie"
+      },
+      "severity": {
+        "info": "Info",
+        "warning": "Warnung",
+        "critical": "Kritisch"
+      },
+      "audit": {
+        "title": "Fehl-Einträge im Audit-Log",
+        "columns": {
+          "when": "Wann",
+          "action": "Aktion",
+          "target": "Zieltyp",
+          "organization": "Organisation"
+        },
+        "empty": "Keine Fehl-Einträge in den letzten 7 Tagen."
+      },
+      "platform": "Plattform"
+    }
+  }
+}

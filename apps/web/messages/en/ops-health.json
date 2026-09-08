@@ -1,0 +1,330 @@
+{
+  "opsHealth": {
+    "intro": "Collector, worker, queues, deliveries, Stripe webhooks, vendors and the database across all tenants — measured, never estimated; every source reports its own state. All times are UTC.",
+    "refresh": {
+      "updatedAt": "Updated {time}",
+      "ago": "{seconds} s ago",
+      "auto": "Auto-refresh every {seconds} s",
+      "paused": "Auto-refresh paused",
+      "now": "Refresh now",
+      "refreshing": "Refreshing",
+      "toggle": "Auto-refresh"
+    },
+    "overall": {
+      "label": "Overall",
+      "ok": "All checks passing",
+      "warn": "Needs attention",
+      "bad": "Degraded",
+      "reasons": {
+        "collector": "Collector not reachable — ingestion may be down",
+        "collector_kill_switch": "Global kill switch active — the collector rejects every event",
+        "worker_stale": "Worker heartbeats stale — no scheduled job has run recently",
+        "worker_failing": "At least one worker job is failing",
+        "worker_never": "No worker heartbeats recorded yet",
+        "database": "Database unavailable",
+        "dead_letters": "Unreplayed dead letters in the queues",
+        "queue_lag": "Queue backlog older than 15 minutes",
+        "delivery_errors": "High delivery error rate for at least one connector",
+        "stripe_failures": "Stripe webhook events failed in the last 24 hours",
+        "stripe_webhook_secret": "Stripe is configured but the webhook secret is missing",
+        "ai": "AI provider check failed",
+        "billing_prices": "Stripe price configuration incomplete",
+        "mail_domain": "Sender mail domain not verified",
+        "snapshots_stale": "Every destination health snapshot is stale",
+        "critical_alerts": "Open critical alerts"
+      }
+    },
+    "tiles": {
+      "collector": "Collector",
+      "worker": "Worker",
+      "queues": "Queues",
+      "deliveries": "Deliveries · 24 h",
+      "stripe": "Stripe webhooks",
+      "vendors": "Vendors",
+      "database": "Database",
+      "jobsFailing": "{count} failing",
+      "jobsStale": "{count} stale",
+      "jobsOk": "{count} jobs ok",
+      "ready": "{count} ready",
+      "dead": "{count} dead",
+      "attempts": "{count} attempts",
+      "errorRate": "{rate} errors",
+      "failedOf": "{failed} of {received} failed",
+      "notMeasured": "Not measured",
+      "noAttempts": "No attempts"
+    },
+    "states": {
+      "ok": "OK",
+      "degraded": "Degraded",
+      "kill_switch": "Kill switch active",
+      "unreachable": "Unreachable",
+      "timeout": "Timed out",
+      "invalid": "Invalid answer",
+      "failing": "Failing",
+      "stale": "Stale",
+      "never": "No heartbeat",
+      "unavailable": "Unavailable",
+      "notConfigured": "Not configured",
+      "unknown": "Unknown"
+    },
+    "collector": {
+      "title": "Collector",
+      "intro": "The ingest service’s own /health, fetched from the console server with a {seconds} s timeout.",
+      "host": "Host",
+      "http": "HTTP status",
+      "latency": "Latency",
+      "db": "Collector database",
+      "driver": "Queue driver",
+      "ready": "Ingest queue ready",
+      "dlq": "Ingest dead letters",
+      "killSwitch": "Global kill switch",
+      "reportedAt": "Collector clock",
+      "checkedAt": "Checked",
+      "dbStates": {
+        "ok": "OK",
+        "error": "Error",
+        "none": "No database"
+      },
+      "killOn": "Active — events are rejected with 503",
+      "killOff": "Off",
+      "unreachableText": "No answer from {host} within the timeout. Ingestion may be down, or the console cannot reach the collector network.",
+      "invalidText": "{host} answered, but not with the expected JSON."
+    },
+    "worker": {
+      "title": "Worker jobs",
+      "intro": "One heartbeat per scheduled job, written by the worker after every run. Stale: no run for more than twice the interval. Failing: the last run ended with an error.",
+      "columns": {
+        "job": "Job",
+        "state": "State",
+        "lastRun": "Last run",
+        "lastOk": "Last success",
+        "duration": "Duration",
+        "interval": "Interval",
+        "host": "Host",
+        "error": "Last error"
+      },
+      "never": "Never",
+      "unknownInterval": "Not in the schedule",
+      "noError": "None",
+      "empty": "No heartbeats yet — the worker has not run since migration 0014 was applied, or it cannot reach the database.",
+      "showError": "Show error",
+      "errorFor": "Last error of job {job}"
+    },
+    "queues": {
+      "title": "Queues and dead letters",
+      "intro": "Backlog of the durable queue tables: ready (available now), scheduled (retry or delay), in flight (locked by a worker) and unreplayed dead letters per queue.",
+      "driver": "Driver",
+      "notMeasured": "Queue driver “{driver}”: the backlog lives outside the database, so these tables are not the source of truth.",
+      "columns": {
+        "queue": "Queue",
+        "ready": "Ready",
+        "scheduled": "Scheduled",
+        "inFlight": "In flight",
+        "oldest": "Oldest ready",
+        "lag": "Lag",
+        "dead": "Dead letters",
+        "oldestDead": "Oldest dead letter"
+      },
+      "totals": "Total",
+      "empty": "No queued messages and no dead letters.",
+      "references": "{count} unreplayed dead-letter references (tenant-visible)"
+    },
+    "deliveries": {
+      "title": "Deliveries per connector",
+      "intro": "Delivery attempts to every destination type across all tenants (delivery_attempts). Error rate = (failed + retry) / (success + failed + retry); skipped attempts (policy, consent, paused) do not count.",
+      "window24h": "Last 24 h",
+      "window7d": "Last 7 d",
+      "columns": {
+        "connector": "Connector",
+        "tenants": "Organisations",
+        "attempts": "Attempts",
+        "success": "Success",
+        "failed": "Failed",
+        "retry": "Retry",
+        "skipped": "Skipped",
+        "errorRate": "Error rate"
+      },
+      "totals": "All connectors",
+      "empty": "No delivery attempts in the last 7 days."
+    },
+    "destinations": {
+      "title": "Destination health snapshots",
+      "intro": "Aggregates of the worker’s per-destination snapshots (destination_health_snapshots); a snapshot older than {minutes} minutes is stale.",
+      "snapshots": "Snapshots",
+      "fresh": "Fresh",
+      "stale": "Stale",
+      "latest": "Latest snapshot",
+      "oldest": "Oldest snapshot",
+      "organizations": "Organisations",
+      "attempts": "Attempts in window",
+      "errorRate": "Error rate",
+      "highErrorRate": "Destinations with high error rate",
+      "withDeadLetters": "Destinations with dead letters",
+      "queueReady": "Queued deliveries",
+      "oldestQueued": "Oldest queued",
+      "integrations": "Destinations by status",
+      "statuses": {
+        "draft": "Draft",
+        "not_connected": "Not connected",
+        "connected": "Connected",
+        "paused": "Paused",
+        "error": "Error"
+      },
+      "empty": "No snapshots yet — the destination-health job has not run, or no destination exists."
+    },
+    "stripe": {
+      "title": "Stripe webhook ledger",
+      "intro": "The last {count} webhook events received (stripe_events) with their processing state. Payloads are never stored — type, digest and outcome only.",
+      "notConfigured": "Stripe is not configured (STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY). The ledger still shows whatever was received.",
+      "webhookSecret": "Webhook secret",
+      "configured": "Configured",
+      "missing": "Missing — signatures cannot be verified",
+      "received24h": "Received · 24 h",
+      "processed24h": "Processed · 24 h",
+      "failed24h": "Failed · 24 h",
+      "pending": "Pending (all time)",
+      "lastReceived": "Last received",
+      "columns": {
+        "event": "Event",
+        "type": "Type",
+        "organization": "Organisation",
+        "received": "Received",
+        "processed": "Processed",
+        "state": "State",
+        "error": "Error"
+      },
+      "states": {
+        "processed": "Processed",
+        "failed": "Failed",
+        "pending": "Pending"
+      },
+      "noOrganization": "None",
+      "noError": "None",
+      "empty": "No webhook events received yet.",
+      "showError": "Show error",
+      "errorFor": "Error of event {id}"
+    },
+    "vendors": {
+      "title": "Vendors and configuration",
+      "intro": "The same read-only checks as /api/health, cached for ten minutes per instance.",
+      "checkedAt": "Checked",
+      "none": "None",
+      "ai": {
+        "label": "AI provider",
+        "states": {
+          "not_configured": "Not configured",
+          "ok": "Models available",
+          "invalid_key": "API key rejected",
+          "unreachable": "Unreachable",
+          "models_missing": "Configured models missing"
+        },
+        "available": "Available models",
+        "missing": "Missing models"
+      },
+      "mail": {
+        "label": "Mail",
+        "transport": {
+          "smtp": "SMTP",
+          "file": "File (development)",
+          "resend": "Resend"
+        },
+        "domain": "Sender domain",
+        "domainState": "Domain status",
+        "domainStates": {
+          "verified": "Verified",
+          "pending": "Verification pending",
+          "failed": "Verification failed",
+          "not_started": "Verification not started",
+          "temporary_failure": "Temporary failure",
+          "sending_only_key": "Sending-only key — domain check unavailable",
+          "invalid_key": "API key rejected",
+          "domain_missing": "Domain not found in Resend",
+          "unreachable": "Resend unreachable"
+        }
+      },
+      "billing": {
+        "label": "Stripe prices",
+        "states": {
+          "not_configured": "Not configured",
+          "ok": "All price slots verified",
+          "prices_failing": "Price slots failing",
+          "prices_missing": "Price slots missing",
+          "no_prices": "No price configured"
+        },
+        "ok": "Verified",
+        "missing": "Missing",
+        "failed": "Failing",
+        "deprecated": "Deprecated fallback names"
+      },
+      "database": {
+        "label": "Database probe",
+        "ok": "Reachable",
+        "down": "Not reachable",
+        "migrations": "Migrations applied"
+      }
+    },
+    "database": {
+      "title": "Database",
+      "intro": "PostgreSQL statistics views: row counts are planner estimates, sizes include indexes and TOAST.",
+      "size": "Size",
+      "version": "Version",
+      "connections": "Connections",
+      "tableCount": "Tables",
+      "columns": {
+        "table": "Table",
+        "rows": "Live rows (est.)",
+        "dead": "Dead rows (est.)",
+        "size": "Size",
+        "vacuum": "Last autovacuum"
+      },
+      "largest": "Largest {count} tables",
+      "never": "Never",
+      "unavailable": "Statistics unavailable — the operator role could not read the statistics views."
+    },
+    "errors": {
+      "title": "Recent alerts and failures",
+      "intro": "The latest alert events across all tenants and audit entries whose action records a failure (last 7 days). Details stay in the tenant’s own dashboard.",
+      "open": "Open alerts",
+      "critical": "critical",
+      "warning": "warning",
+      "info": "info",
+      "alerts": {
+        "title": "Alert events",
+        "columns": {
+          "when": "When",
+          "severity": "Severity",
+          "kind": "Kind",
+          "organization": "Organisation",
+          "state": "State"
+        },
+        "openState": "Open",
+        "resolved": "Resolved {when}",
+        "empty": "No alert events yet."
+      },
+      "kinds": {
+        "event_drop": "Event drop",
+        "vendor_outage": "Vendor outage",
+        "credential_expiry": "Credential expiry",
+        "consent_errors": "Consent errors",
+        "queue_lag": "Queue lag",
+        "conversion_anomaly": "Conversion anomaly"
+      },
+      "severity": {
+        "info": "Info",
+        "warning": "Warning",
+        "critical": "Critical"
+      },
+      "audit": {
+        "title": "Failure entries in the audit log",
+        "columns": {
+          "when": "When",
+          "action": "Action",
+          "target": "Target type",
+          "organization": "Organisation"
+        },
+        "empty": "No failure entries in the last 7 days."
+      },
+      "platform": "Platform"
+    }
+  }
+}

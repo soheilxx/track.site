@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Cada entrada de auditoría de toda la plataforma – equipos de clientes, Track AI, tareas del sistema, claves de origen y operadores de plataforma – con actor, acción, organización, destino y detalles redactados. Buscar, filtrar, paginar y exportar; el registro en sí es de solo anexado.",
+    "presets": {
+      "label": "Vistas rápidas",
+      "all": "Todas las entradas",
+      "platform": "Acciones de operadores",
+      "breakGlass": "Rastro break-glass",
+      "platformWide": "Toda la plataforma",
+      "roles": "Cambios de rol"
+    },
+    "filters": {
+      "legend": "Filtrar",
+      "search": "Buscar",
+      "searchPlaceholder": "Acción, destino o ID de solicitud",
+      "actor": "Actor",
+      "everyone": "Todos",
+      "operators": "Operadores de plataforma",
+      "kinds": "Tipos de actor",
+      "otherUser": "Usuario {id}",
+      "action": "Acción",
+      "actionPlaceholder": "p. ej. platform.organization",
+      "actionHint": "Acción exacta o prefijo: «platform.organization» incluye todas las acciones por debajo.",
+      "organization": "Organización",
+      "organizationPlaceholder": "ID o slug",
+      "target": "Tipo de destino",
+      "all": "Todos",
+      "scope": "Ámbito",
+      "scopes": {
+        "all": "Todas las entradas",
+        "platform_wide": "Solo toda la plataforma (sin organización)",
+        "break_glass": "Rastro break-glass"
+      },
+      "from": "Desde (UTC)",
+      "to": "Hasta (UTC)",
+      "platformOnly": "Solo acciones de operadores de plataforma",
+      "platformOnlyHint": "Entradas cuyo actor es un operador de plataforma (tipo de actor «platform»), sea cual sea la organización.",
+      "apply": "Aplicar",
+      "reset": "Restablecer",
+      "export": "Exportar CSV",
+      "exportHint": "Los mismos filtros y las mismas listas de claves redactadas que esta tabla, de más reciente a más antiguo, como máximo {max} filas; cada exportación queda registrada en el registro de auditoría."
+    },
+    "summary": {
+      "count": "{count} entradas",
+      "countFiltered": "{count} entradas coincidentes",
+      "generated": "Cargado el {date}",
+      "organization": "Organización: {name}",
+      "deletedOrganization": "{id} (ya no existe)",
+      "unknownOrganization": "Ninguna organización tiene el ID o el slug «{input}»; nada coincidirá hasta que lo corrijas.",
+      "actorFallback": "Actor: {name}",
+      "actorUnknown": "Actor: usuario {id} (ya no existe)"
+    },
+    "notes": {
+      "retention": "Las entradas se conservan {days} días por defecto; una organización puede fijar su propia ventana para su registro de auditoría, y las entradas sin organización siguen el valor por defecto. La tarea de retención elimina definitivamente las entradas más antiguas: solo una exportación permite conservarlas más tiempo.",
+      "redacted": "Los valores se redactan antes de guardarse y de nuevo antes de mostrarse; los datos personales de usuarios finales y los secretos nunca aparecen aquí.",
+      "appendOnly": "El registro es de solo anexado: nada aquí puede editarse ni eliminarse, y cada exportación CSV es en sí misma una entrada."
+    },
+    "table": {
+      "caption": "Entradas de auditoría con fecha y hora, actor, acción, organización, destino y detalles redactados",
+      "when": "Cuándo",
+      "actor": "Actor",
+      "action": "Acción",
+      "organization": "Organización",
+      "target": "Destino",
+      "details": "Detalles",
+      "platformWide": "Toda la plataforma",
+      "former": "Antiguo miembro",
+      "formerOperator": "Antiguo operador",
+      "openOrganization": "Abrir {name}",
+      "onlyOrganization": "Solo esta organización",
+      "deletedOrganization": "Organización eliminada",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {Mostrar # detalle} other {Mostrar # detalles}}",
+      "diff": "Diff",
+      "metadata": "Metadatos",
+      "requestId": "Solicitud",
+      "entryId": "ID de la entrada",
+      "truncated": "No se muestran más filas.",
+      "noDetails": "Sin detalles"
+    },
+    "actorKinds": {
+      "platform": "Operador de plataforma",
+      "user": "Miembro",
+      "agent": "Track AI",
+      "system": "Sistema",
+      "source_key": "Clave de origen",
+      "unknown": "Desconocido"
+    },
+    "categories": {
+      "platform": "Plataforma",
+      "team": "Equipo",
+      "organization": "Organización",
+      "sites": "Sitios",
+      "config": "Configuración",
+      "consent": "Consentimiento",
+      "destinations": "Destinos",
+      "credentials": "Credenciales",
+      "privacy": "Privacidad",
+      "billing": "Facturación",
+      "ai": "Track AI",
+      "other": "Otros"
+    },
+    "empty": {
+      "title": "Todavía no hay entradas de auditoría",
+      "text": "Las entradas aparecen en cuanto alguien actúa en la plataforma: un registro, un cambio de configuración, una acción de operador.",
+      "filteredTitle": "Ninguna entrada coincide",
+      "filteredText": "Relaja los filtros, amplía el periodo o borra la búsqueda."
+    },
+    "pagination": {
+      "nav": "Páginas del registro de auditoría",
+      "previous": "Página anterior",
+      "next": "Página siguiente",
+      "page": "Página {page}"
+    }
+  }
+}

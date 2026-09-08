@@ -79,7 +79,8 @@
         "manageSites": "Manage sites",
         "openAssistant": "Open Track AI",
         "closeAssistant": "Close Track AI",
-        "logout": "Log out"
+        "logout": "Log out",
+        "operations": "Open Track Operations"
       },
       "modules": {
         "eventsMatrix": "Event Coverage Matrix",
@@ -133,7 +134,8 @@
       "account": "Account",
       "signedInAs": "Signed in as",
       "role": "Role",
-      "logout": "Log out"
+      "logout": "Log out",
+      "operations": "Track Operations"
     },
     "roles": {
       "OWNER": "Owner",
@@ -153,6 +155,17 @@
       "text": "The error has been recorded. Try again or go back to the Command Center.",
       "retry": "Try again",
       "back": "Command Center"
+    },
+    "supportAccess": {
+      "operatorTitle": "Support access active until {until} (grant {grant})",
+      "operatorText": "You are viewing {organization} read-only under a break-glass grant. Every page view is recorded in the organisation's audit log; changes are refused.",
+      "backToOps": "Back to Track Operations",
+      "customerTitle": "Track support has read-only access to this organisation until {until} (grant {grant})",
+      "customerText": "An approved, time-boxed support grant is active: Track staff can see this workspace but cannot change anything, and every page they open is recorded in your audit log.",
+      "customerMultiple": "{count} support grants are active.",
+      "leave": "Leave support view",
+      "leaving": "Leaving…",
+      "openAudit": "Open audit log"
     },
     "pages": {
       "aiSetup": {

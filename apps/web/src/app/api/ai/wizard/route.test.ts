@@ -20,7 +20,7 @@ const storePendingApproval = vi.fn(async () => undefined);
 const runTool = vi.fn(async (_args: Record<string, unknown>, _ctx: unknown): Promise<{ ok: boolean; code: string; data: unknown }> => ({ ok: true, code: "OK", data: null }));
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/server/session", () => ({ getOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
+vi.mock("@/server/session", () => ({ requireApiOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
 vi.mock("@/server/ai/context", () => ({ buildAgentContext: async () => ({ environmentId: "env1" }), siteBelongsToOrg: async () => true }));
 vi.mock("@/server/ai/chat-store", () => ({
   getOrCreateChatSession: async () => ({ id: "sess1", summary: {} }),

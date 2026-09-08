@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Iscrizioni, attivazione, retention, mix dei piani e connettori su tutte le organizzazioni: conteggi e tassi dalle tabelle della piattaforma, mai payload di eventi o dati degli utenti finali. Tutti i valori di calendario sono in UTC.",
+    "context": {
+      "asOf": "Al {at}",
+      "organizations": "{count, plural, one {# organizzazione} other {# organizzazioni}}",
+      "users": "{count, plural, one {# account} other {# account}}",
+      "sites": "{count, plural, one {# sito} other {# siti}}"
+    },
+    "sample": {
+      "title": "Numeri piccoli",
+      "text": "Esistono meno di {min} organizzazioni. I tassi sono mostrati per completezza, ma una sola organizzazione li sposta di interi punti percentuali: leggi i conteggi, non le percentuali."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organizzazioni",
+        "hint": "{count, plural, one {# nuova negli ultimi 30 giorni} other {# nuove negli ultimi 30 giorni}}"
+      },
+      "newOrganizations": {
+        "label": "Nuove organizzazioni · 30 g",
+        "hint": "{delta} rispetto ai 30 giorni precedenti ({previous})"
+      },
+      "active": {
+        "label": "Organizzazioni attive · 7 g / 30 g",
+        "hint": "{share7} / {share30} di tutte le organizzazioni, con eventi accettati"
+      },
+      "paying": {
+        "label": "Organizzazioni paganti",
+        "hint": "{share} di tutte le organizzazioni · abbonamento attivo"
+      }
+    },
+    "signups": {
+      "title": "Iscrizioni",
+      "intro": "Nuovi account e organizzazioni per data di creazione. Un account che crea un'organizzazione conta in entrambe le serie; i membri invitati contano solo come account.",
+      "daily": {
+        "title": "Per giorno · ultimi {days} giorni"
+      },
+      "weekly": {
+        "title": "Per settimana · ultime {weeks} settimane"
+      },
+      "series": {
+        "organizations": "Organizzazioni",
+        "users": "Account"
+      },
+      "chart": {
+        "daily": "Barre raggruppate per giorno: organizzazioni e account creati. La tabella sotto il grafico riporta gli stessi valori.",
+        "weekly": "Barre raggruppate per settimana ISO che inizia il lunedì: organizzazioni e account creati. La tabella sotto il grafico riporta gli stessi valori."
+      },
+      "table": "Mostra come tabella",
+      "columns": {
+        "day": "Giorno",
+        "week": "Settimana del",
+        "organizations": "Organizzazioni",
+        "users": "Account"
+      },
+      "partial": "settimana corrente, ancora in corso",
+      "figures": {
+        "last7": "Ultimi 7 giorni",
+        "last30": "Ultimi 30 giorni",
+        "previous30": "30 giorni precedenti",
+        "accounts": "{count, plural, one {# account} other {# account}}"
+      },
+      "empty": {
+        "title": "Nessuna iscrizione in questo periodo",
+        "text": "Nelle ultime 12 settimane non è stato creato alcun account né alcuna organizzazione."
+      }
+    },
+    "funnel": {
+      "title": "Funnel di attivazione",
+      "intro": "Traguardi che ogni organizzazione può raggiungere, misurati dalle tabelle che li registrano. I traguardi sono indipendenti: un'organizzazione conta in una fase appena raggiunge quel traguardo, che abbia superato o meno i precedenti.",
+      "stages": {
+        "created": "Organizzazione creata",
+        "site": "Primo sito creato",
+        "verified": "Snippet verificato (dominio)",
+        "event": "Primo evento accettato",
+        "destination": "Destinazione collegata",
+        "published": "Configurazione pubblicata",
+        "paying": "Pagante (abbonamento attivo)"
+      },
+      "columns": {
+        "stage": "Fase",
+        "count": "Organizzazioni",
+        "step": "Della fase precedente",
+        "total": "Del totale",
+        "median": "Tempo mediano dall'iscrizione",
+        "recent": "Ultimi {days} giorni",
+        "recentStep": "Della fase precedente (recente)"
+      },
+      "figures": {
+        "all": "Tutte le organizzazioni",
+        "recent": "Create negli ultimi {days} giorni"
+      },
+      "caption": "Fasi di attivazione con numero di organizzazioni, tassi di conversione e tempo mediano dall'iscrizione",
+      "note": "I tassi sono rapporti tra conteggi. «Della fase precedente» può superare il 100 % perché i traguardi sono indipendenti: un'organizzazione può pagare senza dominio verificato.",
+      "empty": {
+        "title": "Ancora nessuna organizzazione",
+        "text": "Il funnel si riempie appena viene creata la prima organizzazione."
+      }
+    },
+    "retention": {
+      "title": "Retention settimanale",
+      "intro": "Organizzazioni per settimana di iscrizione (lunedì, UTC) e quota che continua a inviare eventi accettati in ogni settimana successiva all'iscrizione; la settimana 0 sono i primi sette giorni. Misurato dagli aggregati orari degli eventi.",
+      "caption": "Coorti di retention settimanale: quota di ogni settimana di iscrizione attiva nelle settimane successive all'iscrizione",
+      "columns": {
+        "cohort": "Settimana di iscrizione",
+        "size": "Organizzazioni",
+        "week": "S{n}"
+      },
+      "cell": "{active} su {size} attive",
+      "state": {
+        "partial": "in corso",
+        "pending": "non iniziata"
+      },
+      "small": "coorte piccola",
+      "legend": {
+        "scale": "Le celle più scure indicano una quota attiva maggiore della coorte; ogni cella mostra anche la sua percentuale.",
+        "partial": "Le celle tratteggiate sono ancora in corso: la settimana non è terminata per tutte le organizzazioni della coorte.",
+        "small": "Le coorti con meno di {min} organizzazioni sono contrassegnate; una sola organizzazione ne sposta molto il tasso."
+      },
+      "horizon": "Aggregati orari registrati dal {at}.",
+      "horizonNone": "Nessun aggregato orario ancora registrato: l'attività non può essere misurata.",
+      "empty": {
+        "title": "Nessuna iscrizione nelle ultime {weeks} settimane",
+        "text": "Le coorti compaiono appena un'organizzazione viene creata nella finestra."
+      }
+    },
+    "planMix": {
+      "title": "Mix dei piani",
+      "intro": "Organizzazioni per piano del catalogo e stato dell'abbonamento dal registro di fatturazione. Le organizzazioni senza riga nel registro non hanno mai avviato un checkout.",
+      "caption": "Organizzazioni per piano e stato dell'abbonamento",
+      "columns": {
+        "plan": "Piano",
+        "organizations": "Organizzazioni",
+        "share": "Quota",
+        "active": "Attivo",
+        "trialing": "In prova",
+        "pastDue": "Scaduto",
+        "canceled": "Annullato",
+        "other": "Altro"
+      },
+      "figures": {
+        "paying": "Paganti"
+      },
+      "none": "Nessun abbonamento",
+      "unknown": "Id piano sconosciuto",
+      "empty": {
+        "title": "Ancora nessuna organizzazione",
+        "text": "Il mix dei piani si riempie appena esiste la prima organizzazione."
+      }
+    },
+    "connectors": {
+      "title": "Connettori in uso",
+      "intro": "Tipi di connettore ordinati per organizzazioni con almeno una destinazione collegata di quel tipo. Solo conteggi di integrazioni: nessun identificativo, nessuna credenziale.",
+      "caption": "Tipi di connettore per organizzazioni che li usano",
+      "columns": {
+        "connector": "Connettore",
+        "organizations": "Organizzazioni",
+        "connected": "Collegate",
+        "paused": "In pausa",
+        "error": "Errore",
+        "notConnected": "Non collegate"
+      },
+      "figures": {
+        "organizations": "Organizzazioni con destinazione",
+        "connected": "Integrazioni collegate"
+      },
+      "more": "{count, plural, one {# altro tipo di connettore con meno organizzazioni non è elencato.} other {# altri tipi di connettore con meno organizzazioni non sono elencati.}}",
+      "empty": {
+        "title": "Ancora nessuna destinazione",
+        "text": "I connettori compaiono qui appena un'organizzazione aggiunge una destinazione."
+      }
+    },
+    "method": {
+      "title": "Metodo e avvertenze",
+      "items": {
+        "sources": "Le iscrizioni contano le righe delle tabelle account e organizzazioni per data di creazione; nulla viene campionato o stimato.",
+        "milestones": "Traguardi del funnel: prima riga di sito; primo dominio verificato (domains.verified_at); primo aggregato orario con eventi accettati; data di creazione di una destinazione attualmente collegata (una destinazione scollegata di nuovo non conta); prima pubblicazione di configurazione; creazione di un abbonamento attivo nel registro di fatturazione.",
+        "proxies": "Gli istanti di destinazione e pagamento sono approssimazioni — il collegamento e il checkout stessi non hanno marca temporale — quindi i loro tempi mediani sono approssimativi.",
+        "retention": "Retention e attività si basano sugli aggregati orari degli eventi; se le regole di conservazione hanno eliminato aggregati, le coorti più vecchie sembrano inattive. L'orizzonte degli aggregati è indicato sotto la griglia.",
+        "noGeo": "Nessuna ripartizione geografica: Track non memorizza alcun paese per account o organizzazioni, quindi non ne viene mostrata alcuna.",
+        "privacy": "Tutto in questa pagina è un conteggio o un tasso su tutte le organizzazioni. Nessuna organizzazione, account, visitatore o evento viene identificato."
+      }
+    },
+    "overview": {
+      "title": "Numeri chiave",
+      "link": "Apri crescita",
+      "asOf": "Al {at}",
+      "sample": "Numeri piccoli: meno di {min} organizzazioni.",
+      "unavailable": "Impossibile caricare: il modulo ha segnalato un errore. Apri il modulo per i dettagli.",
+      "organizations": {
+        "label": "Organizzazioni",
+        "hint": "{count, plural, one {# account} other {# account}}"
+      },
+      "newOrganizations": {
+        "label": "Nuove organizzazioni · 30 g",
+        "hint": "{count} negli ultimi 7 giorni · {delta} rispetto ai 30 giorni precedenti"
+      },
+      "active": {
+        "label": "Organizzazioni attive · 7 g / 30 g",
+        "hint": "Con eventi accettati"
+      },
+      "paying": {
+        "label": "Organizzazioni paganti",
+        "hint": "Abbonamento attivo"
+      },
+      "health": {
+        "title": "Stato della piattaforma",
+        "link": "Apri stato della piattaforma",
+        "checkedAt": "Verificato il {at}",
+        "tiles": {
+          "collector": "Collector",
+          "worker": "Worker",
+          "queues": "Code",
+          "deliveries": "Consegne · 24 h",
+          "database": "Database"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Richiede attenzione",
+          "bad": "Degradato",
+          "info": "Info",
+          "neutral": "Non misurato"
+        }
+      },
+      "inbox": {
+        "title": "Posta in arrivo",
+        "link": "Apri posta in arrivo",
+        "notMeasured": "Non misurato",
+        "failed": "Impossibile caricare",
+        "contacts": {
+          "label": "Richieste di contatto",
+          "open": "{count, plural, one {# aperta} other {# aperte}}",
+          "detail": "{newCount} nuove · {inProgress} in lavorazione"
+        },
+        "privacy": {
+          "label": "Richieste privacy",
+          "open": "{count, plural, one {# aperta} other {# aperte}}",
+          "detail": "{overdue} scadute · {dueSoon} in scadenza",
+          "unavailable": "Tabelle privacy non disponibili in questa installazione"
+        },
+        "alerts": {
+          "label": "Avvisi",
+          "open": "{count, plural, one {# aperto} other {# aperti}}",
+          "detail": "{critical} critici · ultimi {days} giorni",
+          "unavailable": "Tabelle degli avvisi non disponibili in questa installazione"
+        }
+      }
+    }
+  }
+}

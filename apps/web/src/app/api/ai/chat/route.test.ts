@@ -20,6 +20,8 @@ const EXPIRES_AT = new Date(APPROVAL.claims.expiresAt).toISOString();
 const UI = { message: `Saved ${SECRET}`, intent: "configuration", stage: "destinations", current_step: "destinations", progress_percent: 40, status: "ok", cards: [], input_component: { type: "none" }, quick_actions: [], completed_steps: ["site"], missing_fields: [], warnings: [], requires_confirmation: false, confirmation_summary: null, tool_result_summary: null, next_best_action: null };
 
 const aiConfigured = vi.fn(() => true);
+const ORG_CONTEXT = { organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" };
+const orgContext = vi.fn(async (): Promise<Record<string, unknown> | null> => ORG_CONTEXT);
 const listMessages = vi.fn(async (): Promise<Array<{ id: string; role: string; content: string; ui: null; createdAt: string }>> => []);
 const runChatTurn = vi.fn(async (_ctx: unknown, _siteId: string, _message: string, emit: (e: unknown) => void) => {
   emit({ type: "assistant.progress", phase: "thinking", detail: null });
@@ -32,7 +34,7 @@ const runChatTurn = vi.fn(async (_ctx: unknown, _siteId: string, _message: strin
 });
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/server/session", () => ({ getOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
+vi.mock("@/server/session", () => ({ requireApiOrgContext: async () => (await orgContext()) ?? new Response(null, { status: 401 }) }));
 vi.mock("@/server/ai/context", () => ({ aiConfigured: () => aiConfigured(), siteBelongsToOrg: async () => true }));
 vi.mock("@/server/ai/chat-store", () => ({ getOrCreateChatSession: async () => ({ id: "sess1", summary: {} }), listMessages: () => listMessages() }));
 vi.mock("@/server/ai/turn", () => ({ runChatTurn: (...args: unknown[]) => runChatTurn(...(args as Parameters<typeof runChatTurn>)) }));
@@ -65,7 +67,22 @@ async function frames(res: Response): Promise<Frame[]> {
 describe("chat route stream contract", () => {
   beforeEach(() => {
     runChatTurn.mockClear();
+    listMessages.mockClear();
     aiConfigured.mockReturnValue(true);
+    orgContext.mockResolvedValue(ORG_CONTEXT);
+  });
+
+  it("refuses a read-only support session (break-glass) before touching the store or the model", async () => {
+    orgContext.mockResolvedValue({ ...ORG_CONTEXT, role: "READ_ONLY", readOnly: true, breakGlass: { grantId: "g1", endsAt: new Date() } });
+    const req = new Request(`http://localhost/api/ai/chat?siteId=${SITE_ID}`);
+    const get = await GET(Object.assign(req, { nextUrl: new URL(req.url) }) as unknown as Parameters<typeof GET>[0]);
+    expect(get.status).toBe(403);
+    expect(await get.json()).toMatchObject({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access" });
+    const post = await POST(request({ siteId: SITE_ID, message: "hi" }));
+    expect(post.status).toBe(403);
+    expect(await post.json()).toMatchObject({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access" });
+    expect(listMessages).not.toHaveBeenCalled();
+    expect(runChatTurn).not.toHaveBeenCalled();
   });
 
   it("degrades to the guided wizard with 424 when the provider is not configured", async () => {

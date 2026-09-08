@@ -79,7 +79,8 @@
         "manageSites": "Gérer les sites",
         "openAssistant": "Ouvrir Track AI",
         "closeAssistant": "Fermer Track AI",
-        "logout": "Se déconnecter"
+        "logout": "Se déconnecter",
+        "operations": "Ouvrir Track Operations"
       },
       "modules": {
         "eventsMatrix": "Event Coverage Matrix",
@@ -133,7 +134,8 @@
       "account": "Compte",
       "signedInAs": "Connecté en tant que",
       "role": "Rôle",
-      "logout": "Se déconnecter"
+      "logout": "Se déconnecter",
+      "operations": "Track Operations"
     },
     "roles": {
       "OWNER": "Propriétaire",
@@ -153,6 +155,17 @@
       "text": "L’erreur a été enregistrée. Réessayez ou revenez au Command Center.",
       "retry": "Réessayer",
       "back": "Command Center"
+    },
+    "supportAccess": {
+      "operatorTitle": "Accès support actif jusqu’au {until} (accès {grant})",
+      "operatorText": "Vous consultez {organization} en lecture seule dans le cadre d’un accès break-glass. Chaque page ouverte est consignée dans le journal d’audit de l’organisation ; toute modification est refusée.",
+      "backToOps": "Retour à Track Operations",
+      "customerTitle": "Le support Track a un accès en lecture seule à cette organisation jusqu’au {until} (accès {grant})",
+      "customerText": "Un accès support approuvé et limité dans le temps est actif : l’équipe Track peut voir cet espace de travail mais ne peut rien modifier, et chaque page ouverte est consignée dans votre journal d’audit.",
+      "customerMultiple": "{count} accès support sont actifs.",
+      "leave": "Quitter la vue support",
+      "leaving": "Fermeture…",
+      "openAudit": "Ouvrir le journal d’audit"
     },
     "pages": {
       "aiSetup": {

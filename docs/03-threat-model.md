@@ -53,6 +53,10 @@ Method: STRIDE per trust boundary; updated whenever a boundary changes.
 
 ### B8 Platform operators
 - No raw data by default; break-glass access is time-boxed, justified, step-up authenticated and immutably audited. Global and tenant kill switches.
+- Implementation (docs/17-operations-console.md, migration 0014): the operator console lives at `/ops` with its own shell and access model. Platform roles (`user.platform_role`: `PLATFORM_SUPPORT`, `PLATFORM_ADMIN`) are orthogonal to organisation membership and change only through the audited `ops:grant` CLI or the four-eyes Platform users module; every platform page requires the operator's two-factor authentication (`OPS_REQUIRE_2FA`, always on in production).
+- Platform reads bypass RLS **only** through `withPlatform(ctx, …)` (apps/web/src/server/ops/platform.ts), which assumes the dedicated role `tracksite_ops` (`NOLOGIN BYPASSRLS`, privileges identical to `tracksite_worker`) and requires a resolved `PlatformContext`. The tenant helpers (`withOrg` / `withTenant`) keep running as `tracksite_app` under RLS; the console never uses them to widen access, and `tracksite_ops` is never used outside that helper (no API route, no cron, no CLI).
+- Every operator mutation is a server action with role check, zod validation, explicit UI confirmation and an `audit_log` entry with actor kind `platform` and the affected organisation id (`auditPlatform`); tenant-detail views require an active break-glass grant (`activeBreakGlass`) and are themselves audited with the grant id, so the customer's own audit log shows the access. Operator notes (`ops_notes`) and break-glass grants are revoked from `tracksite_app`; feature-flag overrides are readable by the tenant but writable only by operators.
+- Tenant kill switch: `organization.suspended_at` / `suspended_reason` (Controls module), in addition to the global `KILL_SWITCH_GLOBAL` and the per-site/environment/connector switches.
 
 ## 3. Abuse / AUP
 

@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "none": "—",
+      "on": "Enabled",
+      "off": "Not enabled",
+      "verified": "Verified",
+      "unverified": "Not verified",
+      "former": "Former account",
+      "metadata": "Metadata only: names, e-mails, roles, two-factor state and session timestamps. Never session tokens, IP addresses, user agents or end-user data.",
+      "adminOnly": "Platform admins only."
+    },
+    "roles": {
+      "NONE": "No platform role",
+      "PLATFORM_SUPPORT": "Platform support",
+      "PLATFORM_ADMIN": "Platform admin"
+    },
+    "errors": {
+      "forbidden": "Your platform role does not allow this action.",
+      "invalid": "Check the highlighted fields.",
+      "confirm_required": "Confirm the action in the dialog first.",
+      "not_found": "No account with this address or id.",
+      "self": "You cannot change your own platform role — another platform admin has to.",
+      "unchanged": "The account already has this role.",
+      "lastAdmin": "This is the last platform admin; grant the admin role to someone else first.",
+      "emailNotVerified": "The account has not verified its e-mail address; a platform role is granted to verified accounts only.",
+      "ticketRequired": "You are the only admin who can decide this change: a ticket reference is required for a self-approved change.",
+      "needsThirdAdmin": "A second platform admin exists but cannot decide a change to their own role. Grant the admin role to a third person first, or use the ops:grant command.",
+      "duplicate": "A role change for this account is already waiting for a decision.",
+      "fourEyes": "You filed this request; a different platform admin has to apply it (four eyes).",
+      "stale": "The account’s role changed since the request was filed; decline it and file a new one.",
+      "expired": "The request expired; file a new one.",
+      "notPending": "The request was already decided.",
+      "notOperator": "Sessions are revoked for platform operators only; the customer directory is read-only.",
+      "generic": "The action failed. Try again; the failure has been recorded."
+    },
+    "notices": {
+      "proposed": "Request filed. A different platform admin has to apply it; it expires after seven days.",
+      "applied": "Role changed and recorded as self-approved. {count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}}",
+      "approved": "Role changed. {count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}}",
+      "declined": "Request declined and recorded.",
+      "withdrawn": "Request withdrawn and recorded.",
+      "sessionsRevoked": "{count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}} The account has to sign in again."
+    },
+    "overview": {
+      "intro": "Accounts with a platform role, their two-factor state and sessions, and the four-eyes rule for granting roles. Customer accounts are listed read-only in the directory.",
+      "directory": "Customer directory",
+      "grant": "Grant a platform role",
+      "rules": {
+        "title": "Four-eyes status",
+        "admins": "{eligible} of {total, plural, one {# platform admin} other {# platform admins}} can decide requests.",
+        "eligibleHint": "Deciding admins have a verified e-mail{twoFactor, select, yes { and two-factor enabled} other {}}.",
+        "on": "A role change you file is applied by a different platform admin.",
+        "off": "You are the only deciding admin: role changes you file are applied at once, recorded as self-approved, and need a ticket reference.",
+        "bootstrap": "The first platform admin is granted with the ops:grant command; from then on roles change here.",
+        "signOut": "Every role change deletes the account’s stored sessions (forced sign-out). A cached session can stay valid for up to {minutes} minutes."
+      }
+    },
+    "requests": {
+      "title": "Pending role changes",
+      "intro": "Requests wait here until a different platform admin applies or declines them. They expire after seven days.",
+      "empty": "No pending role changes.",
+      "caption": "Role change requests with account, change, reason, proposer and available decisions",
+      "account": "Account",
+      "change": "Change",
+      "changeValue": "{from} → {to}",
+      "reason": "Reason",
+      "ticket": "Ticket",
+      "noTicket": "No ticket reference",
+      "proposer": "Filed by",
+      "filed": "Filed {date}",
+      "expires": "Expires {date}",
+      "decision": "Decision",
+      "states": {
+        "pending": "Pending",
+        "stale": "Stale",
+        "expired": "Expired"
+      },
+      "staleHint": "The account’s role changed meanwhile ({role}); this request can only be declined.",
+      "approve": "Apply",
+      "decline": "Decline",
+      "withdraw": "Withdraw",
+      "cannot": {
+        "fourEyes": "You filed this request — another admin applies it.",
+        "self": "This is your own account.",
+        "stale": "Role changed meanwhile.",
+        "expired": "Expired.",
+        "lastAdmin": "Would remove the last admin.",
+        "emailNotVerified": "E-mail not verified."
+      },
+      "dialog": {
+        "approveTitle": "Apply the role change for {name}?",
+        "approveText": "{from} → {to}. The account is signed out everywhere and the change is recorded with both admins in the audit log.",
+        "approveConfirm": "Apply change",
+        "declineTitle": "Decline the role change for {name}?",
+        "declineText": "Nothing changes for the account; the decision is recorded in the audit log.",
+        "declineConfirm": "Decline",
+        "withdrawTitle": "Withdraw your request for {name}?",
+        "withdrawText": "Nothing changes for the account; the withdrawal is recorded in the audit log.",
+        "withdrawConfirm": "Withdraw",
+        "reason": "Note",
+        "reasonHint": "Optional, up to {max} characters; stored in the audit log."
+      }
+    },
+    "operators": {
+      "title": "Operators",
+      "caption": "Accounts with a platform role, their two-factor and verification state, last sign-in, active sessions and available actions",
+      "empty": "No platform users yet",
+      "emptyText": "Grant the first platform admin with the ops:grant command; further roles are granted here.",
+      "count": "{count, plural, one {# operator} other {# operators}}",
+      "columns": {
+        "account": "Account",
+        "role": "Role",
+        "security": "Security",
+        "lastSignIn": "Last sign-in",
+        "sessions": "Sessions",
+        "since": "Since",
+        "actions": "Actions"
+      },
+      "twoFactor": "Two-factor",
+      "email": "E-mail",
+      "eligible": "Can decide requests",
+      "notEligible": "Cannot decide requests",
+      "memberOf": "{count, plural, one {Member of # organisation} other {Member of # organisations}}",
+      "pending": "Change pending",
+      "noSession": "No stored session",
+      "lastSeen": "active {date}",
+      "activeSessions": "{count, plural, =0 {none active} one {# active} other {# active}}",
+      "changeRole": "Change role",
+      "revokeSessions": "Sign out everywhere",
+      "self": "Your own account: another admin changes your role.",
+      "lastAdmin": "Last platform admin: cannot be demoted.",
+      "open": "Open {name}",
+      "openLabel": "Details"
+    },
+    "roleDialog": {
+      "title": "Change the platform role of {name}",
+      "grantTitle": "Grant a platform role",
+      "description": "Current role: {role}.",
+      "grantDescription": "The person signs up as a normal user and verifies the e-mail first; then the role is granted here.",
+      "email": "E-mail address",
+      "emailHint": "Exact address of an existing, verified account.",
+      "role": "New role",
+      "reason": "Reason",
+      "reasonHint": "At least {min} characters, up to {max}. Stored in the audit log.",
+      "ticket": "Ticket reference",
+      "ticketHint": "For example OPS-1234. Required when no other admin can decide (self-approved change).",
+      "modeProposal": "Four eyes: this files a request that a different platform admin applies.",
+      "modeSelf": "You are the only admin who can decide: the change is applied at once, recorded as self-approved, and needs a ticket reference.",
+      "signOut": "The account is signed out everywhere when the change is applied.",
+      "submit": "File request",
+      "submitSelf": "Apply change"
+    },
+    "revokeDialog": {
+      "title": "Sign out {name} everywhere?",
+      "text": "Every stored session of the account is deleted; the person has to sign in again (with two-factor). The action is recorded in the audit log.",
+      "selfWarning": "This is your own account: you will be signed out too.",
+      "cache": "A cached session can stay valid for up to {minutes} minutes.",
+      "reason": "Reason",
+      "reasonHint": "At least {min} characters; stored in the audit log.",
+      "confirm": "Sign out everywhere"
+    },
+    "history": {
+      "title": "Recent role changes",
+      "intro": "The newest {count} role entries of the audit log — requests, applied changes (console and CLI), declines and withdrawals.",
+      "empty": "No role changes recorded yet.",
+      "caption": "Recent role-change audit entries with time, actor, action, account and change",
+      "when": "When",
+      "actor": "Actor",
+      "action": "Action",
+      "account": "Account",
+      "change": "Change",
+      "actions": {
+        "propose": "Filed",
+        "set": "Applied",
+        "decline": "Declined",
+        "withdraw": "Withdrawn"
+      },
+      "selfApproved": "self-approved",
+      "actorKinds": {
+        "platform": "Platform admin",
+        "system": "System",
+        "unknown": "Unknown"
+      },
+      "request": "Request {id}",
+      "sessionsRevoked": "{count, plural, one {# session revoked} other {# sessions revoked}}",
+      "reason": "Reason: {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Customer directory",
+      "intro": "Every account with its organisations and roles, two-factor state, creation and last sign-in — read-only metadata, no end-user data.",
+      "back": "Platform users",
+      "filters": {
+        "legend": "Filter and sort",
+        "search": "Search",
+        "searchPlaceholder": "Name, e-mail or ID",
+        "kind": "Accounts",
+        "kinds": {
+          "all": "All",
+          "operators": "With platform role",
+          "customers": "Customers only"
+        },
+        "twoFactor": "Two-factor",
+        "twoFactorAll": "All",
+        "twoFactorOn": "Enabled",
+        "twoFactorOff": "Not enabled",
+        "sort": "Sort by",
+        "sorts": {
+          "created": "Created",
+          "name": "Name",
+          "email": "E-mail",
+          "signin": "Last sign-in"
+        },
+        "direction": "Direction",
+        "asc": "Ascending",
+        "desc": "Descending",
+        "apply": "Apply",
+        "reset": "Reset"
+      },
+      "count": "{count, plural, one {# account} other {# accounts}}",
+      "countFiltered": "{count, plural, one {# matching account} other {# matching accounts}}",
+      "operatorsCount": "{count} with a platform role",
+      "caption": "Accounts with memberships, roles, two-factor and verification state, last sign-in and creation date",
+      "columns": {
+        "account": "Account",
+        "memberships": "Organisations",
+        "security": "Security",
+        "lastSignIn": "Last sign-in",
+        "created": "Created"
+      },
+      "noMemberships": "No organisation",
+      "moreMemberships": "+{count} more",
+      "open": "Open {name}",
+      "empty": "No accounts yet",
+      "emptyText": "Accounts appear here as soon as the first person signs up.",
+      "emptyFiltered": "No account matches",
+      "emptyFilteredText": "Loosen the filters or clear the search.",
+      "pagination": {
+        "nav": "Pages of the directory",
+        "previous": "Previous page",
+        "next": "Next page",
+        "page": "Page {page}"
+      },
+      "methods": "Last sign-in: newest stored session (rows vanish on sign-out and clean-up, so “no stored session” does not mean the person never signed in). Active: sessions that have not expired."
+    },
+    "detail": {
+      "back": "All platform users",
+      "backDirectory": "Customer directory",
+      "id": "ID",
+      "created": "Created {date}",
+      "updated": "Updated {date}",
+      "generated": "Loaded {date}",
+      "sections": {
+        "profile": "Account",
+        "memberships": "Organisations",
+        "sessions": "Sessions",
+        "requests": "Pending role change",
+        "audit": "Audit entries for this account"
+      },
+      "profile": {
+        "role": "Platform role",
+        "email": "E-mail",
+        "verified": "E-mail verification",
+        "twoFactor": "Two-factor",
+        "twoFactorVerified": "Two-factor verified",
+        "twoFactorNotSetUp": "Not set up",
+        "passkeys": "{count, plural, =0 {No passkeys} one {# passkey} other {# passkeys}}",
+        "locale": "Language",
+        "updated": "Last updated",
+        "customer": "Customer account without platform role: read-only here."
+      },
+      "memberships": {
+        "caption": "Organisations the account belongs to with role and join date",
+        "organisation": "Organisation",
+        "role": "Role",
+        "joined": "Joined",
+        "suspended": "Suspended",
+        "empty": "Member of no organisation.",
+        "open": "Open {name}"
+      },
+      "sessions": {
+        "caption": "Stored sessions of the account with sign-in, last activity, expiry, state and active organisation",
+        "created": "Signed in",
+        "lastActive": "Last activity",
+        "expires": "Expires",
+        "state": "State",
+        "states": {
+          "active": "Active",
+          "expired": "Expired"
+        },
+        "organisation": "Active organisation",
+        "summary": "{active, plural, one {# active session} other {# active sessions}} · {expired, plural, one {# expired} other {# expired}}",
+        "empty": "No stored sessions.",
+        "truncated": "The {count} most recent sessions are shown.",
+        "noSecrets": "Session tokens, IP addresses and user agents are never shown here."
+      },
+      "audit": {
+        "caption": "Audit entries targeting this account with time, actor, action and redacted details",
+        "when": "When",
+        "actor": "Actor",
+        "action": "Action",
+        "details": "Details",
+        "show": "{count, plural, one {Show # detail} other {Show # details}}",
+        "noDetails": "No details",
+        "empty": "No audit entries for this account.",
+        "limit": "The {count} most recent entries are shown; the Audit module has the full log."
+      }
+    }
+  }
+}

@@ -1,10 +1,11 @@
 "use client";
 
 import { Command } from "cmdk";
-import { Globe, LogOut, Plus, Sparkles, Waypoints } from "lucide-react";
+import { Globe, LogOut, Plus, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import type { PlatformRole } from "@track-site/core";
 import { Dialog } from "@track-site/ui";
 import { MODULES } from "./modules";
 import { NAV, navLabel } from "./nav";
@@ -20,6 +21,8 @@ export interface CommandPaletteProps {
   assistantOpen: boolean;
   onToggleAssistant: () => void;
   onLogout: () => void;
+  /** platform operators get the Track Operations entry (docs/17); `NONE` for customers */
+  platformRole?: PlatformRole;
 }
 
 const ITEM =
@@ -39,6 +42,7 @@ export function CommandPalette({
   assistantOpen,
   onToggleAssistant,
   onLogout,
+  platformRole = "NONE",
 }: CommandPaletteProps) {
   const t = useTranslations("shell");
   const tModule = useTranslations();
@@ -187,6 +191,18 @@ export function CommandPalette({
                 ? t("palette.actions.closeAssistant")
                 : t("palette.actions.openAssistant")}
             </Command.Item>
+            {platformRole !== "NONE" ? (
+              <Command.Item
+                value={`action ${t("palette.actions.operations")}`}
+                keywords={["/ops"]}
+                onSelect={() => run(() => router.push("/ops"))}
+                className={ITEM}
+                data-testid="palette-operations"
+              >
+                <ShieldCheck className="size-4 shrink-0" aria-hidden="true" />
+                {t("palette.actions.operations")}
+              </Command.Item>
+            ) : null}
             <Command.Item
               value={`action ${t("palette.actions.logout")}`}
               onSelect={() => run(onLogout)}

@@ -79,7 +79,8 @@
         "manageSites": "Sites beheren",
         "openAssistant": "Track AI openen",
         "closeAssistant": "Track AI sluiten",
-        "logout": "Uitloggen"
+        "logout": "Uitloggen",
+        "operations": "Track Operations openen"
       },
       "modules": {
         "eventsMatrix": "Event Coverage Matrix",
@@ -133,7 +134,8 @@
       "account": "Account",
       "signedInAs": "Ingelogd als",
       "role": "Rol",
-      "logout": "Uitloggen"
+      "logout": "Uitloggen",
+      "operations": "Track Operations"
     },
     "roles": {
       "OWNER": "Eigenaar",
@@ -153,6 +155,17 @@
       "text": "De fout is vastgelegd. Probeer het opnieuw of ga terug naar het Command Center.",
       "retry": "Opnieuw proberen",
       "back": "Command Center"
+    },
+    "supportAccess": {
+      "operatorTitle": "Supporttoegang actief tot {until} (toegang {grant})",
+      "operatorText": "Je bekijkt {organization} alleen-lezen via een break-glass-toegang. Elke geopende pagina wordt vastgelegd in de auditlog van de organisatie; wijzigingen worden geweigerd.",
+      "backToOps": "Terug naar Track Operations",
+      "customerTitle": "Track-support heeft tot {until} alleen-lezen toegang tot deze organisatie (toegang {grant})",
+      "customerText": "Er is een goedgekeurde, tijdelijke supporttoegang actief: Track-medewerkers kunnen deze werkruimte zien maar niets wijzigen, en elke pagina die ze openen wordt vastgelegd in je auditlog.",
+      "customerMultiple": "{count} supporttoegangen zijn actief.",
+      "leave": "Supportweergave verlaten",
+      "leaving": "Verlaten…",
+      "openAudit": "Auditlog openen"
     },
     "pages": {
       "aiSetup": {

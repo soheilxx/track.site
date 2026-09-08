@@ -1,0 +1,284 @@
+{
+  "opsInbox": {
+    "sections": {
+      "label": "Secciones de la bandeja de entrada",
+      "requests": "Solicitudes",
+      "privacy": "Solicitudes de privacidad",
+      "alerts": "Resumen de alertas",
+      "knowledge": "Valoraciones de Knowledge"
+    },
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "working": "Procesando…",
+      "never": "nunca",
+      "none": "—",
+      "unassigned": "Sin asignar",
+      "you": "tú",
+      "openOrganization": "Abrir organización",
+      "aggregatesOnly": "Solo agregados y metadatos: sin cargas de eventos ni datos de usuarios finales."
+    },
+    "errors": {
+      "forbidden": "Tu rol de plataforma no permite hacer eso.",
+      "invalid": "Revisa los campos marcados.",
+      "not_found": "Esa solicitud ya no existe.",
+      "unchanged": "No hay nada que cambiar: ya está en ese estado.",
+      "invalid_transition": "Ese cambio de estado no está permitido desde el estado actual.",
+      "confirmation_required": "Confirma primero la acción.",
+      "invalid_assignee": "La persona asignada debe tener un rol de plataforma.",
+      "mail_failed": "No se pudo enviar el correo; el intento quedó registrado. Comprueba el transporte de correo y vuelve a intentarlo.",
+      "generic": "No ha funcionado. Inténtalo de nuevo."
+    },
+    "kinds": {
+      "contact": "Contacto",
+      "demo": "Demo",
+      "support": "Soporte"
+    },
+    "status": {
+      "new": "Nueva",
+      "in_progress": "En curso",
+      "done": "Resuelta",
+      "spam": "Spam"
+    },
+    "delivery": {
+      "delivered": "Reenviada a la dirección de la bandeja",
+      "failed": "Falló el reenvío a la dirección de la bandeja",
+      "not_sent": "No reenviada (no hay dirección de bandeja configurada)"
+    },
+    "requests": {
+      "title": "Solicitudes de contacto, demo y soporte",
+      "intro": "Todo lo que entregan los formularios públicos, con estado, persona asignada y estado de reenvío. Las respuestas salen por correo en el idioma de quien solicita; cada cambio de estado, asignación y respuesta queda auditado.",
+      "summary": {
+        "label": "Solicitudes por estado",
+        "open": "Abiertas",
+        "all": "Todas"
+      },
+      "filters": {
+        "legend": "Filtros",
+        "status": "Estado",
+        "kind": "Tipo",
+        "assignee": "Asignada a",
+        "search": "Buscar",
+        "searchPlaceholder": "Nombre, correo o empresa",
+        "apply": "Aplicar filtros",
+        "reset": "Restablecer",
+        "all": "Todas",
+        "open": "Abiertas (nuevas y en curso)",
+        "everyone": "Cualquiera",
+        "unassigned": "Sin asignar",
+        "me": "Asignadas a mí"
+      },
+      "columns": {
+        "received": "Recibida",
+        "kind": "Tipo",
+        "from": "De",
+        "message": "Mensaje",
+        "status": "Estado",
+        "assignee": "Asignada a",
+        "delivery": "Reenvío",
+        "actions": "Acciones"
+      },
+      "open": "Abrir",
+      "openLabel": "Abrir la solicitud de {name}",
+      "caption": "Solicitudes de contacto, las más recientes primero",
+      "count": "{count} solicitudes",
+      "countFiltered": "{count} solicitudes coinciden con los filtros",
+      "empty": "No hay solicitudes abiertas",
+      "emptyText": "Las solicitudes de los formularios públicos de contacto, demo y soporte aparecen aquí en cuanto alguien envía una.",
+      "emptyFiltered": "Ninguna solicitud coincide con estos filtros",
+      "emptyFilteredText": "Amplía los filtros o restablécelos.",
+      "pagination": {
+        "nav": "Páginas de solicitudes",
+        "previous": "Página anterior",
+        "next": "Página siguiente",
+        "page": "Página {page}"
+      }
+    },
+    "detail": {
+      "back": "Volver a la bandeja de entrada",
+      "title": "Solicitud de {kind} de {name}",
+      "message": "Mensaje",
+      "facts": "Detalles",
+      "email": "Correo",
+      "company": "Empresa",
+      "locale": "Idioma",
+      "received": "Recibida",
+      "handled": "Gestionada",
+      "forwarding": "Reenvío",
+      "organization": "Organización al enviar",
+      "organizationNone": "Sin sesión en una organización",
+      "userLinked": "Cuenta con sesión iniciada",
+      "userLinkedYes": "Sí, quien solicitó tenía la sesión iniciada",
+      "userLinkedNo": "No, enviada de forma anónima",
+      "reference": "Referencia",
+      "assignee": "Asignada a",
+      "status": {
+        "title": "Estado",
+        "current": "Estado actual",
+        "moveTo": "Marcar como «{status}»",
+        "changed": "Estado actualizado.",
+        "spamDialog": {
+          "title": "¿Marcar como spam?",
+          "description": "La solicitud desaparece de la vista de abiertas y no se puede responder hasta reabrirla. Esto queda registrado en el registro de auditoría.",
+          "confirm": "Marcar como spam"
+        }
+      },
+      "assign": {
+        "title": "Persona asignada",
+        "label": "Asignar a",
+        "save": "Guardar",
+        "saved": "Asignación guardada.",
+        "takeOver": "Asignármela"
+      },
+      "reply": {
+        "title": "Responder por correo",
+        "intro": "Tu texto se inserta en la plantilla de respuesta del idioma de quien solicita: saludo, tu nombre como firma y la referencia {reference}. El registro de auditoría anota que se envió una respuesta, no su texto.",
+        "language": "Se envía en {language}",
+        "recipient": "Destinatario",
+        "body": "Tu respuesta",
+        "bodyHint": "De 10 a 4.000 caracteres. Texto sin formato; el saludo y la firma se añaden automáticamente.",
+        "send": "Enviar respuesta",
+        "spamBlocked": "Las solicitudes marcadas como spam no se pueden responder. Reabre primero la solicitud.",
+        "dialog": {
+          "title": "¿Enviar esta respuesta?",
+          "description": "El correo se envía a {email} con el asunto «{subject}». El envío queda registrado en el registro de auditoría.",
+          "confirm": "Enviar"
+        },
+        "sent": "Respuesta enviada mediante {transport}.",
+        "sentFile": "Respuesta escrita en la bandeja de salida local (no hay transporte de correo configurado en este entorno)."
+      },
+      "trail": {
+        "title": "Historial",
+        "caption": "Acciones auditadas sobre esta solicitud, las más recientes primero",
+        "empty": "Todavía no hay ninguna acción de operador.",
+        "submitted": "Recibida a través del formulario de {kind}",
+        "actions": {
+          "status": "Estado cambiado",
+          "assign": "Asignación cambiada",
+          "reply": "Respuesta enviada",
+          "replyFailed": "Respuesta fallida",
+          "other": "Acción"
+        },
+        "statusChange": "{from} → {to}",
+        "assignedTo": "→ {name}",
+        "assignedNone": "→ sin asignar",
+        "replyDetail": "mediante {transport}, {locale}, {length} caracteres",
+        "replyError": "no enviada ({transport})",
+        "by": "por {name}",
+        "byUnknown": "por un antiguo operador"
+      }
+    },
+    "privacy": {
+      "title": "Solicitudes de privacidad",
+      "intro": "Solicitudes de interesados de todas las organizaciones: cuántas están abiertas, cuáles están vencidas y cuándo vence la siguiente. Los interesados, los informes y las notas se quedan en el centro de privacidad del cliente: los operadores solo ven cifras y fechas.",
+      "unavailable": "Tablas de privacidad no disponibles",
+      "unavailableText": "Las tablas de solicitudes de interesados no están aplicadas en esta base de datos, así que no se puede contar nada.",
+      "totals": {
+        "label": "En todas las organizaciones",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "dueSoon": "Vencen en {days} días",
+        "completed30d": "Completadas (30 días)",
+        "rejected30d": "Rechazadas (30 días)",
+        "failedJobs": "Trabajos de borrado fallidos",
+        "organizations": "Organizaciones con solicitudes"
+      },
+      "byKind": "Solicitudes abiertas por tipo",
+      "kinds": {
+        "export": "Acceso",
+        "delete": "Supresión",
+        "restrict": "Limitación",
+        "rectify": "Rectificación",
+        "object": "Oposición",
+        "portability": "Portabilidad"
+      },
+      "columns": {
+        "organization": "Organización",
+        "open": "Abiertas",
+        "overdue": "Vencidas",
+        "nextDue": "Próximo vencimiento",
+        "completed": "Completadas",
+        "rejected": "Rechazadas",
+        "total": "Total",
+        "lastRequested": "Última solicitud",
+        "failedJobs": "Trabajos de borrado fallidos",
+        "actions": "Acciones"
+      },
+      "due": {
+        "overdue": "vencida",
+        "soon": "vence pronto",
+        "later": "en plazo"
+      },
+      "tenantPath": "Los clientes gestionan sus solicitudes en Consentimiento y privacidad (/app/consent) de su propio panel.",
+      "caption": "Solicitudes de interesados por organización, las más urgentes primero",
+      "empty": "No hay solicitudes de interesados",
+      "emptyText": "Ninguna organización ha creado todavía una solicitud de interesado."
+    },
+    "alerts": {
+      "title": "Resumen de alertas",
+      "intro": "Eventos de alerta de los últimos {days} días en todas las organizaciones, agrupados por tipo y organización: cuántos se dispararon, cuántos siguen abiertos y cuántos fueron críticos. Los detalles de cada evento se quedan en el historial de alertas del cliente.",
+      "unavailable": "Tablas de alertas no disponibles",
+      "unavailableText": "Las tablas de alertas (migración 0013) no están aplicadas en esta base de datos, así que no se puede contar nada.",
+      "totals": {
+        "label": "Últimos {days} días",
+        "events": "Eventos",
+        "open": "Aún abiertos",
+        "critical": "Críticos",
+        "organizations": "Organizaciones afectadas"
+      },
+      "byKind": "Por tipo",
+      "byOrganization": "Por organización y tipo",
+      "kinds": {
+        "event_drop": "Caída de eventos",
+        "vendor_outage": "Caída de proveedor",
+        "credential_expiry": "Caducidad de credenciales",
+        "consent_errors": "Errores de consentimiento",
+        "queue_lag": "Retraso de la cola",
+        "conversion_anomaly": "Anomalía de conversiones"
+      },
+      "columns": {
+        "organization": "Organización",
+        "kind": "Tipo",
+        "total": "Eventos",
+        "open": "Abiertos",
+        "critical": "Críticos",
+        "warning": "Aviso",
+        "last": "Último disparo",
+        "actions": "Acciones"
+      },
+      "organizationDeleted": "Organización eliminada",
+      "captionKinds": "Eventos de alerta por tipo",
+      "caption": "Eventos de alerta por organización y tipo, más abiertos primero",
+      "empty": "Sin alertas en los últimos {days} días",
+      "emptyText": "Ninguna regla de alerta de ninguna organización se disparó en este periodo."
+    },
+    "knowledge": {
+      "title": "Valoraciones de Knowledge",
+      "intro": "Votos «¿Te ha resultado útil este artículo?» de Tracking Knowledge de los últimos {days} días por artículo, menor proporción de utilidad primero. Los votos son anónimos por diseño: sin dirección, sin sesión, sin inquilino; el resumen solo indica al equipo editorial qué artículos necesitan trabajo.",
+      "unavailable": "Tabla de valoraciones no disponible",
+      "unavailableText": "La tabla de valoraciones de Knowledge (migración 0005) no está aplicada en esta base de datos, así que no se puede contar nada.",
+      "totals": {
+        "label": "Últimos {days} días",
+        "votes": "Votos",
+        "helpful": "Útil",
+        "notHelpful": "No útil",
+        "articles": "Artículos con votos"
+      },
+      "columns": {
+        "article": "Artículo",
+        "helpful": "Útil",
+        "notHelpful": "No útil",
+        "share": "Proporción de utilidad",
+        "locales": "Idiomas",
+        "last": "Último voto",
+        "actions": "Acciones"
+      },
+      "unknownArticle": "No se encontró versión en inglés",
+      "openArticle": "Abrir artículo",
+      "openArticleLabel": "Abrir el artículo «{title}»",
+      "caption": "Valoraciones por artículo, menor proporción de utilidad primero",
+      "empty": "Sin votos en los últimos {days} días",
+      "emptyText": "Nadie ha votado ningún artículo en este periodo."
+    }
+  }
+}

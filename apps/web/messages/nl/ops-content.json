@@ -1,0 +1,231 @@
+{
+  "opsContent": {
+    "intro": "Redactionele stand van Tracking Knowledge in de zes talen, lezersfeedback per artikel, leerpaden, actualiteit van sitemaps en feeds en integratiedekking. Alleen-lezen: de content leeft in git, wijzigingen zijn commits en geen consoleacties.",
+    "sections": {
+      "label": "Secties van de contentmodule",
+      "board": "Redactiebord",
+      "feedback": "Lezersfeedback",
+      "paths": "Leerpaden",
+      "freshness": "Sitemaps en feeds",
+      "integrations": "Integratiedekking"
+    },
+    "common": {
+      "none": "—",
+      "never": "nooit",
+      "generatedAt": "Uit de content gelezen om {time}",
+      "readOnly": "Alleen-lezen weergave van de content in git en van anonieme stemmen — geen tenantgegevens betrokken.",
+      "opensNewTab": "(opent in een nieuw tabblad)",
+      "openLive": "Livepagina openen",
+      "attention": "Vraagt aandacht",
+      "ok": "OK"
+    },
+    "status": {
+      "draft": "Concept",
+      "translated": "Vertaald",
+      "reviewed": "Nagekeken",
+      "published": "Gepubliceerd",
+      "missing": "Ontbreekt"
+    },
+    "flags": {
+      "stale": "Review ouder dan {days} dagen",
+      "takeaways": "Geen kernpunten",
+      "incomplete": "Niet in alle talen gepubliceerd",
+      "neverReviewed": "Nooit nagekeken",
+      "featured": "Uitgelicht"
+    },
+    "board": {
+      "title": "Redactiebord",
+      "intro": "Eén rij per vertaalgroep met de status van elke taalversie uit de front matter. Een groep is compleet als alle talen gepubliceerd zijn; een gepubliceerde versie waarvan de laatste review (reviewedAt, anders de publicatiedatum) ouder is dan {days} dagen geldt als verouderd; een versie zonder lijst met kernpunten wordt gemarkeerd.",
+      "totals": {
+        "label": "Bordtotalen",
+        "groups": "Vertaalgroepen",
+        "complete": "Compleet (alle talen gepubliceerd)",
+        "attention": "Vragen aandacht",
+        "published": "Gepubliceerde versies",
+        "unpublished": "Ongepubliceerde versies",
+        "missingVersions": "Ontbrekende taalversies",
+        "missingTakeaways": "Versies zonder kernpunten",
+        "staleReviews": "Verouderde reviews",
+        "neverReviewed": "Nooit nagekeken groepen"
+      },
+      "perLocale": {
+        "title": "Per taal",
+        "caption": "Aantal versies per taal",
+        "columns": {
+          "locale": "Taal",
+          "published": "Gepubliceerd",
+          "reviewed": "Nagekeken",
+          "translated": "Vertaald",
+          "draft": "Concept",
+          "missing": "Ontbreekt",
+          "takeaways": "Zonder kernpunten",
+          "stale": "Verouderde reviews",
+          "lastReviewed": "Laatste review"
+        }
+      },
+      "filters": {
+        "legend": "Bordfilters",
+        "view": "Tonen",
+        "topic": "Onderwerp",
+        "views": {
+          "all": "Alle groepen",
+          "attention": "Die aandacht vragen",
+          "incomplete": "Incompleet",
+          "stale": "Verouderde reviews",
+          "takeaways": "Ontbrekende kernpunten",
+          "unpublished": "Met ongepubliceerde versies"
+        },
+        "allTopics": "Alle onderwerpen",
+        "reset": "Filters resetten"
+      },
+      "columns": {
+        "article": "Artikel",
+        "locales": "Taalversies",
+        "reviewed": "Laatste review",
+        "flags": "Markeringen",
+        "actions": "Acties"
+      },
+      "caption": "Vertaalgroepen met hun taalversies",
+      "count": "{count} groepen",
+      "countFiltered": "{count} groepen voldoen aan de filters",
+      "empty": "Geen artikelen gevonden",
+      "emptyText": "De loader vond onder content/knowledge geen artikelbestanden voor de actieve talen.",
+      "emptyFiltered": "Geen groepen voldoen aan deze filters",
+      "emptyFilteredText": "Verruim de filters of reset ze.",
+      "openLabel": "Live-artikel {title} openen"
+    },
+    "feedback": {
+      "title": "Lezersfeedback per artikel",
+      "intro": "Stemmen op „Was dit artikel nuttig?” uit de openbare artikelen: totaal en de laatste {days} dagen, uitgesplitst per taal. De stemmen zijn bewust anoniem — er valt niets in te zoomen.",
+      "unavailable": "Feedbacktabel niet beschikbaar",
+      "unavailableText": "De tabel knowledge_feedback ontbreekt in deze database. Pas migratie 0005 toe en laad opnieuw.",
+      "empty": "Nog geen stemmen",
+      "emptyText": "Stemmen verschijnen hier zodra een lezer de vraag onder een artikel beantwoordt.",
+      "totals": {
+        "label": "Feedbacktotalen",
+        "votes": "Stemmen (totaal)",
+        "helpful": "Nuttig",
+        "notHelpful": "Niet nuttig",
+        "share": "Aandeel nuttig",
+        "recentVotes": "Stemmen in de laatste {days} dagen",
+        "articles": "Artikelen met stemmen",
+        "withoutVotes": "Gepubliceerde artikelen zonder stemmen"
+      },
+      "columns": {
+        "article": "Artikel",
+        "allTime": "Totaal",
+        "recent": "Laatste {days} dagen",
+        "share": "Aandeel nuttig",
+        "byLocale": "Per taal",
+        "last": "Laatste stem",
+        "actions": "Acties"
+      },
+      "cell": "{helpful} nuttig · {notHelpful} niet nuttig",
+      "caption": "Stemmen per artikel, de meest negatieve eerst",
+      "unknownArticle": "Artikel staat niet op het bord",
+      "inboxLink": "30-dagenoverzicht in de inbox openen"
+    },
+    "paths": {
+      "title": "Leerpaden",
+      "intro": "Samengestelde paden uit content/knowledge/paths.<locale>.json per taal: hoeveel van de vermelde artikelen naar een gepubliceerde versie verwijzen en of de hub het pad toont. Ids die niet verwijzen zijn onbekende groepen of nog niet gepubliceerde versies.",
+      "totals": {
+        "label": "Leerpadtotalen",
+        "paths": "Paden",
+        "attention": "Vragen aandacht",
+        "missingLocales": "Ontbrekende taaldefinities",
+        "unresolved": "Niet-verwijzende artikel-ids"
+      },
+      "columns": {
+        "path": "Pad",
+        "locales": "Taalversies",
+        "flags": "Markeringen",
+        "actions": "Acties"
+      },
+      "caption": "Leerpaden per taal",
+      "empty": "Geen leerpaden gedefinieerd",
+      "emptyText": "Onder content/knowledge bestaat geen paths.<locale>.json met geldige items.",
+      "resolvedOf": "{resolved} van {listed} artikelen verwijzen",
+      "unresolvedIds": "Verwijzen niet",
+      "hidden": "Verborgen op de hub (geen enkel artikel verwijst)",
+      "missing": "Geen definitie in deze taal",
+      "reading": "{count} min leestijd",
+      "openHub": "Leerpaden openen ({locale})"
+    },
+    "freshness": {
+      "title": "Sitemaps en feeds",
+      "intro": "De sitemapindex, de Knowledge-sitemaps en de RSS-feeds worden bij de build uit de gepubliceerde artikelen gegenereerd. De aantallen hieronder zijn wat de loader nu zou genereren; wijken ze af van de livebestanden, dan is een nieuwe build nodig.",
+      "build": {
+        "title": "Laatste build",
+        "id": "Build-id",
+        "builtAt": "Gebouwd",
+        "runtime": "Runtime",
+        "runtimes": {
+          "production": "Productiebuild",
+          "development": "Ontwikkelserver",
+          "test": "Test"
+        },
+        "none": "Geen build-uitvoer gevonden",
+        "noneText": "Er staat geen .next/BUILD_ID naast de app. In ontwikkeling worden de routes per verzoek gegenereerd, dus de livebestanden komen altijd overeen met de loader."
+      },
+      "index": {
+        "title": "Sitemapindex",
+        "sitemaps": "{count} sitemaps (pagina’s en Knowledge per taal)",
+        "open": "Sitemapindex openen"
+      },
+      "columns": {
+        "locale": "Taal",
+        "knowledgeUrls": "Knowledge-URL’s / feeditems",
+        "pageUrls": "Pagina-URL’s",
+        "newestPublished": "Nieuwste publicatie",
+        "newestUpdated": "Nieuwste update",
+        "unpublished": "Ongepubliceerde versies",
+        "links": "Livebestanden"
+      },
+      "caption": "Sitemap- en feedaantallen per taal",
+      "openHub": "Hub",
+      "openFeed": "Feed",
+      "openSitemap": "Sitemap"
+    },
+    "integrations": {
+      "title": "Integratiedekking",
+      "intro": "Welke catalogusitems gepubliceerde Tracking Knowledge-artikelen per taal hebben (de platforms of shopsystemen van een artikel noemen de slug, of een van de tags staat in de Knowledge-tags van het item — dezelfde regel als de openbare integratiepagina) en welke openbare leveranciersdocumentatie hebben vastgelegd. Items met de minste artikelen staan bovenaan.",
+      "totals": {
+        "label": "Dekkingstotalen",
+        "integrations": "Integraties",
+        "destinations": "Bestemmingen",
+        "sources": "Bronnen",
+        "withArticles": "Met artikelen",
+        "withoutArticles": "Zonder artikelen",
+        "everyLocale": "Gedekt in alle talen",
+        "vendorDocs": "Met leveranciersdocumentatie"
+      },
+      "columns": {
+        "integration": "Integratie",
+        "kind": "Soort",
+        "articles": "Artikelen per taal",
+        "groups": "Groepen",
+        "vendorDocs": "Leveranciersdocumentatie",
+        "actions": "Acties"
+      },
+      "kinds": {
+        "destination": "Bestemming",
+        "source": "Bron"
+      },
+      "categories": {
+        "ads": "Advertenties",
+        "analytics": "Analytics",
+        "commerce": "Commerce",
+        "affiliate": "Affiliate",
+        "custom": "Aangepast"
+      },
+      "caption": "Integraties met hun Knowledge-dekking",
+      "noArticles": "Geen artikelen",
+      "vendorDocsYes": "Vastgelegd",
+      "vendorDocsNo": "Geen (alleen Track-documentatie)",
+      "verifiedOn": "Geverifieerd op {date}",
+      "openIntegration": "Integratiepagina openen",
+      "openIntegrationLabel": "Live-integratiepagina van {name} openen",
+      "openVendorDocs": "Leveranciersdoc."
+    }
+  }
+}

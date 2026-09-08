@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { MemoryRateLimiter } from "@track-site/core";
 import { TurnRegistry, createUiEventFilter, type UiEvent } from "@track-site/ai";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { getOrCreateChatSession, listMessages } from "@/server/ai/chat-store";
 import { aiConfigured, siteBelongsToOrg } from "@/server/ai/context";
 import { logger } from "@/server/db";
@@ -33,8 +33,11 @@ function sameOrigin(req: NextRequest): boolean {
 
 /** GET: chat history for a site. */
 export async function GET(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
+  // break-glass (docs/17 §4): a read-only support session gets no assistant — its tool reads and chat-session writes are neither
+  // page views audited with the grant id nor guarded by requireOrgContext's permission check
+  if (ctx.readOnly) return NextResponse.json({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access", message: "The AI assistant is not available in a read-only support session." }, { status: 403 });
   const siteId = req.nextUrl.searchParams.get("siteId") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(siteId) || !(await siteBelongsToOrg(ctx.organization.id, siteId))) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
   const session = await getOrCreateChatSession(ctx.organization.id, siteId, ctx.user.id, ctx.user.locale);
@@ -52,8 +55,11 @@ export async function GET(req: NextRequest) {
  * Frames carry `id: <seq>` so a client can resume the same turn with `turnId` + `afterSeq`.
  */
 export async function POST(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
+  // break-glass (docs/17 §4): a read-only support session gets no assistant — its tool reads and chat-session writes are neither
+  // page views audited with the grant id nor guarded by requireOrgContext's permission check
+  if (ctx.readOnly) return NextResponse.json({ ok: false, code: "FORBIDDEN", reason: "read_only_support_access", message: "The AI assistant is not available in a read-only support session." }, { status: 403 });
   if (!sameOrigin(req)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   // provider not configured: the rule-based wizard (/api/ai/wizard) stays available
   if (!aiConfigured()) return NextResponse.json({ ok: false, code: "NOT_CONNECTED", message: "AI assistant is not configured; use the guided form." }, { status: 424 });

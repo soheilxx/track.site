@@ -37,6 +37,10 @@ export async function setActiveSiteAction(input: { siteId: string; environmentId
   const result = await withOrg(ctx, async (tx) => {
     const site = await getSite(tx, ctx.organization.id, parsed.data.siteId);
     if (!site) return "not_found" as const;
+    // read-only support session (break-glass, docs/17 §4): the operator moves between the tenant's sites through the
+    // cookie alone — no preference row, no audit row of their own (the page view is audited with the grant id); the
+    // environment stays the site's default
+    if (ctx.readOnly) return site.id;
     let environmentId: string | null = null;
     if (parsed.data.environmentId) {
       const rows = await tx

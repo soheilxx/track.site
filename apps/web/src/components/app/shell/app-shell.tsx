@@ -7,8 +7,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState, useTransition, type ReactNode } from "react";
 import { Brand, Button, IconButton, Kbd, Sheet, cn } from "@track-site/ui";
 import { useAssistant } from "@/components/chat/assistant-store";
+import { SupportAccessBanner } from "@/components/ops/break-glass/support-access-banner";
 import { authClient } from "@/lib/auth-client";
 import { setActiveSiteAction } from "./actions";
+import { AnnouncementsBanner } from "./announcements-banner";
 import { AssistantHost } from "./assistant-host";
 import { CommandPalette } from "./command-palette";
 import { EnvironmentIndicator } from "./environment-indicator";
@@ -120,6 +122,9 @@ export function AppShell({ user, organization, organizations, workspace, destina
         {/* `relative`: the scroll area is the containing block of its absolutely positioned descendants (sr-only captions/headings, tooltips), otherwise they escape the clip and grow the document's scrollable overflow */}
         <main id="main" tabIndex={-1} className="relative min-h-0 min-w-0 overflow-y-auto overflow-x-clip outline-none" data-testid="app-main">
           <div className={cn("mx-auto w-full max-w-wide px-4 py-6 sm:px-6 lg:px-8", "pb-24 lg:pb-8")}>
+            {/* banner slot: break-glass support access (operator and customer notice, docs/17 §4) */}
+            <SupportAccessBanner />
+            <AnnouncementsBanner />
             <div className="mb-4 md:hidden">
               <EnvironmentIndicator siteId={workspace?.site?.id ?? null} environments={workspace?.environments ?? []} environment={workspace?.environment ?? null} />
             </div>
@@ -159,7 +164,7 @@ export function AppShell({ user, organization, organizations, workspace, destina
         </div>
       </Sheet>
 
-      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} sites={workspace?.sites ?? []} activeSiteId={workspace?.site?.id ?? null} destinations={destinations} onSwitchSite={switchSite} assistantOpen={assistantOpen} onToggleAssistant={() => (assistantOpen ? assistant.setOpen(false) : openAssistant())} onLogout={() => void logout()} />
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} sites={workspace?.sites ?? []} activeSiteId={workspace?.site?.id ?? null} destinations={destinations} onSwitchSite={switchSite} assistantOpen={assistantOpen} onToggleAssistant={() => (assistantOpen ? assistant.setOpen(false) : openAssistant())} onLogout={() => void logout()} platformRole={user.platformRole} />
     </div>
   );
 }

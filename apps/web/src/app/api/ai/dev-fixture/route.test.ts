@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const session: { ctx: unknown } = { ctx: { organization: { id: "org1" }, user: { id: "user1", locale: "en" }, role: "OWNER" } };
 const belongs = vi.fn(async () => true);
 vi.mock("server-only", () => ({}));
-vi.mock("@/server/session", () => ({ getOrgContext: async () => session.ctx }));
+vi.mock("@/server/session", () => ({ requireApiOrgContext: async () => session.ctx ?? new Response(null, { status: 401 }) }));
 vi.mock("@/server/ai/context", () => ({ siteBelongsToOrg: () => belongs() }));
 
 const { GET } = await import("./route");

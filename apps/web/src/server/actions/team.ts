@@ -7,7 +7,7 @@ import { z } from "zod";
 import { ORG_ROLES, assignableRoles, can, isOrgRole, type OrgRole } from "@track-site/core";
 import { approvalRequests, invitation, member, orgSettings, recordAudit, user } from "@track-site/db";
 import { auth } from "@/server/auth";
-import { requireOrgContext, withOrg } from "@/server/session";
+import { assertOrgWritable, requireOrgContext, withOrg } from "@/server/session";
 import { APPROVAL_REQUEST_TTL_MS, approvalPolicyFromForm, canDecideRequest, diffApprovalPolicy, effectiveRequestStatus, isRelaxing, loadApprovalPolicy, loadTeamEntitlements, normalizeApprovalPolicy, requiresFourEyes, seatUsage } from "@/server/team";
 import type { ActionState } from "./organization";
 
@@ -231,6 +231,7 @@ export async function updateApprovalPolicyAction(_prev: TeamActionState, formDat
  */
 export async function decideApprovalRequestAction(_prev: TeamActionState, formData: FormData): Promise<TeamActionState> {
   const ctx = await requireOrgContext("members.read");
+  assertOrgWritable(ctx, "approval_request.decide");
   const parsed = z
     .object({ requestId: uuid, decision: z.enum(["approve", "reject"]), confirm: z.literal("decide"), note: z.string().trim().max(500).optional() })
     .safeParse({ requestId: formData.get("requestId"), decision: formData.get("decision"), confirm: formData.get("confirm"), note: formData.get("note") ?? undefined });
@@ -286,6 +287,7 @@ export async function decideApprovalRequestAction(_prev: TeamActionState, formDa
 /** The requester (or a member who may update members) withdraws an open request. */
 export async function withdrawApprovalRequestAction(_prev: TeamActionState, formData: FormData): Promise<TeamActionState> {
   const ctx = await requireOrgContext("members.read");
+  assertOrgWritable(ctx, "approval_request.withdraw");
   const parsed = uuid.safeParse(formData.get("requestId"));
   if (!parsed.success) return fail("generic");
   const error = await withOrg(ctx, async (tx) => {

@@ -17,7 +17,7 @@ import {
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { isAiMotion, writeAiMotion } from "@/server/preferences";
-import { requireOrgContext, withOrg } from "@/server/session";
+import { assertOrgWritable, requireOrgContext, withOrg } from "@/server/session";
 import type { ActionState } from "./organization";
 
 export interface KeyState extends ActionState {
@@ -218,6 +218,8 @@ export async function updateLocaleAction(locale: "en" | "de"): Promise<void> {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
+  // read-only support session (break-glass): the operator's own language cookie changes, the organization's setting never does
+  if (ctx.readOnly) return;
   await db()
     .insert(orgSettings)
     .values({ organizationId: ctx.organization.id, locale })
@@ -236,6 +238,8 @@ export async function updateAiMotionAction(
   formData: FormData,
 ): Promise<ActionState> {
   const ctx = await requireOrgContext("org.read");
+  // a per-user preference, but stored inside the tenant: refused for a read-only support session (break-glass)
+  assertOrgWritable(ctx, "workspace.ai_motion");
   const value = formData.get("aiMotion");
   if (!isAiMotion(value))
     return { ok: false, error: "generic", fieldErrors: { aiMotion: "invalid" } };

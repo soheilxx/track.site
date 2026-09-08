@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Sign-ups, activation, retention, plan mix and connectors across all organisations — counts and rates from the platform's own tables, never event payloads or end-user data. All calendar values are UTC.",
+    "context": {
+      "asOf": "As of {at}",
+      "organizations": "{count, plural, one {# organisation} other {# organisations}}",
+      "users": "{count, plural, one {# account} other {# accounts}}",
+      "sites": "{count, plural, one {# site} other {# sites}}"
+    },
+    "sample": {
+      "title": "Small numbers",
+      "text": "Fewer than {min} organisations exist. Rates are shown for completeness, but a single organisation moves them by whole percentage points — read the counts, not the percentages."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organisations",
+        "hint": "{count, plural, one {# new in the last 30 days} other {# new in the last 30 days}}"
+      },
+      "newOrganizations": {
+        "label": "New organisations · 30 d",
+        "hint": "{delta} vs. the previous 30 days ({previous})"
+      },
+      "active": {
+        "label": "Active organisations · 7 d / 30 d",
+        "hint": "{share7} / {share30} of all organisations, with accepted events"
+      },
+      "paying": {
+        "label": "Paying organisations",
+        "hint": "{share} of all organisations · active subscription"
+      }
+    },
+    "signups": {
+      "title": "Sign-ups",
+      "intro": "New accounts and organisations by creation date. An account that creates an organisation counts in both series; invited members count as accounts only.",
+      "daily": {
+        "title": "Per day · last {days} days"
+      },
+      "weekly": {
+        "title": "Per week · last {weeks} weeks"
+      },
+      "series": {
+        "organizations": "Organisations",
+        "users": "Accounts"
+      },
+      "chart": {
+        "daily": "Grouped bars per day: organisations and accounts created. The table below the chart lists the same values.",
+        "weekly": "Grouped bars per ISO week starting Monday: organisations and accounts created. The table below the chart lists the same values."
+      },
+      "table": "Show as table",
+      "columns": {
+        "day": "Day",
+        "week": "Week of",
+        "organizations": "Organisations",
+        "users": "Accounts"
+      },
+      "partial": "current week, still running",
+      "figures": {
+        "last7": "Last 7 days",
+        "last30": "Last 30 days",
+        "previous30": "Previous 30 days",
+        "accounts": "{count, plural, one {# account} other {# accounts}}"
+      },
+      "empty": {
+        "title": "No sign-ups in this window",
+        "text": "No account or organisation was created in the last 12 weeks."
+      }
+    },
+    "funnel": {
+      "title": "Activation funnel",
+      "intro": "Milestones every organisation can reach, measured from the tables that record them. Milestones are independent: an organisation counts at a stage once it reached that milestone, whether or not it passed the earlier ones.",
+      "stages": {
+        "created": "Organisation created",
+        "site": "First site created",
+        "verified": "Snippet verified (domain)",
+        "event": "First accepted event",
+        "destination": "Destination connected",
+        "published": "Configuration published",
+        "paying": "Paying (active subscription)"
+      },
+      "columns": {
+        "stage": "Stage",
+        "count": "Organisations",
+        "step": "Of previous stage",
+        "total": "Of all",
+        "median": "Median time from sign-up",
+        "recent": "Last {days} days",
+        "recentStep": "Of previous stage (recent)"
+      },
+      "figures": {
+        "all": "All organisations",
+        "recent": "Created in the last {days} days"
+      },
+      "caption": "Activation stages with organisation counts, conversion rates and median time from sign-up",
+      "note": "Rates are ratios of counts. \"Of previous stage\" can exceed 100 % because milestones are independent — an organisation can pay without a verified domain.",
+      "empty": {
+        "title": "No organisations yet",
+        "text": "The funnel fills once the first organisation is created."
+      }
+    },
+    "retention": {
+      "title": "Weekly retention",
+      "intro": "Organisations by sign-up week (Monday, UTC) and the share still sending accepted events in each week after sign-up — week 0 is the first seven days. Measured from the hourly event aggregates.",
+      "caption": "Weekly retention cohorts: share of each sign-up week active in the weeks after sign-up",
+      "columns": {
+        "cohort": "Sign-up week",
+        "size": "Organisations",
+        "week": "W{n}"
+      },
+      "cell": "{active} of {size} active",
+      "state": {
+        "partial": "still running",
+        "pending": "not started"
+      },
+      "small": "small cohort",
+      "legend": {
+        "scale": "Darker cells mean a larger share of the cohort was active; every cell also shows its percentage.",
+        "partial": "Dashed cells are still running — the week has not ended for every organisation of the cohort.",
+        "small": "Cohorts with fewer than {min} organisations are marked; one organisation moves their rate by a large step."
+      },
+      "horizon": "Hourly aggregates on record since {at}.",
+      "horizonNone": "No hourly aggregates on record yet — activity cannot be measured.",
+      "empty": {
+        "title": "No sign-ups in the last {weeks} weeks",
+        "text": "Cohorts appear once an organisation is created inside the window."
+      }
+    },
+    "planMix": {
+      "title": "Plan mix",
+      "intro": "Organisations by catalogue plan and subscription state from the billing ledger. Organisations without a ledger row never started a checkout.",
+      "caption": "Organisations per plan and subscription state",
+      "columns": {
+        "plan": "Plan",
+        "organizations": "Organisations",
+        "share": "Share",
+        "active": "Active",
+        "trialing": "Trialing",
+        "pastDue": "Past due",
+        "canceled": "Cancelled",
+        "other": "Other"
+      },
+      "figures": {
+        "paying": "Paying"
+      },
+      "none": "No subscription",
+      "unknown": "Unknown plan id",
+      "empty": {
+        "title": "No organisations yet",
+        "text": "The plan mix fills once the first organisation exists."
+      }
+    },
+    "connectors": {
+      "title": "Connectors in use",
+      "intro": "Connector types ranked by the organisations that have at least one connected destination of that type. Counts of integrations only — no identifiers, no credentials.",
+      "caption": "Connector types by organisations using them",
+      "columns": {
+        "connector": "Connector",
+        "organizations": "Organisations",
+        "connected": "Connected",
+        "paused": "Paused",
+        "error": "Error",
+        "notConnected": "Not connected"
+      },
+      "figures": {
+        "organizations": "Organisations with a destination",
+        "connected": "Connected integrations"
+      },
+      "more": "{count, plural, one {# more connector type with fewer organisations is not listed.} other {# more connector types with fewer organisations are not listed.}}",
+      "empty": {
+        "title": "No destinations yet",
+        "text": "Connectors appear here once an organisation adds a destination."
+      }
+    },
+    "method": {
+      "title": "Method and caveats",
+      "items": {
+        "sources": "Sign-ups count rows of the account and organisation tables by creation date; nothing is sampled or estimated.",
+        "milestones": "Funnel milestones: first site row; first verified domain (domains.verified_at); first hourly aggregate with accepted events; creation date of a currently connected destination (a destination that was disconnected again does not count); first configuration publication; creation of an active subscription in the billing ledger.",
+        "proxies": "The destination and paying instants are proxies — the connection and the checkout themselves carry no timestamp — so their median times are approximate.",
+        "retention": "Retention and activity rest on the hourly event aggregates; if aggregates were pruned by retention policies, older cohorts look inactive. The aggregate horizon is shown below the grid.",
+        "noGeo": "No geographic split: Track stores no country for accounts or organisations, so none is shown.",
+        "privacy": "Everything on this page is a count or a rate over all organisations. No organisation, account, visitor or event is identified."
+      }
+    },
+    "overview": {
+      "title": "Key numbers",
+      "link": "Open growth",
+      "asOf": "As of {at}",
+      "sample": "Small numbers: fewer than {min} organisations.",
+      "unavailable": "Could not be loaded — the module reported an error. Open the module for details.",
+      "organizations": {
+        "label": "Organisations",
+        "hint": "{count, plural, one {# account} other {# accounts}}"
+      },
+      "newOrganizations": {
+        "label": "New organisations · 30 d",
+        "hint": "{count} in the last 7 days · {delta} vs. the previous 30 days"
+      },
+      "active": {
+        "label": "Active organisations · 7 d / 30 d",
+        "hint": "With accepted events"
+      },
+      "paying": {
+        "label": "Paying organisations",
+        "hint": "Active subscription"
+      },
+      "health": {
+        "title": "Platform health",
+        "link": "Open platform health",
+        "checkedAt": "Checked {at}",
+        "tiles": {
+          "collector": "Collector",
+          "worker": "Worker",
+          "queues": "Queues",
+          "deliveries": "Deliveries · 24 h",
+          "database": "Database"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Needs attention",
+          "bad": "Degraded",
+          "info": "Info",
+          "neutral": "Not measured"
+        }
+      },
+      "inbox": {
+        "title": "Inbox",
+        "link": "Open inbox",
+        "notMeasured": "Not measured",
+        "failed": "Could not be loaded",
+        "contacts": {
+          "label": "Contact requests",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{newCount} new · {inProgress} in progress"
+        },
+        "privacy": {
+          "label": "Privacy requests",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{overdue} overdue · {dueSoon} due soon",
+          "unavailable": "Privacy tables not available in this deployment"
+        },
+        "alerts": {
+          "label": "Alerts",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{critical} critical · last {days} days",
+          "unavailable": "Alert tables not available in this deployment"
+        }
+      }
+    }
+  }
+}

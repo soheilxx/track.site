@@ -1,9 +1,9 @@
 "use client";
 
-import { ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LogOut, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { OrgRole } from "@track-site/core";
-import { Menu } from "./menu";
+import { Menu, type MenuItem } from "./menu";
 import type { ShellUser } from "./types";
 
 function initials(name: string, email: string): string {
@@ -12,9 +12,17 @@ function initials(name: string, email: string): string {
   return letters.toUpperCase();
 }
 
-/** Account menu: who is signed in, the role in the active organization and log out (router navigation, no full reload). */
+/**
+ * Account menu: who is signed in, the role in the active organization and log out (router navigation, no full
+ * reload). Platform operators (`platformRole` ≠ NONE) additionally get the way into Track Operations (`/ops`);
+ * the console enforces the role and the two-factor step-up again on every request (docs/17 §3).
+ */
 export function UserMenu({ user, role, onLogout }: { user: ShellUser; role: OrgRole | null; onLogout: () => void }) {
   const t = useTranslations("shell");
+  const operations: MenuItem[] =
+    user.platformRole !== "NONE"
+      ? [{ id: "operations", label: t("user.operations"), icon: <ShieldCheck className="size-4" aria-hidden="true" />, href: "/ops" }]
+      : [];
   return (
     <Menu
       label={t("user.menu")}
@@ -33,7 +41,10 @@ export function UserMenu({ user, role, onLogout }: { user: ShellUser; role: OrgR
           ) : null}
         </div>
       }
-      sections={[{ id: "account", items: [{ id: "logout", label: t("user.logout"), icon: <LogOut className="size-4" aria-hidden="true" />, onSelect: onLogout }] }]}
+      sections={[
+        ...(operations.length > 0 ? [{ id: "operations", items: operations }] : []),
+        { id: "account", items: [{ id: "logout", label: t("user.logout"), icon: <LogOut className="size-4" aria-hidden="true" />, onSelect: onLogout }] },
+      ]}
     >
       <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
         {initials(user.name, user.email)}

@@ -1,0 +1,231 @@
+{
+  "opsContent": {
+    "intro": "Editorial state of Tracking Knowledge across the six locales, reader feedback per article, learning paths, sitemap and feed freshness and integration coverage. Read-only: the content lives in git, so changes are commits, not console actions.",
+    "sections": {
+      "label": "Content sections",
+      "board": "Editorial board",
+      "feedback": "Reader feedback",
+      "paths": "Learning paths",
+      "freshness": "Sitemaps and feeds",
+      "integrations": "Integration coverage"
+    },
+    "common": {
+      "none": "—",
+      "never": "never",
+      "generatedAt": "Read from the content at {time}",
+      "readOnly": "Read-only view of the content in git and of anonymous votes — no tenant data involved.",
+      "opensNewTab": "(opens in a new tab)",
+      "openLive": "Open live page",
+      "attention": "Needs attention",
+      "ok": "OK"
+    },
+    "status": {
+      "draft": "Draft",
+      "translated": "Translated",
+      "reviewed": "Reviewed",
+      "published": "Published",
+      "missing": "Missing"
+    },
+    "flags": {
+      "stale": "Review older than {days} days",
+      "takeaways": "No takeaways",
+      "incomplete": "Not published in every locale",
+      "neverReviewed": "Never reviewed",
+      "featured": "Featured"
+    },
+    "board": {
+      "title": "Editorial board",
+      "intro": "One row per translation group with the status of every locale version from the front matter. A group is complete when every locale is published; a published version whose last review (reviewedAt, else the publication date) is older than {days} days counts as stale; a version without a takeaways list is flagged.",
+      "totals": {
+        "label": "Board totals",
+        "groups": "Translation groups",
+        "complete": "Complete (all locales published)",
+        "attention": "Need attention",
+        "published": "Published versions",
+        "unpublished": "Unpublished versions",
+        "missingVersions": "Missing locale versions",
+        "missingTakeaways": "Versions without takeaways",
+        "staleReviews": "Stale reviews",
+        "neverReviewed": "Groups never reviewed"
+      },
+      "perLocale": {
+        "title": "Per locale",
+        "caption": "Version counts per locale",
+        "columns": {
+          "locale": "Locale",
+          "published": "Published",
+          "reviewed": "Reviewed",
+          "translated": "Translated",
+          "draft": "Draft",
+          "missing": "Missing",
+          "takeaways": "Without takeaways",
+          "stale": "Stale reviews",
+          "lastReviewed": "Last review"
+        }
+      },
+      "filters": {
+        "legend": "Board filters",
+        "view": "Show",
+        "topic": "Topic",
+        "views": {
+          "all": "All groups",
+          "attention": "Needing attention",
+          "incomplete": "Incomplete",
+          "stale": "Stale reviews",
+          "takeaways": "Missing takeaways",
+          "unpublished": "With unpublished versions"
+        },
+        "allTopics": "All topics",
+        "reset": "Reset filters"
+      },
+      "columns": {
+        "article": "Article",
+        "locales": "Locale versions",
+        "reviewed": "Last review",
+        "flags": "Flags",
+        "actions": "Actions"
+      },
+      "caption": "Translation groups with their locale versions",
+      "count": "{count} groups",
+      "countFiltered": "{count} groups match the filters",
+      "empty": "No articles found",
+      "emptyText": "The loader found no article files under content/knowledge for the active locales.",
+      "emptyFiltered": "No groups match these filters",
+      "emptyFilteredText": "Widen the filters or reset them.",
+      "openLabel": "Open the live article {title}"
+    },
+    "feedback": {
+      "title": "Reader feedback per article",
+      "intro": "\"Was this article helpful?\" votes from the public articles: all-time and the last {days} days, split by locale. The votes are anonymous by design — there is nothing to drill into.",
+      "unavailable": "Feedback table not available",
+      "unavailableText": "The knowledge_feedback table is missing on this database. Apply migration 0005 and reload.",
+      "empty": "No votes yet",
+      "emptyText": "Votes appear here as soon as a reader answers the question under an article.",
+      "totals": {
+        "label": "Feedback totals",
+        "votes": "Votes (all time)",
+        "helpful": "Helpful",
+        "notHelpful": "Not helpful",
+        "share": "Helpful share",
+        "recentVotes": "Votes in the last {days} days",
+        "articles": "Articles with votes",
+        "withoutVotes": "Published articles without votes"
+      },
+      "columns": {
+        "article": "Article",
+        "allTime": "All time",
+        "recent": "Last {days} days",
+        "share": "Helpful share",
+        "byLocale": "By locale",
+        "last": "Last vote",
+        "actions": "Actions"
+      },
+      "cell": "{helpful} helpful · {notHelpful} not helpful",
+      "caption": "Votes per article, most negative first",
+      "unknownArticle": "Article not on the board",
+      "inboxLink": "Open the 30-day digest in the inbox"
+    },
+    "paths": {
+      "title": "Learning paths",
+      "intro": "Curated paths from content/knowledge/paths.<locale>.json per locale: how many listed articles resolve to a published version and whether the hub shows the path. Ids that do not resolve are unknown groups or versions that are not published yet.",
+      "totals": {
+        "label": "Learning path totals",
+        "paths": "Paths",
+        "attention": "Need attention",
+        "missingLocales": "Missing locale definitions",
+        "unresolved": "Unresolved article ids"
+      },
+      "columns": {
+        "path": "Path",
+        "locales": "Locale versions",
+        "flags": "Flags",
+        "actions": "Actions"
+      },
+      "caption": "Learning paths per locale",
+      "empty": "No learning paths defined",
+      "emptyText": "No paths.<locale>.json file with valid entries exists under content/knowledge.",
+      "resolvedOf": "{resolved} of {listed} articles resolve",
+      "unresolvedIds": "Not resolving",
+      "hidden": "Hidden on the hub (no article resolves)",
+      "missing": "No definition in this locale",
+      "reading": "{count} min reading",
+      "openHub": "Open learning paths ({locale})"
+    },
+    "freshness": {
+      "title": "Sitemaps and feeds",
+      "intro": "The sitemap index, the knowledge sitemaps and the RSS feeds are rendered at build time from the published articles. The counts below are what the loader would render right now; when they differ from the live files, a new build is due.",
+      "build": {
+        "title": "Last build",
+        "id": "Build id",
+        "builtAt": "Built",
+        "runtime": "Runtime",
+        "runtimes": {
+          "production": "Production build",
+          "development": "Development server",
+          "test": "Test"
+        },
+        "none": "No build output found",
+        "noneText": "There is no .next/BUILD_ID next to the app. In development the routes render on request, so the live files always match the loader."
+      },
+      "index": {
+        "title": "Sitemap index",
+        "sitemaps": "{count} sitemaps (pages and knowledge per locale)",
+        "open": "Open sitemap index"
+      },
+      "columns": {
+        "locale": "Locale",
+        "knowledgeUrls": "Knowledge URLs / feed items",
+        "pageUrls": "Page URLs",
+        "newestPublished": "Newest publication",
+        "newestUpdated": "Newest update",
+        "unpublished": "Unpublished versions",
+        "links": "Live files"
+      },
+      "caption": "Sitemap and feed counts per locale",
+      "openHub": "Hub",
+      "openFeed": "Feed",
+      "openSitemap": "Sitemap"
+    },
+    "integrations": {
+      "title": "Integration coverage",
+      "intro": "Which catalogue entries have published Tracking Knowledge articles per locale (an article's platforms or shop systems name the slug, or one of its tags is in the entry's knowledge tags — the same rule as the public integration page) and which have public vendor documentation on file. Entries with the fewest articles come first.",
+      "totals": {
+        "label": "Coverage totals",
+        "integrations": "Integrations",
+        "destinations": "Destinations",
+        "sources": "Sources",
+        "withArticles": "With articles",
+        "withoutArticles": "Without articles",
+        "everyLocale": "Covered in every locale",
+        "vendorDocs": "With vendor documentation"
+      },
+      "columns": {
+        "integration": "Integration",
+        "kind": "Kind",
+        "articles": "Articles per locale",
+        "groups": "Groups",
+        "vendorDocs": "Vendor documentation",
+        "actions": "Actions"
+      },
+      "kinds": {
+        "destination": "Destination",
+        "source": "Source"
+      },
+      "categories": {
+        "ads": "Ads",
+        "analytics": "Analytics",
+        "commerce": "Commerce",
+        "affiliate": "Affiliate",
+        "custom": "Custom"
+      },
+      "caption": "Integrations with their knowledge coverage",
+      "noArticles": "No articles",
+      "vendorDocsYes": "On file",
+      "vendorDocsNo": "None (Track documentation only)",
+      "verifiedOn": "Verified {date}",
+      "openIntegration": "Open integration page",
+      "openIntegrationLabel": "Open the live integration page of {name}",
+      "openVendorDocs": "Vendor docs"
+    }
+  }
+}

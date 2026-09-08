@@ -21,7 +21,7 @@ const recordToolRun = vi.fn(async () => undefined);
 const appendMessage = vi.fn(async () => "m1");
 
 vi.mock("server-only", () => ({}));
-vi.mock("@/server/session", () => ({ getOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
+vi.mock("@/server/session", () => ({ requireApiOrgContext: async () => ({ organization: { id: "org1" }, user: { id: "user1", locale: "de" }, role: "OWNER" }) }));
 vi.mock("@/server/ai/context", () => ({ buildAgentContext: async () => ({ environmentId: "env1" }), siteBelongsToOrg: async () => true }));
 vi.mock("@/server/db", () => ({ db: () => ({}) }));
 vi.mock("@track-site/db", () => ({ withTenant: async (_db: unknown, _org: string, fn: (tx: unknown) => Promise<unknown>) => fn({}), activeVersion: () => activeVersion() }));

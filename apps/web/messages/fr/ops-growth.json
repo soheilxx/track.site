@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Inscriptions, activation, rétention, répartition des forfaits et connecteurs sur l'ensemble des organisations — des comptages et des taux issus des tables de la plateforme, jamais de charges utiles d'événements ni de données d'utilisateurs finaux. Toutes les valeurs calendaires sont en UTC.",
+    "context": {
+      "asOf": "Au {at}",
+      "organizations": "{count, plural, one {# organisation} other {# organisations}}",
+      "users": "{count, plural, one {# compte} other {# comptes}}",
+      "sites": "{count, plural, one {# site} other {# sites}}"
+    },
+    "sample": {
+      "title": "Petits nombres",
+      "text": "Il existe moins de {min} organisations. Les taux sont affichés par souci d'exhaustivité, mais une seule organisation les déplace de plusieurs points — lisez les comptages, pas les pourcentages."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organisations",
+        "hint": "{count, plural, one {# nouvelle sur les 30 derniers jours} other {# nouvelles sur les 30 derniers jours}}"
+      },
+      "newOrganizations": {
+        "label": "Nouvelles organisations · 30 j",
+        "hint": "{delta} par rapport aux 30 jours précédents ({previous})"
+      },
+      "active": {
+        "label": "Organisations actives · 7 j / 30 j",
+        "hint": "{share7} / {share30} de toutes les organisations, avec des événements acceptés"
+      },
+      "paying": {
+        "label": "Organisations payantes",
+        "hint": "{share} de toutes les organisations · abonnement actif"
+      }
+    },
+    "signups": {
+      "title": "Inscriptions",
+      "intro": "Nouveaux comptes et organisations par date de création. Un compte qui crée une organisation compte dans les deux séries ; les membres invités ne comptent que comme comptes.",
+      "daily": {
+        "title": "Par jour · {days} derniers jours"
+      },
+      "weekly": {
+        "title": "Par semaine · {weeks} dernières semaines"
+      },
+      "series": {
+        "organizations": "Organisations",
+        "users": "Comptes"
+      },
+      "chart": {
+        "daily": "Barres groupées par jour : organisations et comptes créés. Le tableau sous le graphique reprend les mêmes valeurs.",
+        "weekly": "Barres groupées par semaine ISO débutant le lundi : organisations et comptes créés. Le tableau sous le graphique reprend les mêmes valeurs."
+      },
+      "table": "Afficher en tableau",
+      "columns": {
+        "day": "Jour",
+        "week": "Semaine du",
+        "organizations": "Organisations",
+        "users": "Comptes"
+      },
+      "partial": "semaine en cours, non terminée",
+      "figures": {
+        "last7": "7 derniers jours",
+        "last30": "30 derniers jours",
+        "previous30": "30 jours précédents",
+        "accounts": "{count, plural, one {# compte} other {# comptes}}"
+      },
+      "empty": {
+        "title": "Aucune inscription sur cette période",
+        "text": "Aucun compte ni organisation n'a été créé au cours des 12 dernières semaines."
+      }
+    },
+    "funnel": {
+      "title": "Entonnoir d'activation",
+      "intro": "Jalons que chaque organisation peut atteindre, mesurés à partir des tables qui les enregistrent. Les jalons sont indépendants : une organisation compte à une étape dès qu'elle a atteint ce jalon, qu'elle ait franchi ou non les précédents.",
+      "stages": {
+        "created": "Organisation créée",
+        "site": "Premier site créé",
+        "verified": "Snippet vérifié (domaine)",
+        "event": "Premier événement accepté",
+        "destination": "Destination connectée",
+        "published": "Configuration publiée",
+        "paying": "Payante (abonnement actif)"
+      },
+      "columns": {
+        "stage": "Étape",
+        "count": "Organisations",
+        "step": "De l'étape précédente",
+        "total": "De l'ensemble",
+        "median": "Délai médian depuis l'inscription",
+        "recent": "{days} derniers jours",
+        "recentStep": "De l'étape précédente (récent)"
+      },
+      "figures": {
+        "all": "Toutes les organisations",
+        "recent": "Créées au cours des {days} derniers jours"
+      },
+      "caption": "Étapes d'activation avec nombre d'organisations, taux de conversion et délai médian depuis l'inscription",
+      "note": "Les taux sont des rapports de comptages. « De l'étape précédente » peut dépasser 100 % parce que les jalons sont indépendants — une organisation peut payer sans domaine vérifié.",
+      "empty": {
+        "title": "Pas encore d'organisation",
+        "text": "L'entonnoir se remplit dès la création de la première organisation."
+      }
+    },
+    "retention": {
+      "title": "Rétention hebdomadaire",
+      "intro": "Organisations par semaine d'inscription (lundi, UTC) et part qui envoie encore des événements acceptés chaque semaine après l'inscription — la semaine 0 correspond aux sept premiers jours. Mesuré à partir des agrégats horaires d'événements.",
+      "caption": "Cohortes de rétention hebdomadaire : part de chaque semaine d'inscription active dans les semaines suivant l'inscription",
+      "columns": {
+        "cohort": "Semaine d'inscription",
+        "size": "Organisations",
+        "week": "S{n}"
+      },
+      "cell": "{active} sur {size} actives",
+      "state": {
+        "partial": "en cours",
+        "pending": "pas encore commencée"
+      },
+      "small": "petite cohorte",
+      "legend": {
+        "scale": "Les cellules plus foncées indiquent une part active plus grande de la cohorte ; chaque cellule affiche aussi son pourcentage.",
+        "partial": "Les cellules en pointillés sont encore en cours — la semaine n'est pas terminée pour toutes les organisations de la cohorte.",
+        "small": "Les cohortes de moins de {min} organisations sont signalées ; une seule organisation déplace fortement leur taux."
+      },
+      "horizon": "Agrégats horaires disponibles depuis le {at}.",
+      "horizonNone": "Aucun agrégat horaire enregistré pour l'instant — l'activité ne peut pas être mesurée.",
+      "empty": {
+        "title": "Aucune inscription au cours des {weeks} dernières semaines",
+        "text": "Les cohortes apparaissent dès qu'une organisation est créée dans la fenêtre."
+      }
+    },
+    "planMix": {
+      "title": "Répartition des forfaits",
+      "intro": "Organisations par forfait du catalogue et état d'abonnement d'après le registre de facturation. Les organisations sans ligne de registre n'ont jamais démarré de paiement.",
+      "caption": "Organisations par forfait et état d'abonnement",
+      "columns": {
+        "plan": "Forfait",
+        "organizations": "Organisations",
+        "share": "Part",
+        "active": "Actif",
+        "trialing": "En essai",
+        "pastDue": "En retard",
+        "canceled": "Résilié",
+        "other": "Autre"
+      },
+      "figures": {
+        "paying": "Payantes"
+      },
+      "none": "Sans abonnement",
+      "unknown": "Identifiant de forfait inconnu",
+      "empty": {
+        "title": "Pas encore d'organisation",
+        "text": "La répartition se remplit dès que la première organisation existe."
+      }
+    },
+    "connectors": {
+      "title": "Connecteurs utilisés",
+      "intro": "Types de connecteurs classés selon le nombre d'organisations ayant au moins une destination connectée de ce type. Uniquement des comptages d'intégrations — aucun identifiant, aucun identifiant de connexion.",
+      "caption": "Types de connecteurs selon les organisations qui les utilisent",
+      "columns": {
+        "connector": "Connecteur",
+        "organizations": "Organisations",
+        "connected": "Connectées",
+        "paused": "En pause",
+        "error": "Erreur",
+        "notConnected": "Non connectées"
+      },
+      "figures": {
+        "organizations": "Organisations avec destination",
+        "connected": "Intégrations connectées"
+      },
+      "more": "{count, plural, one {# autre type de connecteur avec moins d'organisations n'est pas listé.} other {# autres types de connecteurs avec moins d'organisations ne sont pas listés.}}",
+      "empty": {
+        "title": "Pas encore de destination",
+        "text": "Les connecteurs apparaissent ici dès qu'une organisation ajoute une destination."
+      }
+    },
+    "method": {
+      "title": "Méthode et réserves",
+      "items": {
+        "sources": "Les inscriptions comptent les lignes des tables de comptes et d'organisations par date de création ; rien n'est échantillonné ni estimé.",
+        "milestones": "Jalons de l'entonnoir : première ligne de site ; premier domaine vérifié (domains.verified_at) ; premier agrégat horaire avec des événements acceptés ; date de création d'une destination actuellement connectée (une destination déconnectée depuis ne compte pas) ; première publication de configuration ; création d'un abonnement actif dans le registre de facturation.",
+        "proxies": "Les instants de destination et de paiement sont des approximations — la connexion et le paiement eux-mêmes ne portent pas d'horodatage — leurs délais médians sont donc approximatifs.",
+        "retention": "La rétention et l'activité reposent sur les agrégats horaires d'événements ; si des agrégats ont été purgés par les règles de conservation, les cohortes plus anciennes paraissent inactives. L'horizon des agrégats est indiqué sous la grille.",
+        "noGeo": "Pas de répartition géographique : Track n'enregistre aucun pays pour les comptes ou les organisations, aucune n'est donc affichée.",
+        "privacy": "Tout sur cette page est un comptage ou un taux sur l'ensemble des organisations. Aucune organisation, aucun compte, aucun visiteur ni aucun événement n'est identifié."
+      }
+    },
+    "overview": {
+      "title": "Chiffres clés",
+      "link": "Ouvrir la croissance",
+      "asOf": "Au {at}",
+      "sample": "Petits nombres : moins de {min} organisations.",
+      "unavailable": "Chargement impossible — le module a signalé une erreur. Ouvrez le module pour les détails.",
+      "organizations": {
+        "label": "Organisations",
+        "hint": "{count, plural, one {# compte} other {# comptes}}"
+      },
+      "newOrganizations": {
+        "label": "Nouvelles organisations · 30 j",
+        "hint": "{count} sur les 7 derniers jours · {delta} par rapport aux 30 jours précédents"
+      },
+      "active": {
+        "label": "Organisations actives · 7 j / 30 j",
+        "hint": "Avec des événements acceptés"
+      },
+      "paying": {
+        "label": "Organisations payantes",
+        "hint": "Abonnement actif"
+      },
+      "health": {
+        "title": "État de la plateforme",
+        "link": "Ouvrir l'état de la plateforme",
+        "checkedAt": "Vérifié le {at}",
+        "tiles": {
+          "collector": "Collecteur",
+          "worker": "Worker",
+          "queues": "Files d'attente",
+          "deliveries": "Livraisons · 24 h",
+          "database": "Base de données"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Attention requise",
+          "bad": "Dégradé",
+          "info": "Info",
+          "neutral": "Non mesuré"
+        }
+      },
+      "inbox": {
+        "title": "Boîte de réception",
+        "link": "Ouvrir la boîte de réception",
+        "notMeasured": "Non mesuré",
+        "failed": "Chargement impossible",
+        "contacts": {
+          "label": "Demandes de contact",
+          "open": "{count, plural, one {# ouverte} other {# ouvertes}}",
+          "detail": "{newCount} nouvelles · {inProgress} en cours"
+        },
+        "privacy": {
+          "label": "Demandes de confidentialité",
+          "open": "{count, plural, one {# ouverte} other {# ouvertes}}",
+          "detail": "{overdue} en retard · {dueSoon} bientôt échues",
+          "unavailable": "Tables de confidentialité indisponibles dans ce déploiement"
+        },
+        "alerts": {
+          "label": "Alertes",
+          "open": "{count, plural, one {# ouverte} other {# ouvertes}}",
+          "detail": "{critical} critiques · {days} derniers jours",
+          "unavailable": "Tables d'alertes indisponibles dans ce déploiement"
+        }
+      }
+    }
+  }
+}

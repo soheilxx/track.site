@@ -1,0 +1,309 @@
+{
+  "opsControls": {
+    "subnav": {
+      "label": "Controls sections",
+      "overview": "Kill switch & suspensions",
+      "flags": "Feature flags",
+      "announcements": "Announcements"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Working…",
+      "never": "never",
+      "unknown": "unknown",
+      "on": "On",
+      "off": "Off",
+      "optional": "optional",
+      "noPlan": "no subscription"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "errors": {
+      "forbidden": "This action needs the platform admin role with two-factor authentication.",
+      "invalid": "Please check the highlighted fields.",
+      "not_found": "That entry does not exist (any more).",
+      "unchanged": "Nothing to change — it is already in that state.",
+      "confirmation": "The confirmation word does not match.",
+      "reserved": "Keys starting with “platform.” are reserved for system switches.",
+      "exists": "A flag with this key already exists.",
+      "generic": "That did not work. Please try again."
+    },
+    "fieldErrors": {
+      "required": "Required.",
+      "invalid": "Invalid value.",
+      "long": "Too long.",
+      "window": "The end must be after the start.",
+      "not_found": "No organisation with this slug or id.",
+      "reserved": "Reserved prefix “platform.”.",
+      "exists": "Already exists.",
+      "confirmation": "Type the word exactly as shown."
+    },
+    "notices": {
+      "killSwitchEngaged": "Kill switch engaged. The collector pauses ingestion, config delivery and inbound webhooks within about five seconds.",
+      "killSwitchReleased": "Kill switch released. The collector resumes within about five seconds.",
+      "suspended": "Organisation suspended. Ingestion and config delivery for its sites pause within the collector’s cache window.",
+      "unsuspended": "Suspension lifted.",
+      "flagCreated": "Flag created.",
+      "flagRegistered": "Flag stored with its code default.",
+      "flagUpdated": "Description saved.",
+      "flagDefaultChanged": "Default changed. Customer instances pick it up within 60 seconds.",
+      "overrideSaved": "Override saved. The organisation picks it up within 60 seconds.",
+      "overrideRemoved": "Override removed. The organisation follows the default again within 60 seconds.",
+      "announcementCreated": "Announcement created.",
+      "announcementRevoked": "Announcement revoked. It disappears from the dashboards on their next request."
+    },
+    "maintenance": {
+      "title": "Maintenance mode for the marketing site",
+      "text": "Not part of Controls. The marketing site has no maintenance switch in this module; it is out of scope here and would need its own decision (hosting-level redirect or a static notice)."
+    },
+    "killSwitch": {
+      "title": "Global kill switch",
+      "intro": "Stops the whole collector for every tenant: browser and server batches answer 503, config manifests carry the kill switch, inbound shop and affiliate webhooks answer “paused”. Nothing is deleted; senders retry later.",
+      "state": {
+        "label": "Platform switch",
+        "engaged": "Engaged — ingestion paused",
+        "released": "Released — traffic flows"
+      },
+      "updatedAt": "Last change",
+      "env": {
+        "label": "KILL_SWITCH_GLOBAL",
+        "on": "set for this web process",
+        "off": "not set for this web process",
+        "hint": "The environment variable KILL_SWITCH_GLOBAL is a deployment-level switch that needs a restart to change; the collector reports its own value under “source”. The platform switch here is stored in the database and read by the collector every five seconds."
+      },
+      "collector": {
+        "title": "Collector (live)",
+        "url": "Endpoint",
+        "status": "HTTP status",
+        "source": "Kill switch source",
+        "sources": {
+          "env": "environment variable",
+          "platform": "platform switch",
+          "none": "not engaged"
+        },
+        "error": "Error",
+        "checkedAt": "Checked",
+        "recheck": "Re-check",
+        "unreachable": "Unreachable",
+        "invalid": "Unexpected response",
+        "paused": "Paused by the kill switch",
+        "ok": "Healthy",
+        "degraded": "Not healthy"
+      },
+      "effects": "The switch affects every organisation at once. For one organisation use a suspension below; for one site or environment the customer’s own Incident Mode.",
+      "engage": "Engage kill switch",
+      "release": "Release kill switch",
+      "dialog": {
+        "engageTitle": "Engage the global kill switch?",
+        "engageText": "Every tenant stops sending data within seconds. Give the reason (it is audited) and type the word to confirm.",
+        "releaseTitle": "Release the global kill switch?",
+        "releaseText": "The collector accepts traffic again within seconds. Give the reason (it is audited) and type the word to confirm.",
+        "reason": "Reason",
+        "reasonHint": "Incident, ticket reference, what was observed. At least 3 characters; stored in the audit log.",
+        "wordLabel": "Type {word} to confirm",
+        "wordHint": "Exactly {word}, in capitals — no other word is accepted.",
+        "engageConfirm": "Engage now",
+        "releaseConfirm": "Release now"
+      }
+    },
+    "suspensions": {
+      "title": "Suspended organisations",
+      "intro": "The tenant kill switch. A suspended organisation stops sending data (the collector treats it like the customer’s own kill switch for every site) and its members are locked out of the dashboard and API (403) until the suspension is lifted. Metadata only — no event data is shown here.",
+      "activeCount": "{count} organisations active",
+      "empty": "No organisation is suspended",
+      "emptyText": "Every organisation can send data. Use the form to suspend one.",
+      "table": {
+        "caption": "Suspended organisations with plan, sites, time and reason",
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "sites": "Sites",
+        "suspendedAt": "Suspended",
+        "reason": "Reason",
+        "actions": "Actions"
+      },
+      "unsuspend": "Lift suspension",
+      "suspendForm": {
+        "title": "Suspend an organisation",
+        "text": "Look the organisation up by slug or id first; the suspension itself is confirmed in a dialog with a mandatory reason.",
+        "ref": "Slug or organisation id",
+        "refHint": "Exact slug (e.g. acme-demo) or the UUID.",
+        "lookup": "Look up",
+        "notFound": "No organisation with this slug or id."
+      },
+      "found": {
+        "plan": "Plan",
+        "sites": "Sites",
+        "created": "Created",
+        "alreadySuspended": "Already suspended since {when}"
+      },
+      "dialog": {
+        "suspendTitle": "Suspend {name}?",
+        "suspendText": "Ingestion and config delivery for every site of this organisation pause within the collector’s cache window; the dashboard and API answer 403 for its members. The reason is audited and visible to the organisation’s own audit log.",
+        "unsuspendTitle": "Lift the suspension of {name}?",
+        "unsuspendText": "The organisation can send data again within the collector’s cache window. This is audited.",
+        "reason": "Reason",
+        "reasonHint": "Ticket reference and what happened. At least 3 characters.",
+        "suspendConfirm": "Suspend organisation",
+        "unsuspendConfirm": "Lift suspension",
+        "currentReason": "Suspension reason"
+      }
+    },
+    "flags": {
+      "title": "Feature flags",
+      "intro": "Global defaults with per-organisation overrides. The customer app caches a value for 60 seconds. Keys the app reads are registered in code; keys created here only take effect once the app reads them.",
+      "empty": "No flags",
+      "emptyText": "No flag is stored and none is registered in the app.",
+      "table": {
+        "caption": "Feature flags with default, override count, source and last change",
+        "key": "Key",
+        "default": "Default",
+        "overrides": "Overrides",
+        "source": "Source",
+        "updated": "Changed",
+        "actions": "Actions"
+      },
+      "source": {
+        "code": "read by the app",
+        "manual": "manual",
+        "unregistered": "not stored yet"
+      },
+      "codeDefault": "code default: {value}",
+      "register": "Store flag",
+      "open": "Details",
+      "create": {
+        "title": "Create a flag",
+        "text": "Only flags the app reads change behaviour. Reserved keys start with “platform.”.",
+        "key": "Key",
+        "keyHint": "Lower case, 2–64 characters: letters, digits, underscore, dot, hyphen. Example: reports.export",
+        "description": "Description",
+        "descriptionHint": "What the flag gates and where. Shown in this list.",
+        "default": "Enabled by default",
+        "submit": "Create flag"
+      },
+      "detail": {
+        "back": "All flags",
+        "notFound": "Unknown flag",
+        "notFoundText": "No stored flag and no code-registered flag with this key.",
+        "unregisteredTitle": "Not stored yet",
+        "unregisteredText": "The app reads this flag with its code default. Store it from the list to change the default or add overrides.",
+        "defaultTitle": "Global default",
+        "defaultText": "Applies to every organisation without an override. Changing it is confirmed and audited.",
+        "enable": "Enable by default",
+        "disable": "Disable by default",
+        "descriptionTitle": "Description",
+        "save": "Save description",
+        "overridesTitle": "Organisation overrides",
+        "overridesText": "An override replaces the default for one organisation. Organisations are named by slug; no event data is involved.",
+        "overridesEmpty": "No overrides — every organisation follows the default.",
+        "overridesCaption": "Overrides with organisation, value, reason and last change",
+        "organisation": "Organisation",
+        "organisationHint": "Exact slug or UUID.",
+        "value": "Value",
+        "valueLabel": "Value for this organisation",
+        "reason": "Reason",
+        "reasonHint": "Why this organisation differs (optional, audited).",
+        "updated": "Changed",
+        "remove": "Remove",
+        "addTitle": "Add or replace an override",
+        "addText": "One override per organisation and flag; saving again replaces it.",
+        "submit": "Save override"
+      },
+      "dialog": {
+        "defaultTitle": "Change the default of {key}?",
+        "defaultText": "The default becomes {value} for every organisation without an override ({count} overrides stay in place). Customer instances pick it up within 60 seconds.",
+        "defaultConfirm": "Change default",
+        "removeTitle": "Remove the override for {organisation}?",
+        "removeText": "The organisation follows the default of {key} again within 60 seconds.",
+        "removeConfirm": "Remove override"
+      }
+    },
+    "announcements": {
+      "title": "Announcements",
+      "intro": "Banners in the customer dashboard: localized texts, severity, display window in UTC and audience by plan or organisation. Customers can dismiss a banner per browser; revoking removes it everywhere.",
+      "new": "New announcement",
+      "empty": "No announcements",
+      "emptyText": "Nothing has been announced yet. Create one to show a banner in the dashboards.",
+      "table": {
+        "caption": "Announcements with status, window, audience and actions",
+        "title": "Announcement",
+        "status": "Status",
+        "window": "Window (UTC)",
+        "audience": "Audience",
+        "actions": "Actions"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "active": "Active",
+        "ended": "Ended",
+        "revoked": "Revoked"
+      },
+      "severity": {
+        "info": "Information",
+        "warn": "Warning",
+        "bad": "Incident"
+      },
+      "audience": {
+        "everyone": "Every organisation",
+        "plans": "Plans: {plans}",
+        "organisations": "{count} organisations"
+      },
+      "window": {
+        "from": "from {start}",
+        "until": "until {end}",
+        "open": "no end",
+        "revoked": "revoked {when}"
+      },
+      "link": "Link",
+      "revoke": "Revoke",
+      "dialog": {
+        "revokeTitle": "Revoke “{title}”?",
+        "revokeText": "The banner disappears from every dashboard on its next request. This cannot be undone; create a new announcement instead.",
+        "revokeConfirm": "Revoke announcement"
+      },
+      "form": {
+        "title": "New announcement",
+        "text": "English is mandatory; other locales fall back to English in the dashboard. Times are UTC.",
+        "back": "All announcements",
+        "created": "Announcement created.",
+        "createAnother": "Create another",
+        "severity": "Severity",
+        "severityHint": "Information (blue), warning (amber) or incident (red, announced assertively).",
+        "textsTitle": "Texts",
+        "textsText": "Short title, one or two sentences of body. No personal data, no secrets.",
+        "titleFor": "Title ({locale})",
+        "bodyFor": "Body ({locale})",
+        "windowTitle": "Display window",
+        "windowText": "Leave the end empty for an open-ended banner; revoke it later.",
+        "startsAt": "Start (UTC)",
+        "startsAtHint": "Empty = now.",
+        "endsAt": "End (UTC)",
+        "endsAtHint": "Must be after the start.",
+        "linkUrl": "Link",
+        "linkUrlHint": "Optional https URL, e.g. a status page.",
+        "audienceTitle": "Audience",
+        "audienceText": "Nothing selected = every organisation. With plans and organisation ids, an organisation matching either sees the banner.",
+        "plans": "Plans",
+        "organisationIds": "Organisation ids",
+        "organisationIdsHint": "UUIDs, one per line or comma-separated; every id must exist.",
+        "submit": "Create announcement"
+      }
+    },
+    "customer": {
+      "featureOff": {
+        "title": "Not enabled for your organisation",
+        "text": "This feature is switched off for your organisation at the moment. Nothing is broken and no data is lost; contact support if you expected it here.",
+        "back": "Back to Data Quality"
+      },
+      "announcements": {
+        "region": "Platform announcements",
+        "dismiss": "Dismiss announcement",
+        "open": "Open link"
+      }
+    }
+  }
+}

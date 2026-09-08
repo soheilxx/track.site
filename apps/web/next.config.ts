@@ -79,6 +79,12 @@ const csp = buildContentSecurityPolicy({ production: isProd, secureOrigin: isSec
 const STATIC_ASSET_CACHE = "public, max-age=86400, stale-while-revalidate=604800";
 const SOCIAL_CARD_CACHE = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800";
 
+/** Operator console responses (`/ops/**`): robots and caches must never keep them. */
+const OPS_HEADERS = [
+  { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+  { key: "Cache-Control", value: "no-store" },
+];
+
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -172,6 +178,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // Track Operations console (docs/17): never indexed or cached, whatever the page metadata says.
+      { source: "/ops", headers: OPS_HEADERS },
+      { source: "/ops/:path*", headers: OPS_HEADERS },
       { source: "/cdn/:path*", headers: [{ key: "Access-Control-Allow-Origin", value: "*" }] },
       // Static brand assets and app icons change only with a deploy: a day in the browser cache, a week
       // stale-while-revalidate. (`/_next/static` is already served immutable by Next.js.)

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { siteBelongsToOrg } from "@/server/ai/context";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { FIXTURES, devFixturesEnabled, fixtureMessages } from "./fixtures";
 
 export const dynamic = "force-dynamic";
@@ -18,8 +18,8 @@ const query = z.object({ siteId: z.string().uuid(), fixture: z.enum(FIXTURES), c
 
 export async function GET(req: NextRequest) {
   if (!devFixturesEnabled()) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
   const parsed = query.safeParse(Object.fromEntries(req.nextUrl.searchParams));
   if (!parsed.success) return NextResponse.json({ ok: false, code: "VALIDATION_ERROR" }, { status: 400 });
   if (!(await siteBelongsToOrg(ctx.organization.id, parsed.data.siteId))) return NextResponse.json({ ok: false, code: "NOT_FOUND" }, { status: 404 });

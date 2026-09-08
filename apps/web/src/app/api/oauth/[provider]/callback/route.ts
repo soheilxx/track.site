@@ -4,7 +4,7 @@ import { getConnector } from "@track-site/connectors";
 import { getIntegration, oauthConnections, recordAudit, setIntegrationStatus, storeCredential, withTenant } from "@track-site/db";
 import { db, vault } from "@/server/db";
 import { finishOAuth2, verifyState, xAccessToken } from "@/server/oauth";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +14,8 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
   const { provider } = await params;
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.redirect(new URL("/login", req.url));
+  const ctx = await requireApiOrgContext({ signedOut: () => NextResponse.redirect(new URL("/login", req.url)) });
+  if (ctx instanceof Response) return ctx;
   const q = req.nextUrl.searchParams;
   const stateToken = provider === "x" ? (req.cookies.get("ts_oauth_x")?.value ?? "") : (q.get("state") ?? "");
   const state = verifyState(stateToken);

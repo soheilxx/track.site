@@ -1,0 +1,330 @@
+{
+  "opsHealth": {
+    "intro": "Collector, worker, wachtrijen, leveringen, Stripe-webhooks, leveranciers en database over alle tenants — gemeten, nooit geschat; elke bron meldt zijn eigen toestand. Alle tijden in UTC.",
+    "refresh": {
+      "updatedAt": "Bijgewerkt {time}",
+      "ago": "{seconds} s geleden",
+      "auto": "Automatisch vernieuwen elke {seconds} s",
+      "paused": "Automatisch vernieuwen gepauzeerd",
+      "now": "Nu vernieuwen",
+      "refreshing": "Bezig met vernieuwen",
+      "toggle": "Automatisch vernieuwen"
+    },
+    "overall": {
+      "label": "Algemene status",
+      "ok": "Alle controles geslaagd",
+      "warn": "Vraagt aandacht",
+      "bad": "Verstoord",
+      "reasons": {
+        "collector": "Collector niet bereikbaar — de ingestie ligt mogelijk stil",
+        "collector_kill_switch": "Globale kill switch actief — de collector weigert elk event",
+        "worker_stale": "Worker-heartbeats verouderd — geen enkele geplande job is recent uitgevoerd",
+        "worker_failing": "Minstens één worker-job faalt",
+        "worker_never": "Nog geen worker-heartbeats vastgelegd",
+        "database": "Database niet beschikbaar",
+        "dead_letters": "Niet opnieuw afgespeelde dead letters in de wachtrijen",
+        "queue_lag": "Wachtrijachterstand ouder dan 15 minuten",
+        "delivery_errors": "Hoog leveringsfoutpercentage bij minstens één connector",
+        "stripe_failures": "Stripe-webhookevents mislukt in de afgelopen 24 uur",
+        "stripe_webhook_secret": "Stripe is geconfigureerd, maar het webhook-secret ontbreekt",
+        "ai": "Controle van de AI-leverancier mislukt",
+        "billing_prices": "Stripe-prijsconfiguratie onvolledig",
+        "mail_domain": "Afzenderdomein voor e-mail niet geverifieerd",
+        "snapshots_stale": "Elke statussnapshot van bestemmingen is verouderd",
+        "critical_alerts": "Openstaande kritieke waarschuwingen"
+      }
+    },
+    "tiles": {
+      "collector": "Collector",
+      "worker": "Worker",
+      "queues": "Wachtrijen",
+      "deliveries": "Leveringen · 24 u",
+      "stripe": "Stripe-webhooks",
+      "vendors": "Leveranciers",
+      "database": "Database",
+      "jobsFailing": "{count} falend",
+      "jobsStale": "{count} verouderd",
+      "jobsOk": "{count} jobs ok",
+      "ready": "{count} gereed",
+      "dead": "{count} dead letters",
+      "attempts": "{count} pogingen",
+      "errorRate": "{rate} fouten",
+      "failedOf": "{failed} van {received} mislukt",
+      "notMeasured": "Niet gemeten",
+      "noAttempts": "Geen pogingen"
+    },
+    "states": {
+      "ok": "OK",
+      "degraded": "Verstoord",
+      "kill_switch": "Kill switch actief",
+      "unreachable": "Niet bereikbaar",
+      "timeout": "Time-out",
+      "invalid": "Ongeldig antwoord",
+      "failing": "Falend",
+      "stale": "Verouderd",
+      "never": "Geen heartbeat",
+      "unavailable": "Niet beschikbaar",
+      "notConfigured": "Niet geconfigureerd",
+      "unknown": "Onbekend"
+    },
+    "collector": {
+      "title": "Collector",
+      "intro": "De eigen /health van de ingestiedienst, opgehaald vanaf de consoleserver met een time-out van {seconds} s.",
+      "host": "Host",
+      "http": "HTTP-status",
+      "latency": "Latentie",
+      "db": "Collector-database",
+      "driver": "Wachtrijdriver",
+      "ready": "Ingestiewachtrij gereed",
+      "dlq": "Ingestie-dead-letters",
+      "killSwitch": "Globale kill switch",
+      "reportedAt": "Klok van de collector",
+      "checkedAt": "Gecontroleerd",
+      "dbStates": {
+        "ok": "OK",
+        "error": "Fout",
+        "none": "Geen database"
+      },
+      "killOn": "Actief — events worden geweigerd met 503",
+      "killOff": "Uit",
+      "unreachableText": "Geen antwoord van {host} binnen de time-out. De ingestie ligt mogelijk stil, of de console bereikt het collectornetwerk niet.",
+      "invalidText": "{host} heeft geantwoord, maar niet met de verwachte JSON."
+    },
+    "worker": {
+      "title": "Worker-jobs",
+      "intro": "Eén heartbeat per geplande job, door de worker geschreven na elke run. Verouderd: geen run sinds meer dan tweemaal het interval. Falend: de laatste run eindigde met een fout.",
+      "columns": {
+        "job": "Job",
+        "state": "Status",
+        "lastRun": "Laatste run",
+        "lastOk": "Laatste succes",
+        "duration": "Duur",
+        "interval": "Interval",
+        "host": "Host",
+        "error": "Laatste fout"
+      },
+      "never": "Nooit",
+      "unknownInterval": "Niet in het schema",
+      "noError": "Geen",
+      "empty": "Nog geen heartbeats — de worker heeft niet gedraaid sinds migratie 0014 is toegepast, of bereikt de database niet.",
+      "showError": "Fout tonen",
+      "errorFor": "Laatste fout van job {job}"
+    },
+    "queues": {
+      "title": "Wachtrijen en dead letters",
+      "intro": "Achterstand van de duurzame wachtrijtabellen: gereed (nu beschikbaar), gepland (nieuwe poging of vertraging), in behandeling (vergrendeld door een worker) en niet opnieuw afgespeelde dead letters per wachtrij.",
+      "driver": "Driver",
+      "notMeasured": "Wachtrijdriver ‘{driver}’: de achterstand bevindt zich buiten de database, dus deze tabellen zijn niet de bron van waarheid.",
+      "columns": {
+        "queue": "Wachtrij",
+        "ready": "Gereed",
+        "scheduled": "Gepland",
+        "inFlight": "In behandeling",
+        "oldest": "Oudste gereed",
+        "lag": "Vertraging",
+        "dead": "Dead letters",
+        "oldestDead": "Oudste dead letter"
+      },
+      "totals": "Totaal",
+      "empty": "Geen berichten in de wachtrij en geen dead letters.",
+      "references": "{count} niet opnieuw afgespeelde dead-letter-verwijzingen (zichtbaar voor tenants)"
+    },
+    "deliveries": {
+      "title": "Leveringen per connector",
+      "intro": "Leveringspogingen naar elk bestemmingstype over alle tenants (delivery_attempts). Foutpercentage = (mislukt + nieuwe pogingen) / (geslaagd + mislukt + nieuwe pogingen); overgeslagen pogingen (beleid, toestemming, gepauzeerd) tellen niet mee.",
+      "window24h": "Laatste 24 u",
+      "window7d": "Laatste 7 d",
+      "columns": {
+        "connector": "Connector",
+        "tenants": "Organisaties",
+        "attempts": "Pogingen",
+        "success": "Geslaagd",
+        "failed": "Mislukt",
+        "retry": "Nieuwe pogingen",
+        "skipped": "Overgeslagen",
+        "errorRate": "Foutpercentage"
+      },
+      "totals": "Alle connectors",
+      "empty": "Geen leveringspogingen in de afgelopen 7 dagen."
+    },
+    "destinations": {
+      "title": "Statussnapshots van bestemmingen",
+      "intro": "Aggregaten van de snapshots per bestemming van de worker (destination_health_snapshots); een snapshot ouder dan {minutes} minuten is verouderd.",
+      "snapshots": "Snapshots",
+      "fresh": "Actueel",
+      "stale": "Verouderd",
+      "latest": "Nieuwste snapshot",
+      "oldest": "Oudste snapshot",
+      "organizations": "Organisaties",
+      "attempts": "Pogingen in het venster",
+      "errorRate": "Foutpercentage",
+      "highErrorRate": "Bestemmingen met hoog foutpercentage",
+      "withDeadLetters": "Bestemmingen met dead letters",
+      "queueReady": "Leveringen in de wachtrij",
+      "oldestQueued": "Oudste in de wachtrij",
+      "integrations": "Bestemmingen per status",
+      "statuses": {
+        "draft": "Concept",
+        "not_connected": "Niet verbonden",
+        "connected": "Verbonden",
+        "paused": "Gepauzeerd",
+        "error": "Fout"
+      },
+      "empty": "Nog geen snapshots — de job destination-health heeft niet gedraaid, of er bestaat geen bestemming."
+    },
+    "stripe": {
+      "title": "Stripe-webhooklogboek",
+      "intro": "De laatste {count} ontvangen webhookevents (stripe_events) met hun verwerkingsstatus. Payloads worden nooit opgeslagen — alleen type, digest en resultaat.",
+      "notConfigured": "Stripe is niet geconfigureerd (STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY). Het logboek toont toch wat is ontvangen.",
+      "webhookSecret": "Webhook-secret",
+      "configured": "Geconfigureerd",
+      "missing": "Ontbreekt — handtekeningen kunnen niet worden geverifieerd",
+      "received24h": "Ontvangen · 24 u",
+      "processed24h": "Verwerkt · 24 u",
+      "failed24h": "Mislukt · 24 u",
+      "pending": "In afwachting (totaal)",
+      "lastReceived": "Laatst ontvangen",
+      "columns": {
+        "event": "Event",
+        "type": "Type",
+        "organization": "Organisatie",
+        "received": "Ontvangen",
+        "processed": "Verwerkt",
+        "state": "Status",
+        "error": "Fout"
+      },
+      "states": {
+        "processed": "Verwerkt",
+        "failed": "Mislukt",
+        "pending": "In afwachting"
+      },
+      "noOrganization": "Geen",
+      "noError": "Geen",
+      "empty": "Nog geen webhookevents ontvangen.",
+      "showError": "Fout tonen",
+      "errorFor": "Fout van event {id}"
+    },
+    "vendors": {
+      "title": "Leveranciers en configuratie",
+      "intro": "Dezelfde alleen-lezen controles als /api/health, tien minuten per instantie gecachet.",
+      "checkedAt": "Gecontroleerd",
+      "none": "Geen",
+      "ai": {
+        "label": "AI-leverancier",
+        "states": {
+          "not_configured": "Niet geconfigureerd",
+          "ok": "Modellen beschikbaar",
+          "invalid_key": "API-sleutel geweigerd",
+          "unreachable": "Niet bereikbaar",
+          "models_missing": "Geconfigureerde modellen ontbreken"
+        },
+        "available": "Beschikbare modellen",
+        "missing": "Ontbrekende modellen"
+      },
+      "mail": {
+        "label": "E-mail",
+        "transport": {
+          "smtp": "SMTP",
+          "file": "Bestand (ontwikkeling)",
+          "resend": "Resend"
+        },
+        "domain": "Afzenderdomein",
+        "domainState": "Domeinstatus",
+        "domainStates": {
+          "verified": "Geverifieerd",
+          "pending": "Verificatie in afwachting",
+          "failed": "Verificatie mislukt",
+          "not_started": "Verificatie niet gestart",
+          "temporary_failure": "Tijdelijke storing",
+          "sending_only_key": "Alleen-verzenden-sleutel — domeincontrole niet beschikbaar",
+          "invalid_key": "API-sleutel geweigerd",
+          "domain_missing": "Domein niet gevonden in Resend",
+          "unreachable": "Resend niet bereikbaar"
+        }
+      },
+      "billing": {
+        "label": "Stripe-prijzen",
+        "states": {
+          "not_configured": "Niet geconfigureerd",
+          "ok": "Alle prijsslots geverifieerd",
+          "prices_failing": "Prijsslots falen",
+          "prices_missing": "Prijsslots ontbreken",
+          "no_prices": "Geen prijs geconfigureerd"
+        },
+        "ok": "Geverifieerd",
+        "missing": "Ontbrekend",
+        "failed": "Falend",
+        "deprecated": "Verouderde fallback-namen"
+      },
+      "database": {
+        "label": "Databaseprobe",
+        "ok": "Bereikbaar",
+        "down": "Niet bereikbaar",
+        "migrations": "Toegepaste migraties"
+      }
+    },
+    "database": {
+      "title": "Database",
+      "intro": "PostgreSQL-statistiekweergaven: rijaantallen zijn schattingen van de planner, groottes omvatten indexen en TOAST.",
+      "size": "Grootte",
+      "version": "Versie",
+      "connections": "Verbindingen",
+      "tableCount": "Tabellen",
+      "columns": {
+        "table": "Tabel",
+        "rows": "Actieve rijen (schatting)",
+        "dead": "Dode rijen (schatting)",
+        "size": "Grootte",
+        "vacuum": "Laatste autovacuum"
+      },
+      "largest": "De {count} grootste tabellen",
+      "never": "Nooit",
+      "unavailable": "Statistieken niet beschikbaar — de operatorrol kon de statistiekweergaven niet lezen."
+    },
+    "errors": {
+      "title": "Recente waarschuwingen en fouten",
+      "intro": "De nieuwste waarschuwingsevents van alle tenants en auditregels waarvan de actie een mislukking vastlegt (laatste 7 dagen). Details blijven in het dashboard van de tenant zelf.",
+      "open": "Openstaande waarschuwingen",
+      "critical": "kritiek",
+      "warning": "waarschuwing",
+      "info": "info",
+      "alerts": {
+        "title": "Waarschuwingsevents",
+        "columns": {
+          "when": "Wanneer",
+          "severity": "Ernst",
+          "kind": "Soort",
+          "organization": "Organisatie",
+          "state": "Status"
+        },
+        "openState": "Open",
+        "resolved": "Opgelost {when}",
+        "empty": "Nog geen waarschuwingsevents."
+      },
+      "kinds": {
+        "event_drop": "Eventdaling",
+        "vendor_outage": "Leveranciersstoring",
+        "credential_expiry": "Verlopen inloggegevens",
+        "consent_errors": "Toestemmingsfouten",
+        "queue_lag": "Wachtrijvertraging",
+        "conversion_anomaly": "Conversieafwijking"
+      },
+      "severity": {
+        "info": "Info",
+        "warning": "Waarschuwing",
+        "critical": "Kritiek"
+      },
+      "audit": {
+        "title": "Foutregels in het auditlogboek",
+        "columns": {
+          "when": "Wanneer",
+          "action": "Actie",
+          "target": "Doeltype",
+          "organization": "Organisatie"
+        },
+        "empty": "Geen foutregels in de afgelopen 7 dagen."
+      },
+      "platform": "Platform"
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Jeder Audit-Eintrag der gesamten Plattform – Kundenteams, Track AI, Systemjobs, Source-Keys und Plattformbetreiber – mit Akteur, Aktion, Organisation, Ziel und redigierten Details. Suchen, filtern, blättern und exportieren; das Log selbst ist nur anfügbar.",
+    "presets": {
+      "label": "Schnellansichten",
+      "all": "Alle Einträge",
+      "platform": "Betreiberaktionen",
+      "breakGlass": "Break-glass-Verlauf",
+      "platformWide": "Plattformweit",
+      "roles": "Rollenänderungen"
+    },
+    "filters": {
+      "legend": "Filter",
+      "search": "Suche",
+      "searchPlaceholder": "Aktion, Ziel oder Anfrage-ID",
+      "actor": "Akteur",
+      "everyone": "Alle",
+      "operators": "Plattformbetreiber",
+      "kinds": "Akteurarten",
+      "otherUser": "Nutzer {id}",
+      "action": "Aktion",
+      "actionPlaceholder": "z. B. platform.organization",
+      "actionHint": "Genaue Aktion oder Präfix: „platform.organization“ schließt alle darunterliegenden Aktionen ein.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "ID oder Slug",
+      "target": "Zieltyp",
+      "all": "Alle",
+      "scope": "Bereich",
+      "scopes": {
+        "all": "Alle Einträge",
+        "platform_wide": "Nur plattformweit (ohne Organisation)",
+        "break_glass": "Break-glass-Verlauf"
+      },
+      "from": "Von (UTC)",
+      "to": "Bis (UTC)",
+      "platformOnly": "Nur Aktionen von Plattformbetreibern",
+      "platformOnlyHint": "Einträge, deren Akteur ein Plattformbetreiber ist (Akteurart „platform“), unabhängig von der Organisation.",
+      "apply": "Anwenden",
+      "reset": "Zurücksetzen",
+      "export": "CSV exportieren",
+      "exportHint": "Dieselben Filter und dieselben redigierten Schlüssellisten wie diese Tabelle, neueste zuerst, höchstens {max} Zeilen; jeder Export wird im Audit-Log festgehalten."
+    },
+    "summary": {
+      "count": "{count} Einträge",
+      "countFiltered": "{count} passende Einträge",
+      "generated": "Geladen {date}",
+      "organization": "Organisation: {name}",
+      "deletedOrganization": "{id} (existiert nicht mehr)",
+      "unknownOrganization": "Keine Organisation hat die ID oder den Slug „{input}“; bis zur Korrektur passt nichts.",
+      "actorFallback": "Akteur: {name}",
+      "actorUnknown": "Akteur: Nutzer {id} (existiert nicht mehr)"
+    },
+    "notes": {
+      "retention": "Einträge werden standardmäßig {days} Tage aufbewahrt; eine Organisation kann für ihr Audit-Log ein eigenes Fenster festlegen, Einträge ohne Organisation folgen dem Standard. Der Retention-Job löscht ältere Einträge endgültig – nur ein Export bewahrt sie länger auf.",
+      "redacted": "Werte werden vor dem Speichern und erneut vor der Anzeige redigiert; personenbezogene Daten von Endnutzern und Geheimnisse erscheinen hier nie.",
+      "appendOnly": "Das Log ist nur anfügbar: Nichts hier kann bearbeitet oder gelöscht werden, und jeder CSV-Export ist selbst ein Eintrag."
+    },
+    "table": {
+      "caption": "Audit-Einträge mit Zeitpunkt, Akteur, Aktion, Organisation, Ziel und redigierten Details",
+      "when": "Wann",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "organization": "Organisation",
+      "target": "Ziel",
+      "details": "Details",
+      "platformWide": "Plattformweit",
+      "former": "Ehemaliges Mitglied",
+      "formerOperator": "Ehemaliger Betreiber",
+      "openOrganization": "{name} öffnen",
+      "onlyOrganization": "Nur diese Organisation",
+      "deletedOrganization": "Gelöschte Organisation",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {# Detail anzeigen} other {# Details anzeigen}}",
+      "diff": "Diff",
+      "metadata": "Metadaten",
+      "requestId": "Anfrage",
+      "entryId": "Eintrags-ID",
+      "truncated": "Weitere Zeilen werden nicht angezeigt.",
+      "noDetails": "Keine Details"
+    },
+    "actorKinds": {
+      "platform": "Plattformbetreiber",
+      "user": "Mitglied",
+      "agent": "Track AI",
+      "system": "System",
+      "source_key": "Source-Key",
+      "unknown": "Unbekannt"
+    },
+    "categories": {
+      "platform": "Plattform",
+      "team": "Team",
+      "organization": "Organisation",
+      "sites": "Sites",
+      "config": "Konfiguration",
+      "consent": "Consent",
+      "destinations": "Destinations",
+      "credentials": "Zugangsdaten",
+      "privacy": "Datenschutz",
+      "billing": "Abrechnung",
+      "ai": "Track AI",
+      "other": "Sonstiges"
+    },
+    "empty": {
+      "title": "Noch keine Audit-Einträge",
+      "text": "Einträge erscheinen, sobald jemand auf der Plattform handelt: eine Registrierung, eine Konfigurationsänderung, eine Betreiberaktion.",
+      "filteredTitle": "Kein Eintrag passt",
+      "filteredText": "Lockere die Filter, erweitere den Zeitraum oder leere die Suche."
+    },
+    "pagination": {
+      "nav": "Seiten des Audit-Logs",
+      "previous": "Vorherige Seite",
+      "next": "Nächste Seite",
+      "page": "Seite {page}"
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { credentialRequirementsFor, getConnector } from "@track-site/connectors"
 import { getIntegration, listCredentialRefs, setIntegrationStatus, storeCredential, withTenant } from "@track-site/db";
 import { db, vault } from "@/server/db";
 import { env } from "@/env";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { appendMessage, getOrCreateChatSession } from "@/server/ai/chat-store";
 import { siteBelongsToOrg } from "@/server/ai/context";
 
@@ -24,8 +24,8 @@ const bodySchema = z.object({
  * and never touches the chat transcript or the model. Only a reference is returned.
  */
 export async function POST(req: NextRequest) {
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.json({ ok: false, code: "UNAUTHORIZED" }, { status: 401 });
+  const ctx = await requireApiOrgContext();
+  if (ctx instanceof Response) return ctx;
   if (!["OWNER", "ADMIN", "DEVELOPER"].includes(ctx.role)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, code: "VALIDATION_ERROR" }, { status: 400 });

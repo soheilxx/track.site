@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "In attesa di approvazione",
+      "active": "Accessi attivi",
+      "admins": "Admin approvatori",
+      "adminsHint": "Admin della piattaforma con e-mail verificata{twoFactor, select, yes { e autenticazione a due fattori} other {}} che possono approvare.",
+      "fourEyesOn": "Quattro occhi: un secondo admin della piattaforma approva le tue richieste.",
+      "fourEyesOff": "Sei l'unico admin approvatore: le tue richieste vengono auto-approvate e richiedono un riferimento al ticket.",
+      "noAdmins": "Al momento nessun admin della piattaforma può approvare."
+    },
+    "rules": {
+      "readOnly": "Ogni accesso è in sola lettura: la dashboard del cliente rifiuta le modifiche e anche la transazione sul database è in sola lettura.",
+      "audited": "Ogni richiesta, approvazione, revoca e ogni pagina aperta con un accesso viene registrata nel registro di audit dell'organizzazione con l'identificativo dell'accesso.",
+      "notified": "I proprietari dell'organizzazione ricevono un'e-mail all'approvazione e alla revoca di un accesso attivo."
+    },
+    "request": {
+      "title": "Richiedi accesso",
+      "text": "Accesso in sola lettura a un'organizzazione per un tempo limitato. Un admin della piattaforma approva; il tempo parte dall'approvazione.",
+      "organization": "Organizzazione",
+      "organizationPlaceholder": "Seleziona un'organizzazione",
+      "organizationHint": "{count, plural, =0 {Ancora nessuna organizzazione} one {# organizzazione} other {# organizzazioni}}, in ordine di nome.",
+      "reason": "Motivo",
+      "reasonHint": "Almeno {min} caratteri: cosa devi vedere e perché — la segnalazione del cliente, il contesto del ticket.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Riferimento ticket",
+      "ticketHint": "Per esempio SUP-1234. Obbligatorio quando approvi la tua stessa richiesta (caso di admin unico).",
+      "optional": "facoltativo",
+      "duration": "Durata",
+      "durations": {
+        "15": "15 minuti",
+        "30": "30 minuti",
+        "60": "1 ora",
+        "120": "2 ore",
+        "240": "4 ore"
+      },
+      "submit": "Richiedi accesso in sola lettura"
+    },
+    "queue": {
+      "title": "Coda di approvazione",
+      "caption": "Richieste break-glass aperte",
+      "empty": "Nessuna richiesta aperta",
+      "emptyText": "Le richieste restano qui finché un admin della piattaforma non le approva o le rifiuta.",
+      "requestedBy": "Richiesto da",
+      "organization": "Organizzazione",
+      "reason": "Motivo",
+      "ticket": "Ticket",
+      "duration": "Durata",
+      "requestedAt": "Richiesto",
+      "actions": "Azioni",
+      "noTicket": "Nessun riferimento al ticket",
+      "you": "tu",
+      "approve": "Approva",
+      "decline": "Rifiuta",
+      "withdraw": "Ritira",
+      "adminOnly": "Solo gli admin della piattaforma approvano.",
+      "fourEyesBlocked": "La tua richiesta deve essere approvata da un altro admin della piattaforma (quattro occhi).",
+      "ticketRequired": "L'auto-approvazione richiede un riferimento al ticket: ritira la richiesta e presentala di nuovo con un ticket.",
+      "selfApprovalHint": "Nessun altro admin può approvare: questa approvazione viene registrata come auto-approvata.",
+      "approveDialog": {
+        "title": "Approvare l'accesso in sola lettura?",
+        "description": "{name} ottiene da subito accesso in sola lettura a {organization} per {duration}. I proprietari dell'organizzazione ricevono un'e-mail e ogni pagina aperta viene registrata con l'identificativo dell'accesso.",
+        "confirm": "Approva accesso"
+      },
+      "declineDialog": {
+        "title": "Rifiutare questa richiesta?",
+        "description": "La richiesta di {name} per {organization} viene chiusa senza accesso. La decisione viene registrata nel registro di audit.",
+        "confirm": "Rifiuta richiesta"
+      },
+      "withdrawDialog": {
+        "title": "Ritirare la tua richiesta?",
+        "description": "La tua richiesta per {organization} viene chiusa senza accesso. Puoi presentarne una nuova in qualsiasi momento.",
+        "confirm": "Ritira richiesta"
+      }
+    },
+    "active": {
+      "title": "Accessi attivi",
+      "caption": "Accessi break-glass attualmente attivi",
+      "empty": "Nessun accesso attivo",
+      "emptyText": "In questo momento nessuno ha accesso in sola lettura a un'organizzazione cliente.",
+      "operator": "Operatore",
+      "organization": "Organizzazione",
+      "window": "Finestra",
+      "until": "Fino al {until}",
+      "approvedBy": "Approvato da {name}",
+      "selfApproved": "auto-approvato",
+      "ticket": "Ticket {ticket}",
+      "notified": "Proprietari avvisati via e-mail",
+      "notNotified": "Proprietari non avvisati — controlla il trasporto e-mail",
+      "actions": "Azioni",
+      "open": "Apri dashboard (sola lettura)",
+      "revoke": "Revoca",
+      "revokeDialog": {
+        "title": "Revocare l'accesso adesso?",
+        "description": "L'accesso a {organization} termina immediatamente; l'operatore lo perde alla richiesta successiva e i proprietari ricevono un'e-mail.",
+        "confirm": "Revoca accesso"
+      },
+      "countdown": {
+        "remaining": "{time} rimanenti",
+        "hoursMinutes": "{hours} h {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "meno di un minuto",
+        "expired": "Scaduto"
+      }
+    },
+    "history": {
+      "title": "Cronologia",
+      "caption": "Voci break-glass chiuse, scadute e revocate",
+      "empty": "Ancora nulla registrato",
+      "emptyText": "Le richieste chiuse e gli accessi scaduti o revocati compaiono qui.",
+      "truncated": "Vengono mostrate solo le voci più recenti; la traccia completa è nel registro di audit.",
+      "when": "Presentata",
+      "state": "Stato",
+      "operator": "Operatore",
+      "organization": "Organizzazione",
+      "details": "Dettagli",
+      "approved": "Approvato il {when}",
+      "revoked": "Terminato il {when}",
+      "window": "Finestra di {minutes} min"
+    },
+    "states": {
+      "pending": "In attesa di approvazione",
+      "stale": "Richiesta scaduta",
+      "withdrawn": "Ritirata o rifiutata",
+      "active": "Attivo",
+      "revoked": "Revocato",
+      "expired": "Scaduto"
+    },
+    "notices": {
+      "requested": "Richiesta presentata. Un admin della piattaforma deve approvarla.",
+      "approved": "Accesso approvato; ora è attivo.",
+      "revoked": "Accesso revocato.",
+      "withdrawn": "Richiesta ritirata.",
+      "declined": "Richiesta rifiutata.",
+      "notified": "{sent, plural, =0 {Nessun proprietario ha ricevuto l'e-mail} one {# proprietario avvisato via e-mail} other {# proprietari avvisati via e-mail}}{failed, plural, =0 {} one {, # invio non riuscito} other {, # invii non riusciti}}."
+    },
+    "errors": {
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "forbidden": "Non sei autorizzato a farlo.",
+      "notFound": "Questa voce non esiste più.",
+      "validation": "Controlla i campi evidenziati.",
+      "organization": "Seleziona un'organizzazione.",
+      "reason": "Il motivo deve avere tra {min} e {max} caratteri.",
+      "ticketRef": "Il riferimento al ticket può contenere lettere, cifre, spazi e - _ # : . / (fino a {max} caratteri).",
+      "durationMinutes": "Scegli una delle durate proposte.",
+      "duplicate": "Hai già una richiesta aperta o un accesso attivo per questa organizzazione.",
+      "notPending": "Questa richiesta non è più aperta.",
+      "stale": "Questa richiesta è scaduta senza approvazione. Presentane una nuova.",
+      "fourEyes": "La tua richiesta deve essere approvata da un altro admin della piattaforma.",
+      "ticketRequired": "L'auto-approvazione richiede un riferimento al ticket.",
+      "notActive": "Questo accesso non è attivo.",
+      "notGrantee": "Solo l'operatore a cui è stato concesso l'accesso può aprire la dashboard.",
+      "confirmRequired": "Conferma prima l'azione nella finestra di dialogo."
+    },
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi"
+    }
+  }
+}

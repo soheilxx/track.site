@@ -18,4 +18,16 @@ export const MAIL_COPY_EN: MailCopy = {
     subject: "{inviter} invited you to {organization} on Track",
     text: "Accept the invitation: {url}",
   },
+  contactReply: {
+    subject: "Re: your request to Track [{reference}]",
+    text: "Hello {name},\n\n{body}\n\nKind regards\n{operator}\nTrack\n\n—\nThis e-mail answers the request you sent to Track (reference {reference}). Simply reply to this e-mail if you have further questions.",
+  },
+  breakGlassApproved: {
+    subject: "Track support has read-only access to {organization} until {until}",
+    text: "A Track support operator has been granted time-boxed, read-only access to your organisation {organization} on Track.\n\nUntil: {until}\nReason: {reason}\nTicket: {ticket}\nGrant: {grantId}\n\nNothing can be changed on your behalf, and every page the operator opens is recorded in your audit log: {url}\n\nIf you did not expect this, contact Track support and quote the grant id.",
+  },
+  breakGlassRevoked: {
+    subject: "Track support access to {organization} has ended",
+    text: "The read-only support access to your organisation {organization} on Track has ended (grant {grantId}).\n\nEverything the operator opened is recorded in your audit log: {url}",
+  },
 };

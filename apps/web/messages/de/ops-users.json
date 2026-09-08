@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Schließen",
+      "cancel": "Abbrechen",
+      "none": "—",
+      "on": "Aktiviert",
+      "off": "Nicht aktiviert",
+      "verified": "Bestätigt",
+      "unverified": "Nicht bestätigt",
+      "former": "Ehemaliges Konto",
+      "metadata": "Nur Metadaten: Namen, E-Mails, Rollen, Zwei-Faktor-Status und Sitzungszeitpunkte. Niemals Sitzungs-Tokens, IP-Adressen, User-Agents oder Endnutzerdaten.",
+      "adminOnly": "Nur Plattform-Admins."
+    },
+    "roles": {
+      "NONE": "Keine Plattformrolle",
+      "PLATFORM_SUPPORT": "Plattform-Support",
+      "PLATFORM_ADMIN": "Plattform-Admin"
+    },
+    "errors": {
+      "forbidden": "Deine Plattformrolle erlaubt diese Aktion nicht.",
+      "invalid": "Prüfe die markierten Felder.",
+      "confirm_required": "Bestätige die Aktion zuerst im Dialog.",
+      "not_found": "Kein Konto mit dieser Adresse oder ID.",
+      "self": "Du kannst deine eigene Plattformrolle nicht ändern — das muss ein anderer Plattform-Admin tun.",
+      "unchanged": "Das Konto hat diese Rolle bereits.",
+      "lastAdmin": "Dies ist der letzte Plattform-Admin; vergib die Admin-Rolle zuerst an jemand anderen.",
+      "emailNotVerified": "Das Konto hat seine E-Mail-Adresse nicht bestätigt; eine Plattformrolle erhalten nur bestätigte Konten.",
+      "ticketRequired": "Du bist der einzige Admin, der über diese Änderung entscheiden kann: Eine selbst genehmigte Änderung braucht eine Ticket-Referenz.",
+      "needsThirdAdmin": "Es gibt einen zweiten Plattform-Admin, der aber nicht über die Änderung seiner eigenen Rolle entscheiden kann. Vergib die Admin-Rolle zuerst an eine dritte Person oder nutze den Befehl ops:grant.",
+      "duplicate": "Für dieses Konto wartet bereits eine Rollenänderung auf eine Entscheidung.",
+      "fourEyes": "Du hast diese Anfrage gestellt; ein anderer Plattform-Admin muss sie anwenden (vier Augen).",
+      "stale": "Die Rolle des Kontos hat sich seit der Anfrage geändert; lehne sie ab und stelle eine neue.",
+      "expired": "Die Anfrage ist abgelaufen; stelle eine neue.",
+      "notPending": "Über die Anfrage wurde bereits entschieden.",
+      "notOperator": "Sitzungen werden nur bei Plattform-Operatoren widerrufen; das Kundenverzeichnis ist schreibgeschützt.",
+      "generic": "Die Aktion ist fehlgeschlagen. Versuche es erneut; der Fehler wurde aufgezeichnet."
+    },
+    "notices": {
+      "proposed": "Anfrage gestellt. Ein anderer Plattform-Admin muss sie anwenden; sie läuft nach sieben Tagen ab.",
+      "applied": "Rolle geändert und als Selbstgenehmigung festgehalten. {count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}}",
+      "approved": "Rolle geändert. {count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}}",
+      "declined": "Anfrage abgelehnt und festgehalten.",
+      "withdrawn": "Anfrage zurückgezogen und festgehalten.",
+      "sessionsRevoked": "{count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}} Das Konto muss sich neu anmelden."
+    },
+    "overview": {
+      "intro": "Konten mit Plattformrolle, ihr Zwei-Faktor-Status und ihre Sitzungen sowie die Vier-Augen-Regel für die Rollenvergabe. Kundenkonten stehen schreibgeschützt im Verzeichnis.",
+      "directory": "Kundenverzeichnis",
+      "grant": "Plattformrolle vergeben",
+      "rules": {
+        "title": "Vier-Augen-Status",
+        "admins": "{eligible} von {total, plural, one {# Plattform-Admin} other {# Plattform-Admins}} können über Anfragen entscheiden.",
+        "eligibleHint": "Entscheidende Admins haben eine bestätigte E-Mail{twoFactor, select, yes { und aktivierte Zwei-Faktor-Authentifizierung} other {}}.",
+        "on": "Eine von dir gestellte Rollenänderung wendet ein anderer Plattform-Admin an.",
+        "off": "Du bist der einzige entscheidende Admin: Von dir gestellte Rollenänderungen werden sofort angewendet, als Selbstgenehmigung festgehalten und brauchen eine Ticket-Referenz.",
+        "bootstrap": "Der erste Plattform-Admin wird mit dem Befehl ops:grant eingerichtet; danach ändern sich Rollen hier.",
+        "signOut": "Jede Rollenänderung löscht die gespeicherten Sitzungen des Kontos (erzwungene Abmeldung). Eine zwischengespeicherte Sitzung kann bis zu {minutes} Minuten gültig bleiben."
+      }
+    },
+    "requests": {
+      "title": "Ausstehende Rollenänderungen",
+      "intro": "Anfragen warten hier, bis ein anderer Plattform-Admin sie anwendet oder ablehnt. Sie laufen nach sieben Tagen ab.",
+      "empty": "Keine ausstehenden Rollenänderungen.",
+      "caption": "Anfragen zur Rollenänderung mit Konto, Änderung, Begründung, Antragsteller und möglichen Entscheidungen",
+      "account": "Konto",
+      "change": "Änderung",
+      "changeValue": "{from} → {to}",
+      "reason": "Begründung",
+      "ticket": "Ticket",
+      "noTicket": "Keine Ticket-Referenz",
+      "proposer": "Gestellt von",
+      "filed": "Gestellt {date}",
+      "expires": "Läuft ab {date}",
+      "decision": "Entscheidung",
+      "states": {
+        "pending": "Ausstehend",
+        "stale": "Veraltet",
+        "expired": "Abgelaufen"
+      },
+      "staleHint": "Die Rolle des Kontos hat sich inzwischen geändert ({role}); diese Anfrage kann nur noch abgelehnt werden.",
+      "approve": "Anwenden",
+      "decline": "Ablehnen",
+      "withdraw": "Zurückziehen",
+      "cannot": {
+        "fourEyes": "Du hast diese Anfrage gestellt — ein anderer Admin wendet sie an.",
+        "self": "Das ist dein eigenes Konto.",
+        "stale": "Rolle inzwischen geändert.",
+        "expired": "Abgelaufen.",
+        "lastAdmin": "Würde den letzten Admin entfernen.",
+        "emailNotVerified": "E-Mail nicht bestätigt."
+      },
+      "dialog": {
+        "approveTitle": "Rollenänderung für {name} anwenden?",
+        "approveText": "{from} → {to}. Das Konto wird überall abgemeldet und die Änderung mit beiden Admins im Audit-Log festgehalten.",
+        "approveConfirm": "Änderung anwenden",
+        "declineTitle": "Rollenänderung für {name} ablehnen?",
+        "declineText": "Für das Konto ändert sich nichts; die Entscheidung wird im Audit-Log festgehalten.",
+        "declineConfirm": "Ablehnen",
+        "withdrawTitle": "Deine Anfrage für {name} zurückziehen?",
+        "withdrawText": "Für das Konto ändert sich nichts; der Rückzug wird im Audit-Log festgehalten.",
+        "withdrawConfirm": "Zurückziehen",
+        "reason": "Notiz",
+        "reasonHint": "Optional, bis zu {max} Zeichen; wird im Audit-Log gespeichert."
+      }
+    },
+    "operators": {
+      "title": "Operatoren",
+      "caption": "Konten mit Plattformrolle, ihr Zwei-Faktor- und Bestätigungsstatus, letzte Anmeldung, aktive Sitzungen und verfügbare Aktionen",
+      "empty": "Noch keine Plattformnutzer",
+      "emptyText": "Richte den ersten Plattform-Admin mit dem Befehl ops:grant ein; weitere Rollen werden hier vergeben.",
+      "count": "{count, plural, one {# Operator} other {# Operatoren}}",
+      "columns": {
+        "account": "Konto",
+        "role": "Rolle",
+        "security": "Sicherheit",
+        "lastSignIn": "Letzte Anmeldung",
+        "sessions": "Sitzungen",
+        "since": "Seit",
+        "actions": "Aktionen"
+      },
+      "twoFactor": "Zwei-Faktor",
+      "email": "E-Mail",
+      "eligible": "Kann über Anfragen entscheiden",
+      "notEligible": "Kann nicht über Anfragen entscheiden",
+      "memberOf": "{count, plural, one {Mitglied in # Organisation} other {Mitglied in # Organisationen}}",
+      "pending": "Änderung ausstehend",
+      "noSession": "Keine gespeicherte Sitzung",
+      "lastSeen": "aktiv {date}",
+      "activeSessions": "{count, plural, =0 {keine aktiv} one {# aktiv} other {# aktiv}}",
+      "changeRole": "Rolle ändern",
+      "revokeSessions": "Überall abmelden",
+      "self": "Dein eigenes Konto: Deine Rolle ändert ein anderer Admin.",
+      "lastAdmin": "Letzter Plattform-Admin: kann nicht herabgestuft werden.",
+      "open": "{name} öffnen",
+      "openLabel": "Details"
+    },
+    "roleDialog": {
+      "title": "Plattformrolle von {name} ändern",
+      "grantTitle": "Plattformrolle vergeben",
+      "description": "Aktuelle Rolle: {role}.",
+      "grantDescription": "Die Person registriert sich zuerst als normale Nutzerin oder normaler Nutzer und bestätigt die E-Mail; danach wird die Rolle hier vergeben.",
+      "email": "E-Mail-Adresse",
+      "emailHint": "Exakte Adresse eines bestehenden, bestätigten Kontos.",
+      "role": "Neue Rolle",
+      "reason": "Begründung",
+      "reasonHint": "Mindestens {min} Zeichen, höchstens {max}. Wird im Audit-Log gespeichert.",
+      "ticket": "Ticket-Referenz",
+      "ticketHint": "Zum Beispiel OPS-1234. Pflicht, wenn kein anderer Admin entscheiden kann (selbst genehmigte Änderung).",
+      "modeProposal": "Vier Augen: Das stellt eine Anfrage, die ein anderer Plattform-Admin anwendet.",
+      "modeSelf": "Du bist der einzige Admin, der entscheiden kann: Die Änderung wird sofort angewendet, als Selbstgenehmigung festgehalten und braucht eine Ticket-Referenz.",
+      "signOut": "Das Konto wird überall abgemeldet, sobald die Änderung angewendet wird.",
+      "submit": "Anfrage stellen",
+      "submitSelf": "Änderung anwenden"
+    },
+    "revokeDialog": {
+      "title": "{name} überall abmelden?",
+      "text": "Jede gespeicherte Sitzung des Kontos wird gelöscht; die Person muss sich neu anmelden (mit Zwei-Faktor). Die Aktion wird im Audit-Log festgehalten.",
+      "selfWarning": "Das ist dein eigenes Konto: Du wirst ebenfalls abgemeldet.",
+      "cache": "Eine zwischengespeicherte Sitzung kann bis zu {minutes} Minuten gültig bleiben.",
+      "reason": "Begründung",
+      "reasonHint": "Mindestens {min} Zeichen; wird im Audit-Log gespeichert.",
+      "confirm": "Überall abmelden"
+    },
+    "history": {
+      "title": "Letzte Rollenänderungen",
+      "intro": "Die neuesten {count} Rolleneinträge des Audit-Logs — Anfragen, angewendete Änderungen (Konsole und CLI), Ablehnungen und Rückzüge.",
+      "empty": "Noch keine Rollenänderungen aufgezeichnet.",
+      "caption": "Neueste Audit-Einträge zu Rollenänderungen mit Zeitpunkt, Akteur, Aktion, Konto und Änderung",
+      "when": "Wann",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "account": "Konto",
+      "change": "Änderung",
+      "actions": {
+        "propose": "Gestellt",
+        "set": "Angewendet",
+        "decline": "Abgelehnt",
+        "withdraw": "Zurückgezogen"
+      },
+      "selfApproved": "selbst genehmigt",
+      "actorKinds": {
+        "platform": "Plattform-Admin",
+        "system": "System",
+        "unknown": "Unbekannt"
+      },
+      "request": "Anfrage {id}",
+      "sessionsRevoked": "{count, plural, one {# Sitzung widerrufen} other {# Sitzungen widerrufen}}",
+      "reason": "Begründung: {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Kundenverzeichnis",
+      "intro": "Jedes Konto mit seinen Organisationen und Rollen, Zwei-Faktor-Status, Erstellung und letzter Anmeldung — schreibgeschützte Metadaten, keine Endnutzerdaten.",
+      "back": "Plattformnutzer",
+      "filters": {
+        "legend": "Filtern und sortieren",
+        "search": "Suche",
+        "searchPlaceholder": "Name, E-Mail oder ID",
+        "kind": "Konten",
+        "kinds": {
+          "all": "Alle",
+          "operators": "Mit Plattformrolle",
+          "customers": "Nur Kunden"
+        },
+        "twoFactor": "Zwei-Faktor",
+        "twoFactorAll": "Alle",
+        "twoFactorOn": "Aktiviert",
+        "twoFactorOff": "Nicht aktiviert",
+        "sort": "Sortieren nach",
+        "sorts": {
+          "created": "Erstellt",
+          "name": "Name",
+          "email": "E-Mail",
+          "signin": "Letzte Anmeldung"
+        },
+        "direction": "Richtung",
+        "asc": "Aufsteigend",
+        "desc": "Absteigend",
+        "apply": "Anwenden",
+        "reset": "Zurücksetzen"
+      },
+      "count": "{count, plural, one {# Konto} other {# Konten}}",
+      "countFiltered": "{count, plural, one {# passendes Konto} other {# passende Konten}}",
+      "operatorsCount": "{count} mit Plattformrolle",
+      "caption": "Konten mit Mitgliedschaften, Rollen, Zwei-Faktor- und Bestätigungsstatus, letzter Anmeldung und Erstellungsdatum",
+      "columns": {
+        "account": "Konto",
+        "memberships": "Organisationen",
+        "security": "Sicherheit",
+        "lastSignIn": "Letzte Anmeldung",
+        "created": "Erstellt"
+      },
+      "noMemberships": "Keine Organisation",
+      "moreMemberships": "+{count} weitere",
+      "open": "{name} öffnen",
+      "empty": "Noch keine Konten",
+      "emptyText": "Konten erscheinen hier, sobald sich die erste Person registriert.",
+      "emptyFiltered": "Kein Konto passt",
+      "emptyFilteredText": "Lockere die Filter oder leere die Suche.",
+      "pagination": {
+        "nav": "Seiten des Verzeichnisses",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {page}"
+      },
+      "methods": "Letzte Anmeldung: neueste gespeicherte Sitzung (Zeilen verschwinden bei Abmeldung und Bereinigung; „keine gespeicherte Sitzung“ heißt also nicht, dass sich die Person nie angemeldet hat). Aktiv: Sitzungen, die noch nicht abgelaufen sind."
+    },
+    "detail": {
+      "back": "Alle Plattformnutzer",
+      "backDirectory": "Kundenverzeichnis",
+      "id": "ID",
+      "created": "Erstellt {date}",
+      "updated": "Aktualisiert {date}",
+      "generated": "Geladen {date}",
+      "sections": {
+        "profile": "Konto",
+        "memberships": "Organisationen",
+        "sessions": "Sitzungen",
+        "requests": "Ausstehende Rollenänderung",
+        "audit": "Audit-Einträge zu diesem Konto"
+      },
+      "profile": {
+        "role": "Plattformrolle",
+        "email": "E-Mail",
+        "verified": "E-Mail-Bestätigung",
+        "twoFactor": "Zwei-Faktor",
+        "twoFactorVerified": "Zwei-Faktor verifiziert",
+        "twoFactorNotSetUp": "Nicht eingerichtet",
+        "passkeys": "{count, plural, =0 {Keine Passkeys} one {# Passkey} other {# Passkeys}}",
+        "locale": "Sprache",
+        "updated": "Zuletzt aktualisiert",
+        "customer": "Kundenkonto ohne Plattformrolle: hier schreibgeschützt."
+      },
+      "memberships": {
+        "caption": "Organisationen, denen das Konto angehört, mit Rolle und Beitrittsdatum",
+        "organisation": "Organisation",
+        "role": "Rolle",
+        "joined": "Beigetreten",
+        "suspended": "Gesperrt",
+        "empty": "Mitglied in keiner Organisation.",
+        "open": "{name} öffnen"
+      },
+      "sessions": {
+        "caption": "Gespeicherte Sitzungen des Kontos mit Anmeldung, letzter Aktivität, Ablauf, Status und aktiver Organisation",
+        "created": "Angemeldet",
+        "lastActive": "Letzte Aktivität",
+        "expires": "Läuft ab",
+        "state": "Status",
+        "states": {
+          "active": "Aktiv",
+          "expired": "Abgelaufen"
+        },
+        "organisation": "Aktive Organisation",
+        "summary": "{active, plural, one {# aktive Sitzung} other {# aktive Sitzungen}} · {expired, plural, one {# abgelaufen} other {# abgelaufen}}",
+        "empty": "Keine gespeicherten Sitzungen.",
+        "truncated": "Die {count} neuesten Sitzungen werden angezeigt.",
+        "noSecrets": "Sitzungs-Tokens, IP-Adressen und User-Agents werden hier nie angezeigt."
+      },
+      "audit": {
+        "caption": "Audit-Einträge mit diesem Konto als Ziel, mit Zeitpunkt, Akteur, Aktion und geschwärzten Details",
+        "when": "Wann",
+        "actor": "Akteur",
+        "action": "Aktion",
+        "details": "Details",
+        "show": "{count, plural, one {# Detail anzeigen} other {# Details anzeigen}}",
+        "noDetails": "Keine Details",
+        "empty": "Keine Audit-Einträge zu diesem Konto.",
+        "limit": "Die {count} neuesten Einträge werden angezeigt; das Audit-Modul hat das vollständige Protokoll."
+      }
+    }
+  }
+}

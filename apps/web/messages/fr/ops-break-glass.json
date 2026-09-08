@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "En attente d’approbation",
+      "active": "Accès actifs",
+      "admins": "Admins approbateurs",
+      "adminsHint": "Admins plateforme avec e-mail vérifié{twoFactor, select, yes { et double authentification} other {}} pouvant approuver.",
+      "fourEyesOn": "Quatre yeux : un second admin plateforme approuve vos demandes.",
+      "fourEyesOff": "Vous êtes le seul admin approbateur : vos propres demandes sont auto-approuvées et exigent une référence de ticket.",
+      "noAdmins": "Aucun admin plateforme ne peut approuver pour le moment."
+    },
+    "rules": {
+      "readOnly": "Chaque accès est en lecture seule : le tableau de bord du client refuse les modifications, et la transaction en base de données est elle aussi en lecture seule.",
+      "audited": "Chaque demande, approbation, révocation et chaque page ouverte sous un accès est consignée dans le journal d’audit de l’organisation avec l’identifiant de l’accès.",
+      "notified": "Les propriétaires de l’organisation reçoivent un e-mail à l’approbation et à la révocation d’un accès actif."
+    },
+    "request": {
+      "title": "Demander un accès",
+      "text": "Accès en lecture seule à une organisation pour une durée limitée. Un admin plateforme approuve ; le compte à rebours démarre à l’approbation.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "Sélectionnez une organisation",
+      "organizationHint": "{count, plural, =0 {Aucune organisation pour l’instant} one {# organisation} other {# organisations}}, triées par nom.",
+      "reason": "Motif",
+      "reasonHint": "Au moins {min} caractères : ce que vous devez consulter et pourquoi — le signalement du client, le contexte du ticket.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Référence du ticket",
+      "ticketHint": "Par exemple SUP-1234. Obligatoire lorsque vous approuvez votre propre demande (cas d’un admin unique).",
+      "optional": "facultatif",
+      "duration": "Durée",
+      "durations": {
+        "15": "15 minutes",
+        "30": "30 minutes",
+        "60": "1 heure",
+        "120": "2 heures",
+        "240": "4 heures"
+      },
+      "submit": "Demander un accès en lecture seule"
+    },
+    "queue": {
+      "title": "File d’approbation",
+      "caption": "Demandes break-glass ouvertes",
+      "empty": "Aucune demande ouverte",
+      "emptyText": "Les demandes attendent ici qu’un admin plateforme les approuve ou les refuse.",
+      "requestedBy": "Demandé par",
+      "organization": "Organisation",
+      "reason": "Motif",
+      "ticket": "Ticket",
+      "duration": "Durée",
+      "requestedAt": "Demandé le",
+      "actions": "Actions",
+      "noTicket": "Aucune référence de ticket",
+      "you": "vous",
+      "approve": "Approuver",
+      "decline": "Refuser",
+      "withdraw": "Retirer",
+      "adminOnly": "Seuls les admins plateforme approuvent.",
+      "fourEyesBlocked": "Un autre admin plateforme doit approuver votre propre demande (quatre yeux).",
+      "ticketRequired": "L’auto-approbation exige une référence de ticket : retirez la demande et déposez-la à nouveau avec un ticket.",
+      "selfApprovalHint": "Aucun autre admin ne peut approuver : cette approbation est consignée comme auto-approuvée.",
+      "approveDialog": {
+        "title": "Approuver l’accès en lecture seule ?",
+        "description": "{name} obtient dès maintenant un accès en lecture seule à {organization} pour {duration}. Les propriétaires de l’organisation reçoivent un e-mail et chaque page ouverte est consignée avec l’identifiant de l’accès.",
+        "confirm": "Approuver l’accès"
+      },
+      "declineDialog": {
+        "title": "Refuser cette demande ?",
+        "description": "La demande de {name} pour {organization} est close sans accès. La décision est consignée dans le journal d’audit.",
+        "confirm": "Refuser la demande"
+      },
+      "withdrawDialog": {
+        "title": "Retirer votre demande ?",
+        "description": "Votre demande pour {organization} est close sans accès. Vous pouvez en déposer une nouvelle à tout moment.",
+        "confirm": "Retirer la demande"
+      }
+    },
+    "active": {
+      "title": "Accès actifs",
+      "caption": "Accès break-glass actuellement actifs",
+      "empty": "Aucun accès actif",
+      "emptyText": "Personne n’a actuellement d’accès en lecture seule à une organisation cliente.",
+      "operator": "Opérateur",
+      "organization": "Organisation",
+      "window": "Fenêtre",
+      "until": "Jusqu’au {until}",
+      "approvedBy": "Approuvé par {name}",
+      "selfApproved": "auto-approuvé",
+      "ticket": "Ticket {ticket}",
+      "notified": "Propriétaires informés par e-mail",
+      "notNotified": "Propriétaires non informés — vérifiez le transport e-mail",
+      "actions": "Actions",
+      "open": "Ouvrir le tableau de bord (lecture seule)",
+      "revoke": "Révoquer",
+      "revokeDialog": {
+        "title": "Révoquer l’accès maintenant ?",
+        "description": "L’accès à {organization} prend fin immédiatement ; l’opérateur le perd à la prochaine requête et les propriétaires reçoivent un e-mail.",
+        "confirm": "Révoquer l’accès"
+      },
+      "countdown": {
+        "remaining": "{time} restantes",
+        "hoursMinutes": "{hours} h {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "moins d’une minute",
+        "expired": "Expiré"
+      }
+    },
+    "history": {
+      "title": "Historique",
+      "caption": "Entrées break-glass closes, expirées et révoquées",
+      "empty": "Rien d’enregistré pour l’instant",
+      "emptyText": "Les demandes closes ainsi que les accès expirés et révoqués apparaissent ici.",
+      "truncated": "Seules les entrées les plus récentes sont affichées ; l’historique complet est dans le journal d’audit.",
+      "when": "Déposée le",
+      "state": "État",
+      "operator": "Opérateur",
+      "organization": "Organisation",
+      "details": "Détails",
+      "approved": "Approuvé le {when}",
+      "revoked": "Terminé le {when}",
+      "window": "Fenêtre de {minutes} min"
+    },
+    "states": {
+      "pending": "En attente d’approbation",
+      "stale": "Demande expirée",
+      "withdrawn": "Retirée ou refusée",
+      "active": "Actif",
+      "revoked": "Révoqué",
+      "expired": "Expiré"
+    },
+    "notices": {
+      "requested": "Demande déposée. Un admin plateforme doit l’approuver.",
+      "approved": "Accès approuvé ; il est actif dès maintenant.",
+      "revoked": "Accès révoqué.",
+      "withdrawn": "Demande retirée.",
+      "declined": "Demande refusée.",
+      "notified": "{sent, plural, =0 {Aucun propriétaire n’a reçu d’e-mail} one {# propriétaire informé par e-mail} other {# propriétaires informés par e-mail}}{failed, plural, =0 {} one {, # envoi a échoué} other {, # envois ont échoué}}."
+    },
+    "errors": {
+      "generic": "Une erreur s’est produite. Veuillez réessayer.",
+      "forbidden": "Vous n’êtes pas autorisé à faire cela.",
+      "notFound": "Cette entrée n’existe plus.",
+      "validation": "Vérifiez les champs signalés.",
+      "organization": "Sélectionnez une organisation.",
+      "reason": "Le motif doit compter entre {min} et {max} caractères.",
+      "ticketRef": "La référence de ticket peut contenir des lettres, des chiffres, des espaces et - _ # : . / (jusqu’à {max} caractères).",
+      "durationMinutes": "Choisissez l’une des durées proposées.",
+      "duplicate": "Vous avez déjà une demande ouverte ou un accès actif pour cette organisation.",
+      "notPending": "Cette demande n’est plus ouverte.",
+      "stale": "Cette demande a expiré sans approbation. Déposez-en une nouvelle.",
+      "fourEyes": "Un autre admin plateforme doit approuver votre propre demande.",
+      "ticketRequired": "L’auto-approbation exige une référence de ticket.",
+      "notActive": "Cet accès n’est pas actif.",
+      "notGrantee": "Seul l’opérateur à qui l’accès a été accordé peut ouvrir le tableau de bord.",
+      "confirmRequired": "Confirmez d’abord l’action dans la boîte de dialogue."
+    },
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer"
+    }
+  }
+}

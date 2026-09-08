@@ -1,0 +1,263 @@
+{
+  "opsRevenue": {
+    "context": {
+      "asOf": "Aggiornato al {at}",
+      "period": "Periodo di utilizzo {period}",
+      "ledger": "Registro di fatturazione: ultimo evento Stripe {at}",
+      "ledgerNone": "Registro di fatturazione: nessun evento webhook Stripe ricevuto finora",
+      "ledgerFailed": "{count, plural, one {# evento webhook non riuscito} other {# eventi webhook non riusciti}}",
+      "stripe": {
+        "test": "Stripe in modalità test",
+        "live": "Stripe in modalità live",
+        "unknown": "Stripe configurato, modalità sconosciuta",
+        "none": "Stripe non configurato"
+      }
+    },
+    "export": {
+      "subscriptions": "Esporta abbonamenti (CSV)",
+      "overage": "Esporta eccedenze (CSV)",
+      "hint": "Ogni esportazione viene registrata nel log di audit della piattaforma."
+    },
+    "kpis": {
+      "mrr": {
+        "label": "MRR",
+        "hint": "{count, plural, one {# abbonamento con prezzo} other {# abbonamenti con prezzo}} a prezzo di listino"
+      },
+      "arr": {
+        "label": "ARR",
+        "hint": "MRR × 12"
+      },
+      "paying": {
+        "label": "Abbonamenti a pagamento",
+        "hint": "{monthly} mensili · {yearly} annuali"
+      },
+      "atRisk": {
+        "label": "MRR a rischio",
+        "hint": "{count, plural, one {# abbonamento scaduto o non pagato} other {# abbonamenti scaduti o non pagati}}"
+      }
+    },
+    "plans": {
+      "title": "Ricavi per piano",
+      "intro": "Abbonamenti attivi per piano del catalogo e intervallo, valutati ai prezzi di listino odierni. Prove e pagamenti falliti sono mostrati per contesto e non contano mai nell’MRR.",
+      "caption": "Abbonamenti e MRR per piano",
+      "columns": {
+        "plan": "Piano",
+        "active": "Attivi",
+        "monthly": "Mensili",
+        "yearly": "Annuali",
+        "trialing": "In prova",
+        "pastDue": "Scaduti",
+        "mrr": "MRR",
+        "share": "Quota"
+      },
+      "customPrice": "Prezzo su misura — escluso dall’MRR",
+      "other": "Id piano sconosciuto",
+      "empty": {
+        "title": "Ancora nessun abbonamento",
+        "text": "Il registro di fatturazione non contiene righe di abbonamento. Si popola tramite i webhook Stripe non appena il primo checkout viene completato."
+      },
+      "excluded": {
+        "title": "Senza prezzo",
+        "custom_price": "{count, plural, one {# abbonamento Enterprise attivo} other {# abbonamenti Enterprise attivi}} (prezzo contrattuale)",
+        "unknown_plan": "{count, plural, one {# abbonamento attivo} other {# abbonamenti attivi}} su un piano che il catalogo non conosce",
+        "unknown_interval": "{count, plural, one {# abbonamento attivo} other {# abbonamenti attivi}} senza intervallo di fatturazione"
+      }
+    },
+    "trials": {
+      "title": "Prove",
+      "intro": "Prova del catalogo: {days} giorni di {plan}, {card}. Non si converte mai da sola: un piano a pagamento richiede un checkout esplicito.",
+      "noCard": "senza carta",
+      "card": "carta obbligatoria",
+      "stats": {
+        "active": "In corso",
+        "endingSoon": "Termina entro {days} giorni",
+        "expired": "Terminata, ancora segnata come prova"
+      },
+      "noData": {
+        "title": "Nessun dato sulle prove",
+        "text": "Nessun abbonamento nel registro di fatturazione ha uno stato di prova (stato «trialing» o una fine prova). Non viene conteggiato nulla."
+      },
+      "caption": "Prove in corso",
+      "columns": {
+        "organisation": "Organizzazione",
+        "plan": "Piano",
+        "trialEnd": "Fine della prova",
+        "remaining": "Rimanenti",
+        "stripe": "Stripe"
+      },
+      "daysLeft": "{count, plural, =0 {termina oggi} one {# giorno} other {# giorni}}",
+      "ended": "{count, plural, one {terminata # giorno fa} other {terminata # giorni fa}}",
+      "noEnd": "nessuna data di fine"
+    },
+    "pastDue": {
+      "title": "Scaduti e non pagati",
+      "intro": "Abbonamenti il cui pagamento non è andato a buon fine. Il periodo di tolleranza viene dal registro (sette giorni dopo la segnalazione di Stripe); poi si applicano i limiti rigidi.",
+      "caption": "Abbonamenti scaduti e non pagati",
+      "graceOver": "periodo di tolleranza scaduto: si applicano i limiti rigidi",
+      "empty": {
+        "title": "Nessun pagamento fallito",
+        "text": "Al momento nessun abbonamento è scaduto o non pagato."
+      },
+      "columns": {
+        "organisation": "Organizzazione",
+        "plan": "Piano",
+        "status": "Stato",
+        "grace": "Tolleranza fino al",
+        "periodEnd": "Fine periodo",
+        "mrr": "MRR a rischio",
+        "stripe": "Stripe"
+      }
+    },
+    "cancellations": {
+      "title": "Disdette",
+      "intro": "Abbonamenti disdetti in base alla data della richiesta di disdetta (canceled_at di Stripe), con l’MRR a prezzo di listino che portavano. Le disdette programmate su abbonamenti in corso sono elencate a parte.",
+      "window": "Ultimi {days} giorni",
+      "lost": "{amount} di MRR",
+      "pending": "Programmate",
+      "pendingHint": "{amount} di MRR termina alla data programmata",
+      "recentTitle": "Disdetti negli ultimi {days} giorni",
+      "recentCaption": "Abbonamenti disdetti di recente",
+      "pendingTitle": "Disdette programmate",
+      "pendingCaption": "Abbonamenti con una disdetta programmata",
+      "emptyRecent": "Nessun abbonamento è stato disdetto negli ultimi {days} giorni.",
+      "emptyPending": "Nessuna disdetta è programmata.",
+      "columns": {
+        "organisation": "Organizzazione",
+        "plan": "Piano",
+        "interval": "Intervallo",
+        "canceledAt": "Disdetto il",
+        "cancelAt": "Termina il",
+        "mrr": "MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "overage": {
+      "title": "Esposizione per eccedenze",
+      "intro": "Organizzazioni oltre il loro limite mensile di eventi nel periodo {period}: pacchetti a prezzo di listino del catalogo, ridotti a ciò che la politica di eccedenza di ogni organizzazione consente alla piattaforma di fatturare. Un prezzo di listino non è una fattura.",
+      "total": "Esposizione fatturabile",
+      "totalHint": "{list} a prezzo di listino su {count, plural, one {# organizzazione} other {# organizzazioni}}",
+      "contractual": "{count, plural, one {# organizzazione} other {# organizzazioni}} con eccedenza contrattuale (nessun prezzo di listino)",
+      "caption": "Eccedenza per organizzazione",
+      "empty": {
+        "title": "Nessuna eccedenza",
+        "text": "Nessuna organizzazione supera il proprio limite di eventi nel periodo {period}."
+      },
+      "columns": {
+        "organisation": "Organizzazione",
+        "plan": "Piano",
+        "billable": "Eventi fatturabili",
+        "limit": "Limite",
+        "over": "Oltre",
+        "packs": "Pacchetti",
+        "list": "Prezzo di listino",
+        "policy": "Politica",
+        "exposure": "Esposizione"
+      },
+      "packInfo": "{packs} × {events}",
+      "policies": {
+        "allow": "Consenti",
+        "cost_limit": "Limite di costo",
+        "pause": "Pausa"
+      },
+      "paused": "in pausa dal {when}",
+      "contractualCell": "Contrattuale"
+    },
+    "usage": {
+      "title": "Organizzazioni con il maggior utilizzo",
+      "intro": "Le {count} organizzazioni con più eventi fatturabili nel periodo {period}, dai contatori di utilizzo: solo totali, nessun dato sugli eventi.",
+      "caption": "Organizzazioni ordinate per eventi fatturabili",
+      "empty": {
+        "title": "Nessun contatore di utilizzo",
+        "text": "Nessuna organizzazione ha ancora contatori di utilizzo per il periodo {period}. I contatori vengono scritti dal job di utilizzo."
+      },
+      "columns": {
+        "rank": "#",
+        "organisation": "Organizzazione",
+        "plan": "Piano",
+        "billable": "Eventi fatturabili",
+        "accepted": "Accettati",
+        "limit": "Limite",
+        "used": "Del limite",
+        "sites": "Siti"
+      },
+      "noLimit": "nessun tetto",
+      "noPlan": "nessun abbonamento"
+    },
+    "invoices": {
+      "title": "Fatture recenti (Stripe)",
+      "intro": "Le ultime fatture lette in tempo reale da Stripe con la chiave configurata. Gli importi sono quelli di Stripe, nella valuta della fattura.",
+      "caption": "Fatture Stripe recenti",
+      "notConfigured": {
+        "title": "Stripe non configurato",
+        "text": "In questo ambiente non è impostata alcuna chiave segreta Stripe, quindi le fatture non possono essere lette."
+      },
+      "forbidden": {
+        "title": "Non consentito con la chiave attuale",
+        "text": "La chiave Stripe configurata è limitata e non ha accesso in lettura alle fatture ({detail}). Apri le fatture nella dashboard di Stripe oppure estendi i permessi della chiave."
+      },
+      "error": {
+        "title": "Stripe non ha risposto",
+        "text": "Impossibile caricare l’elenco delle fatture ({detail}). Il resto di questa pagina proviene dal registro di fatturazione e non ne è influenzato."
+      },
+      "empty": {
+        "title": "Nessuna fattura",
+        "text": "Stripe non ha restituito fatture per questo account."
+      },
+      "more": "Stripe conserva più fatture di quelle mostrate qui.",
+      "columns": {
+        "number": "Numero",
+        "organisation": "Organizzazione",
+        "status": "Stato",
+        "due": "Importo dovuto",
+        "paid": "Pagato",
+        "created": "Creata il",
+        "dueDate": "Scadenza",
+        "stripe": "Stripe"
+      },
+      "statuses": {
+        "draft": "Bozza",
+        "open": "Aperta",
+        "paid": "Pagata",
+        "uncollectible": "Inesigibile",
+        "void": "Annullata",
+        "unknown": "Sconosciuto"
+      },
+      "unknownCustomer": "Non presente nel registro",
+      "noNumber": "senza numero"
+    },
+    "stripe": {
+      "customer": "Cliente",
+      "subscription": "Abbonamento",
+      "invoice": "Fattura",
+      "opensNewTab": "apre la dashboard di Stripe in una nuova scheda",
+      "noId": "nessun id Stripe"
+    },
+    "status": {
+      "none": "Nessuno",
+      "trialing": "In prova",
+      "active": "Attivo",
+      "past_due": "Scaduto",
+      "canceled": "Disdetto",
+      "unpaid": "Non pagato",
+      "incomplete": "Incompleto",
+      "incomplete_expired": "Incompleto, scaduto",
+      "paused": "In pausa"
+    },
+    "interval": {
+      "monthly": "Mensile",
+      "yearly": "Annuale",
+      "unknown": "Sconosciuto"
+    },
+    "org": {
+      "suspended": "Sospesa"
+    },
+    "method": {
+      "title": "Come nascono questi numeri",
+      "mrr": "L’MRR somma il prezzo di listino del catalogo di ogni abbonamento con stato «active»: i piani mensili al prezzo mensile, quelli annuali a un dodicesimo del prezzo annuale. Importi Stripe, sconti, imposte e note di credito non vengono applicati.",
+      "atRisk": "L’MRR a rischio è lo stesso calcolo per gli abbonamenti scaduti o non pagati.",
+      "trials": "Le prove non contano mai nell’MRR. La sezione Prove mostra solo ciò che contiene il registro.",
+      "overage": "L’eccedenza confronta i contatori di utilizzo del periodo con il limite del piano e i pacchetti del catalogo. La politica «Pausa» non fattura nulla; «Limite di costo» fattura al massimo i pacchetti entro il limite.",
+      "invoices": "Le fatture vengono lette in tempo reale da Stripe e sono gli unici importi Stripe in questa pagina. Nulla qui è un valore contabilizzato; il registro segue i webhook Stripe."
+    }
+  }
+}

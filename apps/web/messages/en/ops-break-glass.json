@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "Awaiting approval",
+      "active": "Active grants",
+      "admins": "Approving admins",
+      "adminsHint": "Platform admins with a verified e-mail{twoFactor, select, yes { and two-factor} other {}} who can approve.",
+      "fourEyesOn": "Four eyes: a second platform admin approves your requests.",
+      "fourEyesOff": "You are the only approving admin: your own requests are self-approved and need a ticket reference.",
+      "noAdmins": "No platform admin can approve at the moment."
+    },
+    "rules": {
+      "readOnly": "Every grant is read-only: the tenant's dashboard refuses changes, and the database transaction is read-only too.",
+      "audited": "Every request, approval, revocation and every page view under a grant is recorded in the organisation's audit log with the grant id.",
+      "notified": "The organisation's owners are e-mailed on approval and when an active grant is revoked."
+    },
+    "request": {
+      "title": "Request access",
+      "text": "Read-only access to one organisation for a limited time. A platform admin approves; the clock starts at approval.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "Select an organisation",
+      "organizationHint": "{count, plural, =0 {No organisations yet} one {# organisation} other {# organisations}}, sorted by name.",
+      "reason": "Reason",
+      "reasonHint": "At least {min} characters: what you need to see and why — the customer's report, the ticket context.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Ticket reference",
+      "ticketHint": "For example SUP-1234. Required when you approve your own request (single-admin fallback).",
+      "optional": "optional",
+      "duration": "Duration",
+      "durations": {
+        "15": "15 minutes",
+        "30": "30 minutes",
+        "60": "1 hour",
+        "120": "2 hours",
+        "240": "4 hours"
+      },
+      "submit": "Request read-only access"
+    },
+    "queue": {
+      "title": "Approval queue",
+      "caption": "Open break-glass requests",
+      "empty": "No open requests",
+      "emptyText": "Requests wait here until a platform admin approves or declines them.",
+      "requestedBy": "Requested by",
+      "organization": "Organisation",
+      "reason": "Reason",
+      "ticket": "Ticket",
+      "duration": "Duration",
+      "requestedAt": "Requested",
+      "actions": "Actions",
+      "noTicket": "No ticket reference",
+      "you": "you",
+      "approve": "Approve",
+      "decline": "Decline",
+      "withdraw": "Withdraw",
+      "adminOnly": "Only platform admins approve.",
+      "fourEyesBlocked": "Another platform admin has to approve your own request (four eyes).",
+      "ticketRequired": "Self-approval needs a ticket reference: withdraw the request and file it again with one.",
+      "selfApprovalHint": "No other admin can approve: this approval is recorded as self-approved.",
+      "approveDialog": {
+        "title": "Approve read-only access?",
+        "description": "{name} gets read-only access to {organization} for {duration}, starting now. The organisation's owners are e-mailed and every page view is recorded with the grant id.",
+        "confirm": "Approve access"
+      },
+      "declineDialog": {
+        "title": "Decline this request?",
+        "description": "The request by {name} for {organization} is closed without access. The decision is recorded in the audit log.",
+        "confirm": "Decline request"
+      },
+      "withdrawDialog": {
+        "title": "Withdraw your request?",
+        "description": "Your request for {organization} is closed without access. You can file a new one at any time.",
+        "confirm": "Withdraw request"
+      }
+    },
+    "active": {
+      "title": "Active grants",
+      "caption": "Currently active break-glass grants",
+      "empty": "No active grant",
+      "emptyText": "Nobody has read-only access to a customer organisation right now.",
+      "operator": "Operator",
+      "organization": "Organisation",
+      "window": "Window",
+      "until": "Until {until}",
+      "approvedBy": "Approved by {name}",
+      "selfApproved": "self-approved",
+      "ticket": "Ticket {ticket}",
+      "notified": "Owners e-mailed",
+      "notNotified": "Owners not e-mailed — check the mail transport",
+      "actions": "Actions",
+      "open": "Open dashboard (read-only)",
+      "revoke": "Revoke",
+      "revokeDialog": {
+        "title": "Revoke access now?",
+        "description": "The grant for {organization} ends immediately; the operator loses access with the next request and the owners are e-mailed.",
+        "confirm": "Revoke access"
+      },
+      "countdown": {
+        "remaining": "{time} remaining",
+        "hoursMinutes": "{hours} h {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "under a minute",
+        "expired": "Expired"
+      }
+    },
+    "history": {
+      "title": "History",
+      "caption": "Closed, expired and revoked break-glass entries",
+      "empty": "Nothing recorded yet",
+      "emptyText": "Closed requests, expired and revoked grants appear here.",
+      "truncated": "Only the most recent entries are shown; the complete trail is in the audit log.",
+      "when": "Filed",
+      "state": "State",
+      "operator": "Operator",
+      "organization": "Organisation",
+      "details": "Details",
+      "approved": "Approved {when}",
+      "revoked": "Ended {when}",
+      "window": "{minutes} min window"
+    },
+    "states": {
+      "pending": "Awaiting approval",
+      "stale": "Request expired",
+      "withdrawn": "Withdrawn or declined",
+      "active": "Active",
+      "revoked": "Revoked",
+      "expired": "Expired"
+    },
+    "notices": {
+      "requested": "Request filed. A platform admin has to approve it.",
+      "approved": "Access approved; the grant is active now.",
+      "revoked": "Access revoked.",
+      "withdrawn": "Request withdrawn.",
+      "declined": "Request declined.",
+      "notified": "{sent, plural, =0 {No owner was e-mailed} one {# owner e-mailed} other {# owners e-mailed}}{failed, plural, =0 {} one {, # delivery failed} other {, # deliveries failed}}."
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "forbidden": "You are not allowed to do that.",
+      "notFound": "This entry no longer exists.",
+      "validation": "Check the highlighted fields.",
+      "organization": "Select an organisation.",
+      "reason": "The reason needs between {min} and {max} characters.",
+      "ticketRef": "The ticket reference may contain letters, digits, spaces and - _ # : . / (up to {max} characters).",
+      "durationMinutes": "Choose one of the offered durations.",
+      "duplicate": "You already have an open request or an active grant for this organisation.",
+      "notPending": "This request is no longer open.",
+      "stale": "This request expired unapproved. File a new one.",
+      "fourEyes": "Another platform admin has to approve your own request.",
+      "ticketRequired": "Self-approval needs a ticket reference.",
+      "notActive": "This grant is not active.",
+      "notGrantee": "Only the operator the grant was issued to can open the dashboard.",
+      "confirmRequired": "Confirm the action in the dialog first."
+    },
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close"
+    }
+  }
+}

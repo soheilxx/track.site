@@ -1,0 +1,309 @@
+{
+  "opsControls": {
+    "subnav": {
+      "label": "Bereiche der Steuerung",
+      "overview": "Kill Switch & Sperrungen",
+      "flags": "Feature-Flags",
+      "announcements": "Ankündigungen"
+    },
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "working": "Wird ausgeführt…",
+      "never": "nie",
+      "unknown": "unbekannt",
+      "on": "An",
+      "off": "Aus",
+      "optional": "optional",
+      "noPlan": "kein Abonnement"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "errors": {
+      "forbidden": "Diese Aktion erfordert die Rolle Plattform-Admin mit Zwei-Faktor-Authentifizierung.",
+      "invalid": "Bitte die markierten Felder prüfen.",
+      "not_found": "Dieser Eintrag existiert nicht (mehr).",
+      "unchanged": "Nichts zu ändern — der Zustand ist bereits so.",
+      "confirmation": "Das Bestätigungswort stimmt nicht.",
+      "reserved": "Schlüssel, die mit „platform.“ beginnen, sind Systemschaltern vorbehalten.",
+      "exists": "Ein Flag mit diesem Schlüssel existiert bereits.",
+      "generic": "Das hat nicht geklappt. Bitte erneut versuchen."
+    },
+    "fieldErrors": {
+      "required": "Pflichtfeld.",
+      "invalid": "Ungültiger Wert.",
+      "long": "Zu lang.",
+      "window": "Das Ende muss nach dem Start liegen.",
+      "not_found": "Keine Organisation mit diesem Slug oder dieser ID.",
+      "reserved": "Reserviertes Präfix „platform.“.",
+      "exists": "Existiert bereits.",
+      "confirmation": "Das Wort genau wie angezeigt eingeben."
+    },
+    "notices": {
+      "killSwitchEngaged": "Kill Switch aktiviert. Der Collector pausiert Ingestion, Konfigurationsauslieferung und eingehende Webhooks innerhalb von etwa fünf Sekunden.",
+      "killSwitchReleased": "Kill Switch gelöst. Der Collector nimmt den Betrieb innerhalb von etwa fünf Sekunden wieder auf.",
+      "suspended": "Organisation gesperrt. Ingestion und Konfigurationsauslieferung ihrer Sites pausieren innerhalb des Cache-Fensters des Collectors.",
+      "unsuspended": "Sperrung aufgehoben.",
+      "flagCreated": "Flag angelegt.",
+      "flagRegistered": "Flag mit seinem Code-Standard gespeichert.",
+      "flagUpdated": "Beschreibung gespeichert.",
+      "flagDefaultChanged": "Standard geändert. Kundeninstanzen übernehmen ihn innerhalb von 60 Sekunden.",
+      "overrideSaved": "Override gespeichert. Die Organisation übernimmt ihn innerhalb von 60 Sekunden.",
+      "overrideRemoved": "Override entfernt. Die Organisation folgt innerhalb von 60 Sekunden wieder dem Standard.",
+      "announcementCreated": "Ankündigung angelegt.",
+      "announcementRevoked": "Ankündigung zurückgezogen. Sie verschwindet bei der nächsten Anfrage aus den Dashboards."
+    },
+    "maintenance": {
+      "title": "Wartungsmodus für die Marketing-Website",
+      "text": "Nicht Teil der Steuerung. Die Marketing-Website hat in diesem Modul keinen Wartungsschalter; das liegt hier außerhalb des Umfangs und bräuchte eine eigene Entscheidung (Redirect auf Hosting-Ebene oder ein statischer Hinweis)."
+    },
+    "killSwitch": {
+      "title": "Globaler Kill Switch",
+      "intro": "Stoppt den gesamten Collector für alle Mandanten: Browser- und Server-Batches antworten mit 503, Konfigurationsmanifeste tragen den Kill Switch, eingehende Shop- und Affiliate-Webhooks antworten mit „paused“. Nichts wird gelöscht; Absender versuchen es später erneut.",
+      "state": {
+        "label": "Plattformschalter",
+        "engaged": "Aktiv — Ingestion pausiert",
+        "released": "Gelöst — Datenverkehr läuft"
+      },
+      "updatedAt": "Letzte Änderung",
+      "env": {
+        "label": "KILL_SWITCH_GLOBAL",
+        "on": "für diesen Web-Prozess gesetzt",
+        "off": "für diesen Web-Prozess nicht gesetzt",
+        "hint": "Die Umgebungsvariable KILL_SWITCH_GLOBAL ist ein Schalter auf Deployment-Ebene, der einen Neustart braucht; der Collector meldet seinen eigenen Wert unter „Quelle“. Der Plattformschalter hier liegt in der Datenbank und wird vom Collector alle fünf Sekunden gelesen."
+      },
+      "collector": {
+        "title": "Collector (live)",
+        "url": "Endpunkt",
+        "status": "HTTP-Status",
+        "source": "Quelle des Kill Switch",
+        "sources": {
+          "env": "Umgebungsvariable",
+          "platform": "Plattformschalter",
+          "none": "nicht aktiv"
+        },
+        "error": "Fehler",
+        "checkedAt": "Geprüft",
+        "recheck": "Erneut prüfen",
+        "unreachable": "Nicht erreichbar",
+        "invalid": "Unerwartete Antwort",
+        "paused": "Durch Kill Switch pausiert",
+        "ok": "Gesund",
+        "degraded": "Nicht gesund"
+      },
+      "effects": "Der Schalter betrifft alle Organisationen gleichzeitig. Für eine einzelne Organisation dient die Sperrung unten; für eine Site oder Umgebung der Incident-Modus des Kunden.",
+      "engage": "Kill Switch aktivieren",
+      "release": "Kill Switch lösen",
+      "dialog": {
+        "engageTitle": "Globalen Kill Switch aktivieren?",
+        "engageText": "Alle Mandanten senden innerhalb von Sekunden keine Daten mehr. Grund angeben (wird auditiert) und das Wort zur Bestätigung eingeben.",
+        "releaseTitle": "Globalen Kill Switch lösen?",
+        "releaseText": "Der Collector nimmt innerhalb von Sekunden wieder Datenverkehr an. Grund angeben (wird auditiert) und das Wort zur Bestätigung eingeben.",
+        "reason": "Grund",
+        "reasonHint": "Vorfall, Ticketreferenz, Beobachtung. Mindestens 3 Zeichen; landet im Audit-Log.",
+        "wordLabel": "{word} zur Bestätigung eingeben",
+        "wordHint": "Genau {word}, in Großbuchstaben — kein anderes Wort wird akzeptiert.",
+        "engageConfirm": "Jetzt aktivieren",
+        "releaseConfirm": "Jetzt lösen"
+      }
+    },
+    "suspensions": {
+      "title": "Gesperrte Organisationen",
+      "intro": "Der Kill Switch je Mandant. Eine gesperrte Organisation sendet keine Daten mehr (der Collector behandelt sie für jede Site wie den kundeneigenen Kill Switch), und ihre Mitglieder sind bis zur Aufhebung aus Dashboard und API ausgesperrt (403). Nur Metadaten — hier werden keine Ereignisdaten gezeigt.",
+      "activeCount": "{count} Organisationen aktiv",
+      "empty": "Keine Organisation ist gesperrt",
+      "emptyText": "Jede Organisation kann Daten senden. Über das Formular lässt sich eine sperren.",
+      "table": {
+        "caption": "Gesperrte Organisationen mit Tarif, Sites, Zeitpunkt und Grund",
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "sites": "Sites",
+        "suspendedAt": "Gesperrt",
+        "reason": "Grund",
+        "actions": "Aktionen"
+      },
+      "unsuspend": "Sperrung aufheben",
+      "suspendForm": {
+        "title": "Organisation sperren",
+        "text": "Zuerst die Organisation per Slug oder ID nachschlagen; die Sperrung selbst wird in einem Dialog mit Pflichtgrund bestätigt.",
+        "ref": "Slug oder Organisations-ID",
+        "refHint": "Exakter Slug (z. B. acme-demo) oder die UUID.",
+        "lookup": "Nachschlagen",
+        "notFound": "Keine Organisation mit diesem Slug oder dieser ID."
+      },
+      "found": {
+        "plan": "Tarif",
+        "sites": "Sites",
+        "created": "Angelegt",
+        "alreadySuspended": "Bereits gesperrt seit {when}"
+      },
+      "dialog": {
+        "suspendTitle": "{name} sperren?",
+        "suspendText": "Ingestion und Konfigurationsauslieferung aller Sites dieser Organisation pausieren innerhalb des Cache-Fensters des Collectors; Dashboard und API antworten ihren Mitgliedern mit 403. Der Grund wird auditiert und ist im Audit-Log der Organisation sichtbar.",
+        "unsuspendTitle": "Sperrung von {name} aufheben?",
+        "unsuspendText": "Die Organisation kann innerhalb des Cache-Fensters des Collectors wieder Daten senden. Das wird auditiert.",
+        "reason": "Grund",
+        "reasonHint": "Ticketreferenz und was passiert ist. Mindestens 3 Zeichen.",
+        "suspendConfirm": "Organisation sperren",
+        "unsuspendConfirm": "Sperrung aufheben",
+        "currentReason": "Grund der Sperrung"
+      }
+    },
+    "flags": {
+      "title": "Feature-Flags",
+      "intro": "Globale Standards mit Overrides je Organisation. Die Kunden-App cached einen Wert 60 Sekunden lang. Schlüssel, die die App liest, sind im Code registriert; hier angelegte Schlüssel wirken erst, wenn die App sie liest.",
+      "empty": "Keine Flags",
+      "emptyText": "Kein Flag ist gespeichert und keines in der App registriert.",
+      "table": {
+        "caption": "Feature-Flags mit Standard, Anzahl Overrides, Quelle und letzter Änderung",
+        "key": "Schlüssel",
+        "default": "Standard",
+        "overrides": "Overrides",
+        "source": "Quelle",
+        "updated": "Geändert",
+        "actions": "Aktionen"
+      },
+      "source": {
+        "code": "von der App gelesen",
+        "manual": "manuell",
+        "unregistered": "noch nicht gespeichert"
+      },
+      "codeDefault": "Code-Standard: {value}",
+      "register": "Flag speichern",
+      "open": "Details",
+      "create": {
+        "title": "Flag anlegen",
+        "text": "Nur Flags, die die App liest, ändern das Verhalten. Reservierte Schlüssel beginnen mit „platform.“.",
+        "key": "Schlüssel",
+        "keyHint": "Kleinbuchstaben, 2–64 Zeichen: Buchstaben, Ziffern, Unterstrich, Punkt, Bindestrich. Beispiel: reports.export",
+        "description": "Beschreibung",
+        "descriptionHint": "Was das Flag schaltet und wo. Wird in dieser Liste gezeigt.",
+        "default": "Standardmäßig aktiviert",
+        "submit": "Flag anlegen"
+      },
+      "detail": {
+        "back": "Alle Flags",
+        "notFound": "Unbekanntes Flag",
+        "notFoundText": "Kein gespeichertes und kein im Code registriertes Flag mit diesem Schlüssel.",
+        "unregisteredTitle": "Noch nicht gespeichert",
+        "unregisteredText": "Die App liest dieses Flag mit seinem Code-Standard. In der Liste speichern, um den Standard zu ändern oder Overrides anzulegen.",
+        "defaultTitle": "Globaler Standard",
+        "defaultText": "Gilt für jede Organisation ohne Override. Eine Änderung wird bestätigt und auditiert.",
+        "enable": "Standardmäßig aktivieren",
+        "disable": "Standardmäßig deaktivieren",
+        "descriptionTitle": "Beschreibung",
+        "save": "Beschreibung speichern",
+        "overridesTitle": "Overrides je Organisation",
+        "overridesText": "Ein Override ersetzt den Standard für eine Organisation. Organisationen werden per Slug benannt; Ereignisdaten sind nicht beteiligt.",
+        "overridesEmpty": "Keine Overrides — jede Organisation folgt dem Standard.",
+        "overridesCaption": "Overrides mit Organisation, Wert, Grund und letzter Änderung",
+        "organisation": "Organisation",
+        "organisationHint": "Exakter Slug oder UUID.",
+        "value": "Wert",
+        "valueLabel": "Wert für diese Organisation",
+        "reason": "Grund",
+        "reasonHint": "Warum diese Organisation abweicht (optional, auditiert).",
+        "updated": "Geändert",
+        "remove": "Entfernen",
+        "addTitle": "Override anlegen oder ersetzen",
+        "addText": "Ein Override je Organisation und Flag; erneutes Speichern ersetzt ihn.",
+        "submit": "Override speichern"
+      },
+      "dialog": {
+        "defaultTitle": "Standard von {key} ändern?",
+        "defaultText": "Der Standard wird {value} für jede Organisation ohne Override ({count} Overrides bleiben bestehen). Kundeninstanzen übernehmen ihn innerhalb von 60 Sekunden.",
+        "defaultConfirm": "Standard ändern",
+        "removeTitle": "Override für {organisation} entfernen?",
+        "removeText": "Die Organisation folgt innerhalb von 60 Sekunden wieder dem Standard von {key}.",
+        "removeConfirm": "Override entfernen"
+      }
+    },
+    "announcements": {
+      "title": "Ankündigungen",
+      "intro": "Banner im Kunden-Dashboard: lokalisierte Texte, Schweregrad, Anzeigefenster in UTC und Zielgruppe nach Tarif oder Organisation. Kunden können ein Banner je Browser ausblenden; Zurückziehen entfernt es überall.",
+      "new": "Neue Ankündigung",
+      "empty": "Keine Ankündigungen",
+      "emptyText": "Noch nichts angekündigt. Lege eine an, um ein Banner in den Dashboards zu zeigen.",
+      "table": {
+        "caption": "Ankündigungen mit Status, Fenster, Zielgruppe und Aktionen",
+        "title": "Ankündigung",
+        "status": "Status",
+        "window": "Fenster (UTC)",
+        "audience": "Zielgruppe",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "scheduled": "Geplant",
+        "active": "Aktiv",
+        "ended": "Beendet",
+        "revoked": "Zurückgezogen"
+      },
+      "severity": {
+        "info": "Information",
+        "warn": "Warnung",
+        "bad": "Vorfall"
+      },
+      "audience": {
+        "everyone": "Alle Organisationen",
+        "plans": "Tarife: {plans}",
+        "organisations": "{count} Organisationen"
+      },
+      "window": {
+        "from": "ab {start}",
+        "until": "bis {end}",
+        "open": "kein Ende",
+        "revoked": "zurückgezogen {when}"
+      },
+      "link": "Link",
+      "revoke": "Zurückziehen",
+      "dialog": {
+        "revokeTitle": "„{title}“ zurückziehen?",
+        "revokeText": "Das Banner verschwindet bei der nächsten Anfrage aus jedem Dashboard. Das lässt sich nicht rückgängig machen; lege stattdessen eine neue Ankündigung an.",
+        "revokeConfirm": "Ankündigung zurückziehen"
+      },
+      "form": {
+        "title": "Neue Ankündigung",
+        "text": "Englisch ist Pflicht; andere Sprachen fallen im Dashboard auf Englisch zurück. Zeiten sind UTC.",
+        "back": "Alle Ankündigungen",
+        "created": "Ankündigung angelegt.",
+        "createAnother": "Weitere anlegen",
+        "severity": "Schweregrad",
+        "severityHint": "Information (blau), Warnung (gelb) oder Vorfall (rot, wird dringlich angesagt).",
+        "textsTitle": "Texte",
+        "textsText": "Kurzer Titel, ein bis zwei Sätze Text. Keine personenbezogenen Daten, keine Geheimnisse.",
+        "titleFor": "Titel ({locale})",
+        "bodyFor": "Text ({locale})",
+        "windowTitle": "Anzeigefenster",
+        "windowText": "Ende leer lassen für ein offenes Banner; später zurückziehen.",
+        "startsAt": "Start (UTC)",
+        "startsAtHint": "Leer = jetzt.",
+        "endsAt": "Ende (UTC)",
+        "endsAtHint": "Muss nach dem Start liegen.",
+        "linkUrl": "Link",
+        "linkUrlHint": "Optionale https-URL, z. B. eine Statusseite.",
+        "audienceTitle": "Zielgruppe",
+        "audienceText": "Nichts ausgewählt = alle Organisationen. Bei Tarifen und Organisations-IDs sieht eine Organisation das Banner, wenn eines von beiden zutrifft.",
+        "plans": "Tarife",
+        "organisationIds": "Organisations-IDs",
+        "organisationIdsHint": "UUIDs, eine je Zeile oder kommagetrennt; jede ID muss existieren.",
+        "submit": "Ankündigung anlegen"
+      }
+    },
+    "customer": {
+      "featureOff": {
+        "title": "Für deine Organisation nicht aktiviert",
+        "text": "Diese Funktion ist für deine Organisation derzeit abgeschaltet. Nichts ist kaputt und keine Daten gehen verloren; wende dich an den Support, wenn du sie hier erwartet hast.",
+        "back": "Zurück zur Datenqualität"
+      },
+      "announcements": {
+        "region": "Plattform-Ankündigungen",
+        "dismiss": "Ankündigung ausblenden",
+        "open": "Link öffnen"
+      }
+    }
+  }
+}

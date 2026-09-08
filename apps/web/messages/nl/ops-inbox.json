@@ -1,0 +1,284 @@
+{
+  "opsInbox": {
+    "sections": {
+      "label": "Onderdelen van de inbox",
+      "requests": "Aanvragen",
+      "privacy": "Privacyverzoeken",
+      "alerts": "Alertoverzicht",
+      "knowledge": "Knowledge-feedback"
+    },
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "never": "nooit",
+      "none": "—",
+      "unassigned": "Niet toegewezen",
+      "you": "jij",
+      "openOrganization": "Organisatie openen",
+      "aggregatesOnly": "Alleen aggregaten en metadata — geen event-payloads, geen gegevens van eindgebruikers."
+    },
+    "errors": {
+      "forbidden": "Je platformrol staat dit niet toe.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Deze aanvraag bestaat niet meer.",
+      "unchanged": "Niets te wijzigen — die status is al ingesteld.",
+      "invalid_transition": "Deze statuswijziging is vanuit de huidige status niet toegestaan.",
+      "confirmation_required": "Bevestig eerst de actie.",
+      "invalid_assignee": "De toegewezen persoon moet een platformrol hebben.",
+      "mail_failed": "De e-mail kon niet worden verzonden; de poging is vastgelegd. Controleer het mailtransport en probeer het opnieuw.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    },
+    "kinds": {
+      "contact": "Contact",
+      "demo": "Demo",
+      "support": "Support"
+    },
+    "status": {
+      "new": "Nieuw",
+      "in_progress": "In behandeling",
+      "done": "Afgerond",
+      "spam": "Spam"
+    },
+    "delivery": {
+      "delivered": "Doorgestuurd naar het inboxadres",
+      "failed": "Doorsturen naar het inboxadres mislukt",
+      "not_sent": "Niet doorgestuurd (geen inboxadres geconfigureerd)"
+    },
+    "requests": {
+      "title": "Contact-, demo- en supportaanvragen",
+      "intro": "Alles wat de openbare formulieren aanleveren, met status, toegewezen persoon en doorstuurstatus. Antwoorden gaan per e-mail in de taal van de aanvrager; elke statuswijziging, toewijzing en elk antwoord wordt geauditeerd.",
+      "summary": {
+        "label": "Aanvragen per status",
+        "open": "Open",
+        "all": "Alle"
+      },
+      "filters": {
+        "legend": "Filters",
+        "status": "Status",
+        "kind": "Soort",
+        "assignee": "Toegewezen aan",
+        "search": "Zoeken",
+        "searchPlaceholder": "Naam, e-mail of bedrijf",
+        "apply": "Filters toepassen",
+        "reset": "Herstellen",
+        "all": "Alle",
+        "open": "Open (nieuw en in behandeling)",
+        "everyone": "Iedereen",
+        "unassigned": "Niet toegewezen",
+        "me": "Aan mij toegewezen"
+      },
+      "columns": {
+        "received": "Ontvangen",
+        "kind": "Soort",
+        "from": "Van",
+        "message": "Bericht",
+        "status": "Status",
+        "assignee": "Toegewezen aan",
+        "delivery": "Doorsturen",
+        "actions": "Acties"
+      },
+      "open": "Openen",
+      "openLabel": "Aanvraag van {name} openen",
+      "caption": "Contactaanvragen, nieuwste eerst",
+      "count": "{count} aanvragen",
+      "countFiltered": "{count} aanvragen voldoen aan de filters",
+      "empty": "Geen open aanvragen",
+      "emptyText": "Aanvragen uit de openbare contact-, demo- en supportformulieren verschijnen hier zodra iemand er een verstuurt.",
+      "emptyFiltered": "Geen aanvragen voldoen aan deze filters",
+      "emptyFilteredText": "Verruim de filters of herstel ze.",
+      "pagination": {
+        "nav": "Pagina's met aanvragen",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {page}"
+      }
+    },
+    "detail": {
+      "back": "Terug naar de inbox",
+      "title": "{kind}-aanvraag van {name}",
+      "message": "Bericht",
+      "facts": "Details",
+      "email": "E-mail",
+      "company": "Bedrijf",
+      "locale": "Taal",
+      "received": "Ontvangen",
+      "handled": "Afgehandeld",
+      "forwarding": "Doorsturen",
+      "organization": "Organisatie bij verzenden",
+      "organizationNone": "Niet aangemeld bij een organisatie",
+      "userLinked": "Aangemeld account",
+      "userLinkedYes": "Ja, de aanvrager was aangemeld",
+      "userLinkedNo": "Nee, anoniem verzonden",
+      "reference": "Referentie",
+      "assignee": "Toegewezen aan",
+      "status": {
+        "title": "Status",
+        "current": "Huidige status",
+        "moveTo": "Markeren als ‘{status}’",
+        "changed": "Status bijgewerkt.",
+        "spamDialog": {
+          "title": "Als spam markeren?",
+          "description": "De aanvraag verdwijnt uit het overzicht van open aanvragen en er kan geen antwoord worden verstuurd totdat ze wordt heropend. Dit wordt vastgelegd in het auditlog.",
+          "confirm": "Als spam markeren"
+        }
+      },
+      "assign": {
+        "title": "Toewijzing",
+        "label": "Toewijzen aan",
+        "save": "Opslaan",
+        "saved": "Toewijzing opgeslagen.",
+        "takeOver": "Aan mij toewijzen"
+      },
+      "reply": {
+        "title": "Antwoorden per e-mail",
+        "intro": "Je tekst wordt in het antwoordsjabloon van de taal van de aanvrager geplaatst: aanhef, je naam als ondertekening en de referentie {reference}. Het auditlog legt vast dat er een antwoord is verstuurd, niet de tekst ervan.",
+        "language": "Verzonden in het {language}",
+        "recipient": "Ontvanger",
+        "body": "Je antwoord",
+        "bodyHint": "10 tot 4.000 tekens. Platte tekst; aanhef en ondertekening worden automatisch toegevoegd.",
+        "send": "Antwoord versturen",
+        "spamBlocked": "Aanvragen die als spam zijn gemarkeerd kunnen niet worden beantwoord. Heropen de aanvraag eerst.",
+        "dialog": {
+          "title": "Dit antwoord versturen?",
+          "description": "De e-mail gaat naar {email} met het onderwerp ‘{subject}’. Het versturen wordt vastgelegd in het auditlog.",
+          "confirm": "Versturen"
+        },
+        "sent": "Antwoord verstuurd via {transport}.",
+        "sentFile": "Antwoord weggeschreven naar de lokale outbox (in deze omgeving is geen mailtransport geconfigureerd)."
+      },
+      "trail": {
+        "title": "Geschiedenis",
+        "caption": "Geauditeerde acties op deze aanvraag, nieuwste eerst",
+        "empty": "Nog geen actie van een operator.",
+        "submitted": "Ontvangen via het {kind}-formulier",
+        "actions": {
+          "status": "Status gewijzigd",
+          "assign": "Toewijzing gewijzigd",
+          "reply": "Antwoord verstuurd",
+          "replyFailed": "Antwoord mislukt",
+          "other": "Actie"
+        },
+        "statusChange": "{from} → {to}",
+        "assignedTo": "→ {name}",
+        "assignedNone": "→ niet toegewezen",
+        "replyDetail": "via {transport}, {locale}, {length} tekens",
+        "replyError": "niet verstuurd ({transport})",
+        "by": "door {name}",
+        "byUnknown": "door een voormalige operator"
+      }
+    },
+    "privacy": {
+      "title": "Privacyverzoeken",
+      "intro": "Verzoeken van betrokkenen van elke organisatie: hoeveel er open staan, welke te laat zijn en wanneer het volgende verzoek verloopt. Betrokkenen, rapporten en notities blijven in het privacycentrum van de klant — operators zien alleen aantallen en datums.",
+      "unavailable": "Privacytabellen niet beschikbaar",
+      "unavailableText": "De tabellen voor verzoeken van betrokkenen zijn niet toegepast op deze database, dus er kan niets worden geteld.",
+      "totals": {
+        "label": "Over alle organisaties",
+        "open": "Open",
+        "overdue": "Te laat",
+        "dueSoon": "Verloopt binnen {days} dagen",
+        "completed30d": "Afgerond (30 dagen)",
+        "rejected30d": "Afgewezen (30 dagen)",
+        "failedJobs": "Mislukte verwijdertaken",
+        "organizations": "Organisaties met verzoeken"
+      },
+      "byKind": "Open verzoeken per soort",
+      "kinds": {
+        "export": "Inzage",
+        "delete": "Verwijdering",
+        "restrict": "Beperking",
+        "rectify": "Rectificatie",
+        "object": "Bezwaar",
+        "portability": "Overdraagbaarheid"
+      },
+      "columns": {
+        "organization": "Organisatie",
+        "open": "Open",
+        "overdue": "Te laat",
+        "nextDue": "Volgende deadline",
+        "completed": "Afgerond",
+        "rejected": "Afgewezen",
+        "total": "Totaal",
+        "lastRequested": "Laatste verzoek",
+        "failedJobs": "Mislukte verwijdertaken",
+        "actions": "Acties"
+      },
+      "due": {
+        "overdue": "te laat",
+        "soon": "verloopt binnenkort",
+        "later": "op schema"
+      },
+      "tenantPath": "Klanten handelen hun verzoeken af onder Toestemming & privacy (/app/consent) in hun eigen dashboard.",
+      "caption": "Verzoeken van betrokkenen per organisatie, meest urgente eerst",
+      "empty": "Geen verzoeken van betrokkenen",
+      "emptyText": "Nog geen organisatie heeft een verzoek van een betrokkene aangemaakt."
+    },
+    "alerts": {
+      "title": "Alertoverzicht",
+      "intro": "Alertgebeurtenissen van de afgelopen {days} dagen over alle organisaties, gegroepeerd per soort en organisatie: hoeveel er zijn afgegaan, hoeveel er nog open staan, hoeveel kritiek waren. Details van afzonderlijke gebeurtenissen blijven in de alertgeschiedenis van de klant.",
+      "unavailable": "Alerttabellen niet beschikbaar",
+      "unavailableText": "De alerttabellen (migratie 0013) zijn niet toegepast op deze database, dus er kan niets worden geteld.",
+      "totals": {
+        "label": "Afgelopen {days} dagen",
+        "events": "Gebeurtenissen",
+        "open": "Nog open",
+        "critical": "Kritiek",
+        "organizations": "Betrokken organisaties"
+      },
+      "byKind": "Per soort",
+      "byOrganization": "Per organisatie en soort",
+      "kinds": {
+        "event_drop": "Eventdaling",
+        "vendor_outage": "Storing bij leverancier",
+        "credential_expiry": "Verlopen inloggegevens",
+        "consent_errors": "Toestemmingsfouten",
+        "queue_lag": "Wachtrijvertraging",
+        "conversion_anomaly": "Conversieafwijking"
+      },
+      "columns": {
+        "organization": "Organisatie",
+        "kind": "Soort",
+        "total": "Gebeurtenissen",
+        "open": "Open",
+        "critical": "Kritiek",
+        "warning": "Waarschuwing",
+        "last": "Laatst afgegaan",
+        "actions": "Acties"
+      },
+      "organizationDeleted": "Verwijderde organisatie",
+      "captionKinds": "Alertgebeurtenissen per soort",
+      "caption": "Alertgebeurtenissen per organisatie en soort, meeste open eerst",
+      "empty": "Geen alerts in de afgelopen {days} dagen",
+      "emptyText": "In deze periode is geen alertregel van een organisatie afgegaan."
+    },
+    "knowledge": {
+      "title": "Knowledge-feedback",
+      "intro": "Stemmen op ‘Was dit artikel nuttig?’ uit Tracking Knowledge van de afgelopen {days} dagen per artikel, laagste nuttig-aandeel eerst. Stemmen zijn bewust anoniem: geen adres, geen sessie, geen tenant — het overzicht vertelt de redactie alleen welke artikelen werk nodig hebben.",
+      "unavailable": "Feedbacktabel niet beschikbaar",
+      "unavailableText": "De Knowledge-feedbacktabel (migratie 0005) is niet toegepast op deze database, dus er kan niets worden geteld.",
+      "totals": {
+        "label": "Afgelopen {days} dagen",
+        "votes": "Stemmen",
+        "helpful": "Nuttig",
+        "notHelpful": "Niet nuttig",
+        "articles": "Artikelen met stemmen"
+      },
+      "columns": {
+        "article": "Artikel",
+        "helpful": "Nuttig",
+        "notHelpful": "Niet nuttig",
+        "share": "Nuttig-aandeel",
+        "locales": "Talen",
+        "last": "Laatste stem",
+        "actions": "Acties"
+      },
+      "unknownArticle": "Geen Engelse versie gevonden",
+      "openArticle": "Artikel openen",
+      "openArticleLabel": "Artikel ‘{title}’ openen",
+      "caption": "Feedback per artikel, laagste nuttig-aandeel eerst",
+      "empty": "Geen stemmen in de afgelopen {days} dagen",
+      "emptyText": "Niemand heeft in deze periode op een artikel gestemd."
+    }
+  }
+}

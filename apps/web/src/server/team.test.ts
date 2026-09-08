@@ -174,6 +174,9 @@ describe("audit log", () => {
     expect(auditActorView({ kind: "user", userId: "gone", role: "ADMIN" }, names)).toMatchObject({ kind: "user", userId: "gone", name: null });
     expect(auditActorView({ kind: "agent", onBehalfOfUserId: "u1", role: "DEVELOPER", chatSessionId: "s1" }, names)).toEqual({ kind: "agent", userId: "u1", name: "Ada", role: "DEVELOPER", detail: "s1" });
     expect(auditActorView({ kind: "system", name: "worker:usage" }, names)).toEqual({ kind: "system", userId: null, name: null, role: null, detail: "worker:usage" });
+    // break-glass: Track support is shown with platform role and grant id only, never with the operator's identity
+    expect(auditActorView({ kind: "platform", userId: "op1", email: "[redacted:email]", platformRole: "PLATFORM_SUPPORT", grantId: "g1", readOnly: true }, new Map([["op1", "Operator"]]))).toEqual({ kind: "platform", userId: null, name: null, role: "PLATFORM_SUPPORT", detail: "g1" });
+    expect(auditActorView({ kind: "platform", userId: "op1", platformRole: "PLATFORM_ADMIN" }, names)).toEqual({ kind: "platform", userId: null, name: null, role: "PLATFORM_ADMIN", detail: null });
     expect(auditActorView(null, names).kind).toBe("unknown");
   });
   it("cuts the range to the plan's window and says so", () => {

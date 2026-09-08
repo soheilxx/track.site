@@ -519,12 +519,14 @@ export function flattenDiff(diff: unknown): { rows: AuditDiffRow[]; truncated: b
 }
 
 export interface AuditActorView {
-  kind: "user" | "agent" | "system" | "source_key" | "unknown";
+  /** `platform`: a Track operator under a read-only break-glass grant (docs/17 §4) — never identified beyond role and grant */
+  kind: "user" | "agent" | "system" | "source_key" | "platform" | "unknown";
   userId: string | null;
   /** member name; null for a former member or a non-user actor */
   name: string | null;
+  /** organisation role; the platform role of a Track operator */
   role: string | null;
-  /** system job name, agent session, source-key id */
+  /** system job name, agent session, source-key id, break-glass grant id */
   detail: string | null;
 }
 
@@ -541,6 +543,9 @@ export function auditActorView(actor: Record<string, unknown> | null, names: Map
   }
   if (kind === "system") return { kind, userId: null, name: null, role: null, detail: str(actor?.name) };
   if (kind === "source_key") return { kind, userId: null, name: null, role: null, detail: str(actor?.sourceKeyId) };
+  // break-glass support access: the customer sees "Track support", the platform role and the grant id (the key of the
+  // trail) — never the operator's name, e-mail or user id
+  if (kind === "platform") return { kind, userId: null, name: null, role: str(actor?.platformRole), detail: str(actor?.grantId) };
   return { kind: "unknown", userId: null, name: null, role: null, detail: null };
 }
 

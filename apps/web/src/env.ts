@@ -59,6 +59,12 @@ export const webEnvSchema = baseEnvSchema.extend({
   X_CONSUMER_SECRET: envString(),
   GOOGLE_ADS_DEVELOPER_TOKEN: envString(),
   SEED_DEMO: envBool(false),
+  /**
+   * Step-up rule of the Track Operations console (/ops): platform pages require the operator's two-factor
+   * authentication to be enabled. `false` is a local-development convenience only; production always
+   * requires two-factor regardless of this value (`opsRequiresTwoFactor()` in server/ops/platform.ts).
+   */
+  OPS_REQUIRE_2FA: envBool(true),
 });
 export type WebEnv = z.infer<typeof webEnvSchema>;
 

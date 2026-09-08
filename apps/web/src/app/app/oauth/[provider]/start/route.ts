@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getIntegration, withTenant } from "@track-site/db";
 import { db } from "@/server/db";
 import { providerConfig, signState, startUrl, xRequestToken } from "@/server/oauth";
-import { getOrgContext } from "@/server/session";
+import { requireApiOrgContext } from "@/server/session";
 import { siteBelongsToOrg } from "@/server/ai/context";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +10,8 @@ export const dynamic = "force-dynamic";
 /** Starts the vendor OAuth connect flow for a destination (state bound to org/site/integration/user). */
 export async function GET(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
   const { provider } = await params;
-  const ctx = await getOrgContext();
-  if (!ctx) return NextResponse.redirect(new URL("/login", req.url));
+  const ctx = await requireApiOrgContext({ signedOut: () => NextResponse.redirect(new URL("/login", req.url)) });
+  if (ctx instanceof Response) return ctx;
   if (!["OWNER", "ADMIN", "DEVELOPER"].includes(ctx.role)) return NextResponse.json({ ok: false, code: "FORBIDDEN" }, { status: 403 });
   const integrationId = req.nextUrl.searchParams.get("integration") ?? "";
   const siteId = req.nextUrl.searchParams.get("site") ?? "";

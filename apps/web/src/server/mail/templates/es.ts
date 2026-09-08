@@ -18,4 +18,16 @@ export const MAIL_COPY_ES: MailCopy = {
     subject: "{inviter} te ha invitado a {organization} en Track",
     text: "Acepta la invitación: {url}",
   },
+  contactReply: {
+    subject: "Respuesta a tu solicitud a Track [{reference}]",
+    text: "Hola {name}:\n\n{body}\n\nUn saludo\n{operator}\nTrack\n\n—\nEste correo responde a la solicitud que enviaste a Track (referencia {reference}). Si tienes más preguntas, responde a este correo.",
+  },
+  breakGlassApproved: {
+    subject: "El soporte de Track tiene acceso de solo lectura a {organization} hasta {until}",
+    text: "Un operador del soporte de Track ha recibido acceso temporal y de solo lectura a tu organización {organization} en Track.\n\nHasta: {until}\nMotivo: {reason}\nTicket: {ticket}\nAcceso: {grantId}\n\nNo se puede cambiar nada en tu nombre, y cada página que abra el operador queda registrada en tu registro de auditoría: {url}\n\nSi no esperabas este acceso, contacta con el soporte de Track e indica el identificador del acceso.",
+  },
+  breakGlassRevoked: {
+    subject: "El acceso del soporte de Track a {organization} ha terminado",
+    text: "El acceso de solo lectura del soporte a tu organización {organization} en Track ha terminado (acceso {grantId}).\n\nTodo lo que abrió el operador está registrado en tu registro de auditoría: {url}",
+  },
 };

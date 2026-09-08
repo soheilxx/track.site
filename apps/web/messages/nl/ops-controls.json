@@ -1,0 +1,309 @@
+{
+  "opsControls": {
+    "subnav": {
+      "label": "Onderdelen van besturing",
+      "overview": "Kill switch & schorsingen",
+      "flags": "Feature flags",
+      "announcements": "Aankondigingen"
+    },
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "never": "nooit",
+      "unknown": "onbekend",
+      "on": "Aan",
+      "off": "Uit",
+      "optional": "optioneel",
+      "noPlan": "geen abonnement"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "errors": {
+      "forbidden": "Deze actie vereist de rol platformbeheerder met tweefactorauthenticatie.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Deze vermelding bestaat niet (meer).",
+      "unchanged": "Niets te wijzigen — de status is al zo.",
+      "confirmation": "Het bevestigingswoord komt niet overeen.",
+      "reserved": "Sleutels die met ‘platform.’ beginnen zijn gereserveerd voor systeemschakelaars.",
+      "exists": "Er bestaat al een flag met deze sleutel.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    },
+    "fieldErrors": {
+      "required": "Verplicht.",
+      "invalid": "Ongeldige waarde.",
+      "long": "Te lang.",
+      "window": "Het einde moet na het begin liggen.",
+      "not_found": "Geen organisatie met deze slug of id.",
+      "reserved": "Gereserveerd voorvoegsel ‘platform.’.",
+      "exists": "Bestaat al.",
+      "confirmation": "Typ het woord precies zoals getoond."
+    },
+    "notices": {
+      "killSwitchEngaged": "Kill switch ingeschakeld. De collector pauzeert ingestie, configuratielevering en inkomende webhooks binnen ongeveer vijf seconden.",
+      "killSwitchReleased": "Kill switch vrijgegeven. De collector hervat binnen ongeveer vijf seconden.",
+      "suspended": "Organisatie geschorst. Ingestie en configuratielevering van haar sites pauzeren binnen het cachevenster van de collector.",
+      "unsuspended": "Schorsing opgeheven.",
+      "flagCreated": "Flag aangemaakt.",
+      "flagRegistered": "Flag opgeslagen met de standaardwaarde uit de code.",
+      "flagUpdated": "Beschrijving opgeslagen.",
+      "flagDefaultChanged": "Standaardwaarde gewijzigd. Klantinstanties nemen die binnen 60 seconden over.",
+      "overrideSaved": "Override opgeslagen. De organisatie neemt die binnen 60 seconden over.",
+      "overrideRemoved": "Override verwijderd. De organisatie volgt binnen 60 seconden weer de standaardwaarde.",
+      "announcementCreated": "Aankondiging aangemaakt.",
+      "announcementRevoked": "Aankondiging ingetrokken. Ze verdwijnt bij de volgende aanvraag uit de dashboards."
+    },
+    "maintenance": {
+      "title": "Onderhoudsmodus voor de marketingsite",
+      "text": "Geen onderdeel van Besturing. De marketingsite heeft in deze module geen onderhoudsschakelaar; dat valt hier buiten de scope en vraagt een eigen beslissing (redirect op hostingniveau of een statische melding)."
+    },
+    "killSwitch": {
+      "title": "Globale kill switch",
+      "intro": "Stopt de hele collector voor alle tenants: browser- en serverbatches antwoorden 503, configuratiemanifesten dragen de kill switch, inkomende shop- en affiliatewebhooks antwoorden ‘paused’. Er wordt niets verwijderd; afzenders proberen het later opnieuw.",
+      "state": {
+        "label": "Platformschakelaar",
+        "engaged": "Ingeschakeld — ingestie gepauzeerd",
+        "released": "Vrijgegeven — verkeer loopt"
+      },
+      "updatedAt": "Laatste wijziging",
+      "env": {
+        "label": "KILL_SWITCH_GLOBAL",
+        "on": "ingesteld voor dit webproces",
+        "off": "niet ingesteld voor dit webproces",
+        "hint": "De omgevingsvariabele KILL_SWITCH_GLOBAL is een schakelaar op deploymentniveau die een herstart vereist; de collector meldt zijn eigen waarde onder ‘bron’. De platformschakelaar hier staat in de database en wordt elke vijf seconden door de collector gelezen."
+      },
+      "collector": {
+        "title": "Collector (live)",
+        "url": "Endpoint",
+        "status": "HTTP-status",
+        "source": "Bron van de kill switch",
+        "sources": {
+          "env": "omgevingsvariabele",
+          "platform": "platformschakelaar",
+          "none": "niet ingeschakeld"
+        },
+        "error": "Fout",
+        "checkedAt": "Gecontroleerd",
+        "recheck": "Opnieuw controleren",
+        "unreachable": "Onbereikbaar",
+        "invalid": "Onverwacht antwoord",
+        "paused": "Gepauzeerd door de kill switch",
+        "ok": "Gezond",
+        "degraded": "Niet gezond"
+      },
+      "effects": "De schakelaar raakt alle organisaties tegelijk. Gebruik voor één organisatie de schorsing hieronder; voor één site of omgeving de incidentmodus van de klant zelf.",
+      "engage": "Kill switch inschakelen",
+      "release": "Kill switch vrijgeven",
+      "dialog": {
+        "engageTitle": "Globale kill switch inschakelen?",
+        "engageText": "Alle tenants stoppen binnen seconden met het versturen van data. Geef de reden op (wordt geauditeerd) en typ het woord ter bevestiging.",
+        "releaseTitle": "Globale kill switch vrijgeven?",
+        "releaseText": "De collector accepteert binnen seconden weer verkeer. Geef de reden op (wordt geauditeerd) en typ het woord ter bevestiging.",
+        "reason": "Reden",
+        "reasonHint": "Incident, ticketreferentie, wat er is waargenomen. Minstens 3 tekens; opgeslagen in het auditlogboek.",
+        "wordLabel": "Typ {word} om te bevestigen",
+        "wordHint": "Precies {word}, in hoofdletters — geen ander woord wordt geaccepteerd.",
+        "engageConfirm": "Nu inschakelen",
+        "releaseConfirm": "Nu vrijgeven"
+      }
+    },
+    "suspensions": {
+      "title": "Geschorste organisaties",
+      "intro": "De kill switch per tenant. Een geschorste organisatie stuurt geen data meer (de collector behandelt haar voor elke site als de eigen kill switch van de klant) en haar leden zijn buitengesloten van dashboard en API (403) tot de schorsing wordt opgeheven. Alleen metadata — hier worden geen eventdata getoond.",
+      "activeCount": "{count} organisaties actief",
+      "empty": "Geen organisatie is geschorst",
+      "emptyText": "Elke organisatie kan data versturen. Gebruik het formulier om er een te schorsen.",
+      "table": {
+        "caption": "Geschorste organisaties met abonnement, sites, tijdstip en reden",
+        "organisation": "Organisatie",
+        "plan": "Abonnement",
+        "sites": "Sites",
+        "suspendedAt": "Geschorst",
+        "reason": "Reden",
+        "actions": "Acties"
+      },
+      "unsuspend": "Schorsing opheffen",
+      "suspendForm": {
+        "title": "Een organisatie schorsen",
+        "text": "Zoek de organisatie eerst op via slug of id; de schorsing zelf wordt bevestigd in een dialoog met een verplichte reden.",
+        "ref": "Slug of organisatie-id",
+        "refHint": "Exacte slug (bv. acme-demo) of de UUID.",
+        "lookup": "Opzoeken",
+        "notFound": "Geen organisatie met deze slug of id."
+      },
+      "found": {
+        "plan": "Abonnement",
+        "sites": "Sites",
+        "created": "Aangemaakt",
+        "alreadySuspended": "Al geschorst sinds {when}"
+      },
+      "dialog": {
+        "suspendTitle": "{name} schorsen?",
+        "suspendText": "Ingestie en configuratielevering van alle sites van deze organisatie pauzeren binnen het cachevenster van de collector; dashboard en API antwoorden haar leden met 403. De reden wordt geauditeerd en is zichtbaar in het auditlogboek van de organisatie.",
+        "unsuspendTitle": "Schorsing van {name} opheffen?",
+        "unsuspendText": "De organisatie kan binnen het cachevenster van de collector weer data versturen. Dit wordt geauditeerd.",
+        "reason": "Reden",
+        "reasonHint": "Ticketreferentie en wat er is gebeurd. Minstens 3 tekens.",
+        "suspendConfirm": "Organisatie schorsen",
+        "unsuspendConfirm": "Schorsing opheffen",
+        "currentReason": "Reden van de schorsing"
+      }
+    },
+    "flags": {
+      "title": "Feature flags",
+      "intro": "Globale standaardwaarden met overrides per organisatie. De klantapp cachet een waarde 60 seconden. Sleutels die de app leest zijn in de code geregistreerd; hier aangemaakte sleutels werken pas zodra de app ze leest.",
+      "empty": "Geen flags",
+      "emptyText": "Er is geen flag opgeslagen en geen enkele in de app geregistreerd.",
+      "table": {
+        "caption": "Feature flags met standaardwaarde, aantal overrides, bron en laatste wijziging",
+        "key": "Sleutel",
+        "default": "Standaard",
+        "overrides": "Overrides",
+        "source": "Bron",
+        "updated": "Gewijzigd",
+        "actions": "Acties"
+      },
+      "source": {
+        "code": "gelezen door de app",
+        "manual": "handmatig",
+        "unregistered": "nog niet opgeslagen"
+      },
+      "codeDefault": "standaard uit code: {value}",
+      "register": "Flag opslaan",
+      "open": "Details",
+      "create": {
+        "title": "Een flag aanmaken",
+        "text": "Alleen flags die de app leest veranderen het gedrag. Gereserveerde sleutels beginnen met ‘platform.’.",
+        "key": "Sleutel",
+        "keyHint": "Kleine letters, 2–64 tekens: letters, cijfers, underscore, punt, koppelteken. Voorbeeld: reports.export",
+        "description": "Beschrijving",
+        "descriptionHint": "Wat de flag schakelt en waar. Wordt in deze lijst getoond.",
+        "default": "Standaard ingeschakeld",
+        "submit": "Flag aanmaken"
+      },
+      "detail": {
+        "back": "Alle flags",
+        "notFound": "Onbekende flag",
+        "notFoundText": "Geen opgeslagen en geen in de code geregistreerde flag met deze sleutel.",
+        "unregisteredTitle": "Nog niet opgeslagen",
+        "unregisteredText": "De app leest deze flag met de standaardwaarde uit de code. Sla hem vanuit de lijst op om de standaardwaarde te wijzigen of overrides toe te voegen.",
+        "defaultTitle": "Globale standaardwaarde",
+        "defaultText": "Geldt voor elke organisatie zonder override. Een wijziging wordt bevestigd en geauditeerd.",
+        "enable": "Standaard inschakelen",
+        "disable": "Standaard uitschakelen",
+        "descriptionTitle": "Beschrijving",
+        "save": "Beschrijving opslaan",
+        "overridesTitle": "Overrides per organisatie",
+        "overridesText": "Een override vervangt de standaardwaarde voor één organisatie. Organisaties worden met hun slug aangeduid; er zijn geen eventdata bij betrokken.",
+        "overridesEmpty": "Geen overrides — elke organisatie volgt de standaardwaarde.",
+        "overridesCaption": "Overrides met organisatie, waarde, reden en laatste wijziging",
+        "organisation": "Organisatie",
+        "organisationHint": "Exacte slug of UUID.",
+        "value": "Waarde",
+        "valueLabel": "Waarde voor deze organisatie",
+        "reason": "Reden",
+        "reasonHint": "Waarom deze organisatie afwijkt (optioneel, geauditeerd).",
+        "updated": "Gewijzigd",
+        "remove": "Verwijderen",
+        "addTitle": "Override toevoegen of vervangen",
+        "addText": "Eén override per organisatie en flag; opnieuw opslaan vervangt hem.",
+        "submit": "Override opslaan"
+      },
+      "dialog": {
+        "defaultTitle": "Standaardwaarde van {key} wijzigen?",
+        "defaultText": "De standaardwaarde wordt {value} voor elke organisatie zonder override ({count} overrides blijven staan). Klantinstanties nemen die binnen 60 seconden over.",
+        "defaultConfirm": "Standaardwaarde wijzigen",
+        "removeTitle": "Override voor {organisation} verwijderen?",
+        "removeText": "De organisatie volgt binnen 60 seconden weer de standaardwaarde van {key}.",
+        "removeConfirm": "Override verwijderen"
+      }
+    },
+    "announcements": {
+      "title": "Aankondigingen",
+      "intro": "Banners in het klantdashboard: gelokaliseerde teksten, ernst, weergavevenster in UTC en doelgroep per abonnement of organisatie. Klanten kunnen een banner per browser verbergen; intrekken verwijdert hem overal.",
+      "new": "Nieuwe aankondiging",
+      "empty": "Geen aankondigingen",
+      "emptyText": "Er is nog niets aangekondigd. Maak er een aan om een banner in de dashboards te tonen.",
+      "table": {
+        "caption": "Aankondigingen met status, venster, doelgroep en acties",
+        "title": "Aankondiging",
+        "status": "Status",
+        "window": "Venster (UTC)",
+        "audience": "Doelgroep",
+        "actions": "Acties"
+      },
+      "status": {
+        "scheduled": "Gepland",
+        "active": "Actief",
+        "ended": "Beëindigd",
+        "revoked": "Ingetrokken"
+      },
+      "severity": {
+        "info": "Informatie",
+        "warn": "Waarschuwing",
+        "bad": "Incident"
+      },
+      "audience": {
+        "everyone": "Alle organisaties",
+        "plans": "Abonnementen: {plans}",
+        "organisations": "{count} organisaties"
+      },
+      "window": {
+        "from": "vanaf {start}",
+        "until": "tot {end}",
+        "open": "geen einde",
+        "revoked": "ingetrokken {when}"
+      },
+      "link": "Link",
+      "revoke": "Intrekken",
+      "dialog": {
+        "revokeTitle": "‘{title}’ intrekken?",
+        "revokeText": "De banner verdwijnt bij de volgende aanvraag uit elk dashboard. Dit kan niet ongedaan worden gemaakt; maak in plaats daarvan een nieuwe aankondiging.",
+        "revokeConfirm": "Aankondiging intrekken"
+      },
+      "form": {
+        "title": "Nieuwe aankondiging",
+        "text": "Engels is verplicht; andere talen vallen in het dashboard terug op Engels. Tijden zijn in UTC.",
+        "back": "Alle aankondigingen",
+        "created": "Aankondiging aangemaakt.",
+        "createAnother": "Nog een aanmaken",
+        "severity": "Ernst",
+        "severityHint": "Informatie (blauw), waarschuwing (amber) of incident (rood, assertief aangekondigd).",
+        "textsTitle": "Teksten",
+        "textsText": "Korte titel, één of twee zinnen tekst. Geen persoonsgegevens, geen geheimen.",
+        "titleFor": "Titel ({locale})",
+        "bodyFor": "Tekst ({locale})",
+        "windowTitle": "Weergavevenster",
+        "windowText": "Laat het einde leeg voor een banner zonder einddatum; trek hem later in.",
+        "startsAt": "Begin (UTC)",
+        "startsAtHint": "Leeg = nu.",
+        "endsAt": "Einde (UTC)",
+        "endsAtHint": "Moet na het begin liggen.",
+        "linkUrl": "Link",
+        "linkUrlHint": "Optionele https-URL, bv. een statuspagina.",
+        "audienceTitle": "Doelgroep",
+        "audienceText": "Niets geselecteerd = alle organisaties. Met abonnementen en organisatie-id’s ziet elke organisatie die met een van beide overeenkomt de banner.",
+        "plans": "Abonnementen",
+        "organisationIds": "Organisatie-id’s",
+        "organisationIdsHint": "UUID’s, één per regel of door komma’s gescheiden; elke id moet bestaan.",
+        "submit": "Aankondiging aanmaken"
+      }
+    },
+    "customer": {
+      "featureOff": {
+        "title": "Niet ingeschakeld voor je organisatie",
+        "text": "Deze functie is op dit moment uitgeschakeld voor je organisatie. Er is niets kapot en er gaan geen data verloren; neem contact op met support als je ze hier verwachtte.",
+        "back": "Terug naar datakwaliteit"
+      },
+      "announcements": {
+        "region": "Platformaankondigingen",
+        "dismiss": "Aankondiging verbergen",
+        "open": "Link openen"
+      }
+    }
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "opsContent": {
+    "intro": "Estado editorial de Tracking Knowledge en los seis idiomas, opiniones de los lectores por artículo, rutas de aprendizaje, frescura de sitemaps y feeds y cobertura de integraciones. Solo lectura: el contenido vive en git, los cambios son commits, no acciones de la consola.",
+    "sections": {
+      "label": "Secciones del módulo de contenido",
+      "board": "Tablero editorial",
+      "feedback": "Opiniones de lectores",
+      "paths": "Rutas de aprendizaje",
+      "freshness": "Sitemaps y feeds",
+      "integrations": "Cobertura de integraciones"
+    },
+    "common": {
+      "none": "—",
+      "never": "nunca",
+      "generatedAt": "Leído del contenido a las {time}",
+      "readOnly": "Vista de solo lectura del contenido en git y de votos anónimos — sin datos de inquilinos.",
+      "opensNewTab": "(se abre en una pestaña nueva)",
+      "openLive": "Abrir página en vivo",
+      "attention": "Necesita atención",
+      "ok": "OK"
+    },
+    "status": {
+      "draft": "Borrador",
+      "translated": "Traducido",
+      "reviewed": "Revisado",
+      "published": "Publicado",
+      "missing": "Falta"
+    },
+    "flags": {
+      "stale": "Revisión de hace más de {days} días",
+      "takeaways": "Sin puntos clave",
+      "incomplete": "No publicado en todos los idiomas",
+      "neverReviewed": "Nunca revisado",
+      "featured": "Destacado"
+    },
+    "board": {
+      "title": "Tablero editorial",
+      "intro": "Una fila por grupo de traducción con el estado de cada versión de idioma según el front matter. Un grupo está completo cuando todos los idiomas están publicados; una versión publicada cuya última revisión (reviewedAt, si no la fecha de publicación) tiene más de {days} días se considera caducada; una versión sin lista de puntos clave se marca.",
+      "totals": {
+        "label": "Totales del tablero",
+        "groups": "Grupos de traducción",
+        "complete": "Completos (todos los idiomas publicados)",
+        "attention": "Necesitan atención",
+        "published": "Versiones publicadas",
+        "unpublished": "Versiones sin publicar",
+        "missingVersions": "Versiones de idioma que faltan",
+        "missingTakeaways": "Versiones sin puntos clave",
+        "staleReviews": "Revisiones caducadas",
+        "neverReviewed": "Grupos nunca revisados"
+      },
+      "perLocale": {
+        "title": "Por idioma",
+        "caption": "Número de versiones por idioma",
+        "columns": {
+          "locale": "Idioma",
+          "published": "Publicado",
+          "reviewed": "Revisado",
+          "translated": "Traducido",
+          "draft": "Borrador",
+          "missing": "Falta",
+          "takeaways": "Sin puntos clave",
+          "stale": "Revisiones caducadas",
+          "lastReviewed": "Última revisión"
+        }
+      },
+      "filters": {
+        "legend": "Filtros del tablero",
+        "view": "Mostrar",
+        "topic": "Tema",
+        "views": {
+          "all": "Todos los grupos",
+          "attention": "Que necesitan atención",
+          "incomplete": "Incompletos",
+          "stale": "Revisiones caducadas",
+          "takeaways": "Sin puntos clave",
+          "unpublished": "Con versiones sin publicar"
+        },
+        "allTopics": "Todos los temas",
+        "reset": "Restablecer filtros"
+      },
+      "columns": {
+        "article": "Artículo",
+        "locales": "Versiones de idioma",
+        "reviewed": "Última revisión",
+        "flags": "Marcas",
+        "actions": "Acciones"
+      },
+      "caption": "Grupos de traducción con sus versiones de idioma",
+      "count": "{count} grupos",
+      "countFiltered": "{count} grupos coinciden con los filtros",
+      "empty": "No se encontraron artículos",
+      "emptyText": "El cargador no encontró archivos de artículos en content/knowledge para los idiomas activos.",
+      "emptyFiltered": "Ningún grupo coincide con estos filtros",
+      "emptyFilteredText": "Amplía los filtros o restablécelos.",
+      "openLabel": "Abrir el artículo en vivo {title}"
+    },
+    "feedback": {
+      "title": "Opiniones de lectores por artículo",
+      "intro": "Votos de «¿Te ha resultado útil este artículo?» de los artículos públicos: en total y en los últimos {days} días, divididos por idioma. Los votos son anónimos por diseño — no hay nada en lo que profundizar.",
+      "unavailable": "Tabla de opiniones no disponible",
+      "unavailableText": "Falta la tabla knowledge_feedback en esta base de datos. Aplica la migración 0005 y recarga.",
+      "empty": "Aún no hay votos",
+      "emptyText": "Los votos aparecen aquí en cuanto un lector responde a la pregunta bajo un artículo.",
+      "totals": {
+        "label": "Totales de opiniones",
+        "votes": "Votos (en total)",
+        "helpful": "Útil",
+        "notHelpful": "No útil",
+        "share": "Porcentaje de útil",
+        "recentVotes": "Votos en los últimos {days} días",
+        "articles": "Artículos con votos",
+        "withoutVotes": "Artículos publicados sin votos"
+      },
+      "columns": {
+        "article": "Artículo",
+        "allTime": "En total",
+        "recent": "Últimos {days} días",
+        "share": "Porcentaje de útil",
+        "byLocale": "Por idioma",
+        "last": "Último voto",
+        "actions": "Acciones"
+      },
+      "cell": "{helpful} útil · {notHelpful} no útil",
+      "caption": "Votos por artículo, los más negativos primero",
+      "unknownArticle": "Artículo que no está en el tablero",
+      "inboxLink": "Abrir el resumen de 30 días en la bandeja de entrada"
+    },
+    "paths": {
+      "title": "Rutas de aprendizaje",
+      "intro": "Rutas seleccionadas de content/knowledge/paths.<locale>.json por idioma: cuántos artículos listados se resuelven en una versión publicada y si el hub muestra la ruta. Los ids que no se resuelven son grupos desconocidos o versiones aún no publicadas.",
+      "totals": {
+        "label": "Totales de rutas",
+        "paths": "Rutas",
+        "attention": "Necesitan atención",
+        "missingLocales": "Definiciones de idioma que faltan",
+        "unresolved": "Ids de artículos sin resolver"
+      },
+      "columns": {
+        "path": "Ruta",
+        "locales": "Versiones de idioma",
+        "flags": "Marcas",
+        "actions": "Acciones"
+      },
+      "caption": "Rutas de aprendizaje por idioma",
+      "empty": "No hay rutas definidas",
+      "emptyText": "No existe ningún archivo paths.<locale>.json con entradas válidas en content/knowledge.",
+      "resolvedOf": "{resolved} de {listed} artículos se resuelven",
+      "unresolvedIds": "Sin resolver",
+      "hidden": "Oculta en el hub (ningún artículo se resuelve)",
+      "missing": "Sin definición en este idioma",
+      "reading": "{count} min de lectura",
+      "openHub": "Abrir rutas de aprendizaje ({locale})"
+    },
+    "freshness": {
+      "title": "Sitemaps y feeds",
+      "intro": "El índice de sitemaps, los sitemaps de Knowledge y los feeds RSS se generan en el build a partir de los artículos publicados. Los números de abajo son lo que el cargador generaría ahora; si difieren de los archivos en vivo, toca un nuevo build.",
+      "build": {
+        "title": "Último build",
+        "id": "Id del build",
+        "builtAt": "Construido",
+        "runtime": "Entorno de ejecución",
+        "runtimes": {
+          "production": "Build de producción",
+          "development": "Servidor de desarrollo",
+          "test": "Prueba"
+        },
+        "none": "No se encontró salida de build",
+        "noneText": "No hay .next/BUILD_ID junto a la aplicación. En desarrollo las rutas se generan por petición, así que los archivos en vivo siempre coinciden con el cargador."
+      },
+      "index": {
+        "title": "Índice de sitemaps",
+        "sitemaps": "{count} sitemaps (páginas y Knowledge por idioma)",
+        "open": "Abrir índice de sitemaps"
+      },
+      "columns": {
+        "locale": "Idioma",
+        "knowledgeUrls": "URL de Knowledge / elementos del feed",
+        "pageUrls": "URL de páginas",
+        "newestPublished": "Publicación más reciente",
+        "newestUpdated": "Actualización más reciente",
+        "unpublished": "Versiones sin publicar",
+        "links": "Archivos en vivo"
+      },
+      "caption": "Números de sitemaps y feeds por idioma",
+      "openHub": "Hub",
+      "openFeed": "Feed",
+      "openSitemap": "Sitemap"
+    },
+    "integrations": {
+      "title": "Cobertura de integraciones",
+      "intro": "Qué entradas del catálogo tienen artículos publicados de Tracking Knowledge por idioma (las plataformas o sistemas de tienda de un artículo nombran el slug, o una de sus etiquetas está en las etiquetas Knowledge de la entrada — la misma regla que la página pública de integración) y cuáles tienen documentación pública del proveedor registrada. Las entradas con menos artículos van primero.",
+      "totals": {
+        "label": "Totales de cobertura",
+        "integrations": "Integraciones",
+        "destinations": "Destinos",
+        "sources": "Fuentes",
+        "withArticles": "Con artículos",
+        "withoutArticles": "Sin artículos",
+        "everyLocale": "Cubiertas en todos los idiomas",
+        "vendorDocs": "Con documentación del proveedor"
+      },
+      "columns": {
+        "integration": "Integración",
+        "kind": "Tipo",
+        "articles": "Artículos por idioma",
+        "groups": "Grupos",
+        "vendorDocs": "Documentación del proveedor",
+        "actions": "Acciones"
+      },
+      "kinds": {
+        "destination": "Destino",
+        "source": "Fuente"
+      },
+      "categories": {
+        "ads": "Publicidad",
+        "analytics": "Analítica",
+        "commerce": "Comercio",
+        "affiliate": "Afiliación",
+        "custom": "Personalizado"
+      },
+      "caption": "Integraciones con su cobertura de Knowledge",
+      "noArticles": "Sin artículos",
+      "vendorDocsYes": "Registrada",
+      "vendorDocsNo": "Ninguna (solo documentación de Track)",
+      "verifiedOn": "Verificado el {date}",
+      "openIntegration": "Abrir página de integración",
+      "openIntegrationLabel": "Abrir la página de integración en vivo de {name}",
+      "openVendorDocs": "Doc. del proveedor"
+    }
+  }
+}

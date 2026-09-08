@@ -79,7 +79,8 @@
         "manageSites": "Gestisci siti",
         "openAssistant": "Apri Track AI",
         "closeAssistant": "Chiudi Track AI",
-        "logout": "Esci"
+        "logout": "Esci",
+        "operations": "Apri Track Operations"
       },
       "modules": {
         "eventsMatrix": "Event Coverage Matrix",
@@ -133,7 +134,8 @@
       "account": "Account",
       "signedInAs": "Accesso effettuato come",
       "role": "Ruolo",
-      "logout": "Esci"
+      "logout": "Esci",
+      "operations": "Track Operations"
     },
     "roles": {
       "OWNER": "Proprietario",
@@ -153,6 +155,17 @@
       "text": "L’errore è stato registrato. Riprova o torna al Command Center.",
       "retry": "Riprova",
       "back": "Command Center"
+    },
+    "supportAccess": {
+      "operatorTitle": "Accesso di supporto attivo fino al {until} (accesso {grant})",
+      "operatorText": "Stai visualizzando {organization} in sola lettura tramite un accesso break-glass. Ogni pagina aperta viene registrata nel registro di audit dell’organizzazione; le modifiche vengono rifiutate.",
+      "backToOps": "Torna a Track Operations",
+      "customerTitle": "Il supporto Track ha accesso in sola lettura a questa organizzazione fino al {until} (accesso {grant})",
+      "customerText": "È attivo un accesso di supporto approvato e limitato nel tempo: il personale Track può vedere questo spazio di lavoro ma non può modificare nulla, e ogni pagina aperta viene registrata nel tuo registro di audit.",
+      "customerMultiple": "{count} accessi di supporto sono attivi.",
+      "leave": "Esci dalla vista di supporto",
+      "leaving": "Uscita in corso…",
+      "openAudit": "Apri il registro di audit"
     },
     "pages": {
       "aiSetup": {

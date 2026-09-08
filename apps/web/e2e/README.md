@@ -5,8 +5,10 @@ Playwright (Chromium) against a running web server. The base URL defaults to `ht
 | Project | Files | Purpose |
 | --- | --- | --- |
 | `setup` | `auth.setup.ts` | Signs in once as the seeded owner (`owner@acme.test` / `Demo-Password-123!`, `SEED_DEMO=true pnpm db:seed`) and stores the session in `.auth/owner.json` (git-ignored). better-auth allows 3 sign-ins per 10 s, so every other project starts from this stored session instead of signing in. |
-| `chromium` | `marketing.spec.ts`, `app.spec.ts` | Functional smoke tests (marketing with axe, dashboard, Track AI shell). Ignores `visual.spec.ts`. |
+| `chromium` | `marketing.spec.ts`, `app.spec.ts`, `ops.spec.ts` | Functional smoke tests (marketing with axe, dashboard, Track AI shell, Track Operations console). Ignores `visual.spec.ts`. |
 | `visual` | `visual.spec.ts` | Visual regression: `toHaveScreenshot` against the PNG baselines in `__screenshots__/`. |
+
+`ops.spec.ts` (Track Operations, docs/17) signs in the seeded platform admin (`ops@acme.test` / `Demo-Password-123!`) once through the auth API in its own `beforeAll` and stores that session in `.auth/ops.json`; the owner checks use the stored owner session. It needs the server to run with `OPS_REQUIRE_2FA=false` (the seeded operator has no two-factor enrolment) and on its trusted origin (see below). It covers the owner's 403 on `/ops`, every console page at 1440 and 375 px (one `h1`, no raw translation keys, viewport-fixed shell, axe serious/critical empty), a feature flag, an announcement and its dashboard banner, the break-glass round trip (request → single-admin self-approval → read-only tenant view with banner and refused mutation → leave → revoke), suspend/unsuspend of `acme-demo` with the owner's notice, and one audited CSV export. Its flows change the demo organisation for the duration of the run (a support banner, a temporary suspension, an active announcement), which can collide with the `visual` project's `app-overview-*` capture when both run in the same invocation (the 2026-09-08 full run passed with all projects together; if that capture ever diffs, run `--project=visual` on its own). Left behind on purpose: one feature flag per run (`e2e.smoke_<stamp>`, flags cannot be deleted) and the revoked announcement row.
 
 ```bash
 cd apps/web

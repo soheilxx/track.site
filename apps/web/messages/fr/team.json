@@ -307,6 +307,7 @@
         "agent": "Track AI",
         "system": "Système",
         "source_key": "Clé source",
+        "platform": "Support Track",
         "unknown": "Inconnu"
       },
       "formerMember": "Ancien membre",

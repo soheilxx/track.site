@@ -1,0 +1,250 @@
+{
+  "opsGrowth": {
+    "intro": "Aanmeldingen, activering, retentie, abonnementsmix en connectoren over alle organisaties — aantallen en percentages uit de eigen tabellen van het platform, nooit event-payloads of gegevens van eindgebruikers. Alle kalenderwaarden zijn in UTC.",
+    "context": {
+      "asOf": "Per {at}",
+      "organizations": "{count, plural, one {# organisatie} other {# organisaties}}",
+      "users": "{count, plural, one {# account} other {# accounts}}",
+      "sites": "{count, plural, one {# site} other {# sites}}"
+    },
+    "sample": {
+      "title": "Kleine aantallen",
+      "text": "Er bestaan minder dan {min} organisaties. Percentages worden voor de volledigheid getoond, maar één organisatie verschuift ze met hele procentpunten — lees de aantallen, niet de percentages."
+    },
+    "kpis": {
+      "organizations": {
+        "label": "Organisaties",
+        "hint": "{count, plural, one {# nieuw in de laatste 30 dagen} other {# nieuw in de laatste 30 dagen}}"
+      },
+      "newOrganizations": {
+        "label": "Nieuwe organisaties · 30 d",
+        "hint": "{delta} t.o.v. de vorige 30 dagen ({previous})"
+      },
+      "active": {
+        "label": "Actieve organisaties · 7 d / 30 d",
+        "hint": "{share7} / {share30} van alle organisaties, met geaccepteerde events"
+      },
+      "paying": {
+        "label": "Betalende organisaties",
+        "hint": "{share} van alle organisaties · actief abonnement"
+      }
+    },
+    "signups": {
+      "title": "Aanmeldingen",
+      "intro": "Nieuwe accounts en organisaties op aanmaakdatum. Een account dat een organisatie aanmaakt telt in beide reeksen; uitgenodigde leden tellen alleen als account.",
+      "daily": {
+        "title": "Per dag · laatste {days} dagen"
+      },
+      "weekly": {
+        "title": "Per week · laatste {weeks} weken"
+      },
+      "series": {
+        "organizations": "Organisaties",
+        "users": "Accounts"
+      },
+      "chart": {
+        "daily": "Gegroepeerde staven per dag: aangemaakte organisaties en accounts. De tabel onder de grafiek toont dezelfde waarden.",
+        "weekly": "Gegroepeerde staven per ISO-week vanaf maandag: aangemaakte organisaties en accounts. De tabel onder de grafiek toont dezelfde waarden."
+      },
+      "table": "Als tabel tonen",
+      "columns": {
+        "day": "Dag",
+        "week": "Week van",
+        "organizations": "Organisaties",
+        "users": "Accounts"
+      },
+      "partial": "lopende week, nog niet afgesloten",
+      "figures": {
+        "last7": "Laatste 7 dagen",
+        "last30": "Laatste 30 dagen",
+        "previous30": "Vorige 30 dagen",
+        "accounts": "{count, plural, one {# account} other {# accounts}}"
+      },
+      "empty": {
+        "title": "Geen aanmeldingen in deze periode",
+        "text": "In de laatste 12 weken is geen account of organisatie aangemaakt."
+      }
+    },
+    "funnel": {
+      "title": "Activeringsfunnel",
+      "intro": "Mijlpalen die elke organisatie kan bereiken, gemeten uit de tabellen die ze vastleggen. Mijlpalen zijn onafhankelijk: een organisatie telt in een fase zodra ze die mijlpaal heeft bereikt, ongeacht of ze de eerdere fasen heeft doorlopen.",
+      "stages": {
+        "created": "Organisatie aangemaakt",
+        "site": "Eerste site aangemaakt",
+        "verified": "Snippet geverifieerd (domein)",
+        "event": "Eerste geaccepteerde event",
+        "destination": "Bestemming gekoppeld",
+        "published": "Configuratie gepubliceerd",
+        "paying": "Betalend (actief abonnement)"
+      },
+      "columns": {
+        "stage": "Fase",
+        "count": "Organisaties",
+        "step": "Van vorige fase",
+        "total": "Van totaal",
+        "median": "Mediane tijd sinds aanmelding",
+        "recent": "Laatste {days} dagen",
+        "recentStep": "Van vorige fase (recent)"
+      },
+      "figures": {
+        "all": "Alle organisaties",
+        "recent": "Aangemaakt in de laatste {days} dagen"
+      },
+      "caption": "Activeringsfasen met aantal organisaties, conversiepercentages en mediane tijd sinds aanmelding",
+      "note": "Percentages zijn verhoudingen van aantallen. \"Van vorige fase\" kan boven 100 % uitkomen omdat mijlpalen onafhankelijk zijn — een organisatie kan betalen zonder geverifieerd domein.",
+      "empty": {
+        "title": "Nog geen organisaties",
+        "text": "De funnel vult zich zodra de eerste organisatie is aangemaakt."
+      }
+    },
+    "retention": {
+      "title": "Wekelijkse retentie",
+      "intro": "Organisaties per aanmeldweek (maandag, UTC) en het aandeel dat in elke week na aanmelding nog geaccepteerde events verstuurt — week 0 zijn de eerste zeven dagen. Gemeten uit de uurlijkse event-aggregaten.",
+      "caption": "Wekelijkse retentiecohorten: aandeel van elke aanmeldweek dat actief was in de weken na aanmelding",
+      "columns": {
+        "cohort": "Aanmeldweek",
+        "size": "Organisaties",
+        "week": "W{n}"
+      },
+      "cell": "{active} van {size} actief",
+      "state": {
+        "partial": "loopt nog",
+        "pending": "nog niet gestart"
+      },
+      "small": "klein cohort",
+      "legend": {
+        "scale": "Donkerdere cellen betekenen een groter actief aandeel van het cohort; elke cel toont ook het percentage.",
+        "partial": "Gestippelde cellen lopen nog — de week is niet voor elke organisatie van het cohort afgelopen.",
+        "small": "Cohorten met minder dan {min} organisaties zijn gemarkeerd; één organisatie verschuift hun percentage sterk."
+      },
+      "horizon": "Uurlijkse aggregaten beschikbaar sinds {at}.",
+      "horizonNone": "Nog geen uurlijkse aggregaten vastgelegd — activiteit kan niet worden gemeten.",
+      "empty": {
+        "title": "Geen aanmeldingen in de laatste {weeks} weken",
+        "text": "Cohorten verschijnen zodra een organisatie binnen het venster wordt aangemaakt."
+      }
+    },
+    "planMix": {
+      "title": "Abonnementsmix",
+      "intro": "Organisaties per catalogusabonnement en abonnementsstatus uit het facturatieregister. Organisaties zonder registerregel zijn nooit aan een checkout begonnen.",
+      "caption": "Organisaties per abonnement en abonnementsstatus",
+      "columns": {
+        "plan": "Abonnement",
+        "organizations": "Organisaties",
+        "share": "Aandeel",
+        "active": "Actief",
+        "trialing": "Proefperiode",
+        "pastDue": "Achterstallig",
+        "canceled": "Opgezegd",
+        "other": "Overig"
+      },
+      "figures": {
+        "paying": "Betalend"
+      },
+      "none": "Geen abonnement",
+      "unknown": "Onbekend abonnements-id",
+      "empty": {
+        "title": "Nog geen organisaties",
+        "text": "De abonnementsmix vult zich zodra de eerste organisatie bestaat."
+      }
+    },
+    "connectors": {
+      "title": "Connectoren in gebruik",
+      "intro": "Connectortypen gerangschikt op organisaties met minstens één gekoppelde bestemming van dat type. Alleen aantallen integraties — geen identificaties, geen inloggegevens.",
+      "caption": "Connectortypen naar organisaties die ze gebruiken",
+      "columns": {
+        "connector": "Connector",
+        "organizations": "Organisaties",
+        "connected": "Gekoppeld",
+        "paused": "Gepauzeerd",
+        "error": "Fout",
+        "notConnected": "Niet gekoppeld"
+      },
+      "figures": {
+        "organizations": "Organisaties met bestemming",
+        "connected": "Gekoppelde integraties"
+      },
+      "more": "{count, plural, one {# ander connectortype met minder organisaties staat niet in de lijst.} other {# andere connectortypen met minder organisaties staan niet in de lijst.}}",
+      "empty": {
+        "title": "Nog geen bestemmingen",
+        "text": "Connectoren verschijnen hier zodra een organisatie een bestemming toevoegt."
+      }
+    },
+    "method": {
+      "title": "Methode en kanttekeningen",
+      "items": {
+        "sources": "Aanmeldingen tellen rijen van de account- en organisatietabellen op aanmaakdatum; niets wordt bemonsterd of geschat.",
+        "milestones": "Funnelmijlpalen: eerste siterij; eerste geverifieerd domein (domains.verified_at); eerste uurlijks aggregaat met geaccepteerde events; aanmaakdatum van een momenteel gekoppelde bestemming (een weer ontkoppelde bestemming telt niet); eerste configuratiepublicatie; aanmaak van een actief abonnement in het facturatieregister.",
+        "proxies": "De tijdstippen voor bestemming en betaling zijn benaderingen — de koppeling en de checkout zelf dragen geen tijdstempel — dus hun mediane tijden zijn bij benadering.",
+        "retention": "Retentie en activiteit berusten op de uurlijkse event-aggregaten; als aggregaten door bewaarregels zijn opgeschoond, lijken oudere cohorten inactief. De aggregaathorizon staat onder het raster.",
+        "noGeo": "Geen geografische uitsplitsing: Track slaat geen land op voor accounts of organisaties, dus er wordt er geen getoond.",
+        "privacy": "Alles op deze pagina is een aantal of een percentage over alle organisaties. Geen organisatie, account, bezoeker of event wordt geïdentificeerd."
+      }
+    },
+    "overview": {
+      "title": "Kerncijfers",
+      "link": "Groei openen",
+      "asOf": "Per {at}",
+      "sample": "Kleine aantallen: minder dan {min} organisaties.",
+      "unavailable": "Kon niet worden geladen — de module meldde een fout. Open de module voor details.",
+      "organizations": {
+        "label": "Organisaties",
+        "hint": "{count, plural, one {# account} other {# accounts}}"
+      },
+      "newOrganizations": {
+        "label": "Nieuwe organisaties · 30 d",
+        "hint": "{count} in de laatste 7 dagen · {delta} t.o.v. de vorige 30 dagen"
+      },
+      "active": {
+        "label": "Actieve organisaties · 7 d / 30 d",
+        "hint": "Met geaccepteerde events"
+      },
+      "paying": {
+        "label": "Betalende organisaties",
+        "hint": "Actief abonnement"
+      },
+      "health": {
+        "title": "Platformstatus",
+        "link": "Platformstatus openen",
+        "checkedAt": "Gecontroleerd {at}",
+        "tiles": {
+          "collector": "Collector",
+          "worker": "Worker",
+          "queues": "Wachtrijen",
+          "deliveries": "Leveringen · 24 u",
+          "database": "Database"
+        },
+        "state": {
+          "ok": "OK",
+          "warn": "Aandacht nodig",
+          "bad": "Verstoord",
+          "info": "Info",
+          "neutral": "Niet gemeten"
+        }
+      },
+      "inbox": {
+        "title": "Inbox",
+        "link": "Inbox openen",
+        "notMeasured": "Niet gemeten",
+        "failed": "Kon niet worden geladen",
+        "contacts": {
+          "label": "Contactaanvragen",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{newCount} nieuw · {inProgress} in behandeling"
+        },
+        "privacy": {
+          "label": "Privacyverzoeken",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{overdue} achterstallig · {dueSoon} binnenkort verschuldigd",
+          "unavailable": "Privacytabellen niet beschikbaar in deze installatie"
+        },
+        "alerts": {
+          "label": "Waarschuwingen",
+          "open": "{count, plural, one {# open} other {# open}}",
+          "detail": "{critical} kritiek · laatste {days} dagen",
+          "unavailable": "Waarschuwingstabellen niet beschikbaar in deze installatie"
+        }
+      }
+    }
+  }
+}

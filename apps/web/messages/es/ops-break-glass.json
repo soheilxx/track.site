@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "Pendientes de aprobación",
+      "active": "Accesos activos",
+      "admins": "Admins que aprueban",
+      "adminsHint": "Admins de plataforma con correo verificado{twoFactor, select, yes { y doble factor} other {}} que pueden aprobar.",
+      "fourEyesOn": "Cuatro ojos: un segundo admin de plataforma aprueba tus solicitudes.",
+      "fourEyesOff": "Eres el único admin que aprueba: tus propias solicitudes se autoaprueban y necesitan una referencia de ticket.",
+      "noAdmins": "Ahora mismo ningún admin de plataforma puede aprobar."
+    },
+    "rules": {
+      "readOnly": "Cada acceso es de solo lectura: el panel del cliente rechaza los cambios, y la transacción de base de datos también es de solo lectura.",
+      "audited": "Cada solicitud, aprobación, revocación y cada página abierta con un acceso queda registrada en el registro de auditoría de la organización con el identificador del acceso.",
+      "notified": "Los propietarios de la organización reciben un correo al aprobar y al revocar un acceso activo."
+    },
+    "request": {
+      "title": "Solicitar acceso",
+      "text": "Acceso de solo lectura a una organización durante un tiempo limitado. Un admin de plataforma aprueba; el reloj arranca con la aprobación.",
+      "organization": "Organización",
+      "organizationPlaceholder": "Selecciona una organización",
+      "organizationHint": "{count, plural, =0 {Todavía no hay organizaciones} one {# organización} other {# organizaciones}}, ordenadas por nombre.",
+      "reason": "Motivo",
+      "reasonHint": "Al menos {min} caracteres: qué necesitas ver y por qué — el informe del cliente, el contexto del ticket.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Referencia del ticket",
+      "ticketHint": "Por ejemplo SUP-1234. Obligatoria cuando apruebas tu propia solicitud (caso de admin único).",
+      "optional": "opcional",
+      "duration": "Duración",
+      "durations": {
+        "15": "15 minutos",
+        "30": "30 minutos",
+        "60": "1 hora",
+        "120": "2 horas",
+        "240": "4 horas"
+      },
+      "submit": "Solicitar acceso de solo lectura"
+    },
+    "queue": {
+      "title": "Cola de aprobación",
+      "caption": "Solicitudes break-glass abiertas",
+      "empty": "No hay solicitudes abiertas",
+      "emptyText": "Las solicitudes esperan aquí hasta que un admin de plataforma las apruebe o rechace.",
+      "requestedBy": "Solicitado por",
+      "organization": "Organización",
+      "reason": "Motivo",
+      "ticket": "Ticket",
+      "duration": "Duración",
+      "requestedAt": "Solicitado",
+      "actions": "Acciones",
+      "noTicket": "Sin referencia de ticket",
+      "you": "tú",
+      "approve": "Aprobar",
+      "decline": "Rechazar",
+      "withdraw": "Retirar",
+      "adminOnly": "Solo los admins de plataforma aprueban.",
+      "fourEyesBlocked": "Otro admin de plataforma tiene que aprobar tu propia solicitud (cuatro ojos).",
+      "ticketRequired": "La autoaprobación necesita una referencia de ticket: retira la solicitud y vuelve a presentarla con una.",
+      "selfApprovalHint": "Ningún otro admin puede aprobar: esta aprobación se registra como autoaprobada.",
+      "approveDialog": {
+        "title": "¿Aprobar el acceso de solo lectura?",
+        "description": "{name} obtiene desde ahora acceso de solo lectura a {organization} durante {duration}. Los propietarios de la organización reciben un correo y cada página abierta queda registrada con el identificador del acceso.",
+        "confirm": "Aprobar acceso"
+      },
+      "declineDialog": {
+        "title": "¿Rechazar esta solicitud?",
+        "description": "La solicitud de {name} para {organization} se cierra sin acceso. La decisión queda registrada en el registro de auditoría.",
+        "confirm": "Rechazar solicitud"
+      },
+      "withdrawDialog": {
+        "title": "¿Retirar tu solicitud?",
+        "description": "Tu solicitud para {organization} se cierra sin acceso. Puedes presentar una nueva en cualquier momento.",
+        "confirm": "Retirar solicitud"
+      }
+    },
+    "active": {
+      "title": "Accesos activos",
+      "caption": "Accesos break-glass activos ahora mismo",
+      "empty": "Ningún acceso activo",
+      "emptyText": "Nadie tiene ahora mismo acceso de solo lectura a una organización cliente.",
+      "operator": "Operador",
+      "organization": "Organización",
+      "window": "Ventana",
+      "until": "Hasta {until}",
+      "approvedBy": "Aprobado por {name}",
+      "selfApproved": "autoaprobado",
+      "ticket": "Ticket {ticket}",
+      "notified": "Propietarios avisados por correo",
+      "notNotified": "Propietarios no avisados — revisa el transporte de correo",
+      "actions": "Acciones",
+      "open": "Abrir panel (solo lectura)",
+      "revoke": "Revocar",
+      "revokeDialog": {
+        "title": "¿Revocar el acceso ahora?",
+        "description": "El acceso a {organization} termina de inmediato; el operador lo pierde con la siguiente petición y los propietarios reciben un correo.",
+        "confirm": "Revocar acceso"
+      },
+      "countdown": {
+        "remaining": "{time} restantes",
+        "hoursMinutes": "{hours} h {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "menos de un minuto",
+        "expired": "Caducado"
+      }
+    },
+    "history": {
+      "title": "Historial",
+      "caption": "Entradas break-glass cerradas, caducadas y revocadas",
+      "empty": "Todavía no hay nada registrado",
+      "emptyText": "Aquí aparecen las solicitudes cerradas y los accesos caducados y revocados.",
+      "truncated": "Solo se muestran las entradas más recientes; el rastro completo está en el registro de auditoría.",
+      "when": "Presentada",
+      "state": "Estado",
+      "operator": "Operador",
+      "organization": "Organización",
+      "details": "Detalles",
+      "approved": "Aprobado {when}",
+      "revoked": "Finalizado {when}",
+      "window": "Ventana de {minutes} min"
+    },
+    "states": {
+      "pending": "Pendiente de aprobación",
+      "stale": "Solicitud caducada",
+      "withdrawn": "Retirada o rechazada",
+      "active": "Activo",
+      "revoked": "Revocado",
+      "expired": "Caducado"
+    },
+    "notices": {
+      "requested": "Solicitud presentada. Un admin de plataforma tiene que aprobarla.",
+      "approved": "Acceso aprobado; ya está activo.",
+      "revoked": "Acceso revocado.",
+      "withdrawn": "Solicitud retirada.",
+      "declined": "Solicitud rechazada.",
+      "notified": "{sent, plural, =0 {Ningún propietario recibió correo} one {# propietario avisado por correo} other {# propietarios avisados por correo}}{failed, plural, =0 {} one {, # envío falló} other {, # envíos fallaron}}."
+    },
+    "errors": {
+      "generic": "Algo ha salido mal. Inténtalo de nuevo.",
+      "forbidden": "No tienes permiso para hacer eso.",
+      "notFound": "Esta entrada ya no existe.",
+      "validation": "Revisa los campos marcados.",
+      "organization": "Selecciona una organización.",
+      "reason": "El motivo necesita entre {min} y {max} caracteres.",
+      "ticketRef": "La referencia del ticket puede contener letras, dígitos, espacios y - _ # : . / (hasta {max} caracteres).",
+      "durationMinutes": "Elige una de las duraciones ofrecidas.",
+      "duplicate": "Ya tienes una solicitud abierta o un acceso activo para esta organización.",
+      "notPending": "Esta solicitud ya no está abierta.",
+      "stale": "Esta solicitud caducó sin aprobación. Presenta una nueva.",
+      "fourEyes": "Otro admin de plataforma tiene que aprobar tu propia solicitud.",
+      "ticketRequired": "La autoaprobación necesita una referencia de ticket.",
+      "notActive": "Este acceso no está activo.",
+      "notGrantee": "Solo el operador al que se concedió el acceso puede abrir el panel.",
+      "confirmRequired": "Confirma primero la acción en el diálogo."
+    },
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar"
+    }
+  }
+}

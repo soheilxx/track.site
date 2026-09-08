@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "Wacht op goedkeuring",
+      "active": "Actieve toegangen",
+      "admins": "Goedkeurende admins",
+      "adminsHint": "Platformadmins met een geverifieerd e-mailadres{twoFactor, select, yes { en tweestapsverificatie} other {}} die kunnen goedkeuren.",
+      "fourEyesOn": "Vier ogen: een tweede platformadmin keurt je aanvragen goed.",
+      "fourEyesOff": "Je bent de enige goedkeurende admin: je eigen aanvragen worden zelf goedgekeurd en vereisen een ticketreferentie.",
+      "noAdmins": "Op dit moment kan geen enkele platformadmin goedkeuren."
+    },
+    "rules": {
+      "readOnly": "Elke toegang is alleen-lezen: het dashboard van de klant weigert wijzigingen, en ook de databasetransactie is alleen-lezen.",
+      "audited": "Elke aanvraag, goedkeuring, intrekking en elke geopende pagina onder een toegang wordt met het toegangs-id vastgelegd in de auditlog van de organisatie.",
+      "notified": "De eigenaren van de organisatie krijgen een e-mail bij goedkeuring en bij intrekking van een actieve toegang."
+    },
+    "request": {
+      "title": "Toegang aanvragen",
+      "text": "Alleen-lezen toegang tot één organisatie voor beperkte tijd. Een platformadmin keurt goed; de klok start bij goedkeuring.",
+      "organization": "Organisatie",
+      "organizationPlaceholder": "Kies een organisatie",
+      "organizationHint": "{count, plural, =0 {Nog geen organisaties} one {# organisatie} other {# organisaties}}, gesorteerd op naam.",
+      "reason": "Reden",
+      "reasonHint": "Minimaal {min} tekens: wat je moet zien en waarom — de melding van de klant, de context van het ticket.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Ticketreferentie",
+      "ticketHint": "Bijvoorbeeld SUP-1234. Verplicht wanneer je je eigen aanvraag goedkeurt (situatie met één admin).",
+      "optional": "optioneel",
+      "duration": "Duur",
+      "durations": {
+        "15": "15 minuten",
+        "30": "30 minuten",
+        "60": "1 uur",
+        "120": "2 uur",
+        "240": "4 uur"
+      },
+      "submit": "Alleen-lezen toegang aanvragen"
+    },
+    "queue": {
+      "title": "Goedkeuringswachtrij",
+      "caption": "Openstaande break-glass-aanvragen",
+      "empty": "Geen openstaande aanvragen",
+      "emptyText": "Aanvragen wachten hier tot een platformadmin ze goedkeurt of afwijst.",
+      "requestedBy": "Aangevraagd door",
+      "organization": "Organisatie",
+      "reason": "Reden",
+      "ticket": "Ticket",
+      "duration": "Duur",
+      "requestedAt": "Aangevraagd",
+      "actions": "Acties",
+      "noTicket": "Geen ticketreferentie",
+      "you": "jij",
+      "approve": "Goedkeuren",
+      "decline": "Afwijzen",
+      "withdraw": "Intrekken",
+      "adminOnly": "Alleen platformadmins keuren goed.",
+      "fourEyesBlocked": "Een andere platformadmin moet je eigen aanvraag goedkeuren (vier ogen).",
+      "ticketRequired": "Zelf goedkeuren vereist een ticketreferentie: trek de aanvraag in en dien hem opnieuw in met een ticket.",
+      "selfApprovalHint": "Geen andere admin kan goedkeuren: deze goedkeuring wordt vastgelegd als zelf goedgekeurd.",
+      "approveDialog": {
+        "title": "Alleen-lezen toegang goedkeuren?",
+        "description": "{name} krijgt vanaf nu {duration} alleen-lezen toegang tot {organization}. De eigenaren van de organisatie krijgen een e-mail en elke geopende pagina wordt met het toegangs-id vastgelegd.",
+        "confirm": "Toegang goedkeuren"
+      },
+      "declineDialog": {
+        "title": "Deze aanvraag afwijzen?",
+        "description": "De aanvraag van {name} voor {organization} wordt zonder toegang gesloten. De beslissing wordt vastgelegd in de auditlog.",
+        "confirm": "Aanvraag afwijzen"
+      },
+      "withdrawDialog": {
+        "title": "Je aanvraag intrekken?",
+        "description": "Je aanvraag voor {organization} wordt zonder toegang gesloten. Je kunt op elk moment een nieuwe indienen.",
+        "confirm": "Aanvraag intrekken"
+      }
+    },
+    "active": {
+      "title": "Actieve toegangen",
+      "caption": "Momenteel actieve break-glass-toegangen",
+      "empty": "Geen actieve toegang",
+      "emptyText": "Niemand heeft op dit moment alleen-lezen toegang tot een klantorganisatie.",
+      "operator": "Medewerker",
+      "organization": "Organisatie",
+      "window": "Tijdvenster",
+      "until": "Tot {until}",
+      "approvedBy": "Goedgekeurd door {name}",
+      "selfApproved": "zelf goedgekeurd",
+      "ticket": "Ticket {ticket}",
+      "notified": "Eigenaren per e-mail geïnformeerd",
+      "notNotified": "Eigenaren niet geïnformeerd — controleer het e-mailtransport",
+      "actions": "Acties",
+      "open": "Dashboard openen (alleen-lezen)",
+      "revoke": "Intrekken",
+      "revokeDialog": {
+        "title": "Toegang nu intrekken?",
+        "description": "De toegang tot {organization} eindigt direct; de medewerker verliest hem bij het volgende verzoek en de eigenaren krijgen een e-mail.",
+        "confirm": "Toegang intrekken"
+      },
+      "countdown": {
+        "remaining": "nog {time}",
+        "hoursMinutes": "{hours} u {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "minder dan een minuut",
+        "expired": "Verlopen"
+      }
+    },
+    "history": {
+      "title": "Geschiedenis",
+      "caption": "Gesloten, verlopen en ingetrokken break-glass-vermeldingen",
+      "empty": "Nog niets vastgelegd",
+      "emptyText": "Gesloten aanvragen en verlopen of ingetrokken toegangen verschijnen hier.",
+      "truncated": "Alleen de meest recente vermeldingen worden getoond; het volledige spoor staat in de auditlog.",
+      "when": "Ingediend",
+      "state": "Status",
+      "operator": "Medewerker",
+      "organization": "Organisatie",
+      "details": "Details",
+      "approved": "Goedgekeurd {when}",
+      "revoked": "Beëindigd {when}",
+      "window": "Tijdvenster van {minutes} min"
+    },
+    "states": {
+      "pending": "Wacht op goedkeuring",
+      "stale": "Aanvraag verlopen",
+      "withdrawn": "Ingetrokken of afgewezen",
+      "active": "Actief",
+      "revoked": "Ingetrokken",
+      "expired": "Verlopen"
+    },
+    "notices": {
+      "requested": "Aanvraag ingediend. Een platformadmin moet hem goedkeuren.",
+      "approved": "Toegang goedgekeurd; hij is nu actief.",
+      "revoked": "Toegang ingetrokken.",
+      "withdrawn": "Aanvraag ingetrokken.",
+      "declined": "Aanvraag afgewezen.",
+      "notified": "{sent, plural, =0 {Geen eigenaar heeft een e-mail ontvangen} one {# eigenaar per e-mail geïnformeerd} other {# eigenaren per e-mail geïnformeerd}}{failed, plural, =0 {} one {, # verzending mislukt} other {, # verzendingen mislukt}}."
+    },
+    "errors": {
+      "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+      "forbidden": "Dat mag je niet doen.",
+      "notFound": "Deze vermelding bestaat niet meer.",
+      "validation": "Controleer de gemarkeerde velden.",
+      "organization": "Kies een organisatie.",
+      "reason": "De reden moet tussen {min} en {max} tekens hebben.",
+      "ticketRef": "De ticketreferentie mag letters, cijfers, spaties en - _ # : . / bevatten (maximaal {max} tekens).",
+      "durationMinutes": "Kies een van de aangeboden duren.",
+      "duplicate": "Je hebt voor deze organisatie al een openstaande aanvraag of een actieve toegang.",
+      "notPending": "Deze aanvraag staat niet meer open.",
+      "stale": "Deze aanvraag is zonder goedkeuring verlopen. Dien een nieuwe in.",
+      "fourEyes": "Een andere platformadmin moet je eigen aanvraag goedkeuren.",
+      "ticketRequired": "Zelf goedkeuren vereist een ticketreferentie.",
+      "notActive": "Deze toegang is niet actief.",
+      "notGrantee": "Alleen de medewerker aan wie de toegang is verleend kan het dashboard openen.",
+      "confirmRequired": "Bevestig de actie eerst in het dialoogvenster."
+    },
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten"
+    }
+  }
+}

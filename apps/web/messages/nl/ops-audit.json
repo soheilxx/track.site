@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Elke auditvermelding van het hele platform – klantteams, Track AI, systeemtaken, source keys en platformoperators – met actor, actie, organisatie, doel en geredigeerde details. Zoeken, filteren, bladeren en exporteren; het logboek zelf kan alleen worden aangevuld.",
+    "presets": {
+      "label": "Snelle weergaven",
+      "all": "Alle vermeldingen",
+      "platform": "Operatoracties",
+      "breakGlass": "Break-glass-spoor",
+      "platformWide": "Platformbreed",
+      "roles": "Rolwijzigingen"
+    },
+    "filters": {
+      "legend": "Filteren",
+      "search": "Zoeken",
+      "searchPlaceholder": "Actie, doel of verzoek-ID",
+      "actor": "Actor",
+      "everyone": "Iedereen",
+      "operators": "Platformoperators",
+      "kinds": "Actortypen",
+      "otherUser": "Gebruiker {id}",
+      "action": "Actie",
+      "actionPlaceholder": "bijv. platform.organization",
+      "actionHint": "Exacte actie of voorvoegsel: „platform.organization” omvat elke actie eronder.",
+      "organization": "Organisatie",
+      "organizationPlaceholder": "ID of slug",
+      "target": "Doeltype",
+      "all": "Alle",
+      "scope": "Bereik",
+      "scopes": {
+        "all": "Alle vermeldingen",
+        "platform_wide": "Alleen platformbreed (zonder organisatie)",
+        "break_glass": "Break-glass-spoor"
+      },
+      "from": "Van (UTC)",
+      "to": "Tot (UTC)",
+      "platformOnly": "Alleen acties van platformoperators",
+      "platformOnlyHint": "Vermeldingen waarvan de actor een platformoperator is (actortype „platform”), ongeacht de organisatie.",
+      "apply": "Toepassen",
+      "reset": "Herstellen",
+      "export": "CSV exporteren",
+      "exportHint": "Dezelfde filters en dezelfde geredigeerde sleutellijsten als deze tabel, nieuwste eerst, maximaal {max} rijen; elke export wordt in het auditlogboek vastgelegd."
+    },
+    "summary": {
+      "count": "{count} vermeldingen",
+      "countFiltered": "{count} overeenkomende vermeldingen",
+      "generated": "Geladen op {date}",
+      "organization": "Organisatie: {name}",
+      "deletedOrganization": "{id} (bestaat niet meer)",
+      "unknownOrganization": "Geen enkele organisatie heeft de ID of slug „{input}”; er komt niets overeen tot je dit corrigeert.",
+      "actorFallback": "Actor: {name}",
+      "actorUnknown": "Actor: gebruiker {id} (bestaat niet meer)"
+    },
+    "notes": {
+      "retention": "Vermeldingen worden standaard {days} dagen bewaard; een organisatie kan voor haar eigen auditlogboek een eigen venster instellen, en vermeldingen zonder organisatie volgen de standaard. De retentietaak verwijdert oudere vermeldingen definitief: alleen een export bewaart ze langer.",
+      "redacted": "Waarden worden vóór het opslaan en opnieuw vóór het tonen geredigeerd; persoonsgegevens van eindgebruikers en geheimen verschijnen hier nooit.",
+      "appendOnly": "Het logboek kan alleen worden aangevuld: niets hier kan worden bewerkt of verwijderd, en elke CSV-export is zelf een vermelding."
+    },
+    "table": {
+      "caption": "Auditvermeldingen met tijdstip, actor, actie, organisatie, doel en geredigeerde details",
+      "when": "Wanneer",
+      "actor": "Actor",
+      "action": "Actie",
+      "organization": "Organisatie",
+      "target": "Doel",
+      "details": "Details",
+      "platformWide": "Platformbreed",
+      "former": "Voormalig lid",
+      "formerOperator": "Voormalige operator",
+      "openOrganization": "{name} openen",
+      "onlyOrganization": "Alleen deze organisatie",
+      "deletedOrganization": "Verwijderde organisatie",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {# detail tonen} other {# details tonen}}",
+      "diff": "Diff",
+      "metadata": "Metadata",
+      "requestId": "Verzoek",
+      "entryId": "Vermeldings-ID",
+      "truncated": "Verdere rijen worden niet getoond.",
+      "noDetails": "Geen details"
+    },
+    "actorKinds": {
+      "platform": "Platformoperator",
+      "user": "Lid",
+      "agent": "Track AI",
+      "system": "Systeem",
+      "source_key": "Source key",
+      "unknown": "Onbekend"
+    },
+    "categories": {
+      "platform": "Platform",
+      "team": "Team",
+      "organization": "Organisatie",
+      "sites": "Sites",
+      "config": "Configuratie",
+      "consent": "Toestemming",
+      "destinations": "Bestemmingen",
+      "credentials": "Inloggegevens",
+      "privacy": "Privacy",
+      "billing": "Facturering",
+      "ai": "Track AI",
+      "other": "Overig"
+    },
+    "empty": {
+      "title": "Nog geen auditvermeldingen",
+      "text": "Vermeldingen verschijnen zodra iemand op het platform handelt: een registratie, een configuratiewijziging, een operatoractie.",
+      "filteredTitle": "Geen vermelding komt overeen",
+      "filteredText": "Versoepel de filters, verruim de periode of wis de zoekopdracht."
+    },
+    "pagination": {
+      "nav": "Pagina’s van het auditlogboek",
+      "previous": "Vorige pagina",
+      "next": "Volgende pagina",
+      "page": "Pagina {page}"
+    }
+  }
+}

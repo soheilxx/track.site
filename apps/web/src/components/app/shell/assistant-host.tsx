@@ -2,7 +2,7 @@
 
 import { Minimize2, Sparkles, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { IconButton, cn } from "@track-site/ui";
 import { AssistantActivityFeed, AssistantComposer, AssistantContextLine, AssistantMessages, AssistantModeToggle } from "@/components/chat/assistant-chat";
@@ -11,6 +11,16 @@ import { useAssistantUiState, type AssistantUiState } from "@/components/chat/as
 import { useWorkspaceMoves } from "@/components/chat/use-workspace-moves";
 import { AssistantPanel } from "./assistant-panel";
 import { AssistantAmbient } from "./living-ai-core/assistant-ambient";
+
+/**
+ * Feature flag `ai.assistant` (server/flags.ts, Track Operations → Controls): the dashboard layout resolves
+ * it per organization and hands it down here; without a provider the panel is enabled (tests, previews).
+ */
+const AssistantFeatureContext = createContext<boolean>(true);
+
+export function AssistantFeatureProvider({ enabled, children }: { enabled: boolean; children: ReactNode }) {
+  return <AssistantFeatureContext.Provider value={enabled}>{children}</AssistantFeatureContext.Provider>;
+}
 
 /**
  * Hosts the Track AI panel in the three presentations of the viewport-fixed shell (supplement §9):
@@ -29,6 +39,7 @@ import { AssistantAmbient } from "./living-ai-core/assistant-ambient";
  */
 export function AssistantHost() {
   const t = useTranslations("shell.assistant");
+  const featureEnabled = useContext(AssistantFeatureContext);
   const { open, presentation, width, setWidth, setOpen, focusComposer, siteId, chat } = useAssistant();
   // motion-relevant state (idle | listening | working | streaming | approval_required | success | blocked), derived from
   // real events with hysteresis; exposed on the panel container for the Living AI Core (ambient slot) and tests
@@ -67,6 +78,9 @@ export function AssistantHost() {
       <AssistantMessages key={siteId ?? "none"} />
     </AssistantPanel>
   );
+
+  // flag gate: with `ai.assistant` off for the organization the panel never mounts (docked, drawer or sheet)
+  if (!featureEnabled) return null;
 
   if (presentation === "docked") {
     if (open === false) return null;

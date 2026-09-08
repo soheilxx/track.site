@@ -1,0 +1,138 @@
+{
+  "ops": {
+    "title": "Track Operations",
+    "skipToContent": "Skip to content",
+    "brandHome": "Track Operations – Overview",
+    "backToDashboard": "Customer dashboard",
+    "roleLabel": "Platform role",
+    "roles": {
+      "PLATFORM_SUPPORT": "Platform support",
+      "PLATFORM_ADMIN": "Platform admin"
+    },
+    "nav": {
+      "label": "Operations",
+      "menuTitle": "Navigation",
+      "openMenu": "Open navigation",
+      "closeMenu": "Close navigation",
+      "overview": "Overview",
+      "organisations": "Organisations",
+      "breakGlass": "Break-glass",
+      "health": "Platform health",
+      "revenue": "Revenue",
+      "controls": "Controls",
+      "inbox": "Inbox",
+      "growth": "Growth",
+      "audit": "Audit",
+      "users": "Platform users",
+      "content": "Content"
+    },
+    "environment": {
+      "label": "Environment",
+      "host": "Host",
+      "development": "Development",
+      "test": "Test",
+      "staging": "Staging",
+      "production": "Production",
+      "help": {
+        "development": "Local development: synthetic data, no customers affected.",
+        "test": "Test environment: synthetic data, no customers affected.",
+        "staging": "Staging: pre-production data, no customers affected.",
+        "production": "Production: every action here affects live customers and is audited."
+      }
+    },
+    "user": {
+      "menu": "Account menu",
+      "signedInAs": "Signed in as",
+      "dashboard": "Open the customer dashboard",
+      "logout": "Log out"
+    },
+    "gate": {
+      "status": "403 · access denied",
+      "noRole": {
+        "title": "No platform access",
+        "text": "Your account has no platform role. Track Operations is reserved for Track’s own operators; a platform admin grants roles with the ops:grant command, and every grant is audited.",
+        "back": "Back to the dashboard"
+      },
+      "twoFactor": {
+        "title": "Enable two-factor authentication first",
+        "text": "Track Operations requires two-factor authentication for every operator (step-up). Enable it for your account, sign in again and come back to this page.",
+        "back": "Back to the dashboard"
+      },
+      "insufficientRole": {
+        "title": "Platform admin required",
+        "text": "This area is limited to platform admins. Platform support sees organisations, break-glass, platform health, inbox, growth, audit and content.",
+        "back": "Back to the overview"
+      }
+    },
+    "notFound": {
+      "title": "Page not found",
+      "text": "This page does not exist in Track Operations or has moved.",
+      "back": "Back to the overview"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "text": "The error has been recorded. Try again or go back to the overview.",
+      "retry": "Try again",
+      "back": "Overview"
+    },
+    "placeholder": {
+      "title": "In preparation",
+      "text": "This module is being built. Nothing here is measured yet, so no numbers are shown."
+    },
+    "overview": {
+      "modules": "Modules",
+      "principles": "Operating rules",
+      "rules": {
+        "noRawData": "No raw event payloads, end-user personal data or secrets — aggregated and metadata views only.",
+        "breakGlass": "Tenant details need an approved, time-boxed break-glass grant; even then read-only, and every view is audited with the grant id.",
+        "audit": "Every change is a server action with role check, validation, explicit confirmation and an audit entry with actor kind “platform”."
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Overview",
+        "intro": "Platform-wide status at a glance: what needs attention, which modules exist and the rules every operator works under."
+      },
+      "organisations": {
+        "title": "Organisations",
+        "intro": "Every customer organisation with plan, sites, usage and health — metadata and aggregates, never their event data."
+      },
+      "breakGlass": {
+        "title": "Break-glass",
+        "intro": "Time-boxed, justified and approved access to one organisation’s details: requests, approvals, active grants and their audit trail."
+      },
+      "health": {
+        "title": "Platform health",
+        "intro": "Worker heartbeats, queues, delivery success, dead letters and vendor status across all tenants."
+      },
+      "revenue": {
+        "title": "Revenue",
+        "intro": "Subscriptions, monthly recurring revenue, trials, overages and failed payments from the billing ledger and Stripe."
+      },
+      "controls": {
+        "title": "Controls",
+        "intro": "Global and per-tenant kill switches, suspensions and feature flags — every switch confirmed and audited."
+      },
+      "inbox": {
+        "title": "Inbox",
+        "intro": "Contact, demo and support requests from the public forms with status, assignee and handling time."
+      },
+      "growth": {
+        "title": "Growth",
+        "intro": "Sign-ups, activation, published configurations and conversion to paid plans — aggregated, no individual visitors."
+      },
+      "audit": {
+        "title": "Audit",
+        "intro": "The platform audit log: every operator action with actor, target, organisation and redacted diff."
+      },
+      "users": {
+        "title": "Platform users",
+        "intro": "Operators with a platform role, their two-factor state and the four-eyes rule for granting roles."
+      },
+      "content": {
+        "title": "Content",
+        "intro": "Tracking Knowledge editorial board: status and review age per locale from the front matter, reader feedback, learning paths, sitemap and feed freshness, integration coverage. Read-only — the content lives in git."
+      }
+    }
+  }
+}

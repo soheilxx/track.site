@@ -1,0 +1,330 @@
+{
+  "opsHealth": {
+    "intro": "Collecteur, worker, files d’attente, livraisons, webhooks Stripe, fournisseurs et base de données pour tous les tenants — mesurés, jamais estimés ; chaque source indique son propre état. Toutes les heures sont en UTC.",
+    "refresh": {
+      "updatedAt": "Mis à jour {time}",
+      "ago": "il y a {seconds} s",
+      "auto": "Actualisation automatique toutes les {seconds} s",
+      "paused": "Actualisation automatique en pause",
+      "now": "Actualiser maintenant",
+      "refreshing": "Actualisation en cours",
+      "toggle": "Actualisation automatique"
+    },
+    "overall": {
+      "label": "État global",
+      "ok": "Toutes les vérifications passent",
+      "warn": "Nécessite une attention",
+      "bad": "Dégradé",
+      "reasons": {
+        "collector": "Collecteur injoignable — l’ingestion est peut-être arrêtée",
+        "collector_kill_switch": "Coupe-circuit global actif — le collecteur rejette chaque événement",
+        "worker_stale": "Heartbeats du worker obsolètes — aucun job planifié n’a tourné récemment",
+        "worker_failing": "Au moins un job du worker échoue",
+        "worker_never": "Aucun heartbeat du worker enregistré pour l’instant",
+        "database": "Base de données indisponible",
+        "dead_letters": "Dead letters non rejoués dans les files d’attente",
+        "queue_lag": "Retard de file d’attente supérieur à 15 minutes",
+        "delivery_errors": "Taux d’erreur de livraison élevé pour au moins un connecteur",
+        "stripe_failures": "Des événements webhook Stripe ont échoué au cours des dernières 24 heures",
+        "stripe_webhook_secret": "Stripe est configuré mais le secret du webhook manque",
+        "ai": "La vérification du fournisseur d’IA a échoué",
+        "billing_prices": "Configuration des prix Stripe incomplète",
+        "mail_domain": "Domaine d’expédition des e-mails non vérifié",
+        "snapshots_stale": "Tous les instantanés d’état des destinations sont obsolètes",
+        "critical_alerts": "Alertes critiques ouvertes"
+      }
+    },
+    "tiles": {
+      "collector": "Collecteur",
+      "worker": "Worker",
+      "queues": "Files d’attente",
+      "deliveries": "Livraisons · 24 h",
+      "stripe": "Webhooks Stripe",
+      "vendors": "Fournisseurs",
+      "database": "Base de données",
+      "jobsFailing": "{count} en échec",
+      "jobsStale": "{count} obsolètes",
+      "jobsOk": "{count} jobs ok",
+      "ready": "{count} prêts",
+      "dead": "{count} dead letters",
+      "attempts": "{count} tentatives",
+      "errorRate": "{rate} d’erreurs",
+      "failedOf": "{failed} sur {received} en échec",
+      "notMeasured": "Non mesuré",
+      "noAttempts": "Aucune tentative"
+    },
+    "states": {
+      "ok": "OK",
+      "degraded": "Dégradé",
+      "kill_switch": "Coupe-circuit actif",
+      "unreachable": "Injoignable",
+      "timeout": "Délai dépassé",
+      "invalid": "Réponse invalide",
+      "failing": "En échec",
+      "stale": "Obsolète",
+      "never": "Aucun heartbeat",
+      "unavailable": "Indisponible",
+      "notConfigured": "Non configuré",
+      "unknown": "Inconnu"
+    },
+    "collector": {
+      "title": "Collecteur",
+      "intro": "Le /health du service d’ingestion lui-même, interrogé depuis le serveur de la console avec un délai de {seconds} s.",
+      "host": "Hôte",
+      "http": "Statut HTTP",
+      "latency": "Latence",
+      "db": "Base du collecteur",
+      "driver": "Pilote de file",
+      "ready": "File d’ingestion prête",
+      "dlq": "Dead letters d’ingestion",
+      "killSwitch": "Coupe-circuit global",
+      "reportedAt": "Horloge du collecteur",
+      "checkedAt": "Vérifié",
+      "dbStates": {
+        "ok": "OK",
+        "error": "Erreur",
+        "none": "Pas de base de données"
+      },
+      "killOn": "Actif — les événements sont rejetés avec 503",
+      "killOff": "Inactif",
+      "unreachableText": "Aucune réponse de {host} dans le délai imparti. L’ingestion est peut-être arrêtée, ou la console n’atteint pas le réseau du collecteur.",
+      "invalidText": "{host} a répondu, mais pas avec le JSON attendu."
+    },
+    "worker": {
+      "title": "Jobs du worker",
+      "intro": "Un heartbeat par job planifié, écrit par le worker après chaque exécution. Obsolète : aucune exécution depuis plus de deux fois l’intervalle. En échec : la dernière exécution s’est terminée par une erreur.",
+      "columns": {
+        "job": "Job",
+        "state": "État",
+        "lastRun": "Dernière exécution",
+        "lastOk": "Dernier succès",
+        "duration": "Durée",
+        "interval": "Intervalle",
+        "host": "Hôte",
+        "error": "Dernière erreur"
+      },
+      "never": "Jamais",
+      "unknownInterval": "Absent de la planification",
+      "noError": "Aucune",
+      "empty": "Pas encore de heartbeat — le worker n’a pas tourné depuis l’application de la migration 0014, ou il n’atteint pas la base de données.",
+      "showError": "Afficher l’erreur",
+      "errorFor": "Dernière erreur du job {job}"
+    },
+    "queues": {
+      "title": "Files d’attente et dead letters",
+      "intro": "Retard des tables de file durables : prêts (disponibles maintenant), planifiés (nouvelle tentative ou délai), en cours (verrouillés par un worker) et dead letters non rejoués par file.",
+      "driver": "Pilote",
+      "notMeasured": "Pilote de file « {driver} » : le retard se trouve hors de la base de données, ces tables ne font donc pas foi.",
+      "columns": {
+        "queue": "File",
+        "ready": "Prêts",
+        "scheduled": "Planifiés",
+        "inFlight": "En cours",
+        "oldest": "Plus ancien prêt",
+        "lag": "Retard",
+        "dead": "Dead letters",
+        "oldestDead": "Plus ancien dead letter"
+      },
+      "totals": "Total",
+      "empty": "Aucun message en attente et aucun dead letter.",
+      "references": "{count} références de dead letters non rejouées (visibles par les tenants)"
+    },
+    "deliveries": {
+      "title": "Livraisons par connecteur",
+      "intro": "Tentatives de livraison vers chaque type de destination pour tous les tenants (delivery_attempts). Taux d’erreur = (échecs + nouvelles tentatives) / (succès + échecs + nouvelles tentatives) ; les tentatives ignorées (politique, consentement, pause) ne comptent pas.",
+      "window24h": "Dernières 24 h",
+      "window7d": "Derniers 7 j",
+      "columns": {
+        "connector": "Connecteur",
+        "tenants": "Organisations",
+        "attempts": "Tentatives",
+        "success": "Succès",
+        "failed": "Échecs",
+        "retry": "Nouvelles tentatives",
+        "skipped": "Ignorées",
+        "errorRate": "Taux d’erreur"
+      },
+      "totals": "Tous les connecteurs",
+      "empty": "Aucune tentative de livraison au cours des 7 derniers jours."
+    },
+    "destinations": {
+      "title": "Instantanés d’état des destinations",
+      "intro": "Agrégats des instantanés par destination du worker (destination_health_snapshots) ; un instantané de plus de {minutes} minutes est obsolète.",
+      "snapshots": "Instantanés",
+      "fresh": "À jour",
+      "stale": "Obsolètes",
+      "latest": "Instantané le plus récent",
+      "oldest": "Instantané le plus ancien",
+      "organizations": "Organisations",
+      "attempts": "Tentatives dans la fenêtre",
+      "errorRate": "Taux d’erreur",
+      "highErrorRate": "Destinations à taux d’erreur élevé",
+      "withDeadLetters": "Destinations avec dead letters",
+      "queueReady": "Livraisons en attente",
+      "oldestQueued": "Plus ancienne en attente",
+      "integrations": "Destinations par statut",
+      "statuses": {
+        "draft": "Brouillon",
+        "not_connected": "Non connectée",
+        "connected": "Connectée",
+        "paused": "En pause",
+        "error": "Erreur"
+      },
+      "empty": "Pas encore d’instantané — le job destination-health n’a pas tourné, ou aucune destination n’existe."
+    },
+    "stripe": {
+      "title": "Journal des webhooks Stripe",
+      "intro": "Les {count} derniers événements webhook reçus (stripe_events) avec leur état de traitement. Les charges utiles ne sont jamais stockées — type, empreinte et résultat uniquement.",
+      "notConfigured": "Stripe n’est pas configuré (STRIPE_SECRET_KEY / STRIPE_PUBLISHABLE_KEY). Le journal montre tout de même ce qui a été reçu.",
+      "webhookSecret": "Secret du webhook",
+      "configured": "Configuré",
+      "missing": "Manquant — les signatures ne peuvent pas être vérifiées",
+      "received24h": "Reçus · 24 h",
+      "processed24h": "Traités · 24 h",
+      "failed24h": "En échec · 24 h",
+      "pending": "En attente (total)",
+      "lastReceived": "Dernier reçu",
+      "columns": {
+        "event": "Événement",
+        "type": "Type",
+        "organization": "Organisation",
+        "received": "Reçu",
+        "processed": "Traité",
+        "state": "État",
+        "error": "Erreur"
+      },
+      "states": {
+        "processed": "Traité",
+        "failed": "En échec",
+        "pending": "En attente"
+      },
+      "noOrganization": "Aucune",
+      "noError": "Aucune",
+      "empty": "Aucun événement webhook reçu pour l’instant.",
+      "showError": "Afficher l’erreur",
+      "errorFor": "Erreur de l’événement {id}"
+    },
+    "vendors": {
+      "title": "Fournisseurs et configuration",
+      "intro": "Les mêmes vérifications en lecture seule que /api/health, mises en cache dix minutes par instance.",
+      "checkedAt": "Vérifié",
+      "none": "Aucun",
+      "ai": {
+        "label": "Fournisseur d’IA",
+        "states": {
+          "not_configured": "Non configuré",
+          "ok": "Modèles disponibles",
+          "invalid_key": "Clé API rejetée",
+          "unreachable": "Injoignable",
+          "models_missing": "Modèles configurés manquants"
+        },
+        "available": "Modèles disponibles",
+        "missing": "Modèles manquants"
+      },
+      "mail": {
+        "label": "E-mail",
+        "transport": {
+          "smtp": "SMTP",
+          "file": "Fichier (développement)",
+          "resend": "Resend"
+        },
+        "domain": "Domaine d’expédition",
+        "domainState": "Statut du domaine",
+        "domainStates": {
+          "verified": "Vérifié",
+          "pending": "Vérification en attente",
+          "failed": "Vérification échouée",
+          "not_started": "Vérification non commencée",
+          "temporary_failure": "Échec temporaire",
+          "sending_only_key": "Clé d’envoi seul — vérification du domaine indisponible",
+          "invalid_key": "Clé API rejetée",
+          "domain_missing": "Domaine introuvable dans Resend",
+          "unreachable": "Resend injoignable"
+        }
+      },
+      "billing": {
+        "label": "Prix Stripe",
+        "states": {
+          "not_configured": "Non configuré",
+          "ok": "Tous les emplacements de prix vérifiés",
+          "prices_failing": "Emplacements de prix en échec",
+          "prices_missing": "Emplacements de prix manquants",
+          "no_prices": "Aucun prix configuré"
+        },
+        "ok": "Vérifiés",
+        "missing": "Manquants",
+        "failed": "En échec",
+        "deprecated": "Noms de repli obsolètes"
+      },
+      "database": {
+        "label": "Sonde de base de données",
+        "ok": "Joignable",
+        "down": "Injoignable",
+        "migrations": "Migrations appliquées"
+      }
+    },
+    "database": {
+      "title": "Base de données",
+      "intro": "Vues statistiques PostgreSQL : les nombres de lignes sont des estimations du planificateur, les tailles incluent les index et TOAST.",
+      "size": "Taille",
+      "version": "Version",
+      "connections": "Connexions",
+      "tableCount": "Tables",
+      "columns": {
+        "table": "Table",
+        "rows": "Lignes vivantes (est.)",
+        "dead": "Lignes mortes (est.)",
+        "size": "Taille",
+        "vacuum": "Dernier autovacuum"
+      },
+      "largest": "Les {count} plus grandes tables",
+      "never": "Jamais",
+      "unavailable": "Statistiques indisponibles — le rôle opérateur n’a pas pu lire les vues statistiques."
+    },
+    "errors": {
+      "title": "Alertes et échecs récents",
+      "intro": "Les derniers événements d’alerte de tous les tenants et les entrées d’audit dont l’action consigne un échec (7 derniers jours). Les détails restent dans le tableau de bord du tenant.",
+      "open": "Alertes ouvertes",
+      "critical": "critiques",
+      "warning": "avertissements",
+      "info": "info",
+      "alerts": {
+        "title": "Événements d’alerte",
+        "columns": {
+          "when": "Quand",
+          "severity": "Gravité",
+          "kind": "Type",
+          "organization": "Organisation",
+          "state": "État"
+        },
+        "openState": "Ouverte",
+        "resolved": "Résolue {when}",
+        "empty": "Aucun événement d’alerte pour l’instant."
+      },
+      "kinds": {
+        "event_drop": "Chute d’événements",
+        "vendor_outage": "Panne fournisseur",
+        "credential_expiry": "Expiration d’identifiants",
+        "consent_errors": "Erreurs de consentement",
+        "queue_lag": "Retard de file d’attente",
+        "conversion_anomaly": "Anomalie de conversion"
+      },
+      "severity": {
+        "info": "Info",
+        "warning": "Avertissement",
+        "critical": "Critique"
+      },
+      "audit": {
+        "title": "Entrées d’échec dans le journal d’audit",
+        "columns": {
+          "when": "Quand",
+          "action": "Action",
+          "target": "Type de cible",
+          "organization": "Organisation"
+        },
+        "empty": "Aucune entrée d’échec au cours des 7 derniers jours."
+      },
+      "platform": "Plateforme"
+    }
+  }
+}

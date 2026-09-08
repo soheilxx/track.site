@@ -1,0 +1,313 @@
+{
+  "opsUsers": {
+    "common": {
+      "close": "Chiudi",
+      "cancel": "Annulla",
+      "none": "—",
+      "on": "Attiva",
+      "off": "Non attiva",
+      "verified": "Verificata",
+      "unverified": "Non verificata",
+      "former": "Account precedente",
+      "metadata": "Solo metadati: nomi, e-mail, ruoli, stato dell’autenticazione a due fattori e orari delle sessioni. Mai token di sessione, indirizzi IP, user agent o dati degli utenti finali.",
+      "adminOnly": "Solo amministratori della piattaforma."
+    },
+    "roles": {
+      "NONE": "Nessun ruolo di piattaforma",
+      "PLATFORM_SUPPORT": "Supporto piattaforma",
+      "PLATFORM_ADMIN": "Amministratore piattaforma"
+    },
+    "errors": {
+      "forbidden": "Il tuo ruolo di piattaforma non consente questa azione.",
+      "invalid": "Controlla i campi evidenziati.",
+      "confirm_required": "Conferma prima l’azione nella finestra di dialogo.",
+      "not_found": "Nessun account con questo indirizzo o id.",
+      "self": "Non puoi cambiare il tuo ruolo di piattaforma: deve farlo un altro amministratore della piattaforma.",
+      "unchanged": "L’account ha già questo ruolo.",
+      "lastAdmin": "È l’ultimo amministratore della piattaforma; assegna prima il ruolo di amministratore a qualcun altro.",
+      "emailNotVerified": "L’account non ha verificato l’indirizzo e-mail; un ruolo di piattaforma viene assegnato solo ad account verificati.",
+      "ticketRequired": "Sei l’unico amministratore che può decidere su questa modifica: una modifica auto-approvata richiede un riferimento al ticket.",
+      "needsThirdAdmin": "Esiste un secondo amministratore della piattaforma, ma non può decidere sulla modifica del proprio ruolo. Assegna prima il ruolo di amministratore a una terza persona oppure usa il comando ops:grant.",
+      "duplicate": "Per questo account c’è già una modifica di ruolo in attesa di decisione.",
+      "fourEyes": "Hai presentato tu questa richiesta; deve applicarla un altro amministratore della piattaforma (quattro occhi).",
+      "stale": "Il ruolo dell’account è cambiato dopo la presentazione della richiesta; rifiutala e presentane una nuova.",
+      "expired": "La richiesta è scaduta; presentane una nuova.",
+      "notPending": "La richiesta è già stata decisa.",
+      "notOperator": "Le sessioni vengono revocate solo agli operatori della piattaforma; la rubrica clienti è di sola lettura.",
+      "generic": "L’azione non è riuscita. Riprova; l’errore è stato registrato."
+    },
+    "notices": {
+      "proposed": "Richiesta presentata. Deve applicarla un altro amministratore della piattaforma; scade dopo sette giorni.",
+      "applied": "Ruolo modificato e registrato come auto-approvato. {count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}}",
+      "approved": "Ruolo modificato. {count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}}",
+      "declined": "Richiesta rifiutata e registrata.",
+      "withdrawn": "Richiesta ritirata e registrata.",
+      "sessionsRevoked": "{count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}} L’account deve accedere di nuovo."
+    },
+    "overview": {
+      "intro": "Account con un ruolo di piattaforma, il loro stato a due fattori e le loro sessioni, e la regola dei quattro occhi per l’assegnazione dei ruoli. Gli account dei clienti compaiono in sola lettura nella rubrica.",
+      "directory": "Rubrica clienti",
+      "grant": "Assegna un ruolo di piattaforma",
+      "rules": {
+        "title": "Stato dei quattro occhi",
+        "admins": "{eligible} su {total, plural, one {# amministratore della piattaforma} other {# amministratori della piattaforma}} possono decidere sulle richieste.",
+        "eligibleHint": "Gli amministratori che decidono hanno un’e-mail verificata{twoFactor, select, yes { e l’autenticazione a due fattori attiva} other {}}.",
+        "on": "Una modifica di ruolo che presenti viene applicata da un altro amministratore della piattaforma.",
+        "off": "Sei l’unico amministratore che decide: le modifiche di ruolo che presenti vengono applicate subito, registrate come auto-approvate e richiedono un riferimento al ticket.",
+        "bootstrap": "Il primo amministratore della piattaforma viene creato con il comando ops:grant; da lì in poi i ruoli si cambiano qui.",
+        "signOut": "Ogni modifica di ruolo elimina le sessioni salvate dell’account (disconnessione forzata). Una sessione in cache può restare valida fino a {minutes} minuti."
+      }
+    },
+    "requests": {
+      "title": "Modifiche di ruolo in sospeso",
+      "intro": "Le richieste attendono qui finché un altro amministratore della piattaforma non le applica o le rifiuta. Scadono dopo sette giorni.",
+      "empty": "Nessuna modifica di ruolo in sospeso.",
+      "caption": "Richieste di modifica del ruolo con account, modifica, motivo, richiedente e decisioni disponibili",
+      "account": "Account",
+      "change": "Modifica",
+      "changeValue": "{from} → {to}",
+      "reason": "Motivo",
+      "ticket": "Ticket",
+      "noTicket": "Nessun riferimento al ticket",
+      "proposer": "Presentata da",
+      "filed": "Presentata il {date}",
+      "expires": "Scade il {date}",
+      "decision": "Decisione",
+      "states": {
+        "pending": "In sospeso",
+        "stale": "Obsoleta",
+        "expired": "Scaduta"
+      },
+      "staleHint": "Il ruolo dell’account è cambiato nel frattempo ({role}); questa richiesta può solo essere rifiutata.",
+      "approve": "Applica",
+      "decline": "Rifiuta",
+      "withdraw": "Ritira",
+      "cannot": {
+        "fourEyes": "Hai presentato tu questa richiesta: la applica un altro amministratore.",
+        "self": "È il tuo account.",
+        "stale": "Ruolo cambiato nel frattempo.",
+        "expired": "Scaduta.",
+        "lastAdmin": "Rimuoverebbe l’ultimo amministratore.",
+        "emailNotVerified": "E-mail non verificata."
+      },
+      "dialog": {
+        "approveTitle": "Applicare la modifica di ruolo per {name}?",
+        "approveText": "{from} → {to}. L’account viene disconnesso ovunque e la modifica viene registrata con entrambi gli amministratori nel registro di audit.",
+        "approveConfirm": "Applica modifica",
+        "declineTitle": "Rifiutare la modifica di ruolo per {name}?",
+        "declineText": "Per l’account non cambia nulla; la decisione viene registrata nel registro di audit.",
+        "declineConfirm": "Rifiuta",
+        "withdrawTitle": "Ritirare la tua richiesta per {name}?",
+        "withdrawText": "Per l’account non cambia nulla; il ritiro viene registrato nel registro di audit.",
+        "withdrawConfirm": "Ritira",
+        "reason": "Nota",
+        "reasonHint": "Facoltativa, fino a {max} caratteri; salvata nel registro di audit."
+      }
+    },
+    "operators": {
+      "title": "Operatori",
+      "caption": "Account con un ruolo di piattaforma, stato a due fattori e di verifica, ultimo accesso, sessioni attive e azioni disponibili",
+      "empty": "Ancora nessun utente della piattaforma",
+      "emptyText": "Crea il primo amministratore della piattaforma con il comando ops:grant; gli altri ruoli si assegnano qui.",
+      "count": "{count, plural, one {# operatore} other {# operatori}}",
+      "columns": {
+        "account": "Account",
+        "role": "Ruolo",
+        "security": "Sicurezza",
+        "lastSignIn": "Ultimo accesso",
+        "sessions": "Sessioni",
+        "since": "Dal",
+        "actions": "Azioni"
+      },
+      "twoFactor": "Due fattori",
+      "email": "E-mail",
+      "eligible": "Può decidere sulle richieste",
+      "notEligible": "Non può decidere sulle richieste",
+      "memberOf": "{count, plural, one {Membro di # organizzazione} other {Membro di # organizzazioni}}",
+      "pending": "Modifica in sospeso",
+      "noSession": "Nessuna sessione salvata",
+      "lastSeen": "attivo {date}",
+      "activeSessions": "{count, plural, =0 {nessuna attiva} one {# attiva} other {# attive}}",
+      "changeRole": "Cambia ruolo",
+      "revokeSessions": "Disconnetti ovunque",
+      "self": "Il tuo account: il tuo ruolo lo cambia un altro amministratore.",
+      "lastAdmin": "Ultimo amministratore della piattaforma: non può essere retrocesso.",
+      "open": "Apri {name}",
+      "openLabel": "Dettagli"
+    },
+    "roleDialog": {
+      "title": "Cambia il ruolo di piattaforma di {name}",
+      "grantTitle": "Assegna un ruolo di piattaforma",
+      "description": "Ruolo attuale: {role}.",
+      "grantDescription": "La persona si registra prima come utente normale e verifica l’e-mail; poi il ruolo viene assegnato qui.",
+      "email": "Indirizzo e-mail",
+      "emailHint": "Indirizzo esatto di un account esistente e verificato.",
+      "role": "Nuovo ruolo",
+      "reason": "Motivo",
+      "reasonHint": "Almeno {min} caratteri, al massimo {max}. Salvato nel registro di audit.",
+      "ticket": "Riferimento al ticket",
+      "ticketHint": "Per esempio OPS-1234. Obbligatorio quando nessun altro amministratore può decidere (modifica auto-approvata).",
+      "modeProposal": "Quattro occhi: questo presenta una richiesta che un altro amministratore della piattaforma applica.",
+      "modeSelf": "Sei l’unico amministratore che può decidere: la modifica viene applicata subito, registrata come auto-approvata e richiede un riferimento al ticket.",
+      "signOut": "L’account viene disconnesso ovunque quando la modifica viene applicata.",
+      "submit": "Presenta richiesta",
+      "submitSelf": "Applica modifica"
+    },
+    "revokeDialog": {
+      "title": "Disconnettere {name} ovunque?",
+      "text": "Tutte le sessioni salvate dell’account vengono eliminate; la persona deve accedere di nuovo (con due fattori). L’azione viene registrata nel registro di audit.",
+      "selfWarning": "È il tuo account: verrai disconnesso anche tu.",
+      "cache": "Una sessione in cache può restare valida fino a {minutes} minuti.",
+      "reason": "Motivo",
+      "reasonHint": "Almeno {min} caratteri; salvato nel registro di audit.",
+      "confirm": "Disconnetti ovunque"
+    },
+    "history": {
+      "title": "Modifiche di ruolo recenti",
+      "intro": "Le {count} voci di ruolo più recenti del registro di audit: richieste, modifiche applicate (console e CLI), rifiuti e ritiri.",
+      "empty": "Nessuna modifica di ruolo registrata finora.",
+      "caption": "Voci di audit recenti sui ruoli con data, attore, azione, account e modifica",
+      "when": "Quando",
+      "actor": "Attore",
+      "action": "Azione",
+      "account": "Account",
+      "change": "Modifica",
+      "actions": {
+        "propose": "Presentata",
+        "set": "Applicata",
+        "decline": "Rifiutata",
+        "withdraw": "Ritirata"
+      },
+      "selfApproved": "auto-approvata",
+      "actorKinds": {
+        "platform": "Amministratore piattaforma",
+        "system": "Sistema",
+        "unknown": "Sconosciuto"
+      },
+      "request": "Richiesta {id}",
+      "sessionsRevoked": "{count, plural, one {# sessione revocata} other {# sessioni revocate}}",
+      "reason": "Motivo: {reason}",
+      "ticket": "Ticket {ticket}"
+    },
+    "directory": {
+      "title": "Rubrica clienti",
+      "intro": "Ogni account con le sue organizzazioni e i suoi ruoli, lo stato a due fattori, la creazione e l’ultimo accesso: metadati di sola lettura, nessun dato degli utenti finali.",
+      "back": "Utenti della piattaforma",
+      "filters": {
+        "legend": "Filtra e ordina",
+        "search": "Cerca",
+        "searchPlaceholder": "Nome, e-mail o id",
+        "kind": "Account",
+        "kinds": {
+          "all": "Tutti",
+          "operators": "Con ruolo di piattaforma",
+          "customers": "Solo clienti"
+        },
+        "twoFactor": "Due fattori",
+        "twoFactorAll": "Tutti",
+        "twoFactorOn": "Attiva",
+        "twoFactorOff": "Non attiva",
+        "sort": "Ordina per",
+        "sorts": {
+          "created": "Creazione",
+          "name": "Nome",
+          "email": "E-mail",
+          "signin": "Ultimo accesso"
+        },
+        "direction": "Direzione",
+        "asc": "Crescente",
+        "desc": "Decrescente",
+        "apply": "Applica",
+        "reset": "Reimposta"
+      },
+      "count": "{count, plural, one {# account} other {# account}}",
+      "countFiltered": "{count, plural, one {# account corrispondente} other {# account corrispondenti}}",
+      "operatorsCount": "{count} con ruolo di piattaforma",
+      "caption": "Account con appartenenze, ruoli, stato a due fattori e di verifica, ultimo accesso e data di creazione",
+      "columns": {
+        "account": "Account",
+        "memberships": "Organizzazioni",
+        "security": "Sicurezza",
+        "lastSignIn": "Ultimo accesso",
+        "created": "Creato"
+      },
+      "noMemberships": "Nessuna organizzazione",
+      "moreMemberships": "+{count} altre",
+      "open": "Apri {name}",
+      "empty": "Ancora nessun account",
+      "emptyText": "Gli account compaiono qui non appena la prima persona si registra.",
+      "emptyFiltered": "Nessun account corrisponde",
+      "emptyFilteredText": "Allenta i filtri o svuota la ricerca.",
+      "pagination": {
+        "nav": "Pagine della rubrica",
+        "previous": "Pagina precedente",
+        "next": "Pagina successiva",
+        "page": "Pagina {page}"
+      },
+      "methods": "Ultimo accesso: la sessione salvata più recente (le righe spariscono alla disconnessione e alla pulizia, quindi «nessuna sessione salvata» non significa che la persona non abbia mai effettuato l’accesso). Attive: sessioni non scadute."
+    },
+    "detail": {
+      "back": "Tutti gli utenti della piattaforma",
+      "backDirectory": "Rubrica clienti",
+      "id": "ID",
+      "created": "Creato il {date}",
+      "updated": "Aggiornato il {date}",
+      "generated": "Caricato il {date}",
+      "sections": {
+        "profile": "Account",
+        "memberships": "Organizzazioni",
+        "sessions": "Sessioni",
+        "requests": "Modifica di ruolo in sospeso",
+        "audit": "Voci di audit per questo account"
+      },
+      "profile": {
+        "role": "Ruolo di piattaforma",
+        "email": "E-mail",
+        "verified": "Verifica dell’e-mail",
+        "twoFactor": "Due fattori",
+        "twoFactorVerified": "Due fattori verificati",
+        "twoFactorNotSetUp": "Non configurata",
+        "passkeys": "{count, plural, =0 {Nessuna passkey} one {# passkey} other {# passkey}}",
+        "locale": "Lingua",
+        "updated": "Ultimo aggiornamento",
+        "customer": "Account cliente senza ruolo di piattaforma: qui in sola lettura."
+      },
+      "memberships": {
+        "caption": "Organizzazioni a cui appartiene l’account, con ruolo e data di adesione",
+        "organisation": "Organizzazione",
+        "role": "Ruolo",
+        "joined": "Adesione",
+        "suspended": "Sospesa",
+        "empty": "Non è membro di alcuna organizzazione.",
+        "open": "Apri {name}"
+      },
+      "sessions": {
+        "caption": "Sessioni salvate dell’account con accesso, ultima attività, scadenza, stato e organizzazione attiva",
+        "created": "Accesso",
+        "lastActive": "Ultima attività",
+        "expires": "Scade",
+        "state": "Stato",
+        "states": {
+          "active": "Attiva",
+          "expired": "Scaduta"
+        },
+        "organisation": "Organizzazione attiva",
+        "summary": "{active, plural, one {# sessione attiva} other {# sessioni attive}} · {expired, plural, one {# scaduta} other {# scadute}}",
+        "empty": "Nessuna sessione salvata.",
+        "truncated": "Vengono mostrate le {count} sessioni più recenti.",
+        "noSecrets": "Token di sessione, indirizzi IP e user agent non vengono mai mostrati qui."
+      },
+      "audit": {
+        "caption": "Voci di audit rivolte a questo account con data, attore, azione e dettagli oscurati",
+        "when": "Quando",
+        "actor": "Attore",
+        "action": "Azione",
+        "details": "Dettagli",
+        "show": "{count, plural, one {Mostra # dettaglio} other {Mostra # dettagli}}",
+        "noDetails": "Nessun dettaglio",
+        "empty": "Nessuna voce di audit per questo account.",
+        "limit": "Vengono mostrate le {count} voci più recenti; il modulo Audit contiene il registro completo."
+      }
+    }
+  }
+}

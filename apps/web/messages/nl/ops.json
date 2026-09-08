@@ -1,0 +1,138 @@
+{
+  "ops": {
+    "title": "Track Operations",
+    "skipToContent": "Naar de inhoud",
+    "brandHome": "Track Operations – Overzicht",
+    "backToDashboard": "Klantdashboard",
+    "roleLabel": "Platformrol",
+    "roles": {
+      "PLATFORM_SUPPORT": "Platformsupport",
+      "PLATFORM_ADMIN": "Platformadmin"
+    },
+    "nav": {
+      "label": "Operations",
+      "menuTitle": "Navigatie",
+      "openMenu": "Navigatie openen",
+      "closeMenu": "Navigatie sluiten",
+      "overview": "Overzicht",
+      "organisations": "Organisaties",
+      "breakGlass": "Break-glass",
+      "health": "Platformstatus",
+      "revenue": "Omzet",
+      "controls": "Beheer",
+      "inbox": "Inbox",
+      "growth": "Groei",
+      "audit": "Audit",
+      "users": "Platformgebruikers",
+      "content": "Content"
+    },
+    "environment": {
+      "label": "Omgeving",
+      "host": "Host",
+      "development": "Ontwikkeling",
+      "test": "Test",
+      "staging": "Staging",
+      "production": "Productie",
+      "help": {
+        "development": "Lokale ontwikkeling: synthetische data, geen klanten geraakt.",
+        "test": "Testomgeving: synthetische data, geen klanten geraakt.",
+        "staging": "Staging: preproductiedata, geen klanten geraakt.",
+        "production": "Productie: elke actie hier raakt echte klanten en wordt geauditeerd."
+      }
+    },
+    "user": {
+      "menu": "Accountmenu",
+      "signedInAs": "Ingelogd als",
+      "dashboard": "Klantdashboard openen",
+      "logout": "Uitloggen"
+    },
+    "gate": {
+      "status": "403 · toegang geweigerd",
+      "noRole": {
+        "title": "Geen platformtoegang",
+        "text": "Je account heeft geen platformrol. Track Operations is voorbehouden aan de beheerders van Track; een platformadmin kent rollen toe met het commando ops:grant, en elke toekenning wordt geauditeerd.",
+        "back": "Terug naar het dashboard"
+      },
+      "twoFactor": {
+        "title": "Schakel eerst tweestapsverificatie in",
+        "text": "Track Operations vereist tweestapsverificatie voor elke beheerder (step-up). Schakel die in voor je account, log opnieuw in en kom terug naar deze pagina.",
+        "back": "Terug naar het dashboard"
+      },
+      "insufficientRole": {
+        "title": "Platformadmin vereist",
+        "text": "Dit onderdeel is beperkt tot platformadmins. Platformsupport ziet organisaties, break-glass, platformstatus, inbox, groei, audit en content.",
+        "back": "Terug naar het overzicht"
+      }
+    },
+    "notFound": {
+      "title": "Pagina niet gevonden",
+      "text": "Deze pagina bestaat niet in Track Operations of is verplaatst.",
+      "back": "Terug naar het overzicht"
+    },
+    "error": {
+      "title": "Er is iets misgegaan",
+      "text": "De fout is vastgelegd. Probeer het opnieuw of ga terug naar het overzicht.",
+      "retry": "Opnieuw proberen",
+      "back": "Overzicht"
+    },
+    "placeholder": {
+      "title": "In voorbereiding",
+      "text": "Deze module wordt gebouwd. Hier wordt nog niets gemeten, dus er worden geen cijfers getoond."
+    },
+    "overview": {
+      "modules": "Modules",
+      "principles": "Werkregels",
+      "rules": {
+        "noRawData": "Geen ruwe event-payloads, geen persoonsgegevens van eindgebruikers en geen geheimen — alleen geaggregeerde weergaven en metadata.",
+        "breakGlass": "Details van een klant vereisen een goedgekeurde, in tijd beperkte break-glass-toestemming; ook dan alleen-lezen, en elke weergave wordt geauditeerd met het id van de toestemming.",
+        "audit": "Elke wijziging is een serveractie met rolcontrole, validatie, expliciete bevestiging en een auditvermelding met actortype “platform”."
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Overzicht",
+        "intro": "De status van het hele platform in één oogopslag: wat aandacht nodig heeft, welke modules er zijn en de regels waaronder elke beheerder werkt."
+      },
+      "organisations": {
+        "title": "Organisaties",
+        "intro": "Elke klantorganisatie met abonnement, sites, gebruik en status — metadata en aggregaten, nooit hun eventdata."
+      },
+      "breakGlass": {
+        "title": "Break-glass",
+        "intro": "In tijd beperkte, gemotiveerde en goedgekeurde toegang tot de details van één organisatie: aanvragen, goedkeuringen, actieve toestemmingen en hun auditspoor."
+      },
+      "health": {
+        "title": "Platformstatus",
+        "intro": "Worker-heartbeats, wachtrijen, bezorgsucces, dead letters en leveranciersstatus over alle klanten."
+      },
+      "revenue": {
+        "title": "Omzet",
+        "intro": "Abonnementen, maandelijks terugkerende omzet, proefperiodes, overschrijdingen en mislukte betalingen uit het factuurgrootboek en Stripe."
+      },
+      "controls": {
+        "title": "Beheer",
+        "intro": "Globale en klantspecifieke kill switches, schorsingen en feature flags — elke schakelaar wordt bevestigd en geauditeerd."
+      },
+      "inbox": {
+        "title": "Inbox",
+        "intro": "Contact-, demo- en supportaanvragen uit de openbare formulieren met status, behandelaar en afhandeltijd."
+      },
+      "growth": {
+        "title": "Groei",
+        "intro": "Aanmeldingen, activatie, gepubliceerde configuraties en overstap naar betaalde abonnementen — geaggregeerd, geen individuele bezoekers."
+      },
+      "audit": {
+        "title": "Audit",
+        "intro": "Het platform-auditlog: elke beheerdersactie met actor, doel, organisatie en geredigeerde diff."
+      },
+      "users": {
+        "title": "Platformgebruikers",
+        "intro": "Beheerders met een platformrol, hun tweestapsstatus en het vierogenprincipe bij het toekennen van rollen."
+      },
+      "content": {
+        "title": "Content",
+        "intro": "Redactiebord voor Tracking Knowledge: status en reviewleeftijd per taal uit de front matter, lezersfeedback, leerpaden, actualiteit van sitemaps en feeds, integratiedekking. Alleen-lezen — de content staat in git."
+      }
+    }
+  }
+}

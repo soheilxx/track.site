@@ -25,6 +25,18 @@ export interface MailCopy {
   verifyEmail: MailTemplate;
   /** Placeholders: `{inviter}`, `{organization}`, `{url}`. */
   invitation: MailTemplate;
+  /**
+   * Operator reply to a contact / demo / support request (Track Operations → Inbox). Placeholders:
+   * `{name}` (requester), `{body}` (the operator's free text), `{operator}` (display name), `{reference}`.
+   */
+  contactReply: MailTemplate;
+  /**
+   * Break-glass (Track Operations): the organisation's owners are told that a time-boxed read-only support grant
+   * was approved. Placeholders: `{organization}`, `{until}`, `{reason}`, `{ticket}`, `{grantId}`, `{url}` (audit log).
+   */
+  breakGlassApproved: MailTemplate;
+  /** Break-glass: the grant was revoked or ended. Placeholders: `{organization}`, `{grantId}`, `{url}` (audit log). */
+  breakGlassRevoked: MailTemplate;
 }
 
 export const MAIL_COPY: LocalizedCopy<MailCopy> = { en: MAIL_COPY_EN, de: MAIL_COPY_DE, fr: MAIL_COPY_FR, es: MAIL_COPY_ES, it: MAIL_COPY_IT, nl: MAIL_COPY_NL };

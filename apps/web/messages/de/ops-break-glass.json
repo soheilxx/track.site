@@ -1,0 +1,160 @@
+{
+  "opsBreakGlass": {
+    "summary": {
+      "pending": "Warten auf Genehmigung",
+      "active": "Aktive Zugriffe",
+      "admins": "Genehmigende Admins",
+      "adminsHint": "Plattform-Admins mit bestätigter E-Mail{twoFactor, select, yes { und Zwei-Faktor} other {}}, die genehmigen können.",
+      "fourEyesOn": "Vier Augen: Ein zweiter Plattform-Admin genehmigt deine Anfragen.",
+      "fourEyesOff": "Du bist der einzige genehmigende Admin: Deine eigenen Anfragen werden selbst genehmigt und brauchen eine Ticket-Referenz.",
+      "noAdmins": "Derzeit kann kein Plattform-Admin genehmigen."
+    },
+    "rules": {
+      "readOnly": "Jeder Zugriff ist rein lesend: Das Dashboard des Kunden lehnt Änderungen ab, und auch die Datenbank-Transaktion ist schreibgeschützt.",
+      "audited": "Jede Anfrage, Genehmigung, Aufhebung und jeder Seitenaufruf unter einem Zugriff wird mit der Zugriffs-ID im Audit-Log der Organisation festgehalten.",
+      "notified": "Die Owner der Organisation erhalten bei Genehmigung und bei Aufhebung eines aktiven Zugriffs eine E-Mail."
+    },
+    "request": {
+      "title": "Zugriff anfragen",
+      "text": "Lesezugriff auf eine Organisation für begrenzte Zeit. Ein Plattform-Admin genehmigt; die Uhr startet mit der Genehmigung.",
+      "organization": "Organisation",
+      "organizationPlaceholder": "Organisation auswählen",
+      "organizationHint": "{count, plural, =0 {Noch keine Organisationen} one {# Organisation} other {# Organisationen}}, nach Name sortiert.",
+      "reason": "Grund",
+      "reasonHint": "Mindestens {min} Zeichen: was du sehen musst und warum — die Meldung des Kunden, der Ticket-Kontext.",
+      "reasonCount": "{count} / {max}",
+      "ticket": "Ticket-Referenz",
+      "ticketHint": "Zum Beispiel SUP-1234. Pflicht, wenn du deine eigene Anfrage genehmigst (Einzel-Admin-Fallback).",
+      "optional": "optional",
+      "duration": "Dauer",
+      "durations": {
+        "15": "15 Minuten",
+        "30": "30 Minuten",
+        "60": "1 Stunde",
+        "120": "2 Stunden",
+        "240": "4 Stunden"
+      },
+      "submit": "Lesezugriff anfragen"
+    },
+    "queue": {
+      "title": "Genehmigungsliste",
+      "caption": "Offene Break-glass-Anfragen",
+      "empty": "Keine offenen Anfragen",
+      "emptyText": "Anfragen warten hier, bis ein Plattform-Admin sie genehmigt oder ablehnt.",
+      "requestedBy": "Angefragt von",
+      "organization": "Organisation",
+      "reason": "Grund",
+      "ticket": "Ticket",
+      "duration": "Dauer",
+      "requestedAt": "Angefragt",
+      "actions": "Aktionen",
+      "noTicket": "Keine Ticket-Referenz",
+      "you": "du",
+      "approve": "Genehmigen",
+      "decline": "Ablehnen",
+      "withdraw": "Zurückziehen",
+      "adminOnly": "Nur Plattform-Admins genehmigen.",
+      "fourEyesBlocked": "Deine eigene Anfrage muss ein anderer Plattform-Admin genehmigen (vier Augen).",
+      "ticketRequired": "Selbstgenehmigung braucht eine Ticket-Referenz: Ziehe die Anfrage zurück und stelle sie mit Ticket neu.",
+      "selfApprovalHint": "Kein anderer Admin kann genehmigen: Diese Genehmigung wird als Selbstgenehmigung festgehalten.",
+      "approveDialog": {
+        "title": "Lesezugriff genehmigen?",
+        "description": "{name} erhält ab jetzt für {duration} Lesezugriff auf {organization}. Die Owner der Organisation erhalten eine E-Mail, und jeder Seitenaufruf wird mit der Zugriffs-ID festgehalten.",
+        "confirm": "Zugriff genehmigen"
+      },
+      "declineDialog": {
+        "title": "Diese Anfrage ablehnen?",
+        "description": "Die Anfrage von {name} für {organization} wird ohne Zugriff geschlossen. Die Entscheidung wird im Audit-Log festgehalten.",
+        "confirm": "Anfrage ablehnen"
+      },
+      "withdrawDialog": {
+        "title": "Deine Anfrage zurückziehen?",
+        "description": "Deine Anfrage für {organization} wird ohne Zugriff geschlossen. Du kannst jederzeit eine neue stellen.",
+        "confirm": "Anfrage zurückziehen"
+      }
+    },
+    "active": {
+      "title": "Aktive Zugriffe",
+      "caption": "Derzeit aktive Break-glass-Zugriffe",
+      "empty": "Kein aktiver Zugriff",
+      "emptyText": "Niemand hat gerade Lesezugriff auf eine Kundenorganisation.",
+      "operator": "Operator",
+      "organization": "Organisation",
+      "window": "Zeitfenster",
+      "until": "Bis {until}",
+      "approvedBy": "Genehmigt von {name}",
+      "selfApproved": "selbst genehmigt",
+      "ticket": "Ticket {ticket}",
+      "notified": "Owner per E-Mail informiert",
+      "notNotified": "Owner nicht informiert — Mail-Transport prüfen",
+      "actions": "Aktionen",
+      "open": "Dashboard öffnen (nur lesen)",
+      "revoke": "Aufheben",
+      "revokeDialog": {
+        "title": "Zugriff jetzt aufheben?",
+        "description": "Der Zugriff auf {organization} endet sofort; der Operator verliert ihn mit der nächsten Anfrage, und die Owner erhalten eine E-Mail.",
+        "confirm": "Zugriff aufheben"
+      },
+      "countdown": {
+        "remaining": "noch {time}",
+        "hoursMinutes": "{hours} h {minutes} min",
+        "minutes": "{minutes} min",
+        "underMinute": "unter einer Minute",
+        "expired": "Abgelaufen"
+      }
+    },
+    "history": {
+      "title": "Verlauf",
+      "caption": "Geschlossene, abgelaufene und aufgehobene Break-glass-Einträge",
+      "empty": "Noch nichts festgehalten",
+      "emptyText": "Geschlossene Anfragen sowie abgelaufene und aufgehobene Zugriffe erscheinen hier.",
+      "truncated": "Es werden nur die neuesten Einträge gezeigt; der vollständige Verlauf steht im Audit-Log.",
+      "when": "Gestellt",
+      "state": "Status",
+      "operator": "Operator",
+      "organization": "Organisation",
+      "details": "Details",
+      "approved": "Genehmigt {when}",
+      "revoked": "Beendet {when}",
+      "window": "{minutes} min Zeitfenster"
+    },
+    "states": {
+      "pending": "Warten auf Genehmigung",
+      "stale": "Anfrage abgelaufen",
+      "withdrawn": "Zurückgezogen oder abgelehnt",
+      "active": "Aktiv",
+      "revoked": "Aufgehoben",
+      "expired": "Abgelaufen"
+    },
+    "notices": {
+      "requested": "Anfrage gestellt. Ein Plattform-Admin muss sie genehmigen.",
+      "approved": "Zugriff genehmigt; er ist jetzt aktiv.",
+      "revoked": "Zugriff aufgehoben.",
+      "withdrawn": "Anfrage zurückgezogen.",
+      "declined": "Anfrage abgelehnt.",
+      "notified": "{sent, plural, =0 {Kein Owner wurde per E-Mail informiert} one {# Owner per E-Mail informiert} other {# Owner per E-Mail informiert}}{failed, plural, =0 {} one {, # Zustellung fehlgeschlagen} other {, # Zustellungen fehlgeschlagen}}."
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+      "forbidden": "Das darfst du nicht.",
+      "notFound": "Dieser Eintrag existiert nicht mehr.",
+      "validation": "Prüfe die markierten Felder.",
+      "organization": "Wähle eine Organisation.",
+      "reason": "Der Grund braucht zwischen {min} und {max} Zeichen.",
+      "ticketRef": "Die Ticket-Referenz darf Buchstaben, Ziffern, Leerzeichen und - _ # : . / enthalten (bis zu {max} Zeichen).",
+      "durationMinutes": "Wähle eine der angebotenen Dauern.",
+      "duplicate": "Du hast für diese Organisation bereits eine offene Anfrage oder einen aktiven Zugriff.",
+      "notPending": "Diese Anfrage ist nicht mehr offen.",
+      "stale": "Diese Anfrage ist ungenehmigt abgelaufen. Stelle eine neue.",
+      "fourEyes": "Deine eigene Anfrage muss ein anderer Plattform-Admin genehmigen.",
+      "ticketRequired": "Selbstgenehmigung braucht eine Ticket-Referenz.",
+      "notActive": "Dieser Zugriff ist nicht aktiv.",
+      "notGrantee": "Nur der Operator, dem der Zugriff erteilt wurde, kann das Dashboard öffnen.",
+      "confirmRequired": "Bestätige die Aktion zuerst im Dialog."
+    },
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen"
+    }
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "opsRevenue": {
+    "context": {
+      "asOf": "Stand {at}",
+      "period": "Nutzungsperiode {period}",
+      "ledger": "Abrechnungsbuch: letztes Stripe-Ereignis {at}",
+      "ledgerNone": "Abrechnungsbuch: noch kein Stripe-Webhook-Ereignis empfangen",
+      "ledgerFailed": "{count, plural, one {# Webhook-Ereignis fehlgeschlagen} other {# Webhook-Ereignisse fehlgeschlagen}}",
+      "stripe": {
+        "test": "Stripe-Testmodus",
+        "live": "Stripe-Livemodus",
+        "unknown": "Stripe konfiguriert, Modus unbekannt",
+        "none": "Stripe nicht konfiguriert"
+      }
+    },
+    "export": {
+      "subscriptions": "Abonnements exportieren (CSV)",
+      "overage": "Mehrverbrauch exportieren (CSV)",
+      "hint": "Jeder Export wird im Plattform-Audit-Log festgehalten."
+    },
+    "kpis": {
+      "mrr": {
+        "label": "MRR",
+        "hint": "{count, plural, one {# bepreistes Abonnement} other {# bepreiste Abonnements}} zum Listenpreis"
+      },
+      "arr": {
+        "label": "ARR",
+        "hint": "MRR × 12"
+      },
+      "paying": {
+        "label": "Zahlende Abonnements",
+        "hint": "{monthly} monatlich · {yearly} jährlich"
+      },
+      "atRisk": {
+        "label": "Gefährdeter MRR",
+        "hint": "{count, plural, one {# Abonnement überfällig oder unbezahlt} other {# Abonnements überfällig oder unbezahlt}}"
+      }
+    },
+    "plans": {
+      "title": "Umsatz nach Tarif",
+      "intro": "Aktive Abonnements je Katalogtarif und Intervall, bewertet zu den heutigen Listenpreisen. Testphasen und fehlgeschlagene Zahlungen dienen der Einordnung und zählen nie zum MRR.",
+      "caption": "Abonnements und MRR je Tarif",
+      "columns": {
+        "plan": "Tarif",
+        "active": "Aktiv",
+        "monthly": "Monatlich",
+        "yearly": "Jährlich",
+        "trialing": "Testphase",
+        "pastDue": "Überfällig",
+        "mrr": "MRR",
+        "share": "Anteil"
+      },
+      "customPrice": "Individueller Preis — nicht im MRR",
+      "other": "Unbekannte Tarif-ID",
+      "empty": {
+        "title": "Noch keine Abonnements",
+        "text": "Das Abrechnungsbuch enthält keine Abonnementzeilen. Es füllt sich über Stripe-Webhooks, sobald der erste Checkout abgeschlossen ist."
+      },
+      "excluded": {
+        "title": "Nicht bepreist",
+        "custom_price": "{count, plural, one {# aktives Enterprise-Abonnement} other {# aktive Enterprise-Abonnements}} (Vertragspreis)",
+        "unknown_plan": "{count, plural, one {# aktives Abonnement} other {# aktive Abonnements}} in einem Tarif, den der Katalog nicht kennt",
+        "unknown_interval": "{count, plural, one {# aktives Abonnement} other {# aktive Abonnements}} ohne Abrechnungsintervall"
+      }
+    },
+    "trials": {
+      "title": "Testphasen",
+      "intro": "Katalog-Testphase: {days} Tage {plan}, {card}. Sie wird nie von selbst kostenpflichtig — ein bezahlter Tarif braucht einen ausdrücklichen Checkout.",
+      "noCard": "ohne Kreditkarte",
+      "card": "Kreditkarte erforderlich",
+      "stats": {
+        "active": "Laufend",
+        "endingSoon": "Endet in {days} Tagen",
+        "expired": "Beendet, noch als Testphase markiert"
+      },
+      "noData": {
+        "title": "Keine Testphasen-Daten",
+        "text": "Kein Abonnement im Abrechnungsbuch trägt einen Testphasen-Status (Status „trialing“ oder ein Testphasen-Ende). Es wird nichts gezählt."
+      },
+      "caption": "Laufende Testphasen",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "trialEnd": "Testphase endet",
+        "remaining": "Verbleibend",
+        "stripe": "Stripe"
+      },
+      "daysLeft": "{count, plural, =0 {endet heute} one {# Tag} other {# Tage}}",
+      "ended": "{count, plural, one {vor # Tag beendet} other {vor # Tagen beendet}}",
+      "noEnd": "kein Enddatum"
+    },
+    "pastDue": {
+      "title": "Überfällig und unbezahlt",
+      "intro": "Abonnements, deren Zahlung fehlgeschlagen ist. Die Grace Period stammt aus dem Abrechnungsbuch (sieben Tage, nachdem Stripe „überfällig“ gemeldet hat); danach gelten harte Limits.",
+      "caption": "Überfällige und unbezahlte Abonnements",
+      "graceOver": "Grace Period abgelaufen – harte Limits gelten",
+      "empty": {
+        "title": "Keine fehlgeschlagenen Zahlungen",
+        "text": "Derzeit ist kein Abonnement überfällig oder unbezahlt."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "status": "Status",
+        "grace": "Grace Period bis",
+        "periodEnd": "Periodenende",
+        "mrr": "Gefährdeter MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "cancellations": {
+      "title": "Kündigungen",
+      "intro": "Gekündigte Abonnements nach dem Datum der Kündigungsanfrage (Stripes canceled_at) mit dem MRR zum Listenpreis, den sie trugen. Geplante Kündigungen laufender Abonnements werden getrennt aufgeführt.",
+      "window": "Letzte {days} Tage",
+      "lost": "{amount} MRR",
+      "pending": "Geplant",
+      "pendingHint": "{amount} MRR endet zum geplanten Datum",
+      "recentTitle": "Gekündigt in den letzten {days} Tagen",
+      "recentCaption": "Kürzlich gekündigte Abonnements",
+      "pendingTitle": "Geplante Kündigungen",
+      "pendingCaption": "Abonnements mit geplanter Kündigung",
+      "emptyRecent": "In den letzten {days} Tagen wurde kein Abonnement gekündigt.",
+      "emptyPending": "Es ist keine Kündigung geplant.",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "interval": "Intervall",
+        "canceledAt": "Gekündigt",
+        "cancelAt": "Endet",
+        "mrr": "MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "overage": {
+      "title": "Mehrverbrauchs-Exposure",
+      "intro": "Organisationen über ihrem monatlichen Event-Limit in der Periode {period}: Pakete zum Katalog-Listenpreis, reduziert auf das, was die Mehrverbrauchsregel der jeweiligen Organisation die Plattform berechnen lässt. Ein Listenpreis ist keine Rechnung.",
+      "total": "Berechenbares Exposure",
+      "totalHint": "{list} zum Listenpreis über {count, plural, one {# Organisation} other {# Organisationen}}",
+      "contractual": "{count, plural, one {# Organisation} other {# Organisationen}} mit vertraglichem Mehrverbrauch (kein Listenpreis)",
+      "caption": "Mehrverbrauch je Organisation",
+      "empty": {
+        "title": "Kein Mehrverbrauch",
+        "text": "In der Periode {period} liegt keine Organisation über ihrem Event-Limit."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "billable": "Abrechenbare Events",
+        "limit": "Limit",
+        "over": "Darüber",
+        "packs": "Pakete",
+        "list": "Listenpreis",
+        "policy": "Regel",
+        "exposure": "Exposure"
+      },
+      "packInfo": "{packs} × {events}",
+      "policies": {
+        "allow": "Erlauben",
+        "cost_limit": "Kostenlimit",
+        "pause": "Pausieren"
+      },
+      "paused": "pausiert {when}",
+      "contractualCell": "Vertraglich"
+    },
+    "usage": {
+      "title": "Organisationen mit der höchsten Nutzung",
+      "intro": "Die {count} Organisationen mit den meisten abrechenbaren Events in der Periode {period}, aus den Nutzungszählern — nur Summen, keine Eventdaten.",
+      "caption": "Organisationen nach abrechenbaren Events",
+      "empty": {
+        "title": "Keine Nutzungszähler",
+        "text": "Für die Periode {period} hat noch keine Organisation Nutzungszähler. Die Zähler schreibt der Nutzungs-Job."
+      },
+      "columns": {
+        "rank": "#",
+        "organisation": "Organisation",
+        "plan": "Tarif",
+        "billable": "Abrechenbare Events",
+        "accepted": "Akzeptiert",
+        "limit": "Limit",
+        "used": "Vom Limit",
+        "sites": "Sites"
+      },
+      "noLimit": "keine Obergrenze",
+      "noPlan": "kein Abonnement"
+    },
+    "invoices": {
+      "title": "Aktuelle Rechnungen (Stripe)",
+      "intro": "Die neuesten Rechnungen, live mit dem konfigurierten Schlüssel aus Stripe gelesen. Die Beträge stammen von Stripe, in der Rechnungswährung.",
+      "caption": "Aktuelle Stripe-Rechnungen",
+      "notConfigured": {
+        "title": "Stripe nicht konfiguriert",
+        "text": "In dieser Umgebung ist kein Stripe-Secret-Key gesetzt, Rechnungen können daher nicht gelesen werden."
+      },
+      "forbidden": {
+        "title": "Mit dem aktuellen Schlüssel nicht erlaubt",
+        "text": "Der konfigurierte Stripe-Schlüssel ist eingeschränkt und hat keinen Lesezugriff auf Rechnungen ({detail}). Öffne die Rechnungen im Stripe-Dashboard oder erweitere die Berechtigungen des Schlüssels."
+      },
+      "error": {
+        "title": "Stripe hat nicht geantwortet",
+        "text": "Die Rechnungsliste konnte nicht geladen werden ({detail}). Der Rest dieser Seite stammt aus dem Abrechnungsbuch und ist nicht betroffen."
+      },
+      "empty": {
+        "title": "Keine Rechnungen",
+        "text": "Stripe hat für dieses Konto keine Rechnungen zurückgegeben."
+      },
+      "more": "Stripe hält mehr Rechnungen vor, als hier gezeigt werden.",
+      "columns": {
+        "number": "Nummer",
+        "organisation": "Organisation",
+        "status": "Status",
+        "due": "Fälliger Betrag",
+        "paid": "Bezahlt",
+        "created": "Erstellt",
+        "dueDate": "Fällig",
+        "stripe": "Stripe"
+      },
+      "statuses": {
+        "draft": "Entwurf",
+        "open": "Offen",
+        "paid": "Bezahlt",
+        "uncollectible": "Uneinbringlich",
+        "void": "Storniert",
+        "unknown": "Unbekannt"
+      },
+      "unknownCustomer": "Nicht im Abrechnungsbuch",
+      "noNumber": "keine Nummer"
+    },
+    "stripe": {
+      "customer": "Kunde",
+      "subscription": "Abonnement",
+      "invoice": "Rechnung",
+      "opensNewTab": "öffnet das Stripe-Dashboard in einem neuen Tab",
+      "noId": "keine Stripe-ID"
+    },
+    "status": {
+      "none": "Keins",
+      "trialing": "Testphase",
+      "active": "Aktiv",
+      "past_due": "Überfällig",
+      "canceled": "Gekündigt",
+      "unpaid": "Unbezahlt",
+      "incomplete": "Unvollständig",
+      "incomplete_expired": "Unvollständig, abgelaufen",
+      "paused": "Pausiert"
+    },
+    "interval": {
+      "monthly": "Monatlich",
+      "yearly": "Jährlich",
+      "unknown": "Unbekannt"
+    },
+    "org": {
+      "suspended": "Gesperrt"
+    },
+    "method": {
+      "title": "So entstehen diese Zahlen",
+      "mrr": "Der MRR summiert den Katalog-Listenpreis jedes Abonnements mit Status „active“: Monatstarife zum Monatspreis, Jahrestarife zu einem Zwölftel des Jahrespreises. Stripe-Beträge, Rabatte, Steuern und Gutschriften werden nicht angewendet.",
+      "atRisk": "Der gefährdete MRR ist dieselbe Rechnung für Abonnements, die überfällig oder unbezahlt sind.",
+      "trials": "Testphasen zählen nie zum MRR. Der Testphasen-Abschnitt zeigt nur, was das Abrechnungsbuch enthält.",
+      "overage": "Der Mehrverbrauch stellt die Nutzungszähler der Periode dem Tariflimit und den Katalogpaketen gegenüber. Die Regel „Pausieren“ berechnet nichts; „Kostenlimit“ berechnet höchstens die Pakete innerhalb des Limits.",
+      "invoices": "Rechnungen werden live aus Stripe gelesen und sind die einzigen Stripe-Beträge auf dieser Seite. Nichts hier ist ein gebuchter Wert; das Abrechnungsbuch folgt den Stripe-Webhooks."
+    }
+  }
+}

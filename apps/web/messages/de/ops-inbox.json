@@ -1,0 +1,284 @@
+{
+  "opsInbox": {
+    "sections": {
+      "label": "Bereiche des Posteingangs",
+      "requests": "Anfragen",
+      "privacy": "Datenschutzanfragen",
+      "alerts": "Alert-Übersicht",
+      "knowledge": "Knowledge-Feedback"
+    },
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "working": "Wird ausgeführt…",
+      "never": "nie",
+      "none": "—",
+      "unassigned": "Nicht zugewiesen",
+      "you": "du",
+      "openOrganization": "Organisation öffnen",
+      "aggregatesOnly": "Nur Aggregate und Metadaten — keine Event-Payloads, keine Daten von Endnutzern."
+    },
+    "errors": {
+      "forbidden": "Deine Plattformrolle darf das nicht.",
+      "invalid": "Bitte prüfe die markierten Felder.",
+      "not_found": "Diese Anfrage gibt es nicht mehr.",
+      "unchanged": "Nichts zu ändern — der Zustand ist bereits gesetzt.",
+      "invalid_transition": "Dieser Statuswechsel ist vom aktuellen Status aus nicht erlaubt.",
+      "confirmation_required": "Bestätige die Aktion zuerst.",
+      "invalid_assignee": "Die zuständige Person muss eine Plattformrolle haben.",
+      "mail_failed": "Die E-Mail konnte nicht gesendet werden; der Versuch wurde aufgezeichnet. Prüfe den Mail-Transport und versuche es erneut.",
+      "generic": "Das hat nicht geklappt. Bitte versuche es erneut."
+    },
+    "kinds": {
+      "contact": "Kontakt",
+      "demo": "Demo",
+      "support": "Support"
+    },
+    "status": {
+      "new": "Neu",
+      "in_progress": "In Bearbeitung",
+      "done": "Erledigt",
+      "spam": "Spam"
+    },
+    "delivery": {
+      "delivered": "An die Posteingangsadresse weitergeleitet",
+      "failed": "Weiterleitung an die Posteingangsadresse fehlgeschlagen",
+      "not_sent": "Nicht weitergeleitet (keine Posteingangsadresse konfiguriert)"
+    },
+    "requests": {
+      "title": "Kontakt-, Demo- und Support-Anfragen",
+      "intro": "Alles, was die öffentlichen Formulare liefern, mit Status, Zuständigkeit und Weiterleitungsstatus. Antworten gehen per E-Mail in der Sprache der anfragenden Person hinaus; jeder Statuswechsel, jede Zuweisung und jede Antwort wird auditiert.",
+      "summary": {
+        "label": "Anfragen nach Status",
+        "open": "Offen",
+        "all": "Alle"
+      },
+      "filters": {
+        "legend": "Filter",
+        "status": "Status",
+        "kind": "Art",
+        "assignee": "Zuständig",
+        "search": "Suche",
+        "searchPlaceholder": "Name, E-Mail oder Unternehmen",
+        "apply": "Filter anwenden",
+        "reset": "Zurücksetzen",
+        "all": "Alle",
+        "open": "Offen (neu und in Bearbeitung)",
+        "everyone": "Alle Personen",
+        "unassigned": "Nicht zugewiesen",
+        "me": "Mir zugewiesen"
+      },
+      "columns": {
+        "received": "Eingegangen",
+        "kind": "Art",
+        "from": "Von",
+        "message": "Nachricht",
+        "status": "Status",
+        "assignee": "Zuständig",
+        "delivery": "Weiterleitung",
+        "actions": "Aktionen"
+      },
+      "open": "Öffnen",
+      "openLabel": "Anfrage von {name} öffnen",
+      "caption": "Kontaktanfragen, neueste zuerst",
+      "count": "{count} Anfragen",
+      "countFiltered": "{count} Anfragen entsprechen den Filtern",
+      "empty": "Keine offenen Anfragen",
+      "emptyText": "Anfragen aus den öffentlichen Kontakt-, Demo- und Support-Formularen erscheinen hier, sobald jemand eine sendet.",
+      "emptyFiltered": "Keine Anfragen entsprechen diesen Filtern",
+      "emptyFilteredText": "Erweitere die Filter oder setze sie zurück.",
+      "pagination": {
+        "nav": "Seiten der Anfragen",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {page}"
+      }
+    },
+    "detail": {
+      "back": "Zurück zum Posteingang",
+      "title": "{kind}-Anfrage von {name}",
+      "message": "Nachricht",
+      "facts": "Details",
+      "email": "E-Mail",
+      "company": "Unternehmen",
+      "locale": "Sprache",
+      "received": "Eingegangen",
+      "handled": "Erledigt am",
+      "forwarding": "Weiterleitung",
+      "organization": "Organisation beim Absenden",
+      "organizationNone": "Nicht in einer Organisation angemeldet",
+      "userLinked": "Angemeldetes Konto",
+      "userLinkedYes": "Ja, die anfragende Person war angemeldet",
+      "userLinkedNo": "Nein, anonym gesendet",
+      "reference": "Referenz",
+      "assignee": "Zuständig",
+      "status": {
+        "title": "Status",
+        "current": "Aktueller Status",
+        "moveTo": "Als „{status}“ markieren",
+        "changed": "Status aktualisiert.",
+        "spamDialog": {
+          "title": "Als Spam markieren?",
+          "description": "Die Anfrage verschwindet aus der Ansicht der offenen Anfragen, und bis zum Wiedereröffnen kann keine Antwort gesendet werden. Das wird im Audit-Log festgehalten.",
+          "confirm": "Als Spam markieren"
+        }
+      },
+      "assign": {
+        "title": "Zuständigkeit",
+        "label": "Zuweisen an",
+        "save": "Speichern",
+        "saved": "Zuständigkeit gespeichert.",
+        "takeOver": "Mir zuweisen"
+      },
+      "reply": {
+        "title": "Per E-Mail antworten",
+        "intro": "Dein Text wird in die Antwortvorlage der Sprache der anfragenden Person eingebettet: Anrede, dein Name als Signatur und die Referenz {reference}. Das Audit-Log hält fest, dass eine Antwort gesendet wurde, nicht ihren Text.",
+        "language": "Gesendet auf {language}",
+        "recipient": "Empfänger",
+        "body": "Deine Antwort",
+        "bodyHint": "10 bis 4.000 Zeichen. Reiner Text; Anrede und Signatur werden automatisch ergänzt.",
+        "send": "Antwort senden",
+        "spamBlocked": "Als Spam markierte Anfragen können nicht beantwortet werden. Öffne die Anfrage zuerst wieder.",
+        "dialog": {
+          "title": "Diese Antwort senden?",
+          "description": "Die E-Mail geht an {email} mit dem Betreff „{subject}“. Der Versand wird im Audit-Log festgehalten.",
+          "confirm": "Senden"
+        },
+        "sent": "Antwort über {transport} gesendet.",
+        "sentFile": "Antwort in den lokalen Postausgang geschrieben (in dieser Umgebung ist kein Mail-Transport konfiguriert)."
+      },
+      "trail": {
+        "title": "Verlauf",
+        "caption": "Auditierte Aktionen zu dieser Anfrage, neueste zuerst",
+        "empty": "Noch keine Betreiberaktion.",
+        "submitted": "Über das {kind}-Formular eingegangen",
+        "actions": {
+          "status": "Status geändert",
+          "assign": "Zuständigkeit geändert",
+          "reply": "Antwort gesendet",
+          "replyFailed": "Antwort fehlgeschlagen",
+          "other": "Aktion"
+        },
+        "statusChange": "{from} → {to}",
+        "assignedTo": "→ {name}",
+        "assignedNone": "→ nicht zugewiesen",
+        "replyDetail": "über {transport}, {locale}, {length} Zeichen",
+        "replyError": "nicht gesendet ({transport})",
+        "by": "durch {name}",
+        "byUnknown": "durch eine ehemalige Betreiberin oder einen ehemaligen Betreiber"
+      }
+    },
+    "privacy": {
+      "title": "Datenschutzanfragen",
+      "intro": "Betroffenenanfragen aller Organisationen: wie viele offen sind, welche überfällig sind und wann die nächste fällig wird. Betroffene, Berichte und Notizen bleiben im Datenschutzbereich des Mandanten — Betreiber sehen nur Zahlen und Termine.",
+      "unavailable": "Datenschutz-Tabellen nicht verfügbar",
+      "unavailableText": "Die Tabellen für Betroffenenanfragen sind in dieser Datenbank nicht angelegt, deshalb kann nichts gezählt werden.",
+      "totals": {
+        "label": "Über alle Organisationen",
+        "open": "Offen",
+        "overdue": "Überfällig",
+        "dueSoon": "Fällig in {days} Tagen",
+        "completed30d": "Abgeschlossen (30 Tage)",
+        "rejected30d": "Abgelehnt (30 Tage)",
+        "failedJobs": "Fehlgeschlagene Löschjobs",
+        "organizations": "Organisationen mit Anfragen"
+      },
+      "byKind": "Offene Anfragen nach Art",
+      "kinds": {
+        "export": "Auskunft",
+        "delete": "Löschung",
+        "restrict": "Einschränkung",
+        "rectify": "Berichtigung",
+        "object": "Widerspruch",
+        "portability": "Übertragbarkeit"
+      },
+      "columns": {
+        "organization": "Organisation",
+        "open": "Offen",
+        "overdue": "Überfällig",
+        "nextDue": "Nächste Frist",
+        "completed": "Abgeschlossen",
+        "rejected": "Abgelehnt",
+        "total": "Gesamt",
+        "lastRequested": "Letzte Anfrage",
+        "failedJobs": "Fehlgeschlagene Löschjobs",
+        "actions": "Aktionen"
+      },
+      "due": {
+        "overdue": "überfällig",
+        "soon": "bald fällig",
+        "later": "im Zeitplan"
+      },
+      "tenantPath": "Kunden bearbeiten ihre Anfragen unter Consent & Datenschutz (/app/consent) in ihrem eigenen Dashboard.",
+      "caption": "Betroffenenanfragen pro Organisation, dringendste zuerst",
+      "empty": "Keine Betroffenenanfragen",
+      "emptyText": "Noch keine Organisation hat eine Betroffenenanfrage angelegt."
+    },
+    "alerts": {
+      "title": "Alert-Übersicht",
+      "intro": "Alert-Ereignisse der letzten {days} Tage über alle Organisationen, gruppiert nach Art und Organisation: wie viele ausgelöst wurden, wie viele noch offen sind, wie viele kritisch waren. Fakten einzelner Ereignisse bleiben in der Alert-Historie des Kunden.",
+      "unavailable": "Alert-Tabellen nicht verfügbar",
+      "unavailableText": "Die Alert-Tabellen (Migration 0013) sind in dieser Datenbank nicht angelegt, deshalb kann nichts gezählt werden.",
+      "totals": {
+        "label": "Letzte {days} Tage",
+        "events": "Ereignisse",
+        "open": "Noch offen",
+        "critical": "Kritisch",
+        "organizations": "Betroffene Organisationen"
+      },
+      "byKind": "Nach Art",
+      "byOrganization": "Nach Organisation und Art",
+      "kinds": {
+        "event_drop": "Event-Einbruch",
+        "vendor_outage": "Anbieterausfall",
+        "credential_expiry": "Ablauf von Zugangsdaten",
+        "consent_errors": "Consent-Fehler",
+        "queue_lag": "Warteschlangenverzug",
+        "conversion_anomaly": "Conversion-Anomalie"
+      },
+      "columns": {
+        "organization": "Organisation",
+        "kind": "Art",
+        "total": "Ereignisse",
+        "open": "Offen",
+        "critical": "Kritisch",
+        "warning": "Warnung",
+        "last": "Zuletzt ausgelöst",
+        "actions": "Aktionen"
+      },
+      "organizationDeleted": "Gelöschte Organisation",
+      "captionKinds": "Alert-Ereignisse pro Art",
+      "caption": "Alert-Ereignisse pro Organisation und Art, meiste offene zuerst",
+      "empty": "Keine Alerts in den letzten {days} Tagen",
+      "emptyText": "In diesem Zeitraum hat keine Alert-Regel einer Organisation ausgelöst."
+    },
+    "knowledge": {
+      "title": "Knowledge-Feedback",
+      "intro": "„War dieser Artikel hilfreich?“-Stimmen aus Tracking Knowledge der letzten {days} Tage pro Artikel, geringster Hilfreich-Anteil zuerst. Stimmen sind bewusst anonym: keine Adresse, keine Sitzung, kein Mandant — die Übersicht zeigt der Redaktion nur, welche Artikel Arbeit brauchen.",
+      "unavailable": "Feedback-Tabelle nicht verfügbar",
+      "unavailableText": "Die Knowledge-Feedback-Tabelle (Migration 0005) ist in dieser Datenbank nicht angelegt, deshalb kann nichts gezählt werden.",
+      "totals": {
+        "label": "Letzte {days} Tage",
+        "votes": "Stimmen",
+        "helpful": "Hilfreich",
+        "notHelpful": "Nicht hilfreich",
+        "articles": "Artikel mit Stimmen"
+      },
+      "columns": {
+        "article": "Artikel",
+        "helpful": "Hilfreich",
+        "notHelpful": "Nicht hilfreich",
+        "share": "Hilfreich-Anteil",
+        "locales": "Sprachen",
+        "last": "Letzte Stimme",
+        "actions": "Aktionen"
+      },
+      "unknownArticle": "Keine englische Version gefunden",
+      "openArticle": "Artikel öffnen",
+      "openArticleLabel": "Artikel „{title}“ öffnen",
+      "caption": "Feedback pro Artikel, geringster Hilfreich-Anteil zuerst",
+      "empty": "Keine Stimmen in den letzten {days} Tagen",
+      "emptyText": "In diesem Zeitraum hat niemand über einen Artikel abgestimmt."
+    }
+  }
+}

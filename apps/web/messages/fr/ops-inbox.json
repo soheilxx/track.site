@@ -1,0 +1,284 @@
+{
+  "opsInbox": {
+    "sections": {
+      "label": "Sections de la boîte de réception",
+      "requests": "Demandes",
+      "privacy": "Demandes de confidentialité",
+      "alerts": "Synthèse des alertes",
+      "knowledge": "Retours Knowledge"
+    },
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "never": "jamais",
+      "none": "—",
+      "unassigned": "Non attribuée",
+      "you": "vous",
+      "openOrganization": "Ouvrir l’organisation",
+      "aggregatesOnly": "Agrégats et métadonnées uniquement — aucune charge utile d’événement, aucune donnée d’utilisateur final."
+    },
+    "errors": {
+      "forbidden": "Votre rôle de plateforme ne permet pas cette action.",
+      "invalid": "Vérifiez les champs signalés.",
+      "not_found": "Cette demande n’existe plus.",
+      "unchanged": "Rien à changer — cet état est déjà appliqué.",
+      "invalid_transition": "Ce changement de statut n’est pas autorisé depuis le statut actuel.",
+      "confirmation_required": "Confirmez d’abord l’action.",
+      "invalid_assignee": "La personne responsable doit disposer d’un rôle de plateforme.",
+      "mail_failed": "L’e-mail n’a pas pu être envoyé ; la tentative a été enregistrée. Vérifiez le transport de courrier et réessayez.",
+      "generic": "Cela n’a pas fonctionné. Veuillez réessayer."
+    },
+    "kinds": {
+      "contact": "Contact",
+      "demo": "Démo",
+      "support": "Support"
+    },
+    "status": {
+      "new": "Nouvelle",
+      "in_progress": "En cours",
+      "done": "Terminée",
+      "spam": "Spam"
+    },
+    "delivery": {
+      "delivered": "Transmise à l’adresse de réception",
+      "failed": "Échec de la transmission à l’adresse de réception",
+      "not_sent": "Non transmise (aucune adresse de réception configurée)"
+    },
+    "requests": {
+      "title": "Demandes de contact, de démo et de support",
+      "intro": "Tout ce que les formulaires publics transmettent, avec statut, personne responsable et état de transmission. Les réponses partent par e-mail dans la langue du demandeur ; chaque changement de statut, attribution et réponse est audité.",
+      "summary": {
+        "label": "Demandes par statut",
+        "open": "Ouvertes",
+        "all": "Toutes"
+      },
+      "filters": {
+        "legend": "Filtres",
+        "status": "Statut",
+        "kind": "Type",
+        "assignee": "Responsable",
+        "search": "Recherche",
+        "searchPlaceholder": "Nom, e-mail ou entreprise",
+        "apply": "Appliquer les filtres",
+        "reset": "Réinitialiser",
+        "all": "Tous",
+        "open": "Ouvertes (nouvelles et en cours)",
+        "everyone": "Tout le monde",
+        "unassigned": "Non attribuées",
+        "me": "Attribuées à moi"
+      },
+      "columns": {
+        "received": "Reçue",
+        "kind": "Type",
+        "from": "De",
+        "message": "Message",
+        "status": "Statut",
+        "assignee": "Responsable",
+        "delivery": "Transmission",
+        "actions": "Actions"
+      },
+      "open": "Ouvrir",
+      "openLabel": "Ouvrir la demande de {name}",
+      "caption": "Demandes de contact, les plus récentes en premier",
+      "count": "{count} demandes",
+      "countFiltered": "{count} demandes correspondent aux filtres",
+      "empty": "Aucune demande ouverte",
+      "emptyText": "Les demandes des formulaires publics de contact, de démo et de support apparaissent ici dès que quelqu’un en envoie une.",
+      "emptyFiltered": "Aucune demande ne correspond à ces filtres",
+      "emptyFilteredText": "Élargissez les filtres ou réinitialisez-les.",
+      "pagination": {
+        "nav": "Pages des demandes",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {page}"
+      }
+    },
+    "detail": {
+      "back": "Retour à la boîte de réception",
+      "title": "Demande {kind} de {name}",
+      "message": "Message",
+      "facts": "Détails",
+      "email": "E-mail",
+      "company": "Entreprise",
+      "locale": "Langue",
+      "received": "Reçue",
+      "handled": "Traitée",
+      "forwarding": "Transmission",
+      "organization": "Organisation lors de l’envoi",
+      "organizationNone": "Pas connecté à une organisation",
+      "userLinked": "Compte connecté",
+      "userLinkedYes": "Oui, le demandeur était connecté",
+      "userLinkedNo": "Non, envoyée anonymement",
+      "reference": "Référence",
+      "assignee": "Responsable",
+      "status": {
+        "title": "Statut",
+        "current": "Statut actuel",
+        "moveTo": "Marquer comme « {status} »",
+        "changed": "Statut mis à jour.",
+        "spamDialog": {
+          "title": "Marquer comme spam ?",
+          "description": "La demande disparaît de la vue des demandes ouvertes et aucune réponse ne peut être envoyée tant qu’elle n’est pas rouverte. Cette action est consignée dans le journal d’audit.",
+          "confirm": "Marquer comme spam"
+        }
+      },
+      "assign": {
+        "title": "Responsable",
+        "label": "Attribuer à",
+        "save": "Enregistrer",
+        "saved": "Responsable enregistré.",
+        "takeOver": "Me l’attribuer"
+      },
+      "reply": {
+        "title": "Répondre par e-mail",
+        "intro": "Votre texte est inséré dans le modèle de réponse de la langue du demandeur : formule d’appel, votre nom en signature et la référence {reference}. Le journal d’audit enregistre qu’une réponse a été envoyée, pas son texte.",
+        "language": "Envoyé en {language}",
+        "recipient": "Destinataire",
+        "body": "Votre réponse",
+        "bodyHint": "De 10 à 4 000 caractères. Texte brut ; la formule d’appel et la signature sont ajoutées automatiquement.",
+        "send": "Envoyer la réponse",
+        "spamBlocked": "Les demandes marquées comme spam ne peuvent pas recevoir de réponse. Rouvrez d’abord la demande.",
+        "dialog": {
+          "title": "Envoyer cette réponse ?",
+          "description": "L’e-mail est envoyé à {email} avec l’objet « {subject} ». L’envoi est consigné dans le journal d’audit.",
+          "confirm": "Envoyer"
+        },
+        "sent": "Réponse envoyée via {transport}.",
+        "sentFile": "Réponse écrite dans la boîte d’envoi locale (aucun transport de courrier configuré dans cet environnement)."
+      },
+      "trail": {
+        "title": "Historique",
+        "caption": "Actions auditées sur cette demande, les plus récentes en premier",
+        "empty": "Aucune action d’opérateur pour l’instant.",
+        "submitted": "Reçue via le formulaire {kind}",
+        "actions": {
+          "status": "Statut modifié",
+          "assign": "Responsable modifié",
+          "reply": "Réponse envoyée",
+          "replyFailed": "Échec de la réponse",
+          "other": "Action"
+        },
+        "statusChange": "{from} → {to}",
+        "assignedTo": "→ {name}",
+        "assignedNone": "→ non attribuée",
+        "replyDetail": "via {transport}, {locale}, {length} caractères",
+        "replyError": "non envoyée ({transport})",
+        "by": "par {name}",
+        "byUnknown": "par un ancien opérateur"
+      }
+    },
+    "privacy": {
+      "title": "Demandes de confidentialité",
+      "intro": "Demandes des personnes concernées de chaque organisation : combien sont ouvertes, lesquelles sont en retard et quand la prochaine est due. Les personnes concernées, les rapports et les notes restent dans le centre de confidentialité du client — les opérateurs ne voient que des nombres et des dates.",
+      "unavailable": "Tables de confidentialité indisponibles",
+      "unavailableText": "Les tables des demandes des personnes concernées ne sont pas appliquées à cette base de données ; rien ne peut donc être compté.",
+      "totals": {
+        "label": "Toutes organisations confondues",
+        "open": "Ouvertes",
+        "overdue": "En retard",
+        "dueSoon": "Dues sous {days} jours",
+        "completed30d": "Terminées (30 jours)",
+        "rejected30d": "Rejetées (30 jours)",
+        "failedJobs": "Tâches de suppression en échec",
+        "organizations": "Organisations avec des demandes"
+      },
+      "byKind": "Demandes ouvertes par type",
+      "kinds": {
+        "export": "Accès",
+        "delete": "Effacement",
+        "restrict": "Limitation",
+        "rectify": "Rectification",
+        "object": "Opposition",
+        "portability": "Portabilité"
+      },
+      "columns": {
+        "organization": "Organisation",
+        "open": "Ouvertes",
+        "overdue": "En retard",
+        "nextDue": "Prochaine échéance",
+        "completed": "Terminées",
+        "rejected": "Rejetées",
+        "total": "Total",
+        "lastRequested": "Dernière demande",
+        "failedJobs": "Tâches de suppression en échec",
+        "actions": "Actions"
+      },
+      "due": {
+        "overdue": "en retard",
+        "soon": "bientôt due",
+        "later": "dans les délais"
+      },
+      "tenantPath": "Les clients traitent leurs demandes dans Consentement & Confidentialité (/app/consent) de leur propre tableau de bord.",
+      "caption": "Demandes des personnes concernées par organisation, les plus urgentes en premier",
+      "empty": "Aucune demande de personne concernée",
+      "emptyText": "Aucune organisation n’a encore créé de demande de personne concernée."
+    },
+    "alerts": {
+      "title": "Synthèse des alertes",
+      "intro": "Événements d’alerte des {days} derniers jours pour toutes les organisations, groupés par type et par organisation : combien se sont déclenchés, combien restent ouverts, combien étaient critiques. Les détails des événements individuels restent dans l’historique des alertes du client.",
+      "unavailable": "Tables d’alertes indisponibles",
+      "unavailableText": "Les tables d’alertes (migration 0013) ne sont pas appliquées à cette base de données ; rien ne peut donc être compté.",
+      "totals": {
+        "label": "{days} derniers jours",
+        "events": "Événements",
+        "open": "Encore ouverts",
+        "critical": "Critiques",
+        "organizations": "Organisations concernées"
+      },
+      "byKind": "Par type",
+      "byOrganization": "Par organisation et type",
+      "kinds": {
+        "event_drop": "Chute d’événements",
+        "vendor_outage": "Panne fournisseur",
+        "credential_expiry": "Expiration d’identifiants",
+        "consent_errors": "Erreurs de consentement",
+        "queue_lag": "Retard de file d’attente",
+        "conversion_anomaly": "Anomalie de conversion"
+      },
+      "columns": {
+        "organization": "Organisation",
+        "kind": "Type",
+        "total": "Événements",
+        "open": "Ouverts",
+        "critical": "Critiques",
+        "warning": "Avertissement",
+        "last": "Dernier déclenchement",
+        "actions": "Actions"
+      },
+      "organizationDeleted": "Organisation supprimée",
+      "captionKinds": "Événements d’alerte par type",
+      "caption": "Événements d’alerte par organisation et type, le plus d’ouverts en premier",
+      "empty": "Aucune alerte au cours des {days} derniers jours",
+      "emptyText": "Aucune règle d’alerte d’une organisation ne s’est déclenchée sur cette période."
+    },
+    "knowledge": {
+      "title": "Retours Knowledge",
+      "intro": "Votes « Cet article vous a-t-il été utile ? » de Tracking Knowledge des {days} derniers jours par article, part d’utilité la plus faible en premier. Les votes sont anonymes par conception : aucune adresse, aucune session, aucun tenant — la synthèse indique seulement à la rédaction quels articles demandent du travail.",
+      "unavailable": "Table des retours indisponible",
+      "unavailableText": "La table des retours Knowledge (migration 0005) n’est pas appliquée à cette base de données ; rien ne peut donc être compté.",
+      "totals": {
+        "label": "{days} derniers jours",
+        "votes": "Votes",
+        "helpful": "Utile",
+        "notHelpful": "Pas utile",
+        "articles": "Articles avec des votes"
+      },
+      "columns": {
+        "article": "Article",
+        "helpful": "Utile",
+        "notHelpful": "Pas utile",
+        "share": "Part d’utilité",
+        "locales": "Langues",
+        "last": "Dernier vote",
+        "actions": "Actions"
+      },
+      "unknownArticle": "Aucune version anglaise trouvée",
+      "openArticle": "Ouvrir l’article",
+      "openArticleLabel": "Ouvrir l’article « {title} »",
+      "caption": "Retours par article, part d’utilité la plus faible en premier",
+      "empty": "Aucun vote au cours des {days} derniers jours",
+      "emptyText": "Personne n’a voté sur un article durant cette période."
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "opsAudit": {
+    "intro": "Ogni voce di audit dell’intera piattaforma – team dei clienti, Track AI, job di sistema, source key e operatori della piattaforma – con attore, azione, organizzazione, destinazione e dettagli redatti. Cerca, filtra, sfoglia ed esporta; il registro stesso è di sola aggiunta.",
+    "presets": {
+      "label": "Viste rapide",
+      "all": "Tutte le voci",
+      "platform": "Azioni degli operatori",
+      "breakGlass": "Traccia break-glass",
+      "platformWide": "Intera piattaforma",
+      "roles": "Modifiche di ruolo"
+    },
+    "filters": {
+      "legend": "Filtra",
+      "search": "Cerca",
+      "searchPlaceholder": "Azione, destinazione o ID richiesta",
+      "actor": "Attore",
+      "everyone": "Tutti",
+      "operators": "Operatori della piattaforma",
+      "kinds": "Tipi di attore",
+      "otherUser": "Utente {id}",
+      "action": "Azione",
+      "actionPlaceholder": "es. platform.organization",
+      "actionHint": "Azione esatta o prefisso: «platform.organization» include tutte le azioni sottostanti.",
+      "organization": "Organizzazione",
+      "organizationPlaceholder": "ID o slug",
+      "target": "Tipo di destinazione",
+      "all": "Tutti",
+      "scope": "Ambito",
+      "scopes": {
+        "all": "Tutte le voci",
+        "platform_wide": "Solo intera piattaforma (senza organizzazione)",
+        "break_glass": "Traccia break-glass"
+      },
+      "from": "Dal (UTC)",
+      "to": "Al (UTC)",
+      "platformOnly": "Solo azioni degli operatori della piattaforma",
+      "platformOnlyHint": "Voci il cui attore è un operatore della piattaforma (tipo di attore «platform»), indipendentemente dall’organizzazione.",
+      "apply": "Applica",
+      "reset": "Reimposta",
+      "export": "Esporta CSV",
+      "exportHint": "Gli stessi filtri e le stesse liste di chiavi redatte di questa tabella, dalla più recente alla più vecchia, al massimo {max} righe; ogni esportazione viene registrata nel registro di audit."
+    },
+    "summary": {
+      "count": "{count} voci",
+      "countFiltered": "{count} voci corrispondenti",
+      "generated": "Caricato il {date}",
+      "organization": "Organizzazione: {name}",
+      "deletedOrganization": "{id} (non esiste più)",
+      "unknownOrganization": "Nessuna organizzazione ha l’ID o lo slug «{input}»; finché non lo correggi non corrisponde nulla.",
+      "actorFallback": "Attore: {name}",
+      "actorUnknown": "Attore: utente {id} (non esiste più)"
+    },
+    "notes": {
+      "retention": "Le voci vengono conservate {days} giorni per impostazione predefinita; un’organizzazione può definire una propria finestra per il suo registro di audit, e le voci senza organizzazione seguono il valore predefinito. Il job di retention elimina definitivamente le voci più vecchie: solo un’esportazione permette di conservarle più a lungo.",
+      "redacted": "I valori vengono redatti prima del salvataggio e di nuovo prima della visualizzazione; dati personali degli utenti finali e segreti non compaiono mai qui.",
+      "appendOnly": "Il registro è di sola aggiunta: nulla qui può essere modificato o eliminato, e ogni esportazione CSV è essa stessa una voce."
+    },
+    "table": {
+      "caption": "Voci di audit con data e ora, attore, azione, organizzazione, destinazione e dettagli redatti",
+      "when": "Quando",
+      "actor": "Attore",
+      "action": "Azione",
+      "organization": "Organizzazione",
+      "target": "Destinazione",
+      "details": "Dettagli",
+      "platformWide": "Intera piattaforma",
+      "former": "Ex membro",
+      "formerOperator": "Ex operatore",
+      "openOrganization": "Apri {name}",
+      "onlyOrganization": "Solo questa organizzazione",
+      "deletedOrganization": "Organizzazione eliminata",
+      "breakGlass": "Break-glass",
+      "show": "{count, plural, one {Mostra # dettaglio} other {Mostra # dettagli}}",
+      "diff": "Diff",
+      "metadata": "Metadati",
+      "requestId": "Richiesta",
+      "entryId": "ID della voce",
+      "truncated": "Le righe successive non vengono mostrate.",
+      "noDetails": "Nessun dettaglio"
+    },
+    "actorKinds": {
+      "platform": "Operatore della piattaforma",
+      "user": "Membro",
+      "agent": "Track AI",
+      "system": "Sistema",
+      "source_key": "Source key",
+      "unknown": "Sconosciuto"
+    },
+    "categories": {
+      "platform": "Piattaforma",
+      "team": "Team",
+      "organization": "Organizzazione",
+      "sites": "Siti",
+      "config": "Configurazione",
+      "consent": "Consenso",
+      "destinations": "Destinazioni",
+      "credentials": "Credenziali",
+      "privacy": "Privacy",
+      "billing": "Fatturazione",
+      "ai": "Track AI",
+      "other": "Altro"
+    },
+    "empty": {
+      "title": "Ancora nessuna voce di audit",
+      "text": "Le voci compaiono non appena qualcuno agisce sulla piattaforma: una registrazione, una modifica di configurazione, un’azione di un operatore.",
+      "filteredTitle": "Nessuna voce corrisponde",
+      "filteredText": "Allenta i filtri, amplia il periodo o cancella la ricerca."
+    },
+    "pagination": {
+      "nav": "Pagine del registro di audit",
+      "previous": "Pagina precedente",
+      "next": "Pagina successiva",
+      "page": "Pagina {page}"
+    }
+  }
+}

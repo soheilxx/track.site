@@ -1,0 +1,231 @@
+{
+  "opsContent": {
+    "intro": "Redaktioneller Stand von Tracking Knowledge in den sechs Sprachen, Leserfeedback pro Artikel, Lernpfade, Aktualität von Sitemaps und Feeds sowie Integrationsabdeckung. Nur lesend: Die Inhalte liegen in Git, Änderungen sind Commits und keine Konsolenaktionen.",
+    "sections": {
+      "label": "Bereiche des Content-Moduls",
+      "board": "Redaktionsboard",
+      "feedback": "Leserfeedback",
+      "paths": "Lernpfade",
+      "freshness": "Sitemaps und Feeds",
+      "integrations": "Integrationsabdeckung"
+    },
+    "common": {
+      "none": "—",
+      "never": "nie",
+      "generatedAt": "Aus den Inhalten gelesen um {time}",
+      "readOnly": "Nur-Lese-Ansicht der Inhalte in Git und anonymer Stimmen — keine Mandantendaten beteiligt.",
+      "opensNewTab": "(öffnet in neuem Tab)",
+      "openLive": "Live-Seite öffnen",
+      "attention": "Braucht Aufmerksamkeit",
+      "ok": "OK"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "translated": "Übersetzt",
+      "reviewed": "Geprüft",
+      "published": "Veröffentlicht",
+      "missing": "Fehlt"
+    },
+    "flags": {
+      "stale": "Prüfung älter als {days} Tage",
+      "takeaways": "Keine Takeaways",
+      "incomplete": "Nicht in allen Sprachen veröffentlicht",
+      "neverReviewed": "Nie geprüft",
+      "featured": "Hervorgehoben"
+    },
+    "board": {
+      "title": "Redaktionsboard",
+      "intro": "Eine Zeile pro Übersetzungsgruppe mit dem Status jeder Sprachversion aus dem Front Matter. Eine Gruppe ist vollständig, wenn alle Sprachen veröffentlicht sind; eine veröffentlichte Version, deren letzte Prüfung (reviewedAt, sonst das Veröffentlichungsdatum) älter als {days} Tage ist, gilt als veraltet; eine Version ohne Takeaways-Liste wird markiert.",
+      "totals": {
+        "label": "Board-Summen",
+        "groups": "Übersetzungsgruppen",
+        "complete": "Vollständig (alle Sprachen veröffentlicht)",
+        "attention": "Brauchen Aufmerksamkeit",
+        "published": "Veröffentlichte Versionen",
+        "unpublished": "Unveröffentlichte Versionen",
+        "missingVersions": "Fehlende Sprachversionen",
+        "missingTakeaways": "Versionen ohne Takeaways",
+        "staleReviews": "Veraltete Prüfungen",
+        "neverReviewed": "Nie geprüfte Gruppen"
+      },
+      "perLocale": {
+        "title": "Pro Sprache",
+        "caption": "Anzahl Versionen pro Sprache",
+        "columns": {
+          "locale": "Sprache",
+          "published": "Veröffentlicht",
+          "reviewed": "Geprüft",
+          "translated": "Übersetzt",
+          "draft": "Entwurf",
+          "missing": "Fehlt",
+          "takeaways": "Ohne Takeaways",
+          "stale": "Veraltete Prüfungen",
+          "lastReviewed": "Letzte Prüfung"
+        }
+      },
+      "filters": {
+        "legend": "Board-Filter",
+        "view": "Anzeigen",
+        "topic": "Thema",
+        "views": {
+          "all": "Alle Gruppen",
+          "attention": "Mit Handlungsbedarf",
+          "incomplete": "Unvollständig",
+          "stale": "Veraltete Prüfungen",
+          "takeaways": "Fehlende Takeaways",
+          "unpublished": "Mit unveröffentlichten Versionen"
+        },
+        "allTopics": "Alle Themen",
+        "reset": "Filter zurücksetzen"
+      },
+      "columns": {
+        "article": "Artikel",
+        "locales": "Sprachversionen",
+        "reviewed": "Letzte Prüfung",
+        "flags": "Markierungen",
+        "actions": "Aktionen"
+      },
+      "caption": "Übersetzungsgruppen mit ihren Sprachversionen",
+      "count": "{count} Gruppen",
+      "countFiltered": "{count} Gruppen passen zu den Filtern",
+      "empty": "Keine Artikel gefunden",
+      "emptyText": "Der Loader hat unter content/knowledge keine Artikeldateien für die aktiven Sprachen gefunden.",
+      "emptyFiltered": "Keine Gruppen passen zu diesen Filtern",
+      "emptyFilteredText": "Erweitere die Filter oder setze sie zurück.",
+      "openLabel": "Live-Artikel {title} öffnen"
+    },
+    "feedback": {
+      "title": "Leserfeedback pro Artikel",
+      "intro": "Stimmen zu „War dieser Artikel hilfreich?“ aus den öffentlichen Artikeln: gesamt und die letzten {days} Tage, aufgeteilt nach Sprache. Die Stimmen sind bewusst anonym — es gibt nichts, in das man hineinzoomen könnte.",
+      "unavailable": "Feedback-Tabelle nicht verfügbar",
+      "unavailableText": "Die Tabelle knowledge_feedback fehlt in dieser Datenbank. Wende Migration 0005 an und lade neu.",
+      "empty": "Noch keine Stimmen",
+      "emptyText": "Stimmen erscheinen hier, sobald jemand die Frage unter einem Artikel beantwortet.",
+      "totals": {
+        "label": "Feedback-Summen",
+        "votes": "Stimmen (gesamt)",
+        "helpful": "Hilfreich",
+        "notHelpful": "Nicht hilfreich",
+        "share": "Anteil hilfreich",
+        "recentVotes": "Stimmen in den letzten {days} Tagen",
+        "articles": "Artikel mit Stimmen",
+        "withoutVotes": "Veröffentlichte Artikel ohne Stimmen"
+      },
+      "columns": {
+        "article": "Artikel",
+        "allTime": "Gesamt",
+        "recent": "Letzte {days} Tage",
+        "share": "Anteil hilfreich",
+        "byLocale": "Nach Sprache",
+        "last": "Letzte Stimme",
+        "actions": "Aktionen"
+      },
+      "cell": "{helpful} hilfreich · {notHelpful} nicht hilfreich",
+      "caption": "Stimmen pro Artikel, die negativsten zuerst",
+      "unknownArticle": "Artikel nicht auf dem Board",
+      "inboxLink": "30-Tage-Übersicht im Posteingang öffnen"
+    },
+    "paths": {
+      "title": "Lernpfade",
+      "intro": "Kuratierte Pfade aus content/knowledge/paths.<locale>.json pro Sprache: wie viele der gelisteten Artikel auf eine veröffentlichte Version auflösen und ob der Hub den Pfad zeigt. Ids, die nicht auflösen, sind unbekannte Gruppen oder noch nicht veröffentlichte Versionen.",
+      "totals": {
+        "label": "Lernpfad-Summen",
+        "paths": "Pfade",
+        "attention": "Brauchen Aufmerksamkeit",
+        "missingLocales": "Fehlende Sprachdefinitionen",
+        "unresolved": "Nicht auflösbare Artikel-Ids"
+      },
+      "columns": {
+        "path": "Pfad",
+        "locales": "Sprachversionen",
+        "flags": "Markierungen",
+        "actions": "Aktionen"
+      },
+      "caption": "Lernpfade pro Sprache",
+      "empty": "Keine Lernpfade definiert",
+      "emptyText": "Unter content/knowledge gibt es keine paths.<locale>.json mit gültigen Einträgen.",
+      "resolvedOf": "{resolved} von {listed} Artikeln lösen auf",
+      "unresolvedIds": "Lösen nicht auf",
+      "hidden": "Im Hub ausgeblendet (kein Artikel löst auf)",
+      "missing": "Keine Definition in dieser Sprache",
+      "reading": "{count} Min. Lesezeit",
+      "openHub": "Lernpfade öffnen ({locale})"
+    },
+    "freshness": {
+      "title": "Sitemaps und Feeds",
+      "intro": "Der Sitemap-Index, die Knowledge-Sitemaps und die RSS-Feeds werden beim Build aus den veröffentlichten Artikeln gerendert. Die Zahlen unten sind das, was der Loader jetzt rendern würde; weichen sie von den Live-Dateien ab, ist ein neuer Build fällig.",
+      "build": {
+        "title": "Letzter Build",
+        "id": "Build-Id",
+        "builtAt": "Gebaut",
+        "runtime": "Laufzeit",
+        "runtimes": {
+          "production": "Produktions-Build",
+          "development": "Entwicklungsserver",
+          "test": "Test"
+        },
+        "none": "Keine Build-Ausgabe gefunden",
+        "noneText": "Neben der App gibt es keine .next/BUILD_ID. In der Entwicklung werden die Routen pro Anfrage gerendert, die Live-Dateien entsprechen also immer dem Loader."
+      },
+      "index": {
+        "title": "Sitemap-Index",
+        "sitemaps": "{count} Sitemaps (Seiten und Knowledge pro Sprache)",
+        "open": "Sitemap-Index öffnen"
+      },
+      "columns": {
+        "locale": "Sprache",
+        "knowledgeUrls": "Knowledge-URLs / Feed-Einträge",
+        "pageUrls": "Seiten-URLs",
+        "newestPublished": "Neueste Veröffentlichung",
+        "newestUpdated": "Neueste Aktualisierung",
+        "unpublished": "Unveröffentlichte Versionen",
+        "links": "Live-Dateien"
+      },
+      "caption": "Sitemap- und Feed-Zahlen pro Sprache",
+      "openHub": "Hub",
+      "openFeed": "Feed",
+      "openSitemap": "Sitemap"
+    },
+    "integrations": {
+      "title": "Integrationsabdeckung",
+      "intro": "Welche Katalogeinträge veröffentlichte Tracking-Knowledge-Artikel pro Sprache haben (die Plattformen oder Shopsysteme eines Artikels nennen den Slug, oder eines seiner Tags steht in den Knowledge-Tags des Eintrags — dieselbe Regel wie auf der öffentlichen Integrationsseite) und welche öffentliche Anbieterdokumentation hinterlegt haben. Einträge mit den wenigsten Artikeln stehen oben.",
+      "totals": {
+        "label": "Abdeckungs-Summen",
+        "integrations": "Integrationen",
+        "destinations": "Ziele",
+        "sources": "Quellen",
+        "withArticles": "Mit Artikeln",
+        "withoutArticles": "Ohne Artikel",
+        "everyLocale": "In allen Sprachen abgedeckt",
+        "vendorDocs": "Mit Anbieterdokumentation"
+      },
+      "columns": {
+        "integration": "Integration",
+        "kind": "Art",
+        "articles": "Artikel pro Sprache",
+        "groups": "Gruppen",
+        "vendorDocs": "Anbieterdokumentation",
+        "actions": "Aktionen"
+      },
+      "kinds": {
+        "destination": "Ziel",
+        "source": "Quelle"
+      },
+      "categories": {
+        "ads": "Ads",
+        "analytics": "Analytics",
+        "commerce": "Commerce",
+        "affiliate": "Affiliate",
+        "custom": "Individuell"
+      },
+      "caption": "Integrationen mit ihrer Knowledge-Abdeckung",
+      "noArticles": "Keine Artikel",
+      "vendorDocsYes": "Hinterlegt",
+      "vendorDocsNo": "Keine (nur Track-Dokumentation)",
+      "verifiedOn": "Verifiziert am {date}",
+      "openIntegration": "Integrationsseite öffnen",
+      "openIntegrationLabel": "Live-Integrationsseite von {name} öffnen",
+      "openVendorDocs": "Anbieter-Doku"
+    }
+  }
+}

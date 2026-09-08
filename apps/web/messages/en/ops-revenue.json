@@ -1,0 +1,263 @@
+{
+  "opsRevenue": {
+    "context": {
+      "asOf": "As of {at}",
+      "period": "Usage period {period}",
+      "ledger": "Billing ledger: last Stripe event {at}",
+      "ledgerNone": "Billing ledger: no Stripe webhook event received yet",
+      "ledgerFailed": "{count, plural, one {# webhook event failed} other {# webhook events failed}}",
+      "stripe": {
+        "test": "Stripe test mode",
+        "live": "Stripe live mode",
+        "unknown": "Stripe configured, mode unknown",
+        "none": "Stripe not configured"
+      }
+    },
+    "export": {
+      "subscriptions": "Export subscriptions (CSV)",
+      "overage": "Export overage (CSV)",
+      "hint": "Every export is recorded in the platform audit log."
+    },
+    "kpis": {
+      "mrr": {
+        "label": "MRR",
+        "hint": "{count, plural, one {# priced subscription} other {# priced subscriptions}} at list price"
+      },
+      "arr": {
+        "label": "ARR",
+        "hint": "MRR × 12"
+      },
+      "paying": {
+        "label": "Paying subscriptions",
+        "hint": "{monthly} monthly · {yearly} yearly"
+      },
+      "atRisk": {
+        "label": "MRR at risk",
+        "hint": "{count, plural, one {# subscription past due or unpaid} other {# subscriptions past due or unpaid}}"
+      }
+    },
+    "plans": {
+      "title": "Revenue by plan",
+      "intro": "Active subscriptions per catalogue plan and interval, priced at today’s list prices. Trials and failed payments are shown for context and never count towards MRR.",
+      "caption": "Subscriptions and MRR per plan",
+      "columns": {
+        "plan": "Plan",
+        "active": "Active",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "trialing": "Trialing",
+        "pastDue": "Past due",
+        "mrr": "MRR",
+        "share": "Share"
+      },
+      "customPrice": "Custom price — not in MRR",
+      "other": "Unknown plan id",
+      "empty": {
+        "title": "No subscriptions yet",
+        "text": "The billing ledger has no subscription rows. It fills through Stripe webhooks once the first checkout completes."
+      },
+      "excluded": {
+        "title": "Not priced",
+        "custom_price": "{count, plural, one {# active Enterprise subscription} other {# active Enterprise subscriptions}} (contract price)",
+        "unknown_plan": "{count, plural, one {# active subscription} other {# active subscriptions}} on a plan the catalogue does not know",
+        "unknown_interval": "{count, plural, one {# active subscription} other {# active subscriptions}} without a billing interval"
+      }
+    },
+    "trials": {
+      "title": "Trials",
+      "intro": "Catalogue trial: {days} days of {plan}, {card}. It never converts on its own — a paid plan needs an explicit checkout.",
+      "noCard": "no card required",
+      "card": "card required",
+      "stats": {
+        "active": "Running",
+        "endingSoon": "Ending within {days} days",
+        "expired": "Ended, still marked trialing"
+      },
+      "noData": {
+        "title": "No trial data",
+        "text": "No subscription in the billing ledger carries a trial state (status “trialing” or a trial end). Nothing is counted."
+      },
+      "caption": "Running trials",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "trialEnd": "Trial ends",
+        "remaining": "Remaining",
+        "stripe": "Stripe"
+      },
+      "daysLeft": "{count, plural, =0 {ends today} one {# day} other {# days}}",
+      "ended": "{count, plural, one {ended # day ago} other {ended # days ago}}",
+      "noEnd": "no end date"
+    },
+    "pastDue": {
+      "title": "Past due and unpaid",
+      "intro": "Subscriptions whose payment failed. The grace period comes from the ledger (seven days after Stripe reported past due); after it, hard limits apply.",
+      "caption": "Past-due and unpaid subscriptions",
+      "graceOver": "grace period over — hard limits apply",
+      "empty": {
+        "title": "No failed payments",
+        "text": "No subscription is past due or unpaid right now."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "status": "Status",
+        "grace": "Grace until",
+        "periodEnd": "Period end",
+        "mrr": "MRR at risk",
+        "stripe": "Stripe"
+      }
+    },
+    "cancellations": {
+      "title": "Cancellations",
+      "intro": "Cancelled subscriptions by the date the cancellation was requested (Stripe’s canceled_at), with the list-price MRR they carried. Scheduled cancellations on running subscriptions are listed separately.",
+      "window": "Last {days} days",
+      "lost": "{amount} MRR",
+      "pending": "Scheduled",
+      "pendingHint": "{amount} MRR ends at the scheduled date",
+      "recentTitle": "Cancelled in the last {days} days",
+      "recentCaption": "Recently cancelled subscriptions",
+      "pendingTitle": "Scheduled cancellations",
+      "pendingCaption": "Subscriptions with a scheduled cancellation",
+      "emptyRecent": "No subscription was cancelled in the last {days} days.",
+      "emptyPending": "No cancellation is scheduled.",
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "interval": "Interval",
+        "canceledAt": "Cancelled",
+        "cancelAt": "Ends",
+        "mrr": "MRR",
+        "stripe": "Stripe"
+      }
+    },
+    "overage": {
+      "title": "Overage exposure",
+      "intro": "Organisations above their monthly event limit in period {period}: packs at catalogue list price, reduced to what each organisation’s overage policy lets the platform bill. A list price is not an invoice.",
+      "total": "Billable exposure",
+      "totalHint": "{list} at list price across {count, plural, one {# organisation} other {# organisations}}",
+      "contractual": "{count, plural, one {# organisation} other {# organisations}} with contractual overage (no list price)",
+      "caption": "Overage per organisation",
+      "empty": {
+        "title": "No overage",
+        "text": "No organisation is above its event limit in period {period}."
+      },
+      "columns": {
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "billable": "Billable events",
+        "limit": "Limit",
+        "over": "Over",
+        "packs": "Packs",
+        "list": "List price",
+        "policy": "Policy",
+        "exposure": "Exposure"
+      },
+      "packInfo": "{packs} × {events}",
+      "policies": {
+        "allow": "Allow",
+        "cost_limit": "Cost limit",
+        "pause": "Pause"
+      },
+      "paused": "paused {when}",
+      "contractualCell": "Contractual"
+    },
+    "usage": {
+      "title": "Top organisations by usage",
+      "intro": "The {count} organisations with the most billable events in period {period}, from the usage counters — totals only, no event data.",
+      "caption": "Organisations ranked by billable events",
+      "empty": {
+        "title": "No usage counters",
+        "text": "No organisation has usage counters for period {period} yet. The counters are written by the usage job."
+      },
+      "columns": {
+        "rank": "#",
+        "organisation": "Organisation",
+        "plan": "Plan",
+        "billable": "Billable events",
+        "accepted": "Accepted",
+        "limit": "Limit",
+        "used": "Of limit",
+        "sites": "Sites"
+      },
+      "noLimit": "no cap",
+      "noPlan": "no subscription"
+    },
+    "invoices": {
+      "title": "Recent invoices (Stripe)",
+      "intro": "The latest invoices read live from Stripe with the configured key. Amounts are Stripe’s, in the invoice currency.",
+      "caption": "Recent Stripe invoices",
+      "notConfigured": {
+        "title": "Stripe not configured",
+        "text": "No Stripe secret key is set in this environment, so invoices cannot be read."
+      },
+      "forbidden": {
+        "title": "Not permitted with the current key",
+        "text": "The configured Stripe key is restricted and has no read access to invoices ({detail}). Open the invoices in the Stripe dashboard or extend the key’s permissions."
+      },
+      "error": {
+        "title": "Stripe did not answer",
+        "text": "The invoice list could not be loaded ({detail}). The rest of this page comes from the billing ledger and is unaffected."
+      },
+      "empty": {
+        "title": "No invoices",
+        "text": "Stripe returned no invoices for this account."
+      },
+      "more": "Stripe holds more invoices than shown here.",
+      "columns": {
+        "number": "Number",
+        "organisation": "Organisation",
+        "status": "Status",
+        "due": "Amount due",
+        "paid": "Paid",
+        "created": "Created",
+        "dueDate": "Due",
+        "stripe": "Stripe"
+      },
+      "statuses": {
+        "draft": "Draft",
+        "open": "Open",
+        "paid": "Paid",
+        "uncollectible": "Uncollectible",
+        "void": "Void",
+        "unknown": "Unknown"
+      },
+      "unknownCustomer": "Not in the ledger",
+      "noNumber": "no number"
+    },
+    "stripe": {
+      "customer": "Customer",
+      "subscription": "Subscription",
+      "invoice": "Invoice",
+      "opensNewTab": "opens the Stripe dashboard in a new tab",
+      "noId": "no Stripe id"
+    },
+    "status": {
+      "none": "None",
+      "trialing": "Trialing",
+      "active": "Active",
+      "past_due": "Past due",
+      "canceled": "Cancelled",
+      "unpaid": "Unpaid",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Incomplete, expired",
+      "paused": "Paused"
+    },
+    "interval": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "unknown": "Unknown"
+    },
+    "org": {
+      "suspended": "Suspended"
+    },
+    "method": {
+      "title": "How these numbers are made",
+      "mrr": "MRR sums the catalogue list price of every subscription with status “active”: monthly plans at the monthly price, yearly plans at one twelfth of the yearly price. Stripe amounts, discounts, taxes and credits are not applied.",
+      "atRisk": "MRR at risk is the same calculation for subscriptions that are past due or unpaid.",
+      "trials": "Trials never count towards MRR. The trial section only shows what the ledger carries.",
+      "overage": "Overage uses the period’s usage counters against the plan limit and the catalogue packs. Policy “pause” bills nothing; “cost limit” bills at most the packs within the limit.",
+      "invoices": "Invoices are read live from Stripe and are the only Stripe amounts on this page. Nothing here is a booked figure; the ledger follows Stripe webhooks."
+    }
+  }
+}
