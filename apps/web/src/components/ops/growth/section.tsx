@@ -5,7 +5,7 @@ import { cn } from "@track-site/ui";
 export function Section({ id, title, intro, aside, children }: { id: string; title: string; intro?: ReactNode; aside?: ReactNode; children: ReactNode }) {
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-4" data-testid={id}>
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1 basis-64">
           <h2 id={`${id}-title`} className="text-lg font-semibold text-ink">
             {title}
