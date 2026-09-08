@@ -13,9 +13,11 @@ import {
   knowledgeFeedback,
   organization,
   pgErrorCode,
+  supportTickets,
   user,
   type AlertRuleKind,
   type ContactRequestStatus,
+  type SupportTicketStatus,
   type Tx,
 } from "@track-site/db";
 import { ACTIVE_LOCALES, isLocale, type AppLocale } from "@/i18n/routing";
@@ -28,7 +30,9 @@ import { withPlatform, type PlatformContext } from "@/server/ops/platform";
  * Track Operations → Inbox (docs/17 §2, task O6): data access and pure helpers for `/ops/inbox`.
  *
  * - Contact, demo and support requests from the public forms (`contact_requests`, global by design): list
- *   with status / kind / assignee / search filters, the detail with the message and its audit trail.
+ *   with status / kind / assignee / search filters, the detail with the message and its audit trail. Since the
+ *   support desk (docs/18) every form submission also opens a ticket (`contact_requests.ticket_id`); the list
+ *   and the detail link to it and the section is the **legacy** view — the desk is where the work happens.
  * - Privacy overview: counts and due dates of data subject requests per organisation — metadata only,
  *   never the pseudonymous subject identifiers or reports (those stay in the tenant's privacy centre).
  * - Cross-tenant alert digest (`alert_events`, last 7 days, grouped by kind and organisation) and the
@@ -173,6 +177,14 @@ export function organisationHref(organizationId: string): string {
   return `/ops/organisations/${organizationId}`;
 }
 
+/** Link to the support ticket a request was converted into (Support module, docs/18). */
+export function ticketHref(ticketId: string): string {
+  return `/ops/support/${ticketId}`;
+}
+
+/** The ticket queue narrowed to form tickets (every status): where the requests live since the desk exists. */
+export const FORM_TICKETS_HREF = "/ops/support?channel=form&status=any";
+
 // ---------------------------------------------------------------------------------------------------
 // Views
 // ---------------------------------------------------------------------------------------------------
@@ -196,6 +208,8 @@ export interface ContactRequestView {
   assignee: { id: string; name: string } | null;
   /** organisation the requester was signed in to when submitting (metadata only) */
   organization: { id: string; name: string; slug: string } | null;
+  /** the support ticket the request was converted into (`contact_requests.ticket_id`); null for requests older than the desk */
+  ticket: { id: string; number: number; status: SupportTicketStatus } | null;
   delivery: ContactDelivery;
   preview: string;
   createdAt: string;
@@ -353,6 +367,9 @@ const contactColumns = {
   assigneeName: user.name,
   organizationName: organization.name,
   organizationSlug: organization.slug,
+  ticketId: contactRequests.ticketId,
+  ticketNumber: supportTickets.number,
+  ticketStatus: supportTickets.status,
 };
 
 /** Base query of the list and the detail: the request, its assignee's name and the linked organisation. */
@@ -361,7 +378,8 @@ const contactQuery = (tx: Tx) =>
     .select(contactColumns)
     .from(contactRequests)
     .leftJoin(user, eq(user.id, contactRequests.assigneeUserId))
-    .leftJoin(organization, eq(organization.id, contactRequests.organizationId));
+    .leftJoin(organization, eq(organization.id, contactRequests.organizationId))
+    .leftJoin(supportTickets, eq(supportTickets.id, contactRequests.ticketId));
 
 type ContactRow = Awaited<ReturnType<typeof contactQuery>>[number];
 
@@ -380,6 +398,7 @@ function contactView(row: ContactRow): ContactRequestView {
       row.organizationId && row.organizationName && row.organizationSlug
         ? { id: row.organizationId, name: row.organizationName, slug: row.organizationSlug }
         : null,
+    ticket: row.ticketId && row.ticketNumber != null && row.ticketStatus ? { id: row.ticketId, number: Number(row.ticketNumber), status: row.ticketStatus } : null,
     delivery: deliveryState({ deliveredAt: row.deliveredAt ?? null, deliveryError: row.deliveryError ?? null }),
     preview: messagePreview(row.message),
     createdAt: row.createdAt.toISOString(),

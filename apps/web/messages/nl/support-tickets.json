@@ -1,0 +1,235 @@
+{
+  "supportTickets": {
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "unassigned": "Niet toegewezen",
+      "you": "u",
+      "none": "—",
+      "noSubject": "(geen onderwerp)"
+    },
+    "errors": {
+      "forbidden": "Uw platformrol mag dit niet doen.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Dat ticket of die weergave bestaat niet meer.",
+      "confirmation_required": "Bevestig eerst de actie.",
+      "invalid_assignee": "De toegewezen persoon moet een platformrol hebben.",
+      "invalid_target": "Het doelticket bestaat niet, is spam, is al samengevoegd of maakt deel uit van de selectie.",
+      "nothing_applied": "Niets gewijzigd: de regel stond de wijziging bij geen enkel geselecteerd ticket toe.",
+      "too_many_views": "U hebt het maximale aantal opgeslagen weergaven bereikt. Verwijder er eerst een.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    },
+    "queue": {
+      "intro": "Alle tickets uit e-mail, het contactformulier en het klantdashboard. Kies een weergave, verfijn die met de filters en handel meerdere tickets tegelijk af — elke wijziging wordt in het auditlogboek vastgelegd.",
+      "viewMissing": "Die opgeslagen weergave bestaat niet meer of is de persoonlijke weergave van iemand anders; in plaats daarvan worden alle open tickets getoond.",
+      "saveView": "Opslaan als weergave",
+      "manageViews": "Weergaven beheren",
+      "views": {
+        "label": "Ticketweergaven",
+        "saved": "Opgeslagen weergaven",
+        "count": "{count, plural, one {# ticket} other {# tickets}}",
+        "defaults": {
+          "unassigned": "Niet toegewezen",
+          "mine": "Mijn tickets",
+          "open": "Alle open",
+          "pending": "Wacht op klant",
+          "breached": "SLA overschreden",
+          "solved_7d": "Opgelost (laatste 7 dagen)",
+          "spam": "Spam"
+        }
+      },
+      "filters": {
+        "legend": "Filters",
+        "search": "Zoeken",
+        "searchPlaceholder": "Onderwerp, aanvrager, organisatie of #nummer",
+        "status": "Status",
+        "priority": "Prioriteit",
+        "channel": "Kanaal",
+        "assignee": "Toegewezen aan",
+        "organisation": "Organisatie",
+        "organisationPlaceholder": "Naam, slug of id",
+        "plan": "Abonnement",
+        "tags": "Tags",
+        "tagsPlaceholder": "billing, vip",
+        "sla": "SLA-status",
+        "dateField": "Datumveld",
+        "from": "Van",
+        "to": "Tot",
+        "lastDays": "Laatste … dagen",
+        "lastDaysPlaceholder": "bijv. 7",
+        "sort": "Sortering",
+        "apply": "Filters toepassen",
+        "reset": "Terug naar de weergave",
+        "any": "Alle",
+        "asInView": "Zoals in de weergave ({count, plural, one {# geselecteerd} other {# geselecteerd}})",
+        "everyone": "Iedereen",
+        "unassigned": "Niet toegewezen",
+        "me": "Aan mij toegewezen",
+        "clearDates": "Datumbereik van de weergave negeren",
+        "clearDatesHint": "Aangevinkt telt elke datum, tenzij u hier een eigen bereik invult.",
+        "viewRangeLastDays": "De weergave toont {count, plural, one {de laatste dag} other {de laatste # dagen}}.",
+        "viewRangeBetween": "De weergave toont {from} tot {to}.",
+        "viewRangeFrom": "De weergave toont datums vanaf {from}.",
+        "viewRangeTo": "De weergave toont datums tot en met {to}.",
+        "hint": "Filters verfijnen de gekozen weergave; meerdere statussen, prioriteiten of kanalen tegelijk stelt u in de weergave-editor in. Tags: gescheiden door komma's, elke tag moet aanwezig zijn."
+      },
+      "slaFilters": {
+        "any": "Alle",
+        "on_track": "Op schema",
+        "breached": "Overschreden",
+        "paused": "Klok gepauzeerd",
+        "none": "Geen SLA-beleid"
+      },
+      "dateFields": {
+        "created": "Aangemaakt",
+        "updated": "Bijgewerkt",
+        "resolved": "Opgelost"
+      },
+      "sorts": {
+        "updated_desc": "Laatste update, nieuwste eerst",
+        "updated_asc": "Laatste update, oudste eerst",
+        "created_desc": "Aangemaakt, nieuwste eerst",
+        "created_asc": "Aangemaakt, oudste eerst",
+        "priority_desc": "Prioriteit, urgent eerst",
+        "sla_due_asc": "SLA-deadline, eerstvolgende eerst",
+        "number_desc": "Nummer, hoogste eerst",
+        "number_asc": "Nummer, laagste eerst"
+      },
+      "sla": {
+        "met": "Gehaald",
+        "due": "verloopt {when}",
+        "overdue": "verlopen sinds {when}",
+        "dueWhenResumed": "gepauzeerd, wacht op klant"
+      },
+      "columns": {
+        "select": "Selecteren",
+        "ticket": "Ticket",
+        "requester": "Aanvrager",
+        "status": "Status",
+        "priority": "Prioriteit",
+        "assignee": "Toegewezen aan",
+        "sla": "SLA",
+        "updated": "Laatste update",
+        "viewers": "Bekijkt nu"
+      },
+      "selectAll": "Alle tickets op deze pagina selecteren",
+      "selectOne": "Ticket #{number} selecteren",
+      "merged": "Samengevoegd",
+      "requesterUnknown": "Geen naam opgegeven",
+      "noOrganisation": "Geen organisatie gekoppeld",
+      "created": "aangemaakt {when}",
+      "viewersLabel": "{count, plural, one {# operator bekijkt dit ticket} other {# operators bekijken dit ticket}}",
+      "presence": {
+        "viewing": "{name} bekijkt dit ticket",
+        "typing": "{name} typt een antwoord"
+      },
+      "caption": "Supporttickets van de gekozen weergave",
+      "count": "{count, plural, one {# ticket} other {# tickets}}",
+      "countFiltered": "{count, plural, one {# ticket voldoet} other {# tickets voldoen}} aan de filters",
+      "empty": "Geen tickets in deze weergave",
+      "emptyText": "Tickets verschijnen hier zodra een klant de support aanschrijft of een aanvraag in een ticket wordt omgezet.",
+      "emptyFiltered": "Geen tickets voldoen aan deze filters",
+      "emptyFilteredText": "Verruim de filters of ga terug naar de weergave.",
+      "pagination": {
+        "nav": "Ticketpagina's",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {page}"
+      },
+      "export": {
+        "button": "CSV exporteren",
+        "working": "Export wordt voorbereid…",
+        "done": "{rows, plural, one {# ticket geëxporteerd} other {# tickets geëxporteerd}} (alleen metadata, geen berichten of contactgegevens).",
+        "truncated": "{rows, plural, one {# ticket} other {# tickets}} van {total, number} geëxporteerd — verfijn de filters voor de rest."
+      }
+    },
+    "bulk": {
+      "title": "Bulkacties",
+      "selected": "{count, plural, one {# geselecteerd} other {# geselecteerd}}",
+      "tooMany": "maximaal {max} tickets tegelijk",
+      "action": "Actie",
+      "actions": {
+        "assign": "Toewijzen",
+        "status": "Status wijzigen",
+        "priority": "Prioriteit wijzigen",
+        "tags": "Tags toevoegen of verwijderen",
+        "merge": "Samenvoegen met ander ticket"
+      },
+      "assignTo": "Toewijzen aan",
+      "newStatus": "Nieuwe status",
+      "newPriority": "Nieuwe prioriteit",
+      "tagsAdd": "Tags toevoegen",
+      "tagsRemove": "Tags verwijderen",
+      "tagsPlaceholder": "billing, vip",
+      "tagsHint": "Gescheiden door komma's; kleine letters, cijfers, koppeltekens en underscores, maximaal 20 tags per ticket.",
+      "mergeTarget": "Samenvoegen met ticket",
+      "mergeHint": "De geselecteerde tickets worden gesloten en aan het doel gekoppeld; hun gesprekken blijven leesbaar. Het doel moet een ticket van dezelfde organisatie buiten de selectie zijn, dat geen spam is en niet zelf is samengevoegd.",
+      "statusHint": "Tickets waarvan de huidige status de overgang niet toestaat, worden overgeslagen. 'Wacht op klant' pauzeert de SLA-klok; 'Opgelost' en 'Gesloten' leggen het oplosmoment vast. Spam blokkeert de afzender totdat het ticket is hersteld.",
+      "priorityHint": "Lopende SLA-termijnen verschuiven met het verschil tussen het oude en het nieuwe doel; een korter doel kan meteen verstreken zijn. Tickets zonder SLA-beleid houden geen termijnen.",
+      "apply": "Toepassen…",
+      "summary": {
+        "unassign": "Toewijzing van de geselecteerde tickets verwijderen.",
+        "assign": "Geselecteerde tickets toewijzen aan {name}.",
+        "status": "Status van de geselecteerde tickets instellen op '{status}'.",
+        "priority": "Prioriteit van de geselecteerde tickets instellen op '{priority}'.",
+        "tags": "Toevoegen: {add} · Verwijderen: {remove}",
+        "merge": "Geselecteerde tickets samenvoegen met ticket #{number} en sluiten."
+      },
+      "dialog": {
+        "title": "Toepassen op {count, plural, one {# ticket} other {# tickets}}?",
+        "description": "De wijziging wordt toegepast op elk geselecteerd ticket dat de regels toestaan en per ticket in het auditlogboek vastgelegd.",
+        "confirm": "Toepassen"
+      },
+      "result": {
+        "applied": "{applied, plural, one {# ticket bijgewerkt} other {# tickets bijgewerkt}}, {skipped, plural, one {# overgeslagen} other {# overgeslagen}}.",
+        "skippedOnly": "{skipped, plural, one {# ticket is overgeslagen} other {# tickets zijn overgeslagen}}."
+      }
+    },
+    "viewsPage": {
+      "intro": "Gedeelde weergaven zijn de wachtrijen van het team (beheerd door platformbeheerders); persoonlijke weergaven zijn van uzelf. Elke weergave behoudt haar filters en sortering en toont haar actuele aantal in de wachtrij.",
+      "new": "Nieuwe weergave",
+      "empty": "Nog geen opgeslagen weergaven",
+      "emptyText": "Begin in de wachtrij: stel de gewenste filters in en kies 'Opslaan als weergave'.",
+      "caption": "Opgeslagen weergaven, gedeelde eerst",
+      "columns": {
+        "name": "Naam",
+        "scope": "Zichtbaarheid",
+        "sort": "Sortering",
+        "updated": "Bijgewerkt",
+        "actions": "Acties"
+      },
+      "open": "Weergave '{name}' openen",
+      "edit": "Bewerken",
+      "editLabel": "Weergave '{name}' bewerken",
+      "readOnly": "Beheerd door platformbeheerders",
+      "scope": {
+        "personal": "Persoonlijk",
+        "shared": "Gedeeld"
+      }
+    },
+    "viewForm": {
+      "titleNew": "Nieuwe weergave",
+      "titleEdit": "Weergave '{name}' bewerken",
+      "titleEditShort": "Weergave bewerken",
+      "introNew": "Geef de weergave een naam, kies wie haar ziet en stel filters en sortering in. De waarden komen uit de wachtrij waar u vandaan komt.",
+      "introEdit": "Wijzig naam, zichtbaarheid, filters of sortering. Het actuele aantal van de weergave in de wachtrij volgt de nieuwe filters.",
+      "name": "Naam",
+      "scope": "Zichtbaarheid",
+      "scopePersonal": "Persoonlijk — alleen u",
+      "scopeShared": "Gedeeld — alle operators",
+      "scopeAdminOnly": "Gedeelde weergaven worden door platformbeheerders aangemaakt.",
+      "filters": "Filters",
+      "groupHint": "Niets aangevinkt = alle.",
+      "sort": "Sortering",
+      "create": "Weergave aanmaken",
+      "saveChanges": "Wijzigingen opslaan",
+      "delete": "Verwijderen",
+      "deleteTitle": "Weergave '{name}' verwijderen?",
+      "deleteDescription": "De weergave verdwijnt uit de wachtrij voor iedereen die haar kon gebruiken. Tickets worden niet beïnvloed. Dit wordt in het auditlogboek vastgelegd.",
+      "deleteConfirm": "Weergave verwijderen",
+      "openQueue": "Wachtrij openen",
+      "notEditable": "Dit is een gedeelde weergave; platformbeheerders bewerken haar. U kunt haar wachtrij openen en met de filters verfijnen."
+    }
+  }
+}

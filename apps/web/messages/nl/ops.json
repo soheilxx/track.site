@@ -15,6 +15,7 @@
       "openMenu": "Navigatie openen",
       "closeMenu": "Navigatie sluiten",
       "overview": "Overzicht",
+      "support": "Support",
       "organisations": "Organisaties",
       "breakGlass": "Break-glass",
       "health": "Platformstatus",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "Platformadmin vereist",
-        "text": "Dit onderdeel is beperkt tot platformadmins. Platformsupport ziet organisaties, break-glass, platformstatus, inbox, groei, audit en content.",
+        "text": "Dit onderdeel is beperkt tot platformadmins. Platformsupport ziet supporttickets, organisaties, break-glass, platformstatus, inbox, groei, audit en content.",
         "back": "Terug naar het overzicht"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "Geen ruwe event-payloads, geen persoonsgegevens van eindgebruikers en geen geheimen — alleen geaggregeerde weergaven en metadata.",
         "breakGlass": "Details van een klant vereisen een goedgekeurde, in tijd beperkte break-glass-toestemming; ook dan alleen-lezen, en elke weergave wordt geauditeerd met het id van de toestemming.",
         "audit": "Elke wijziging is een serveractie met rolcontrole, validatie, expliciete bevestiging en een auditvermelding met actortype “platform”."
+      },
+      "support": {
+        "title": "Supporttickets",
+        "link": "Support openen",
+        "open": "{count, plural, one {# open ticket} other {# open tickets}}",
+        "openHint": "nieuw, open, in afwachting en on hold — live geteld",
+        "unassigned": "Niet toegewezen",
+        "unassignedHint": "open tickets zonder eigenaar",
+        "breached": "SLA overschreden",
+        "breachedHint": "open tickets voorbij een opgeslagen deadline",
+        "mine": "Aan mij toegewezen",
+        "mineHint": "uw open tickets",
+        "failed": "Kon niet worden geladen"
       }
     },
     "pages": {
       "overview": {
         "title": "Overzicht",
         "intro": "De status van het hele platform in één oogopslag: wat aandacht nodig heeft, welke modules er zijn en de regels waaronder elke beheerder werkt."
+      },
+      "support": {
+        "title": "Support",
+        "intro": "Supporttickets uit e-mail, het contactformulier en het klantdashboard: wachtrij, SLA-status, antwoorden, interne notities en macro’s. Klanten zien hun eigen tickets in het dashboard, nooit de interne notities."
       },
       "organisations": {
         "title": "Organisaties",

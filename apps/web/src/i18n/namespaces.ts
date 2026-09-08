@@ -54,3 +54,16 @@ registerNamespace("ops-growth");
 registerNamespace("ops-content");
 
 registerNamespace("security");
+registerNamespace("support");
+registerNamespace("support-portal");
+
+registerNamespace("support-tickets");
+
+registerNamespace("support-macros");
+registerNamespace("support-ticket");
+
+registerNamespace("support-sla");
+
+registerNamespace("support-notifications");
+
+registerNamespace("support-reports");

@@ -43,6 +43,14 @@ export interface MailCopy {
    * `{product}`, `{supportLink}`.
    */
   twoFactorReset: MailTemplate & { roles: Record<TwoFactorResetRole, string> };
+  /**
+   * Support desk → an agent: a ticket was assigned to them (docs/18 §"Notifications"). Placeholders:
+   * `{actor}` (display name of the assigning agent, or `system` for an automatic assignment), `{number}`,
+   * `{subject}`, `{url}` (the ticket in Track Operations). No message bodies.
+   */
+  supportAssigned: MailTemplate & { system: string };
+  /** Support desk → the assignee: the customer replied. Placeholders: `{requester}`, `{number}`, `{subject}`, `{url}`. */
+  supportCustomerReply: MailTemplate;
 }
 
 /** Who performed a two-factor reset, as the mail names it: a Track platform admin, an owner or an admin of the organisation. */

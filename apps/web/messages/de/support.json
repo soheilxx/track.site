@@ -1,0 +1,110 @@
+{
+  "support": {
+    "status": {
+      "new": "Neu",
+      "open": "Offen",
+      "pending": "Wartet auf Kunde",
+      "on_hold": "Zurückgestellt",
+      "solved": "Gelöst",
+      "closed": "Geschlossen",
+      "spam": "Spam"
+    },
+    "priority": {
+      "low": "Niedrig",
+      "normal": "Normal",
+      "high": "Hoch",
+      "urgent": "Dringend"
+    },
+    "channel": {
+      "email": "E-Mail",
+      "form": "Kontaktformular",
+      "dashboard": "Dashboard",
+      "api": "API"
+    },
+    "direction": {
+      "inbound": "Empfangen",
+      "outbound": "Gesendet",
+      "note": "Interne Notiz"
+    },
+    "authorKind": {
+      "customer": "Kunde",
+      "agent": "Agent",
+      "system": "System"
+    },
+    "delivery": {
+      "queued": "In Warteschlange",
+      "sent": "Gesendet",
+      "delivered": "Zugestellt",
+      "bounced": "Unzustellbar",
+      "complained": "Als Spam gemeldet",
+      "failed": "Fehlgeschlagen",
+      "na": "Nicht zutreffend"
+    },
+    "eventKind": {
+      "created": "Ticket erstellt",
+      "status": "Status geändert",
+      "priority": "Priorität geändert",
+      "assignee": "Zuständigkeit geändert",
+      "tags": "Tags geändert",
+      "merged": "Zusammengeführt",
+      "sla_breach": "SLA verletzt",
+      "sla_warning": "SLA-Warnung",
+      "reply": "Antwort",
+      "note": "Interne Notiz",
+      "csat": "Zufriedenheitsbewertung",
+      "reopened": "Wieder geöffnet"
+    },
+    "macroScope": {
+      "global": "Global",
+      "personal": "Persönlich"
+    },
+    "sla": {
+      "firstResponse": "Erste Antwort",
+      "resolution": "Lösung",
+      "paused": "Uhr angehalten",
+      "breached": "Verletzt",
+      "onTrack": "Im Plan",
+      "noPolicy": "Keine SLA-Richtlinie"
+    },
+    "ticketNumber": "#{number}",
+    "pages": {
+      "tickets": {
+        "title": "Support",
+        "intro": "Support-Tickets aus E-Mail, Kontaktformular und Kunden-Dashboard: Warteschlange, SLA-Status, Antworten, interne Notizen und Makros."
+      },
+      "ticket": {
+        "title": "Ticket",
+        "intro": "Unterhaltung, interne Notizen, SLA-Uhr und Verlauf eines Tickets.",
+        "back": "Zurück zur Ticketliste"
+      },
+      "macros": {
+        "title": "Makros",
+        "intro": "Vorgefertigte Antworten mit optionalen Aktionen: globale für alle Operatoren, persönliche für Sie selbst."
+      },
+      "views": {
+        "title": "Ansichten",
+        "intro": "Gespeicherte Ticketlisten: geteilte Ansichten für das Team und persönliche für Ihre eigene Warteschlange."
+      },
+      "settings": {
+        "title": "Support-Einstellungen",
+        "intro": "Absender und Antwortdomain, Signatur, Geschäftszeiten, SLA-Richtlinien, automatische Zuweisung und Zufriedenheitsumfragen."
+      },
+      "reports": {
+        "title": "Support-Berichte",
+        "intro": "Volumen, Antwort- und Lösungszeiten, SLA-Einhaltung und Zufriedenheit — ausschließlich aus echten Zeitstempeln."
+      }
+    },
+    "placeholder": {
+      "title": "In Vorbereitung",
+      "text": "Dieser Teil des Support-Desks wird gerade gebaut. Hier wird noch nichts gemessen, deshalb werden keine Zahlen gezeigt."
+    },
+    "customer": {
+      "title": "Support",
+      "intro": "Die Support-Tickets Ihrer Organisation: Antworten verfolgen und direkt von hier aus antworten.",
+      "placeholder": {
+        "title": "Support-Tickets kommen bald",
+        "text": "Die Ticketansicht wird gerade gebaut. Bis dahin erreichen Sie uns über das Kontaktformular; jede Anfrage wird per E-Mail beantwortet."
+      }
+    }
+  }
+}

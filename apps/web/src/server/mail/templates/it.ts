@@ -35,4 +35,13 @@ export const MAIL_COPY_IT: MailCopy = {
     text: "La tua autenticazione a due fattori per {product} è stata reimpostata da {actorRole}.\n\nIl segreto dell'app di autenticazione e i tuoi codici di backup sono stati eliminati e sei stato disconnesso ovunque. Accedi con la tua password e configura di nuovo l'autenticazione a due fattori in Impostazioni → Sicurezza.\n\nSe non l'hai richiesto, contattaci subito: {supportLink}\n\n— Track",
     roles: { platformAdmin: "un amministratore della piattaforma Track", owner: "un proprietario della tua organizzazione", admin: "un amministratore della tua organizzazione" },
   },
+  supportAssigned: {
+    subject: "[Track #{number}] assegnato a te: {subject}",
+    text: "{actor} ti ha assegnato il ticket di supporto n. {number}.\n\nOggetto: {subject}\n\nApri il ticket in Track Operations: {url}\n\n—\nRicevi questa e-mail perché «Inviami un'e-mail quando mi viene assegnato un ticket» è attivo nelle tue impostazioni delle notifiche (la campanella in Track Operations).",
+    system: "Il servizio di supporto (assegnazione automatica)",
+  },
+  supportCustomerReply: {
+    subject: "[Track #{number}] nuova risposta del cliente: {subject}",
+    text: "{requester} ha risposto sul ticket di supporto n. {number}, assegnato a te.\n\nOggetto: {subject}\n\nApri il ticket in Track Operations: {url}\n\n—\nRicevi questa e-mail perché «Inviami un'e-mail quando un cliente risponde sul mio ticket» è attivo nelle tue impostazioni delle notifiche (la campanella in Track Operations).",
+  },
 };

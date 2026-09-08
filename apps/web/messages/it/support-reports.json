@@ -1,0 +1,298 @@
+{
+  "supportReports": {
+    "intro": "Volume di ticket, arretrato, tempi di risposta e di risoluzione, rispetto degli SLA, carico degli agenti, soddisfazione, categorie e organizzazioni per un periodo: ogni cifra deriva da timestamp e conteggi memorizzati; nulla è stimato. Tutti i valori di calendario sono in UTC.",
+    "backToSupport": "Torna all’elenco dei ticket",
+    "context": {
+      "asOf": "Aggiornato al {at}",
+      "range": "{from} – {to}",
+      "days": "{count, plural, one {# giorno} other {# giorni}}",
+      "tickets": "{count, plural, one {# ticket creato} other {# ticket creati}}"
+    },
+    "range": {
+      "legend": "Periodo",
+      "presets": "Periodi rapidi",
+      "preset": "Ultimi {days} giorni",
+      "from": "Dal",
+      "to": "Al",
+      "bucket": "Raggruppa per",
+      "buckets": {
+        "day": "Giorno",
+        "week": "Settimana (lunedì)"
+      },
+      "apply": "Applica",
+      "reset": "Reimposta",
+      "hint": "Fino a {max} giorni di calendario (UTC), mai nel futuro. Un ticket appartiene al periodo per la sua data di creazione; l’arretrato è sempre lo stato attuale.",
+      "fallback": "Il periodo richiesto non era valido: vengono mostrati gli ultimi {days} giorni."
+    },
+    "export": {
+      "kind": "Sezione da esportare",
+      "button": "Esporta CSV",
+      "kinds": {
+        "summary": "Riepilogo",
+        "volume": "Volume per intervallo",
+        "backlog": "Arretrato per stato",
+        "times": "Tempi di risposta e risoluzione",
+        "sla": "Rispetto degli SLA",
+        "agents": "Agenti",
+        "csat": "Soddisfazione",
+        "categories": "Categorie",
+        "tags": "Tag",
+        "organisations": "Organizzazioni"
+      }
+    },
+    "notes": {
+      "small": {
+        "title": "Numeri piccoli",
+        "text": "In questo periodo sono stati creati meno di {min} ticket. Mediane, tassi e quote sono mostrati per completezza, ma un solo ticket li sposta di interi punti percentuali: leggete i conteggi, non le percentuali."
+      },
+      "truncated": {
+        "title": "Periodo troppo ampio per cifre esatte per ticket",
+        "text": "Per tempi, SLA, soddisfazione, categorie, tag e prime risposte per agente sono stati caricati solo i primi {max} ticket del periodo. Volume, arretrato, risposte, risoluzioni e organizzazioni sono completi. Restringete il periodo per cifre esatte."
+      }
+    },
+    "kpis": {
+      "created": {
+        "label": "Ticket creati",
+        "hint": "{perDay} al giorno in media"
+      },
+      "solved": {
+        "label": "Ticket risolti nel periodo",
+        "hint": "Risolti all’interno del periodo, indipendentemente da quando sono stati creati"
+      },
+      "firstResponse": {
+        "label": "Mediana prima risposta",
+        "hint": "{measured} con risposta · p90 {p90}"
+      },
+      "resolution": {
+        "label": "Mediana risoluzione",
+        "hint": "{measured} risolti · p90 {p90}"
+      },
+      "sla": {
+        "label": "SLA prima risposta rispettato",
+        "hint": "{met} su {counted} orologi conclusi · risoluzione {resolution}"
+      },
+      "csat": {
+        "label": "Soddisfazione",
+        "outOf": "{average} / 5",
+        "hint": "{responses} risposte · {rate} dei ticket risolti"
+      }
+    },
+    "volume": {
+      "title": "Volume di ticket",
+      "intro": "Ticket creati per intervallo, impilati per canale, e — come linea — i ticket risolti nello stesso intervallo, indipendentemente da quando sono stati creati. Lo spam e i ticket uniti a un altro non vengono conteggiati.",
+      "caption": "Ticket creati per intervallo e canale, e ticket risolti per intervallo",
+      "chart": "Barre impilate per giorno o settimana: ticket creati per canale (e-mail, modulo di contatto, dashboard, API). Una linea mostra i ticket risolti nello stesso intervallo. La tabella sotto il grafico riporta gli stessi valori.",
+      "table": "Mostra come tabella",
+      "series": {
+        "solved": "Risolti"
+      },
+      "columns": {
+        "day": "Giorno",
+        "week": "Settimana del",
+        "channel": "Canale",
+        "count": "Ticket",
+        "share": "Quota",
+        "total": "Totale",
+        "solved": "Risolti"
+      },
+      "partial": "intervallo parziale",
+      "mix": {
+        "caption": "Ripartizione per canale del periodo"
+      },
+      "figures": {
+        "created": "Creati",
+        "solved": "Risolti",
+        "perDay": "Al giorno"
+      },
+      "empty": {
+        "title": "Nessun ticket in questo periodo",
+        "text": "Nessun ticket è stato creato o risolto tra le date selezionate."
+      }
+    },
+    "backlog": {
+      "title": "Arretrato per stato",
+      "intro": "Tutti i ticket per stato del flusso di lavoro in questo momento, indipendentemente dal periodo. L’arretrato aperto somma Nuovo, Aperto, In attesa del cliente e In sospeso.",
+      "caption": "Ticket per stato del flusso di lavoro in questo momento",
+      "columns": {
+        "status": "Stato",
+        "count": "Ticket",
+        "share": "Quota sul totale"
+      },
+      "figures": {
+        "open": "Aperti ora",
+        "unassigned": "Aperti non assegnati",
+        "oldest": "Aperto più vecchio"
+      },
+      "oldestHint": "creato il {at}",
+      "empty": {
+        "title": "Ancora nessun ticket",
+        "text": "L’arretrato si riempie non appena arriva il primo ticket."
+      }
+    },
+    "times": {
+      "title": "Tempi di risposta e risoluzione",
+      "intro": "Tempo reale dalla creazione del ticket alla prima risposta di un agente e alla risoluzione, per i ticket creati nel periodo. Le pause in attesa del cliente non vengono sottratte: è il tempo vissuto dal richiedente.",
+      "caption": "Tempi di prima risposta e risoluzione: ticket misurati, mediana, 90° percentile e ticket in sospeso",
+      "columns": {
+        "metric": "Orologio",
+        "measured": "Misurati",
+        "median": "Mediana",
+        "p90": "90° percentile",
+        "pending": "In sospeso"
+      },
+      "rows": {
+        "firstResponse": "Prima risposta",
+        "resolution": "Risoluzione"
+      },
+      "pending": {
+        "firstResponse": "ancora senza risposta",
+        "resolution": "ancora non risolti"
+      },
+      "withheld": "dati insufficienti",
+      "p90Withheld": "Il 90° percentile viene mostrato a partire da {min} ticket misurati; al di sotto dice più di un singolo ticket che del servizio.",
+      "empty": {
+        "title": "Ancora nulla di misurato",
+        "text": "Nessun ticket creato in questo periodo ha finora ricevuto risposta o è stato risolto."
+      }
+    },
+    "sla": {
+      "title": "Rispetto degli SLA",
+      "intro": "Esito di ogni orologio SLA per i ticket creati nel periodo, dalle scadenze memorizzate e dagli istanti in cui l’orologio si è fermato. Il tasso conta solo gli orologi conclusi: gli orologi in corso e i ticket senza policy sono elencati, non valutati.",
+      "caption": "{clock}: esiti SLA per priorità",
+      "all": "Tutte le priorità",
+      "columns": {
+        "priority": "Priorità",
+        "met": "Rispettati",
+        "breached": "Violati",
+        "running": "In corso",
+        "noPolicy": "Senza policy",
+        "rate": "Tasso di rispetto"
+      },
+      "figures": {
+        "withPolicy": "Con policy SLA",
+        "firstResponse": "Prima risposta rispettata",
+        "resolution": "Risoluzione rispettata"
+      },
+      "rateHint": "{met} su {counted} conclusi",
+      "note": "Un orologio è violato quando si è fermato dopo la scadenza o quando il worker lo ha segnalato; un orologio in corso oltre la scadenza conta come violato. Un orologio in pausa (in attesa del cliente) non è mai violato dall’orologio a muro: la sua scadenza si sposta al termine della pausa.",
+      "empty": {
+        "title": "Nessun orologio SLA in questo periodo",
+        "text": "Nessuno dei ticket creati in questo periodo ha una policy SLA con scadenze."
+      }
+    },
+    "agents": {
+      "title": "Agenti",
+      "intro": "Carico per operatore: ticket aperti assegnati in questo momento, risposte inviate e ticket portati a risolto nel periodo e — per i ticket creati nel periodo — quanti l’operatore ha risposto per primo e con quale rapidità.",
+      "caption": "Carico per agente: ticket aperti, risposte, prime risposte, mediana della prima risposta e ticket risolti",
+      "columns": {
+        "agent": "Agente",
+        "open": "Aperti ora",
+        "replies": "Risposte nel periodo",
+        "firstResponses": "Prime risposte",
+        "median": "Mediana prima risposta",
+        "solved": "Risolti nel periodo"
+      },
+      "figures": {
+        "agents": "Operatori",
+        "unassigned": "Aperti non assegnati"
+      },
+      "former": "Non più operatore",
+      "note": "«Risolti» conta i cambi di stato a risolto effettuati dall’agente nel periodo (un ticket riaperto conta di nuovo quando viene risolto di nuovo). Le risposte sono messaggi in uscita dell’agente per autore, non per assegnazione.",
+      "empty": {
+        "title": "Nessuna attività degli agenti",
+        "text": "Nessun operatore ha un ticket aperto, ha risposto o ha risolto un ticket in questo periodo."
+      }
+    },
+    "csat": {
+      "title": "Soddisfazione dei clienti",
+      "intro": "Valutazioni date sui ticket creati nel periodo: punteggio medio, quota dei ticket risolti che hanno ricevuto una risposta e distribuzione da 1 a 5.",
+      "caption": "Distribuzione dei punteggi di soddisfazione da 5 (migliore) a 1",
+      "columns": {
+        "score": "Punteggio",
+        "count": "Risposte",
+        "share": "Quota delle risposte"
+      },
+      "score": "{score} su 5",
+      "outOf": "{average} / 5",
+      "figures": {
+        "average": "Media",
+        "responses": "Risposte",
+        "responseRate": "Tasso di risposta"
+      },
+      "responseRateHint": "su {solved} ticket risolti o chiusi",
+      "disabled": "I sondaggi di soddisfazione sono disattivati nelle impostazioni del supporto. Le risposte esistenti vengono comunque conteggiate; quelle nuove potranno arrivare solo dopo la riattivazione.",
+      "empty": {
+        "title": "Ancora nessuna valutazione",
+        "text": "Nessun ticket creato in questo periodo ha ricevuto una valutazione di soddisfazione."
+      }
+    },
+    "categories": {
+      "title": "Categorie principali",
+      "intro": "Categorie dei ticket creati nel periodo, ordinate per numero di ticket.",
+      "caption": "Categorie per numero di ticket",
+      "columns": {
+        "category": "Categoria",
+        "count": "Ticket",
+        "share": "Quota"
+      },
+      "none": "Senza categoria",
+      "more": "{count, plural, one {# altra categoria con meno ticket non è elencata.} other {# altre categorie con meno ticket non sono elencate.}}",
+      "empty": {
+        "title": "Nessuna categoria",
+        "text": "Nessun ticket creato in questo periodo ha una categoria."
+      }
+    },
+    "tags": {
+      "title": "Tag principali",
+      "intro": "Tag dei ticket creati nel periodo, ordinati per numero di ticket. Un ticket conta una volta per tag, quindi le quote non sommano al 100 %.",
+      "caption": "Tag per numero di ticket",
+      "columns": {
+        "tag": "Tag",
+        "count": "Ticket",
+        "share": "Quota"
+      },
+      "none": "Senza tag",
+      "more": "{count, plural, one {# altro tag con meno ticket non è elencato.} other {# altri tag con meno ticket non sono elencati.}}",
+      "empty": {
+        "title": "Nessun tag",
+        "text": "Nessun ticket creato in questo periodo ha un tag."
+      }
+    },
+    "organisations": {
+      "title": "Organizzazioni con più ticket",
+      "intro": "Organizzazioni con più ticket creati nel periodo, con quanti di questi sono ancora aperti e quanti risolti. Solo nomi e slug: la pagina dell’organizzazione richiede un permesso proprio.",
+      "caption": "Organizzazioni per numero di ticket nel periodo",
+      "columns": {
+        "organisation": "Organizzazione",
+        "tickets": "Ticket",
+        "open": "Ancora aperti",
+        "resolved": "Risolti",
+        "share": "Quota sul totale"
+      },
+      "none": "Nessuna organizzazione (mittente non associato)",
+      "figures": {
+        "distinct": "Organizzazioni",
+        "without": "Senza organizzazione"
+      },
+      "empty": {
+        "title": "Nessun ticket in questo periodo",
+        "text": "Le organizzazioni compaiono non appena viene creato un ticket nel periodo."
+      }
+    },
+    "method": {
+      "title": "Metodo e avvertenze",
+      "items": {
+        "cohort": "Il periodo seleziona i ticket per data di creazione (giorni di calendario UTC). I ticket spam e quelli uniti a un altro sono esclusi ovunque; «risolti nel periodo» conta i ticket il cui istante di risoluzione cade nel periodo, indipendentemente da quando sono stati creati.",
+        "backlog": "Arretrato, non assegnati e ticket aperti degli agenti sono lo stato al momento della generazione della pagina, non cifre del periodo.",
+        "times": "La prima risposta è l’istante memorizzato della prima risposta di un agente (una conferma automatica di ricezione non conta mai); la risoluzione è il passaggio a risolto. Entrambi sono misurati dalla creazione in tempo reale; un ticket riaperto mantiene la data di creazione e perde l’istante di risoluzione finché non viene risolto di nuovo.",
+        "p90": "Le mediane interpolano linearmente tra i due valori centrali. Il 90° percentile viene mostrato solo a partire da {min} ticket misurati.",
+        "sla": "Gli esiti SLA confrontano l’istante di arresto memorizzato con la scadenza memorizzata (che include già le pause); la segnalazione di violazione del worker prevale. I ticket senza policy non hanno scadenza e non vengono mai valutati.",
+        "agents": "«Risolti» per agente conta i suoi cambi di stato a risolto; «prime risposte» attribuisce un ticket all’autore del suo primo messaggio in uscita dell’agente. Gli autori che non hanno più un ruolo di piattaforma sono raggruppati in una riga.",
+        "csat": "La soddisfazione è il punteggio memorizzato sul ticket (1–5); il tasso di risposta divide le risposte per i ticket risolti o chiusi del periodo.",
+        "organisations": "Le organizzazioni con più ticket mostrano nome e slug dal record dell’organizzazione: solo metadati. I ticket di mittenti senza organizzazione sono conteggiati a parte.",
+        "export": "L’esportazione CSV contiene gli stessi conteggi, tassi e durate in minuti (mai oggetti, testi dei messaggi o dati del richiedente) ed è registrata nel log di audit.",
+        "privacy": "Tutto in questa pagina è un conteggio, una durata o un tasso. Nessun richiedente, messaggio o indirizzo e-mail viene identificato; gli agenti compaiono con il loro nome visualizzato."
+      }
+    }
+  }
+}

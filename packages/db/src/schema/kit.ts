@@ -15,3 +15,4 @@ export * from "./workspace.ts";
 export * from "./lineage.ts";
 export * from "./alerts.ts";
 export * from "./ops.ts";
+export * from "./support.ts";

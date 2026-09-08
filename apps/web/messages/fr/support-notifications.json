@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Notifications",
+      "labelUnread": "Notifications, {count} non lue(s)"
+    },
+    "panel": {
+      "title": "Notifications",
+      "description": "Attributions, réponses des clients, alertes SLA et @mentions sur les tickets de support.",
+      "close": "Fermer",
+      "refresh": "Actualiser",
+      "markAllRead": "Tout marquer comme lu",
+      "markRead": "Marquer comme lu",
+      "unread": "non lu",
+      "loading": "Chargement des notifications…",
+      "updated": "Actualisé {time}",
+      "polling": "Actualisation toutes les {seconds} secondes tant que cet onglet est visible.",
+      "showingLatest": "Les {count} plus récentes sont affichées ; les plus anciennes non lues comptent toujours.",
+      "empty": "Rien à rattraper",
+      "emptyText": "Les attributions, réponses des clients, avertissements SLA et @mentions dans les notes internes apparaîtront ici.",
+      "error": "Les notifications n’ont pas pu être chargées. La prochaine actualisation réessaiera.",
+      "forbidden": "Votre rôle de plateforme ne permet pas de lire les tickets de support."
+    },
+    "kinds": {
+      "assignment": "Attribué à vous",
+      "customer_reply": "Réponse du client",
+      "sla_warning": "Avertissement SLA",
+      "sla_breach": "SLA dépassé",
+      "mention": "Mentionné dans une note"
+    },
+    "item": {
+      "ticket": "Ticket n° {number}",
+      "by": "par {name}",
+      "customer": "par le client",
+      "system": "automatique",
+      "formerOperator": "par un ancien opérateur",
+      "clock": {
+        "first_response": "première réponse",
+        "resolution": "résolution"
+      }
+    },
+    "live": {
+      "newOne": "1 nouvelle notification",
+      "newMany": "{count} nouvelles notifications"
+    },
+    "preferences": {
+      "title": "E-mail",
+      "assignment": "M’envoyer un e-mail quand un ticket m’est attribué",
+      "customerReply": "M’envoyer un e-mail quand un client répond sur mon ticket",
+      "hint": "Les avertissements et dépassements SLA sont envoyés par e-mail au responsable par le moteur SLA ; les mentions restent ici.",
+      "saved": "Préférence enregistrée.",
+      "error": "La préférence n’a pas pu être enregistrée."
+    }
+  }
+}

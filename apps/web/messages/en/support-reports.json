@@ -1,0 +1,298 @@
+{
+  "supportReports": {
+    "intro": "Ticket volume, backlog, response and resolution times, SLA attainment, agent workload, satisfaction, categories and organisations for a date range — every figure from stored timestamps and counts; nothing is estimated. All calendar values are UTC.",
+    "backToSupport": "Back to the ticket list",
+    "context": {
+      "asOf": "As of {at}",
+      "range": "{from} – {to}",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "tickets": "{count, plural, one {# ticket created} other {# tickets created}}"
+    },
+    "range": {
+      "legend": "Date range",
+      "presets": "Quick ranges",
+      "preset": "Last {days} days",
+      "from": "From",
+      "to": "To",
+      "bucket": "Group by",
+      "buckets": {
+        "day": "Day",
+        "week": "Week (Monday)"
+      },
+      "apply": "Apply",
+      "reset": "Reset",
+      "hint": "Up to {max} calendar days (UTC), never in the future. Tickets belong to the range by their creation date; the backlog is always the state right now.",
+      "fallback": "The requested range was not valid — showing the last {days} days instead."
+    },
+    "export": {
+      "kind": "Section to export",
+      "button": "Export CSV",
+      "kinds": {
+        "summary": "Summary",
+        "volume": "Volume per bucket",
+        "backlog": "Backlog by status",
+        "times": "Response and resolution times",
+        "sla": "SLA attainment",
+        "agents": "Agents",
+        "csat": "Satisfaction",
+        "categories": "Categories",
+        "tags": "Tags",
+        "organisations": "Organisations"
+      }
+    },
+    "notes": {
+      "small": {
+        "title": "Small numbers",
+        "text": "Fewer than {min} tickets were created in this range. Medians, rates and shares are shown for completeness, but a single ticket moves them by whole percentage points — read the counts, not the percentages."
+      },
+      "truncated": {
+        "title": "Range too large for exact per-ticket figures",
+        "text": "Only the first {max} tickets of the range were loaded for the times, SLA, satisfaction, category, tag and per-agent first-response figures. Volume, backlog, replies, solves and organisation figures are complete. Narrow the range for exact figures."
+      }
+    },
+    "kpis": {
+      "created": {
+        "label": "Tickets created",
+        "hint": "{perDay} per day on average"
+      },
+      "solved": {
+        "label": "Tickets solved in range",
+        "hint": "Resolved inside the range, whenever they were created"
+      },
+      "firstResponse": {
+        "label": "Median first response",
+        "hint": "{measured} answered · p90 {p90}"
+      },
+      "resolution": {
+        "label": "Median resolution",
+        "hint": "{measured} resolved · p90 {p90}"
+      },
+      "sla": {
+        "label": "First-response SLA met",
+        "hint": "{met} of {counted} concluded clocks · resolution {resolution}"
+      },
+      "csat": {
+        "label": "Satisfaction",
+        "outOf": "{average} / 5",
+        "hint": "{responses} answers · {rate} of solved tickets"
+      }
+    },
+    "volume": {
+      "title": "Ticket volume",
+      "intro": "Tickets created per bucket, stacked by channel, and — as a line — the tickets resolved in the same bucket, whenever they were created. Spam and tickets merged into another are not counted.",
+      "caption": "Tickets created per bucket by channel, and tickets resolved per bucket",
+      "chart": "Stacked bars per day or week: tickets created by channel (e-mail, contact form, dashboard, API). A line shows the tickets resolved in the same bucket. The table below the chart lists the same values.",
+      "table": "Show as table",
+      "series": {
+        "solved": "Resolved"
+      },
+      "columns": {
+        "day": "Day",
+        "week": "Week of",
+        "channel": "Channel",
+        "count": "Tickets",
+        "share": "Share",
+        "total": "Total",
+        "solved": "Resolved"
+      },
+      "partial": "partial bucket",
+      "mix": {
+        "caption": "Channel mix of the range"
+      },
+      "figures": {
+        "created": "Created",
+        "solved": "Resolved",
+        "perDay": "Per day"
+      },
+      "empty": {
+        "title": "No tickets in this range",
+        "text": "No ticket was created or resolved between the selected dates."
+      }
+    },
+    "backlog": {
+      "title": "Backlog by status",
+      "intro": "Every ticket by workflow status as of now — independent of the date range. Open backlog is new, open, pending and on hold together.",
+      "caption": "Tickets by workflow status right now",
+      "columns": {
+        "status": "Status",
+        "count": "Tickets",
+        "share": "Share of all"
+      },
+      "figures": {
+        "open": "Open now",
+        "unassigned": "Unassigned open",
+        "oldest": "Oldest open"
+      },
+      "oldestHint": "created {at}",
+      "empty": {
+        "title": "No tickets yet",
+        "text": "The backlog fills once the first ticket arrives."
+      }
+    },
+    "times": {
+      "title": "Response and resolution times",
+      "intro": "Wall-clock time from ticket creation to the first agent reply and to resolution, for tickets created in the range. Pauses while waiting for the customer are not subtracted — this is the time the requester experienced.",
+      "caption": "First-response and resolution times: measured tickets, median, 90th percentile and pending tickets",
+      "columns": {
+        "metric": "Clock",
+        "measured": "Measured",
+        "median": "Median",
+        "p90": "90th percentile",
+        "pending": "Pending"
+      },
+      "rows": {
+        "firstResponse": "First response",
+        "resolution": "Resolution"
+      },
+      "pending": {
+        "firstResponse": "not answered yet",
+        "resolution": "not resolved yet"
+      },
+      "withheld": "not enough data",
+      "p90Withheld": "A 90th percentile is shown from {min} measured tickets on; below that it says more about one ticket than about the desk.",
+      "empty": {
+        "title": "Nothing measured yet",
+        "text": "No ticket created in this range has been answered or resolved so far."
+      }
+    },
+    "sla": {
+      "title": "SLA attainment",
+      "intro": "Outcome of each SLA clock for tickets created in the range, from the stored due times and the instants the clock stopped. The rate counts concluded clocks only — running clocks and tickets without a policy are listed, not rated.",
+      "caption": "{clock}: SLA outcomes by priority",
+      "all": "All priorities",
+      "columns": {
+        "priority": "Priority",
+        "met": "Met",
+        "breached": "Breached",
+        "running": "Running",
+        "noPolicy": "No policy",
+        "rate": "Met rate"
+      },
+      "figures": {
+        "withPolicy": "With an SLA policy",
+        "firstResponse": "First response met",
+        "resolution": "Resolution met"
+      },
+      "rateHint": "{met} of {counted} concluded",
+      "note": "A clock is breached when it stopped after its due time or when the worker flagged it; a running clock past its due time counts as breached. A paused clock (waiting for the customer) is never breached by the wall clock — its due time shifts when the pause ends.",
+      "empty": {
+        "title": "No SLA clocks in this range",
+        "text": "None of the tickets created in this range has an SLA policy with due times."
+      }
+    },
+    "agents": {
+      "title": "Agents",
+      "intro": "Workload per operator: open tickets assigned right now, replies sent and tickets set to solved inside the range, and — for tickets created in the range — how many the operator answered first and how fast.",
+      "caption": "Per-agent workload: open tickets, replies, first responses, median first-response time and tickets solved",
+      "columns": {
+        "agent": "Agent",
+        "open": "Open now",
+        "replies": "Replies in range",
+        "firstResponses": "First responses",
+        "median": "Median first response",
+        "solved": "Solved in range"
+      },
+      "figures": {
+        "agents": "Operators",
+        "unassigned": "Unassigned open"
+      },
+      "former": "No longer an operator",
+      "note": "\"Solved\" counts status changes to solved made by the agent inside the range (a reopened ticket counts again when it is solved again). Replies are outbound agent messages by author, not by assignee.",
+      "empty": {
+        "title": "No agent activity",
+        "text": "No operator holds an open ticket, replied or solved a ticket in this range."
+      }
+    },
+    "csat": {
+      "title": "Customer satisfaction",
+      "intro": "Ratings given on tickets created in the range: average score, the share of solved tickets that received an answer, and the distribution from 1 to 5.",
+      "caption": "Distribution of satisfaction scores from 5 (best) to 1",
+      "columns": {
+        "score": "Score",
+        "count": "Answers",
+        "share": "Share of answers"
+      },
+      "score": "{score} of 5",
+      "outOf": "{average} / 5",
+      "figures": {
+        "average": "Average",
+        "responses": "Answers",
+        "responseRate": "Response rate"
+      },
+      "responseRateHint": "of {solved} solved or closed tickets",
+      "disabled": "Satisfaction surveys are switched off in the support settings. Existing answers are still counted; new ones cannot arrive until they are switched on again.",
+      "empty": {
+        "title": "No ratings yet",
+        "text": "No ticket created in this range has received a satisfaction rating."
+      }
+    },
+    "categories": {
+      "title": "Top categories",
+      "intro": "Categories of tickets created in the range, ranked by ticket count.",
+      "caption": "Categories by number of tickets",
+      "columns": {
+        "category": "Category",
+        "count": "Tickets",
+        "share": "Share"
+      },
+      "none": "Without a category",
+      "more": "{count, plural, one {# more category with fewer tickets is not listed.} other {# more categories with fewer tickets are not listed.}}",
+      "empty": {
+        "title": "No categories",
+        "text": "No ticket created in this range carries a category."
+      }
+    },
+    "tags": {
+      "title": "Top tags",
+      "intro": "Tags of tickets created in the range, ranked by ticket count. A ticket counts once per tag, so shares do not add up to 100 %.",
+      "caption": "Tags by number of tickets",
+      "columns": {
+        "tag": "Tag",
+        "count": "Tickets",
+        "share": "Share"
+      },
+      "none": "Without tags",
+      "more": "{count, plural, one {# more tag with fewer tickets is not listed.} other {# more tags with fewer tickets are not listed.}}",
+      "empty": {
+        "title": "No tags",
+        "text": "No ticket created in this range carries a tag."
+      }
+    },
+    "organisations": {
+      "title": "Busiest organisations",
+      "intro": "Organisations with the most tickets created in the range, with how many of those are still open and how many are resolved. Names and slugs only — the organisation page needs its own permission.",
+      "caption": "Organisations by number of tickets in the range",
+      "columns": {
+        "organisation": "Organisation",
+        "tickets": "Tickets",
+        "open": "Still open",
+        "resolved": "Resolved",
+        "share": "Share of all"
+      },
+      "none": "No organisation (sender not matched)",
+      "figures": {
+        "distinct": "Organisations",
+        "without": "Without organisation"
+      },
+      "empty": {
+        "title": "No tickets in this range",
+        "text": "Organisations appear once a ticket is created inside the range."
+      }
+    },
+    "method": {
+      "title": "Method and caveats",
+      "items": {
+        "cohort": "The range selects tickets by their creation date (UTC calendar days). Spam tickets and tickets merged into another are excluded everywhere; \"resolved in range\" counts tickets whose resolution instant falls inside the range, whenever they were created.",
+        "backlog": "Backlog, unassigned and the agents' open tickets are the state at the moment the page was generated, not a range figure.",
+        "times": "First response is the stored instant of the first agent reply (an automatic acknowledgement never counts); resolution is the transition to solved. Both are measured from creation on the wall clock; a reopened ticket keeps its original creation date and loses its resolution instant until it is solved again.",
+        "p90": "Medians use linear interpolation between the two middle values. A 90th percentile is only shown from {min} measured tickets on.",
+        "sla": "SLA outcomes compare the stored stop instant with the stored due time (which already includes pauses); the worker's breach flag wins. Tickets without a policy have no due time and are never rated.",
+        "agents": "\"Solved\" per agent counts the agent's own status changes to solved; \"first responses\" attribute a ticket to the author of its first outbound agent message. Authors who no longer hold a platform role are folded into one row.",
+        "csat": "Satisfaction is the score stored on the ticket (1–5); the response rate divides answers by solved or closed tickets of the range.",
+        "organisations": "Busiest organisations show name and slug from the organisation record — metadata only. Tickets of senders without an organisation are counted separately.",
+        "export": "The CSV export contains the same counts, rates and durations in minutes (never subjects, message text or requester details) and is recorded in the audit log.",
+        "privacy": "Everything on this page is a count, a duration or a rate. No requester, message or e-mail address is identified; agents appear by their display name."
+      }
+    }
+  }
+}

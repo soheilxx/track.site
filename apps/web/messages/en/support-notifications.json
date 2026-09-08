@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Notifications",
+      "labelUnread": "Notifications, {count} unread"
+    },
+    "panel": {
+      "title": "Notifications",
+      "description": "Assignments, customer replies, SLA alerts and @mentions on support tickets.",
+      "close": "Close",
+      "refresh": "Refresh",
+      "markAllRead": "Mark all as read",
+      "markRead": "Mark as read",
+      "unread": "unread",
+      "loading": "Loading notifications…",
+      "updated": "Updated {time}",
+      "polling": "Refreshes every {seconds} seconds while this tab is visible.",
+      "showingLatest": "Showing the latest {count}; older unread ones still count.",
+      "empty": "Nothing to catch up on",
+      "emptyText": "Assignments, customer replies, SLA warnings and @mentions in internal notes will appear here.",
+      "error": "The notifications could not be loaded. The next refresh will try again.",
+      "forbidden": "Your platform role cannot read support tickets."
+    },
+    "kinds": {
+      "assignment": "Assigned to you",
+      "customer_reply": "Customer replied",
+      "sla_warning": "SLA warning",
+      "sla_breach": "SLA breached",
+      "mention": "Mentioned in a note"
+    },
+    "item": {
+      "ticket": "Ticket #{number}",
+      "by": "by {name}",
+      "customer": "by the customer",
+      "system": "automatic",
+      "formerOperator": "by a former operator",
+      "clock": {
+        "first_response": "first response",
+        "resolution": "resolution"
+      }
+    },
+    "live": {
+      "newOne": "1 new notification",
+      "newMany": "{count} new notifications"
+    },
+    "preferences": {
+      "title": "E-mail",
+      "assignment": "E-mail me when a ticket is assigned to me",
+      "customerReply": "E-mail me when a customer replies on my ticket",
+      "hint": "SLA warnings and breaches are e-mailed by the SLA engine to the assignee; mentions stay here.",
+      "saved": "Preference saved.",
+      "error": "The preference could not be saved."
+    }
+  }
+}

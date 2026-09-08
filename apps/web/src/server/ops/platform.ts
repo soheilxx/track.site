@@ -3,7 +3,7 @@ import { and, desc, eq, gt, isNotNull, isNull, lte, sql } from "drizzle-orm";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { AppError, newUlid, redactDeep, type PlatformRole } from "@track-site/core";
+import { AppError, hasPlatformPermission, newUlid, redactDeep, type PlatformPermission, type PlatformRole } from "@track-site/core";
 import {
   auditLog,
   breakGlassAccess,
@@ -123,10 +123,14 @@ export const platformGate = cache(async (): Promise<PlatformGate> => {
 /**
  * Platform context for a page or server action. Redirects to the login page when signed out and throws a
  * `PlatformAccessError` when the account has no platform role, lacks two-factor while the step-up rule
- * applies, or is below `minRole`.
+ * applies, is below `minRole`, or — when a `permission` is given — lacks that platform permission
+ * (`PLATFORM_PERMISSIONS` in packages/core, docs/18 §"Permissions"). A permission-scoped call is written
+ * as `requirePlatform("PLATFORM_SUPPORT", "platform.tickets.write")`; the role stays the coarse gate, the
+ * permission the fine one, and both are enforced here, never in the navigation alone.
  */
 export async function requirePlatform(
   minRole: PlatformMinRole = "PLATFORM_SUPPORT",
+  permission?: PlatformPermission,
 ): Promise<PlatformContext> {
   const gate = await platformGate();
   if (!gate.ok)
@@ -136,19 +140,27 @@ export async function requirePlatform(
     );
   if (!hasPlatformRole(gate.ctx.platformRole, minRole))
     throw new PlatformAccessError("insufficient_role", `Requires ${minRole}`);
+  if (permission && !hasPlatformPermission(gate.ctx.platformRole, permission))
+    throw new PlatformAccessError("insufficient_role", `Requires ${permission}`);
   return gate.ctx;
 }
 
 /** Same check without throwing, for pages that render the 403 inline. */
 export async function checkPlatform(
   minRole: PlatformMinRole = "PLATFORM_SUPPORT",
+  permission?: PlatformPermission,
 ): Promise<{ ok: true; ctx: PlatformContext } | { ok: false; reason: PlatformAccessReason }> {
   try {
-    return { ok: true, ctx: await requirePlatform(minRole) };
+    return { ok: true, ctx: await requirePlatform(minRole, permission) };
   } catch (e) {
     if (e instanceof PlatformAccessError) return { ok: false, reason: e.reason };
     throw e;
   }
+}
+
+/** Whether the resolved operator holds a platform permission (for hiding actions in a page; actions re-check). */
+export function platformCan(ctx: PlatformContext, permission: PlatformPermission): boolean {
+  return hasPlatformPermission(ctx.platformRole, permission);
 }
 
 /**

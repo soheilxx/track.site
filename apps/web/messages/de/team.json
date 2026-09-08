@@ -127,7 +127,8 @@
         "ai": "Track AI",
         "billing": "Abrechnung",
         "audit": "Audit",
-        "kill_switch": "Kill-Switch"
+        "kill_switch": "Kill-Switch",
+        "support": "Support"
       },
       "permissions": {
         "org_read": "Organisation ansehen",
@@ -162,7 +163,9 @@
         "billing_manage": "Abonnement verwalten",
         "audit_read": "Audit-Log ansehen",
         "kill_switch_manage": "Kill-Switches bedienen",
-        "members_security": "Zwei-Faktor-Authentifizierung von Mitgliedern zurücksetzen"
+        "members_security": "Zwei-Faktor-Authentifizierung von Mitgliedern zurücksetzen",
+        "support_read": "Support-Tickets ansehen",
+        "support_write": "Support-Tickets eröffnen und beantworten"
       }
     },
     "approvals": {

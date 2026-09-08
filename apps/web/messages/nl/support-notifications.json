@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Meldingen",
+      "labelUnread": "Meldingen, {count} ongelezen"
+    },
+    "panel": {
+      "title": "Meldingen",
+      "description": "Toewijzingen, antwoorden van klanten, SLA-waarschuwingen en @vermeldingen bij supporttickets.",
+      "close": "Sluiten",
+      "refresh": "Vernieuwen",
+      "markAllRead": "Alles als gelezen markeren",
+      "markRead": "Als gelezen markeren",
+      "unread": "ongelezen",
+      "loading": "Meldingen laden…",
+      "updated": "Bijgewerkt {time}",
+      "polling": "Wordt elke {seconds} seconden vernieuwd zolang dit tabblad zichtbaar is.",
+      "showingLatest": "De nieuwste {count} worden getoond; oudere ongelezen meldingen tellen nog steeds mee.",
+      "empty": "Niets om bij te werken",
+      "emptyText": "Toewijzingen, antwoorden van klanten, SLA-waarschuwingen en @vermeldingen in interne notities verschijnen hier.",
+      "error": "De meldingen konden niet worden geladen. De volgende vernieuwing probeert het opnieuw.",
+      "forbidden": "Je platformrol kan geen supporttickets lezen."
+    },
+    "kinds": {
+      "assignment": "Aan jou toegewezen",
+      "customer_reply": "Antwoord van de klant",
+      "sla_warning": "SLA-waarschuwing",
+      "sla_breach": "SLA overschreden",
+      "mention": "Vermeld in een notitie"
+    },
+    "item": {
+      "ticket": "Ticket #{number}",
+      "by": "door {name}",
+      "customer": "door de klant",
+      "system": "automatisch",
+      "formerOperator": "door een voormalige medewerker",
+      "clock": {
+        "first_response": "eerste reactie",
+        "resolution": "oplossing"
+      }
+    },
+    "live": {
+      "newOne": "1 nieuwe melding",
+      "newMany": "{count} nieuwe meldingen"
+    },
+    "preferences": {
+      "title": "E-mail",
+      "assignment": "E-mail mij als een ticket aan mij wordt toegewezen",
+      "customerReply": "E-mail mij als een klant op mijn ticket antwoordt",
+      "hint": "SLA-waarschuwingen en -overschrijdingen worden door de SLA-engine per e-mail naar de toegewezen persoon gestuurd; vermeldingen blijven hier.",
+      "saved": "Voorkeur opgeslagen.",
+      "error": "De voorkeur kon niet worden opgeslagen."
+    }
+  }
+}

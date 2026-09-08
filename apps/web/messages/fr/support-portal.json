@@ -1,0 +1,182 @@
+{
+  "supportPortal": {
+    "nav": "Support",
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "none": "—",
+      "optional": "facultatif"
+    },
+    "list": {
+      "title": "Support",
+      "intro": "Les tickets de support de votre organisation : suivez les réponses, répondez directement d’ici et ouvrez un nouveau ticket quand quelque chose ne fonctionne pas.",
+      "newTicket": "Nouveau ticket",
+      "views": {
+        "label": "Vues des tickets",
+        "open": "Ouverts",
+        "solved": "Résolus",
+        "all": "Tous"
+      },
+      "caption": "Tickets de support de votre organisation",
+      "columns": {
+        "number": "Ticket",
+        "subject": "Objet",
+        "status": "Statut",
+        "priority": "Priorité",
+        "category": "Catégorie",
+        "requester": "Ouvert par",
+        "updated": "Dernière mise à jour"
+      },
+      "lastFromAgent": "Track a répondu",
+      "lastFromYou": "Votre organisation a écrit",
+      "rated": "Noté {score}/5",
+      "open": "Ouvrir le ticket {number}",
+      "empty": {
+        "openTitle": "Aucun ticket ouvert",
+        "openText": "Tout ce que vous nous avez envoyé est traité ou résolu. Ouvrez un nouveau ticket quand quelque chose ne fonctionne pas.",
+        "solvedTitle": "Pas encore de ticket résolu",
+        "solvedText": "Les tickets résolus et fermés apparaîtront ici.",
+        "allTitle": "Pas encore de ticket",
+        "allText": "Votre organisation n’a pas encore contacté le support depuis le tableau de bord ou le formulaire de contact."
+      },
+      "limited": "Affichage des {limit} tickets mis à jour le plus récemment.",
+      "readOnly": "Votre rôle peut consulter les tickets. Ouvrir et répondre aux tickets nécessite un rôle avec accès en écriture au support (tous les rôles sauf « Lecture seule »).",
+      "unavailableTitle": "Les tickets de support ne sont pas disponibles",
+      "unavailableText": "Les tables des tickets ne sont pas encore appliquées à cette base de données (migration 0015). D’ici là, contactez-nous via le formulaire de contact ; chaque demande reçoit une réponse par e-mail."
+    },
+    "categories": {
+      "tracking": "Tracking et événements",
+      "integrations": "Destinations et intégrations",
+      "consent": "Consentement et confidentialité",
+      "billing": "Facturation et forfait",
+      "account": "Compte et équipe",
+      "other": "Autre chose"
+    },
+    "form": {
+      "title": "Nouveau ticket",
+      "intro": "Décrivez ce qui ne fonctionne pas ou ce dont vous avez besoin. Chaque ticket reçoit une réponse par e-mail et reste visible ici pour toute votre organisation.",
+      "back": "Retour aux tickets",
+      "subject": "Objet",
+      "subjectHint": "Une ligne qui résume le sujet, {min} à {max} caractères.",
+      "category": "Catégorie",
+      "priority": "Priorité suggérée",
+      "priorityHint": "Votre estimation nous aide à trier la file ; notre équipe support peut l’ajuster.",
+      "message": "Message",
+      "messageHint": "Que s’est-il passé, qu’attendiez-vous, depuis quand ? Les noms de sites, d’événements et les captures d’écran aident — {min} à {max} caractères.",
+      "attachments": "Pièces jointes",
+      "attachmentsHint": "Jusqu’à {count} fichiers de {size} chacun : images, PDF, texte, CSV, JSON, Word, Excel ou un fichier e-mail (.eml).",
+      "selected": "{count, plural, =1 {1 fichier sélectionné} other {# fichiers sélectionnés}}",
+      "submit": "Ouvrir le ticket",
+      "requester": "Le ticket est ouvert au nom de {name} ({email}) ; les réponses sont envoyées à cette adresse.",
+      "suggestions": {
+        "title": "Ceci peut déjà vous aider",
+        "intro": "Articles de Tracking Knowledge correspondant à ce que vous saisissez. Ils s’ouvrent dans un nouvel onglet.",
+        "empty": "Aucun article correspondant pour l’instant — continuez à écrire ou ouvrez simplement le ticket.",
+        "typing": "Saisissez quelques mots dans l’objet ou le message pour voir les articles correspondants.",
+        "reading": "{minutes} min de lecture",
+        "searching": "Recherche d’articles…"
+      }
+    },
+    "detail": {
+      "back": "Retour aux tickets",
+      "opened": "Ouvert le {date} par {name}",
+      "openedForm": "Ouvert le {date} via le formulaire de contact",
+      "openedEmail": "Ouvert le {date} par e-mail",
+      "meta": {
+        "status": "Statut",
+        "priority": "Priorité",
+        "category": "Catégorie",
+        "channel": "Canal",
+        "lastUpdate": "Dernière mise à jour",
+        "resolved": "Résolu le",
+        "reopened": "{count, plural, =1 {Rouvert une fois} other {Rouvert # fois}}"
+      },
+      "merged": "Ce ticket a été fusionné avec le ticket {number}. La conversation continue là-bas.",
+      "mergedLink": "Ouvrir le ticket {number}",
+      "conversation": {
+        "title": "Conversation",
+        "you": "Vous",
+        "agent": "Support Track",
+        "system": "Track",
+        "attachments": "Pièces jointes",
+        "download": "Télécharger {name} ({size})",
+        "empty": "Pas encore de message."
+      },
+      "reply": {
+        "title": "Répondre",
+        "body": "Votre message",
+        "bodyHint": "{min} à {max} caractères. Votre réponse est envoyée à notre équipe support ; vous recevez aussi chaque réponse par e-mail.",
+        "attachments": "Pièces jointes",
+        "send": "Envoyer la réponse",
+        "reopens": "Ce ticket est résolu. Envoyer un message le rouvre.",
+        "pendingHint": "Notre équipe support attend votre réponse.",
+        "closedBlocked": "Ce ticket ne peut plus recevoir de messages. Ouvrez un nouveau ticket si vous avez besoin d’aide."
+      },
+      "solve": {
+        "button": "Marquer comme résolu",
+        "title": "Marquer le ticket comme résolu ?",
+        "description": "Le ticket {number} sera marqué comme résolu. Vous pourrez encore répondre ensuite, ce qui le rouvrira.",
+        "confirm": "Marquer comme résolu"
+      },
+      "csat": {
+        "title": "Comment avons-nous fait ?",
+        "intro": "Votre ticket est résolu. Évaluez le support reçu — une réponse par ticket, visible par notre équipe support.",
+        "legend": "Note de 1 (très insatisfait) à 5 (très satisfait)",
+        "scores": {
+          "1": "1 – Très insatisfait",
+          "2": "2 – Insatisfait",
+          "3": "3 – Neutre",
+          "4": "4 – Satisfait",
+          "5": "5 – Très satisfait"
+        },
+        "comment": "Commentaire",
+        "commentHint": "Facultatif, jusqu’à {max} caractères.",
+        "submit": "Envoyer la note",
+        "rated": "Votre organisation a noté ce ticket {score} sur 5 le {date}.",
+        "disabled": "Les enquêtes de satisfaction sont désactivées pour le moment."
+      },
+      "timeline": {
+        "title": "Historique",
+        "caption": "Modifications de ce ticket",
+        "actor": {
+          "customer": "Votre organisation",
+          "agent": "Support Track",
+          "system": "Track"
+        },
+        "change": "{from} → {to}",
+        "channel": "via {channel}",
+        "score": "Note {score}/5",
+        "mergedInto": "dans le ticket {number}"
+      }
+    },
+    "notices": {
+      "created": "Votre ticket a été ouvert. Nous répondrons par e-mail et ici.",
+      "replied": "Votre réponse a été ajoutée au ticket.",
+      "reopened": "Votre réponse a été ajoutée et le ticket a été rouvert.",
+      "solved": "Le ticket a été marqué comme résolu.",
+      "rated": "Merci pour votre évaluation."
+    },
+    "errors": {
+      "forbidden": "Votre rôle ne permet pas cette action.",
+      "invalid": "Veuillez vérifier les champs signalés.",
+      "not_found": "Ce ticket n’existe pas ou appartient à une autre organisation.",
+      "invalid_state": "Ce n’est pas possible dans l’état actuel du ticket.",
+      "attachments": "Certaines pièces jointes ont été refusées ; rien n’a été envoyé. Retirez-les et réessayez.",
+      "confirmation_required": "Confirmez d’abord l’action.",
+      "already_rated": "Ce ticket a déjà été noté.",
+      "csat_disabled": "Les enquêtes de satisfaction sont désactivées pour le moment.",
+      "generic": "Cela n’a pas fonctionné. Veuillez réessayer.",
+      "subject": "Saisissez un objet de {min} à {max} caractères.",
+      "body": "Saisissez un message de {min} à {max} caractères.",
+      "category": "Choisissez une catégorie.",
+      "score": "Choisissez une note entre 1 et 5."
+    },
+    "attachmentReasons": {
+      "too_many": "trop de fichiers",
+      "too_large": "plus grand que {size}",
+      "size_unknown": "taille inconnue",
+      "type_not_allowed": "type de fichier non autorisé"
+    }
+  }
+}

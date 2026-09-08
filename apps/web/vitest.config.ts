@@ -8,6 +8,9 @@ export default defineConfig({
     include: ["src/**/*.test.{ts,tsx}"],
     exclude: ["src/**/*.integration.test.ts"],
     environment: "node",
+    // the catalogue-heavy content tests (i18n namespace parity across every locale, the knowledge base loader)
+    // read and parse many files per test and exceed Vitest's 5 s default on slower machines
+    testTimeout: 30_000,
     // next-intl's navigation imports `next/navigation` without an extension; Node's ESM loader cannot
     // resolve that for an externalized package, Vite's resolver can — so the package is transformed inline
     server: { deps: { inline: ["next-intl"] } },

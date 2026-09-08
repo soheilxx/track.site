@@ -1,0 +1,13 @@
+{
+  "type": "email.delivered",
+  "created_at": "2026-09-08T10:01:12.000Z",
+  "data": {
+    "created_at": "2026-09-08T10:01:10.000Z",
+    "email_id": "9c2f7f0e-5b3a-4c2e-9d1a-0f3b2a1c4d5e",
+    "message_id": "<t1042.01j7abc@support.track.site>",
+    "from": "Track Support <support@track.site>",
+    "to": ["ada@example.com"],
+    "subject": "Re: [Track #1042] Pixel feuert doppelt auf der Danke-Seite",
+    "tags": { "category": "support" }
+  }
+}

@@ -15,6 +15,7 @@
       "openMenu": "Apri la navigazione",
       "closeMenu": "Chiudi la navigazione",
       "overview": "Panoramica",
+      "support": "Supporto",
       "organisations": "Organizzazioni",
       "breakGlass": "Break-glass",
       "health": "Stato della piattaforma",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "È richiesto un admin di piattaforma",
-        "text": "Quest’area è riservata agli admin di piattaforma. Il supporto piattaforma vede organizzazioni, break-glass, stato della piattaforma, posta in arrivo, crescita, audit e contenuti.",
+        "text": "Quest’area è riservata agli admin di piattaforma. Il supporto piattaforma vede ticket di supporto, organizzazioni, break-glass, stato della piattaforma, posta in arrivo, crescita, audit e contenuti.",
         "back": "Torna alla panoramica"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "Nessun payload di eventi grezzo, nessun dato personale degli utenti finali, nessun segreto: solo viste aggregate e metadati.",
         "breakGlass": "I dettagli di un cliente richiedono un’autorizzazione break-glass approvata e limitata nel tempo; anche allora in sola lettura, e ogni consultazione viene registrata nell’audit con l’id dell’autorizzazione.",
         "audit": "Ogni modifica è un’azione server con verifica del ruolo, validazione, conferma esplicita e una voce di audit con tipo di attore «platform»."
+      },
+      "support": {
+        "title": "Ticket di supporto",
+        "link": "Apri il supporto",
+        "open": "{count, plural, one {# ticket aperto} other {# ticket aperti}}",
+        "openHint": "nuovi, aperti, in attesa e sospesi — conteggio in tempo reale",
+        "unassigned": "Non assegnati",
+        "unassignedHint": "ticket aperti senza responsabile",
+        "breached": "SLA violato",
+        "breachedHint": "ticket aperti oltre una scadenza registrata",
+        "mine": "Assegnati a me",
+        "mineHint": "i tuoi ticket aperti",
+        "failed": "Impossibile caricare"
       }
     },
     "pages": {
       "overview": {
         "title": "Panoramica",
         "intro": "Lo stato dell’intera piattaforma a colpo d’occhio: cosa richiede attenzione, quali moduli esistono e le regole con cui lavora ogni operatore."
+      },
+      "support": {
+        "title": "Supporto",
+        "intro": "Ticket di supporto da e-mail, modulo di contatto e dashboard cliente: coda, stato SLA, risposte, note interne e macro. I clienti vedono i propri ticket nella dashboard, mai le note interne."
       },
       "organisations": {
         "title": "Organizzazioni",

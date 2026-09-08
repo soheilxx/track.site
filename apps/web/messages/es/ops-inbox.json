@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Secciones de la bandeja de entrada",
-      "requests": "Solicitudes",
+      "requests": "Solicitudes (heredado)",
       "privacy": "Solicitudes de privacidad",
       "alerts": "Resumen de alertas",
       "knowledge": "Valoraciones de Knowledge"
@@ -76,7 +76,8 @@
         "status": "Estado",
         "assignee": "Asignada a",
         "delivery": "Reenvío",
-        "actions": "Acciones"
+        "actions": "Acciones",
+        "ticket": "Ticket"
       },
       "open": "Abrir",
       "openLabel": "Abrir la solicitud de {name}",
@@ -92,7 +93,11 @@
         "previous": "Página anterior",
         "next": "Página siguiente",
         "page": "Página {page}"
-      }
+      },
+      "openDesk": "Abrir la cola de tickets",
+      "legacyNotice": "Cada solicitud de los formularios públicos es ahora un ticket de soporte (canal «formulario de contacto») y se gestiona en Soporte. Esta lista se conserva para las solicitudes anteriores al servicio de soporte y enlaza cada solicitud más reciente con su ticket.",
+      "openTicketLabel": "Abrir el ticket #{number}",
+      "ticketNone": "Sin ticket (anterior al servicio de soporte)"
     },
     "detail": {
       "back": "Volver a la bandeja de entrada",
@@ -166,7 +171,10 @@
         "replyError": "no enviada ({transport})",
         "by": "por {name}",
         "byUnknown": "por un antiguo operador"
-      }
+      },
+      "ticket": "Ticket de soporte",
+      "openTicket": "Abrir el ticket",
+      "ticketNone": "Sin ticket — enviado antes del servicio de soporte; responde desde aquí."
     },
     "privacy": {
       "title": "Solicitudes de privacidad",

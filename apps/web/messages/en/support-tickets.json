@@ -1,0 +1,235 @@
+{
+  "supportTickets": {
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Working…",
+      "unassigned": "Unassigned",
+      "you": "you",
+      "none": "—",
+      "noSubject": "(no subject)"
+    },
+    "errors": {
+      "forbidden": "Your platform role is not allowed to do that.",
+      "invalid": "Please check the highlighted fields.",
+      "not_found": "That ticket or view no longer exists.",
+      "confirmation_required": "Confirm the action first.",
+      "invalid_assignee": "The assignee must hold a platform role.",
+      "invalid_target": "The target ticket does not exist, is spam, is already merged or is among the selected tickets.",
+      "nothing_applied": "Nothing changed: the rule did not allow the change on any selected ticket.",
+      "too_many_views": "You have reached the maximum number of saved views. Delete one first.",
+      "generic": "That did not work. Please try again."
+    },
+    "queue": {
+      "intro": "Every ticket from e-mail, the contact form and the customer dashboard. Pick a view, refine it with the filters, act on several tickets at once — every change is recorded in the audit log.",
+      "viewMissing": "That saved view no longer exists or is another operator's personal view; showing all open tickets instead.",
+      "saveView": "Save as view",
+      "manageViews": "Manage views",
+      "views": {
+        "label": "Ticket views",
+        "saved": "Saved views",
+        "count": "{count, plural, one {# ticket} other {# tickets}}",
+        "defaults": {
+          "unassigned": "Unassigned",
+          "mine": "My tickets",
+          "open": "All open",
+          "pending": "Pending customer",
+          "breached": "Breached SLA",
+          "solved_7d": "Solved last 7 days",
+          "spam": "Spam"
+        }
+      },
+      "filters": {
+        "legend": "Filters",
+        "search": "Search",
+        "searchPlaceholder": "Subject, requester, organisation or #number",
+        "status": "Status",
+        "priority": "Priority",
+        "channel": "Channel",
+        "assignee": "Assignee",
+        "organisation": "Organisation",
+        "organisationPlaceholder": "Name, slug or id",
+        "plan": "Plan",
+        "tags": "Tags",
+        "tagsPlaceholder": "billing, vip",
+        "sla": "SLA state",
+        "dateField": "Date field",
+        "from": "From",
+        "to": "To",
+        "lastDays": "Last … days",
+        "lastDaysPlaceholder": "e.g. 7",
+        "sort": "Sort",
+        "apply": "Apply filters",
+        "reset": "Back to the view",
+        "any": "Any",
+        "asInView": "As in the view ({count, plural, one {# selected} other {# selected}})",
+        "everyone": "Everyone",
+        "unassigned": "Unassigned",
+        "me": "Assigned to me",
+        "clearDates": "Ignore the view's date range",
+        "clearDatesHint": "When ticked, every date counts unless you enter a range of your own here.",
+        "viewRangeLastDays": "The view shows {count, plural, one {the last day} other {the last # days}}.",
+        "viewRangeBetween": "The view shows {from} to {to}.",
+        "viewRangeFrom": "The view shows dates from {from}.",
+        "viewRangeTo": "The view shows dates up to {to}.",
+        "hint": "Filters refine the selected view; the view editor sets several statuses, priorities or channels at once. Tags: comma-separated, every tag must be present."
+      },
+      "slaFilters": {
+        "any": "Any",
+        "on_track": "On track",
+        "breached": "Breached",
+        "paused": "Clock paused",
+        "none": "No SLA policy"
+      },
+      "dateFields": {
+        "created": "Created",
+        "updated": "Updated",
+        "resolved": "Resolved"
+      },
+      "sorts": {
+        "updated_desc": "Last update, newest first",
+        "updated_asc": "Last update, oldest first",
+        "created_desc": "Created, newest first",
+        "created_asc": "Created, oldest first",
+        "priority_desc": "Priority, urgent first",
+        "sla_due_asc": "SLA due, soonest first",
+        "number_desc": "Number, highest first",
+        "number_asc": "Number, lowest first"
+      },
+      "sla": {
+        "met": "Met",
+        "due": "due {when}",
+        "overdue": "overdue since {when}",
+        "dueWhenResumed": "paused while waiting for the customer"
+      },
+      "columns": {
+        "select": "Select",
+        "ticket": "Ticket",
+        "requester": "Requester",
+        "status": "Status",
+        "priority": "Priority",
+        "assignee": "Assignee",
+        "sla": "SLA",
+        "updated": "Last update",
+        "viewers": "Viewing"
+      },
+      "selectAll": "Select all tickets on this page",
+      "selectOne": "Select ticket #{number}",
+      "merged": "Merged",
+      "requesterUnknown": "No name given",
+      "noOrganisation": "No organisation matched",
+      "created": "created {when}",
+      "viewersLabel": "{count, plural, one {# operator viewing} other {# operators viewing}}",
+      "presence": {
+        "viewing": "{name} is viewing this ticket",
+        "typing": "{name} is typing a reply"
+      },
+      "caption": "Support tickets of the selected view",
+      "count": "{count, plural, one {# ticket} other {# tickets}}",
+      "countFiltered": "{count, plural, one {# ticket matches} other {# tickets match}} the filters",
+      "empty": "No tickets in this view",
+      "emptyText": "Tickets appear here as soon as a customer writes to support or a request is converted into a ticket.",
+      "emptyFiltered": "No tickets match these filters",
+      "emptyFilteredText": "Widen the filters or go back to the view.",
+      "pagination": {
+        "nav": "Ticket pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "page": "Page {page}"
+      },
+      "export": {
+        "button": "Export CSV",
+        "working": "Preparing the export…",
+        "done": "{rows, plural, one {# ticket} other {# tickets}} exported (metadata only, no messages or requester details).",
+        "truncated": "{rows, plural, one {# ticket} other {# tickets}} of {total, number} exported — narrow the filters for the rest."
+      }
+    },
+    "bulk": {
+      "title": "Bulk actions",
+      "selected": "{count, plural, one {# selected} other {# selected}}",
+      "tooMany": "at most {max} tickets at once",
+      "action": "Action",
+      "actions": {
+        "assign": "Assign",
+        "status": "Change status",
+        "priority": "Change priority",
+        "tags": "Add or remove tags",
+        "merge": "Merge into another ticket"
+      },
+      "assignTo": "Assign to",
+      "newStatus": "New status",
+      "newPriority": "New priority",
+      "tagsAdd": "Add tags",
+      "tagsRemove": "Remove tags",
+      "tagsPlaceholder": "billing, vip",
+      "tagsHint": "Comma-separated; lower-case letters, digits, hyphens and underscores, at most 20 tags per ticket.",
+      "mergeTarget": "Merge into ticket",
+      "mergeHint": "The selected tickets are closed and linked to the target; their conversations stay readable. The target must be a ticket of the same organisation that is neither spam nor merged itself, and not among the selection.",
+      "statusHint": "Tickets whose current status does not allow the transition are skipped. Pending pauses the SLA clock; solved and closed stamp the resolution. Spam blocks the sender until the ticket is restored.",
+      "priorityHint": "The running SLA clocks move by the difference between the old and the new target, so a shorter target can be overdue at once. Tickets without an SLA policy keep no due times.",
+      "apply": "Apply…",
+      "summary": {
+        "unassign": "Remove the assignee from the selected tickets.",
+        "assign": "Assign the selected tickets to {name}.",
+        "status": "Set the status of the selected tickets to “{status}”.",
+        "priority": "Set the priority of the selected tickets to “{priority}”.",
+        "tags": "Add: {add} · Remove: {remove}",
+        "merge": "Merge the selected tickets into ticket #{number} and close them."
+      },
+      "dialog": {
+        "title": "Apply to {count, plural, one {# ticket} other {# tickets}}?",
+        "description": "The change is applied to every selected ticket the rules allow and recorded in the audit log per ticket.",
+        "confirm": "Apply"
+      },
+      "result": {
+        "applied": "{applied, plural, one {# ticket updated} other {# tickets updated}}, {skipped, plural, one {# skipped} other {# skipped}}.",
+        "skippedOnly": "{skipped, plural, one {# ticket was skipped} other {# tickets were skipped}}."
+      }
+    },
+    "viewsPage": {
+      "intro": "Shared views are the team's queues (managed by platform admins); personal views are your own. Every view keeps its filters and sort and shows its live count in the queue.",
+      "new": "New view",
+      "empty": "No saved views yet",
+      "emptyText": "Start from the queue: set the filters you need and choose “Save as view”.",
+      "caption": "Saved views, shared ones first",
+      "columns": {
+        "name": "Name",
+        "scope": "Scope",
+        "sort": "Sort",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "open": "Open view “{name}”",
+      "edit": "Edit",
+      "editLabel": "Edit view “{name}”",
+      "readOnly": "Managed by platform admins",
+      "scope": {
+        "personal": "Personal",
+        "shared": "Shared"
+      }
+    },
+    "viewForm": {
+      "titleNew": "New view",
+      "titleEdit": "Edit view “{name}”",
+      "titleEditShort": "Edit view",
+      "introNew": "Name the view, choose who sees it and set its filters and sort. The values start from the queue you came from.",
+      "introEdit": "Change the name, scope, filters or sort. The view's live count in the queue follows the new filters.",
+      "name": "Name",
+      "scope": "Visibility",
+      "scopePersonal": "Personal — only you",
+      "scopeShared": "Shared — every operator",
+      "scopeAdminOnly": "Shared views are created by platform admins.",
+      "filters": "Filters",
+      "groupHint": "Nothing selected = any.",
+      "sort": "Sort",
+      "create": "Create view",
+      "saveChanges": "Save changes",
+      "delete": "Delete",
+      "deleteTitle": "Delete view “{name}”?",
+      "deleteDescription": "The view disappears from the queue for everyone who could use it. Tickets are not affected. This is recorded in the audit log.",
+      "deleteConfirm": "Delete view",
+      "openQueue": "Open the queue",
+      "notEditable": "This is a shared view; platform admins edit it. You can open its queue and refine it with the filters."
+    }
+  }
+}

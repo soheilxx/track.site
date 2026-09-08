@@ -127,7 +127,8 @@
         "ai": "Track AI",
         "billing": "Facturatie",
         "audit": "Audit",
-        "kill_switch": "Kill switch"
+        "kill_switch": "Kill switch",
+        "support": "Support"
       },
       "permissions": {
         "org_read": "Organisatie bekijken",
@@ -162,7 +163,9 @@
         "billing_manage": "Abonnement beheren",
         "audit_read": "Auditlog bekijken",
         "kill_switch_manage": "Kill switches bedienen",
-        "members_security": "Tweestapsverificatie van leden resetten"
+        "members_security": "Tweestapsverificatie van leden resetten",
+        "support_read": "Supporttickets bekijken",
+        "support_write": "Supporttickets openen en beantwoorden"
       }
     },
     "approvals": {

@@ -1,0 +1,298 @@
+{
+  "supportReports": {
+    "intro": "Ticketvolumen, Rückstand, Antwort- und Lösungszeiten, SLA-Einhaltung, Auslastung der Agenten, Zufriedenheit, Kategorien und Organisationen für einen Zeitraum — jede Zahl aus gespeicherten Zeitstempeln und Zählungen; nichts wird geschätzt. Alle Kalenderwerte sind UTC.",
+    "backToSupport": "Zurück zur Ticketliste",
+    "context": {
+      "asOf": "Stand {at}",
+      "range": "{from} – {to}",
+      "days": "{count, plural, one {# Tag} other {# Tage}}",
+      "tickets": "{count, plural, one {# Ticket erstellt} other {# Tickets erstellt}}"
+    },
+    "range": {
+      "legend": "Zeitraum",
+      "presets": "Schnellauswahl",
+      "preset": "Letzte {days} Tage",
+      "from": "Von",
+      "to": "Bis",
+      "bucket": "Gruppieren nach",
+      "buckets": {
+        "day": "Tag",
+        "week": "Woche (Montag)"
+      },
+      "apply": "Anwenden",
+      "reset": "Zurücksetzen",
+      "hint": "Bis zu {max} Kalendertage (UTC), nie in der Zukunft. Tickets gehören über ihr Erstellungsdatum zum Zeitraum; der Rückstand ist immer der aktuelle Stand.",
+      "fallback": "Der angeforderte Zeitraum war ungültig — stattdessen werden die letzten {days} Tage gezeigt."
+    },
+    "export": {
+      "kind": "Zu exportierender Abschnitt",
+      "button": "CSV exportieren",
+      "kinds": {
+        "summary": "Zusammenfassung",
+        "volume": "Volumen je Intervall",
+        "backlog": "Rückstand nach Status",
+        "times": "Antwort- und Lösungszeiten",
+        "sla": "SLA-Einhaltung",
+        "agents": "Agenten",
+        "csat": "Zufriedenheit",
+        "categories": "Kategorien",
+        "tags": "Tags",
+        "organisations": "Organisationen"
+      }
+    },
+    "notes": {
+      "small": {
+        "title": "Kleine Zahlen",
+        "text": "In diesem Zeitraum wurden weniger als {min} Tickets erstellt. Mediane, Quoten und Anteile werden der Vollständigkeit halber gezeigt, aber ein einziges Ticket verschiebt sie um ganze Prozentpunkte — lesen Sie die Zählungen, nicht die Prozente."
+      },
+      "truncated": {
+        "title": "Zeitraum zu groß für exakte Werte je Ticket",
+        "text": "Für Zeiten, SLA, Zufriedenheit, Kategorien, Tags und die Erstantworten je Agent wurden nur die ersten {max} Tickets des Zeitraums geladen. Volumen, Rückstand, Antworten, Lösungen und Organisationen sind vollständig. Verkleinern Sie den Zeitraum für exakte Werte."
+      }
+    },
+    "kpis": {
+      "created": {
+        "label": "Erstellte Tickets",
+        "hint": "{perDay} pro Tag im Durchschnitt"
+      },
+      "solved": {
+        "label": "Im Zeitraum gelöste Tickets",
+        "hint": "Innerhalb des Zeitraums gelöst, unabhängig vom Erstellungsdatum"
+      },
+      "firstResponse": {
+        "label": "Median erste Antwort",
+        "hint": "{measured} beantwortet · p90 {p90}"
+      },
+      "resolution": {
+        "label": "Median Lösung",
+        "hint": "{measured} gelöst · p90 {p90}"
+      },
+      "sla": {
+        "label": "SLA erste Antwort eingehalten",
+        "hint": "{met} von {counted} abgeschlossenen Uhren · Lösung {resolution}"
+      },
+      "csat": {
+        "label": "Zufriedenheit",
+        "outOf": "{average} / 5",
+        "hint": "{responses} Antworten · {rate} der gelösten Tickets"
+      }
+    },
+    "volume": {
+      "title": "Ticketvolumen",
+      "intro": "Erstellte Tickets je Intervall, gestapelt nach Kanal, und — als Linie — die im selben Intervall gelösten Tickets, unabhängig vom Erstellungsdatum. Spam und in ein anderes Ticket zusammengeführte Tickets werden nicht gezählt.",
+      "caption": "Erstellte Tickets je Intervall nach Kanal und gelöste Tickets je Intervall",
+      "chart": "Gestapelte Balken je Tag oder Woche: erstellte Tickets nach Kanal (E-Mail, Kontaktformular, Dashboard, API). Eine Linie zeigt die im selben Intervall gelösten Tickets. Die Tabelle unter dem Diagramm enthält dieselben Werte.",
+      "table": "Als Tabelle anzeigen",
+      "series": {
+        "solved": "Gelöst"
+      },
+      "columns": {
+        "day": "Tag",
+        "week": "Woche ab",
+        "channel": "Kanal",
+        "count": "Tickets",
+        "share": "Anteil",
+        "total": "Gesamt",
+        "solved": "Gelöst"
+      },
+      "partial": "unvollständiges Intervall",
+      "mix": {
+        "caption": "Kanalmix des Zeitraums"
+      },
+      "figures": {
+        "created": "Erstellt",
+        "solved": "Gelöst",
+        "perDay": "Pro Tag"
+      },
+      "empty": {
+        "title": "Keine Tickets in diesem Zeitraum",
+        "text": "Zwischen den gewählten Daten wurde kein Ticket erstellt oder gelöst."
+      }
+    },
+    "backlog": {
+      "title": "Rückstand nach Status",
+      "intro": "Alle Tickets nach Workflow-Status zum jetzigen Zeitpunkt — unabhängig vom Zeitraum. Offener Rückstand sind Neu, Offen, Wartet auf Kunde und Zurückgestellt zusammen.",
+      "caption": "Tickets nach Workflow-Status zum jetzigen Zeitpunkt",
+      "columns": {
+        "status": "Status",
+        "count": "Tickets",
+        "share": "Anteil an allen"
+      },
+      "figures": {
+        "open": "Jetzt offen",
+        "unassigned": "Offen ohne Zuweisung",
+        "oldest": "Ältestes offenes"
+      },
+      "oldestHint": "erstellt {at}",
+      "empty": {
+        "title": "Noch keine Tickets",
+        "text": "Der Rückstand füllt sich, sobald das erste Ticket eingeht."
+      }
+    },
+    "times": {
+      "title": "Antwort- und Lösungszeiten",
+      "intro": "Uhrzeit-basierte Dauer von der Ticketerstellung bis zur ersten Agentenantwort und bis zur Lösung, für im Zeitraum erstellte Tickets. Pausen während des Wartens auf den Kunden werden nicht abgezogen — das ist die Zeit, die der Anfragende erlebt hat.",
+      "caption": "Erste-Antwort- und Lösungszeiten: gemessene Tickets, Median, 90. Perzentil und ausstehende Tickets",
+      "columns": {
+        "metric": "Uhr",
+        "measured": "Gemessen",
+        "median": "Median",
+        "p90": "90. Perzentil",
+        "pending": "Ausstehend"
+      },
+      "rows": {
+        "firstResponse": "Erste Antwort",
+        "resolution": "Lösung"
+      },
+      "pending": {
+        "firstResponse": "noch nicht beantwortet",
+        "resolution": "noch nicht gelöst"
+      },
+      "withheld": "zu wenige Daten",
+      "p90Withheld": "Ein 90. Perzentil wird ab {min} gemessenen Tickets gezeigt; darunter sagt es mehr über ein einzelnes Ticket als über den Desk aus.",
+      "empty": {
+        "title": "Noch nichts gemessen",
+        "text": "Kein in diesem Zeitraum erstelltes Ticket wurde bisher beantwortet oder gelöst."
+      }
+    },
+    "sla": {
+      "title": "SLA-Einhaltung",
+      "intro": "Ergebnis jeder SLA-Uhr für im Zeitraum erstellte Tickets, aus den gespeicherten Fälligkeiten und den Zeitpunkten, an denen die Uhr gestoppt wurde. Die Quote zählt nur abgeschlossene Uhren — laufende Uhren und Tickets ohne Richtlinie werden aufgeführt, nicht bewertet.",
+      "caption": "{clock}: SLA-Ergebnisse nach Priorität",
+      "all": "Alle Prioritäten",
+      "columns": {
+        "priority": "Priorität",
+        "met": "Eingehalten",
+        "breached": "Verletzt",
+        "running": "Laufend",
+        "noPolicy": "Ohne Richtlinie",
+        "rate": "Einhaltungsquote"
+      },
+      "figures": {
+        "withPolicy": "Mit SLA-Richtlinie",
+        "firstResponse": "Erste Antwort eingehalten",
+        "resolution": "Lösung eingehalten"
+      },
+      "rateHint": "{met} von {counted} abgeschlossen",
+      "note": "Eine Uhr gilt als verletzt, wenn sie nach ihrer Fälligkeit gestoppt wurde oder der Worker sie markiert hat; eine laufende Uhr über der Fälligkeit zählt als verletzt. Eine angehaltene Uhr (Warten auf Kunde) wird nie über die Uhrzeit als verletzt gewertet — ihre Fälligkeit verschiebt sich, wenn die Pause endet.",
+      "empty": {
+        "title": "Keine SLA-Uhren in diesem Zeitraum",
+        "text": "Keines der in diesem Zeitraum erstellten Tickets hat eine SLA-Richtlinie mit Fälligkeiten."
+      }
+    },
+    "agents": {
+      "title": "Agenten",
+      "intro": "Auslastung je Operator: aktuell zugewiesene offene Tickets, im Zeitraum gesendete Antworten und auf Gelöst gesetzte Tickets sowie — für im Zeitraum erstellte Tickets — wie viele der Operator zuerst beantwortet hat und wie schnell.",
+      "caption": "Auslastung je Agent: offene Tickets, Antworten, erste Antworten, Median der ersten Antwort und gelöste Tickets",
+      "columns": {
+        "agent": "Agent",
+        "open": "Jetzt offen",
+        "replies": "Antworten im Zeitraum",
+        "firstResponses": "Erste Antworten",
+        "median": "Median erste Antwort",
+        "solved": "Im Zeitraum gelöst"
+      },
+      "figures": {
+        "agents": "Operatoren",
+        "unassigned": "Offen ohne Zuweisung"
+      },
+      "former": "Kein Operator mehr",
+      "note": "„Gelöst“ zählt Statuswechsel auf Gelöst, die der Agent im Zeitraum vorgenommen hat (ein wiedereröffnetes Ticket zählt erneut, wenn es erneut gelöst wird). Antworten sind ausgehende Agentennachrichten nach Verfasser, nicht nach Zuweisung.",
+      "empty": {
+        "title": "Keine Agentenaktivität",
+        "text": "Kein Operator hält ein offenes Ticket, hat in diesem Zeitraum geantwortet oder ein Ticket gelöst."
+      }
+    },
+    "csat": {
+      "title": "Kundenzufriedenheit",
+      "intro": "Bewertungen zu im Zeitraum erstellten Tickets: Durchschnittswert, Anteil der gelösten Tickets mit Antwort und die Verteilung von 1 bis 5.",
+      "caption": "Verteilung der Zufriedenheitswerte von 5 (beste) bis 1",
+      "columns": {
+        "score": "Wert",
+        "count": "Antworten",
+        "share": "Anteil der Antworten"
+      },
+      "score": "{score} von 5",
+      "outOf": "{average} / 5",
+      "figures": {
+        "average": "Durchschnitt",
+        "responses": "Antworten",
+        "responseRate": "Antwortquote"
+      },
+      "responseRateHint": "von {solved} gelösten oder geschlossenen Tickets",
+      "disabled": "Zufriedenheitsumfragen sind in den Support-Einstellungen ausgeschaltet. Vorhandene Antworten werden weiterhin gezählt; neue können erst eingehen, wenn sie wieder eingeschaltet sind.",
+      "empty": {
+        "title": "Noch keine Bewertungen",
+        "text": "Kein in diesem Zeitraum erstelltes Ticket hat eine Zufriedenheitsbewertung erhalten."
+      }
+    },
+    "categories": {
+      "title": "Häufigste Kategorien",
+      "intro": "Kategorien der im Zeitraum erstellten Tickets, sortiert nach Ticketanzahl.",
+      "caption": "Kategorien nach Anzahl der Tickets",
+      "columns": {
+        "category": "Kategorie",
+        "count": "Tickets",
+        "share": "Anteil"
+      },
+      "none": "Ohne Kategorie",
+      "more": "{count, plural, one {# weitere Kategorie mit weniger Tickets ist nicht aufgeführt.} other {# weitere Kategorien mit weniger Tickets sind nicht aufgeführt.}}",
+      "empty": {
+        "title": "Keine Kategorien",
+        "text": "Kein in diesem Zeitraum erstelltes Ticket trägt eine Kategorie."
+      }
+    },
+    "tags": {
+      "title": "Häufigste Tags",
+      "intro": "Tags der im Zeitraum erstellten Tickets, sortiert nach Ticketanzahl. Ein Ticket zählt je Tag einmal, daher ergeben die Anteile zusammen nicht 100 %.",
+      "caption": "Tags nach Anzahl der Tickets",
+      "columns": {
+        "tag": "Tag",
+        "count": "Tickets",
+        "share": "Anteil"
+      },
+      "none": "Ohne Tags",
+      "more": "{count, plural, one {# weiterer Tag mit weniger Tickets ist nicht aufgeführt.} other {# weitere Tags mit weniger Tickets sind nicht aufgeführt.}}",
+      "empty": {
+        "title": "Keine Tags",
+        "text": "Kein in diesem Zeitraum erstelltes Ticket trägt einen Tag."
+      }
+    },
+    "organisations": {
+      "title": "Organisationen mit den meisten Tickets",
+      "intro": "Organisationen mit den meisten im Zeitraum erstellten Tickets, mit der Zahl der davon noch offenen und der gelösten. Nur Namen und Slugs — die Organisationsseite braucht eine eigene Berechtigung.",
+      "caption": "Organisationen nach Anzahl der Tickets im Zeitraum",
+      "columns": {
+        "organisation": "Organisation",
+        "tickets": "Tickets",
+        "open": "Noch offen",
+        "resolved": "Gelöst",
+        "share": "Anteil an allen"
+      },
+      "none": "Keine Organisation (Absender nicht zugeordnet)",
+      "figures": {
+        "distinct": "Organisationen",
+        "without": "Ohne Organisation"
+      },
+      "empty": {
+        "title": "Keine Tickets in diesem Zeitraum",
+        "text": "Organisationen erscheinen, sobald innerhalb des Zeitraums ein Ticket erstellt wird."
+      }
+    },
+    "method": {
+      "title": "Methode und Vorbehalte",
+      "items": {
+        "cohort": "Der Zeitraum wählt Tickets über ihr Erstellungsdatum aus (UTC-Kalendertage). Spam-Tickets und in ein anderes Ticket zusammengeführte Tickets sind überall ausgeschlossen; „im Zeitraum gelöst“ zählt Tickets, deren Lösungszeitpunkt in den Zeitraum fällt, unabhängig vom Erstellungsdatum.",
+        "backlog": "Rückstand, nicht zugewiesene und offene Tickets der Agenten sind der Stand zum Zeitpunkt der Seitenerzeugung, keine Zeitraumwerte.",
+        "times": "Erste Antwort ist der gespeicherte Zeitpunkt der ersten Agentenantwort (eine automatische Eingangsbestätigung zählt nie); Lösung ist der Wechsel auf Gelöst. Beides wird ab Erstellung nach Uhrzeit gemessen; ein wiedereröffnetes Ticket behält sein Erstellungsdatum und verliert seinen Lösungszeitpunkt, bis es erneut gelöst wird.",
+        "p90": "Mediane interpolieren linear zwischen den beiden mittleren Werten. Ein 90. Perzentil wird erst ab {min} gemessenen Tickets gezeigt.",
+        "sla": "SLA-Ergebnisse vergleichen den gespeicherten Stoppzeitpunkt mit der gespeicherten Fälligkeit (die Pausen bereits enthält); die Verletzungsmarkierung des Workers hat Vorrang. Tickets ohne Richtlinie haben keine Fälligkeit und werden nie bewertet.",
+        "agents": "„Gelöst“ je Agent zählt die eigenen Statuswechsel des Agenten auf Gelöst; „erste Antworten“ ordnen ein Ticket dem Verfasser seiner ersten ausgehenden Agentennachricht zu. Verfasser ohne Plattformrolle werden in einer Zeile zusammengefasst.",
+        "csat": "Zufriedenheit ist der am Ticket gespeicherte Wert (1–5); die Antwortquote teilt Antworten durch gelöste oder geschlossene Tickets des Zeitraums.",
+        "organisations": "Organisationen mit den meisten Tickets zeigen Name und Slug aus dem Organisationsdatensatz — nur Metadaten. Tickets von Absendern ohne Organisation werden separat gezählt.",
+        "export": "Der CSV-Export enthält dieselben Zählungen, Quoten und Dauern in Minuten (nie Betreffzeilen, Nachrichtentexte oder Angaben zum Anfragenden) und wird im Audit-Log festgehalten.",
+        "privacy": "Alles auf dieser Seite ist eine Zählung, eine Dauer oder eine Quote. Kein Anfragender, keine Nachricht und keine E-Mail-Adresse wird identifiziert; Agenten erscheinen mit ihrem Anzeigenamen."
+      }
+    }
+  }
+}

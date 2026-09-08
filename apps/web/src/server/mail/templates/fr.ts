@@ -35,4 +35,13 @@ export const MAIL_COPY_FR: MailCopy = {
     text: "Votre double authentification pour {product} a été réinitialisée par {actorRole}.\n\nLe secret de l’application d’authentification et vos codes de secours ont été supprimés, et vous avez été déconnecté partout. Connectez-vous avec votre mot de passe et configurez à nouveau la double authentification dans Paramètres → Sécurité.\n\nSi vous n’avez pas demandé cette réinitialisation, contactez-nous immédiatement : {supportLink}\n\n— Track",
     roles: { platformAdmin: "un administrateur de la plateforme Track", owner: "un propriétaire de votre organisation", admin: "un administrateur de votre organisation" },
   },
+  supportAssigned: {
+    subject: "[Track #{number}] attribué à vous : {subject}",
+    text: "{actor} vous a attribué le ticket de support n° {number}.\n\nObjet : {subject}\n\nOuvrir le ticket dans Track Operations : {url}\n\n—\nVous recevez cet e-mail parce que « M’envoyer un e-mail quand un ticket m’est attribué » est activé dans vos paramètres de notification (la cloche dans Track Operations).",
+    system: "Le service support (attribution automatique)",
+  },
+  supportCustomerReply: {
+    subject: "[Track #{number}] nouvelle réponse du client : {subject}",
+    text: "{requester} a répondu sur le ticket de support n° {number}, qui vous est attribué.\n\nObjet : {subject}\n\nOuvrir le ticket dans Track Operations : {url}\n\n—\nVous recevez cet e-mail parce que « M’envoyer un e-mail quand un client répond sur mon ticket » est activé dans vos paramètres de notification (la cloche dans Track Operations).",
+  },
 };

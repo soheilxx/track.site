@@ -15,6 +15,7 @@
       "openMenu": "Ouvrir la navigation",
       "closeMenu": "Fermer la navigation",
       "overview": "Vue d’ensemble",
+      "support": "Support",
       "organisations": "Organisations",
       "breakGlass": "Break-glass",
       "health": "État de la plateforme",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "Admin plateforme requis",
-        "text": "Cette zone est réservée aux admins plateforme. Le support plateforme voit les organisations, le break-glass, l’état de la plateforme, la boîte de réception, la croissance, l’audit et le contenu.",
+        "text": "Cette zone est réservée aux admins plateforme. Le support plateforme voit les tickets de support, les organisations, le break-glass, l’état de la plateforme, la boîte de réception, la croissance, l’audit et le contenu.",
         "back": "Retour à la vue d’ensemble"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "Aucune charge utile d’événement brute, aucune donnée personnelle d’utilisateur final, aucun secret — uniquement des vues agrégées et des métadonnées.",
         "breakGlass": "Les détails d’un client exigent une autorisation break-glass approuvée et limitée dans le temps ; même alors en lecture seule, et chaque consultation est auditée avec l’identifiant de l’autorisation.",
         "audit": "Chaque modification est une action serveur avec vérification du rôle, validation, confirmation explicite et une entrée d’audit avec le type d’acteur « platform »."
+      },
+      "support": {
+        "title": "Tickets de support",
+        "link": "Ouvrir le support",
+        "open": "{count, plural, one {# ticket ouvert} other {# tickets ouverts}}",
+        "openHint": "nouveaux, ouverts, en attente et suspendus — comptage en direct",
+        "unassigned": "Non attribués",
+        "unassignedHint": "tickets ouverts sans responsable",
+        "breached": "SLA dépassé",
+        "breachedHint": "tickets ouverts au-delà d’une échéance enregistrée",
+        "mine": "Attribués à moi",
+        "mineHint": "vos tickets ouverts",
+        "failed": "Impossible à charger"
       }
     },
     "pages": {
       "overview": {
         "title": "Vue d’ensemble",
         "intro": "L’état de la plateforme en un coup d’œil : ce qui demande de l’attention, les modules existants et les règles que chaque opérateur applique."
+      },
+      "support": {
+        "title": "Support",
+        "intro": "Tickets de support venant de l’e-mail, du formulaire de contact et du tableau de bord client : file d’attente, état des SLA, réponses, notes internes et macros. Les clients voient leurs propres tickets dans le tableau de bord, jamais les notes internes."
       },
       "organisations": {
         "title": "Organisations",

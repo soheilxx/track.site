@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Notifiche",
+      "labelUnread": "Notifiche, {count} da leggere"
+    },
+    "panel": {
+      "title": "Notifiche",
+      "description": "Assegnazioni, risposte dei clienti, avvisi SLA e @menzioni sui ticket di supporto.",
+      "close": "Chiudi",
+      "refresh": "Aggiorna",
+      "markAllRead": "Segna tutte come lette",
+      "markRead": "Segna come letta",
+      "unread": "da leggere",
+      "loading": "Caricamento delle notifiche…",
+      "updated": "Aggiornato {time}",
+      "polling": "Si aggiorna ogni {seconds} secondi finché questa scheda è visibile.",
+      "showingLatest": "Sono mostrate le {count} più recenti; quelle precedenti non lette contano comunque.",
+      "empty": "Niente da recuperare",
+      "emptyText": "Qui compariranno assegnazioni, risposte dei clienti, avvisi SLA e @menzioni nelle note interne.",
+      "error": "Impossibile caricare le notifiche. Il prossimo aggiornamento riproverà.",
+      "forbidden": "Il tuo ruolo di piattaforma non può leggere i ticket di supporto."
+    },
+    "kinds": {
+      "assignment": "Assegnato a te",
+      "customer_reply": "Risposta del cliente",
+      "sla_warning": "Avviso SLA",
+      "sla_breach": "SLA violato",
+      "mention": "Menzionato in una nota"
+    },
+    "item": {
+      "ticket": "Ticket n. {number}",
+      "by": "da {name}",
+      "customer": "dal cliente",
+      "system": "automatico",
+      "formerOperator": "da un ex operatore",
+      "clock": {
+        "first_response": "prima risposta",
+        "resolution": "risoluzione"
+      }
+    },
+    "live": {
+      "newOne": "1 nuova notifica",
+      "newMany": "{count} nuove notifiche"
+    },
+    "preferences": {
+      "title": "E-mail",
+      "assignment": "Inviami un'e-mail quando mi viene assegnato un ticket",
+      "customerReply": "Inviami un'e-mail quando un cliente risponde sul mio ticket",
+      "hint": "Avvisi e violazioni SLA vengono inviati via e-mail all'assegnatario dal motore SLA; le menzioni restano qui.",
+      "saved": "Preferenza salvata.",
+      "error": "Impossibile salvare la preferenza."
+    }
+  }
+}

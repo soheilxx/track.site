@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Badge, EmptyState, Status, TBody, THead, Table, Td, Th, Tr, buttonVariants, type Tone } from "@track-site/ui";
 import { formatNumber } from "@/lib/format";
-import type { ContactDelivery, ContactRequestView, InboxPage } from "@/server/ops/inbox";
+import { ticketHref, type ContactDelivery, type ContactRequestView, type InboxPage } from "@/server/ops/inbox";
 import { formatDateTime, formatRelative } from "./format";
 
 export const STATUS_TONE: Record<ContactRequestView["status"], Tone> = {
@@ -18,9 +18,9 @@ export const DELIVERY_TONE: Record<ContactDelivery, Tone> = {
   not_sent: "neutral",
 };
 
-/** Dense request table (stacked rows on mobile): who, what, status, assignee, forwarding state and the link to the detail. */
+/** Dense request table (stacked rows on mobile): who, what, status, assignee, the ticket it became, forwarding state and the link to the detail. */
 export async function RequestTable({ page, locale, filtered, now }: { page: InboxPage; locale: string; filtered: boolean; now: string }) {
-  const t = await getTranslations("opsInbox");
+  const [t, ts] = await Promise.all([getTranslations("opsInbox"), getTranslations("support")]);
   const nowMs = Date.parse(now);
   if (page.total === 0) {
     return <EmptyState title={filtered ? t("requests.emptyFiltered") : t("requests.empty")} description={filtered ? t("requests.emptyFilteredText") : t("requests.emptyText")} />;
@@ -40,6 +40,7 @@ export async function RequestTable({ page, locale, filtered, now }: { page: Inbo
               <Th>{t("requests.columns.message")}</Th>
               <Th>{t("requests.columns.status")}</Th>
               <Th>{t("requests.columns.assignee")}</Th>
+              <Th>{t("requests.columns.ticket")}</Th>
               <Th>{t("requests.columns.delivery")}</Th>
               <Th>{t("requests.columns.actions")}</Th>
             </Tr>
@@ -69,6 +70,16 @@ export async function RequestTable({ page, locale, filtered, now }: { page: Inbo
                   </Status>
                 </Td>
                 <Td label={t("requests.columns.assignee")}>{entry.assignee ? <span className="text-ink">{entry.assignee.name}</span> : <span className="text-ink-3">{t("common.unassigned")}</span>}</Td>
+                <Td label={t("requests.columns.ticket")}>
+                  {entry.ticket ? (
+                    <Link href={ticketHref(entry.ticket.id)} className="inline-flex min-h-9 items-center gap-2 font-medium text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11" aria-label={t("requests.openTicketLabel", { number: entry.ticket.number })} data-testid="inbox-ticket-link">
+                      <span className="font-mono text-xs">{ts("ticketNumber", { number: entry.ticket.number })}</span>
+                      <Badge tone="neutral">{ts(`status.${entry.ticket.status}`)}</Badge>
+                    </Link>
+                  ) : (
+                    <span className="text-ink-3">{t("requests.ticketNone")}</span>
+                  )}
+                </Td>
                 <Td label={t("requests.columns.delivery")}>
                   <Status tone={DELIVERY_TONE[entry.delivery]} indicator="icon" className="text-xs">
                     {t(`delivery.${entry.delivery}`)}

@@ -15,6 +15,7 @@
       "openMenu": "Abrir la navegación",
       "closeMenu": "Cerrar la navegación",
       "overview": "Resumen",
+      "support": "Soporte",
       "organisations": "Organizaciones",
       "breakGlass": "Break-glass",
       "health": "Estado de la plataforma",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "Se requiere admin de plataforma",
-        "text": "Esta zona está limitada a los admins de plataforma. El soporte de plataforma ve organizaciones, break-glass, estado de la plataforma, bandeja de entrada, crecimiento, auditoría y contenido.",
+        "text": "Esta zona está limitada a los admins de plataforma. El soporte de plataforma ve tickets de soporte, organizaciones, break-glass, estado de la plataforma, bandeja de entrada, crecimiento, auditoría y contenido.",
         "back": "Volver al resumen"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "Sin payloads de eventos en bruto, sin datos personales de usuarios finales y sin secretos: solo vistas agregadas y metadatos.",
         "breakGlass": "Los detalles de un cliente requieren una autorización break-glass aprobada y limitada en el tiempo; incluso entonces solo lectura, y cada consulta queda auditada con el id de la autorización.",
         "audit": "Cada cambio es una acción de servidor con comprobación de rol, validación, confirmación explícita y una entrada de auditoría con tipo de actor «platform»."
+      },
+      "support": {
+        "title": "Tickets de soporte",
+        "link": "Abrir soporte",
+        "open": "{count, plural, one {# ticket abierto} other {# tickets abiertos}}",
+        "openHint": "nuevos, abiertos, pendientes y en espera — recuento en vivo",
+        "unassigned": "Sin asignar",
+        "unassignedHint": "tickets abiertos sin responsable",
+        "breached": "SLA incumplido",
+        "breachedHint": "tickets abiertos fuera de un plazo registrado",
+        "mine": "Asignados a mí",
+        "mineHint": "tus tickets abiertos",
+        "failed": "No se pudo cargar"
       }
     },
     "pages": {
       "overview": {
         "title": "Resumen",
         "intro": "El estado de toda la plataforma de un vistazo: qué necesita atención, qué módulos existen y las reglas con las que trabaja cada operador."
+      },
+      "support": {
+        "title": "Soporte",
+        "intro": "Tickets de soporte procedentes del correo, del formulario de contacto y del panel de cliente: cola, estado de SLA, respuestas, notas internas y macros. Los clientes ven sus propios tickets en el panel, nunca las notas internas."
       },
       "organisations": {
         "title": "Organizaciones",

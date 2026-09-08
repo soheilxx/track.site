@@ -7,6 +7,7 @@ import { relayOutbox } from "./outbox.ts";
 import { DATA_QUALITY_INTERVAL_MS, runDataQualityJobs } from "./reconciliation.ts";
 import { ensureEventPartitions, runRetention } from "./retention.ts";
 import { SCHEDULED_PUBLISH_INTERVAL_MS, runScheduledPublications } from "./scheduled-publish.ts";
+import { SUPPORT_SLA_INTERVAL_MS, runSupportSla } from "./support-sla.ts";
 import { checkUsageLimits } from "./usage.ts";
 
 /** Last known state of one scheduled job, reported by the worker health endpoint. */
@@ -62,6 +63,8 @@ export const JOB_SCHEDULE: ReadonlyArray<{
   },
   // Alerts & Incident Mode: evaluates alert rules against aggregates, health snapshots and credentials, notifies channels (migration 0013).
   { name: "alerts", intervalMs: ALERTS_INTERVAL_MS, run: (ctx) => runAlerts(ctx) },
+  // Support desk: SLA warnings, breaches and auto-close from real timestamps (migration 0015, docs/18).
+  { name: "support-sla", intervalMs: SUPPORT_SLA_INTERVAL_MS, run: (ctx) => runSupportSla(ctx) },
 ];
 
 /** Longest `last_error` stored per heartbeat (the log keeps the full message). */

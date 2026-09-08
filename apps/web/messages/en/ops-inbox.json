@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Inbox sections",
-      "requests": "Requests",
+      "requests": "Requests (legacy)",
       "privacy": "Privacy requests",
       "alerts": "Alert digest",
       "knowledge": "Knowledge feedback"
@@ -76,7 +76,8 @@
         "status": "Status",
         "assignee": "Assignee",
         "delivery": "Forwarding",
-        "actions": "Actions"
+        "actions": "Actions",
+        "ticket": "Ticket"
       },
       "open": "Open",
       "openLabel": "Open request from {name}",
@@ -92,7 +93,11 @@
         "previous": "Previous page",
         "next": "Next page",
         "page": "Page {page}"
-      }
+      },
+      "openDesk": "Open the ticket queue",
+      "legacyNotice": "Every request from the public forms is now a support ticket (channel “contact form”) and is worked on in Support. This list is kept for requests submitted before the desk existed and links each newer request to its ticket.",
+      "openTicketLabel": "Open ticket #{number}",
+      "ticketNone": "No ticket (before the desk)"
     },
     "detail": {
       "back": "Back to the inbox",
@@ -166,7 +171,10 @@
         "replyError": "not sent ({transport})",
         "by": "by {name}",
         "byUnknown": "by a former operator"
-      }
+      },
+      "ticket": "Support ticket",
+      "openTicket": "Open ticket",
+      "ticketNone": "No ticket — submitted before the support desk existed; reply from here."
     },
     "privacy": {
       "title": "Privacy requests",

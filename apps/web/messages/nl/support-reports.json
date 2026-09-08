@@ -1,0 +1,298 @@
+{
+  "supportReports": {
+    "intro": "Ticketvolume, achterstand, reactie- en oplostijden, SLA-naleving, werklast van agents, tevredenheid, categorieën en organisaties voor een periode — elk cijfer komt uit opgeslagen tijdstempels en tellingen; niets wordt geschat. Alle kalenderwaarden zijn UTC.",
+    "backToSupport": "Terug naar de ticketlijst",
+    "context": {
+      "asOf": "Stand {at}",
+      "range": "{from} – {to}",
+      "days": "{count, plural, one {# dag} other {# dagen}}",
+      "tickets": "{count, plural, one {# ticket aangemaakt} other {# tickets aangemaakt}}"
+    },
+    "range": {
+      "legend": "Periode",
+      "presets": "Snelle periodes",
+      "preset": "Laatste {days} dagen",
+      "from": "Van",
+      "to": "Tot en met",
+      "bucket": "Groeperen per",
+      "buckets": {
+        "day": "Dag",
+        "week": "Week (maandag)"
+      },
+      "apply": "Toepassen",
+      "reset": "Herstellen",
+      "hint": "Maximaal {max} kalenderdagen (UTC), nooit in de toekomst. Een ticket hoort bij de periode op basis van zijn aanmaakdatum; de achterstand is altijd de huidige stand.",
+      "fallback": "De gevraagde periode was ongeldig — in plaats daarvan worden de laatste {days} dagen getoond."
+    },
+    "export": {
+      "kind": "Te exporteren onderdeel",
+      "button": "CSV exporteren",
+      "kinds": {
+        "summary": "Samenvatting",
+        "volume": "Volume per interval",
+        "backlog": "Achterstand per status",
+        "times": "Reactie- en oplostijden",
+        "sla": "SLA-naleving",
+        "agents": "Agents",
+        "csat": "Tevredenheid",
+        "categories": "Categorieën",
+        "tags": "Tags",
+        "organisations": "Organisaties"
+      }
+    },
+    "notes": {
+      "small": {
+        "title": "Kleine aantallen",
+        "text": "In deze periode zijn minder dan {min} tickets aangemaakt. Medianen, percentages en aandelen worden volledigheidshalve getoond, maar één ticket verschuift ze met hele procentpunten — lees de tellingen, niet de percentages."
+      },
+      "truncated": {
+        "title": "Periode te groot voor exacte cijfers per ticket",
+        "text": "Voor tijden, SLA, tevredenheid, categorieën, tags en eerste antwoorden per agent zijn alleen de eerste {max} tickets van de periode geladen. Volume, achterstand, antwoorden, oplossingen en organisaties zijn volledig. Verklein de periode voor exacte cijfers."
+      }
+    },
+    "kpis": {
+      "created": {
+        "label": "Aangemaakte tickets",
+        "hint": "{perDay} per dag gemiddeld"
+      },
+      "solved": {
+        "label": "Opgeloste tickets in de periode",
+        "hint": "Opgelost binnen de periode, ongeacht wanneer ze zijn aangemaakt"
+      },
+      "firstResponse": {
+        "label": "Mediaan eerste reactie",
+        "hint": "{measured} beantwoord · p90 {p90}"
+      },
+      "resolution": {
+        "label": "Mediaan oplossing",
+        "hint": "{measured} opgelost · p90 {p90}"
+      },
+      "sla": {
+        "label": "SLA eerste reactie gehaald",
+        "hint": "{met} van {counted} afgeronde klokken · oplossing {resolution}"
+      },
+      "csat": {
+        "label": "Tevredenheid",
+        "outOf": "{average} / 5",
+        "hint": "{responses} antwoorden · {rate} van de opgeloste tickets"
+      }
+    },
+    "volume": {
+      "title": "Ticketvolume",
+      "intro": "Aangemaakte tickets per interval, gestapeld per kanaal, en — als lijn — de tickets die in hetzelfde interval zijn opgelost, ongeacht wanneer ze zijn aangemaakt. Spam en tickets die in een ander ticket zijn samengevoegd, worden niet meegeteld.",
+      "caption": "Aangemaakte tickets per interval en kanaal, en opgeloste tickets per interval",
+      "chart": "Gestapelde staven per dag of week: aangemaakte tickets per kanaal (e-mail, contactformulier, dashboard, API). Een lijn toont de tickets die in hetzelfde interval zijn opgelost. De tabel onder de grafiek bevat dezelfde waarden.",
+      "table": "Als tabel tonen",
+      "series": {
+        "solved": "Opgelost"
+      },
+      "columns": {
+        "day": "Dag",
+        "week": "Week van",
+        "channel": "Kanaal",
+        "count": "Tickets",
+        "share": "Aandeel",
+        "total": "Totaal",
+        "solved": "Opgelost"
+      },
+      "partial": "onvolledig interval",
+      "mix": {
+        "caption": "Kanaalverdeling van de periode"
+      },
+      "figures": {
+        "created": "Aangemaakt",
+        "solved": "Opgelost",
+        "perDay": "Per dag"
+      },
+      "empty": {
+        "title": "Geen tickets in deze periode",
+        "text": "Tussen de gekozen datums is geen ticket aangemaakt of opgelost."
+      }
+    },
+    "backlog": {
+      "title": "Achterstand per status",
+      "intro": "Alle tickets per workflowstatus op dit moment — los van de periode. De open achterstand is Nieuw, Open, Wacht op klant en In de wacht samen.",
+      "caption": "Tickets per workflowstatus op dit moment",
+      "columns": {
+        "status": "Status",
+        "count": "Tickets",
+        "share": "Aandeel van alle"
+      },
+      "figures": {
+        "open": "Nu open",
+        "unassigned": "Open zonder toewijzing",
+        "oldest": "Oudste open"
+      },
+      "oldestHint": "aangemaakt {at}",
+      "empty": {
+        "title": "Nog geen tickets",
+        "text": "De achterstand vult zich zodra het eerste ticket binnenkomt."
+      }
+    },
+    "times": {
+      "title": "Reactie- en oplostijden",
+      "intro": "Kloktijd van het aanmaken van het ticket tot de eerste reactie van een agent en tot de oplossing, voor tickets die in de periode zijn aangemaakt. Pauzes tijdens het wachten op de klant worden niet afgetrokken — dit is de tijd zoals de aanvrager die heeft ervaren.",
+      "caption": "Eerste-reactie- en oplostijden: gemeten tickets, mediaan, 90e percentiel en openstaande tickets",
+      "columns": {
+        "metric": "Klok",
+        "measured": "Gemeten",
+        "median": "Mediaan",
+        "p90": "90e percentiel",
+        "pending": "Openstaand"
+      },
+      "rows": {
+        "firstResponse": "Eerste reactie",
+        "resolution": "Oplossing"
+      },
+      "pending": {
+        "firstResponse": "nog niet beantwoord",
+        "resolution": "nog niet opgelost"
+      },
+      "withheld": "te weinig gegevens",
+      "p90Withheld": "Een 90e percentiel wordt getoond vanaf {min} gemeten tickets; daaronder zegt het meer over één ticket dan over de desk.",
+      "empty": {
+        "title": "Nog niets gemeten",
+        "text": "Geen enkel in deze periode aangemaakt ticket is tot nu toe beantwoord of opgelost."
+      }
+    },
+    "sla": {
+      "title": "SLA-naleving",
+      "intro": "Uitkomst van elke SLA-klok voor tickets die in de periode zijn aangemaakt, op basis van de opgeslagen deadlines en de momenten waarop de klok stopte. Het percentage telt alleen afgeronde klokken — lopende klokken en tickets zonder beleid worden vermeld, niet beoordeeld.",
+      "caption": "{clock}: SLA-uitkomsten per prioriteit",
+      "all": "Alle prioriteiten",
+      "columns": {
+        "priority": "Prioriteit",
+        "met": "Gehaald",
+        "breached": "Overschreden",
+        "running": "Lopend",
+        "noPolicy": "Zonder beleid",
+        "rate": "Nalevingspercentage"
+      },
+      "figures": {
+        "withPolicy": "Met SLA-beleid",
+        "firstResponse": "Eerste reactie gehaald",
+        "resolution": "Oplossing gehaald"
+      },
+      "rateHint": "{met} van {counted} afgerond",
+      "note": "Een klok is overschreden wanneer die na de deadline stopte of wanneer de worker die heeft gemarkeerd; een lopende klok voorbij de deadline telt als overschreden. Een gepauzeerde klok (wachten op de klant) wordt nooit op de kloktijd als overschreden geteld — de deadline schuift op zodra de pauze eindigt.",
+      "empty": {
+        "title": "Geen SLA-klokken in deze periode",
+        "text": "Geen van de in deze periode aangemaakte tickets heeft een SLA-beleid met deadlines."
+      }
+    },
+    "agents": {
+      "title": "Agents",
+      "intro": "Werklast per operator: nu toegewezen open tickets, verzonden reacties en op opgelost gezette tickets binnen de periode, en — voor tickets die in de periode zijn aangemaakt — hoeveel de operator als eerste heeft beantwoord en hoe snel.",
+      "caption": "Werklast per agent: open tickets, reacties, eerste reacties, mediaan eerste reactietijd en opgeloste tickets",
+      "columns": {
+        "agent": "Agent",
+        "open": "Nu open",
+        "replies": "Reacties in de periode",
+        "firstResponses": "Eerste reacties",
+        "median": "Mediaan eerste reactie",
+        "solved": "Opgelost in de periode"
+      },
+      "figures": {
+        "agents": "Operators",
+        "unassigned": "Open zonder toewijzing"
+      },
+      "former": "Geen operator meer",
+      "note": "‘Opgelost’ telt statuswijzigingen naar opgelost die de agent binnen de periode heeft gedaan (een heropend ticket telt opnieuw wanneer het opnieuw wordt opgelost). Reacties zijn uitgaande agentberichten per auteur, niet per toewijzing.",
+      "empty": {
+        "title": "Geen agentactiviteit",
+        "text": "Geen enkele operator heeft een open ticket, heeft gereageerd of een ticket opgelost in deze periode."
+      }
+    },
+    "csat": {
+      "title": "Klanttevredenheid",
+      "intro": "Beoordelingen op tickets die in de periode zijn aangemaakt: gemiddelde score, aandeel van de opgeloste tickets met een antwoord en de verdeling van 1 tot 5.",
+      "caption": "Verdeling van tevredenheidsscores van 5 (beste) tot 1",
+      "columns": {
+        "score": "Score",
+        "count": "Antwoorden",
+        "share": "Aandeel van de antwoorden"
+      },
+      "score": "{score} van 5",
+      "outOf": "{average} / 5",
+      "figures": {
+        "average": "Gemiddelde",
+        "responses": "Antwoorden",
+        "responseRate": "Responspercentage"
+      },
+      "responseRateHint": "van {solved} opgeloste of gesloten tickets",
+      "disabled": "Tevredenheidsenquêtes staan uit in de supportinstellingen. Bestaande antwoorden worden nog steeds meegeteld; nieuwe kunnen pas binnenkomen zodra ze weer aanstaan.",
+      "empty": {
+        "title": "Nog geen beoordelingen",
+        "text": "Geen enkel in deze periode aangemaakt ticket heeft een tevredenheidsbeoordeling ontvangen."
+      }
+    },
+    "categories": {
+      "title": "Belangrijkste categorieën",
+      "intro": "Categorieën van tickets die in de periode zijn aangemaakt, gerangschikt op aantal tickets.",
+      "caption": "Categorieën op aantal tickets",
+      "columns": {
+        "category": "Categorie",
+        "count": "Tickets",
+        "share": "Aandeel"
+      },
+      "none": "Zonder categorie",
+      "more": "{count, plural, one {# andere categorie met minder tickets staat niet in de lijst.} other {# andere categorieën met minder tickets staan niet in de lijst.}}",
+      "empty": {
+        "title": "Geen categorieën",
+        "text": "Geen enkel in deze periode aangemaakt ticket heeft een categorie."
+      }
+    },
+    "tags": {
+      "title": "Belangrijkste tags",
+      "intro": "Tags van tickets die in de periode zijn aangemaakt, gerangschikt op aantal tickets. Een ticket telt één keer per tag, dus de aandelen tellen niet op tot 100 %.",
+      "caption": "Tags op aantal tickets",
+      "columns": {
+        "tag": "Tag",
+        "count": "Tickets",
+        "share": "Aandeel"
+      },
+      "none": "Zonder tags",
+      "more": "{count, plural, one {# andere tag met minder tickets staat niet in de lijst.} other {# andere tags met minder tickets staan niet in de lijst.}}",
+      "empty": {
+        "title": "Geen tags",
+        "text": "Geen enkel in deze periode aangemaakt ticket heeft een tag."
+      }
+    },
+    "organisations": {
+      "title": "Drukste organisaties",
+      "intro": "Organisaties met de meeste tickets die in de periode zijn aangemaakt, met hoeveel daarvan nog open zijn en hoeveel zijn opgelost. Alleen namen en slugs — de organisatiepagina vereist een eigen toestemming.",
+      "caption": "Organisaties op aantal tickets in de periode",
+      "columns": {
+        "organisation": "Organisatie",
+        "tickets": "Tickets",
+        "open": "Nog open",
+        "resolved": "Opgelost",
+        "share": "Aandeel van alle"
+      },
+      "none": "Geen organisatie (afzender niet gekoppeld)",
+      "figures": {
+        "distinct": "Organisaties",
+        "without": "Zonder organisatie"
+      },
+      "empty": {
+        "title": "Geen tickets in deze periode",
+        "text": "Organisaties verschijnen zodra er binnen de periode een ticket wordt aangemaakt."
+      }
+    },
+    "method": {
+      "title": "Methode en kanttekeningen",
+      "items": {
+        "cohort": "De periode selecteert tickets op aanmaakdatum (UTC-kalenderdagen). Spamtickets en tickets die in een ander ticket zijn samengevoegd, zijn overal uitgesloten; ‘opgelost in de periode’ telt tickets waarvan het oplosmoment in de periode valt, ongeacht wanneer ze zijn aangemaakt.",
+        "backlog": "Achterstand, niet-toegewezen en open tickets van agents zijn de stand op het moment dat de pagina werd gegenereerd, geen periodecijfers.",
+        "times": "De eerste reactie is het opgeslagen moment van de eerste agentreactie (een automatische ontvangstbevestiging telt nooit); de oplossing is de overgang naar opgelost. Beide worden vanaf het aanmaken op de kloktijd gemeten; een heropend ticket behoudt zijn aanmaakdatum en verliest zijn oplosmoment totdat het opnieuw wordt opgelost.",
+        "p90": "Medianen interpoleren lineair tussen de twee middelste waarden. Een 90e percentiel wordt pas getoond vanaf {min} gemeten tickets.",
+        "sla": "SLA-uitkomsten vergelijken het opgeslagen stopmoment met de opgeslagen deadline (waarin pauzes al zijn verwerkt); de overschrijdingsmarkering van de worker gaat voor. Tickets zonder beleid hebben geen deadline en worden nooit beoordeeld.",
+        "agents": "‘Opgelost’ per agent telt de eigen statuswijzigingen van de agent naar opgelost; ‘eerste reacties’ schrijven een ticket toe aan de auteur van het eerste uitgaande agentbericht. Auteurs zonder platformrol worden in één rij samengevoegd.",
+        "csat": "Tevredenheid is de op het ticket opgeslagen score (1–5); het responspercentage deelt de antwoorden door de opgeloste of gesloten tickets van de periode.",
+        "organisations": "De drukste organisaties tonen naam en slug uit het organisatierecord — alleen metadata. Tickets van afzenders zonder organisatie worden apart geteld.",
+        "export": "De CSV-export bevat dezelfde tellingen, percentages en duur in minuten (nooit onderwerpen, berichtteksten of gegevens van de aanvrager) en wordt vastgelegd in het auditlog.",
+        "privacy": "Alles op deze pagina is een telling, een duur of een percentage. Geen aanvrager, bericht of e-mailadres wordt geïdentificeerd; agents verschijnen met hun weergavenaam."
+      }
+    }
+  }
+}

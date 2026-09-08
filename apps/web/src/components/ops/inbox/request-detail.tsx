@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Badge, Status, buttonVariants } from "@track-site/ui";
 import { LOCALE_NAMES, isKnownLocale } from "@/i18n/routing";
-import { organisationHref, type ContactRequestDetail, type ContactTrailEntry } from "@/server/ops/inbox";
+import { organisationHref, ticketHref, type ContactRequestDetail, type ContactTrailEntry } from "@/server/ops/inbox";
 import { formatDateTime, formatRelative } from "./format";
 import { DELIVERY_TONE, STATUS_TONE } from "./request-table";
 
@@ -39,10 +39,26 @@ function trailLine(t: Translate, entry: ContactTrailEntry, names: ReadonlyMap<st
 
 /** Message, facts and the audited history of one request (the actions are client islands rendered by the page). */
 export async function RequestDetail({ request, locale, now, operatorNames }: { request: ContactRequestDetail; locale: string; now: string; operatorNames: ReadonlyMap<string, string> }) {
-  const t = await getTranslations("opsInbox");
+  const [t, ts] = await Promise.all([getTranslations("opsInbox"), getTranslations("support")]);
   const nowMs = Date.parse(now);
   const language = isKnownLocale(request.locale) ? LOCALE_NAMES[request.locale] : request.locale;
   const facts: Array<{ key: string; label: string; value: ReactNode }> = [
+    {
+      key: "ticket",
+      label: t("detail.ticket"),
+      value: request.ticket ? (
+        <span className="flex flex-wrap items-center gap-2">
+          <span>
+            <span className="font-mono">{ts("ticketNumber", { number: request.ticket.number })}</span> · {ts(`status.${request.ticket.status}`)}
+          </span>
+          <Link href={ticketHref(request.ticket.id)} className={buttonVariants({ variant: "secondary", size: "sm" })} data-testid="inbox-detail-ticket-link">
+            {t("detail.openTicket")}
+          </Link>
+        </span>
+      ) : (
+        <span className="text-ink-3">{t("detail.ticketNone")}</span>
+      ),
+    },
     { key: "email", label: t("detail.email"), value: <span className="break-all">{request.email}</span> },
     { key: "company", label: t("detail.company"), value: request.company ?? <span className="text-ink-3">{t("common.none")}</span> },
     { key: "locale", label: t("detail.locale"), value: language },

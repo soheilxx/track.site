@@ -1,0 +1,182 @@
+{
+  "supportPortal": {
+    "nav": "Support",
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "none": "—",
+      "optional": "optioneel"
+    },
+    "list": {
+      "title": "Support",
+      "intro": "De supporttickets van uw organisatie: volg antwoorden, reageer rechtstreeks vanaf hier en open een nieuw ticket als iets niet werkt.",
+      "newTicket": "Nieuw ticket",
+      "views": {
+        "label": "Ticketweergaven",
+        "open": "Open",
+        "solved": "Opgelost",
+        "all": "Alle"
+      },
+      "caption": "Supporttickets van uw organisatie",
+      "columns": {
+        "number": "Ticket",
+        "subject": "Onderwerp",
+        "status": "Status",
+        "priority": "Prioriteit",
+        "category": "Categorie",
+        "requester": "Geopend door",
+        "updated": "Laatste update"
+      },
+      "lastFromAgent": "Track heeft geantwoord",
+      "lastFromYou": "Uw organisatie schreef",
+      "rated": "Beoordeeld {score}/5",
+      "open": "Ticket {number} openen",
+      "empty": {
+        "openTitle": "Geen open tickets",
+        "openText": "Alles wat u ons stuurde is beantwoord of opgelost. Open een nieuw ticket als iets niet werkt.",
+        "solvedTitle": "Nog geen opgeloste tickets",
+        "solvedText": "Opgeloste en gesloten tickets verschijnen hier.",
+        "allTitle": "Nog geen tickets",
+        "allText": "Uw organisatie heeft support nog niet benaderd via het dashboard of het contactformulier."
+      },
+      "limited": "De {limit} meest recent bijgewerkte tickets worden getoond.",
+      "readOnly": "Uw rol kan tickets bekijken. Tickets openen en beantwoorden vereist een rol met schrijftoegang tot support (elke rol behalve „Alleen lezen”).",
+      "unavailableTitle": "Supporttickets zijn niet beschikbaar",
+      "unavailableText": "De tickettabellen zijn nog niet toegepast op deze database (migratie 0015). Tot die tijd bereikt u ons via het contactformulier; elke aanvraag wordt per e-mail beantwoord."
+    },
+    "categories": {
+      "tracking": "Tracking & events",
+      "integrations": "Bestemmingen & integraties",
+      "consent": "Toestemming & privacy",
+      "billing": "Facturatie & abonnement",
+      "account": "Account & team",
+      "other": "Iets anders"
+    },
+    "form": {
+      "title": "Nieuw ticket",
+      "intro": "Beschrijf wat niet werkt of wat u nodig hebt. Elk ticket wordt per e-mail beantwoord en blijft hier zichtbaar voor uw hele organisatie.",
+      "back": "Terug naar tickets",
+      "subject": "Onderwerp",
+      "subjectHint": "Eén regel die zegt waar het over gaat, {min}–{max} tekens.",
+      "category": "Categorie",
+      "priority": "Voorgestelde prioriteit",
+      "priorityHint": "Uw inschatting helpt ons de wachtrij te sorteren; ons supportteam kan die aanpassen.",
+      "message": "Bericht",
+      "messageHint": "Wat gebeurde er, wat verwachtte u, sinds wanneer? Sitenamen, eventnamen en screenshots helpen — {min}–{max} tekens.",
+      "attachments": "Bijlagen",
+      "attachmentsHint": "Maximaal {count} bestanden van elk {size}: afbeeldingen, PDF, tekst, CSV, JSON, Word, Excel of een e-mailbestand (.eml).",
+      "selected": "{count, plural, =1 {1 bestand geselecteerd} other {# bestanden geselecteerd}}",
+      "submit": "Ticket openen",
+      "requester": "Het ticket wordt geopend namens {name} ({email}); antwoorden gaan naar dit adres.",
+      "suggestions": {
+        "title": "Misschien helpt dit al",
+        "intro": "Artikelen uit Tracking Knowledge die passen bij wat u typt. Ze openen in een nieuw tabblad.",
+        "empty": "Nog geen passend artikel — typ verder of open gewoon het ticket.",
+        "typing": "Typ een paar woorden in het onderwerp of bericht om passende artikelen te zien.",
+        "reading": "{minutes} min leestijd",
+        "searching": "Artikelen zoeken…"
+      }
+    },
+    "detail": {
+      "back": "Terug naar tickets",
+      "opened": "Geopend op {date} door {name}",
+      "openedForm": "Geopend op {date} via het contactformulier",
+      "openedEmail": "Geopend op {date} per e-mail",
+      "meta": {
+        "status": "Status",
+        "priority": "Prioriteit",
+        "category": "Categorie",
+        "channel": "Kanaal",
+        "lastUpdate": "Laatste update",
+        "resolved": "Opgelost op",
+        "reopened": "{count, plural, =1 {Eén keer heropend} other {# keer heropend}}"
+      },
+      "merged": "Dit ticket is samengevoegd met ticket {number}. Het gesprek gaat daar verder.",
+      "mergedLink": "Ticket {number} openen",
+      "conversation": {
+        "title": "Gesprek",
+        "you": "U",
+        "agent": "Track Support",
+        "system": "Track",
+        "attachments": "Bijlagen",
+        "download": "{name} downloaden ({size})",
+        "empty": "Nog geen berichten."
+      },
+      "reply": {
+        "title": "Antwoorden",
+        "body": "Uw bericht",
+        "bodyHint": "{min}–{max} tekens. Uw antwoord gaat naar ons supportteam; elk antwoord ontvangt u ook per e-mail.",
+        "attachments": "Bijlagen",
+        "send": "Antwoord verzenden",
+        "reopens": "Dit ticket is opgelost. Een bericht verzenden heropent het.",
+        "pendingHint": "Ons supportteam wacht op uw antwoord.",
+        "closedBlocked": "Dit ticket kan geen berichten meer ontvangen. Open een nieuw ticket als u verdere hulp nodig hebt."
+      },
+      "solve": {
+        "button": "Markeren als opgelost",
+        "title": "Ticket markeren als opgelost?",
+        "description": "Ticket {number} wordt gemarkeerd als opgelost. U kunt daarna nog antwoorden; dat heropent het.",
+        "confirm": "Markeren als opgelost"
+      },
+      "csat": {
+        "title": "Hoe hebben we het gedaan?",
+        "intro": "Uw ticket is opgelost. Beoordeel de ontvangen support — één antwoord per ticket, zichtbaar voor ons supportteam.",
+        "legend": "Beoordeling van 1 (zeer ontevreden) tot 5 (zeer tevreden)",
+        "scores": {
+          "1": "1 – Zeer ontevreden",
+          "2": "2 – Ontevreden",
+          "3": "3 – Neutraal",
+          "4": "4 – Tevreden",
+          "5": "5 – Zeer tevreden"
+        },
+        "comment": "Opmerking",
+        "commentHint": "Optioneel, maximaal {max} tekens.",
+        "submit": "Beoordeling verzenden",
+        "rated": "Uw organisatie beoordeelde dit ticket op {date} met {score} van 5.",
+        "disabled": "Tevredenheidsonderzoeken staan momenteel uit."
+      },
+      "timeline": {
+        "title": "Tijdlijn",
+        "caption": "Wijzigingen van dit ticket",
+        "actor": {
+          "customer": "Uw organisatie",
+          "agent": "Track Support",
+          "system": "Track"
+        },
+        "change": "{from} → {to}",
+        "channel": "via {channel}",
+        "score": "Beoordeling {score}/5",
+        "mergedInto": "in ticket {number}"
+      }
+    },
+    "notices": {
+      "created": "Uw ticket is geopend. We antwoorden per e-mail en hier.",
+      "replied": "Uw antwoord is aan het ticket toegevoegd.",
+      "reopened": "Uw antwoord is toegevoegd en het ticket is heropend.",
+      "solved": "Het ticket is gemarkeerd als opgelost.",
+      "rated": "Bedankt voor uw beoordeling."
+    },
+    "errors": {
+      "forbidden": "Uw rol mag dit niet.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Dat ticket bestaat niet of hoort bij een andere organisatie.",
+      "invalid_state": "Dat is niet mogelijk in de huidige status van het ticket.",
+      "attachments": "Sommige bijlagen zijn geweigerd; er is niets verzonden. Verwijder ze en probeer het opnieuw.",
+      "confirmation_required": "Bevestig eerst de actie.",
+      "already_rated": "Dit ticket is al beoordeeld.",
+      "csat_disabled": "Tevredenheidsonderzoeken staan momenteel uit.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw.",
+      "subject": "Voer een onderwerp van {min}–{max} tekens in.",
+      "body": "Voer een bericht van {min}–{max} tekens in.",
+      "category": "Kies een categorie.",
+      "score": "Kies een beoordeling tussen 1 en 5."
+    },
+    "attachmentReasons": {
+      "too_many": "te veel bestanden",
+      "too_large": "groter dan {size}",
+      "size_unknown": "grootte onbekend",
+      "type_not_allowed": "bestandstype niet toegestaan"
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "SLA policies",
+        "intro": "Response and resolution targets per plan and priority in business minutes, the business hours they count in, and what happens when a clock runs out. The worker applies them every minute from real timestamps."
+      },
+      "new": {
+        "title": "New SLA policy",
+        "intro": "Targets, business hours and escalation for one or more plans. Values are prefilled with the seeded defaults."
+      },
+      "edit": {
+        "title": "Edit SLA policy",
+        "intro": "Changes apply to new tickets and to clocks that are still running; stopped clocks keep their result."
+      }
+    },
+    "nav": {
+      "settings": "Back to support settings",
+      "list": "Back to the policies",
+      "new": "New policy"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Working…",
+      "edit": "Edit",
+      "delete": "Delete",
+      "optional": "optional",
+      "unknown": "unknown"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Support",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "first response",
+      "resolution": "resolution"
+    },
+    "units": {
+      "minutes": "minutes",
+      "hours": "hours",
+      "days": "days"
+    },
+    "howItWorks": {
+      "title": "What the worker does with these policies",
+      "clocks": "Every ticket gets the policy of its organisation's plan (or the default) when it is created; the first-response clock stops with the first agent reply, the resolution clock when the ticket is solved. \"Pending\" pauses both.",
+      "warnings": "When the remaining business time drops to the warning share of the target, the assignee gets an in-app event and an e-mail — once per clock, never for a paused ticket.",
+      "breaches": "Past the due date the ticket is flagged as breached; the assignee, the named recipients and — if enabled — every platform admin are e-mailed.",
+      "autoClose": "Solved tickets close themselves after the configured number of days (empty = never). Tickets without a policy of their own follow the default policy here.",
+      "selection": "One policy per plan; plans without a policy use the default. The job runs every minute (support-sla) and evaluates up to 2 000 tickets per run."
+    },
+    "table": {
+      "caption": "SLA policies with plans, targets, business hours, escalation and the number of tickets using them",
+      "name": "Policy",
+      "plans": "Plans",
+      "targets": "Targets (first response / resolution)",
+      "hours": "Business hours",
+      "escalation": "Escalation",
+      "tickets": "Tickets",
+      "actions": "Actions",
+      "defaultBadge": "Default",
+      "allPlans": "every plan without its own policy",
+      "noPlans": "no plan assigned",
+      "alwaysOpen": "24/7 — no business hours",
+      "warningAt": "Warning at {percent} % of the target",
+      "escalatesToAdmins": "Breaches escalate to platform admins",
+      "noAdminEscalation": "No admin escalation",
+      "recipients": "{count, plural, =0 {No named recipients} one {# named recipient} other {# named recipients}}",
+      "autoClose": "Auto-close after {count, plural, one {# day} other {# days}}",
+      "autoCloseNever": "No auto-close"
+    },
+    "empty": {
+      "title": "No SLA policy yet",
+      "text": "Without a policy tickets show \"no SLA policy\" and the worker neither warns nor escalates. Create one and mark it as the default."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {No tickets use this policy} one {# ticket uses this policy} other {# tickets use this policy}}",
+      "updatedAt": "Last change: {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Policy",
+        "text": "Name, the plans it applies to, and whether it is the default for every plan without a policy of its own."
+      },
+      "name": "Name",
+      "nameHint": "Shown in the ticket list and on the ticket; at most 80 characters.",
+      "description": "Description",
+      "descriptionHint": "Internal note for operators.",
+      "plans": "Plans",
+      "plansHint": "A plan can belong to one policy only. Leave every plan unchecked for a policy that applies through the default flag alone.",
+      "isDefault": "Default policy",
+      "isDefaultHint": "Applies to every plan without an explicit policy and decides the auto-close of tickets without a policy. Exactly one policy is the default; to replace it, mark another one.",
+      "targets": {
+        "title": "Targets",
+        "text": "Business minutes from the ticket's creation (or reopening) to the first agent reply and to the resolution. Whole minutes; a day counts as 24 hours of business time.",
+        "caption": "Targets per priority for first response and resolution",
+        "priority": "Priority",
+        "valueLabel": "{priority}: {clock} target",
+        "unitLabel": "{priority}: unit of the {clock} target",
+        "hint": "Between 5 minutes and 90 days; the first-response target cannot exceed the resolution target."
+      },
+      "hours": {
+        "title": "Business hours",
+        "text": "The clocks count only inside these windows, in the zone below. Weekends and evenings do not count.",
+        "timezone": "Time zone",
+        "timezoneHint": "IANA name, for example Europe/Berlin. The zone also formats the due times in notifications.",
+        "days": "Business days",
+        "startLabel": "{day}: start",
+        "endLabel": "{day}: end",
+        "hint": "One window per day (a lunch break needs the API). No enabled day means the clocks run around the clock, seven days a week."
+      },
+      "escalation": {
+        "title": "Escalation",
+        "text": "Who hears about a clock that is running out or has run out, and when solved tickets close themselves.",
+        "warningPercent": "Warning at … % of the target",
+        "warningPercentHint": "1–99. At 80 % the assignee is warned when a fifth of the target is left.",
+        "escalateToAdmins": "Escalate breaches to every platform admin",
+        "escalateToAdminsHint": "On a breach every account with the PLATFORM_ADMIN role is e-mailed next to the assignee and the named recipients.",
+        "notifyUserIds": "Named recipients on a breach",
+        "notifyUserIdsHint": "Platform operators only; customers can never be named here.",
+        "noPlatformUsers": "No platform users exist yet.",
+        "autoCloseDays": "Auto-close solved tickets after … days",
+        "autoCloseDaysHint": "Whole days after the resolution; empty or 0 = never. Tickets without a policy follow the default policy's value."
+      },
+      "submitCreate": "Create policy",
+      "submitUpdate": "Save changes",
+      "createdTitle": "Policy created. New tickets of its plans pick it up at once.",
+      "editPolicy": "Open the policy"
+    },
+    "actions": {
+      "setDefault": "Make default",
+      "setDefaultTitle": "Make “{name}” the default policy?",
+      "setDefaultText": "The current default loses the flag. Plans without their own policy and the auto-close of tickets without a policy follow the new default from now on; existing tickets keep their policy.",
+      "setDefaultConfirm": "Make default",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteText": "The policy is removed for good. Its plans fall back to the default policy for new tickets.",
+      "deleteBlockedInUse": "{count, plural, one {# ticket references this policy} other {# tickets reference this policy}}; it cannot be deleted. Reassign or close those tickets first, or keep the policy.",
+      "deleteConfirm": "Delete policy"
+    },
+    "errors": {
+      "forbidden": "This action needs the platform admin role with two-factor authentication.",
+      "invalid": "Please check the highlighted fields.",
+      "not_found": "That policy does not exist (any more).",
+      "unchanged": "Nothing to change — the policy already looks like this.",
+      "in_use": "{count, plural, one {# ticket references} other {# tickets reference}} this policy; it cannot be deleted.",
+      "is_default": "The default policy cannot be deleted. Make another policy the default first.",
+      "default_required": "The default flag cannot be switched off. Mark another policy as the default instead.",
+      "plan_taken": "One of the selected plans already belongs to another policy.",
+      "generic": "That did not work. Please try again."
+    },
+    "fieldErrors": {
+      "required": "Required.",
+      "invalid": "Invalid value.",
+      "long": "Too long.",
+      "range": "Out of range.",
+      "order": "Must not be shorter than the first-response target.",
+      "window": "The end must be after the start.",
+      "timezone": "Unknown time zone. Use an IANA name such as Europe/Berlin.",
+      "not_found": "One of the recipients is no platform operator.",
+      "plan_taken": "Already assigned to another policy.",
+      "default_required": "Mark another policy as the default instead."
+    },
+    "notices": {
+      "created": "Policy created.",
+      "updated": "Policy saved. Running clocks of its tickets follow the new targets at the next change; the worker applies the new warning share within a minute.",
+      "deleted": "Policy deleted.",
+      "defaultSet": "Default policy changed."
+    }
+  }
+}

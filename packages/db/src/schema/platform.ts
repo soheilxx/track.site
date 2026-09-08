@@ -73,6 +73,8 @@ export const contactRequests = pgTable(
     userId: uuid("user_id"),
     /** platform user working on the request (Track Operations → Inbox) */
     assigneeUserId: uuid("assignee_user_id"),
+    /** support ticket the request was converted into (migration 0015; FK `support_tickets.id`, set null on delete) */
+    ticketId: uuid("ticket_id"),
     ipHash: text("ip_hash"),
     uaFamily: text("ua_family"),
     deliveredAt: tz("delivered_at"),

@@ -15,6 +15,7 @@
       "openMenu": "Open navigation",
       "closeMenu": "Close navigation",
       "overview": "Overview",
+      "support": "Support",
       "organisations": "Organisations",
       "breakGlass": "Break-glass",
       "health": "Platform health",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "Platform admin required",
-        "text": "This area is limited to platform admins. Platform support sees organisations, break-glass, platform health, inbox, growth, audit and content.",
+        "text": "This area is limited to platform admins. Platform support sees support tickets, organisations, break-glass, platform health, inbox, growth, audit and content.",
         "back": "Back to the overview"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "No raw event payloads, end-user personal data or secrets — aggregated and metadata views only.",
         "breakGlass": "Tenant details need an approved, time-boxed break-glass grant; even then read-only, and every view is audited with the grant id.",
         "audit": "Every change is a server action with role check, validation, explicit confirmation and an audit entry with actor kind “platform”."
+      },
+      "support": {
+        "title": "Support tickets",
+        "link": "Open support",
+        "open": "{count, plural, one {# open ticket} other {# open tickets}}",
+        "openHint": "new, open, pending and on hold — live count",
+        "unassigned": "Unassigned",
+        "unassignedHint": "open tickets nobody holds",
+        "breached": "SLA breached",
+        "breachedHint": "open tickets past a stored due time",
+        "mine": "Assigned to me",
+        "mineHint": "your open tickets",
+        "failed": "Could not be loaded"
       }
     },
     "pages": {
       "overview": {
         "title": "Overview",
         "intro": "Platform-wide status at a glance: what needs attention, which modules exist and the rules every operator works under."
+      },
+      "support": {
+        "title": "Support",
+        "intro": "Support tickets from e-mail, the contact form and the customer dashboard: queue, SLA state, replies, internal notes and macros. Customers see their own tickets in the dashboard, never the internal notes."
       },
       "organisations": {
         "title": "Organisations",

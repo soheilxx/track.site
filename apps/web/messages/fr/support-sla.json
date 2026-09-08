@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "Politiques SLA",
+        "intro": "Objectifs de réponse et de résolution par offre et par priorité en minutes ouvrées, les heures ouvrées dans lesquelles ils sont comptés, et ce qui se passe quand une horloge arrive à échéance. Le worker les applique chaque minute à partir d’horodatages réels."
+      },
+      "new": {
+        "title": "Nouvelle politique SLA",
+        "intro": "Objectifs, heures ouvrées et escalade pour une ou plusieurs offres. Les valeurs sont préremplies avec les valeurs par défaut livrées."
+      },
+      "edit": {
+        "title": "Modifier la politique SLA",
+        "intro": "Les changements s’appliquent aux nouveaux tickets et aux horloges encore en cours ; les horloges arrêtées gardent leur résultat."
+      }
+    },
+    "nav": {
+      "settings": "Retour aux paramètres du support",
+      "list": "Retour aux politiques",
+      "new": "Nouvelle politique"
+    },
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "optional": "facultatif",
+      "unknown": "inconnu"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Support",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "première réponse",
+      "resolution": "résolution"
+    },
+    "units": {
+      "minutes": "minutes",
+      "hours": "heures",
+      "days": "jours"
+    },
+    "howItWorks": {
+      "title": "Ce que le worker fait de ces politiques",
+      "clocks": "Chaque ticket reçoit à sa création la politique de l’offre de son organisation (ou la politique par défaut) ; l’horloge « première réponse » s’arrête à la première réponse d’un agent, l’horloge « résolution » quand le ticket est résolu. « En attente » met les deux en pause.",
+      "warnings": "Quand le temps ouvré restant descend à la part d’alerte de l’objectif, le responsable reçoit un événement dans l’application et un e-mail — une fois par horloge, jamais pour un ticket en pause.",
+      "breaches": "Passée l’échéance, le ticket est marqué comme dépassé ; le responsable, les destinataires nommés et — si activé — tous les administrateurs de la plateforme reçoivent un e-mail.",
+      "autoClose": "Les tickets résolus se ferment d’eux-mêmes après le nombre de jours configuré (vide = jamais). Les tickets sans politique propre suivent ici la politique par défaut.",
+      "selection": "Une politique par offre ; les offres sans politique utilisent la politique par défaut. Le job s’exécute chaque minute (support-sla) et évalue jusqu’à 2 000 tickets par exécution."
+    },
+    "table": {
+      "caption": "Politiques SLA avec offres, objectifs, heures ouvrées, escalade et nombre de tickets qui les utilisent",
+      "name": "Politique",
+      "plans": "Offres",
+      "targets": "Objectifs (première réponse / résolution)",
+      "hours": "Heures ouvrées",
+      "escalation": "Escalade",
+      "tickets": "Tickets",
+      "actions": "Actions",
+      "defaultBadge": "Par défaut",
+      "allPlans": "toute offre sans politique propre",
+      "noPlans": "aucune offre attribuée",
+      "alwaysOpen": "24 h/24, 7 j/7 — sans heures ouvrées",
+      "warningAt": "Alerte à {percent} % de l’objectif",
+      "escalatesToAdmins": "Les dépassements remontent aux administrateurs de la plateforme",
+      "noAdminEscalation": "Pas d’escalade aux administrateurs",
+      "recipients": "{count, plural, =0 {Aucun destinataire nommé} one {# destinataire nommé} other {# destinataires nommés}}",
+      "autoClose": "Fermeture automatique après {count, plural, one {# jour} other {# jours}}",
+      "autoCloseNever": "Pas de fermeture automatique"
+    },
+    "empty": {
+      "title": "Aucune politique SLA pour l’instant",
+      "text": "Sans politique, les tickets affichent « Aucune politique SLA » et le worker n’alerte ni n’escalade. Créez-en une et marquez-la comme politique par défaut."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {Aucun ticket n’utilise cette politique} one {# ticket utilise cette politique} other {# tickets utilisent cette politique}}",
+      "updatedAt": "Dernière modification : {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Politique",
+        "text": "Nom, offres auxquelles elle s’applique et si elle est la politique par défaut pour toute offre sans politique propre."
+      },
+      "name": "Nom",
+      "nameHint": "Affiché dans la liste des tickets et sur le ticket ; 80 caractères au plus.",
+      "description": "Description",
+      "descriptionHint": "Note interne pour les opérateurs.",
+      "plans": "Offres",
+      "plansHint": "Une offre ne peut appartenir qu’à une seule politique. Ne cochez aucune offre pour une politique qui s’applique uniquement via l’indicateur par défaut.",
+      "isDefault": "Politique par défaut",
+      "isDefaultHint": "S’applique à toute offre sans politique explicite et décide de la fermeture automatique des tickets sans politique. Exactement une politique est la politique par défaut ; pour la remplacer, marquez-en une autre.",
+      "targets": {
+        "title": "Objectifs",
+        "text": "Minutes ouvrées entre la création (ou la réouverture) du ticket et la première réponse d’un agent, puis la résolution. Minutes entières ; un jour compte pour 24 heures de temps ouvré.",
+        "caption": "Objectifs par priorité pour la première réponse et la résolution",
+        "priority": "Priorité",
+        "valueLabel": "{priority} : objectif {clock}",
+        "unitLabel": "{priority} : unité de l’objectif {clock}",
+        "hint": "Entre 5 minutes et 90 jours ; l’objectif de première réponse ne peut pas dépasser l’objectif de résolution."
+      },
+      "hours": {
+        "title": "Heures ouvrées",
+        "text": "Les horloges ne comptent qu’à l’intérieur de ces plages, dans le fuseau ci-dessous. Week-ends et soirées ne comptent pas.",
+        "timezone": "Fuseau horaire",
+        "timezoneHint": "Nom IANA, par exemple Europe/Paris. Le fuseau sert aussi à formater les échéances dans les notifications.",
+        "days": "Jours ouvrés",
+        "startLabel": "{day} : début",
+        "endLabel": "{day} : fin",
+        "hint": "Une plage par jour (une pause déjeuner passe par l’API). Aucun jour activé signifie que les horloges tournent en continu, sept jours sur sept."
+      },
+      "escalation": {
+        "title": "Escalade",
+        "text": "Qui est informé d’une horloge qui arrive à échéance ou l’a dépassée, et quand les tickets résolus se ferment d’eux-mêmes.",
+        "warningPercent": "Alerte à … % de l’objectif",
+        "warningPercentHint": "1–99. À 80 %, le responsable est alerté quand il reste un cinquième de l’objectif.",
+        "escalateToAdmins": "Remonter les dépassements à tous les administrateurs de la plateforme",
+        "escalateToAdminsHint": "En cas de dépassement, chaque compte doté du rôle PLATFORM_ADMIN reçoit un e-mail, en plus du responsable et des destinataires nommés.",
+        "notifyUserIds": "Destinataires nommés en cas de dépassement",
+        "notifyUserIdsHint": "Opérateurs de la plateforme uniquement ; un client ne peut jamais être nommé ici.",
+        "noPlatformUsers": "Aucun utilisateur de plateforme n’existe encore.",
+        "autoCloseDays": "Fermer automatiquement les tickets résolus après … jours",
+        "autoCloseDaysHint": "Jours entiers après la résolution ; vide ou 0 = jamais. Les tickets sans politique suivent la valeur de la politique par défaut."
+      },
+      "submitCreate": "Créer la politique",
+      "submitUpdate": "Enregistrer les modifications",
+      "createdTitle": "Politique créée. Les nouveaux tickets de ses offres l’adoptent immédiatement.",
+      "editPolicy": "Ouvrir la politique"
+    },
+    "actions": {
+      "setDefault": "Définir par défaut",
+      "setDefaultTitle": "Faire de « {name} » la politique par défaut ?",
+      "setDefaultText": "La politique par défaut actuelle perd son indicateur. Les offres sans politique propre et la fermeture automatique des tickets sans politique suivent désormais la nouvelle politique par défaut ; les tickets existants gardent leur politique.",
+      "setDefaultConfirm": "Définir par défaut",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteText": "La politique est supprimée définitivement. Ses offres reviennent à la politique par défaut pour les nouveaux tickets.",
+      "deleteBlockedInUse": "{count, plural, one {# ticket fait référence à cette politique} other {# tickets font référence à cette politique}} ; elle ne peut pas être supprimée. Réattribuez ou fermez d’abord ces tickets, ou conservez la politique.",
+      "deleteConfirm": "Supprimer la politique"
+    },
+    "errors": {
+      "forbidden": "Cette action requiert le rôle d’administrateur de la plateforme avec authentification à deux facteurs.",
+      "invalid": "Veuillez vérifier les champs signalés.",
+      "not_found": "Cette politique n’existe pas (ou plus).",
+      "unchanged": "Rien à modifier — la politique est déjà dans cet état.",
+      "in_use": "{count, plural, one {# ticket fait référence} other {# tickets font référence}} à cette politique ; elle ne peut pas être supprimée.",
+      "is_default": "La politique par défaut ne peut pas être supprimée. Définissez d’abord une autre politique par défaut.",
+      "default_required": "L’indicateur par défaut ne peut pas être désactivé. Marquez plutôt une autre politique comme politique par défaut.",
+      "plan_taken": "L’une des offres sélectionnées appartient déjà à une autre politique.",
+      "generic": "Cela n’a pas fonctionné. Veuillez réessayer."
+    },
+    "fieldErrors": {
+      "required": "Obligatoire.",
+      "invalid": "Valeur non valide.",
+      "long": "Trop long.",
+      "range": "Hors limites.",
+      "order": "Ne doit pas être plus court que l’objectif de première réponse.",
+      "window": "La fin doit être après le début.",
+      "timezone": "Fuseau horaire inconnu. Utilisez un nom IANA tel que Europe/Paris.",
+      "not_found": "L’un des destinataires n’est pas un opérateur de la plateforme.",
+      "plan_taken": "Déjà attribuée à une autre politique.",
+      "default_required": "Marquez plutôt une autre politique comme politique par défaut."
+    },
+    "notices": {
+      "created": "Politique créée.",
+      "updated": "Politique enregistrée. Les horloges en cours de ses tickets suivent les nouveaux objectifs au prochain changement ; le worker applique la nouvelle part d’alerte en moins d’une minute.",
+      "deleted": "Politique supprimée.",
+      "defaultSet": "Politique par défaut modifiée."
+    }
+  }
+}

@@ -67,6 +67,7 @@ export const WORKER_JOB_INTERVALS_MS: Readonly<Record<string, number>> = {
   "data-quality": 60 * 60_000,
   "scheduled-publish": 30_000,
   alerts: 60_000,
+  "support-sla": 60_000,
 };
 
 export type CollectorState = "ok" | "degraded" | "kill_switch" | "unreachable" | "timeout" | "invalid";

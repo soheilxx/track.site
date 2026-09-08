@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T17:07:35.269Z",
+  "generatedAt": "2026-09-08T22:36:19.176Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -33,21 +33,29 @@
       "destinations-health": 187,
       "events": 426,
       "insights": 232,
-      "ops": 82,
+      "ops": 96,
       "ops-audit": 92,
       "ops-break-glass": 124,
       "ops-content": 173,
       "ops-controls": 235,
       "ops-growth": 152,
       "ops-health": 254,
-      "ops-inbox": 218,
-      "ops-organisations": 339,
+      "ops-inbox": 226,
+      "ops-organisations": 356,
       "ops-revenue": 179,
       "ops-users": 271,
       "releases": 350,
       "security": 85,
       "shell": 159,
-      "team": 298
+      "support": 68,
+      "support-macros": 249,
+      "support-notifications": 37,
+      "support-portal": 138,
+      "support-reports": 186,
+      "support-sla": 126,
+      "support-ticket": 199,
+      "support-tickets": 185,
+      "team": 301
     },
     "copyModules": [
       "AUTH_COPY",
@@ -229,6 +237,46 @@
               "extra": []
             },
             "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-macros": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-notifications": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-portal": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-reports": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-ticket": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-tickets": {
               "file": true,
               "missing": [],
               "extra": []
@@ -437,6 +485,46 @@
               "missing": [],
               "extra": []
             },
+            "support": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-macros": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-notifications": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-portal": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-reports": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-ticket": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-tickets": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "team": {
               "file": true,
               "missing": [],
@@ -637,6 +725,46 @@
               "extra": []
             },
             "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-macros": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-notifications": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-portal": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-reports": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-ticket": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-tickets": {
               "file": true,
               "missing": [],
               "extra": []
@@ -845,6 +973,46 @@
               "missing": [],
               "extra": []
             },
+            "support": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-macros": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-notifications": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-portal": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-reports": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-ticket": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-tickets": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "team": {
               "file": true,
               "missing": [],
@@ -1045,6 +1213,46 @@
               "extra": []
             },
             "shell": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-macros": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-notifications": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-portal": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-reports": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-ticket": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-tickets": {
               "file": true,
               "missing": [],
               "extra": []

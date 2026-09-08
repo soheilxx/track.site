@@ -1,0 +1,110 @@
+{
+  "support": {
+    "status": {
+      "new": "Nieuw",
+      "open": "Open",
+      "pending": "Wacht op klant",
+      "on_hold": "In de wacht",
+      "solved": "Opgelost",
+      "closed": "Gesloten",
+      "spam": "Spam"
+    },
+    "priority": {
+      "low": "Laag",
+      "normal": "Normaal",
+      "high": "Hoog",
+      "urgent": "Urgent"
+    },
+    "channel": {
+      "email": "E-mail",
+      "form": "Contactformulier",
+      "dashboard": "Dashboard",
+      "api": "API"
+    },
+    "direction": {
+      "inbound": "Ontvangen",
+      "outbound": "Verzonden",
+      "note": "Interne notitie"
+    },
+    "authorKind": {
+      "customer": "Klant",
+      "agent": "Medewerker",
+      "system": "Systeem"
+    },
+    "delivery": {
+      "queued": "In wachtrij",
+      "sent": "Verzonden",
+      "delivered": "Afgeleverd",
+      "bounced": "Gebounced",
+      "complained": "Gemeld als spam",
+      "failed": "Mislukt",
+      "na": "Niet van toepassing"
+    },
+    "eventKind": {
+      "created": "Ticket aangemaakt",
+      "status": "Status gewijzigd",
+      "priority": "Prioriteit gewijzigd",
+      "assignee": "Toewijzing gewijzigd",
+      "tags": "Tags gewijzigd",
+      "merged": "Samengevoegd",
+      "sla_breach": "SLA overschreden",
+      "sla_warning": "SLA-waarschuwing",
+      "reply": "Antwoord",
+      "note": "Interne notitie",
+      "csat": "Tevredenheidsbeoordeling",
+      "reopened": "Heropend"
+    },
+    "macroScope": {
+      "global": "Globaal",
+      "personal": "Persoonlijk"
+    },
+    "sla": {
+      "firstResponse": "Eerste reactie",
+      "resolution": "Oplossing",
+      "paused": "Klok gepauzeerd",
+      "breached": "Overschreden",
+      "onTrack": "Op schema",
+      "noPolicy": "Geen SLA-beleid"
+    },
+    "ticketNumber": "#{number}",
+    "pages": {
+      "tickets": {
+        "title": "Support",
+        "intro": "Supporttickets uit e-mail, het contactformulier en het klantdashboard: wachtrij, SLA-status, antwoorden, interne notities en macro’s."
+      },
+      "ticket": {
+        "title": "Ticket",
+        "intro": "Gesprek, interne notities, SLA-klok en tijdlijn van één ticket.",
+        "back": "Terug naar de ticketlijst"
+      },
+      "macros": {
+        "title": "Macro’s",
+        "intro": "Standaardantwoorden met optionele acties: globale voor alle medewerkers, persoonlijke voor uzelf."
+      },
+      "views": {
+        "title": "Weergaven",
+        "intro": "Opgeslagen ticketlijsten: gedeelde weergaven voor het team en persoonlijke weergaven voor uw eigen wachtrij."
+      },
+      "settings": {
+        "title": "Supportinstellingen",
+        "intro": "Afzender en antwoorddomein, handtekening, kantooruren, SLA-beleid, automatische toewijzing en tevredenheidsonderzoeken."
+      },
+      "reports": {
+        "title": "Supportrapporten",
+        "intro": "Volume, reactie- en oplostijden, SLA-naleving en tevredenheid — uitsluitend op basis van echte tijdstempels."
+      }
+    },
+    "placeholder": {
+      "title": "In voorbereiding",
+      "text": "Dit deel van de supportdesk wordt nog gebouwd. Hier wordt nog niets gemeten, dus er worden geen cijfers getoond."
+    },
+    "customer": {
+      "title": "Support",
+      "intro": "De supporttickets van uw organisatie: volg antwoorden en reageer rechtstreeks vanaf hier.",
+      "placeholder": {
+        "title": "Supporttickets komen eraan",
+        "text": "De ticketweergave wordt nog gebouwd. Tot die tijd bereikt u ons via het contactformulier; elke aanvraag wordt per e-mail beantwoord."
+      }
+    }
+  }
+}

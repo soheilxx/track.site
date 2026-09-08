@@ -1,0 +1,27 @@
+{
+  "object": "email",
+  "id": "4ef9a417-02e9-4d39-ad75-9611e0fcc33c",
+  "to": ["support@support.track.site"],
+  "from": "Ada Lovelace <ada@example.com>",
+  "created_at": "2026-09-08T09:59:00.000Z",
+  "subject": "Pixel feuert doppelt auf der Danke-Seite",
+  "bcc": null,
+  "cc": ["Ops <ops@example.com>"],
+  "reply_to": null,
+  "received_for": ["support@support.track.site"],
+  "html": "<html><head><style>p{color:red}</style></head><body><p>Hallo,</p><p>seit gestern wird das <b>Purchase</b>-Event auf der Danke-Seite doppelt gesendet. Screenshot im Anhang.</p><img src=\"https://tracker.example/open.gif\" alt=\"\"><script>alert(1)</script><p>Freundliche Grüße<br>Ada</p></body></html>",
+  "text": "Hallo,\n\nseit gestern wird das Purchase-Event auf der Danke-Seite doppelt gesendet. Screenshot im Anhang.\n\nFreundliche Grüße\nAda",
+  "headers": {
+    "Message-ID": "<CAB+ada-1@mail.example.com>",
+    "Date": "Tue, 08 Sep 2026 11:58:40 +0200",
+    "Content-Language": "de-DE",
+    "Authentication-Results": "mx.resend.com; spf=pass smtp.mailfrom=example.com; dkim=pass header.d=example.com; dmarc=pass (p=none) header.from=example.com",
+    "Auto-Submitted": "no"
+  },
+  "message_id": "<CAB+ada-1@mail.example.com>",
+  "raw": null,
+  "attachments": [
+    { "id": "att_01", "filename": "screenshot.png", "size": 20, "content_type": "image/png", "content_id": null, "content_disposition": "attachment" },
+    { "id": "att_02", "filename": "export.zip", "size": 1024, "content_type": "application/zip", "content_id": null, "content_disposition": "attachment" }
+  ]
+}

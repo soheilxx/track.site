@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Notificaciones",
+      "labelUnread": "Notificaciones, {count} sin leer"
+    },
+    "panel": {
+      "title": "Notificaciones",
+      "description": "Asignaciones, respuestas de clientes, avisos de SLA y @menciones en tickets de soporte.",
+      "close": "Cerrar",
+      "refresh": "Actualizar",
+      "markAllRead": "Marcar todo como leído",
+      "markRead": "Marcar como leído",
+      "unread": "sin leer",
+      "loading": "Cargando notificaciones…",
+      "updated": "Actualizado {time}",
+      "polling": "Se actualiza cada {seconds} segundos mientras esta pestaña esté visible.",
+      "showingLatest": "Se muestran las {count} más recientes; las anteriores sin leer siguen contando.",
+      "empty": "Nada pendiente",
+      "emptyText": "Aquí aparecerán las asignaciones, las respuestas de clientes, los avisos de SLA y las @menciones en notas internas.",
+      "error": "No se pudieron cargar las notificaciones. La próxima actualización lo intentará de nuevo.",
+      "forbidden": "Tu rol de plataforma no puede leer tickets de soporte."
+    },
+    "kinds": {
+      "assignment": "Asignado a ti",
+      "customer_reply": "Respuesta del cliente",
+      "sla_warning": "Aviso de SLA",
+      "sla_breach": "SLA incumplido",
+      "mention": "Mencionado en una nota"
+    },
+    "item": {
+      "ticket": "Ticket n.º {number}",
+      "by": "por {name}",
+      "customer": "por el cliente",
+      "system": "automático",
+      "formerOperator": "por un antiguo operador",
+      "clock": {
+        "first_response": "primera respuesta",
+        "resolution": "resolución"
+      }
+    },
+    "live": {
+      "newOne": "1 notificación nueva",
+      "newMany": "{count} notificaciones nuevas"
+    },
+    "preferences": {
+      "title": "Correo electrónico",
+      "assignment": "Enviarme un correo cuando se me asigne un ticket",
+      "customerReply": "Enviarme un correo cuando un cliente responda en mi ticket",
+      "hint": "El motor de SLA envía por correo los avisos e incumplimientos de SLA a la persona asignada; las menciones se quedan aquí.",
+      "saved": "Preferencia guardada.",
+      "error": "No se pudo guardar la preferencia."
+    }
+  }
+}

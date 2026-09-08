@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { HealthCard, InboxCard, KeyNumbers } from "@/components/ops/overview";
+import { HealthCard, InboxCard, KeyNumbers, SupportCard } from "@/components/ops/overview";
 import { OPS_NAV, OpsForbidden, OpsPageHeader, opsPageMetadata, roleAllows } from "@/components/ops/shell";
 import { loadGrowthHeadline } from "@/server/ops/growth";
 import { loadPlatformHealth } from "@/server/ops/health";
 import { DEFAULT_INBOX_FILTERS, loadAlertDigest, loadInbox, loadPrivacyOverview } from "@/server/ops/inbox";
 import { checkPlatform, platformLocale, withPlatform } from "@/server/ops/platform";
+import { loadViewCounts } from "@/server/support/tickets";
 
 export const dynamic = "force-dynamic";
 
@@ -23,8 +24,8 @@ function settled<T>(result: PromiseSettledResult<T>, name: string): T | null {
 }
 
 /**
- * Track Operations overview (docs/17): the growth module's key numbers, the platform-health summary and
- * the open inbox work, read through the modules' own server functions — every card degrades to an honest
+ * Track Operations overview (docs/17): the growth module's key numbers, the support desk's live queue counts
+ * (docs/18), the platform-health summary and the open inbox work, read through the modules' own server functions — every card degrades to an honest
  * "could not be loaded" state on its own — followed by the modules the operator may open and the rules
  * every operator works under. Aggregates and metadata only; nothing here needs a break-glass grant.
  */
@@ -34,12 +35,13 @@ export default async function OpsOverviewPage() {
   const ctx = access.ctx;
   const now = new Date();
   const [t, locale] = await Promise.all([getTranslations("ops"), platformLocale(ctx.user)]);
-  const [headline, health, inbox, privacy, alerts] = await Promise.allSettled([
+  const [headline, health, inbox, privacy, alerts, support] = await Promise.allSettled([
     withPlatform(ctx, (tx) => loadGrowthHeadline(tx, now)),
     loadPlatformHealth(ctx, { now }),
     loadInbox(ctx, DEFAULT_INBOX_FILTERS),
     loadPrivacyOverview(ctx),
     loadAlertDigest(ctx),
+    loadViewCounts(ctx, [], now),
   ]);
   const modules = OPS_NAV.filter((item) => item.key !== "overview" && roleAllows(ctx.platformRole, item.minRole));
   return (
@@ -49,6 +51,7 @@ export default async function OpsOverviewPage() {
       <KeyNumbers headline={settled(headline, "growth")} locale={locale} />
 
       <div className="grid gap-4 xl:grid-cols-2">
+        <SupportCard counts={settled(support, "support")} locale={locale} />
         <HealthCard view={settled(health, "health")} locale={locale} />
         <InboxCard inbox={settled(inbox, "inbox")} privacy={settled(privacy, "privacy")} alerts={settled(alerts, "alerts")} locale={locale} />
       </div>

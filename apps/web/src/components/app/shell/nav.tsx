@@ -7,6 +7,7 @@ import {
   CreditCard,
   Gauge,
   GitBranch,
+  LifeBuoy,
   Lightbulb,
   Settings,
   ShieldCheck,
@@ -34,11 +35,12 @@ export const NAV: ReadonlyArray<{
     | "releases"
     | "team"
     | "billing"
+    | "support"
     | "settings"
     | "alerts";
   icon: LucideIcon;
   exact?: boolean;
-  /** message namespace of the label when it is not `shell.nav` (the Alerts module owns `alerts.nav`) */ ns?: "alerts";
+  /** message namespace of the label when it is not `shell.nav` (the Alerts module owns `alerts.nav`, the support portal `supportPortal.nav`) */ ns?: "alerts" | "supportPortal";
 }> = [
   { href: "/app", key: "commandCenter", icon: Gauge, exact: true },
   { href: "/app/ai-setup", key: "aiSetup", icon: Sparkles },
@@ -50,6 +52,7 @@ export const NAV: ReadonlyArray<{
   { href: "/app/releases", key: "releases", icon: GitBranch },
   { href: "/app/team", key: "team", icon: Users },
   { href: "/app/billing", key: "billing", icon: CreditCard },
+  { href: "/app/support", key: "support", icon: LifeBuoy, ns: "supportPortal" },
   { href: "/app/settings", key: "settings", icon: Settings },
   { href: "/app/settings/alerts", key: "alerts", icon: BellRing, ns: "alerts" },
 ];

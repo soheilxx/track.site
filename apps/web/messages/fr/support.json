@@ -1,0 +1,110 @@
+{
+  "support": {
+    "status": {
+      "new": "Nouveau",
+      "open": "Ouvert",
+      "pending": "En attente du client",
+      "on_hold": "En suspens",
+      "solved": "Résolu",
+      "closed": "Fermé",
+      "spam": "Spam"
+    },
+    "priority": {
+      "low": "Basse",
+      "normal": "Normale",
+      "high": "Haute",
+      "urgent": "Urgente"
+    },
+    "channel": {
+      "email": "E-mail",
+      "form": "Formulaire de contact",
+      "dashboard": "Tableau de bord",
+      "api": "API"
+    },
+    "direction": {
+      "inbound": "Reçu",
+      "outbound": "Envoyé",
+      "note": "Note interne"
+    },
+    "authorKind": {
+      "customer": "Client",
+      "agent": "Agent",
+      "system": "Système"
+    },
+    "delivery": {
+      "queued": "En file d’attente",
+      "sent": "Envoyé",
+      "delivered": "Remis",
+      "bounced": "Rejeté",
+      "complained": "Signalé comme spam",
+      "failed": "Échec",
+      "na": "Sans objet"
+    },
+    "eventKind": {
+      "created": "Ticket créé",
+      "status": "Statut modifié",
+      "priority": "Priorité modifiée",
+      "assignee": "Responsable modifié",
+      "tags": "Étiquettes modifiées",
+      "merged": "Fusionné",
+      "sla_breach": "SLA dépassé",
+      "sla_warning": "Alerte SLA",
+      "reply": "Réponse",
+      "note": "Note interne",
+      "csat": "Note de satisfaction",
+      "reopened": "Rouvert"
+    },
+    "macroScope": {
+      "global": "Globale",
+      "personal": "Personnelle"
+    },
+    "sla": {
+      "firstResponse": "Première réponse",
+      "resolution": "Résolution",
+      "paused": "Chronomètre en pause",
+      "breached": "Dépassé",
+      "onTrack": "Dans les temps",
+      "noPolicy": "Aucune politique SLA"
+    },
+    "ticketNumber": "n° {number}",
+    "pages": {
+      "tickets": {
+        "title": "Support",
+        "intro": "Tickets de support venant de l’e-mail, du formulaire de contact et du tableau de bord client : file d’attente, état des SLA, réponses, notes internes et macros."
+      },
+      "ticket": {
+        "title": "Ticket",
+        "intro": "Conversation, notes internes, chronomètre SLA et historique d’un ticket.",
+        "back": "Retour à la liste des tickets"
+      },
+      "macros": {
+        "title": "Macros",
+        "intro": "Réponses préenregistrées avec actions facultatives : globales pour tous les opérateurs, personnelles pour vous."
+      },
+      "views": {
+        "title": "Vues",
+        "intro": "Listes de tickets enregistrées : vues partagées pour l’équipe et vues personnelles pour votre propre file."
+      },
+      "settings": {
+        "title": "Paramètres du support",
+        "intro": "Expéditeur et domaine de réponse, signature, heures ouvrées, politiques SLA, attribution automatique et enquêtes de satisfaction."
+      },
+      "reports": {
+        "title": "Rapports du support",
+        "intro": "Volume, délais de réponse et de résolution, respect des SLA et satisfaction — uniquement à partir d’horodatages réels."
+      }
+    },
+    "placeholder": {
+      "title": "En préparation",
+      "text": "Cette partie du support est en cours de construction. Rien n’est encore mesuré ici, aucun chiffre n’est donc affiché."
+    },
+    "customer": {
+      "title": "Support",
+      "intro": "Les tickets de support de votre organisation : suivez les réponses et répondez directement d’ici.",
+      "placeholder": {
+        "title": "Les tickets de support arrivent",
+        "text": "La vue des tickets est en cours de construction. D’ici là, contactez-nous via le formulaire de contact ; chaque demande reçoit une réponse par e-mail."
+      }
+    }
+  }
+}

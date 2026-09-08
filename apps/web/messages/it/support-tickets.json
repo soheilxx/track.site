@@ -1,0 +1,235 @@
+{
+  "supportTickets": {
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "working": "In corso…",
+      "unassigned": "Non assegnato",
+      "you": "tu",
+      "none": "—",
+      "noSubject": "(senza oggetto)"
+    },
+    "errors": {
+      "forbidden": "Il tuo ruolo di piattaforma non consente questa azione.",
+      "invalid": "Controlla i campi evidenziati.",
+      "not_found": "Questo ticket o questa vista non esiste più.",
+      "confirmation_required": "Conferma prima l'azione.",
+      "invalid_assignee": "La persona assegnataria deve avere un ruolo di piattaforma.",
+      "invalid_target": "Il ticket di destinazione non esiste, è spam, è già unito o fa parte della selezione.",
+      "nothing_applied": "Nessuna modifica: la regola non ha consentito il cambiamento su alcun ticket selezionato.",
+      "too_many_views": "Hai raggiunto il numero massimo di viste salvate. Eliminane prima una.",
+      "generic": "Non ha funzionato. Riprova."
+    },
+    "queue": {
+      "intro": "Tutti i ticket da e-mail, modulo di contatto e dashboard cliente. Scegli una vista, affinala con i filtri, agisci su più ticket insieme: ogni modifica viene registrata nel registro di audit.",
+      "viewMissing": "Questa vista salvata non esiste più o è la vista personale di un'altra persona; vengono mostrati tutti i ticket aperti.",
+      "saveView": "Salva come vista",
+      "manageViews": "Gestisci viste",
+      "views": {
+        "label": "Viste dei ticket",
+        "saved": "Viste salvate",
+        "count": "{count, plural, one {# ticket} other {# ticket}}",
+        "defaults": {
+          "unassigned": "Non assegnati",
+          "mine": "I miei ticket",
+          "open": "Tutti gli aperti",
+          "pending": "In attesa del cliente",
+          "breached": "SLA violato",
+          "solved_7d": "Risolti (ultimi 7 giorni)",
+          "spam": "Spam"
+        }
+      },
+      "filters": {
+        "legend": "Filtri",
+        "search": "Cerca",
+        "searchPlaceholder": "Oggetto, richiedente, organizzazione o n.",
+        "status": "Stato",
+        "priority": "Priorità",
+        "channel": "Canale",
+        "assignee": "Assegnato a",
+        "organisation": "Organizzazione",
+        "organisationPlaceholder": "Nome, slug o id",
+        "plan": "Piano",
+        "tags": "Tag",
+        "tagsPlaceholder": "billing, vip",
+        "sla": "Stato SLA",
+        "dateField": "Campo data",
+        "from": "Dal",
+        "to": "Al",
+        "lastDays": "Ultimi … giorni",
+        "lastDaysPlaceholder": "es. 7",
+        "sort": "Ordinamento",
+        "apply": "Applica filtri",
+        "reset": "Torna alla vista",
+        "any": "Qualsiasi",
+        "asInView": "Come nella vista ({count, plural, one {# selezionato} other {# selezionati}})",
+        "everyone": "Tutti",
+        "unassigned": "Non assegnato",
+        "me": "Assegnati a me",
+        "clearDates": "Ignora l'intervallo di date della vista",
+        "clearDatesHint": "Se selezionato, contano tutte le date, salvo che qui venga indicato un intervallo proprio.",
+        "viewRangeLastDays": "La vista mostra {count, plural, one {l'ultimo giorno} other {gli ultimi # giorni}}.",
+        "viewRangeBetween": "La vista mostra dal {from} al {to}.",
+        "viewRangeFrom": "La vista mostra le date a partire dal {from}.",
+        "viewRangeTo": "La vista mostra le date fino al {to}.",
+        "hint": "I filtri affinano la vista selezionata; l'editor delle viste imposta più stati, priorità o canali insieme. Tag: separati da virgola, ognuno deve essere presente."
+      },
+      "slaFilters": {
+        "any": "Qualsiasi",
+        "on_track": "Nei tempi",
+        "breached": "Violato",
+        "paused": "Orologio in pausa",
+        "none": "Nessuna politica SLA"
+      },
+      "dateFields": {
+        "created": "Creato",
+        "updated": "Aggiornato",
+        "resolved": "Risolto"
+      },
+      "sorts": {
+        "updated_desc": "Ultimo aggiornamento, più recente prima",
+        "updated_asc": "Ultimo aggiornamento, meno recente prima",
+        "created_desc": "Creazione, più recente prima",
+        "created_asc": "Creazione, meno recente prima",
+        "priority_desc": "Priorità, urgente prima",
+        "sla_due_asc": "Scadenza SLA, più vicina prima",
+        "number_desc": "Numero, più alto prima",
+        "number_asc": "Numero, più basso prima"
+      },
+      "sla": {
+        "met": "Rispettato",
+        "due": "scade {when}",
+        "overdue": "in ritardo da {when}",
+        "dueWhenResumed": "in pausa, in attesa del cliente"
+      },
+      "columns": {
+        "select": "Seleziona",
+        "ticket": "Ticket",
+        "requester": "Richiedente",
+        "status": "Stato",
+        "priority": "Priorità",
+        "assignee": "Assegnato a",
+        "sla": "SLA",
+        "updated": "Ultimo aggiornamento",
+        "viewers": "Sta guardando"
+      },
+      "selectAll": "Seleziona tutti i ticket di questa pagina",
+      "selectOne": "Seleziona il ticket n. {number}",
+      "merged": "Unito",
+      "requesterUnknown": "Nessun nome indicato",
+      "noOrganisation": "Nessuna organizzazione associata",
+      "created": "creato {when}",
+      "viewersLabel": "{count, plural, one {# operatore sta guardando questo ticket} other {# operatori stanno guardando questo ticket}}",
+      "presence": {
+        "viewing": "{name} sta guardando questo ticket",
+        "typing": "{name} sta scrivendo una risposta"
+      },
+      "caption": "Ticket di supporto della vista selezionata",
+      "count": "{count, plural, one {# ticket} other {# ticket}}",
+      "countFiltered": "{count, plural, one {# ticket corrisponde} other {# ticket corrispondono}} ai filtri",
+      "empty": "Nessun ticket in questa vista",
+      "emptyText": "I ticket compaiono qui non appena un cliente scrive al supporto o una richiesta viene convertita in ticket.",
+      "emptyFiltered": "Nessun ticket corrisponde a questi filtri",
+      "emptyFilteredText": "Allarga i filtri o torna alla vista.",
+      "pagination": {
+        "nav": "Pagine dei ticket",
+        "previous": "Pagina precedente",
+        "next": "Pagina successiva",
+        "page": "Pagina {page}"
+      },
+      "export": {
+        "button": "Esporta CSV",
+        "working": "Preparazione dell'esportazione…",
+        "done": "{rows, plural, one {# ticket esportato} other {# ticket esportati}} (solo metadati, senza messaggi né dati di contatto).",
+        "truncated": "{rows, plural, one {# ticket esportato} other {# ticket esportati}} su {total, number}: restringi i filtri per il resto."
+      }
+    },
+    "bulk": {
+      "title": "Azioni multiple",
+      "selected": "{count, plural, one {# selezionato} other {# selezionati}}",
+      "tooMany": "al massimo {max} ticket alla volta",
+      "action": "Azione",
+      "actions": {
+        "assign": "Assegna",
+        "status": "Cambia stato",
+        "priority": "Cambia priorità",
+        "tags": "Aggiungi o rimuovi tag",
+        "merge": "Unisci in un altro ticket"
+      },
+      "assignTo": "Assegna a",
+      "newStatus": "Nuovo stato",
+      "newPriority": "Nuova priorità",
+      "tagsAdd": "Aggiungi tag",
+      "tagsRemove": "Rimuovi tag",
+      "tagsPlaceholder": "billing, vip",
+      "tagsHint": "Separati da virgola; minuscole, cifre, trattini e trattini bassi, al massimo 20 tag per ticket.",
+      "mergeTarget": "Unisci nel ticket",
+      "mergeHint": "I ticket selezionati vengono chiusi e collegati alla destinazione; le loro conversazioni restano leggibili. La destinazione deve essere un ticket della stessa organizzazione fuori dalla selezione, che non sia spam né a sua volta unito.",
+      "statusHint": "I ticket il cui stato attuale non consente la transizione vengono saltati. «In attesa» mette in pausa l'orologio SLA; «Risolto» e «Chiuso» fissano il momento della risoluzione. Spam blocca il mittente finché il ticket non viene ripristinato.",
+      "priorityHint": "Le scadenze SLA in corso si spostano della differenza tra il vecchio e il nuovo obiettivo; un obiettivo più breve può risultare subito scaduto. I ticket senza policy SLA non conservano scadenze.",
+      "apply": "Applica…",
+      "summary": {
+        "unassign": "Rimuovi l'assegnazione dai ticket selezionati.",
+        "assign": "Assegna i ticket selezionati a {name}.",
+        "status": "Imposta lo stato dei ticket selezionati su «{status}».",
+        "priority": "Imposta la priorità dei ticket selezionati su «{priority}».",
+        "tags": "Aggiungi: {add} · Rimuovi: {remove}",
+        "merge": "Unisci i ticket selezionati nel ticket n. {number} e chiudili."
+      },
+      "dialog": {
+        "title": "Applicare a {count, plural, one {# ticket} other {# ticket}}?",
+        "description": "La modifica viene applicata a ogni ticket selezionato consentito dalle regole e registrata nell'audit per ciascun ticket.",
+        "confirm": "Applica"
+      },
+      "result": {
+        "applied": "{applied, plural, one {# ticket aggiornato} other {# ticket aggiornati}}, {skipped, plural, one {# saltato} other {# saltati}}.",
+        "skippedOnly": "{skipped, plural, one {# ticket è stato saltato} other {# ticket sono stati saltati}}."
+      }
+    },
+    "viewsPage": {
+      "intro": "Le viste condivise sono le code del team (gestite dagli amministratori di piattaforma); le viste personali sono tue. Ogni vista conserva filtri e ordinamento e mostra il proprio conteggio in tempo reale nella coda.",
+      "new": "Nuova vista",
+      "empty": "Ancora nessuna vista salvata",
+      "emptyText": "Parti dalla coda: imposta i filtri che ti servono e scegli «Salva come vista».",
+      "caption": "Viste salvate, prima quelle condivise",
+      "columns": {
+        "name": "Nome",
+        "scope": "Visibilità",
+        "sort": "Ordinamento",
+        "updated": "Aggiornata",
+        "actions": "Azioni"
+      },
+      "open": "Apri la vista «{name}»",
+      "edit": "Modifica",
+      "editLabel": "Modifica la vista «{name}»",
+      "readOnly": "Gestita dagli amministratori di piattaforma",
+      "scope": {
+        "personal": "Personale",
+        "shared": "Condivisa"
+      }
+    },
+    "viewForm": {
+      "titleNew": "Nuova vista",
+      "titleEdit": "Modifica la vista «{name}»",
+      "titleEditShort": "Modifica vista",
+      "introNew": "Dai un nome alla vista, scegli chi la vede e imposta filtri e ordinamento. I valori partono dalla coda da cui arrivi.",
+      "introEdit": "Cambia nome, visibilità, filtri o ordinamento. Il conteggio in tempo reale della vista nella coda segue i nuovi filtri.",
+      "name": "Nome",
+      "scope": "Visibilità",
+      "scopePersonal": "Personale — solo tu",
+      "scopeShared": "Condivisa — tutti gli operatori",
+      "scopeAdminOnly": "Le viste condivise vengono create dagli amministratori di piattaforma.",
+      "filters": "Filtri",
+      "groupHint": "Niente selezionato = qualsiasi.",
+      "sort": "Ordinamento",
+      "create": "Crea vista",
+      "saveChanges": "Salva modifiche",
+      "delete": "Elimina",
+      "deleteTitle": "Eliminare la vista «{name}»?",
+      "deleteDescription": "La vista scompare dalla coda per tutte le persone che potevano usarla. I ticket non sono interessati. L'operazione viene registrata nell'audit.",
+      "deleteConfirm": "Elimina vista",
+      "openQueue": "Apri la coda",
+      "notEditable": "È una vista condivisa; la modificano gli amministratori di piattaforma. Puoi aprire la sua coda e affinarla con i filtri."
+    }
+  }
+}

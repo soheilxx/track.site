@@ -15,6 +15,7 @@
       "openMenu": "Navigation öffnen",
       "closeMenu": "Navigation schließen",
       "overview": "Übersicht",
+      "support": "Support",
       "organisations": "Organisationen",
       "breakGlass": "Break-glass",
       "health": "Plattformstatus",
@@ -60,7 +61,7 @@
       },
       "insufficientRole": {
         "title": "Plattform-Admin erforderlich",
-        "text": "Dieser Bereich ist Plattform-Admins vorbehalten. Der Plattform-Support sieht Organisationen, Break-glass, Plattformstatus, Posteingang, Wachstum, Audit und Inhalte.",
+        "text": "Dieser Bereich ist Plattform-Admins vorbehalten. Der Plattform-Support sieht Support-Tickets, Organisationen, Break-glass, Plattformstatus, Posteingang, Wachstum, Audit und Inhalte.",
         "back": "Zurück zur Übersicht"
       }
     },
@@ -86,12 +87,29 @@
         "noRawData": "Keine rohen Event-Payloads, keine personenbezogenen Daten von Endnutzern, keine Geheimnisse — nur aggregierte Ansichten und Metadaten.",
         "breakGlass": "Mandantendetails brauchen eine genehmigte, zeitlich begrenzte Break-glass-Freigabe; auch dann nur lesend, und jeder Aufruf wird mit der Freigabe-ID auditiert.",
         "audit": "Jede Änderung ist eine Server-Aktion mit Rollenprüfung, Validierung, ausdrücklicher Bestätigung und einem Audit-Eintrag mit Akteurstyp „platform“."
+      },
+      "support": {
+        "title": "Support-Tickets",
+        "link": "Support öffnen",
+        "open": "{count, plural, one {# offenes Ticket} other {# offene Tickets}}",
+        "openHint": "neu, offen, wartend und zurückgestellt — live gezählt",
+        "unassigned": "Nicht zugewiesen",
+        "unassignedHint": "offene Tickets ohne Zuständige",
+        "breached": "SLA verletzt",
+        "breachedHint": "offene Tickets über einer gespeicherten Frist",
+        "mine": "Mir zugewiesen",
+        "mineHint": "Ihre offenen Tickets",
+        "failed": "Konnte nicht geladen werden"
       }
     },
     "pages": {
       "overview": {
         "title": "Übersicht",
         "intro": "Plattformweiter Status auf einen Blick: was Aufmerksamkeit braucht, welche Module es gibt und nach welchen Regeln jede Betreiberin und jeder Betreiber arbeitet."
+      },
+      "support": {
+        "title": "Support",
+        "intro": "Support-Tickets aus E-Mail, Kontaktformular und Kunden-Dashboard: Warteschlange, SLA-Status, Antworten, interne Notizen und Makros. Kunden sehen ihre eigenen Tickets im Dashboard, nie die internen Notizen."
       },
       "organisations": {
         "title": "Organisationen",

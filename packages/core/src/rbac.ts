@@ -43,6 +43,10 @@ export const PERMISSIONS = [
   "billing.manage",
   "audit.read",
   "kill_switch.manage",
+  // customer support portal (/app/support, docs/18-support-desk.md): every member reads the organisation's
+  // tickets; every role except READ_ONLY opens tickets, replies, marks them solved and rates them
+  "support.read",
+  "support.write",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -56,9 +60,11 @@ const READ: readonly Permission[] = [
   "integrations.read",
   "consent.read",
   "billing.read",
+  "support.read",
 ];
 const DEVELOPER: readonly Permission[] = [
   ...READ,
+  "support.write",
   "sites.create",
   "sites.update",
   "domains.verify",
@@ -74,8 +80,8 @@ const DEVELOPER: readonly Permission[] = [
   "ai.write_tools",
   "audit.read",
 ];
-const ANALYST: readonly Permission[] = [...READ, "events.export", "ai.chat", "audit.read"];
-const BILLING: readonly Permission[] = [...READ, "billing.manage"];
+const ANALYST: readonly Permission[] = [...READ, "support.write", "events.export", "ai.chat", "audit.read"];
+const BILLING: readonly Permission[] = [...READ, "support.write", "billing.manage"];
 const ADMIN: readonly Permission[] = [
   ...DEVELOPER,
   "org.update",
@@ -144,4 +150,88 @@ export function assignableRoles(actor: OrgRole): OrgRole[] {
   if (actor === "OWNER") return [...ORG_ROLES];
   if (actor === "ADMIN") return ORG_ROLES.filter((r) => r !== "OWNER");
   return [];
+}
+
+/**
+ * Platform permissions of the Track Operations console (docs/17, docs/18-support-desk.md §"Permissions").
+ * Orthogonal to the organisation permissions above: they describe what an operator with a platform role may
+ * do on Track's own console, never inside a customer organisation. `requirePlatform(minRole, permission)` in
+ * apps/web/src/server/ops/platform.ts enforces them server-side; the navigation only hides entries.
+ *
+ * Scope notes that the module rules refine (the permission alone does not encode them):
+ * - `platform.macros.manage` for PLATFORM_SUPPORT means personal macros plus *using* global ones; creating
+ *   or editing global macros is an admin action (the support-desk module checks the macro's scope).
+ * - `platform.audit.read` for PLATFORM_SUPPORT is limited to the operator's own actions by the audit module.
+ */
+export const PLATFORM_PERMISSIONS = [
+  "platform.tickets.read",
+  "platform.tickets.write",
+  "platform.tickets.assign",
+  "platform.tickets.delete",
+  "platform.macros.manage",
+  "platform.sla.manage",
+  "platform.orgs.read",
+  "platform.billing.read",
+  "platform.billing.manage",
+  "platform.breakglass.request",
+  "platform.breakglass.approve",
+  "platform.controls.manage",
+  "platform.users.manage",
+  "platform.audit.read",
+  "platform.content.read",
+  "platform.reports.read",
+] as const;
+export type PlatformPermission = (typeof PLATFORM_PERMISSIONS)[number];
+
+const PLATFORM_SUPPORT: readonly PlatformPermission[] = [
+  "platform.tickets.read",
+  "platform.tickets.write",
+  "platform.tickets.assign",
+  "platform.macros.manage",
+  "platform.orgs.read",
+  "platform.billing.read",
+  "platform.breakglass.request",
+  "platform.audit.read",
+  "platform.content.read",
+  "platform.reports.read",
+];
+
+export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, ReadonlySet<PlatformPermission>> = {
+  NONE: new Set(),
+  PLATFORM_SUPPORT: new Set(PLATFORM_SUPPORT),
+  PLATFORM_ADMIN: new Set(PLATFORM_PERMISSIONS),
+};
+
+export function isPlatformRole(value: unknown): value is PlatformRole {
+  return typeof value === "string" && (PLATFORM_ROLES as readonly string[]).includes(value);
+}
+
+export function isPlatformPermission(value: unknown): value is PlatformPermission {
+  return typeof value === "string" && (PLATFORM_PERMISSIONS as readonly string[]).includes(value);
+}
+
+/** Whether a platform role carries a platform permission; `NONE` (every customer) never does. */
+export function hasPlatformPermission(role: PlatformRole, permission: PlatformPermission): boolean {
+  return PLATFORM_ROLE_PERMISSIONS[role].has(permission);
+}
+
+/**
+ * The lowest platform role that carries `permission` (`PLATFORM_SUPPORT` or `PLATFORM_ADMIN`). Used to
+ * derive a navigation entry's minimum role from its permission so the two never diverge.
+ */
+export function minPlatformRoleFor(permission: PlatformPermission): Exclude<PlatformRole, "NONE"> {
+  return hasPlatformPermission("PLATFORM_SUPPORT", permission) ? "PLATFORM_SUPPORT" : "PLATFORM_ADMIN";
+}
+
+export class PlatformForbiddenError extends Error {
+  readonly permission: PlatformPermission;
+  constructor(permission: PlatformPermission) {
+    super(`Missing platform permission ${permission}`);
+    this.name = "PlatformForbiddenError";
+    this.permission = permission;
+  }
+}
+
+export function assertPlatformPermission(role: PlatformRole, permission: PlatformPermission): void {
+  if (!hasPlatformPermission(role, permission)) throw new PlatformForbiddenError(permission);
 }

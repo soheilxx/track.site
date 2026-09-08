@@ -1,0 +1,235 @@
+{
+  "supportTickets": {
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "working": "En cours…",
+      "unassigned": "Non attribué",
+      "you": "vous",
+      "none": "—",
+      "noSubject": "(sans objet)"
+    },
+    "errors": {
+      "forbidden": "Votre rôle plateforme ne permet pas cette action.",
+      "invalid": "Vérifiez les champs signalés.",
+      "not_found": "Ce ticket ou cette vue n'existe plus.",
+      "confirmation_required": "Confirmez d'abord l'action.",
+      "invalid_assignee": "La personne assignée doit avoir un rôle plateforme.",
+      "invalid_target": "Le ticket cible n'existe pas, est un spam, est déjà fusionné ou fait partie de la sélection.",
+      "nothing_applied": "Rien n'a changé : la règle n'a autorisé la modification sur aucun ticket sélectionné.",
+      "too_many_views": "Vous avez atteint le nombre maximal de vues enregistrées. Supprimez-en une d'abord.",
+      "generic": "Cela n'a pas fonctionné. Réessayez."
+    },
+    "queue": {
+      "intro": "Tous les tickets issus de l'e-mail, du formulaire de contact et du tableau de bord client. Choisissez une vue, affinez-la avec les filtres, agissez sur plusieurs tickets à la fois — chaque modification est consignée dans le journal d'audit.",
+      "viewMissing": "Cette vue enregistrée n'existe plus ou est la vue personnelle d'une autre personne ; tous les tickets ouverts sont affichés à la place.",
+      "saveView": "Enregistrer comme vue",
+      "manageViews": "Gérer les vues",
+      "views": {
+        "label": "Vues des tickets",
+        "saved": "Vues enregistrées",
+        "count": "{count, plural, one {# ticket} other {# tickets}}",
+        "defaults": {
+          "unassigned": "Non attribués",
+          "mine": "Mes tickets",
+          "open": "Tous les ouverts",
+          "pending": "En attente du client",
+          "breached": "SLA dépassé",
+          "solved_7d": "Résolus (7 derniers jours)",
+          "spam": "Spam"
+        }
+      },
+      "filters": {
+        "legend": "Filtres",
+        "search": "Recherche",
+        "searchPlaceholder": "Objet, demandeur, organisation ou n°",
+        "status": "Statut",
+        "priority": "Priorité",
+        "channel": "Canal",
+        "assignee": "Attribué à",
+        "organisation": "Organisation",
+        "organisationPlaceholder": "Nom, slug ou identifiant",
+        "plan": "Offre",
+        "tags": "Étiquettes",
+        "tagsPlaceholder": "billing, vip",
+        "sla": "État du SLA",
+        "dateField": "Champ de date",
+        "from": "Du",
+        "to": "Au",
+        "lastDays": "… derniers jours",
+        "lastDaysPlaceholder": "p. ex. 7",
+        "sort": "Tri",
+        "apply": "Appliquer les filtres",
+        "reset": "Revenir à la vue",
+        "any": "Tous",
+        "asInView": "Comme dans la vue ({count, plural, one {# sélectionné} other {# sélectionnés}})",
+        "everyone": "Tout le monde",
+        "unassigned": "Non attribué",
+        "me": "Attribués à moi",
+        "clearDates": "Ignorer la plage de dates de la vue",
+        "clearDatesHint": "Cochée, toutes les dates comptent, sauf si vous saisissez ici une plage à vous.",
+        "viewRangeLastDays": "La vue affiche {count, plural, one {le dernier jour} other {les # derniers jours}}.",
+        "viewRangeBetween": "La vue affiche du {from} au {to}.",
+        "viewRangeFrom": "La vue affiche les dates à partir du {from}.",
+        "viewRangeTo": "La vue affiche les dates jusqu'au {to}.",
+        "hint": "Les filtres affinent la vue sélectionnée ; l'éditeur de vue permet de choisir plusieurs statuts, priorités ou canaux à la fois. Étiquettes : séparées par des virgules, chacune doit être présente."
+      },
+      "slaFilters": {
+        "any": "Tous",
+        "on_track": "Dans les temps",
+        "breached": "Dépassé",
+        "paused": "Horloge en pause",
+        "none": "Sans politique SLA"
+      },
+      "dateFields": {
+        "created": "Créé",
+        "updated": "Mis à jour",
+        "resolved": "Résolu"
+      },
+      "sorts": {
+        "updated_desc": "Dernière mise à jour, plus récente d'abord",
+        "updated_asc": "Dernière mise à jour, plus ancienne d'abord",
+        "created_desc": "Création, plus récente d'abord",
+        "created_asc": "Création, plus ancienne d'abord",
+        "priority_desc": "Priorité, urgent d'abord",
+        "sla_due_asc": "Échéance SLA, la plus proche d'abord",
+        "number_desc": "Numéro, le plus élevé d'abord",
+        "number_asc": "Numéro, le plus bas d'abord"
+      },
+      "sla": {
+        "met": "Respecté",
+        "due": "échéance {when}",
+        "overdue": "en retard depuis {when}",
+        "dueWhenResumed": "en pause, en attente du client"
+      },
+      "columns": {
+        "select": "Sélectionner",
+        "ticket": "Ticket",
+        "requester": "Demandeur",
+        "status": "Statut",
+        "priority": "Priorité",
+        "assignee": "Attribué à",
+        "sla": "SLA",
+        "updated": "Dernière mise à jour",
+        "viewers": "Consulté par"
+      },
+      "selectAll": "Sélectionner tous les tickets de cette page",
+      "selectOne": "Sélectionner le ticket n° {number}",
+      "merged": "Fusionné",
+      "requesterUnknown": "Aucun nom indiqué",
+      "noOrganisation": "Aucune organisation associée",
+      "created": "créé {when}",
+      "viewersLabel": "{count, plural, one {# opérateur consulte ce ticket} other {# opérateurs consultent ce ticket}}",
+      "presence": {
+        "viewing": "{name} consulte ce ticket",
+        "typing": "{name} rédige une réponse"
+      },
+      "caption": "Tickets de support de la vue sélectionnée",
+      "count": "{count, plural, one {# ticket} other {# tickets}}",
+      "countFiltered": "{count, plural, one {# ticket correspond} other {# tickets correspondent}} aux filtres",
+      "empty": "Aucun ticket dans cette vue",
+      "emptyText": "Les tickets apparaissent ici dès qu'un client écrit au support ou qu'une demande est convertie en ticket.",
+      "emptyFiltered": "Aucun ticket ne correspond à ces filtres",
+      "emptyFilteredText": "Élargissez les filtres ou revenez à la vue.",
+      "pagination": {
+        "nav": "Pages de tickets",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {page}"
+      },
+      "export": {
+        "button": "Exporter en CSV",
+        "working": "Préparation de l'export…",
+        "done": "{rows, plural, one {# ticket exporté} other {# tickets exportés}} (métadonnées uniquement, sans messages ni coordonnées).",
+        "truncated": "{rows, plural, one {# ticket exporté} other {# tickets exportés}} sur {total, number} — affinez les filtres pour le reste."
+      }
+    },
+    "bulk": {
+      "title": "Actions groupées",
+      "selected": "{count, plural, one {# sélectionné} other {# sélectionnés}}",
+      "tooMany": "au plus {max} tickets à la fois",
+      "action": "Action",
+      "actions": {
+        "assign": "Attribuer",
+        "status": "Changer le statut",
+        "priority": "Changer la priorité",
+        "tags": "Ajouter ou retirer des étiquettes",
+        "merge": "Fusionner dans un autre ticket"
+      },
+      "assignTo": "Attribuer à",
+      "newStatus": "Nouveau statut",
+      "newPriority": "Nouvelle priorité",
+      "tagsAdd": "Ajouter des étiquettes",
+      "tagsRemove": "Retirer des étiquettes",
+      "tagsPlaceholder": "billing, vip",
+      "tagsHint": "Séparées par des virgules ; minuscules, chiffres, tirets et tirets bas, au plus 20 étiquettes par ticket.",
+      "mergeTarget": "Fusionner dans le ticket",
+      "mergeHint": "Les tickets sélectionnés sont fermés et liés à la cible ; leurs conversations restent lisibles. La cible doit être un ticket de la même organisation hors de la sélection, qui n'est ni un spam ni lui-même fusionné.",
+      "statusHint": "Les tickets dont le statut actuel n'autorise pas la transition sont ignorés. « En attente » met l'horloge SLA en pause ; « Résolu » et « Fermé » fixent la date de résolution. Spam bloque l'expéditeur jusqu'à la restauration du ticket.",
+      "priorityHint": "Les délais SLA en cours sont décalés de la différence entre l'ancien et le nouvel objectif ; un objectif plus court peut être dépassé immédiatement. Les tickets sans politique SLA ne conservent aucun délai.",
+      "apply": "Appliquer…",
+      "summary": {
+        "unassign": "Retirer l'attribution des tickets sélectionnés.",
+        "assign": "Attribuer les tickets sélectionnés à {name}.",
+        "status": "Passer les tickets sélectionnés au statut « {status} ».",
+        "priority": "Passer les tickets sélectionnés à la priorité « {priority} ».",
+        "tags": "Ajouter : {add} · Retirer : {remove}",
+        "merge": "Fusionner les tickets sélectionnés dans le ticket n° {number} et les fermer."
+      },
+      "dialog": {
+        "title": "Appliquer à {count, plural, one {# ticket} other {# tickets}} ?",
+        "description": "La modification est appliquée à chaque ticket sélectionné que les règles autorisent et consignée dans le journal d'audit par ticket.",
+        "confirm": "Appliquer"
+      },
+      "result": {
+        "applied": "{applied, plural, one {# ticket mis à jour} other {# tickets mis à jour}}, {skipped, plural, one {# ignoré} other {# ignorés}}.",
+        "skippedOnly": "{skipped, plural, one {# ticket a été ignoré} other {# tickets ont été ignorés}}."
+      }
+    },
+    "viewsPage": {
+      "intro": "Les vues partagées sont les files de l'équipe (gérées par les administrateurs plateforme) ; les vues personnelles sont les vôtres. Chaque vue conserve ses filtres et son tri et affiche son nombre en direct dans la file.",
+      "new": "Nouvelle vue",
+      "empty": "Aucune vue enregistrée pour l'instant",
+      "emptyText": "Partez de la file : définissez les filtres voulus et choisissez « Enregistrer comme vue ».",
+      "caption": "Vues enregistrées, partagées d'abord",
+      "columns": {
+        "name": "Nom",
+        "scope": "Visibilité",
+        "sort": "Tri",
+        "updated": "Mise à jour",
+        "actions": "Actions"
+      },
+      "open": "Ouvrir la vue « {name} »",
+      "edit": "Modifier",
+      "editLabel": "Modifier la vue « {name} »",
+      "readOnly": "Gérée par les administrateurs plateforme",
+      "scope": {
+        "personal": "Personnelle",
+        "shared": "Partagée"
+      }
+    },
+    "viewForm": {
+      "titleNew": "Nouvelle vue",
+      "titleEdit": "Modifier la vue « {name} »",
+      "titleEditShort": "Modifier la vue",
+      "introNew": "Nommez la vue, choisissez qui la voit et définissez ses filtres et son tri. Les valeurs proviennent de la file d'où vous venez.",
+      "introEdit": "Modifiez le nom, la visibilité, les filtres ou le tri. Le nombre en direct de la vue dans la file suit les nouveaux filtres.",
+      "name": "Nom",
+      "scope": "Visibilité",
+      "scopePersonal": "Personnelle — vous seulement",
+      "scopeShared": "Partagée — tous les opérateurs",
+      "scopeAdminOnly": "Les vues partagées sont créées par les administrateurs plateforme.",
+      "filters": "Filtres",
+      "groupHint": "Rien de coché = tous.",
+      "sort": "Tri",
+      "create": "Créer la vue",
+      "saveChanges": "Enregistrer les modifications",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer la vue « {name} » ?",
+      "deleteDescription": "La vue disparaît de la file pour toutes les personnes qui pouvaient l'utiliser. Les tickets ne sont pas concernés. L'action est consignée dans le journal d'audit.",
+      "deleteConfirm": "Supprimer la vue",
+      "openQueue": "Ouvrir la file",
+      "notEditable": "Il s'agit d'une vue partagée ; les administrateurs plateforme la modifient. Vous pouvez ouvrir sa file et l'affiner avec les filtres."
+    }
+  }
+}

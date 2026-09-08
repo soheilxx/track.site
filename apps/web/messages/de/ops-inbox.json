@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Bereiche des Posteingangs",
-      "requests": "Anfragen",
+      "requests": "Anfragen (Altbestand)",
       "privacy": "Datenschutzanfragen",
       "alerts": "Alert-Übersicht",
       "knowledge": "Knowledge-Feedback"
@@ -76,7 +76,8 @@
         "status": "Status",
         "assignee": "Zuständig",
         "delivery": "Weiterleitung",
-        "actions": "Aktionen"
+        "actions": "Aktionen",
+        "ticket": "Ticket"
       },
       "open": "Öffnen",
       "openLabel": "Anfrage von {name} öffnen",
@@ -92,7 +93,11 @@
         "previous": "Vorherige Seite",
         "next": "Nächste Seite",
         "page": "Seite {page}"
-      }
+      },
+      "openDesk": "Ticket-Queue öffnen",
+      "legacyNotice": "Jede Anfrage aus den öffentlichen Formularen ist jetzt ein Support-Ticket (Kanal „Kontaktformular“) und wird im Support bearbeitet. Diese Liste bleibt für Anfragen aus der Zeit vor dem Support-Desk erhalten und verlinkt jede neuere Anfrage mit ihrem Ticket.",
+      "openTicketLabel": "Ticket #{number} öffnen",
+      "ticketNone": "Kein Ticket (vor dem Support-Desk)"
     },
     "detail": {
       "back": "Zurück zum Posteingang",
@@ -166,7 +171,10 @@
         "replyError": "nicht gesendet ({transport})",
         "by": "durch {name}",
         "byUnknown": "durch eine ehemalige Betreiberin oder einen ehemaligen Betreiber"
-      }
+      },
+      "ticket": "Support-Ticket",
+      "openTicket": "Ticket öffnen",
+      "ticketNone": "Kein Ticket — vor dem Support-Desk eingereicht; von hier aus antworten."
     },
     "privacy": {
       "title": "Datenschutzanfragen",

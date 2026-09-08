@@ -3,7 +3,7 @@ import { ACTIVE_LOCALES, ALL_LOCALES } from "@/i18n/routing";
 import { copyParity } from "@/lib/marketing-copy/parity";
 import { MAIL_COPY, getMailCopy, renderMail } from "./index";
 
-const PLACEHOLDERS: Record<keyof typeof MAIL_COPY.en, string[]> = { resetPassword: ["url"], verifyEmail: ["url"], invitation: ["inviter", "organization", "url"], contactReply: ["name", "body", "operator", "reference"], breakGlassApproved: ["organization", "until", "reason", "ticket", "grantId", "url"], breakGlassRevoked: ["organization", "grantId", "url"], twoFactorReset: ["actorRole", "product", "supportLink"] };
+const PLACEHOLDERS: Record<keyof typeof MAIL_COPY.en, string[]> = { resetPassword: ["url"], verifyEmail: ["url"], invitation: ["inviter", "organization", "url"], contactReply: ["name", "body", "operator", "reference"], breakGlassApproved: ["organization", "until", "reason", "ticket", "grantId", "url"], breakGlassRevoked: ["organization", "grantId", "url"], twoFactorReset: ["actorRole", "product", "supportLink"], supportAssigned: ["actor", "number", "subject", "url"], supportCustomerReply: ["requester", "number", "subject", "url"] };
 
 describe("mail templates", () => {
   it("exist for every active locale with the English shape and placeholders", () => {

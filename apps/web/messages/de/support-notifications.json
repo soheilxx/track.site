@@ -1,0 +1,55 @@
+{
+  "supportNotifications": {
+    "bell": {
+      "label": "Benachrichtigungen",
+      "labelUnread": "Benachrichtigungen, {count} ungelesen"
+    },
+    "panel": {
+      "title": "Benachrichtigungen",
+      "description": "Zuweisungen, Kundenantworten, SLA-Hinweise und @Erwähnungen zu Support-Tickets.",
+      "close": "Schließen",
+      "refresh": "Aktualisieren",
+      "markAllRead": "Alle als gelesen markieren",
+      "markRead": "Als gelesen markieren",
+      "unread": "ungelesen",
+      "loading": "Benachrichtigungen werden geladen…",
+      "updated": "Aktualisiert {time}",
+      "polling": "Wird alle {seconds} Sekunden aktualisiert, solange dieser Tab sichtbar ist.",
+      "showingLatest": "Die neuesten {count} werden angezeigt; ältere ungelesene zählen weiterhin.",
+      "empty": "Nichts nachzuholen",
+      "emptyText": "Zuweisungen, Kundenantworten, SLA-Warnungen und @Erwähnungen in internen Notizen erscheinen hier.",
+      "error": "Die Benachrichtigungen konnten nicht geladen werden. Die nächste Aktualisierung versucht es erneut.",
+      "forbidden": "Deine Plattformrolle darf keine Support-Tickets lesen."
+    },
+    "kinds": {
+      "assignment": "Dir zugewiesen",
+      "customer_reply": "Kundenantwort",
+      "sla_warning": "SLA-Warnung",
+      "sla_breach": "SLA verletzt",
+      "mention": "In einer Notiz erwähnt"
+    },
+    "item": {
+      "ticket": "Ticket #{number}",
+      "by": "von {name}",
+      "customer": "von der Kundin oder dem Kunden",
+      "system": "automatisch",
+      "formerOperator": "von einer ehemaligen Person im Team",
+      "clock": {
+        "first_response": "Erstantwort",
+        "resolution": "Lösung"
+      }
+    },
+    "live": {
+      "newOne": "1 neue Benachrichtigung",
+      "newMany": "{count} neue Benachrichtigungen"
+    },
+    "preferences": {
+      "title": "E-Mail",
+      "assignment": "E-Mail, wenn mir ein Ticket zugewiesen wird",
+      "customerReply": "E-Mail, wenn eine Kundin oder ein Kunde auf mein Ticket antwortet",
+      "hint": "SLA-Warnungen und -Verletzungen mailt die SLA-Engine an die zuständige Person; Erwähnungen bleiben hier.",
+      "saved": "Einstellung gespeichert.",
+      "error": "Die Einstellung konnte nicht gespeichert werden."
+    }
+  }
+}

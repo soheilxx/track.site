@@ -15,12 +15,15 @@ import { OpsNotes } from "@/components/ops/organisations/ops-notes";
 import { SignalsPanel } from "@/components/ops/organisations/signals-panel";
 import { SitesTable } from "@/components/ops/organisations/sites-table";
 import { SubscriptionPanel } from "@/components/ops/organisations/subscription-panel";
+import { OrganisationTicketsTable } from "@/components/ops/organisations/tickets-table";
 import { SuspensionControl } from "@/components/ops/organisations/suspension-control";
 import { UsagePanel } from "@/components/ops/organisations/usage-panel";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { formatDate } from "@/lib/format";
 import { isUuid, loadOrganisationDetail } from "@/server/ops/organisations";
 import { checkPlatform, hasPlatformRole } from "@/server/ops/platform";
+import { loadTickets } from "@/server/support/tickets";
+import { DEFAULT_TICKET_SORT, EMPTY_VIEW_FILTERS } from "@/server/support/views";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -42,8 +45,9 @@ function Section({ id, title, children }: { id: string; title: string; children:
 /**
  * Organisation detail (Track Operations, docs/17): members and roles, sites and environments with
  * snippet state, subscription and usage, destinations with health, data-quality and alert counts,
- * internal notes, feature-flag overrides, recent audit entries, suspend / unsuspend and the
- * break-glass entry point. Metadata and aggregates only; under an active grant the view is audited.
+ * internal notes, feature-flag overrides, the organisation's support tickets (docs/18), recent audit
+ * entries, suspend / unsuspend and the break-glass entry point. Metadata and aggregates only; under an
+ * active grant the view is audited.
  */
 export default async function OpsOrganisationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -52,6 +56,11 @@ export default async function OpsOrganisationPage({ params }: { params: Promise<
   if (!access.ok) return <OpsForbidden reason={access.reason} />;
   const detail = await loadOrganisationDetail(access.ctx, id);
   if (!detail) notFound();
+  // the desk's queue narrowed to this organisation, most recently updated first; a failure never blanks the page
+  const tickets = await loadTickets(access.ctx, { ...EMPTY_VIEW_FILTERS, organization: id, view: null, q: null, sort: DEFAULT_TICKET_SORT, page: 1 }).catch((e: unknown) => {
+    console.error(`[ops/organisations] tickets unavailable: ${e instanceof Error ? e.name : typeof e}`);
+    return null;
+  });
   const [t, tOps, locale] = await Promise.all([getTranslations("opsOrganisations"), getTranslations("ops"), getLocale()]);
   const org = detail.organization;
   const isAdmin = hasPlatformRole(access.ctx.platformRole, "PLATFORM_ADMIN");
@@ -142,6 +151,10 @@ export default async function OpsOrganisationPage({ params }: { params: Promise<
 
       <Section id="org-flags" title={t("detail.sections.flags")}>
         <FlagOverrides organizationId={org.id} organizationName={org.name} flags={detail.flags} canManage={isAdmin} locale={locale} />
+      </Section>
+
+      <Section id="org-tickets" title={t("detail.sections.tickets")}>
+        <OrganisationTicketsTable organizationId={org.id} page={tickets} locale={locale} />
       </Section>
 
       <Section id="org-notes" title={t("detail.sections.notes")}>

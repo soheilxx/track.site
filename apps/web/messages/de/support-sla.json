@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "SLA-Richtlinien",
+        "intro": "Reaktions- und Lösungsziele je Tarif und Priorität in Geschäftsminuten, die Geschäftszeiten, in denen sie zählen, und was passiert, wenn eine Uhr abläuft. Der Worker wendet sie jede Minute anhand echter Zeitstempel an."
+      },
+      "new": {
+        "title": "Neue SLA-Richtlinie",
+        "intro": "Ziele, Geschäftszeiten und Eskalation für einen oder mehrere Tarife. Die Werte sind mit den ausgelieferten Standardwerten vorbelegt."
+      },
+      "edit": {
+        "title": "SLA-Richtlinie bearbeiten",
+        "intro": "Änderungen gelten für neue Tickets und für noch laufende Uhren; gestoppte Uhren behalten ihr Ergebnis."
+      }
+    },
+    "nav": {
+      "settings": "Zurück zu den Support-Einstellungen",
+      "list": "Zurück zu den Richtlinien",
+      "new": "Neue Richtlinie"
+    },
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "working": "Wird ausgeführt…",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "optional": "optional",
+      "unknown": "unbekannt"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Support",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "erste Antwort",
+      "resolution": "Lösung"
+    },
+    "units": {
+      "minutes": "Minuten",
+      "hours": "Stunden",
+      "days": "Tage"
+    },
+    "howItWorks": {
+      "title": "Was der Worker mit diesen Richtlinien macht",
+      "clocks": "Jedes Ticket erhält beim Anlegen die Richtlinie des Tarifs seiner Organisation (oder die Standardrichtlinie); die Uhr „erste Antwort“ stoppt mit der ersten Agentenantwort, die Uhr „Lösung“, wenn das Ticket gelöst ist. „Wartend“ pausiert beide.",
+      "warnings": "Sinkt die verbleibende Geschäftszeit auf den Warnanteil des Ziels, erhält die zuständige Person ein In-App-Ereignis und eine E-Mail — einmal je Uhr, nie für ein pausiertes Ticket.",
+      "breaches": "Nach dem Fälligkeitszeitpunkt wird das Ticket als verletzt markiert; die zuständige Person, die benannten Empfänger und — falls aktiviert — alle Plattform-Admins erhalten eine E-Mail.",
+      "autoClose": "Gelöste Tickets schließen sich nach der konfigurierten Anzahl Tage selbst (leer = nie). Tickets ohne eigene Richtlinie folgen hier der Standardrichtlinie.",
+      "selection": "Eine Richtlinie je Tarif; Tarife ohne Richtlinie nutzen die Standardrichtlinie. Der Job läuft jede Minute (support-sla) und prüft bis zu 2 000 Tickets je Lauf."
+    },
+    "table": {
+      "caption": "SLA-Richtlinien mit Tarifen, Zielen, Geschäftszeiten, Eskalation und der Anzahl der Tickets, die sie nutzen",
+      "name": "Richtlinie",
+      "plans": "Tarife",
+      "targets": "Ziele (erste Antwort / Lösung)",
+      "hours": "Geschäftszeiten",
+      "escalation": "Eskalation",
+      "tickets": "Tickets",
+      "actions": "Aktionen",
+      "defaultBadge": "Standard",
+      "allPlans": "jeder Tarif ohne eigene Richtlinie",
+      "noPlans": "kein Tarif zugewiesen",
+      "alwaysOpen": "24/7 — keine Geschäftszeiten",
+      "warningAt": "Warnung bei {percent} % des Ziels",
+      "escalatesToAdmins": "Verletzungen eskalieren an Plattform-Admins",
+      "noAdminEscalation": "Keine Admin-Eskalation",
+      "recipients": "{count, plural, =0 {Keine benannten Empfänger} one {# benannter Empfänger} other {# benannte Empfänger}}",
+      "autoClose": "Automatisch schließen nach {count, plural, one {# Tag} other {# Tagen}}",
+      "autoCloseNever": "Kein automatisches Schließen"
+    },
+    "empty": {
+      "title": "Noch keine SLA-Richtlinie",
+      "text": "Ohne Richtlinie zeigen Tickets „Keine SLA-Richtlinie“, und der Worker warnt und eskaliert nicht. Legen Sie eine an und markieren Sie sie als Standard."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {Kein Ticket nutzt diese Richtlinie} one {# Ticket nutzt diese Richtlinie} other {# Tickets nutzen diese Richtlinie}}",
+      "updatedAt": "Letzte Änderung: {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Richtlinie",
+        "text": "Name, die Tarife, für die sie gilt, und ob sie der Standard für jeden Tarif ohne eigene Richtlinie ist."
+      },
+      "name": "Name",
+      "nameHint": "Erscheint in der Ticketliste und auf dem Ticket; höchstens 80 Zeichen.",
+      "description": "Beschreibung",
+      "descriptionHint": "Interner Hinweis für Operatoren.",
+      "plans": "Tarife",
+      "plansHint": "Ein Tarif kann nur zu einer Richtlinie gehören. Lassen Sie alle Tarife abgewählt für eine Richtlinie, die nur über das Standard-Kennzeichen gilt.",
+      "isDefault": "Standardrichtlinie",
+      "isDefaultHint": "Gilt für jeden Tarif ohne explizite Richtlinie und bestimmt das automatische Schließen von Tickets ohne Richtlinie. Genau eine Richtlinie ist der Standard; zum Ersetzen markieren Sie eine andere.",
+      "targets": {
+        "title": "Ziele",
+        "text": "Geschäftsminuten vom Anlegen (oder Wiedereröffnen) des Tickets bis zur ersten Agentenantwort und bis zur Lösung. Ganze Minuten; ein Tag zählt als 24 Stunden Geschäftszeit.",
+        "caption": "Ziele je Priorität für erste Antwort und Lösung",
+        "priority": "Priorität",
+        "valueLabel": "{priority}: Ziel {clock}",
+        "unitLabel": "{priority}: Einheit des Ziels {clock}",
+        "hint": "Zwischen 5 Minuten und 90 Tagen; das Ziel für die erste Antwort darf das Lösungsziel nicht überschreiten."
+      },
+      "hours": {
+        "title": "Geschäftszeiten",
+        "text": "Die Uhren zählen nur innerhalb dieser Fenster, in der Zeitzone unten. Wochenenden und Abende zählen nicht.",
+        "timezone": "Zeitzone",
+        "timezoneHint": "IANA-Name, zum Beispiel Europe/Berlin. Die Zone formatiert auch die Fälligkeitszeiten in Benachrichtigungen.",
+        "days": "Geschäftstage",
+        "startLabel": "{day}: Beginn",
+        "endLabel": "{day}: Ende",
+        "hint": "Ein Fenster je Tag (eine Mittagspause braucht die API). Kein aktivierter Tag bedeutet: Die Uhren laufen rund um die Uhr, sieben Tage die Woche."
+      },
+      "escalation": {
+        "title": "Eskalation",
+        "text": "Wer von einer ablaufenden oder abgelaufenen Uhr erfährt und wann gelöste Tickets sich selbst schließen.",
+        "warningPercent": "Warnung bei … % des Ziels",
+        "warningPercentHint": "1–99. Bei 80 % wird die zuständige Person gewarnt, wenn noch ein Fünftel des Ziels übrig ist.",
+        "escalateToAdmins": "Verletzungen an alle Plattform-Admins eskalieren",
+        "escalateToAdminsHint": "Bei einer Verletzung erhält jedes Konto mit der Rolle PLATFORM_ADMIN neben der zuständigen Person und den benannten Empfängern eine E-Mail.",
+        "notifyUserIds": "Benannte Empfänger bei einer Verletzung",
+        "notifyUserIdsHint": "Nur Plattform-Operatoren; Kunden können hier nie benannt werden.",
+        "noPlatformUsers": "Es gibt noch keine Plattform-Benutzer.",
+        "autoCloseDays": "Gelöste Tickets automatisch schließen nach … Tagen",
+        "autoCloseDaysHint": "Ganze Tage nach der Lösung; leer oder 0 = nie. Tickets ohne Richtlinie folgen dem Wert der Standardrichtlinie."
+      },
+      "submitCreate": "Richtlinie anlegen",
+      "submitUpdate": "Änderungen speichern",
+      "createdTitle": "Richtlinie angelegt. Neue Tickets ihrer Tarife übernehmen sie sofort.",
+      "editPolicy": "Richtlinie öffnen"
+    },
+    "actions": {
+      "setDefault": "Als Standard setzen",
+      "setDefaultTitle": "„{name}“ zur Standardrichtlinie machen?",
+      "setDefaultText": "Der bisherige Standard verliert das Kennzeichen. Tarife ohne eigene Richtlinie und das automatische Schließen von Tickets ohne Richtlinie folgen ab jetzt dem neuen Standard; bestehende Tickets behalten ihre Richtlinie.",
+      "setDefaultConfirm": "Als Standard setzen",
+      "deleteTitle": "„{name}“ löschen?",
+      "deleteText": "Die Richtlinie wird endgültig entfernt. Ihre Tarife fallen für neue Tickets auf die Standardrichtlinie zurück.",
+      "deleteBlockedInUse": "{count, plural, one {# Ticket verweist auf diese Richtlinie} other {# Tickets verweisen auf diese Richtlinie}}; sie kann nicht gelöscht werden. Weisen Sie diese Tickets zuerst neu zu oder schließen Sie sie — oder behalten Sie die Richtlinie.",
+      "deleteConfirm": "Richtlinie löschen"
+    },
+    "errors": {
+      "forbidden": "Diese Aktion erfordert die Plattform-Admin-Rolle mit Zwei-Faktor-Authentifizierung.",
+      "invalid": "Bitte prüfen Sie die markierten Felder.",
+      "not_found": "Diese Richtlinie existiert nicht (mehr).",
+      "unchanged": "Nichts zu ändern — die Richtlinie sieht bereits so aus.",
+      "in_use": "{count, plural, one {# Ticket verweist} other {# Tickets verweisen}} auf diese Richtlinie; sie kann nicht gelöscht werden.",
+      "is_default": "Die Standardrichtlinie kann nicht gelöscht werden. Machen Sie zuerst eine andere Richtlinie zum Standard.",
+      "default_required": "Das Standard-Kennzeichen lässt sich nicht abschalten. Markieren Sie stattdessen eine andere Richtlinie als Standard.",
+      "plan_taken": "Einer der gewählten Tarife gehört bereits zu einer anderen Richtlinie.",
+      "generic": "Das hat nicht funktioniert. Bitte versuchen Sie es erneut."
+    },
+    "fieldErrors": {
+      "required": "Pflichtfeld.",
+      "invalid": "Ungültiger Wert.",
+      "long": "Zu lang.",
+      "range": "Außerhalb des zulässigen Bereichs.",
+      "order": "Darf nicht kürzer sein als das Ziel für die erste Antwort.",
+      "window": "Das Ende muss nach dem Beginn liegen.",
+      "timezone": "Unbekannte Zeitzone. Verwenden Sie einen IANA-Namen wie Europe/Berlin.",
+      "not_found": "Einer der Empfänger ist kein Plattform-Operator.",
+      "plan_taken": "Bereits einer anderen Richtlinie zugewiesen.",
+      "default_required": "Markieren Sie stattdessen eine andere Richtlinie als Standard."
+    },
+    "notices": {
+      "created": "Richtlinie angelegt.",
+      "updated": "Richtlinie gespeichert. Laufende Uhren ihrer Tickets folgen den neuen Zielen bei der nächsten Änderung; der Worker wendet den neuen Warnanteil innerhalb einer Minute an.",
+      "deleted": "Richtlinie gelöscht.",
+      "defaultSet": "Standardrichtlinie geändert."
+    }
+  }
+}

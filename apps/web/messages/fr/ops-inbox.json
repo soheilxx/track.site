@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Sections de la boîte de réception",
-      "requests": "Demandes",
+      "requests": "Demandes (ancien)",
       "privacy": "Demandes de confidentialité",
       "alerts": "Synthèse des alertes",
       "knowledge": "Retours Knowledge"
@@ -76,7 +76,8 @@
         "status": "Statut",
         "assignee": "Responsable",
         "delivery": "Transmission",
-        "actions": "Actions"
+        "actions": "Actions",
+        "ticket": "Ticket"
       },
       "open": "Ouvrir",
       "openLabel": "Ouvrir la demande de {name}",
@@ -92,7 +93,11 @@
         "previous": "Page précédente",
         "next": "Page suivante",
         "page": "Page {page}"
-      }
+      },
+      "openDesk": "Ouvrir la file de tickets",
+      "legacyNotice": "Chaque demande des formulaires publics est désormais un ticket de support (canal « formulaire de contact ») et se traite dans Support. Cette liste est conservée pour les demandes antérieures au support desk et relie chaque demande plus récente à son ticket.",
+      "openTicketLabel": "Ouvrir le ticket #{number}",
+      "ticketNone": "Pas de ticket (avant le support desk)"
     },
     "detail": {
       "back": "Retour à la boîte de réception",
@@ -166,7 +171,10 @@
         "replyError": "non envoyée ({transport})",
         "by": "par {name}",
         "byUnknown": "par un ancien opérateur"
-      }
+      },
+      "ticket": "Ticket de support",
+      "openTicket": "Ouvrir le ticket",
+      "ticketNone": "Pas de ticket — envoyé avant le support desk ; répondre depuis ici."
     },
     "privacy": {
       "title": "Demandes de confidentialité",

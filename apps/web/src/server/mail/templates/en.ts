@@ -35,4 +35,13 @@ export const MAIL_COPY_EN: MailCopy = {
     text: "Your two-factor authentication for {product} was reset by {actorRole}.\n\nThe authenticator secret and your backup codes were deleted, and you were signed out everywhere. Sign in with your password and set up two-factor authentication again under Settings → Security.\n\nIf this was not requested, contact us right away: {supportLink}\n\n— Track",
     roles: { platformAdmin: "a Track platform administrator", owner: "an owner of your organisation", admin: "an administrator of your organisation" },
   },
+  supportAssigned: {
+    subject: "[Track #{number}] assigned to you: {subject}",
+    text: "{actor} assigned support ticket #{number} to you.\n\nSubject: {subject}\n\nOpen the ticket in Track Operations: {url}\n\n—\nYou receive this e-mail because \"E-mail me when a ticket is assigned to me\" is switched on in your notification settings (the bell in Track Operations).",
+    system: "The support desk (automatic assignment)",
+  },
+  supportCustomerReply: {
+    subject: "[Track #{number}] new customer reply: {subject}",
+    text: "{requester} replied on support ticket #{number}, which is assigned to you.\n\nSubject: {subject}\n\nOpen the ticket in Track Operations: {url}\n\n—\nYou receive this e-mail because \"E-mail me when a customer replies on my ticket\" is switched on in your notification settings (the bell in Track Operations).",
+  },
 };

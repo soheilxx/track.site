@@ -133,7 +133,8 @@
         "signals": "Data quality and alerts",
         "flags": "Feature flags",
         "notes": "Internal notes",
-        "audit": "Recent audit entries"
+        "audit": "Recent audit entries",
+        "tickets": "Support tickets"
       },
       "subscription": {
         "plan": "Plan",
@@ -403,6 +404,26 @@
         "ticketHint": "Optional, e.g. the support or abuse ticket.",
         "confirmSuspend": "Suspend",
         "confirmUnsuspend": "Lift suspension"
+      },
+      "tickets": {
+        "intro": "The organisation’s tickets in the support desk — number, subject, state and SLA; conversations open in Support.",
+        "all": "All tickets of this organisation",
+        "count": "{count, plural, one {# ticket} other {# tickets}} · showing the {shown} most recently updated",
+        "empty": "No tickets",
+        "emptyText": "Nobody from this organisation has opened a ticket yet — by e-mail, the contact form or the dashboard.",
+        "unavailable": "The tickets could not be loaded.",
+        "caption": "Support tickets of the organisation, most recently updated first",
+        "columns": {
+          "number": "Ticket",
+          "subject": "Subject",
+          "status": "Status",
+          "priority": "Priority",
+          "assignee": "Assignee",
+          "sla": "SLA",
+          "updated": "Updated"
+        },
+        "unassigned": "Unassigned",
+        "openLabel": "Open ticket #{number}: {subject}"
       }
     }
   }

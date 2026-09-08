@@ -1,0 +1,235 @@
+{
+  "supportTickets": {
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "working": "Wird ausgeführt…",
+      "unassigned": "Nicht zugewiesen",
+      "you": "Sie",
+      "none": "—",
+      "noSubject": "(kein Betreff)"
+    },
+    "errors": {
+      "forbidden": "Ihre Plattformrolle darf das nicht.",
+      "invalid": "Bitte prüfen Sie die markierten Felder.",
+      "not_found": "Dieses Ticket oder diese Ansicht existiert nicht mehr.",
+      "confirmation_required": "Bestätigen Sie die Aktion zuerst.",
+      "invalid_assignee": "Die zugewiesene Person muss eine Plattformrolle haben.",
+      "invalid_target": "Das Zielticket existiert nicht, ist Spam, bereits zusammengeführt oder Teil der Auswahl.",
+      "nothing_applied": "Nichts geändert: Die Regel hat die Änderung bei keinem ausgewählten Ticket erlaubt.",
+      "too_many_views": "Sie haben die maximale Anzahl gespeicherter Ansichten erreicht. Löschen Sie zuerst eine.",
+      "generic": "Das hat nicht funktioniert. Bitte versuchen Sie es erneut."
+    },
+    "queue": {
+      "intro": "Alle Tickets aus E-Mail, Kontaktformular und Kunden-Dashboard. Wählen Sie eine Ansicht, verfeinern Sie sie mit den Filtern, bearbeiten Sie mehrere Tickets auf einmal — jede Änderung wird im Audit-Log festgehalten.",
+      "viewMissing": "Diese gespeicherte Ansicht existiert nicht mehr oder ist die persönliche Ansicht einer anderen Person; stattdessen werden alle offenen Tickets angezeigt.",
+      "saveView": "Als Ansicht speichern",
+      "manageViews": "Ansichten verwalten",
+      "views": {
+        "label": "Ticket-Ansichten",
+        "saved": "Gespeicherte Ansichten",
+        "count": "{count, plural, one {# Ticket} other {# Tickets}}",
+        "defaults": {
+          "unassigned": "Nicht zugewiesen",
+          "mine": "Meine Tickets",
+          "open": "Alle offenen",
+          "pending": "Wartet auf Kunde",
+          "breached": "SLA verletzt",
+          "solved_7d": "Gelöst (letzte 7 Tage)",
+          "spam": "Spam"
+        }
+      },
+      "filters": {
+        "legend": "Filter",
+        "search": "Suche",
+        "searchPlaceholder": "Betreff, Anfragende, Organisation oder #Nummer",
+        "status": "Status",
+        "priority": "Priorität",
+        "channel": "Kanal",
+        "assignee": "Zugewiesen an",
+        "organisation": "Organisation",
+        "organisationPlaceholder": "Name, Slug oder ID",
+        "plan": "Tarif",
+        "tags": "Tags",
+        "tagsPlaceholder": "billing, vip",
+        "sla": "SLA-Status",
+        "dateField": "Datumsfeld",
+        "from": "Von",
+        "to": "Bis",
+        "lastDays": "Letzte … Tage",
+        "lastDaysPlaceholder": "z. B. 7",
+        "sort": "Sortierung",
+        "apply": "Filter anwenden",
+        "reset": "Zurück zur Ansicht",
+        "any": "Alle",
+        "asInView": "Wie in der Ansicht ({count, plural, one {# ausgewählt} other {# ausgewählt}})",
+        "everyone": "Alle Personen",
+        "unassigned": "Nicht zugewiesen",
+        "me": "Mir zugewiesen",
+        "clearDates": "Datumsbereich der Ansicht ignorieren",
+        "clearDatesHint": "Angehakt zählt jedes Datum, solange hier kein eigener Bereich eingetragen ist.",
+        "viewRangeLastDays": "Die Ansicht zeigt {count, plural, one {den letzten Tag} other {die letzten # Tage}}.",
+        "viewRangeBetween": "Die Ansicht zeigt {from} bis {to}.",
+        "viewRangeFrom": "Die Ansicht zeigt Daten ab {from}.",
+        "viewRangeTo": "Die Ansicht zeigt Daten bis {to}.",
+        "hint": "Filter verfeinern die gewählte Ansicht; mehrere Status, Prioritäten oder Kanäle auf einmal setzt der Ansichts-Editor. Tags: kommagetrennt, jedes Tag muss vorhanden sein."
+      },
+      "slaFilters": {
+        "any": "Alle",
+        "on_track": "Im Plan",
+        "breached": "Verletzt",
+        "paused": "Uhr pausiert",
+        "none": "Keine SLA-Richtlinie"
+      },
+      "dateFields": {
+        "created": "Erstellt",
+        "updated": "Aktualisiert",
+        "resolved": "Gelöst"
+      },
+      "sorts": {
+        "updated_desc": "Letzte Aktualisierung, neueste zuerst",
+        "updated_asc": "Letzte Aktualisierung, älteste zuerst",
+        "created_desc": "Erstellt, neueste zuerst",
+        "created_asc": "Erstellt, älteste zuerst",
+        "priority_desc": "Priorität, dringend zuerst",
+        "sla_due_asc": "SLA-Fälligkeit, nächste zuerst",
+        "number_desc": "Nummer, höchste zuerst",
+        "number_asc": "Nummer, niedrigste zuerst"
+      },
+      "sla": {
+        "met": "Eingehalten",
+        "due": "fällig {when}",
+        "overdue": "überfällig seit {when}",
+        "dueWhenResumed": "pausiert, wartet auf Kunde"
+      },
+      "columns": {
+        "select": "Auswählen",
+        "ticket": "Ticket",
+        "requester": "Anfragende Person",
+        "status": "Status",
+        "priority": "Priorität",
+        "assignee": "Zugewiesen an",
+        "sla": "SLA",
+        "updated": "Letzte Aktualisierung",
+        "viewers": "Sieht gerade"
+      },
+      "selectAll": "Alle Tickets dieser Seite auswählen",
+      "selectOne": "Ticket #{number} auswählen",
+      "merged": "Zusammengeführt",
+      "requesterUnknown": "Kein Name angegeben",
+      "noOrganisation": "Keine Organisation zugeordnet",
+      "created": "erstellt {when}",
+      "viewersLabel": "{count, plural, one {# Person sieht sich das Ticket an} other {# Personen sehen sich das Ticket an}}",
+      "presence": {
+        "viewing": "{name} sieht sich dieses Ticket an",
+        "typing": "{name} schreibt eine Antwort"
+      },
+      "caption": "Support-Tickets der gewählten Ansicht",
+      "count": "{count, plural, one {# Ticket} other {# Tickets}}",
+      "countFiltered": "{count, plural, one {# Ticket entspricht} other {# Tickets entsprechen}} den Filtern",
+      "empty": "Keine Tickets in dieser Ansicht",
+      "emptyText": "Tickets erscheinen hier, sobald ein Kunde den Support anschreibt oder eine Anfrage in ein Ticket umgewandelt wird.",
+      "emptyFiltered": "Keine Tickets entsprechen diesen Filtern",
+      "emptyFilteredText": "Erweitern Sie die Filter oder gehen Sie zurück zur Ansicht.",
+      "pagination": {
+        "nav": "Ticket-Seiten",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {page}"
+      },
+      "export": {
+        "button": "CSV exportieren",
+        "working": "Export wird vorbereitet…",
+        "done": "{rows, plural, one {# Ticket} other {# Tickets}} exportiert (nur Metadaten, keine Nachrichten oder Kontaktdaten).",
+        "truncated": "{rows, plural, one {# Ticket} other {# Tickets}} von {total, number} exportiert — grenzen Sie die Filter für den Rest ein."
+      }
+    },
+    "bulk": {
+      "title": "Sammelaktionen",
+      "selected": "{count, plural, one {# ausgewählt} other {# ausgewählt}}",
+      "tooMany": "höchstens {max} Tickets auf einmal",
+      "action": "Aktion",
+      "actions": {
+        "assign": "Zuweisen",
+        "status": "Status ändern",
+        "priority": "Priorität ändern",
+        "tags": "Tags hinzufügen oder entfernen",
+        "merge": "In anderes Ticket zusammenführen"
+      },
+      "assignTo": "Zuweisen an",
+      "newStatus": "Neuer Status",
+      "newPriority": "Neue Priorität",
+      "tagsAdd": "Tags hinzufügen",
+      "tagsRemove": "Tags entfernen",
+      "tagsPlaceholder": "billing, vip",
+      "tagsHint": "Kommagetrennt; Kleinbuchstaben, Ziffern, Binde- und Unterstriche, höchstens 20 Tags pro Ticket.",
+      "mergeTarget": "Zusammenführen in Ticket",
+      "mergeHint": "Die ausgewählten Tickets werden geschlossen und mit dem Ziel verknüpft; ihre Unterhaltungen bleiben lesbar. Das Ziel muss ein Ticket derselben Organisation außerhalb der Auswahl sein, das weder Spam noch selbst zusammengeführt ist.",
+      "statusHint": "Tickets, deren aktueller Status den Übergang nicht erlaubt, werden übersprungen. „Wartet auf Kunde“ pausiert die SLA-Uhr; „Gelöst“ und „Geschlossen“ setzen den Lösungszeitpunkt. Spam sperrt den Absender, bis das Ticket wiederhergestellt wird.",
+      "priorityHint": "Laufende SLA-Fristen verschieben sich um die Differenz zwischen altem und neuem Zielwert; eine kürzere Frist kann sofort überschritten sein. Tickets ohne SLA-Richtlinie behalten keine Fristen.",
+      "apply": "Anwenden…",
+      "summary": {
+        "unassign": "Zuweisung der ausgewählten Tickets entfernen.",
+        "assign": "Ausgewählte Tickets {name} zuweisen.",
+        "status": "Status der ausgewählten Tickets auf „{status}“ setzen.",
+        "priority": "Priorität der ausgewählten Tickets auf „{priority}“ setzen.",
+        "tags": "Hinzufügen: {add} · Entfernen: {remove}",
+        "merge": "Ausgewählte Tickets in Ticket #{number} zusammenführen und schließen."
+      },
+      "dialog": {
+        "title": "Auf {count, plural, one {# Ticket} other {# Tickets}} anwenden?",
+        "description": "Die Änderung wird auf jedes ausgewählte Ticket angewendet, das die Regeln erlauben, und pro Ticket im Audit-Log festgehalten.",
+        "confirm": "Anwenden"
+      },
+      "result": {
+        "applied": "{applied, plural, one {# Ticket aktualisiert} other {# Tickets aktualisiert}}, {skipped, plural, one {# übersprungen} other {# übersprungen}}.",
+        "skippedOnly": "{skipped, plural, one {# Ticket wurde übersprungen} other {# Tickets wurden übersprungen}}."
+      }
+    },
+    "viewsPage": {
+      "intro": "Geteilte Ansichten sind die Warteschlangen des Teams (verwaltet von Plattform-Admins); persönliche Ansichten gehören Ihnen. Jede Ansicht behält Filter und Sortierung und zeigt in der Warteschlange ihre aktuelle Anzahl.",
+      "new": "Neue Ansicht",
+      "empty": "Noch keine gespeicherten Ansichten",
+      "emptyText": "Beginnen Sie in der Warteschlange: Setzen Sie die gewünschten Filter und wählen Sie „Als Ansicht speichern“.",
+      "caption": "Gespeicherte Ansichten, geteilte zuerst",
+      "columns": {
+        "name": "Name",
+        "scope": "Sichtbarkeit",
+        "sort": "Sortierung",
+        "updated": "Aktualisiert",
+        "actions": "Aktionen"
+      },
+      "open": "Ansicht „{name}“ öffnen",
+      "edit": "Bearbeiten",
+      "editLabel": "Ansicht „{name}“ bearbeiten",
+      "readOnly": "Von Plattform-Admins verwaltet",
+      "scope": {
+        "personal": "Persönlich",
+        "shared": "Geteilt"
+      }
+    },
+    "viewForm": {
+      "titleNew": "Neue Ansicht",
+      "titleEdit": "Ansicht „{name}“ bearbeiten",
+      "titleEditShort": "Ansicht bearbeiten",
+      "introNew": "Benennen Sie die Ansicht, legen Sie fest, wer sie sieht, und setzen Sie Filter und Sortierung. Die Werte stammen aus der Warteschlange, aus der Sie kommen.",
+      "introEdit": "Ändern Sie Name, Sichtbarkeit, Filter oder Sortierung. Die aktuelle Anzahl der Ansicht in der Warteschlange folgt den neuen Filtern.",
+      "name": "Name",
+      "scope": "Sichtbarkeit",
+      "scopePersonal": "Persönlich — nur Sie",
+      "scopeShared": "Geteilt — alle Operatoren",
+      "scopeAdminOnly": "Geteilte Ansichten werden von Plattform-Admins angelegt.",
+      "filters": "Filter",
+      "groupHint": "Nichts ausgewählt = alle.",
+      "sort": "Sortierung",
+      "create": "Ansicht anlegen",
+      "saveChanges": "Änderungen speichern",
+      "delete": "Löschen",
+      "deleteTitle": "Ansicht „{name}“ löschen?",
+      "deleteDescription": "Die Ansicht verschwindet aus der Warteschlange für alle, die sie nutzen konnten. Tickets sind nicht betroffen. Das wird im Audit-Log festgehalten.",
+      "deleteConfirm": "Ansicht löschen",
+      "openQueue": "Warteschlange öffnen",
+      "notEditable": "Dies ist eine geteilte Ansicht; Plattform-Admins bearbeiten sie. Sie können ihre Warteschlange öffnen und mit den Filtern verfeinern."
+    }
+  }
+}

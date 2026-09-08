@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "Policy SLA",
+        "intro": "Obiettivi di risposta e risoluzione per piano e priorità in minuti lavorativi, gli orari lavorativi in cui vengono conteggiati e cosa succede quando un orologio scade. Il worker le applica ogni minuto da timestamp reali."
+      },
+      "new": {
+        "title": "Nuova policy SLA",
+        "intro": "Obiettivi, orari lavorativi ed escalation per uno o più piani. I valori sono precompilati con le impostazioni predefinite di fabbrica."
+      },
+      "edit": {
+        "title": "Modifica policy SLA",
+        "intro": "Le modifiche valgono per i nuovi ticket e per gli orologi ancora in corso; gli orologi fermati mantengono il loro risultato."
+      }
+    },
+    "nav": {
+      "settings": "Torna alle impostazioni del supporto",
+      "list": "Torna alle policy",
+      "new": "Nuova policy"
+    },
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "working": "In corso…",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "optional": "facoltativo",
+      "unknown": "sconosciuto"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Supporto",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "prima risposta",
+      "resolution": "risoluzione"
+    },
+    "units": {
+      "minutes": "minuti",
+      "hours": "ore",
+      "days": "giorni"
+    },
+    "howItWorks": {
+      "title": "Cosa fa il worker con queste policy",
+      "clocks": "Ogni ticket riceve alla creazione la policy del piano della sua organizzazione (o quella predefinita); l’orologio della prima risposta si ferma alla prima risposta di un agente, quello della risoluzione quando il ticket è risolto. «In attesa» mette in pausa entrambi.",
+      "warnings": "Quando il tempo lavorativo residuo scende alla quota di avviso dell’obiettivo, l’assegnatario riceve un evento in-app e un’e-mail — una volta per orologio, mai per un ticket in pausa.",
+      "breaches": "Superata la scadenza, il ticket viene segnato come violato; l’assegnatario, i destinatari indicati e — se attivo — tutti gli amministratori della piattaforma ricevono un’e-mail.",
+      "autoClose": "I ticket risolti si chiudono da soli dopo il numero di giorni configurato (vuoto = mai). I ticket senza una policy propria seguono qui la policy predefinita.",
+      "selection": "Una policy per piano; i piani senza policy usano quella predefinita. Il job gira ogni minuto (support-sla) e valuta fino a 2 000 ticket per esecuzione."
+    },
+    "table": {
+      "caption": "Policy SLA con piani, obiettivi, orari lavorativi, escalation e numero di ticket che le usano",
+      "name": "Policy",
+      "plans": "Piani",
+      "targets": "Obiettivi (prima risposta / risoluzione)",
+      "hours": "Orari lavorativi",
+      "escalation": "Escalation",
+      "tickets": "Ticket",
+      "actions": "Azioni",
+      "defaultBadge": "Predefinita",
+      "allPlans": "ogni piano senza policy propria",
+      "noPlans": "nessun piano assegnato",
+      "alwaysOpen": "24/7 — senza orari lavorativi",
+      "warningAt": "Avviso all’{percent} % dell’obiettivo",
+      "escalatesToAdmins": "Le violazioni vengono inoltrate agli amministratori della piattaforma",
+      "noAdminEscalation": "Nessuna escalation agli amministratori",
+      "recipients": "{count, plural, =0 {Nessun destinatario indicato} one {# destinatario indicato} other {# destinatari indicati}}",
+      "autoClose": "Chiusura automatica dopo {count, plural, one {# giorno} other {# giorni}}",
+      "autoCloseNever": "Nessuna chiusura automatica"
+    },
+    "empty": {
+      "title": "Ancora nessuna policy SLA",
+      "text": "Senza policy i ticket mostrano «Nessuna policy SLA» e il worker non avvisa né inoltra. Creane una e contrassegnala come predefinita."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {Nessun ticket usa questa policy} one {# ticket usa questa policy} other {# ticket usano questa policy}}",
+      "updatedAt": "Ultima modifica: {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Policy",
+        "text": "Nome, piani a cui si applica e se è la predefinita per ogni piano senza policy propria."
+      },
+      "name": "Nome",
+      "nameHint": "Mostrato nell’elenco dei ticket e sul ticket; al massimo 80 caratteri.",
+      "description": "Descrizione",
+      "descriptionHint": "Nota interna per gli operatori.",
+      "plans": "Piani",
+      "plansHint": "Un piano può appartenere a una sola policy. Lascia tutti i piani deselezionati per una policy che vale solo tramite il contrassegno di predefinita.",
+      "isDefault": "Policy predefinita",
+      "isDefaultHint": "Vale per ogni piano senza policy esplicita e decide la chiusura automatica dei ticket senza policy. Esattamente una policy è la predefinita; per sostituirla, contrassegnane un’altra.",
+      "targets": {
+        "title": "Obiettivi",
+        "text": "Minuti lavorativi dalla creazione (o riapertura) del ticket alla prima risposta di un agente e alla risoluzione. Minuti interi; un giorno conta come 24 ore di tempo lavorativo.",
+        "caption": "Obiettivi per priorità per prima risposta e risoluzione",
+        "priority": "Priorità",
+        "valueLabel": "{priority}: obiettivo {clock}",
+        "unitLabel": "{priority}: unità dell’obiettivo {clock}",
+        "hint": "Tra 5 minuti e 90 giorni; l’obiettivo della prima risposta non può superare quello della risoluzione."
+      },
+      "hours": {
+        "title": "Orari lavorativi",
+        "text": "Gli orologi contano solo all’interno di queste finestre, nel fuso orario qui sotto. Fine settimana e sere non contano.",
+        "timezone": "Fuso orario",
+        "timezoneHint": "Nome IANA, per esempio Europe/Rome. Il fuso formatta anche le scadenze nelle notifiche.",
+        "days": "Giorni lavorativi",
+        "startLabel": "{day}: inizio",
+        "endLabel": "{day}: fine",
+        "hint": "Una finestra per giorno (una pausa pranzo richiede l’API). Nessun giorno attivo significa che gli orologi corrono senza sosta, sette giorni su sette."
+      },
+      "escalation": {
+        "title": "Escalation",
+        "text": "Chi viene informato di un orologio in scadenza o scaduto, e quando i ticket risolti si chiudono da soli.",
+        "warningPercent": "Avviso al … % dell’obiettivo",
+        "warningPercentHint": "1–99. All’80 % l’assegnatario viene avvisato quando resta un quinto dell’obiettivo.",
+        "escalateToAdmins": "Inoltra le violazioni a tutti gli amministratori della piattaforma",
+        "escalateToAdminsHint": "In caso di violazione ogni account con il ruolo PLATFORM_ADMIN riceve un’e-mail, oltre all’assegnatario e ai destinatari indicati.",
+        "notifyUserIds": "Destinatari indicati in caso di violazione",
+        "notifyUserIdsHint": "Solo operatori della piattaforma; un cliente non può mai essere indicato qui.",
+        "noPlatformUsers": "Non esistono ancora utenti della piattaforma.",
+        "autoCloseDays": "Chiudi automaticamente i ticket risolti dopo … giorni",
+        "autoCloseDaysHint": "Giorni interi dopo la risoluzione; vuoto o 0 = mai. I ticket senza policy seguono il valore della policy predefinita."
+      },
+      "submitCreate": "Crea policy",
+      "submitUpdate": "Salva modifiche",
+      "createdTitle": "Policy creata. I nuovi ticket dei suoi piani la adottano subito.",
+      "editPolicy": "Apri la policy"
+    },
+    "actions": {
+      "setDefault": "Imposta come predefinita",
+      "setDefaultTitle": "Rendere «{name}» la policy predefinita?",
+      "setDefaultText": "La predefinita attuale perde il contrassegno. I piani senza policy propria e la chiusura automatica dei ticket senza policy seguono da ora la nuova predefinita; i ticket esistenti mantengono la loro policy.",
+      "setDefaultConfirm": "Imposta come predefinita",
+      "deleteTitle": "Eliminare «{name}»?",
+      "deleteText": "La policy viene rimossa definitivamente. I suoi piani tornano alla policy predefinita per i nuovi ticket.",
+      "deleteBlockedInUse": "{count, plural, one {# ticket fa riferimento a questa policy} other {# ticket fanno riferimento a questa policy}}; non può essere eliminata. Riassegna o chiudi prima quei ticket, oppure mantieni la policy.",
+      "deleteConfirm": "Elimina policy"
+    },
+    "errors": {
+      "forbidden": "Questa azione richiede il ruolo di amministratore della piattaforma con autenticazione a due fattori.",
+      "invalid": "Controlla i campi evidenziati.",
+      "not_found": "Questa policy non esiste (più).",
+      "unchanged": "Niente da modificare: la policy è già così.",
+      "in_use": "{count, plural, one {# ticket fa riferimento} other {# ticket fanno riferimento}} a questa policy; non può essere eliminata.",
+      "is_default": "La policy predefinita non può essere eliminata. Imposta prima un’altra policy come predefinita.",
+      "default_required": "Il contrassegno di predefinita non può essere disattivato. Contrassegna invece un’altra policy come predefinita.",
+      "plan_taken": "Uno dei piani selezionati appartiene già a un’altra policy.",
+      "generic": "Non ha funzionato. Riprova."
+    },
+    "fieldErrors": {
+      "required": "Obbligatorio.",
+      "invalid": "Valore non valido.",
+      "long": "Troppo lungo.",
+      "range": "Fuori intervallo.",
+      "order": "Non può essere più breve dell’obiettivo della prima risposta.",
+      "window": "La fine deve essere dopo l’inizio.",
+      "timezone": "Fuso orario sconosciuto. Usa un nome IANA come Europe/Rome.",
+      "not_found": "Uno dei destinatari non è un operatore della piattaforma.",
+      "plan_taken": "Già assegnato a un’altra policy.",
+      "default_required": "Contrassegna invece un’altra policy come predefinita."
+    },
+    "notices": {
+      "created": "Policy creata.",
+      "updated": "Policy salvata. Gli orologi in corso dei suoi ticket seguono i nuovi obiettivi alla prossima modifica; il worker applica la nuova quota di avviso entro un minuto.",
+      "deleted": "Policy eliminata.",
+      "defaultSet": "Policy predefinita cambiata."
+    }
+  }
+}

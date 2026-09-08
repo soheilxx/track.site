@@ -9,6 +9,7 @@ import { Badge, BrandMark, IconButton, Sheet, buttonVariants, cn } from "@track-
 import { Menu } from "@/components/app/shell/menu";
 import { authClient } from "@/lib/auth-client";
 import { EnvironmentBadge } from "./environment-badge";
+import { NotificationBell } from "./notifications";
 import { OpsNav } from "./ops-nav";
 import type { OpsShellProps } from "./types";
 
@@ -85,6 +86,7 @@ export function OpsShell({
         </Badge>
         <div className="min-w-0 flex-1" />
         <EnvironmentBadge environment={environment} />
+        <NotificationBell />
         <Link
           href="/app"
           className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden md:inline-flex")}

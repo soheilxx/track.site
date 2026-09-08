@@ -35,4 +35,13 @@ export const MAIL_COPY_DE: MailCopy = {
     text: "Deine Zwei-Faktor-Authentifizierung für {product} wurde von {actorRole} zurückgesetzt.\n\nDas Authenticator-Geheimnis und deine Backup-Codes wurden gelöscht, und du wurdest überall abgemeldet. Melde dich mit deinem Passwort an und richte die Zwei-Faktor-Authentifizierung unter Einstellungen → Sicherheit neu ein.\n\nWenn du das nicht angefordert hast, wende dich sofort an uns: {supportLink}\n\n— Track",
     roles: { platformAdmin: "einem Plattform-Administrator von Track", owner: "einem Owner deiner Organisation", admin: "einem Administrator deiner Organisation" },
   },
+  supportAssigned: {
+    subject: "[Track #{number}] dir zugewiesen: {subject}",
+    text: "{actor} hat dir das Support-Ticket #{number} zugewiesen.\n\nBetreff: {subject}\n\nTicket in Track Operations öffnen: {url}\n\n—\nDu erhältst diese E-Mail, weil „E-Mail, wenn mir ein Ticket zugewiesen wird“ in deinen Benachrichtigungseinstellungen (die Glocke in Track Operations) eingeschaltet ist.",
+    system: "Der Support-Desk (automatische Zuweisung)",
+  },
+  supportCustomerReply: {
+    subject: "[Track #{number}] neue Kundenantwort: {subject}",
+    text: "{requester} hat auf das Support-Ticket #{number} geantwortet, das dir zugewiesen ist.\n\nBetreff: {subject}\n\nTicket in Track Operations öffnen: {url}\n\n—\nDu erhältst diese E-Mail, weil „E-Mail, wenn eine Kundin oder ein Kunde auf mein Ticket antwortet“ in deinen Benachrichtigungseinstellungen (die Glocke in Track Operations) eingeschaltet ist.",
+  },
 };

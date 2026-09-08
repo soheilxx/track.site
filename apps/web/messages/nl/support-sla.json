@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "SLA-beleid",
+        "intro": "Reactie- en oplostijden per abonnement en prioriteit in werkminuten, de werktijden waarin ze tellen, en wat er gebeurt als een klok afloopt. De worker past ze elke minuut toe op basis van echte tijdstempels."
+      },
+      "new": {
+        "title": "Nieuw SLA-beleid",
+        "intro": "Doelen, werktijden en escalatie voor een of meer abonnementen. De waarden zijn vooraf ingevuld met de meegeleverde standaardwaarden."
+      },
+      "edit": {
+        "title": "SLA-beleid bewerken",
+        "intro": "Wijzigingen gelden voor nieuwe tickets en voor klokken die nog lopen; gestopte klokken behouden hun resultaat."
+      }
+    },
+    "nav": {
+      "settings": "Terug naar de supportinstellingen",
+      "list": "Terug naar het beleid",
+      "new": "Nieuw beleid"
+    },
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "working": "Bezig…",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "optional": "optioneel",
+      "unknown": "onbekend"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Support",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "eerste reactie",
+      "resolution": "oplossing"
+    },
+    "units": {
+      "minutes": "minuten",
+      "hours": "uur",
+      "days": "dagen"
+    },
+    "howItWorks": {
+      "title": "Wat de worker met dit beleid doet",
+      "clocks": "Elk ticket krijgt bij aanmaak het beleid van het abonnement van zijn organisatie (of het standaardbeleid); de klok „eerste reactie” stopt bij de eerste reactie van een agent, de klok „oplossing” zodra het ticket is opgelost. „In afwachting” pauzeert beide.",
+      "warnings": "Zakt de resterende werktijd tot het waarschuwingsaandeel van het doel, dan krijgt de toegewezen persoon een gebeurtenis in de app en een e-mail — één keer per klok, nooit voor een gepauzeerd ticket.",
+      "breaches": "Na de deadline wordt het ticket als overschreden gemarkeerd; de toegewezen persoon, de genoemde ontvangers en — indien ingeschakeld — alle platformbeheerders krijgen een e-mail.",
+      "autoClose": "Opgeloste tickets sluiten zichzelf na het ingestelde aantal dagen (leeg = nooit). Tickets zonder eigen beleid volgen hier het standaardbeleid.",
+      "selection": "Eén beleid per abonnement; abonnementen zonder beleid gebruiken het standaardbeleid. De taak draait elke minuut (support-sla) en beoordeelt tot 2 000 tickets per run."
+    },
+    "table": {
+      "caption": "SLA-beleid met abonnementen, doelen, werktijden, escalatie en het aantal tickets dat het gebruikt",
+      "name": "Beleid",
+      "plans": "Abonnementen",
+      "targets": "Doelen (eerste reactie / oplossing)",
+      "hours": "Werktijden",
+      "escalation": "Escalatie",
+      "tickets": "Tickets",
+      "actions": "Acties",
+      "defaultBadge": "Standaard",
+      "allPlans": "elk abonnement zonder eigen beleid",
+      "noPlans": "geen abonnement toegewezen",
+      "alwaysOpen": "24/7 — geen werktijden",
+      "warningAt": "Waarschuwing bij {percent} % van het doel",
+      "escalatesToAdmins": "Overschrijdingen escaleren naar platformbeheerders",
+      "noAdminEscalation": "Geen escalatie naar beheerders",
+      "recipients": "{count, plural, =0 {Geen genoemde ontvangers} one {# genoemde ontvanger} other {# genoemde ontvangers}}",
+      "autoClose": "Automatisch sluiten na {count, plural, one {# dag} other {# dagen}}",
+      "autoCloseNever": "Niet automatisch sluiten"
+    },
+    "empty": {
+      "title": "Nog geen SLA-beleid",
+      "text": "Zonder beleid tonen tickets „Geen SLA-beleid” en waarschuwt of escaleert de worker niet. Maak er een aan en markeer het als standaard."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {Geen enkel ticket gebruikt dit beleid} one {# ticket gebruikt dit beleid} other {# tickets gebruiken dit beleid}}",
+      "updatedAt": "Laatste wijziging: {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Beleid",
+        "text": "Naam, de abonnementen waarvoor het geldt en of het de standaard is voor elk abonnement zonder eigen beleid."
+      },
+      "name": "Naam",
+      "nameHint": "Wordt getoond in de ticketlijst en op het ticket; maximaal 80 tekens.",
+      "description": "Beschrijving",
+      "descriptionHint": "Interne notitie voor operators.",
+      "plans": "Abonnementen",
+      "plansHint": "Een abonnement kan bij slechts één beleid horen. Vink geen enkel abonnement aan voor een beleid dat alleen via de standaardmarkering geldt.",
+      "isDefault": "Standaardbeleid",
+      "isDefaultHint": "Geldt voor elk abonnement zonder expliciet beleid en bepaalt het automatisch sluiten van tickets zonder beleid. Precies één beleid is de standaard; markeer een ander beleid om het te vervangen.",
+      "targets": {
+        "title": "Doelen",
+        "text": "Werkminuten vanaf het aanmaken (of heropenen) van het ticket tot de eerste reactie van een agent en tot de oplossing. Hele minuten; een dag telt als 24 uur werktijd.",
+        "caption": "Doelen per prioriteit voor eerste reactie en oplossing",
+        "priority": "Prioriteit",
+        "valueLabel": "{priority}: doel {clock}",
+        "unitLabel": "{priority}: eenheid van het doel {clock}",
+        "hint": "Tussen 5 minuten en 90 dagen; het doel voor de eerste reactie mag het oplosdoel niet overschrijden."
+      },
+      "hours": {
+        "title": "Werktijden",
+        "text": "De klokken tellen alleen binnen deze vensters, in de onderstaande tijdzone. Weekenden en avonden tellen niet mee.",
+        "timezone": "Tijdzone",
+        "timezoneHint": "IANA-naam, bijvoorbeeld Europe/Amsterdam. De zone bepaalt ook de opmaak van de deadlines in meldingen.",
+        "days": "Werkdagen",
+        "startLabel": "{day}: begin",
+        "endLabel": "{day}: einde",
+        "hint": "Eén venster per dag (een lunchpauze vereist de API). Geen enkele ingeschakelde dag betekent dat de klokken de klok rond lopen, zeven dagen per week."
+      },
+      "escalation": {
+        "title": "Escalatie",
+        "text": "Wie hoort van een klok die afloopt of is afgelopen, en wanneer opgeloste tickets zichzelf sluiten.",
+        "warningPercent": "Waarschuwing bij … % van het doel",
+        "warningPercentHint": "1–99. Bij 80 % wordt de toegewezen persoon gewaarschuwd als nog een vijfde van het doel over is.",
+        "escalateToAdmins": "Overschrijdingen escaleren naar alle platformbeheerders",
+        "escalateToAdminsHint": "Bij een overschrijding krijgt elk account met de rol PLATFORM_ADMIN een e-mail, naast de toegewezen persoon en de genoemde ontvangers.",
+        "notifyUserIds": "Genoemde ontvangers bij een overschrijding",
+        "notifyUserIdsHint": "Alleen platformoperators; een klant kan hier nooit worden genoemd.",
+        "noPlatformUsers": "Er bestaan nog geen platformgebruikers.",
+        "autoCloseDays": "Opgeloste tickets automatisch sluiten na … dagen",
+        "autoCloseDaysHint": "Hele dagen na de oplossing; leeg of 0 = nooit. Tickets zonder beleid volgen de waarde van het standaardbeleid."
+      },
+      "submitCreate": "Beleid aanmaken",
+      "submitUpdate": "Wijzigingen opslaan",
+      "createdTitle": "Beleid aangemaakt. Nieuwe tickets van de bijbehorende abonnementen nemen het meteen over.",
+      "editPolicy": "Beleid openen"
+    },
+    "actions": {
+      "setDefault": "Als standaard instellen",
+      "setDefaultTitle": "„{name}” het standaardbeleid maken?",
+      "setDefaultText": "De huidige standaard verliest de markering. Abonnementen zonder eigen beleid en het automatisch sluiten van tickets zonder beleid volgen vanaf nu de nieuwe standaard; bestaande tickets behouden hun beleid.",
+      "setDefaultConfirm": "Als standaard instellen",
+      "deleteTitle": "„{name}” verwijderen?",
+      "deleteText": "Het beleid wordt definitief verwijderd. De bijbehorende abonnementen vallen voor nieuwe tickets terug op het standaardbeleid.",
+      "deleteBlockedInUse": "{count, plural, one {# ticket verwijst naar dit beleid} other {# tickets verwijzen naar dit beleid}}; het kan niet worden verwijderd. Wijs die tickets eerst opnieuw toe of sluit ze, of behoud het beleid.",
+      "deleteConfirm": "Beleid verwijderen"
+    },
+    "errors": {
+      "forbidden": "Deze actie vereist de rol platformbeheerder met tweestapsverificatie.",
+      "invalid": "Controleer de gemarkeerde velden.",
+      "not_found": "Dat beleid bestaat niet (meer).",
+      "unchanged": "Niets te wijzigen — het beleid ziet er al zo uit.",
+      "in_use": "{count, plural, one {# ticket verwijst} other {# tickets verwijzen}} naar dit beleid; het kan niet worden verwijderd.",
+      "is_default": "Het standaardbeleid kan niet worden verwijderd. Maak eerst een ander beleid de standaard.",
+      "default_required": "De standaardmarkering kan niet worden uitgeschakeld. Markeer in plaats daarvan een ander beleid als standaard.",
+      "plan_taken": "Een van de gekozen abonnementen hoort al bij een ander beleid.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    },
+    "fieldErrors": {
+      "required": "Verplicht.",
+      "invalid": "Ongeldige waarde.",
+      "long": "Te lang.",
+      "range": "Buiten bereik.",
+      "order": "Mag niet korter zijn dan het doel voor de eerste reactie.",
+      "window": "Het einde moet na het begin liggen.",
+      "timezone": "Onbekende tijdzone. Gebruik een IANA-naam zoals Europe/Amsterdam.",
+      "not_found": "Een van de ontvangers is geen platformoperator.",
+      "plan_taken": "Al toegewezen aan een ander beleid.",
+      "default_required": "Markeer in plaats daarvan een ander beleid als standaard."
+    },
+    "notices": {
+      "created": "Beleid aangemaakt.",
+      "updated": "Beleid opgeslagen. Lopende klokken van de bijbehorende tickets volgen de nieuwe doelen bij de volgende wijziging; de worker past het nieuwe waarschuwingsaandeel binnen een minuut toe.",
+      "deleted": "Beleid verwijderd.",
+      "defaultSet": "Standaardbeleid gewijzigd."
+    }
+  }
+}

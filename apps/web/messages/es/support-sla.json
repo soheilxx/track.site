@@ -1,0 +1,176 @@
+{
+  "supportSla": {
+    "pages": {
+      "list": {
+        "title": "Políticas de SLA",
+        "intro": "Objetivos de respuesta y resolución por plan y prioridad en minutos laborables, el horario laboral en el que cuentan y qué ocurre cuando un reloj se agota. El worker las aplica cada minuto a partir de marcas de tiempo reales."
+      },
+      "new": {
+        "title": "Nueva política de SLA",
+        "intro": "Objetivos, horario laboral y escalado para uno o varios planes. Los valores vienen rellenados con los valores predeterminados de fábrica."
+      },
+      "edit": {
+        "title": "Editar política de SLA",
+        "intro": "Los cambios se aplican a los tickets nuevos y a los relojes aún en marcha; los relojes detenidos conservan su resultado."
+      }
+    },
+    "nav": {
+      "settings": "Volver a la configuración del soporte",
+      "list": "Volver a las políticas",
+      "new": "Nueva política"
+    },
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "working": "Procesando…",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "optional": "opcional",
+      "unknown": "desconocido"
+    },
+    "plans": {
+      "starter": "Starter",
+      "growth": "Growth",
+      "pro": "Pro",
+      "enterprise": "Enterprise"
+    },
+    "roles": {
+      "PLATFORM_SUPPORT": "Soporte",
+      "PLATFORM_ADMIN": "Admin"
+    },
+    "clock": {
+      "firstResponse": "primera respuesta",
+      "resolution": "resolución"
+    },
+    "units": {
+      "minutes": "minutos",
+      "hours": "horas",
+      "days": "días"
+    },
+    "howItWorks": {
+      "title": "Qué hace el worker con estas políticas",
+      "clocks": "Cada ticket recibe al crearse la política del plan de su organización (o la predeterminada); el reloj de primera respuesta se detiene con la primera respuesta de un agente y el de resolución cuando el ticket queda resuelto. «Pendiente» pausa ambos.",
+      "warnings": "Cuando el tiempo laborable restante baja a la cuota de aviso del objetivo, el responsable recibe un evento en la aplicación y un correo, una vez por reloj y nunca para un ticket en pausa.",
+      "breaches": "Pasado el vencimiento, el ticket se marca como incumplido; el responsable, los destinatarios designados y, si está activado, todos los administradores de la plataforma reciben un correo.",
+      "autoClose": "Los tickets resueltos se cierran solos tras el número de días configurado (vacío = nunca). Los tickets sin política propia siguen aquí la política predeterminada.",
+      "selection": "Una política por plan; los planes sin política usan la predeterminada. El trabajo se ejecuta cada minuto (support-sla) y evalúa hasta 2 000 tickets por ejecución."
+    },
+    "table": {
+      "caption": "Políticas de SLA con planes, objetivos, horario laboral, escalado y número de tickets que las usan",
+      "name": "Política",
+      "plans": "Planes",
+      "targets": "Objetivos (primera respuesta / resolución)",
+      "hours": "Horario laboral",
+      "escalation": "Escalado",
+      "tickets": "Tickets",
+      "actions": "Acciones",
+      "defaultBadge": "Predeterminada",
+      "allPlans": "cualquier plan sin política propia",
+      "noPlans": "ningún plan asignado",
+      "alwaysOpen": "24/7 — sin horario laboral",
+      "warningAt": "Aviso al {percent} % del objetivo",
+      "escalatesToAdmins": "Los incumplimientos se escalan a los administradores de la plataforma",
+      "noAdminEscalation": "Sin escalado a administradores",
+      "recipients": "{count, plural, =0 {Sin destinatarios designados} one {# destinatario designado} other {# destinatarios designados}}",
+      "autoClose": "Cierre automático tras {count, plural, one {# día} other {# días}}",
+      "autoCloseNever": "Sin cierre automático"
+    },
+    "empty": {
+      "title": "Todavía no hay ninguna política de SLA",
+      "text": "Sin política, los tickets muestran «Sin política de SLA» y el worker ni avisa ni escala. Cree una y márquela como predeterminada."
+    },
+    "edit": {
+      "tickets": "{count, plural, =0 {Ningún ticket usa esta política} one {# ticket usa esta política} other {# tickets usan esta política}}",
+      "updatedAt": "Último cambio: {at}"
+    },
+    "form": {
+      "general": {
+        "title": "Política",
+        "text": "Nombre, planes a los que se aplica y si es la predeterminada para cualquier plan sin política propia."
+      },
+      "name": "Nombre",
+      "nameHint": "Se muestra en la lista de tickets y en el ticket; 80 caracteres como máximo.",
+      "description": "Descripción",
+      "descriptionHint": "Nota interna para los operadores.",
+      "plans": "Planes",
+      "plansHint": "Un plan solo puede pertenecer a una política. Deje todos los planes sin marcar para una política que se aplique únicamente a través de la marca de predeterminada.",
+      "isDefault": "Política predeterminada",
+      "isDefaultHint": "Se aplica a cualquier plan sin política explícita y decide el cierre automático de los tickets sin política. Exactamente una política es la predeterminada; para sustituirla, marque otra.",
+      "targets": {
+        "title": "Objetivos",
+        "text": "Minutos laborables desde la creación (o reapertura) del ticket hasta la primera respuesta de un agente y hasta la resolución. Minutos enteros; un día cuenta como 24 horas de tiempo laborable.",
+        "caption": "Objetivos por prioridad para la primera respuesta y la resolución",
+        "priority": "Prioridad",
+        "valueLabel": "{priority}: objetivo de {clock}",
+        "unitLabel": "{priority}: unidad del objetivo de {clock}",
+        "hint": "Entre 5 minutos y 90 días; el objetivo de primera respuesta no puede superar el de resolución."
+      },
+      "hours": {
+        "title": "Horario laboral",
+        "text": "Los relojes solo cuentan dentro de estas franjas, en la zona horaria de abajo. Fines de semana y noches no cuentan.",
+        "timezone": "Zona horaria",
+        "timezoneHint": "Nombre IANA, por ejemplo Europe/Madrid. La zona también da formato a los vencimientos en las notificaciones.",
+        "days": "Días laborables",
+        "startLabel": "{day}: inicio",
+        "endLabel": "{day}: fin",
+        "hint": "Una franja por día (una pausa para comer requiere la API). Ningún día activado significa que los relojes corren las 24 horas, los siete días de la semana."
+      },
+      "escalation": {
+        "title": "Escalado",
+        "text": "Quién se entera de un reloj que se agota o se ha agotado, y cuándo se cierran solos los tickets resueltos.",
+        "warningPercent": "Aviso al … % del objetivo",
+        "warningPercentHint": "1–99. Al 80 % se avisa al responsable cuando queda una quinta parte del objetivo.",
+        "escalateToAdmins": "Escalar los incumplimientos a todos los administradores de la plataforma",
+        "escalateToAdminsHint": "Ante un incumplimiento, cada cuenta con el rol PLATFORM_ADMIN recibe un correo junto al responsable y los destinatarios designados.",
+        "notifyUserIds": "Destinatarios designados ante un incumplimiento",
+        "notifyUserIdsHint": "Solo operadores de la plataforma; nunca se puede designar aquí a un cliente.",
+        "noPlatformUsers": "Todavía no existen usuarios de plataforma.",
+        "autoCloseDays": "Cerrar automáticamente los tickets resueltos tras … días",
+        "autoCloseDaysHint": "Días enteros tras la resolución; vacío o 0 = nunca. Los tickets sin política siguen el valor de la política predeterminada."
+      },
+      "submitCreate": "Crear política",
+      "submitUpdate": "Guardar cambios",
+      "createdTitle": "Política creada. Los tickets nuevos de sus planes la adoptan de inmediato.",
+      "editPolicy": "Abrir la política"
+    },
+    "actions": {
+      "setDefault": "Establecer como predeterminada",
+      "setDefaultTitle": "¿Convertir «{name}» en la política predeterminada?",
+      "setDefaultText": "La predeterminada actual pierde la marca. Los planes sin política propia y el cierre automático de los tickets sin política siguen desde ahora la nueva predeterminada; los tickets existentes conservan su política.",
+      "setDefaultConfirm": "Establecer como predeterminada",
+      "deleteTitle": "¿Eliminar «{name}»?",
+      "deleteText": "La política se elimina definitivamente. Sus planes vuelven a la política predeterminada para los tickets nuevos.",
+      "deleteBlockedInUse": "{count, plural, one {# ticket hace referencia a esta política} other {# tickets hacen referencia a esta política}}; no se puede eliminar. Reasigne o cierre antes esos tickets, o conserve la política.",
+      "deleteConfirm": "Eliminar política"
+    },
+    "errors": {
+      "forbidden": "Esta acción requiere el rol de administrador de la plataforma con autenticación en dos pasos.",
+      "invalid": "Revise los campos señalados.",
+      "not_found": "Esa política no existe (ya).",
+      "unchanged": "Nada que cambiar: la política ya está así.",
+      "in_use": "{count, plural, one {# ticket hace referencia} other {# tickets hacen referencia}} a esta política; no se puede eliminar.",
+      "is_default": "La política predeterminada no se puede eliminar. Establezca antes otra política como predeterminada.",
+      "default_required": "La marca de predeterminada no se puede desactivar. Marque otra política como predeterminada en su lugar.",
+      "plan_taken": "Uno de los planes seleccionados ya pertenece a otra política.",
+      "generic": "No ha funcionado. Inténtelo de nuevo."
+    },
+    "fieldErrors": {
+      "required": "Obligatorio.",
+      "invalid": "Valor no válido.",
+      "long": "Demasiado largo.",
+      "range": "Fuera de rango.",
+      "order": "No puede ser más corto que el objetivo de primera respuesta.",
+      "window": "El fin debe ser posterior al inicio.",
+      "timezone": "Zona horaria desconocida. Use un nombre IANA como Europe/Madrid.",
+      "not_found": "Uno de los destinatarios no es operador de la plataforma.",
+      "plan_taken": "Ya asignado a otra política.",
+      "default_required": "Marque otra política como predeterminada en su lugar."
+    },
+    "notices": {
+      "created": "Política creada.",
+      "updated": "Política guardada. Los relojes en marcha de sus tickets siguen los nuevos objetivos en el próximo cambio; el worker aplica la nueva cuota de aviso en menos de un minuto.",
+      "deleted": "Política eliminada.",
+      "defaultSet": "Política predeterminada cambiada."
+    }
+  }
+}

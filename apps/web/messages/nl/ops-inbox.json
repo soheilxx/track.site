@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Onderdelen van de inbox",
-      "requests": "Aanvragen",
+      "requests": "Verzoeken (verouderd)",
       "privacy": "Privacyverzoeken",
       "alerts": "Alertoverzicht",
       "knowledge": "Knowledge-feedback"
@@ -76,7 +76,8 @@
         "status": "Status",
         "assignee": "Toegewezen aan",
         "delivery": "Doorsturen",
-        "actions": "Acties"
+        "actions": "Acties",
+        "ticket": "Ticket"
       },
       "open": "Openen",
       "openLabel": "Aanvraag van {name} openen",
@@ -92,7 +93,11 @@
         "previous": "Vorige pagina",
         "next": "Volgende pagina",
         "page": "Pagina {page}"
-      }
+      },
+      "openDesk": "Ticketwachtrij openen",
+      "legacyNotice": "Elk verzoek uit de openbare formulieren is nu een supportticket (kanaal ‘contactformulier’) en wordt in Support afgehandeld. Deze lijst blijft bestaan voor verzoeken van vóór de supportdesk en koppelt elk nieuwer verzoek aan zijn ticket.",
+      "openTicketLabel": "Ticket #{number} openen",
+      "ticketNone": "Geen ticket (van vóór de supportdesk)"
     },
     "detail": {
       "back": "Terug naar de inbox",
@@ -166,7 +171,10 @@
         "replyError": "niet verstuurd ({transport})",
         "by": "door {name}",
         "byUnknown": "door een voormalige operator"
-      }
+      },
+      "ticket": "Supportticket",
+      "openTicket": "Ticket openen",
+      "ticketNone": "Geen ticket — ingediend vóór de supportdesk; beantwoord vanaf hier."
     },
     "privacy": {
       "title": "Privacyverzoeken",

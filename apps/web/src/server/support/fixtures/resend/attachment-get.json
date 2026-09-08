@@ -1,0 +1,10 @@
+{
+  "object": "attachment",
+  "id": "att_01",
+  "filename": "screenshot.png",
+  "size": 20,
+  "content_type": "image/png",
+  "content_disposition": "attachment",
+  "download_url": "https://files.resend.test/inbound/4ef9a417/att_01?signature=abc123",
+  "expires_at": "2026-09-08T10:59:00.000Z"
+}

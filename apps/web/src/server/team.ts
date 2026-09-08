@@ -24,7 +24,7 @@ import { withOrg, type OrgContext } from "./session";
 // ---------------------------------------------------------------------------------------------------
 
 /** Permission areas in display order; a permission's area is the segment before the dot. */
-export const PERMISSION_AREAS = ["org", "members", "sites", "domains", "events", "config", "integrations", "credentials", "consent", "privacy", "ai", "billing", "audit", "kill_switch"] as const;
+export const PERMISSION_AREAS = ["org", "members", "sites", "domains", "events", "config", "integrations", "credentials", "consent", "privacy", "ai", "billing", "audit", "kill_switch", "support"] as const;
 export type PermissionArea = (typeof PERMISSION_AREAS)[number];
 
 export function permissionArea(permission: Permission): PermissionArea {

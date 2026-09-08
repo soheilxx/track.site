@@ -65,6 +65,22 @@ export const webEnvSchema = baseEnvSchema.extend({
    * requires two-factor regardless of this value (`opsRequiresTwoFactor()` in server/ops/platform.ts).
    */
   OPS_REQUIRE_2FA: envBool(true),
+  /**
+   * Support desk (docs/18-support-desk.md). `RESEND_WEBHOOK_SECRET` is the signing secret of the Resend
+   * webhook that delivers `email.received` events (Svix headers, `whsec_…`); without it inbound e-mail is
+   * refused. `RESEND_DELIVERY_WEBHOOK_SECRET` is the secret of an optional second webhook that posts only the
+   * delivery events to `/api/support/delivery` (unset: that route accepts the inbound secret). `SUPPORT_INBOUND_DOMAIN`
+   * (replies go to `support+t<number>@<domain>`) and `SUPPORT_FROM_ADDRESS` override the `support_settings`
+   * row per environment; unset means the stored settings apply. `SUPPORT_AUTHSERV_ID` names the authserv-id(s) of
+   * Resend's receiving MTA whose `Authentication-Results` header the desk believes (comma-separated; docs/18 §5
+   * step 3 says how to read it off a first test mail); unset → every inbound mail counts as unauthenticated
+   * (fail closed: no plus-address / subject replies, no organisation linking, no acknowledgement).
+   */
+  RESEND_WEBHOOK_SECRET: envString(),
+  RESEND_DELIVERY_WEBHOOK_SECRET: envString(),
+  SUPPORT_AUTHSERV_ID: envString(),
+  SUPPORT_INBOUND_DOMAIN: envString(),
+  SUPPORT_FROM_ADDRESS: envString(),
 });
 export type WebEnv = z.infer<typeof webEnvSchema>;
 

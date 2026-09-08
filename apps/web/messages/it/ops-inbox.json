@@ -2,7 +2,7 @@
   "opsInbox": {
     "sections": {
       "label": "Sezioni della posta in arrivo",
-      "requests": "Richieste",
+      "requests": "Richieste (legacy)",
       "privacy": "Richieste privacy",
       "alerts": "Riepilogo avvisi",
       "knowledge": "Feedback Knowledge"
@@ -76,7 +76,8 @@
         "status": "Stato",
         "assignee": "Assegnatario",
         "delivery": "Inoltro",
-        "actions": "Azioni"
+        "actions": "Azioni",
+        "ticket": "Ticket"
       },
       "open": "Apri",
       "openLabel": "Apri la richiesta di {name}",
@@ -92,7 +93,11 @@
         "previous": "Pagina precedente",
         "next": "Pagina successiva",
         "page": "Pagina {page}"
-      }
+      },
+      "openDesk": "Apri la coda dei ticket",
+      "legacyNotice": "Ogni richiesta dai moduli pubblici è ora un ticket di supporto (canale «modulo di contatto») e viene gestita in Supporto. Questo elenco resta per le richieste precedenti al support desk e collega ogni richiesta più recente al suo ticket.",
+      "openTicketLabel": "Apri il ticket #{number}",
+      "ticketNone": "Nessun ticket (prima del support desk)"
     },
     "detail": {
       "back": "Torna alla posta in arrivo",
@@ -166,7 +171,10 @@
         "replyError": "non inviata ({transport})",
         "by": "da {name}",
         "byUnknown": "da un ex operatore"
-      }
+      },
+      "ticket": "Ticket di supporto",
+      "openTicket": "Apri il ticket",
+      "ticketNone": "Nessun ticket — inviato prima del support desk; rispondi da qui."
     },
     "privacy": {
       "title": "Richieste privacy",

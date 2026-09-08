@@ -133,7 +133,8 @@
         "signals": "Qualité des données et alertes",
         "flags": "Feature flags",
         "notes": "Notes internes",
-        "audit": "Entrées d’audit récentes"
+        "audit": "Entrées d’audit récentes",
+        "tickets": "Tickets de support"
       },
       "subscription": {
         "plan": "Forfait",
@@ -403,6 +404,26 @@
         "ticketHint": "Facultatif, par exemple le ticket de support ou d’abus.",
         "confirmSuspend": "Suspendre",
         "confirmUnsuspend": "Lever la suspension"
+      },
+      "tickets": {
+        "intro": "Les tickets de l’organisation dans le support desk — numéro, objet, état et SLA ; les conversations s’ouvrent dans Support.",
+        "all": "Tous les tickets de cette organisation",
+        "count": "{count, plural, one {# ticket} other {# tickets}} · les {shown} plus récemment mis à jour",
+        "empty": "Aucun ticket",
+        "emptyText": "Personne de cette organisation n’a encore ouvert de ticket — ni par e-mail, ni par le formulaire de contact, ni depuis le tableau de bord.",
+        "unavailable": "Les tickets n’ont pas pu être chargés.",
+        "caption": "Tickets de support de l’organisation, les plus récemment mis à jour en premier",
+        "columns": {
+          "number": "Ticket",
+          "subject": "Objet",
+          "status": "État",
+          "priority": "Priorité",
+          "assignee": "Responsable",
+          "sla": "SLA",
+          "updated": "Mis à jour"
+        },
+        "unassigned": "Non attribué",
+        "openLabel": "Ouvrir le ticket #{number} : {subject}"
       }
     }
   }

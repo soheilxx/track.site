@@ -133,7 +133,8 @@
         "signals": "Datakwaliteit en alerts",
         "flags": "Feature flags",
         "notes": "Interne notities",
-        "audit": "Recente auditvermeldingen"
+        "audit": "Recente auditvermeldingen",
+        "tickets": "Supporttickets"
       },
       "subscription": {
         "plan": "Abonnement",
@@ -403,6 +404,26 @@
         "ticketHint": "Optioneel, bijvoorbeeld het support- of misbruikticket.",
         "confirmSuspend": "Schorsen",
         "confirmUnsuspend": "Schorsing opheffen"
+      },
+      "tickets": {
+        "intro": "De tickets van de organisatie in de supportdesk — nummer, onderwerp, status en SLA; gesprekken openen in Support.",
+        "all": "Alle tickets van deze organisatie",
+        "count": "{count, plural, one {# ticket} other {# tickets}} · de {shown} laatst bijgewerkte",
+        "empty": "Geen tickets",
+        "emptyText": "Niemand van deze organisatie heeft nog een ticket geopend — niet per e-mail, contactformulier of dashboard.",
+        "unavailable": "De tickets konden niet worden geladen.",
+        "caption": "Supporttickets van de organisatie, laatst bijgewerkt eerst",
+        "columns": {
+          "number": "Ticket",
+          "subject": "Onderwerp",
+          "status": "Status",
+          "priority": "Prioriteit",
+          "assignee": "Eigenaar",
+          "sla": "SLA",
+          "updated": "Bijgewerkt"
+        },
+        "unassigned": "Niet toegewezen",
+        "openLabel": "Ticket #{number} openen: {subject}"
       }
     }
   }

@@ -133,7 +133,8 @@
         "signals": "Datenqualität und Alerts",
         "flags": "Feature-Flags",
         "notes": "Interne Notizen",
-        "audit": "Letzte Audit-Einträge"
+        "audit": "Letzte Audit-Einträge",
+        "tickets": "Support-Tickets"
       },
       "subscription": {
         "plan": "Tarif",
@@ -403,6 +404,26 @@
         "ticketHint": "Optional, z. B. das Support- oder Abuse-Ticket.",
         "confirmSuspend": "Sperren",
         "confirmUnsuspend": "Sperrung aufheben"
+      },
+      "tickets": {
+        "intro": "Die Tickets der Organisation im Support-Desk — Nummer, Betreff, Status und SLA; die Unterhaltungen öffnen sich im Support.",
+        "all": "Alle Tickets dieser Organisation",
+        "count": "{count, plural, one {# Ticket} other {# Tickets}} · die {shown} zuletzt aktualisierten",
+        "empty": "Keine Tickets",
+        "emptyText": "Aus dieser Organisation wurde noch kein Ticket eröffnet — weder per E-Mail, Kontaktformular noch Dashboard.",
+        "unavailable": "Die Tickets konnten nicht geladen werden.",
+        "caption": "Support-Tickets der Organisation, zuletzt aktualisierte zuerst",
+        "columns": {
+          "number": "Ticket",
+          "subject": "Betreff",
+          "status": "Status",
+          "priority": "Priorität",
+          "assignee": "Zuständig",
+          "sla": "SLA",
+          "updated": "Aktualisiert"
+        },
+        "unassigned": "Nicht zugewiesen",
+        "openLabel": "Ticket #{number} öffnen: {subject}"
       }
     }
   }

@@ -1,0 +1,182 @@
+{
+  "supportPortal": {
+    "nav": "Soporte",
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "working": "Procesando…",
+      "none": "—",
+      "optional": "opcional"
+    },
+    "list": {
+      "title": "Soporte",
+      "intro": "Los tickets de soporte de su organización: siga las respuestas, conteste directamente desde aquí y abra un ticket nuevo cuando algo no funcione.",
+      "newTicket": "Nuevo ticket",
+      "views": {
+        "label": "Vistas de tickets",
+        "open": "Abiertos",
+        "solved": "Resueltos",
+        "all": "Todos"
+      },
+      "caption": "Tickets de soporte de su organización",
+      "columns": {
+        "number": "Ticket",
+        "subject": "Asunto",
+        "status": "Estado",
+        "priority": "Prioridad",
+        "category": "Categoría",
+        "requester": "Abierto por",
+        "updated": "Última actualización"
+      },
+      "lastFromAgent": "Track respondió",
+      "lastFromYou": "Su organización escribió",
+      "rated": "Valorado {score}/5",
+      "open": "Abrir el ticket {number}",
+      "empty": {
+        "openTitle": "No hay tickets abiertos",
+        "openText": "Todo lo que nos envió está respondido o resuelto. Abra un ticket nuevo cuando algo no funcione.",
+        "solvedTitle": "Todavía no hay tickets resueltos",
+        "solvedText": "Los tickets resueltos y cerrados aparecerán aquí.",
+        "allTitle": "Todavía no hay tickets",
+        "allText": "Su organización aún no ha contactado con soporte desde el panel ni desde el formulario de contacto."
+      },
+      "limited": "Se muestran los {limit} tickets actualizados más recientemente.",
+      "readOnly": "Su rol puede ver los tickets. Abrir y responder tickets requiere un rol con acceso de escritura al soporte (todos los roles salvo «Solo lectura»).",
+      "unavailableTitle": "Los tickets de soporte no están disponibles",
+      "unavailableText": "Las tablas de tickets todavía no están aplicadas en esta base de datos (migración 0015). Hasta entonces, contáctenos mediante el formulario de contacto; cada solicitud se responde por correo electrónico."
+    },
+    "categories": {
+      "tracking": "Tracking y eventos",
+      "integrations": "Destinos e integraciones",
+      "consent": "Consentimiento y privacidad",
+      "billing": "Facturación y plan",
+      "account": "Cuenta y equipo",
+      "other": "Otro asunto"
+    },
+    "form": {
+      "title": "Nuevo ticket",
+      "intro": "Describa qué no funciona o qué necesita. Cada ticket se responde por correo electrónico y permanece visible aquí para toda su organización.",
+      "back": "Volver a los tickets",
+      "subject": "Asunto",
+      "subjectHint": "Una línea que resuma el tema, de {min} a {max} caracteres.",
+      "category": "Categoría",
+      "priority": "Prioridad sugerida",
+      "priorityHint": "Su estimación nos ayuda a ordenar la cola; nuestro equipo de soporte puede ajustarla.",
+      "message": "Mensaje",
+      "messageHint": "¿Qué ocurrió, qué esperaba, desde cuándo? Los nombres de sitios, de eventos y las capturas de pantalla ayudan — de {min} a {max} caracteres.",
+      "attachments": "Adjuntos",
+      "attachmentsHint": "Hasta {count} archivos de {size} cada uno: imágenes, PDF, texto, CSV, JSON, Word, Excel o un archivo de correo (.eml).",
+      "selected": "{count, plural, =1 {1 archivo seleccionado} other {# archivos seleccionados}}",
+      "submit": "Abrir ticket",
+      "requester": "El ticket se abre a nombre de {name} ({email}); las respuestas se envían a esta dirección.",
+      "suggestions": {
+        "title": "Quizá esto ya le ayude",
+        "intro": "Artículos de Tracking Knowledge que coinciden con lo que está escribiendo. Se abren en una pestaña nueva.",
+        "empty": "Todavía no hay ningún artículo coincidente — siga escribiendo o simplemente abra el ticket.",
+        "typing": "Escriba unas palabras en el asunto o el mensaje para ver artículos relacionados.",
+        "reading": "{minutes} min de lectura",
+        "searching": "Buscando artículos…"
+      }
+    },
+    "detail": {
+      "back": "Volver a los tickets",
+      "opened": "Abierto el {date} por {name}",
+      "openedForm": "Abierto el {date} mediante el formulario de contacto",
+      "openedEmail": "Abierto el {date} por correo electrónico",
+      "meta": {
+        "status": "Estado",
+        "priority": "Prioridad",
+        "category": "Categoría",
+        "channel": "Canal",
+        "lastUpdate": "Última actualización",
+        "resolved": "Resuelto el",
+        "reopened": "{count, plural, =1 {Reabierto una vez} other {Reabierto # veces}}"
+      },
+      "merged": "Este ticket se fusionó con el ticket {number}. La conversación continúa allí.",
+      "mergedLink": "Abrir el ticket {number}",
+      "conversation": {
+        "title": "Conversación",
+        "you": "Usted",
+        "agent": "Soporte de Track",
+        "system": "Track",
+        "attachments": "Adjuntos",
+        "download": "Descargar {name} ({size})",
+        "empty": "Todavía no hay mensajes."
+      },
+      "reply": {
+        "title": "Responder",
+        "body": "Su mensaje",
+        "bodyHint": "De {min} a {max} caracteres. Su respuesta se envía a nuestro equipo de soporte; además recibirá cada respuesta por correo electrónico.",
+        "attachments": "Adjuntos",
+        "send": "Enviar respuesta",
+        "reopens": "Este ticket está resuelto. Enviar un mensaje lo reabre.",
+        "pendingHint": "Nuestro equipo de soporte espera su respuesta.",
+        "closedBlocked": "Este ticket ya no puede recibir mensajes. Abra un ticket nuevo si necesita más ayuda."
+      },
+      "solve": {
+        "button": "Marcar como resuelto",
+        "title": "¿Marcar el ticket como resuelto?",
+        "description": "El ticket {number} se marcará como resuelto. Después podrá seguir respondiendo, lo que lo reabrirá.",
+        "confirm": "Marcar como resuelto"
+      },
+      "csat": {
+        "title": "¿Qué tal lo hicimos?",
+        "intro": "Su ticket está resuelto. Valore el soporte recibido — una respuesta por ticket, visible para nuestro equipo de soporte.",
+        "legend": "Valoración de 1 (muy insatisfecho) a 5 (muy satisfecho)",
+        "scores": {
+          "1": "1 – Muy insatisfecho",
+          "2": "2 – Insatisfecho",
+          "3": "3 – Neutral",
+          "4": "4 – Satisfecho",
+          "5": "5 – Muy satisfecho"
+        },
+        "comment": "Comentario",
+        "commentHint": "Opcional, hasta {max} caracteres.",
+        "submit": "Enviar valoración",
+        "rated": "Su organización valoró este ticket con {score} de 5 el {date}.",
+        "disabled": "Las encuestas de satisfacción están desactivadas por ahora."
+      },
+      "timeline": {
+        "title": "Cronología",
+        "caption": "Cambios de este ticket",
+        "actor": {
+          "customer": "Su organización",
+          "agent": "Soporte de Track",
+          "system": "Track"
+        },
+        "change": "{from} → {to}",
+        "channel": "mediante {channel}",
+        "score": "Valoración {score}/5",
+        "mergedInto": "en el ticket {number}"
+      }
+    },
+    "notices": {
+      "created": "Su ticket se ha abierto. Responderemos por correo electrónico y aquí.",
+      "replied": "Su respuesta se añadió al ticket.",
+      "reopened": "Su respuesta se añadió y el ticket se reabrió.",
+      "solved": "El ticket se marcó como resuelto.",
+      "rated": "Gracias por su valoración."
+    },
+    "errors": {
+      "forbidden": "Su rol no permite esta acción.",
+      "invalid": "Revise los campos marcados.",
+      "not_found": "Ese ticket no existe o pertenece a otra organización.",
+      "invalid_state": "Eso no es posible en el estado actual del ticket.",
+      "attachments": "Algunos adjuntos fueron rechazados; no se envió nada. Quítelos e inténtelo de nuevo.",
+      "confirmation_required": "Confirme primero la acción.",
+      "already_rated": "Este ticket ya fue valorado.",
+      "csat_disabled": "Las encuestas de satisfacción están desactivadas por ahora.",
+      "generic": "No ha funcionado. Inténtelo de nuevo.",
+      "subject": "Escriba un asunto de {min} a {max} caracteres.",
+      "body": "Escriba un mensaje de {min} a {max} caracteres.",
+      "category": "Elija una categoría.",
+      "score": "Elija una valoración entre 1 y 5."
+    },
+    "attachmentReasons": {
+      "too_many": "demasiados archivos",
+      "too_large": "mayor de {size}",
+      "size_unknown": "tamaño desconocido",
+      "type_not_allowed": "tipo de archivo no permitido"
+    }
+  }
+}

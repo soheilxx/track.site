@@ -1,0 +1,182 @@
+{
+  "supportPortal": {
+    "nav": "Support",
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "working": "Working…",
+      "none": "—",
+      "optional": "optional"
+    },
+    "list": {
+      "title": "Support",
+      "intro": "Your organisation’s support tickets: follow replies, answer directly from here and open a new ticket when something is not working.",
+      "newTicket": "New ticket",
+      "views": {
+        "label": "Ticket views",
+        "open": "Open",
+        "solved": "Solved",
+        "all": "All"
+      },
+      "caption": "Support tickets of your organisation",
+      "columns": {
+        "number": "Ticket",
+        "subject": "Subject",
+        "status": "Status",
+        "priority": "Priority",
+        "category": "Category",
+        "requester": "Opened by",
+        "updated": "Last update"
+      },
+      "lastFromAgent": "Track replied",
+      "lastFromYou": "Your side wrote",
+      "rated": "Rated {score}/5",
+      "open": "Open ticket {number}",
+      "empty": {
+        "openTitle": "No open tickets",
+        "openText": "Everything you sent us is answered or solved. Open a new ticket when something is not working.",
+        "solvedTitle": "No solved tickets yet",
+        "solvedText": "Solved and closed tickets will be listed here.",
+        "allTitle": "No tickets yet",
+        "allText": "Your organisation has not contacted support from the dashboard or the contact form yet."
+      },
+      "limited": "Showing the {limit} most recently updated tickets.",
+      "readOnly": "Your role can view tickets. Opening and answering tickets needs a role with support write access (every role except Read only).",
+      "unavailableTitle": "Support tickets are not available",
+      "unavailableText": "The ticket tables are not applied to this database yet (migration 0015). Until then, reach us through the contact form; every request is answered by e-mail."
+    },
+    "categories": {
+      "tracking": "Tracking & events",
+      "integrations": "Destinations & integrations",
+      "consent": "Consent & privacy",
+      "billing": "Billing & plan",
+      "account": "Account & team",
+      "other": "Something else"
+    },
+    "form": {
+      "title": "New ticket",
+      "intro": "Describe what is not working or what you need. Every ticket is answered by e-mail and stays visible here for your whole organisation.",
+      "back": "Back to tickets",
+      "subject": "Subject",
+      "subjectHint": "One line that says what it is about, {min}–{max} characters.",
+      "category": "Category",
+      "priority": "Suggested priority",
+      "priorityHint": "Your estimate helps us sort the queue; our support team may adjust it.",
+      "message": "Message",
+      "messageHint": "What happened, what did you expect, since when? Site names, event names and screenshots help — {min}–{max} characters.",
+      "attachments": "Attachments",
+      "attachmentsHint": "Up to {count} files, {size} each: images, PDF, text, CSV, JSON, Word, Excel or an e-mail file (.eml).",
+      "selected": "{count, plural, =1 {1 file selected} other {# files selected}}",
+      "submit": "Open ticket",
+      "requester": "The ticket is opened in the name of {name} ({email}); replies are sent to this address.",
+      "suggestions": {
+        "title": "Maybe this already helps",
+        "intro": "Articles from Tracking Knowledge that match what you are typing. They open in a new tab.",
+        "empty": "No matching article yet — keep typing or simply open the ticket.",
+        "typing": "Type a few words in the subject or message to see matching articles.",
+        "reading": "{minutes} min read",
+        "searching": "Searching articles…"
+      }
+    },
+    "detail": {
+      "back": "Back to tickets",
+      "opened": "Opened {date} by {name}",
+      "openedForm": "Opened {date} via the contact form",
+      "openedEmail": "Opened {date} by e-mail",
+      "meta": {
+        "status": "Status",
+        "priority": "Priority",
+        "category": "Category",
+        "channel": "Channel",
+        "lastUpdate": "Last update",
+        "resolved": "Solved on",
+        "reopened": "{count, plural, =1 {Reopened once} other {Reopened # times}}"
+      },
+      "merged": "This ticket was merged into ticket {number}. The conversation continues there.",
+      "mergedLink": "Open ticket {number}",
+      "conversation": {
+        "title": "Conversation",
+        "you": "You",
+        "agent": "Track Support",
+        "system": "Track",
+        "attachments": "Attachments",
+        "download": "Download {name} ({size})",
+        "empty": "No messages yet."
+      },
+      "reply": {
+        "title": "Reply",
+        "body": "Your message",
+        "bodyHint": "{min}–{max} characters. Your reply is sent to our support team; you will get every answer by e-mail as well.",
+        "attachments": "Attachments",
+        "send": "Send reply",
+        "reopens": "This ticket is solved. Sending a message reopens it.",
+        "pendingHint": "Our support team is waiting for your answer.",
+        "closedBlocked": "This ticket cannot receive messages any more. Open a new ticket if you need further help."
+      },
+      "solve": {
+        "button": "Mark as solved",
+        "title": "Mark ticket as solved?",
+        "description": "Ticket {number} will be marked as solved. You can still reply afterwards, which reopens it.",
+        "confirm": "Mark as solved"
+      },
+      "csat": {
+        "title": "How did we do?",
+        "intro": "Your ticket is solved. Rate the support you received — one answer per ticket, visible to our support team.",
+        "legend": "Rating from 1 (very unhappy) to 5 (very happy)",
+        "scores": {
+          "1": "1 – Very unhappy",
+          "2": "2 – Unhappy",
+          "3": "3 – Neutral",
+          "4": "4 – Happy",
+          "5": "5 – Very happy"
+        },
+        "comment": "Comment",
+        "commentHint": "Optional, up to {max} characters.",
+        "submit": "Send rating",
+        "rated": "Your organisation rated this ticket {score} out of 5 on {date}.",
+        "disabled": "Satisfaction surveys are switched off at the moment."
+      },
+      "timeline": {
+        "title": "Timeline",
+        "caption": "Changes of this ticket",
+        "actor": {
+          "customer": "Your organisation",
+          "agent": "Track Support",
+          "system": "Track"
+        },
+        "change": "{from} → {to}",
+        "channel": "via {channel}",
+        "score": "Rating {score}/5",
+        "mergedInto": "into ticket {number}"
+      }
+    },
+    "notices": {
+      "created": "Your ticket was opened. We will answer by e-mail and here.",
+      "replied": "Your reply was added to the ticket.",
+      "reopened": "Your reply was added and the ticket was reopened.",
+      "solved": "The ticket was marked as solved.",
+      "rated": "Thank you for your rating."
+    },
+    "errors": {
+      "forbidden": "Your role is not allowed to do that.",
+      "invalid": "Please check the highlighted fields.",
+      "not_found": "That ticket does not exist or belongs to another organisation.",
+      "invalid_state": "That is not possible in the ticket’s current state.",
+      "attachments": "Some attachments were refused; nothing was sent. Remove them and try again.",
+      "confirmation_required": "Confirm the action first.",
+      "already_rated": "This ticket was rated already.",
+      "csat_disabled": "Satisfaction surveys are switched off at the moment.",
+      "generic": "That did not work. Please try again.",
+      "subject": "Enter a subject of {min}–{max} characters.",
+      "body": "Enter a message of {min}–{max} characters.",
+      "category": "Choose a category.",
+      "score": "Choose a rating between 1 and 5."
+    },
+    "attachmentReasons": {
+      "too_many": "too many files",
+      "too_large": "larger than {size}",
+      "size_unknown": "size unknown",
+      "type_not_allowed": "file type not allowed"
+    }
+  }
+}

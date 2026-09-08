@@ -1,0 +1,110 @@
+{
+  "support": {
+    "status": {
+      "new": "New",
+      "open": "Open",
+      "pending": "Pending",
+      "on_hold": "On hold",
+      "solved": "Solved",
+      "closed": "Closed",
+      "spam": "Spam"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "channel": {
+      "email": "E-mail",
+      "form": "Contact form",
+      "dashboard": "Dashboard",
+      "api": "API"
+    },
+    "direction": {
+      "inbound": "Received",
+      "outbound": "Sent",
+      "note": "Internal note"
+    },
+    "authorKind": {
+      "customer": "Customer",
+      "agent": "Agent",
+      "system": "System"
+    },
+    "delivery": {
+      "queued": "Queued",
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "bounced": "Bounced",
+      "complained": "Reported as spam",
+      "failed": "Failed",
+      "na": "Not applicable"
+    },
+    "eventKind": {
+      "created": "Ticket created",
+      "status": "Status changed",
+      "priority": "Priority changed",
+      "assignee": "Assignee changed",
+      "tags": "Tags changed",
+      "merged": "Merged",
+      "sla_breach": "SLA breached",
+      "sla_warning": "SLA warning",
+      "reply": "Reply",
+      "note": "Internal note",
+      "csat": "Satisfaction rating",
+      "reopened": "Reopened"
+    },
+    "macroScope": {
+      "global": "Global",
+      "personal": "Personal"
+    },
+    "sla": {
+      "firstResponse": "First response",
+      "resolution": "Resolution",
+      "paused": "Clock paused",
+      "breached": "Breached",
+      "onTrack": "On track",
+      "noPolicy": "No SLA policy"
+    },
+    "ticketNumber": "#{number}",
+    "pages": {
+      "tickets": {
+        "title": "Support",
+        "intro": "Support tickets from e-mail, the contact form and the customer dashboard: queue, SLA state, replies, internal notes and macros."
+      },
+      "ticket": {
+        "title": "Ticket",
+        "intro": "Conversation, internal notes, SLA clock and timeline of one ticket.",
+        "back": "Back to the ticket list"
+      },
+      "macros": {
+        "title": "Macros",
+        "intro": "Canned answers with optional actions: global ones for every operator, personal ones for yourself."
+      },
+      "views": {
+        "title": "Views",
+        "intro": "Saved ticket lists: shared views for the team and personal views for your own queue."
+      },
+      "settings": {
+        "title": "Support settings",
+        "intro": "Sender and reply domain, signature, business hours, SLA policies, auto-assignment and satisfaction surveys."
+      },
+      "reports": {
+        "title": "Support reports",
+        "intro": "Volume, response and resolution times, SLA attainment and satisfaction — from real timestamps only."
+      }
+    },
+    "placeholder": {
+      "title": "In preparation",
+      "text": "This part of the support desk is being built. Nothing here is measured yet, so no numbers are shown."
+    },
+    "customer": {
+      "title": "Support",
+      "intro": "Your organisation’s support tickets: follow replies and answer directly from here.",
+      "placeholder": {
+        "title": "Support tickets are coming",
+        "text": "The ticket view is being built. Until then, reach us through the contact form; every request is answered by e-mail."
+      }
+    }
+  }
+}

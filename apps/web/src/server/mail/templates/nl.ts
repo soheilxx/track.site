@@ -35,4 +35,13 @@ export const MAIL_COPY_NL: MailCopy = {
     text: "Je tweestapsverificatie voor {product} is gereset door {actorRole}.\n\nHet geheim van je authenticator-app en je back-upcodes zijn verwijderd en je bent overal uitgelogd. Log in met je wachtwoord en stel tweestapsverificatie opnieuw in onder Instellingen → Beveiliging.\n\nAls je dit niet hebt aangevraagd, neem dan direct contact met ons op: {supportLink}\n\n— Track",
     roles: { platformAdmin: "een platformbeheerder van Track", owner: "een eigenaar van je organisatie", admin: "een beheerder van je organisatie" },
   },
+  supportAssigned: {
+    subject: "[Track #{number}] aan jou toegewezen: {subject}",
+    text: "{actor} heeft supportticket #{number} aan jou toegewezen.\n\nOnderwerp: {subject}\n\nTicket openen in Track Operations: {url}\n\n—\nJe ontvangt deze e-mail omdat 'E-mail mij als een ticket aan mij wordt toegewezen' is ingeschakeld in je meldingsinstellingen (de bel in Track Operations).",
+    system: "De supportdesk (automatische toewijzing)",
+  },
+  supportCustomerReply: {
+    subject: "[Track #{number}] nieuw antwoord van de klant: {subject}",
+    text: "{requester} heeft geantwoord op supportticket #{number}, dat aan jou is toegewezen.\n\nOnderwerp: {subject}\n\nTicket openen in Track Operations: {url}\n\n—\nJe ontvangt deze e-mail omdat 'E-mail mij als een klant op mijn ticket antwoordt' is ingeschakeld in je meldingsinstellingen (de bel in Track Operations).",
+  },
 };

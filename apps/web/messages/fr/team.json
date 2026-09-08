@@ -127,7 +127,8 @@
         "ai": "Track AI",
         "billing": "Facturation",
         "audit": "Audit",
-        "kill_switch": "Kill switch"
+        "kill_switch": "Kill switch",
+        "support": "Support"
       },
       "permissions": {
         "org_read": "Voir l’organisation",
@@ -162,7 +163,9 @@
         "billing_manage": "Gérer l’abonnement",
         "audit_read": "Voir le journal d’audit",
         "kill_switch_manage": "Actionner les kill switches",
-        "members_security": "Réinitialiser la double authentification des membres"
+        "members_security": "Réinitialiser la double authentification des membres",
+        "support_read": "Consulter les tickets de support",
+        "support_write": "Ouvrir des tickets de support et y répondre"
       }
     },
     "approvals": {
