@@ -13,8 +13,9 @@ export function OpsPageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="min-w-0">
+    <header className="flex flex-wrap items-start justify-between gap-4">
+      {/* the text column keeps a real minimum width; wide toolbars wrap below it instead of squeezing the intro to one word per line */}
+      <div className="min-w-0 flex-1 basis-80">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">{title}</h1>
         {intro ? <p className="mt-1 max-w-3xl text-sm text-ink-3">{intro}</p> : null}
         {context ? (
@@ -23,7 +24,7 @@ export function OpsPageHeader({
           </div>
         ) : null}
       </div>
-      {actions ? <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div> : null}
+      {actions ? <div className="flex max-w-full flex-wrap items-center gap-2">{actions}</div> : null}
     </header>
   );
 }
