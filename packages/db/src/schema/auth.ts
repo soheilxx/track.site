@@ -82,6 +82,9 @@ export const organization = pgTable(
     slug: text("slug").notNull(),
     logo: text("logo"),
     metadata: text("metadata"),
+    /** tenant kill switch set by platform admins (migration 0014, Track Operations → Controls); null = active */
+    suspendedAt: tz("suspended_at"),
+    suspendedReason: text("suspended_reason"),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex("organization_slug_uq").on(t.slug)],

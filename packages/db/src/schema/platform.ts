@@ -21,6 +21,16 @@ export const auditLog = pgTable(
   (t) => [index("audit_log_org_time_idx").on(t.organizationId, t.createdAt), index("audit_log_target_idx").on(t.targetType, t.targetId)],
 );
 
+export const BREAK_GLASS_MODES = ["read_only"] as const;
+export type BreakGlassMode = (typeof BREAK_GLASS_MODES)[number];
+
+/**
+ * Time-boxed, justified, approved access of one platform operator to one organization's data (docs/03
+ * §B8, docs/17). A grant is active only when `approved_at` is set, `revoked_at` is null and now lies in
+ * [`starts_at`, `ends_at`); `mode` is `read_only` — the only mode there is. Four-eyes: `approved_by` is a
+ * second platform admin when one exists, otherwise the requester (self-approved, ticket + reason mandatory).
+ * Revoked from `tracksite_app` (migration 0001): tenants never read this table directly.
+ */
 export const breakGlassAccess = pgTable(
   "break_glass_access",
   {
@@ -30,16 +40,22 @@ export const breakGlassAccess = pgTable(
     reason: text("reason").notNull(),
     ticketRef: text("ticket_ref"),
     approvedBy: uuid("approved_by"),
+    approvedAt: tz("approved_at"),
+    mode: text("mode").$type<BreakGlassMode>().notNull().default("read_only"),
     startsAt: tz("starts_at").notNull(),
     endsAt: tz("ends_at").notNull(),
     revokedAt: tz("revoked_at"),
+    customerNotifiedAt: tz("customer_notified_at"),
     createdAt: createdAt(),
   },
-  (t) => [index("break_glass_org_idx").on(t.organizationId, t.endsAt)],
+  (t) => [index("break_glass_org_idx").on(t.organizationId, t.endsAt), index("break_glass_user_org_idx").on(t.platformUserId, t.organizationId, t.endsAt)],
 );
 
 export const contactKindEnum = pgEnum("contact_kind", ["contact", "demo", "support"]);
-export const contactStatusEnum = pgEnum("contact_status", ["new", "handled", "spam"]);
+
+/** Inbox workflow of a contact request (migration 0014 turned the former enum into text; `handled` became `done`). */
+export const CONTACT_REQUEST_STATUSES = ["new", "in_progress", "done", "spam"] as const;
+export type ContactRequestStatus = (typeof CONTACT_REQUEST_STATUSES)[number];
 
 /** Persisted inbox for public forms (contact, demo, support); email delivery is additional. */
 export const contactRequests = pgTable(
@@ -52,9 +68,11 @@ export const contactRequests = pgTable(
     company: text("company"),
     message: text("message").notNull(),
     locale: text("locale").notNull().default("en"),
-    status: contactStatusEnum("status").notNull().default("new"),
+    status: text("status").$type<ContactRequestStatus>().notNull().default("new"),
     organizationId: uuid("organization_id"),
     userId: uuid("user_id"),
+    /** platform user working on the request (Track Operations → Inbox) */
+    assigneeUserId: uuid("assignee_user_id"),
     ipHash: text("ip_hash"),
     uaFamily: text("ua_family"),
     deliveredAt: tz("delivered_at"),
@@ -62,5 +80,5 @@ export const contactRequests = pgTable(
     handledAt: tz("handled_at"),
     createdAt: createdAt(),
   },
-  (t) => [index("contact_requests_status_idx").on(t.status, t.createdAt)],
+  (t) => [index("contact_requests_status_idx").on(t.status, t.createdAt), index("contact_requests_assignee_idx").on(t.assigneeUserId)],
 );

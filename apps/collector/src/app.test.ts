@@ -120,6 +120,33 @@ describe("collector /health", () => {
     const { app } = build();
     const res = await app.request("/health");
     expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ ok: true, queue: { driver: "memory" } });
+    expect(await res.json()).toMatchObject({ ok: true, queue: { driver: "memory" }, killSwitch: false, killSwitchSource: null });
+  });
+});
+
+describe("platform kill switch", () => {
+  const post = (app: ReturnType<typeof createCollectorApp>, path: string, body: unknown, headers: Record<string, string> = {}) =>
+    app.request(path, { method: "POST", body: JSON.stringify(body), headers: { origin: "https://shop.example.com", "user-agent": "Mozilla/5.0 Chrome/128", "content-type": "text/plain", ...headers } });
+
+  it("stops browser and server batches with 503 while the database switch is engaged and reports it on /health", async () => {
+    const queue = new MemoryQueue();
+    const app = createCollectorApp({ env, queue, sites: resolver(site()), pool: null, logger: silentLogger(), killSwitch: { engaged: async () => true } });
+    const browser = await post(app, "/v1/e", batch(1));
+    expect(browser.status).toBe(503);
+    expect(browser.headers.get("retry-after")).toBe("300");
+    expect(await browser.json()).toMatchObject({ ok: false, reason: "kill_switch" });
+    const server = await post(app, "/v1/s", { events: [] }, { authorization: "Bearer tsk_test_valid" });
+    expect(server.status).toBe(503);
+    const health = await app.request("/health");
+    expect(health.status).toBe(503);
+    expect(await health.json()).toMatchObject({ ok: false, killSwitch: true, killSwitchSource: "platform" });
+    expect(await queue.receive(QUEUES.ingest)).toHaveLength(0);
+  });
+
+  it("lets traffic through when the switch is released and prefers the environment variable as the source", async () => {
+    const released = createCollectorApp({ env, queue: new MemoryQueue(), sites: resolver(site()), pool: null, logger: silentLogger(), killSwitch: { engaged: async () => false } });
+    expect((await post(released, "/v1/e", batch(1))).status).toBe(202);
+    const envKilled = createCollectorApp({ env: { ...env, KILL_SWITCH_GLOBAL: true }, queue: new MemoryQueue(), sites: resolver(site()), pool: null, logger: silentLogger(), killSwitch: { engaged: async () => false } });
+    expect(await (await envKilled.request("/health")).json()).toMatchObject({ killSwitch: true, killSwitchSource: "env" });
   });
 });

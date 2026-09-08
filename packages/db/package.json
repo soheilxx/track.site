@@ -21,6 +21,8 @@
     "migrate:check": "drizzle-kit check && tsx src/cli/migrate-check.ts",
     "schema:check": "tsx src/cli/schema-check.ts",
     "seed": "tsx src/cli/seed.ts",
+    "ops:grant": "tsx src/cli/ops-grant.ts",
+    "ops:users": "tsx src/cli/ops-users.ts",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {

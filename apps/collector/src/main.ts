@@ -6,6 +6,7 @@ import { createPool } from "@track-site/db/client";
 import { createQueue } from "@track-site/queue";
 import { createCollectorApp } from "./app.ts";
 import { collectorEnv } from "./env.ts";
+import { PgGlobalKillSwitch } from "./kill-switch.ts";
 import { PgSiteResolver } from "./site-cache.ts";
 
 loadDotenv({ path: path.resolve(process.cwd(), "../../.env"), quiet: true });
@@ -28,7 +29,7 @@ let primary: KeyProvider | null = null;
 if (env.KMS_DRIVER === "aws" && env.AWS_KMS_KEY_ID) primary = new AwsKmsKeyProvider(env.AWS_KMS_KEY_ID, env.AWS_REGION ?? "eu-central-1", "aws-kms-v1");
 else if (env.MASTER_KEY) primary = new LocalKeyProvider(env.MASTER_KEY, env.MASTER_KEY_ID ?? "local-v1");
 const vault = primary ? new SecretVault(primary, env.LEGACY_MASTER_KEY ? [new LocalKeyProvider(env.LEGACY_MASTER_KEY, env.LEGACY_MASTER_KEY_ID ?? "local-v0")] : []) : null;
-const app = createCollectorApp({ env, queue, sites: new PgSiteResolver(pool, env.SITE_CACHE_TTL_MS), pool, logger, vault });
+const app = createCollectorApp({ env, queue, sites: new PgSiteResolver(pool, env.SITE_CACHE_TTL_MS), pool, logger, vault, killSwitch: new PgGlobalKillSwitch(pool, 5_000, logger) });
 
 const server = serve({ fetch: app.fetch, port: env.COLLECTOR_PORT, hostname: "0.0.0.0" }, (info) => {
   logger.info({ port: info.port, queue: queue.driver }, "collector listening");

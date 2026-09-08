@@ -46,6 +46,21 @@ try {
   console.error(`plans synced from the catalogue (${PLANS.length})`);
 
   if (seedDemo) {
+    const password = await hashPassword("Demo-Password-123!");
+
+    // Dev platform admin for the Track Operations console (/ops). Not a member of any organization:
+    // operators and tenants stay separate. No two-factor — fine locally with OPS_REQUIRE_2FA=false.
+    const opsEmail = "ops@acme.test";
+    const [ops] = await db.select({ id: user.id, platformRole: user.platformRole }).from(user).where(eq(user.email, opsEmail)).limit(1);
+    if (!ops) {
+      const [row] = await db.insert(user).values({ name: "Otto Operator", email: opsEmail, emailVerified: true, platformRole: "PLATFORM_ADMIN", twoFactorEnabled: false }).returning();
+      await db.insert(account).values({ issuer: "local:credential", accountId: row!.id, providerId: "credential", userId: row!.id, password });
+      console.error("dev platform admin seeded: ops@acme.test / Demo-Password-123! (PLATFORM_ADMIN, no two-factor)");
+    } else if (ops.platformRole !== "PLATFORM_ADMIN") {
+      await db.update(user).set({ platformRole: "PLATFORM_ADMIN" }).where(eq(user.id, ops.id));
+      console.error("dev platform admin restored to PLATFORM_ADMIN: ops@acme.test");
+    }
+
     const existing = await db.select({ id: organization.id }).from(organization).where(eq(organization.slug, "acme-demo")).limit(1);
     if (existing.length) {
       console.error("demo organization already exists, skipping");
@@ -53,7 +68,6 @@ try {
       const [org] = await db.insert(organization).values({ name: "Acme Demo", slug: "acme-demo" }).returning();
       const orgId = org!.id;
       await db.insert(orgSettings).values({ organizationId: orgId, locale: "en" });
-      const password = await hashPassword("Demo-Password-123!");
       const demoUsers = [
         { email: "owner@acme.test", name: "Olivia Owner", role: "OWNER" },
         { email: "dev@acme.test", name: "Devin Developer", role: "DEVELOPER" },

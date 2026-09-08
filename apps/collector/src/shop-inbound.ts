@@ -4,6 +4,7 @@ import { newUlid } from "@track-site/core";
 import type { IncomingServerEvent, IngestMessage } from "@track-site/events";
 import { QUEUES, partitionKeyFor } from "@track-site/queue";
 import type { CollectorDeps } from "./app.ts";
+import { killSwitchState } from "./kill-switch.ts";
 import type { ResolvedSite } from "./site-cache.ts";
 
 /**
@@ -343,7 +344,7 @@ export function registerShopInbound(app: Hono, deps: CollectorDeps, now: () => D
   };
 
   app.post("/v1/shop/:platform/:trackingId/:token", async (c) => {
-    if (deps.env.KILL_SWITCH_GLOBAL) return c.text("paused", 503);
+    if ((await killSwitchState(deps)).engaged) return c.text("paused", 503);
     const platform = c.req.param("platform");
     if (platform !== "shopify" && platform !== "woocommerce" && platform !== "shopware") return c.text("unknown platform", 404);
     const loaded = await load(platform, c.req.param("trackingId"), c.req.param("token"));

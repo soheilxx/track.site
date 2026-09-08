@@ -1,3 +1,5 @@
+import { hostname } from "node:os";
+import type { PoolClient } from "pg";
 import type { WorkerContext } from "../context.ts";
 import { ALERTS_INTERVAL_MS, runAlerts } from "./alerts.ts";
 import { DESTINATION_HEALTH_INTERVAL_MS, snapshotDestinationHealth } from "./destination-health.ts";
@@ -62,6 +64,69 @@ export const JOB_SCHEDULE: ReadonlyArray<{
   { name: "alerts", intervalMs: ALERTS_INTERVAL_MS, run: (ctx) => runAlerts(ctx) },
 ];
 
+/** Longest `last_error` stored per heartbeat (the log keeps the full message). */
+const HEARTBEAT_ERROR_MAX = 1000;
+const HOST = hostname();
+
+/**
+ * Heartbeat of one run for the Track Operations console (`worker_heartbeats`, migration 0014): upsert as
+ * `tracksite_worker` with the finish time, the duration and the error; `last_ok_at` only moves on success.
+ * Never throws — a heartbeat that cannot be written (database unreachable, migration not applied yet) is
+ * logged once per job at warn level and then at debug, so the scheduler itself is unaffected.
+ */
+const heartbeatWarned = new Set<string>();
+async function recordHeartbeat(
+  ctx: WorkerContext,
+  job: string,
+  ok: boolean,
+  error: string | null,
+  durationMs: number,
+): Promise<void> {
+  const failed = (e: unknown) => {
+    const err = e instanceof Error ? e.message : String(e);
+    if (heartbeatWarned.has(job)) ctx.logger.debug({ job, err }, "heartbeat not recorded");
+    else {
+      heartbeatWarned.add(job);
+      ctx.logger.warn({ job, err }, "heartbeat not recorded");
+    }
+  };
+  let client: PoolClient;
+  try {
+    client = await ctx.pool.connect();
+  } catch (e) {
+    failed(e);
+    return;
+  }
+  try {
+    await client.query("BEGIN");
+    await client.query("SET LOCAL ROLE tracksite_worker");
+    await client.query(
+      `INSERT INTO worker_heartbeats (job, last_run_at, last_ok_at, last_error, last_duration_ms, host)
+       VALUES ($1, now(), CASE WHEN $2::boolean THEN now() ELSE NULL END, $3, $4, $5)
+       ON CONFLICT (job) DO UPDATE SET
+         last_run_at = EXCLUDED.last_run_at,
+         last_ok_at = COALESCE(EXCLUDED.last_ok_at, worker_heartbeats.last_ok_at),
+         last_error = EXCLUDED.last_error,
+         last_duration_ms = EXCLUDED.last_duration_ms,
+         host = EXCLUDED.host`,
+      [
+        job,
+        ok,
+        error ? error.slice(0, HEARTBEAT_ERROR_MAX) : null,
+        Math.max(0, Math.round(durationMs)),
+        HOST,
+      ],
+    );
+    await client.query("COMMIT");
+    heartbeatWarned.delete(job);
+  } catch (e) {
+    await client.query("ROLLBACK").catch(() => undefined);
+    failed(e);
+  } finally {
+    client.release();
+  }
+}
+
 /** Lightweight in-process scheduler over `JOB_SCHEDULE`; the first tick of every job runs immediately. */
 export function runScheduledJobs(ctx: WorkerContext): JobsHandle {
   const timers: NodeJS.Timeout[] = [];
@@ -87,9 +152,11 @@ export function runScheduledJobs(ctx: WorkerContext): JobsHandle {
       status.running = true;
       const started = Date.now();
       status.lastStartedAt = new Date(started).toISOString();
+      let ok = false;
       try {
         await job.run(ctx);
         status.lastError = null;
+        ok = true;
       } catch (e) {
         status.failures += 1;
         status.lastError = e instanceof Error ? e.message : String(e);
@@ -100,6 +167,8 @@ export function runScheduledJobs(ctx: WorkerContext): JobsHandle {
         status.lastDurationMs = Date.now() - started;
         status.lastFinishedAt = new Date().toISOString();
       }
+      // after the in-process status so the health endpoint never waits on the database
+      await recordHeartbeat(ctx, job.name, ok, status.lastError, status.lastDurationMs);
     };
     void tick();
     const t = setInterval(() => void tick(), job.intervalMs);

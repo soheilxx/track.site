@@ -4,6 +4,7 @@ import { newUlid } from "@track-site/core";
 import type { IncomingServerEvent, IngestMessage } from "@track-site/events";
 import { QUEUES, partitionKeyFor } from "@track-site/queue";
 import type { CollectorDeps } from "./app.ts";
+import { killSwitchState } from "./kill-switch.ts";
 
 /**
  * Inbound affiliate postbacks: networks / marketplaces that push conversions to the advertiser.
@@ -37,7 +38,7 @@ const DIGISTORE_EVENTS: Record<string, string> = { on_payment: "purchase", on_re
 
 export function registerAffiliateInbound(app: Hono, deps: CollectorDeps, now: () => Date): void {
   app.all("/v1/affiliate/in/:trackingId/:preset", async (c) => {
-    if (deps.env.KILL_SWITCH_GLOBAL) return c.text("paused", 503);
+    if ((await killSwitchState(deps)).engaged) return c.text("paused", 503);
     const preset = c.req.param("preset");
     const site = await deps.sites.byTrackingId(c.req.param("trackingId"));
     if (!site || site.status !== "active") return c.text("unknown site", 404);

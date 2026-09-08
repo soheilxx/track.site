@@ -17,6 +17,7 @@ import { incomingBrowserBatchSchema, incomingServerBatchSchema, truncateIp, uaFa
 import { QUEUES, partitionKeyFor, type Queue } from "@track-site/queue";
 import { configRoutes } from "./config-routes.ts";
 import type { CollectorEnv } from "./env.ts";
+import { killSwitchState, type GlobalKillSwitch } from "./kill-switch.ts";
 import type { ResolvedSite, SiteResolver } from "./site-cache.ts";
 import { registerAffiliateInbound } from "./affiliate-inbound.ts";
 import { registerShopInbound } from "./shop-inbound.ts";
@@ -26,6 +27,8 @@ export interface CollectorDeps {
   queue: Queue;
   sites: SiteResolver;
   pool: Pool | null;
+  /** platform-level kill switch from the database (Track Operations → Controls); `KILL_SWITCH_GLOBAL` applies regardless */
+  killSwitch?: GlobalKillSwitch | null;
   /** decrypts inbound-postback secrets (Digistore24 IPN passphrase, shared tokens) */
   vault?: SecretVault | null;
   logger: AppLogger;
@@ -93,8 +96,9 @@ export function createCollectorApp(deps: CollectorDeps): Hono {
       }
     }
     const stats = await deps.queue.stats(QUEUES.ingest).catch(() => null);
-    const ok = db !== "error" && stats !== null && !env.KILL_SWITCH_GLOBAL;
-    return c.json({ ok, db, queue: { driver: deps.queue.driver, ready: stats?.ready ?? null, dlq: stats?.deadLetters ?? null }, killSwitch: env.KILL_SWITCH_GLOBAL, ts: now().toISOString() }, ok ? 200 : 503);
+    const kill = await killSwitchState(deps);
+    const ok = db !== "error" && stats !== null && !kill.engaged;
+    return c.json({ ok, db, queue: { driver: deps.queue.driver, ready: stats?.ready ?? null, dlq: stats?.deadLetters ?? null }, killSwitch: kill.engaged, killSwitchSource: kill.source, ts: now().toISOString() }, ok ? 200 : 503);
   });
 
   app.route("/v1/c", configRoutes(deps));
@@ -102,7 +106,7 @@ export function createCollectorApp(deps: CollectorDeps): Hono {
   /** Browser batches from tracker.js (sendBeacon sends text/plain). */
   app.post("/v1/e", async (c) => {
     for (const [k, v] of Object.entries(CORS_HEADERS)) c.header(k, v);
-    if (env.KILL_SWITCH_GLOBAL) {
+    if ((await killSwitchState(deps)).engaged) {
       c.header("retry-after", "300");
       return c.json({ ok: false, reason: "kill_switch" }, 503);
     }
@@ -177,7 +181,7 @@ export function createCollectorApp(deps: CollectorDeps): Hono {
 
   /** Server events authenticated with a source key (Bearer tsk_...). */
   app.post("/v1/s", async (c) => {
-    if (env.KILL_SWITCH_GLOBAL) {
+    if ((await killSwitchState(deps)).engaged) {
       c.header("retry-after", "300");
       return c.json({ ok: false, reason: "kill_switch" }, 503);
     }

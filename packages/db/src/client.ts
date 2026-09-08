@@ -12,6 +12,8 @@ export const DB_ROLES = {
   app: "tracksite_app",
   /** data plane: bypasses RLS, only ever acts with server-resolved site context */
   worker: "tracksite_worker",
+  /** operator console: bypasses RLS, reachable only through a resolved platform context (docs/03 §B8) */
+  ops: "tracksite_ops",
 } as const;
 
 export function createPool(connectionString: string, options: Partial<PoolConfig> = {}): Pool {
@@ -51,12 +53,14 @@ export async function withWorker<T>(db: Db, fn: (tx: Tx) => Promise<T>): Promise
 }
 
 /**
- * Platform-level access (no tenant scope). Callers must have recorded a break-glass or
- * platform-admin audit entry; this helper never checks that by itself.
+ * Platform-level access (no tenant scope) as `tracksite_ops` (migration 0014, BYPASSRLS). The web app
+ * reaches this only through `withPlatform(ctx, …)` in apps/web/src/server/ops/platform.ts, which needs
+ * a resolved platform context (platform role + two-factor step-up); audit entries are the caller's
+ * job — this helper records nothing by itself.
  */
 export async function withPlatform<T>(db: Db, fn: (tx: Tx) => Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
-    await tx.execute(sql`SET LOCAL ROLE tracksite_worker`);
+    await tx.execute(sql`SET LOCAL ROLE tracksite_ops`);
     return fn(tx);
   });
 }

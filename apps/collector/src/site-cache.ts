@@ -3,7 +3,9 @@ import { normalizeTrackingId, sha256Hex } from "@track-site/core";
 
 /**
  * Read-mostly site resolution for the hot path. Cached per tracking id for a short TTL so a
- * publish, kill switch or domain change becomes effective within seconds.
+ * publish, kill switch, suspension or domain change becomes effective within seconds.
+ * `orgKillSwitch` is the tenant kill switch: the customer's own `organization_settings.kill_switch`
+ * or a platform suspension (`organization.suspended_at`, Track Operations → Controls).
  */
 export interface ResolvedSite {
   organizationId: string;
@@ -59,7 +61,8 @@ export class PgSiteResolver implements SiteResolver {
       hosts: string[] | null;
       active_version: number | null;
     }>(
-      `SELECT s.organization_id, s.id AS site_id, s.status, s.kill_switch, os.kill_switch AS org_kill_switch, s.partition_override,
+      `SELECT s.organization_id, s.id AS site_id, s.status, s.kill_switch,
+              (coalesce(os.kill_switch, false) OR o.suspended_at IS NOT NULL) AS org_kill_switch, s.partition_override,
               (SELECT coalesce(json_agg(json_build_object('id', e.id, 'kind', e.kind, 'isDefault', e.is_default)), '[]'::json)
                  FROM environments e WHERE e.site_id = s.id) AS environments,
               (SELECT array_agg(d.hostname) FROM domains d WHERE d.site_id = s.id) AS hosts,
@@ -67,6 +70,7 @@ export class PgSiteResolver implements SiteResolver {
                  JOIN environments e2 ON e2.id = cp.environment_id
                  WHERE cp.site_id = s.id AND cp.is_active AND e2.is_default LIMIT 1) AS active_version
        FROM sites s LEFT JOIN organization_settings os ON os.organization_id = s.organization_id
+       LEFT JOIN organization o ON o.id = s.organization_id
        WHERE s.tracking_id = $1 LIMIT 1`,
       [trackingId],
     );

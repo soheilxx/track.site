@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { normalizeTrackingId } from "@track-site/core";
 import { browserView, buildManifest, type ConfigBundle, type SignedConfigBundle } from "@track-site/config";
 import type { CollectorDeps } from "./app.ts";
+import { killSwitchState } from "./kill-switch.ts";
 
 /**
  * Config delivery: `GET /v1/c/:trackingId` returns the small manifest (30 s TTL) and
@@ -19,7 +20,7 @@ interface ActiveVersionRow {
   org_kill_switch: boolean | null;
 }
 
-export function configRoutes(deps: Pick<CollectorDeps, "pool" | "env" | "now">): Hono {
+export function configRoutes(deps: Pick<CollectorDeps, "pool" | "env" | "now" | "killSwitch">): Hono {
   const app = new Hono();
   const now = deps.now ?? (() => new Date());
   const cache = new Map<string, { row: ActiveVersionRow | null; at: number }>();
@@ -29,12 +30,14 @@ export function configRoutes(deps: Pick<CollectorDeps, "pool" | "env" | "now">):
     if (cached && now().getTime() - cached.at < 15_000) return cached.row;
     if (!deps.pool) return null;
     const res = await deps.pool.query<ActiveVersionRow>(
-      `SELECT cv.version, cv.bundle, cv.digest, cv.signature, cv.key_id, cp.published_at, s.kill_switch, os.kill_switch AS org_kill_switch
+      `SELECT cv.version, cv.bundle, cv.digest, cv.signature, cv.key_id, cp.published_at, s.kill_switch,
+              (coalesce(os.kill_switch, false) OR o.suspended_at IS NOT NULL) AS org_kill_switch
        FROM sites s
        JOIN environments e ON e.site_id = s.id AND e.is_default
        JOIN config_publications cp ON cp.environment_id = e.id AND cp.is_active
        JOIN config_versions cv ON cv.id = cp.version_id
        LEFT JOIN organization_settings os ON os.organization_id = s.organization_id
+       LEFT JOIN organization o ON o.id = s.organization_id
        WHERE s.tracking_id = $1 AND s.status <> 'deleted' LIMIT 1`,
       [trackingId],
     );
@@ -64,7 +67,7 @@ export function configRoutes(deps: Pick<CollectorDeps, "pool" | "env" | "now">):
     if (!row) return c.json({ ok: false, reason: "no_published_config" }, 404);
     const signed: SignedConfigBundle = { payload: row.bundle, digest: row.digest, keyId: row.key_id, algorithm: "ed25519", signature: row.signature };
     const bundleUrl = `${deps.env.HOST_CDN.replace(/\/cdn$/, "")}/cdn/v1/c/${trackingId}/${row.version}.json`.replace("/cdn/v1/c", "/v1/c");
-    const manifest = buildManifest(signed, bundleUrl, row.kill_switch || Boolean(row.org_kill_switch) || deps.env.KILL_SWITCH_GLOBAL, row.published_at.toISOString());
+    const manifest = buildManifest(signed, bundleUrl, row.kill_switch || Boolean(row.org_kill_switch) || (await killSwitchState(deps)).engaged, row.published_at.toISOString());
     return c.json(manifest);
   });
 
