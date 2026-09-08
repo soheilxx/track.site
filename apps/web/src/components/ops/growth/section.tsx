@@ -6,13 +6,13 @@ export function Section({ id, title, intro, aside, children }: { id: string; tit
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-4" data-testid={id}>
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1 basis-64">
           <h2 id={`${id}-title`} className="text-lg font-semibold text-ink">
             {title}
           </h2>
           {intro ? <p className="mt-1 max-w-3xl text-sm text-ink-3">{intro}</p> : null}
         </div>
-        {aside ? <div className="flex shrink-0 flex-wrap gap-2">{aside}</div> : null}
+        {aside ? <div className="flex max-w-full flex-wrap gap-2">{aside}</div> : null}
       </div>
       {children}
     </section>

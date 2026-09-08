@@ -17,14 +17,14 @@ export function HealthSection({
 }) {
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-3" data-testid={`ops-health-${id}`}>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0 flex-1 basis-64">
           <h2 id={`${id}-title`} className="text-lg font-semibold text-ink">
             {title}
           </h2>
           {intro ? <p className="mt-1 max-w-3xl text-sm text-ink-3">{intro}</p> : null}
         </div>
-        {aside ? <div className="flex shrink-0 flex-wrap items-center gap-2 text-sm">{aside}</div> : null}
+        {aside ? <div className="flex max-w-full flex-wrap items-center gap-2 text-sm">{aside}</div> : null}
       </div>
       {children}
     </section>
