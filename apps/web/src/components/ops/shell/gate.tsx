@@ -22,7 +22,11 @@ export async function OpsForbidden({
   reason: PlatformAccessReason;
   standalone?: boolean;
 }) {
-  const [t, tOps] = await Promise.all([getTranslations("ops.gate"), getTranslations("ops")]);
+  const [t, tOps, tSecurity] = await Promise.all([
+    getTranslations("ops.gate"),
+    getTranslations("ops"),
+    getTranslations("security"),
+  ]);
   const key = KEY[reason];
   const back = reason === "insufficient_role" ? "/ops" : "/app";
   const body = (
@@ -36,10 +40,27 @@ export async function OpsForbidden({
       <p className="font-mono text-sm text-ink-3">{t("status")}</p>
       <h1 className="mt-3 text-2xl font-semibold tracking-tight text-ink">{t(`${key}.title`)}</h1>
       <p className="mt-2 text-ink-2">{t(`${key}.text`)}</p>
-      {/* button-styled link: interactive elements are never nested */}
-      <Link href={back} className={cn(buttonVariants(), "mt-6")}>
-        {t(`${key}.back`)}
-      </Link>
+      {/* button-styled links: interactive elements are never nested */}
+      <div className="mt-6 flex flex-col items-center justify-center gap-2 sm:flex-row">
+        {reason === "two_factor_required" ? (
+          // self-service enrolment in the customer dashboard (security settings); the console re-checks on the way back
+          <Link
+            href="/app/settings/security"
+            className={buttonVariants()}
+            data-testid="ops-gate-enable-two-factor"
+          >
+            {tSecurity("opsGate.enable")}
+          </Link>
+        ) : null}
+        <Link
+          href={back}
+          className={cn(
+            buttonVariants({ variant: reason === "two_factor_required" ? "secondary" : "primary" }),
+          )}
+        >
+          {t(`${key}.back`)}
+        </Link>
+      </div>
     </div>
   );
   if (!standalone) return body;

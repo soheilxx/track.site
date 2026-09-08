@@ -52,3 +52,5 @@ registerNamespace("ops-audit");
 registerNamespace("ops-users");
 registerNamespace("ops-growth");
 registerNamespace("ops-content");
+
+registerNamespace("security");

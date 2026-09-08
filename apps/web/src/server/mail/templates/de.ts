@@ -30,4 +30,9 @@ export const MAIL_COPY_DE: MailCopy = {
     subject: "Der Support-Zugriff von Track auf {organization} ist beendet",
     text: "Der rein lesende Support-Zugriff auf deine Organisation {organization} auf Track ist beendet (Zugriff {grantId}).\n\nAlles, was der Operator geöffnet hat, steht in deinem Audit-Log: {url}",
   },
+  twoFactorReset: {
+    subject: "Deine Zwei-Faktor-Authentifizierung für {product} wurde zurückgesetzt",
+    text: "Deine Zwei-Faktor-Authentifizierung für {product} wurde von {actorRole} zurückgesetzt.\n\nDas Authenticator-Geheimnis und deine Backup-Codes wurden gelöscht, und du wurdest überall abgemeldet. Melde dich mit deinem Passwort an und richte die Zwei-Faktor-Authentifizierung unter Einstellungen → Sicherheit neu ein.\n\nWenn du das nicht angefordert hast, wende dich sofort an uns: {supportLink}\n\n— Track",
+    roles: { platformAdmin: "einem Plattform-Administrator von Track", owner: "einem Owner deiner Organisation", admin: "einem Administrator deiner Organisation" },
+  },
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { Command } from "cmdk";
-import { Globe, LogOut, Plus, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
+import { Globe, KeyRound, LogOut, Plus, ShieldCheck, Sparkles, Waypoints } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -46,6 +46,7 @@ export function CommandPalette({
 }: CommandPaletteProps) {
   const t = useTranslations("shell");
   const tModule = useTranslations();
+  const tSecurity = useTranslations("security");
   const router = useRouter();
 
   useEffect(() => {
@@ -190,6 +191,16 @@ export function CommandPalette({
               {assistantOpen
                 ? t("palette.actions.closeAssistant")
                 : t("palette.actions.openAssistant")}
+            </Command.Item>
+            <Command.Item
+              value={`action ${tSecurity("palette")}`}
+              keywords={["/app/settings/security", "2fa", "two-factor", "totp"]}
+              onSelect={() => run(() => router.push("/app/settings/security"))}
+              className={ITEM}
+              data-testid="palette-security"
+            >
+              <KeyRound className="size-4 shrink-0" aria-hidden="true" />
+              {tSecurity("palette")}
             </Command.Item>
             {platformRole !== "NONE" ? (
               <Command.Item

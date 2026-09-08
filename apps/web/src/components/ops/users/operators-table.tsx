@@ -7,11 +7,12 @@ import type { OperatorView } from "@/server/ops/users";
 import { roleLabel, roleTone } from "./labels";
 import { RevokeSessionsControl } from "./revoke-sessions-control";
 import { RoleChangeControl } from "./role-change-control";
+import { TwoFactorResetControl } from "./two-factor-reset-control";
 
 /**
  * Accounts with a platform role (dense table, stacked on mobile): role, two-factor and verification, last
  * sign-in and active sessions from the session rows, join date, and the per-row actions (change role, sign
- * out everywhere). Never tokens, IP addresses or user agents.
+ * out everywhere, reset two-factor). Never tokens, IP addresses or user agents.
  */
 export async function OperatorsTable({ operators, now, cacheMinutes, locale }: { operators: OperatorView[]; now: string; cacheMinutes: number; locale: string }) {
   const t = await getTranslations("opsUsers");
@@ -93,6 +94,7 @@ export async function OperatorsTable({ operators, now, cacheMinutes, locale }: {
                   <div className="flex flex-col items-start gap-2">
                     <RoleChangeControl target={{ id: op.id, name: op.name, platformRole: op.platformRole }} mode={op.viewer.changeMode ?? "proposal"} refusal={op.viewer.changeRefusal} size="sm" />
                     <RevokeSessionsControl userId={op.id} name={op.name} isSelf={op.viewer.isSelf} activeSessions={op.sessions.active} cacheMinutes={cacheMinutes} size="sm" />
+                    <TwoFactorResetControl userId={op.id} name={op.name} isSelf={op.viewer.isSelf} twoFactor={op.twoFactor} platformRole={op.platformRole} size="sm" />
                   </div>
                 </Td>
               </Tr>

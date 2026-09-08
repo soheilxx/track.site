@@ -159,3 +159,13 @@ Both services use the same database and the same `MASTER_KEY`/`CONFIG_SIGNING_*`
 - Tariff catalogue (since 2026-09-03): the slots are `STRIPE_PRICE_{STARTER,GROWTH,PRO}_{MONTHLY,YEARLY}` (one per catalogue plan and interval, `packages/catalog`). The Stripe `unit_amount`/`currency` of every slot is verified against the catalogue list price: a differing price is reported as `amount_mismatch:<stripe>≠<catalogue>` (or `currency_mismatch`), is never shown on the pricing page (which renders the catalogue list prices) and is refused by checkout. `billing` is `ok` only when all six slots verify. The former `STRIPE_PRICE_SCALE_*` names still work as a fallback for the Pro slots and are listed under `billingPrices.deprecated` until they are renamed on Vercel. The `plans` table is synced from the catalogue by `pnpm db:seed`; migration `0004` renames plan `scale` to `pro` and keeps existing subscriptions.
 - Owner actions: the live yearly prices (220/990/1 840 €) differ from the catalogue (190/900/1 800 €) and must be recreated in Stripe; products should be named `Track Starter/Growth/Pro`; env names renamed to `STRIPE_PRICE_PRO_*` (docs/11 §6).
 - Verified before the catalogue: health `billing: ok` for all six slots, pricing pages showed the live amounts, unsigned webhook calls are rejected with 400.
+
+### Emergency two-factor reset (2026-09-08)
+
+When the only platform admin has lost the authenticator and all backup codes, nobody can reach `/ops` to reset it. Run the CLI through the prod-env wrapper (never with the URL in the shell history):
+
+```
+node <scratch>/run-with-prod-env.mjs pnpm --filter @track-site/db ops:2fa-reset --email <address> --reason "authenticator lost" --ticket OPS-123
+```
+
+It removes the TOTP secret and backup codes, switches two-factor off, revokes every session of that user and writes an audit entry (`user.two_factor.reset`, actor `cli:ops-two-factor-reset`, reason and ticket, no secrets). The person signs in with the password and enrols again under Settings → Security. For every other case use the console (`/ops/users`) or the team page; the console never resets the acting admin's own account.

@@ -30,4 +30,9 @@ export const MAIL_COPY_IT: MailCopy = {
     subject: "L'accesso del supporto Track a {organization} è terminato",
     text: "L'accesso in sola lettura del supporto alla tua organizzazione {organization} su Track è terminato (accesso {grantId}).\n\nTutto ciò che l'operatore ha aperto è registrato nel tuo registro di audit: {url}",
   },
+  twoFactorReset: {
+    subject: "La tua autenticazione a due fattori per {product} è stata reimpostata",
+    text: "La tua autenticazione a due fattori per {product} è stata reimpostata da {actorRole}.\n\nIl segreto dell'app di autenticazione e i tuoi codici di backup sono stati eliminati e sei stato disconnesso ovunque. Accedi con la tua password e configura di nuovo l'autenticazione a due fattori in Impostazioni → Sicurezza.\n\nSe non l'hai richiesto, contattaci subito: {supportLink}\n\n— Track",
+    roles: { platformAdmin: "un amministratore della piattaforma Track", owner: "un proprietario della tua organizzazione", admin: "un amministratore della tua organizzazione" },
+  },
 };

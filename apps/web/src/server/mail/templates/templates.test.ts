@@ -3,7 +3,7 @@ import { ACTIVE_LOCALES, ALL_LOCALES } from "@/i18n/routing";
 import { copyParity } from "@/lib/marketing-copy/parity";
 import { MAIL_COPY, getMailCopy, renderMail } from "./index";
 
-const PLACEHOLDERS: Record<keyof typeof MAIL_COPY.en, string[]> = { resetPassword: ["url"], verifyEmail: ["url"], invitation: ["inviter", "organization", "url"], contactReply: ["name", "body", "operator", "reference"], breakGlassApproved: ["organization", "until", "reason", "ticket", "grantId", "url"], breakGlassRevoked: ["organization", "grantId", "url"] };
+const PLACEHOLDERS: Record<keyof typeof MAIL_COPY.en, string[]> = { resetPassword: ["url"], verifyEmail: ["url"], invitation: ["inviter", "organization", "url"], contactReply: ["name", "body", "operator", "reference"], breakGlassApproved: ["organization", "until", "reason", "ticket", "grantId", "url"], breakGlassRevoked: ["organization", "grantId", "url"], twoFactorReset: ["actorRole", "product", "supportLink"] };
 
 describe("mail templates", () => {
   it("exist for every active locale with the English shape and placeholders", () => {
@@ -40,5 +40,17 @@ describe("mail templates", () => {
     expect(rendered.subject).toBe("Ada {url} invited you to Acme on Track");
     expect(rendered.text).toBe("Accept the invitation: https://track.site/accept-invitation/1");
     expect(renderMail({ subject: "{missing}", text: "" }, {}).subject).toBe("{missing}");
+  });
+
+  it("names the resetting role in the recipient's language in the two-factor reset mail", () => {
+    for (const locale of ACTIVE_LOCALES) {
+      const copy = getMailCopy(locale).twoFactorReset;
+      for (const role of ["platformAdmin", "owner", "admin"] as const) {
+        const rendered = renderMail(copy, { actorRole: copy.roles[role], product: "Track", supportLink: "https://www.track.site/en/contact" });
+        expect(rendered.text, `${locale}.${role}`).toContain(copy.roles[role]);
+        expect(rendered.text).toContain("https://www.track.site/en/contact");
+        expect(rendered.text).not.toMatch(/\{(actorRole|product|supportLink)\}/);
+      }
+    }
   });
 });

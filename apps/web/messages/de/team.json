@@ -51,6 +51,15 @@
         "title": "{name} entfernen?",
         "description": "{email} verliert sofort den Zugriff auf diese Organisation. Sites, Destinationen und Daten bleiben erhalten. Die Entfernung wird im Audit-Log festgehalten.",
         "confirm": "Mitglied entfernen"
+      },
+      "resetTwoFactor": "Zwei-Faktor zurücksetzen",
+      "twoFactorDialog": {
+        "title": "Zwei-Faktor von {name} zurücksetzen?",
+        "description": "Das Authenticator-Geheimnis und die Backup-Codes von {email} werden gelöscht, Zwei-Faktor wird deaktiviert und jede Sitzung abgemeldet. Das Mitglied meldet sich mit dem Passwort an, richtet Zwei-Faktor neu ein und wird per E-Mail benachrichtigt.",
+        "reason": "Begründung",
+        "reasonHint": "Mindestens {min} Zeichen; wird im Audit-Log gespeichert.",
+        "notice": "Das Zurücksetzen wird mit deinem Namen und deiner Begründung im Audit-Log festgehalten.",
+        "confirm": "Zwei-Faktor zurücksetzen"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "Abrechnung ansehen",
         "billing_manage": "Abonnement verwalten",
         "audit_read": "Audit-Log ansehen",
-        "kill_switch_manage": "Kill-Switches bedienen"
+        "kill_switch_manage": "Kill-Switches bedienen",
+        "members_security": "Zwei-Faktor-Authentifizierung von Mitgliedern zurücksetzen"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "Nichts geändert.",
       "requestApplied": "Änderung angewendet.",
       "requestRejected": "Anfrage abgelehnt.",
-      "requestWithdrawn": "Anfrage zurückgezogen."
+      "requestWithdrawn": "Anfrage zurückgezogen.",
+      "twoFactorReset": "Zwei-Faktor zurückgesetzt. Das Mitglied wurde überall abgemeldet und per E-Mail benachrichtigt.",
+      "twoFactorResetNoMail": "Zwei-Faktor zurückgesetzt und das Mitglied überall abgemeldet, aber die Benachrichtigungs-E-Mail konnte nicht gesendet werden — informiere das Mitglied auf anderem Weg."
     },
     "errors": {
       "generic": "Etwas ist schiefgelaufen.",
@@ -354,7 +366,11 @@
       "confirmRelax": "Das Lockern der Anforderungen braucht eine Bestätigung.",
       "notPending": "Diese Anfrage ist nicht mehr offen.",
       "selfApproval": "Du kannst deine eigene Anfrage nicht freigeben.",
-      "notAppliedHere": "Dieser Änderungstyp wird aus seinem eigenen Modul angewendet."
+      "notAppliedHere": "Dieser Änderungstyp wird aus seinem eigenen Modul angewendet.",
+      "twoFactorNotEnabled": "Dieses Mitglied hat Zwei-Faktor nicht aktiviert; es gibt nichts zurückzusetzen.",
+      "reasonRequired": "Gib eine Begründung mit mindestens 5 Zeichen an.",
+      "ownerOnly": "Nur ein Owner kann die Zwei-Faktor eines anderen Owners zurücksetzen.",
+      "platformAccount": "Dieses Mitglied hat eine Plattform-Rolle bei Track; seine Zwei-Faktor setzt ein Plattform-Admin in Track Operations zurück."
     },
     "common": {
       "close": "Schließen",

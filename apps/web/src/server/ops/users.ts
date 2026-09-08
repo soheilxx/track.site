@@ -27,6 +27,8 @@ import { opsRequiresTwoFactor, withPlatform, type PlatformContext } from "./plat
  *   `SESSION_CACHE_MINUTES` — the UI says so instead of promising an instant effect.
  * - The customer directory is read-only metadata (name, e-mail, memberships and roles, two-factor,
  *   created, last sign-in) with search; the loaders never read tenant data beyond `member`/`organization`.
+ *   Its one support tool is the two-factor reset (`resetTwoFactorAction`, `server/security/two-factor-reset.ts`):
+ *   reason and ticket reference mandatory for customer accounts, audited with the ticket's organisation.
  *
  * The pure helpers (`roleChangeVerdict`, `approvalVerdict`, `requestState`, filter parsing) carry the rules
  * and are unit-tested; the queries are thin and run as `tracksite_ops` through `withPlatform`.
@@ -329,6 +331,8 @@ export interface DirectoryRow {
   createdAt: string;
   memberships: MembershipSummary[];
   sessions: SessionSummary;
+  /** the viewer's own account: no two-factor reset from here (another admin has to) */
+  isSelf: boolean;
 }
 
 export interface UserDirectoryPage {
@@ -717,6 +721,7 @@ export async function loadUserDirectory(ctx: PlatformContext, filters: UserFilte
         createdAt: r.createdAt.toISOString(),
         memberships: Array.isArray(r.memberships) ? r.memberships : [],
         sessions: summaryOf(r),
+        isSelf: r.id === ctx.user.id,
       }));
     }
     return { rows, total, operators: Number(totals?.operators ?? 0), page, pageCount, pageSize: DIRECTORY_PAGE_SIZE, generatedAt: now.toISOString() };
@@ -876,6 +881,12 @@ export async function readRoleRequest(tx: DbOrTx, requestId: string): Promise<Ro
 export async function isRequestOpen(tx: DbOrTx, request: RoleRequestRow, now: Date): Promise<boolean> {
   const open = await pendingRoleRequests(tx, now, request.targetId);
   return open.some((r) => r.id === request.id);
+}
+
+/** Ids of the organisations the account is a member of (the support two-factor reset records the ticket's organisation, which must be one of them). */
+export async function membershipOrganizationIds(tx: DbOrTx, userId: string): Promise<string[]> {
+  const rows = await tx.select({ organizationId: member.organizationId }).from(member).where(eq(member.userId, userId));
+  return rows.map((r) => r.organizationId);
 }
 
 /** Deletes every stored session of the account (forced sign-out) and returns how many there were. */

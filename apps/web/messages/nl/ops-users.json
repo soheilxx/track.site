@@ -34,7 +34,11 @@
       "expired": "Het verzoek is verlopen; dien een nieuw verzoek in.",
       "notPending": "Over het verzoek is al beslist.",
       "notOperator": "Sessies worden alleen bij platformoperators ingetrokken; de klantenlijst is alleen-lezen.",
-      "generic": "De actie is mislukt. Probeer het opnieuw; de fout is vastgelegd."
+      "generic": "De actie is mislukt. Probeer het opnieuw; de fout is vastgelegd.",
+      "selfTwoFactor": "Je kunt je eigen tweestapsverificatie niet resetten — dat moet een andere platformbeheerder doen.",
+      "notEnabled": "Tweestapsverificatie is niet ingeschakeld voor dit account; er valt niets te resetten.",
+      "organizationRequired": "Kies de organisatie waar het supportticket bij hoort.",
+      "notMember": "Het account is geen lid van die organisatie."
     },
     "notices": {
       "proposed": "Verzoek ingediend. Een andere platformbeheerder moet het toepassen; het verloopt na zeven dagen.",
@@ -42,7 +46,8 @@
       "approved": "Rol gewijzigd. {count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}}",
       "declined": "Verzoek afgewezen en vastgelegd.",
       "withdrawn": "Verzoek ingetrokken en vastgelegd.",
-      "sessionsRevoked": "{count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}} Het account moet opnieuw inloggen."
+      "sessionsRevoked": "{count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}} Het account moet opnieuw inloggen.",
+      "twoFactorReset": "Tweestapsverificatie gereset: geheim en back-upcodes verwijderd. {count, plural, =0 {Geen opgeslagen sessies om in te trekken.} one {# sessie ingetrokken.} other {# sessies ingetrokken.}} {mailed, select, yes {De persoon is per e-mail op de hoogte gebracht.} other {De e-mailmelding kon niet worden verzonden — informeer de persoon op een andere manier.}}"
     },
     "overview": {
       "intro": "Accounts met een platformrol, hun tweestapsverificatie en sessies, en de vierogenregel voor het toekennen van rollen. Klantaccounts staan alleen-lezen in de lijst.",
@@ -133,7 +138,9 @@
       "self": "Je eigen account: een andere beheerder wijzigt je rol.",
       "lastAdmin": "Laatste platformbeheerder: kan niet worden gedegradeerd.",
       "open": "{name} openen",
-      "openLabel": "Details"
+      "openLabel": "Details",
+      "resetTwoFactor": "Tweestapsverificatie resetten",
+      "selfTwoFactor": "Je eigen account: een andere beheerder reset je tweestapsverificatie."
     },
     "roleDialog": {
       "title": "Platformrol van {name} wijzigen",
@@ -229,7 +236,8 @@
         "memberships": "Organisaties",
         "security": "Beveiliging",
         "lastSignIn": "Laatste login",
-        "created": "Aangemaakt"
+        "created": "Aangemaakt",
+        "actions": "Acties"
       },
       "noMemberships": "Geen organisatie",
       "moreMemberships": "+{count} meer",
@@ -244,7 +252,8 @@
         "next": "Volgende pagina",
         "page": "Pagina {page}"
       },
-      "methods": "Laatste login: de nieuwste opgeslagen sessie (rijen verdwijnen bij uitloggen en opschonen, dus „geen opgeslagen sessie” betekent niet dat de persoon nooit is ingelogd). Actief: sessies die nog niet zijn verlopen."
+      "methods": "Laatste login: de nieuwste opgeslagen sessie (rijen verdwijnen bij uitloggen en opschonen, dus „geen opgeslagen sessie” betekent niet dat de persoon nooit is ingelogd). Actief: sessies die nog niet zijn verlopen.",
+      "noActions": "Geen tweestapsverificatie om te resetten"
     },
     "detail": {
       "back": "Alle platformgebruikers",
@@ -308,6 +317,21 @@
         "empty": "Geen auditvermeldingen voor dit account.",
         "limit": "De {count} nieuwste vermeldingen worden getoond; de module Audit bevat het volledige log."
       }
+    },
+    "twoFactorDialog": {
+      "title": "Tweestapsverificatie van {name} resetten?",
+      "text": "Het geheim van de authenticator-app en de back-upcodes worden verwijderd, tweestapsverificatie wordt uitgeschakeld en elke opgeslagen sessie wordt ingetrokken. De persoon logt alleen met het wachtwoord in en stelt tweestapsverificatie opnieuw in; de persoon krijgt een e-mail in de eigen taal.",
+      "operatorHint": "Track Operations vereist tweestapsverificatie: de medewerker heeft geen toegang tot de console totdat die opnieuw is ingesteld.",
+      "customerHint": "Supporthulpmiddel voor een klantaccount: reden en ticketreferentie zijn verplicht; de vermelding wordt vastgelegd met de organisatie van het ticket en verschijnt in het auditlog van die organisatie.",
+      "reason": "Reden",
+      "reasonHint": "Minimaal {min} tekens, maximaal {max}. Opgeslagen in het auditlog.",
+      "ticket": "Ticketreferentie",
+      "ticketHint": "Bijvoorbeeld SUP-1234. Verplicht voor klantaccounts.",
+      "ticketOptionalHint": "Bijvoorbeeld OPS-1234. Optioneel voor platformmedewerkers.",
+      "organisation": "Organisatie",
+      "organisationHint": "De organisatie waar het ticket bij hoort; daar wordt de auditvermelding vastgelegd.",
+      "notice": "Vastgelegd in het auditlog met actor, account, reden en ticket — nooit het geheim of de back-upcodes.",
+      "confirm": "Tweestapsverificatie resetten"
     }
   }
 }

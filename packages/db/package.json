@@ -23,7 +23,8 @@
     "seed": "tsx src/cli/seed.ts",
     "ops:grant": "tsx src/cli/ops-grant.ts",
     "ops:users": "tsx src/cli/ops-users.ts",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "ops:2fa-reset": "tsx src/cli/ops-two-factor-reset.ts"
   },
   "dependencies": {
     "@track-site/catalog": "workspace:*",

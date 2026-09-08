@@ -51,6 +51,15 @@
         "title": "Retirer {name} ?",
         "description": "{email} perd immédiatement l’accès à cette organisation. Les sites, destinations et données restent. Le retrait est consigné dans le journal d’audit.",
         "confirm": "Retirer le membre"
+      },
+      "resetTwoFactor": "Réinitialiser la double authentification",
+      "twoFactorDialog": {
+        "title": "Réinitialiser la double authentification de {name} ?",
+        "description": "Le secret de l’application d’authentification et les codes de secours de {email} sont supprimés, la double authentification est désactivée et chaque session est déconnectée. Le membre se connecte avec son mot de passe, reconfigure la double authentification et est informé par e-mail.",
+        "reason": "Motif",
+        "reasonHint": "Au moins {min} caractères ; enregistré dans le journal d’audit.",
+        "notice": "La réinitialisation est consignée dans le journal d’audit avec votre nom et votre motif.",
+        "confirm": "Réinitialiser la double authentification"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "Voir la facturation",
         "billing_manage": "Gérer l’abonnement",
         "audit_read": "Voir le journal d’audit",
-        "kill_switch_manage": "Actionner les kill switches"
+        "kill_switch_manage": "Actionner les kill switches",
+        "members_security": "Réinitialiser la double authentification des membres"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "Rien n’a changé.",
       "requestApplied": "Modification appliquée.",
       "requestRejected": "Demande rejetée.",
-      "requestWithdrawn": "Demande retirée."
+      "requestWithdrawn": "Demande retirée.",
+      "twoFactorReset": "Double authentification réinitialisée. Le membre a été déconnecté partout et informé par e-mail.",
+      "twoFactorResetNoMail": "Double authentification réinitialisée et membre déconnecté partout, mais l’e-mail de notification n’a pas pu être envoyé — informez le membre par un autre moyen."
     },
     "errors": {
       "generic": "Une erreur s’est produite.",
@@ -354,7 +366,11 @@
       "confirmRelax": "L’assouplissement des exigences nécessite une confirmation.",
       "notPending": "Cette demande n’est plus ouverte.",
       "selfApproval": "Vous ne pouvez pas approuver votre propre demande.",
-      "notAppliedHere": "Ce type de modification est appliqué depuis son propre module."
+      "notAppliedHere": "Ce type de modification est appliqué depuis son propre module.",
+      "twoFactorNotEnabled": "Ce membre n’a pas activé la double authentification ; il n’y a rien à réinitialiser.",
+      "reasonRequired": "Indiquez un motif d’au moins 5 caractères.",
+      "ownerOnly": "Seul un Owner peut réinitialiser la double authentification d’un autre Owner.",
+      "platformAccount": "Ce membre détient un rôle de plateforme Track ; sa double authentification est réinitialisée par un administrateur de plateforme dans Track Operations."
     },
     "common": {
       "close": "Fermer",

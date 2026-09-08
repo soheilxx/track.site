@@ -254,6 +254,9 @@ test.describe("module pages", () => {
       ["/ops/inbox", "main a[href^='/ops/inbox/']"],
     ] as const) {
       await ops.goto(list);
+      // the lists stream in behind their `loading.tsx` skeleton (aria-busy) and React reveals the boundary
+      // after the load event; read the links only once the skeleton is gone, or a busy server yields none
+      await expect(ops.locator("main [aria-busy='true']")).toHaveCount(0);
       const hrefs = await ops
         .locator(selector)
         .evaluateAll((links) => links.map((a) => a.getAttribute("href") ?? ""));

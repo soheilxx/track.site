@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CircuitBreaker, backoffDelay, parseRetryAfterMs } from "./retry.ts";
 import { MemoryRateLimiter } from "./ratelimit.ts";
-import { assertCan, assignableRoles, can } from "./rbac.ts";
+import { assertCan, assignableRoles, can, canResetTwoFactor } from "./rbac.ts";
 import { err, ok, toErrResult, AppError } from "./result.ts";
 
 describe("backoff", () => {
@@ -59,6 +59,16 @@ describe("rbac", () => {
     expect(() => assertCan("ANALYST", "config.publish")).toThrow();
     expect(assignableRoles("ADMIN")).not.toContain("OWNER");
     expect(assignableRoles("DEVELOPER")).toEqual([]);
+  });
+  it("limits two-factor resets to owners and admins, owners only by owners", () => {
+    expect(can("OWNER", "members.security")).toBe(true);
+    expect(can("ADMIN", "members.security")).toBe(true);
+    for (const role of ["DEVELOPER", "ANALYST", "BILLING", "READ_ONLY"] as const) expect(can(role, "members.security")).toBe(false);
+    expect(canResetTwoFactor("OWNER", "OWNER")).toBe(true);
+    expect(canResetTwoFactor("OWNER", "READ_ONLY")).toBe(true);
+    expect(canResetTwoFactor("ADMIN", "ADMIN")).toBe(true);
+    expect(canResetTwoFactor("ADMIN", "OWNER")).toBe(false);
+    expect(canResetTwoFactor("DEVELOPER", "READ_ONLY")).toBe(false);
   });
 });
 

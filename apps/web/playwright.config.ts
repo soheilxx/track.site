@@ -43,13 +43,16 @@ export default defineConfig({
   snapshotPathTemplate: "{testDir}/__screenshots__/{arg}-{projectName}-{platform}{ext}",
   projects: [
     { name: "setup", testMatch: /auth\.setup\.ts$/ },
-    { name: "chromium", use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE }, dependencies: ["setup"], testIgnore: /visual\.spec\.ts$/ },
+    { name: "chromium", use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE }, dependencies: ["setup"], testIgnore: [/visual\.spec\.ts$/, /ops\.spec\.ts$/] },
     {
       name: "visual",
       testMatch: /visual\.spec\.ts$/,
       use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE, deviceScaleFactor: 1, timezoneId: "Europe/Berlin", contextOptions: { reducedMotion: "reduce" } },
       dependencies: ["setup"],
     },
+    // Track Operations flows suspend the demo organisation, open a support session and publish an announcement
+    // for a while: they run after the tenant dashboard specs (`chromium`) so those never render a suspended dashboard.
+    { name: "ops", testMatch: /ops\.spec\.ts$/, use: { ...devices["Desktop Chrome"], storageState: AUTH_FILE }, dependencies: ["setup", "chromium"] },
     ...optionalEngineProjects,
   ],
 });

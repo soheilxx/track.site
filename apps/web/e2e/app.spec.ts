@@ -27,17 +27,41 @@ async function waitForLoginHydration(page: Page) {
   });
 }
 
+/** better-auth allows 3 sign-ins per 10 s per IP; a refused attempt is retried after the window. */
+const RATE_LIMIT_WINDOW_MS = 11_000;
+
+/**
+ * Signs in through the login form. The `setup` project, this spec's own sign-in test and
+ * `security.spec.ts` (which signs in as its own account) all sign in within the first seconds of a run,
+ * so the shared per-IP limit can refuse one of them ("Too many attempts"): the helper then waits for
+ * the window to pass and tries again instead of timing out on the navigation.
+ */
 async function signIn(page: Page) {
-  await page.goto(LOGIN);
-  await waitForLoginHydration(page);
-  const emailInput = page.locator("input[name=email]");
-  const passwordInput = page.locator("input[name=password]");
-  await emailInput.fill(email);
-  await passwordInput.fill(password);
-  await expect(emailInput).toHaveValue(email);
-  await expect(passwordInput).toHaveValue(password);
-  await page.locator("form button[type=submit]").first().click();
-  await page.waitForURL(/\/app/);
+  for (let attempt = 0; ; attempt++) {
+    await page.goto(LOGIN);
+    await waitForLoginHydration(page);
+    const emailInput = page.locator("input[name=email]");
+    const passwordInput = page.locator("input[name=password]");
+    await emailInput.fill(email);
+    await passwordInput.fill(password);
+    await expect(emailInput).toHaveValue(email);
+    await expect(passwordInput).toHaveValue(password);
+    await page.locator("form button[type=submit]").first().click();
+    // the losing waits settle later (navigation timeout) — mapped to a value so nothing rejects unobserved
+    const settled = () => "timeout" as const;
+    const outcome = await Promise.race([
+      page.waitForURL(/\/app/).then(() => "app" as const, settled),
+      page
+        .getByRole("alert")
+        .filter({ hasText: "Too many attempts" })
+        .waitFor()
+        .then(() => "rate-limited" as const, settled),
+    ]);
+    if (outcome === "app") return;
+    if (outcome === "timeout") throw new Error("sign-in did not reach the dashboard");
+    if (attempt >= 3) throw new Error("sign-in kept hitting the rate limit");
+    await page.waitForTimeout(RATE_LIMIT_WINDOW_MS);
+  }
 }
 
 // All other dashboard tests start from the session stored by e2e/auth.setup.ts (see playwright.config.ts):

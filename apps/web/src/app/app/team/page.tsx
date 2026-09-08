@@ -98,7 +98,7 @@ export default async function TeamPage() {
                 </THead>
                 <TBody>
                   {team.members.map((m) => (
-                    <MemberRow key={m.id} member={{ id: m.id, userId: m.userId, name: m.name, email: m.email, role: m.role, twoFactor: m.twoFactor, joinedAt: m.joinedAt.toISOString(), isSelf: m.isSelf }} roles={roles} groups={permissionGroups(m.role)} canUpdate={canUpdate && !m.isSelf} canRemove={canRemove && !m.isSelf} locale={locale} />
+                    <MemberRow key={m.id} member={{ id: m.id, userId: m.userId, name: m.name, email: m.email, role: m.role, twoFactor: m.twoFactor, joinedAt: m.joinedAt.toISOString(), isSelf: m.isSelf }} roles={roles} groups={permissionGroups(m.role)} canUpdate={canUpdate && !m.isSelf} canRemove={canRemove && !m.isSelf} canResetTwoFactor={can(ctx.role, "members.security") && !m.isSelf && (m.role !== "OWNER" || ctx.role === "OWNER")} locale={locale} />
                   ))}
                 </TBody>
               </Table>

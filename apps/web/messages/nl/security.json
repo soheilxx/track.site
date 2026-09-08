@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Beveiliging",
+    "menu": "Beveiliging",
+    "palette": "Beveiligingsinstellingen",
+    "title": "Beveiliging",
+    "intro": "Tweestapsverificatie voor je account: bij elke aanmelding een zescijferige code uit een authenticator-app, met back-upcodes voor als de app niet beschikbaar is. Elke wijziging wordt vastgelegd in het auditlogboek.",
+    "status": {
+      "title": "Tweestapsverificatie",
+      "enabled": "Ingeschakeld",
+      "disabled": "Niet ingeschakeld",
+      "since": "Ingeschakeld sinds {date}",
+      "backupCodes": "{count, plural, =0 {Geen back-upcodes over} one {# back-upcode over} other {# back-upcodes over}}",
+      "backupCodesUnknown": "Back-upcodes: onbekend",
+      "textEnabled": "Aanmelden vereist je wachtwoord en een code uit je authenticator-app. Maak nieuwe back-upcodes aan als ze opraken; uitschakelen verwijdert de tweede factor en maakt de codes ongeldig.",
+      "textDisabled": "Je account wordt alleen door je wachtwoord beschermd. Inschakelen duurt een minuut: bevestig je wachtwoord, scan een QR-code met je authenticator-app, voer één code in en bewaar je back-upcodes.",
+      "enable": "Tweestapsverificatie inschakelen",
+      "disable": "Uitschakelen",
+      "regenerate": "Nieuwe back-upcodes"
+    },
+    "ops": {
+      "title": "Track Operations vereist tweestapsverificatie",
+      "textDisabled": "Je account heeft een platformrol. De operationele console (/ops) blijft gesloten totdat tweestapsverificatie voor je account is ingeschakeld.",
+      "textEnabled": "Je account heeft een platformrol en tweestapsverificatie is ingeschakeld, dus de operationele console staat voor je open.",
+      "open": "Track Operations openen"
+    },
+    "opsGate": {
+      "enable": "Tweestapsverificatie inschakelen"
+    },
+    "enable": {
+      "title": "Tweestapsverificatie inschakelen",
+      "stepOf": "Stap {step} van {total}: {name}",
+      "steps": {
+        "password": "Wachtwoord bevestigen",
+        "scan": "App koppelen",
+        "verify": "Code invoeren",
+        "backup": "Back-upcodes bewaren"
+      },
+      "password": {
+        "label": "Wachtwoord",
+        "hint": "Bevestig je wachtwoord om de instelling te starten.",
+        "submit": "Doorgaan"
+      },
+      "scan": {
+        "title": "Scan de QR-code",
+        "text": "Open je authenticator-app (bijvoorbeeld Google Authenticator, 1Password, Microsoft Authenticator of Aegis) en scan de code, of voer de sleutel handmatig in.",
+        "qrAlt": "QR-code voor de authenticator-app, account {account}",
+        "qrUnavailable": "De QR-code kan hier niet worden getoond; voer de sleutel handmatig in.",
+        "manual": "Handmatige sleutel",
+        "manualText": "Tijdgebaseerde code, zes cijfers, elke 30 seconden.",
+        "issuer": "Uitgever",
+        "copyKey": "Sleutel kopiëren",
+        "copied": "Gekopieerd",
+        "next": "Doorgaan"
+      },
+      "verify": {
+        "title": "Voer de code uit de app in",
+        "text": "Voer de zescijferige code in die je authenticator-app nu toont.",
+        "label": "Verificatiecode",
+        "submit": "Verifiëren en inschakelen"
+      },
+      "backup": {
+        "title": "Bewaar je back-upcodes",
+        "text": "Elke code meldt je één keer aan wanneer je authenticator-app niet beschikbaar is. Ze worden alleen nu getoond: kopieer of download ze en bewaar ze op een veilige plek.",
+        "list": "Back-upcodes",
+        "copy": "Codes kopiëren",
+        "download": "Downloaden als .txt",
+        "copied": "Gekopieerd",
+        "downloaded": "Download gestart",
+        "confirm": "Ik heb de back-upcodes op een veilige plek bewaard.",
+        "closeGuard": "Vink het vakje aan om te bevestigen dat je de codes hebt bewaard en rond dan af. Je kunt op elk moment nieuwe codes aanmaken op deze pagina.",
+        "done": "Klaar"
+      },
+      "success": "Tweestapsverificatie is ingeschakeld."
+    },
+    "disable": {
+      "title": "Tweestapsverificatie uitschakelen",
+      "text": "Daarna wordt je account alleen nog door je wachtwoord beschermd en werken je back-upcodes niet meer. Vertrouwde apparaten worden vergeten.",
+      "password": "Wachtwoord",
+      "confirm": "Ik begrijp dat mijn account minder goed beschermd zal zijn.",
+      "submit": "Tweestapsverificatie uitschakelen",
+      "success": "Tweestapsverificatie is uitgeschakeld."
+    },
+    "regenerate": {
+      "title": "Nieuwe back-upcodes aanmaken",
+      "text": "Tien nieuwe codes vervangen de huidige; de vorige codes werken meteen niet meer.",
+      "password": "Wachtwoord",
+      "submit": "Nieuwe codes aanmaken",
+      "success": "Nieuwe back-upcodes aangemaakt."
+    },
+    "common": {
+      "cancel": "Annuleren",
+      "close": "Sluiten",
+      "back": "Terug",
+      "working": "Bezig…"
+    },
+    "file": {
+      "title": "Track — back-upcodes voor tweestapsverificatie",
+      "account": "Account",
+      "generated": "Aangemaakt",
+      "note": "Elke code werkt één keer. Bewaar dit bestand op een veilige plek en verwijder het zodra de codes gebruikt zijn."
+    },
+    "errors": {
+      "password": "Het wachtwoord is niet juist.",
+      "passwordRequired": "Voer je wachtwoord in.",
+      "code": "De code is niet geldig. Controleer de tijd op je apparaat en probeer het opnieuw.",
+      "codeFormat": "Voer de zescijferige code in.",
+      "rateLimited": "Te veel pogingen. Wacht even en probeer het opnieuw.",
+      "notEnabled": "Tweestapsverificatie is niet ingeschakeld voor dit account.",
+      "noPassword": "Je account heeft geen wachtwoord, dus deze stap kan niet worden bevestigd. Stel eerst een wachtwoord in (‘Wachtwoord vergeten?’ op de aanmeldpagina) en probeer het daarna opnieuw.",
+      "state": "Deze pagina is niet meer actueel: de status van tweestapsverificatie is intussen gewijzigd. Laad de pagina opnieuw.",
+      "session": "Je sessie is verlopen. Meld je opnieuw aan en probeer het nog eens.",
+      "audit": "De wijziging is doorgevoerd, maar kon niet in het auditlogboek worden vastgelegd. Laad de pagina opnieuw; neem contact op met support als dit blijft gebeuren.",
+      "generic": "Dat is niet gelukt. Probeer het opnieuw."
+    }
+  }
+}

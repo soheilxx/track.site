@@ -34,7 +34,11 @@
       "expired": "La richiesta è scaduta; presentane una nuova.",
       "notPending": "La richiesta è già stata decisa.",
       "notOperator": "Le sessioni vengono revocate solo agli operatori della piattaforma; la rubrica clienti è di sola lettura.",
-      "generic": "L’azione non è riuscita. Riprova; l’errore è stato registrato."
+      "generic": "L’azione non è riuscita. Riprova; l’errore è stato registrato.",
+      "selfTwoFactor": "Non puoi reimpostare la tua autenticazione a due fattori: deve farlo un altro amministratore della piattaforma.",
+      "notEnabled": "L’autenticazione a due fattori non è attiva per questo account; non c’è nulla da reimpostare.",
+      "organizationRequired": "Scegli l’organizzazione a cui appartiene il ticket di supporto.",
+      "notMember": "L’account non è membro di quell’organizzazione."
     },
     "notices": {
       "proposed": "Richiesta presentata. Deve applicarla un altro amministratore della piattaforma; scade dopo sette giorni.",
@@ -42,7 +46,8 @@
       "approved": "Ruolo modificato. {count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}}",
       "declined": "Richiesta rifiutata e registrata.",
       "withdrawn": "Richiesta ritirata e registrata.",
-      "sessionsRevoked": "{count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}} L’account deve accedere di nuovo."
+      "sessionsRevoked": "{count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}} L’account deve accedere di nuovo.",
+      "twoFactorReset": "Due fattori reimpostati: segreto e codici di backup eliminati. {count, plural, =0 {Nessuna sessione salvata da revocare.} one {# sessione revocata.} other {# sessioni revocate.}} {mailed, select, yes {La persona è stata avvisata via e-mail.} other {L’e-mail di notifica non è stata inviata: informa la persona in altro modo.}}"
     },
     "overview": {
       "intro": "Account con un ruolo di piattaforma, il loro stato a due fattori e le loro sessioni, e la regola dei quattro occhi per l’assegnazione dei ruoli. Gli account dei clienti compaiono in sola lettura nella rubrica.",
@@ -133,7 +138,9 @@
       "self": "Il tuo account: il tuo ruolo lo cambia un altro amministratore.",
       "lastAdmin": "Ultimo amministratore della piattaforma: non può essere retrocesso.",
       "open": "Apri {name}",
-      "openLabel": "Dettagli"
+      "openLabel": "Dettagli",
+      "resetTwoFactor": "Reimposta due fattori",
+      "selfTwoFactor": "Il tuo account: un altro amministratore reimposta i tuoi due fattori."
     },
     "roleDialog": {
       "title": "Cambia il ruolo di piattaforma di {name}",
@@ -229,7 +236,8 @@
         "memberships": "Organizzazioni",
         "security": "Sicurezza",
         "lastSignIn": "Ultimo accesso",
-        "created": "Creato"
+        "created": "Creato",
+        "actions": "Azioni"
       },
       "noMemberships": "Nessuna organizzazione",
       "moreMemberships": "+{count} altre",
@@ -244,7 +252,8 @@
         "next": "Pagina successiva",
         "page": "Pagina {page}"
       },
-      "methods": "Ultimo accesso: la sessione salvata più recente (le righe spariscono alla disconnessione e alla pulizia, quindi «nessuna sessione salvata» non significa che la persona non abbia mai effettuato l’accesso). Attive: sessioni non scadute."
+      "methods": "Ultimo accesso: la sessione salvata più recente (le righe spariscono alla disconnessione e alla pulizia, quindi «nessuna sessione salvata» non significa che la persona non abbia mai effettuato l’accesso). Attive: sessioni non scadute.",
+      "noActions": "Nessun due fattori da reimpostare"
     },
     "detail": {
       "back": "Tutti gli utenti della piattaforma",
@@ -308,6 +317,21 @@
         "empty": "Nessuna voce di audit per questo account.",
         "limit": "Vengono mostrate le {count} voci più recenti; il modulo Audit contiene il registro completo."
       }
+    },
+    "twoFactorDialog": {
+      "title": "Reimpostare i due fattori di {name}?",
+      "text": "Il segreto dell’app di autenticazione e i codici di backup vengono eliminati, i due fattori vengono disattivati e ogni sessione salvata viene revocata. La persona accede con la sola password e configura di nuovo i due fattori; viene avvisata via e-mail nella sua lingua.",
+      "operatorHint": "Track Operations richiede i due fattori: l’operatore resta fuori dalla console finché non li configura di nuovo.",
+      "customerHint": "Strumento di supporto per un account cliente: motivo e riferimento al ticket sono obbligatori; la voce viene registrata con l’organizzazione del ticket e compare nel registro di audit di quell’organizzazione.",
+      "reason": "Motivo",
+      "reasonHint": "Almeno {min} caratteri, al massimo {max}. Salvato nel registro di audit.",
+      "ticket": "Riferimento al ticket",
+      "ticketHint": "Per esempio SUP-1234. Obbligatorio per gli account cliente.",
+      "ticketOptionalHint": "Per esempio OPS-1234. Facoltativo per gli operatori della piattaforma.",
+      "organisation": "Organizzazione",
+      "organisationHint": "L’organizzazione a cui appartiene il ticket; lì viene registrata la voce di audit.",
+      "notice": "Registrato nel registro di audit con attore, account, motivo e ticket: mai il segreto o i codici di backup.",
+      "confirm": "Reimposta due fattori"
     }
   }
 }

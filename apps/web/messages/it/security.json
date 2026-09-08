@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Sicurezza",
+    "menu": "Sicurezza",
+    "palette": "Impostazioni di sicurezza",
+    "title": "Sicurezza",
+    "intro": "Autenticazione a due fattori per il tuo account: a ogni accesso un codice a sei cifre da un’app di autenticazione, più codici di backup nel caso l’app non sia disponibile. Ogni modifica viene registrata nel log di audit.",
+    "status": {
+      "title": "Autenticazione a due fattori",
+      "enabled": "Attiva",
+      "disabled": "Non attiva",
+      "since": "Attiva dal {date}",
+      "backupCodes": "{count, plural, =0 {Nessun codice di backup rimasto} one {# codice di backup rimasto} other {# codici di backup rimasti}}",
+      "backupCodesUnknown": "Codici di backup: sconosciuto",
+      "textEnabled": "Per accedere servono la tua password e un codice dalla tua app di autenticazione. Genera nuovi codici di backup quando ne restano pochi; la disattivazione rimuove il secondo fattore e invalida i codici.",
+      "textDisabled": "Il tuo account è protetto solo dalla password. L’attivazione richiede un minuto: conferma la password, scansiona un codice QR con l’app di autenticazione, inserisci un codice e salva i codici di backup.",
+      "enable": "Attiva l’autenticazione a due fattori",
+      "disable": "Disattiva",
+      "regenerate": "Nuovi codici di backup"
+    },
+    "ops": {
+      "title": "Track Operations richiede l’autenticazione a due fattori",
+      "textDisabled": "Il tuo account ha un ruolo di piattaforma. La console operativa (/ops) resta chiusa finché l’autenticazione a due fattori non è attiva sul tuo account.",
+      "textEnabled": "Il tuo account ha un ruolo di piattaforma e l’autenticazione a due fattori è attiva: la console operativa è aperta per te.",
+      "open": "Apri Track Operations"
+    },
+    "opsGate": {
+      "enable": "Attiva l’autenticazione a due fattori"
+    },
+    "enable": {
+      "title": "Attiva l’autenticazione a due fattori",
+      "stepOf": "Passaggio {step} di {total}: {name}",
+      "steps": {
+        "password": "Conferma la password",
+        "scan": "Collega l’app",
+        "verify": "Inserisci un codice",
+        "backup": "Salva i codici di backup"
+      },
+      "password": {
+        "label": "Password",
+        "hint": "Conferma la password per avviare la configurazione.",
+        "submit": "Continua"
+      },
+      "scan": {
+        "title": "Scansiona il codice QR",
+        "text": "Apri la tua app di autenticazione (ad esempio Google Authenticator, 1Password, Microsoft Authenticator o Aegis) e scansiona il codice, oppure inserisci la chiave manualmente.",
+        "qrAlt": "Codice QR per l’app di autenticazione, account {account}",
+        "qrUnavailable": "Il codice QR non può essere mostrato qui; inserisci la chiave manualmente.",
+        "manual": "Chiave manuale",
+        "manualText": "Codice basato sul tempo, sei cifre, ogni 30 secondi.",
+        "issuer": "Emittente",
+        "copyKey": "Copia chiave",
+        "copied": "Copiato",
+        "next": "Continua"
+      },
+      "verify": {
+        "title": "Inserisci il codice dell’app",
+        "text": "Inserisci il codice a sei cifre che la tua app di autenticazione mostra in questo momento.",
+        "label": "Codice di verifica",
+        "submit": "Verifica e attiva"
+      },
+      "backup": {
+        "title": "Salva i tuoi codici di backup",
+        "text": "Ogni codice consente un solo accesso quando l’app di autenticazione non è disponibile. Vengono mostrati solo adesso: copiali o scaricali e conservali in un luogo sicuro.",
+        "list": "Codici di backup",
+        "copy": "Copia codici",
+        "download": "Scarica come .txt",
+        "copied": "Copiato",
+        "downloaded": "Download avviato",
+        "confirm": "Ho conservato i codici di backup in un luogo sicuro.",
+        "closeGuard": "Spunta la casella per confermare di aver salvato i codici, poi termina. Puoi generare nuovi codici da questa pagina in qualsiasi momento.",
+        "done": "Fine"
+      },
+      "success": "L’autenticazione a due fattori è attiva."
+    },
+    "disable": {
+      "title": "Disattiva l’autenticazione a due fattori",
+      "text": "In seguito il tuo account sarà protetto solo dalla password e i codici di backup smetteranno di funzionare. I dispositivi attendibili vengono dimenticati.",
+      "password": "Password",
+      "confirm": "Capisco che il mio account sarà meno protetto.",
+      "submit": "Disattiva l’autenticazione a due fattori",
+      "success": "L’autenticazione a due fattori è disattivata."
+    },
+    "regenerate": {
+      "title": "Genera nuovi codici di backup",
+      "text": "Dieci nuovi codici sostituiscono quelli attuali; i precedenti smettono di funzionare immediatamente.",
+      "password": "Password",
+      "submit": "Genera nuovi codici",
+      "success": "Nuovi codici di backup generati."
+    },
+    "common": {
+      "cancel": "Annulla",
+      "close": "Chiudi",
+      "back": "Indietro",
+      "working": "In corso…"
+    },
+    "file": {
+      "title": "Track — codici di backup dell’autenticazione a due fattori",
+      "account": "Account",
+      "generated": "Generati il",
+      "note": "Ogni codice funziona una sola volta. Conserva questo file in un luogo sicuro ed eliminalo quando i codici sono stati usati."
+    },
+    "errors": {
+      "password": "La password non è corretta.",
+      "passwordRequired": "Inserisci la password.",
+      "code": "Il codice non è valido. Controlla l’ora del dispositivo e riprova.",
+      "codeFormat": "Inserisci il codice a sei cifre.",
+      "rateLimited": "Troppi tentativi. Attendi un momento e riprova.",
+      "notEnabled": "L’autenticazione a due fattori non è attiva per questo account.",
+      "noPassword": "Il tuo account non ha una password, quindi questo passaggio non può essere confermato. Imposta prima una password («Password dimenticata?» nella pagina di accesso) e riprova.",
+      "state": "Questa pagina non è più aggiornata: lo stato dell’autenticazione a due fattori è cambiato nel frattempo. Ricarica la pagina.",
+      "session": "La sessione è scaduta. Accedi di nuovo e riprova.",
+      "audit": "La modifica è stata applicata ma non è stato possibile registrarla nel log di audit. Ricarica la pagina; se il problema si ripete, contatta il supporto.",
+      "generic": "Non ha funzionato. Riprova."
+    }
+  }
+}

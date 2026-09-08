@@ -17,6 +17,7 @@ export const PERMISSIONS = [
   "members.invite",
   "members.update",
   "members.remove",
+  "members.security",
   "sites.read",
   "sites.create",
   "sites.update",
@@ -81,6 +82,7 @@ const ADMIN: readonly Permission[] = [
   "members.invite",
   "members.update",
   "members.remove",
+  "members.security",
   "sites.delete",
   "privacy.dsar",
   "privacy.retention",
@@ -125,6 +127,16 @@ export class ForbiddenError extends Error {
 
 export function assertCan(role: OrgRole, permission: Permission): void {
   if (!can(role, permission)) throw new ForbiddenError(permission);
+}
+
+/**
+ * Whether `actor` may reset the two-factor authentication of a member with role `target`
+ * (docs/17 §"Two-factor reset"): the `members.security` permission (OWNER and ADMIN), and an OWNER is
+ * only ever reset by an OWNER. Never the actor's own account — that check needs the user ids and stays
+ * with the caller.
+ */
+export function canResetTwoFactor(actor: OrgRole, target: OrgRole): boolean {
+  return can(actor, "members.security") && (target !== "OWNER" || actor === "OWNER");
 }
 
 /** Roles a given role may assign to others (nobody assigns OWNER except an OWNER). */

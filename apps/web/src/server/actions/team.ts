@@ -4,9 +4,11 @@ import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { ORG_ROLES, assignableRoles, can, isOrgRole, type OrgRole } from "@track-site/core";
+import { ORG_ROLES, assignableRoles, can, canResetTwoFactor, isOrgRole, type OrgRole } from "@track-site/core";
 import { approvalRequests, invitation, member, orgSettings, recordAudit, user } from "@track-site/db";
+import { TWO_FACTOR_RESET_REASON_MAX, TWO_FACTOR_RESET_REASON_MIN } from "@/components/app/team/labels";
 import { auth } from "@/server/auth";
+import { TWO_FACTOR_RESET_ACTIONS, resetTwoFactor, sendTwoFactorResetMail } from "@/server/security/two-factor-reset";
 import { assertOrgWritable, requireOrgContext, withOrg } from "@/server/session";
 import { APPROVAL_REQUEST_TTL_MS, approvalPolicyFromForm, canDecideRequest, diffApprovalPolicy, effectiveRequestStatus, isRelaxing, loadApprovalPolicy, loadTeamEntitlements, normalizeApprovalPolicy, requiresFourEyes, seatUsage } from "@/server/team";
 import type { ActionState } from "./organization";
@@ -14,12 +16,12 @@ import type { ActionState } from "./organization";
 /**
  * Team & Access actions. Every action requires the permission of the change, validates its input
  * with zod, writes an audit entry and revalidates the module. Risky changes (removing a member,
- * giving or taking the OWNER role, relaxing the approval policy, applying a four-eyes request) are
- * confirmed in the UI and re-checked here through the `confirm` field. When the organization's
- * approval policy puts role changes behind four eyes, the change is stored as a request instead of
- * executed; a different member with approver rights applies it.
+ * giving or taking the OWNER role, relaxing the approval policy, applying a four-eyes request,
+ * resetting a member's two-factor) are confirmed in the UI and re-checked here through the `confirm`
+ * field. When the organization's approval policy puts role changes behind four eyes, the change is
+ * stored as a request instead of executed; a different member with approver rights applies it.
  */
-export type TeamNotice = "invited" | "resent" | "cancelled" | "roleUpdated" | "roleRequested" | "removed" | "policySaved" | "policyUnchanged" | "requestApplied" | "requestRejected" | "requestWithdrawn";
+export type TeamNotice = "invited" | "resent" | "cancelled" | "roleUpdated" | "roleRequested" | "removed" | "policySaved" | "policyUnchanged" | "requestApplied" | "requestRejected" | "requestWithdrawn" | "twoFactorReset" | "twoFactorResetNoMail";
 
 export interface TeamActionState extends ActionState {
   notice?: TeamNotice | null;
@@ -188,6 +190,64 @@ export async function removeMemberAction(_prev: TeamActionState, formData: FormD
   await withOrg(ctx, (tx) => recordAudit(tx, { organizationId: ctx.organization.id, actor: ctx.tenant.actor, action: "member.remove", targetType: "member", targetId: memberId, requestId: ctx.tenant.requestId }));
   revalidateTeam();
   return done("removed");
+}
+
+/**
+ * Resets another member's two-factor authentication (docs/17 §"Two-factor reset"): permission
+ * `members.security` (OWNER, ADMIN), an owner only by an owner, never the actor's own membership, never
+ * a member with a platform role (Track operators are reset in Track Operations only — `platformAccount`),
+ * refused under a read-only support session. Confirmed in a dialog with a mandatory reason; the TOTP
+ * secret and backup codes are deleted, two-factor switched off and every session of the member revoked
+ * in one tenant transaction with the audit entry (`member.two_factor.reset`, organisation id, reason,
+ * counts — never a secret). The member is e-mailed in their language afterwards; a failed mail leaves
+ * the reset standing and says so.
+ */
+export async function resetMemberTwoFactorAction(_prev: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  const ctx = await requireOrgContext("members.security");
+  assertOrgWritable(ctx, "member.two_factor.reset");
+  const parsed = z
+    .object({ memberId: uuid, reason: z.string().trim().min(TWO_FACTOR_RESET_REASON_MIN).max(TWO_FACTOR_RESET_REASON_MAX), confirm: z.literal("twoFactorReset") })
+    .safeParse({ memberId: formData.get("memberId"), reason: formData.get("reason"), confirm: formData.get("confirm") });
+  if (!parsed.success) return fail(parsed.error.issues.some((i) => i.path[0] === "confirm") ? "confirmRequired" : parsed.error.issues.some((i) => i.path[0] === "reason") ? "reasonRequired" : "generic", parsed.error.issues.some((i) => i.path[0] === "reason") ? { reason: "reasonRequired" } : undefined);
+  const { memberId, reason } = parsed.data;
+  // a member acts as a `user` actor; the read-only support actor of a break-glass session was refused above
+  const actor = ctx.tenant.actor;
+  if (actor.kind !== "user") return fail("forbidden");
+  const outcome = await withOrg(ctx, async (tx) => {
+    const [target] = await tx
+      .select({ id: member.id, userId: member.userId, role: member.role, platformRole: user.platformRole })
+      .from(member)
+      .innerJoin(user, eq(user.id, member.userId))
+      .where(and(eq(member.organizationId, ctx.organization.id), eq(member.id, memberId)))
+      .limit(1);
+    if (!target) return { error: "notFound" as const };
+    if (target.userId === ctx.user.id) return { error: "self" as const };
+    const targetRole: OrgRole = isOrgRole(target.role) ? target.role : "READ_ONLY";
+    if (!canResetTwoFactor(ctx.role, targetRole)) return { error: targetRole === "OWNER" ? ("ownerOnly" as const) : ("forbidden" as const) };
+    // a member with a platform role is a Track operator: tenant roles never reach platform accounts (that
+    // reset would lock the operator out of /ops from customer scope) — another platform admin resets it in Track Operations
+    if (target.platformRole !== "NONE") return { error: "platformAccount" as const };
+    const result = await resetTwoFactor(
+      {
+        targetUserId: target.userId,
+        actor,
+        action: TWO_FACTOR_RESET_ACTIONS.member,
+        reason,
+        organizationId: ctx.organization.id,
+        requestId: ctx.tenant.requestId,
+        writeAudit: (entry) =>
+          recordAudit(tx, { organizationId: ctx.organization.id, actor: ctx.tenant.actor, action: entry.action, targetType: entry.targetType, targetId: entry.targetId, diff: entry.diff, metadata: { ...entry.metadata, module: "team", memberId: target.id, targetRole }, requestId: ctx.tenant.requestId }),
+      },
+      tx,
+    );
+    if (!result.ok) return { error: result.reason === "self" ? ("self" as const) : result.reason === "not_enabled" ? ("twoFactorNotEnabled" as const) : ("notFound" as const) };
+    return { recipient: { email: result.change.user.email, locale: result.change.user.locale } };
+  });
+  if (outcome.error) return fail(outcome.error);
+  if (!outcome.recipient) return fail("generic");
+  revalidateTeam();
+  const mailed = await sendTwoFactorResetMail(outcome.recipient, ctx.role === "OWNER" ? "owner" : "admin");
+  return done(mailed ? "twoFactorReset" : "twoFactorResetNoMail");
 }
 
 /**

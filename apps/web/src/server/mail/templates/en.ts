@@ -30,4 +30,9 @@ export const MAIL_COPY_EN: MailCopy = {
     subject: "Track support access to {organization} has ended",
     text: "The read-only support access to your organisation {organization} on Track has ended (grant {grantId}).\n\nEverything the operator opened is recorded in your audit log: {url}",
   },
+  twoFactorReset: {
+    subject: "Your two-factor authentication for {product} was reset",
+    text: "Your two-factor authentication for {product} was reset by {actorRole}.\n\nThe authenticator secret and your backup codes were deleted, and you were signed out everywhere. Sign in with your password and set up two-factor authentication again under Settings → Security.\n\nIf this was not requested, contact us right away: {supportLink}\n\n— Track",
+    roles: { platformAdmin: "a Track platform administrator", owner: "an owner of your organisation", admin: "an administrator of your organisation" },
+  },
 };

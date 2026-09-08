@@ -34,7 +34,11 @@
       "expired": "The request expired; file a new one.",
       "notPending": "The request was already decided.",
       "notOperator": "Sessions are revoked for platform operators only; the customer directory is read-only.",
-      "generic": "The action failed. Try again; the failure has been recorded."
+      "generic": "The action failed. Try again; the failure has been recorded.",
+      "selfTwoFactor": "You cannot reset your own two-factor authentication — another platform admin has to.",
+      "notEnabled": "Two-factor is not enabled for this account; there is nothing to reset.",
+      "organizationRequired": "Choose the organisation the support ticket belongs to.",
+      "notMember": "The account is not a member of that organisation."
     },
     "notices": {
       "proposed": "Request filed. A different platform admin has to apply it; it expires after seven days.",
@@ -42,7 +46,8 @@
       "approved": "Role changed. {count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}}",
       "declined": "Request declined and recorded.",
       "withdrawn": "Request withdrawn and recorded.",
-      "sessionsRevoked": "{count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}} The account has to sign in again."
+      "sessionsRevoked": "{count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}} The account has to sign in again.",
+      "twoFactorReset": "Two-factor reset: secret and backup codes deleted. {count, plural, =0 {No stored sessions to revoke.} one {# session revoked.} other {# sessions revoked.}} {mailed, select, yes {The person has been notified by e-mail.} other {The notification e-mail could not be sent — inform the person another way.}}"
     },
     "overview": {
       "intro": "Accounts with a platform role, their two-factor state and sessions, and the four-eyes rule for granting roles. Customer accounts are listed read-only in the directory.",
@@ -133,7 +138,9 @@
       "self": "Your own account: another admin changes your role.",
       "lastAdmin": "Last platform admin: cannot be demoted.",
       "open": "Open {name}",
-      "openLabel": "Details"
+      "openLabel": "Details",
+      "resetTwoFactor": "Reset two-factor",
+      "selfTwoFactor": "Your own account: another admin resets your two-factor."
     },
     "roleDialog": {
       "title": "Change the platform role of {name}",
@@ -229,7 +236,8 @@
         "memberships": "Organisations",
         "security": "Security",
         "lastSignIn": "Last sign-in",
-        "created": "Created"
+        "created": "Created",
+        "actions": "Actions"
       },
       "noMemberships": "No organisation",
       "moreMemberships": "+{count} more",
@@ -244,7 +252,8 @@
         "next": "Next page",
         "page": "Page {page}"
       },
-      "methods": "Last sign-in: newest stored session (rows vanish on sign-out and clean-up, so “no stored session” does not mean the person never signed in). Active: sessions that have not expired."
+      "methods": "Last sign-in: newest stored session (rows vanish on sign-out and clean-up, so “no stored session” does not mean the person never signed in). Active: sessions that have not expired.",
+      "noActions": "No two-factor to reset"
     },
     "detail": {
       "back": "All platform users",
@@ -308,6 +317,21 @@
         "empty": "No audit entries for this account.",
         "limit": "The {count} most recent entries are shown; the Audit module has the full log."
       }
+    },
+    "twoFactorDialog": {
+      "title": "Reset two-factor for {name}?",
+      "text": "The authenticator secret and the backup codes are deleted, two-factor is switched off and every stored session is revoked. The person signs in with the password only and sets up two-factor again; they are notified by e-mail in their language.",
+      "operatorHint": "Track Operations requires two-factor: the operator is locked out of the console until two-factor is set up again.",
+      "customerHint": "Support tool for a customer account: reason and ticket reference are mandatory; the entry is recorded with the ticket’s organisation and shows in that organisation’s audit log.",
+      "reason": "Reason",
+      "reasonHint": "At least {min} characters, up to {max}. Stored in the audit log.",
+      "ticket": "Ticket reference",
+      "ticketHint": "For example SUP-1234. Mandatory for customer accounts.",
+      "ticketOptionalHint": "For example OPS-1234. Optional for platform operators.",
+      "organisation": "Organisation",
+      "organisationHint": "The organisation the ticket belongs to; the audit entry is recorded there.",
+      "notice": "Recorded in the audit log with actor, account, reason and ticket — never the secret or the backup codes.",
+      "confirm": "Reset two-factor"
     }
   }
 }

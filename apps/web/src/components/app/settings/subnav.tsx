@@ -8,11 +8,14 @@ import { cn } from "@track-site/ui";
 const ITEMS = [
   { href: "/app/settings", key: "general", exact: true },
   { href: "/app/settings/alerts", key: "alerts", exact: false },
+  // the Security module owns its label (`security.nav`); the other entries live in `alerts.settingsSubnav`
+  { href: "/app/settings/security", key: "security", exact: false },
 ] as const;
 
 /** Section navigation of the Settings module: links (not tabs), the current one carries aria-current. */
 export function SettingsSubnav({ className }: { className?: string }) {
   const t = useTranslations("alerts.settingsSubnav");
+  const tSecurity = useTranslations("security");
   const pathname = usePathname();
   return (
     <nav
@@ -36,7 +39,7 @@ export function SettingsSubnav({ className }: { className?: string }) {
                 : "border-transparent text-ink-2 hover:border-line-2 hover:text-ink",
             )}
           >
-            {t(item.key)}
+            {item.key === "security" ? tSecurity("nav") : t(item.key)}
           </Link>
         );
       })}

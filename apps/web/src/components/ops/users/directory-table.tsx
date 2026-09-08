@@ -5,10 +5,15 @@ import { formatDateTime, formatRelative } from "@/components/app/alerts/format";
 import { formatDate, formatNumber } from "@/lib/format";
 import type { UserDirectoryPage } from "@/server/ops/users";
 import { roleLabel, roleTone } from "./labels";
+import { TwoFactorResetControl } from "./two-factor-reset-control";
 
 const MEMBERSHIPS_SHOWN = 3;
 
-/** Read-only directory (dense table, stacked on mobile): account, organisations and roles, security state, last sign-in, created. */
+/**
+ * Directory (dense table, stacked on mobile): account, organisations and roles, security state, last sign-in,
+ * created — read-only metadata, plus the one support tool: the two-factor reset (reason and ticket, audited
+ * with the ticket's organisation; docs/17 §"Two-factor reset").
+ */
 export async function DirectoryTable({ page, locale, filtered }: { page: UserDirectoryPage; locale: string; filtered: boolean }) {
   const t = await getTranslations("opsUsers");
   if (page.total === 0) {
@@ -30,6 +35,7 @@ export async function DirectoryTable({ page, locale, filtered }: { page: UserDir
               <Th>{t("directory.columns.security")}</Th>
               <Th>{t("directory.columns.lastSignIn")}</Th>
               <Th>{t("directory.columns.created")}</Th>
+              <Th>{t("directory.columns.actions")}</Th>
             </Tr>
           </THead>
           <TBody>
@@ -89,6 +95,13 @@ export async function DirectoryTable({ page, locale, filtered }: { page: UserDir
                 </Td>
                 <Td label={t("directory.columns.created")} className="whitespace-nowrap text-ink-2">
                   <time dateTime={row.createdAt}>{formatDate(row.createdAt, locale, "short")}</time>
+                </Td>
+                <Td label={t("directory.columns.actions")}>
+                  {row.twoFactor ? (
+                    <TwoFactorResetControl userId={row.id} name={row.name} isSelf={row.isSelf} twoFactor={row.twoFactor} platformRole={row.platformRole} organizations={row.memberships.map((m) => ({ id: m.id, name: m.name }))} size="sm" />
+                  ) : (
+                    <span className="text-xs text-ink-3">{t("directory.noActions")}</span>
+                  )}
                 </Td>
               </Tr>
             ))}

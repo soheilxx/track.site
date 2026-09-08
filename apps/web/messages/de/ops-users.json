@@ -34,7 +34,11 @@
       "expired": "Die Anfrage ist abgelaufen; stelle eine neue.",
       "notPending": "Über die Anfrage wurde bereits entschieden.",
       "notOperator": "Sitzungen werden nur bei Plattform-Operatoren widerrufen; das Kundenverzeichnis ist schreibgeschützt.",
-      "generic": "Die Aktion ist fehlgeschlagen. Versuche es erneut; der Fehler wurde aufgezeichnet."
+      "generic": "Die Aktion ist fehlgeschlagen. Versuche es erneut; der Fehler wurde aufgezeichnet.",
+      "selfTwoFactor": "Du kannst deine eigene Zwei-Faktor-Authentifizierung nicht zurücksetzen — das muss ein anderer Plattform-Admin tun.",
+      "notEnabled": "Zwei-Faktor ist für dieses Konto nicht aktiviert; es gibt nichts zurückzusetzen.",
+      "organizationRequired": "Wähle die Organisation, zu der das Support-Ticket gehört.",
+      "notMember": "Das Konto ist kein Mitglied dieser Organisation."
     },
     "notices": {
       "proposed": "Anfrage gestellt. Ein anderer Plattform-Admin muss sie anwenden; sie läuft nach sieben Tagen ab.",
@@ -42,7 +46,8 @@
       "approved": "Rolle geändert. {count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}}",
       "declined": "Anfrage abgelehnt und festgehalten.",
       "withdrawn": "Anfrage zurückgezogen und festgehalten.",
-      "sessionsRevoked": "{count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}} Das Konto muss sich neu anmelden."
+      "sessionsRevoked": "{count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}} Das Konto muss sich neu anmelden.",
+      "twoFactorReset": "Zwei-Faktor zurückgesetzt: Geheimnis und Backup-Codes gelöscht. {count, plural, =0 {Keine gespeicherten Sitzungen zu widerrufen.} one {# Sitzung widerrufen.} other {# Sitzungen widerrufen.}} {mailed, select, yes {Die Person wurde per E-Mail benachrichtigt.} other {Die Benachrichtigungs-E-Mail konnte nicht gesendet werden — informiere die Person auf anderem Weg.}}"
     },
     "overview": {
       "intro": "Konten mit Plattformrolle, ihr Zwei-Faktor-Status und ihre Sitzungen sowie die Vier-Augen-Regel für die Rollenvergabe. Kundenkonten stehen schreibgeschützt im Verzeichnis.",
@@ -133,7 +138,9 @@
       "self": "Dein eigenes Konto: Deine Rolle ändert ein anderer Admin.",
       "lastAdmin": "Letzter Plattform-Admin: kann nicht herabgestuft werden.",
       "open": "{name} öffnen",
-      "openLabel": "Details"
+      "openLabel": "Details",
+      "resetTwoFactor": "Zwei-Faktor zurücksetzen",
+      "selfTwoFactor": "Dein eigenes Konto: Ein anderer Admin setzt deine Zwei-Faktor zurück."
     },
     "roleDialog": {
       "title": "Plattformrolle von {name} ändern",
@@ -229,7 +236,8 @@
         "memberships": "Organisationen",
         "security": "Sicherheit",
         "lastSignIn": "Letzte Anmeldung",
-        "created": "Erstellt"
+        "created": "Erstellt",
+        "actions": "Aktionen"
       },
       "noMemberships": "Keine Organisation",
       "moreMemberships": "+{count} weitere",
@@ -244,7 +252,8 @@
         "next": "Nächste Seite",
         "page": "Seite {page}"
       },
-      "methods": "Letzte Anmeldung: neueste gespeicherte Sitzung (Zeilen verschwinden bei Abmeldung und Bereinigung; „keine gespeicherte Sitzung“ heißt also nicht, dass sich die Person nie angemeldet hat). Aktiv: Sitzungen, die noch nicht abgelaufen sind."
+      "methods": "Letzte Anmeldung: neueste gespeicherte Sitzung (Zeilen verschwinden bei Abmeldung und Bereinigung; „keine gespeicherte Sitzung“ heißt also nicht, dass sich die Person nie angemeldet hat). Aktiv: Sitzungen, die noch nicht abgelaufen sind.",
+      "noActions": "Keine Zwei-Faktor zum Zurücksetzen"
     },
     "detail": {
       "back": "Alle Plattformnutzer",
@@ -308,6 +317,21 @@
         "empty": "Keine Audit-Einträge zu diesem Konto.",
         "limit": "Die {count} neuesten Einträge werden angezeigt; das Audit-Modul hat das vollständige Protokoll."
       }
+    },
+    "twoFactorDialog": {
+      "title": "Zwei-Faktor von {name} zurücksetzen?",
+      "text": "Das Authenticator-Geheimnis und die Backup-Codes werden gelöscht, Zwei-Faktor wird deaktiviert und jede gespeicherte Sitzung widerrufen. Die Person meldet sich nur mit dem Passwort an und richtet Zwei-Faktor neu ein; sie wird per E-Mail in ihrer Sprache benachrichtigt.",
+      "operatorHint": "Track Operations setzt Zwei-Faktor voraus: Der Operator ist von der Konsole ausgesperrt, bis Zwei-Faktor neu eingerichtet ist.",
+      "customerHint": "Support-Werkzeug für ein Kundenkonto: Begründung und Ticket-Referenz sind Pflicht; der Eintrag wird mit der Organisation des Tickets festgehalten und erscheint in deren Audit-Log.",
+      "reason": "Begründung",
+      "reasonHint": "Mindestens {min} Zeichen, höchstens {max}. Wird im Audit-Log gespeichert.",
+      "ticket": "Ticket-Referenz",
+      "ticketHint": "Zum Beispiel SUP-1234. Pflicht bei Kundenkonten.",
+      "ticketOptionalHint": "Zum Beispiel OPS-1234. Optional bei Plattform-Operatoren.",
+      "organisation": "Organisation",
+      "organisationHint": "Die Organisation, zu der das Ticket gehört; dort wird der Audit-Eintrag festgehalten.",
+      "notice": "Wird im Audit-Log mit Akteur, Konto, Begründung und Ticket festgehalten — nie das Geheimnis oder die Backup-Codes.",
+      "confirm": "Zwei-Faktor zurücksetzen"
     }
   }
 }

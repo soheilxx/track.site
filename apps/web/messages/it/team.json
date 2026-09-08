@@ -51,6 +51,15 @@
         "title": "Rimuovere {name}?",
         "description": "{email} perde subito l’accesso a questa organizzazione. Siti, destinazioni e dati restano. La rimozione viene registrata nel log di audit.",
         "confirm": "Rimuovi membro"
+      },
+      "resetTwoFactor": "Reimposta due fattori",
+      "twoFactorDialog": {
+        "title": "Reimpostare i due fattori di {name}?",
+        "description": "Il segreto dell’app di autenticazione e i codici di backup di {email} vengono eliminati, i due fattori vengono disattivati e ogni sessione viene disconnessa. Il membro accede con la password, configura di nuovo i due fattori e viene avvisato via e-mail.",
+        "reason": "Motivo",
+        "reasonHint": "Almeno {min} caratteri; salvato nel log di audit.",
+        "notice": "La reimpostazione viene registrata nel log di audit con il tuo nome e il tuo motivo.",
+        "confirm": "Reimposta due fattori"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "Vedere la fatturazione",
         "billing_manage": "Gestire l’abbonamento",
         "audit_read": "Vedere il log di audit",
-        "kill_switch_manage": "Azionare i kill switch"
+        "kill_switch_manage": "Azionare i kill switch",
+        "members_security": "Reimpostare l’autenticazione a due fattori dei membri"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "Nulla è cambiato.",
       "requestApplied": "Modifica applicata.",
       "requestRejected": "Richiesta rifiutata.",
-      "requestWithdrawn": "Richiesta ritirata."
+      "requestWithdrawn": "Richiesta ritirata.",
+      "twoFactorReset": "Due fattori reimpostati. Il membro è stato disconnesso ovunque e avvisato via e-mail.",
+      "twoFactorResetNoMail": "Due fattori reimpostati e membro disconnesso ovunque, ma l’e-mail di notifica non è stata inviata: informa il membro in altro modo."
     },
     "errors": {
       "generic": "Qualcosa è andato storto.",
@@ -354,7 +366,11 @@
       "confirmRelax": "Allentare i requisiti richiede una conferma.",
       "notPending": "Questa richiesta non è più aperta.",
       "selfApproval": "Non puoi approvare la tua stessa richiesta.",
-      "notAppliedHere": "Questo tipo di modifica viene applicato dal suo modulo."
+      "notAppliedHere": "Questo tipo di modifica viene applicato dal suo modulo.",
+      "twoFactorNotEnabled": "Questo membro non ha attivato i due fattori; non c’è nulla da reimpostare.",
+      "reasonRequired": "Indica un motivo di almeno 5 caratteri.",
+      "ownerOnly": "Solo un Owner può reimpostare i due fattori di un altro Owner.",
+      "platformAccount": "Questo membro ha un ruolo di piattaforma su Track; i suoi due fattori vengono reimpostati da un amministratore di piattaforma in Track Operations."
     },
     "common": {
       "close": "Chiudi",

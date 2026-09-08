@@ -34,7 +34,11 @@
       "expired": "La solicitud caducó; presenta una nueva.",
       "notPending": "La solicitud ya se decidió.",
       "notOperator": "Las sesiones solo se revocan a operadores de plataforma; el directorio de clientes es de solo lectura.",
-      "generic": "La acción falló. Inténtalo de nuevo; el fallo ha quedado registrado."
+      "generic": "La acción falló. Inténtalo de nuevo; el fallo ha quedado registrado.",
+      "selfTwoFactor": "No puedes restablecer tu propia verificación en dos pasos; debe hacerlo otro administrador de plataforma.",
+      "notEnabled": "La verificación en dos pasos no está activada en esta cuenta; no hay nada que restablecer.",
+      "organizationRequired": "Elige la organización a la que pertenece el ticket de soporte.",
+      "notMember": "La cuenta no es miembro de esa organización."
     },
     "notices": {
       "proposed": "Solicitud presentada. Debe aplicarla otro administrador de plataforma; caduca a los siete días.",
@@ -42,7 +46,8 @@
       "approved": "Rol cambiado. {count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}}",
       "declined": "Solicitud rechazada y registrada.",
       "withdrawn": "Solicitud retirada y registrada.",
-      "sessionsRevoked": "{count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}} La cuenta tiene que volver a iniciar sesión."
+      "sessionsRevoked": "{count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}} La cuenta tiene que volver a iniciar sesión.",
+      "twoFactorReset": "Verificación en dos pasos restablecida: secreto y códigos de respaldo eliminados. {count, plural, =0 {No hay sesiones guardadas que revocar.} one {# sesión revocada.} other {# sesiones revocadas.}} {mailed, select, yes {La persona ha sido avisada por correo electrónico.} other {No se pudo enviar el correo de aviso; informa a la persona por otro medio.}}"
     },
     "overview": {
       "intro": "Cuentas con rol de plataforma, su verificación en dos pasos y sus sesiones, y la regla de los cuatro ojos para conceder roles. Las cuentas de clientes aparecen en el directorio en modo de solo lectura.",
@@ -133,7 +138,9 @@
       "self": "Tu propia cuenta: tu rol lo cambia otro administrador.",
       "lastAdmin": "Último administrador de plataforma: no se puede degradar.",
       "open": "Abrir {name}",
-      "openLabel": "Detalles"
+      "openLabel": "Detalles",
+      "resetTwoFactor": "Restablecer dos pasos",
+      "selfTwoFactor": "Tu propia cuenta: otro administrador restablece tu verificación en dos pasos."
     },
     "roleDialog": {
       "title": "Cambiar el rol de plataforma de {name}",
@@ -229,7 +236,8 @@
         "memberships": "Organizaciones",
         "security": "Seguridad",
         "lastSignIn": "Último inicio de sesión",
-        "created": "Creada"
+        "created": "Creada",
+        "actions": "Acciones"
       },
       "noMemberships": "Sin organización",
       "moreMemberships": "+{count} más",
@@ -244,7 +252,8 @@
         "next": "Página siguiente",
         "page": "Página {page}"
       },
-      "methods": "Último inicio de sesión: la sesión guardada más reciente (las filas desaparecen al cerrar sesión y en la limpieza, así que «sin sesión guardada» no significa que la persona nunca haya iniciado sesión). Activas: sesiones que no han caducado."
+      "methods": "Último inicio de sesión: la sesión guardada más reciente (las filas desaparecen al cerrar sesión y en la limpieza, así que «sin sesión guardada» no significa que la persona nunca haya iniciado sesión). Activas: sesiones que no han caducado.",
+      "noActions": "Sin verificación en dos pasos que restablecer"
     },
     "detail": {
       "back": "Todos los usuarios de plataforma",
@@ -308,6 +317,21 @@
         "empty": "No hay entradas de auditoría para esta cuenta.",
         "limit": "Se muestran las {count} entradas más recientes; el módulo Auditoría tiene el registro completo."
       }
+    },
+    "twoFactorDialog": {
+      "title": "¿Restablecer la verificación en dos pasos de {name}?",
+      "text": "Se eliminan el secreto de la aplicación de autenticación y los códigos de respaldo, se desactiva la verificación en dos pasos y se revocan todas las sesiones guardadas. La persona inicia sesión solo con la contraseña y vuelve a configurar la verificación en dos pasos; recibe un aviso por correo electrónico en su idioma.",
+      "operatorHint": "Track Operations exige la verificación en dos pasos: el operador queda fuera de la consola hasta que la configure de nuevo.",
+      "customerHint": "Herramienta de soporte para una cuenta de cliente: el motivo y la referencia de ticket son obligatorios; la entrada se registra con la organización del ticket y aparece en el registro de auditoría de esa organización.",
+      "reason": "Motivo",
+      "reasonHint": "Al menos {min} caracteres, como máximo {max}. Se guarda en el registro de auditoría.",
+      "ticket": "Referencia de ticket",
+      "ticketHint": "Por ejemplo SUP-1234. Obligatoria para cuentas de cliente.",
+      "ticketOptionalHint": "Por ejemplo OPS-1234. Opcional para operadores de plataforma.",
+      "organisation": "Organización",
+      "organisationHint": "La organización a la que pertenece el ticket; allí se registra la entrada de auditoría.",
+      "notice": "Se registra en el registro de auditoría con actor, cuenta, motivo y ticket; nunca el secreto ni los códigos de respaldo.",
+      "confirm": "Restablecer dos pasos"
     }
   }
 }

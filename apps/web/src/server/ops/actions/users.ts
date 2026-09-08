@@ -19,12 +19,14 @@ import {
   findAccountByEmail,
   isRequestOpen,
   lockAccount,
+  membershipOrganizationIds,
   pendingRoleRequests,
   readRoleRequest,
   revokeSessionsOf,
   roleChangeVerdict,
   type UserAccount,
 } from "@/server/ops/users";
+import { TWO_FACTOR_RESET_ACTIONS, resetTwoFactor, sendTwoFactorResetMail } from "@/server/security/two-factor-reset";
 
 /**
  * Track Operations → Platform users actions (docs/17 §1, §3). Admin only. Every action resolves the operator
@@ -32,7 +34,9 @@ import {
  * `confirm` field, locks the affected account row, applies the four-eyes rules of `server/ops/users.ts`
  * again at decision time, and writes the change and its `auditPlatform` entry (actor kind `platform`,
  * target type `user`, no organisation) in one `tracksite_ops` transaction. Role changes delete the
- * account's sessions in the same transaction (forced sign-out).
+ * account's sessions in the same transaction (forced sign-out). The two-factor reset (docs/17
+ * §"Two-factor reset") is the one action that also reaches customer accounts — as a support tool with a
+ * ticket reference, audited with the ticket's organisation — and the one that e-mails the affected person.
  */
 export type UsersActionError =
   | "forbidden"
@@ -51,18 +55,24 @@ export type UsersActionError =
   | "expired"
   | "notPending"
   | "notOperator"
+  | "selfTwoFactor"
+  | "notEnabled"
+  | "organizationRequired"
+  | "notMember"
   | "generic";
-export type UsersActionNotice = "proposed" | "applied" | "approved" | "declined" | "withdrawn" | "sessionsRevoked";
+export type UsersActionNotice = "proposed" | "applied" | "approved" | "declined" | "withdrawn" | "sessionsRevoked" | "twoFactorReset";
 
 export interface UsersActionState {
   ok: boolean;
   error: UsersActionError | null;
   notice: UsersActionNotice | null;
   fieldErrors?: Record<string, string>;
-  /** sessions deleted by the action (role change or explicit revocation) */
+  /** sessions deleted by the action (role change, explicit revocation or two-factor reset) */
   sessionsRevoked?: number;
   /** id of the filed request (`proposed`) or of the decided one */
   requestId?: string | null;
+  /** two-factor reset: whether the notification e-mail reached the transport (the reset stands either way) */
+  mailed?: boolean;
 }
 
 const uuid = z.string().uuid();
@@ -305,4 +315,68 @@ export async function revokeSessionsAction(_prev: UsersActionState, formData: Fo
   });
   if (outcome.ok) revalidate(userId);
   return outcome;
+}
+
+const resetTwoFactorSchema = z.object({ userId: uuid, reason, ticketRef, organizationId: uuid.nullable(), confirm: z.literal("twoFactorReset") });
+
+/**
+ * Resets the two-factor authentication of another account (docs/17 §"Two-factor reset"): the TOTP secret
+ * and backup codes are deleted, two-factor switched off and every stored session revoked, in one
+ * `tracksite_ops` transaction with the `auditPlatform` entry (reason, ticket, organisation, counts — never
+ * a secret); the person is e-mailed in their language afterwards. Never the admin's own account. Other
+ * platform users need a reason (ticket optional); customer accounts are a support case: ticket reference
+ * mandatory and, when the account belongs to organisations, the ticket's organisation — recorded on the
+ * audit row so the entry shows in that organisation's own audit log.
+ */
+export async function resetTwoFactorAction(_prev: UsersActionState, formData: FormData): Promise<UsersActionState> {
+  const ctx = await admin();
+  if (!ctx) return fail("forbidden");
+  const parsed = resetTwoFactorSchema.safeParse({
+    userId: str(formData, "userId"),
+    reason: str(formData, "reason"),
+    ticketRef: optional(formData, "ticketRef"),
+    organizationId: optional(formData, "organizationId"),
+    confirm: str(formData, "confirm"),
+  });
+  if (!parsed.success) return invalid(parsed);
+  const input = parsed.data;
+  if (input.userId === ctx.user.id) return fail("selfTwoFactor");
+  // the recipient never travels in the action state (it would reach the client); the mail goes out after the commit
+  const notify: { recipient: { email: string; locale: string } | null } = { recipient: null };
+  const outcome = await withPlatform(ctx, async (tx): Promise<UsersActionState> => {
+    const target = await lockAccount(tx, input.userId);
+    if (!target) return fail("not_found");
+    if (target.id === ctx.user.id) return fail("selfTwoFactor");
+    const support = target.platformRole === "NONE";
+    let organizationId: string | null = null;
+    if (support) {
+      if (!input.ticketRef) return fail("ticketRequired", { fieldErrors: { ticketRef: "required" } });
+      const memberships = await membershipOrganizationIds(tx, target.id);
+      if (memberships.length) {
+        if (!input.organizationId) return fail("organizationRequired", { fieldErrors: { organizationId: "required" } });
+        if (!memberships.includes(input.organizationId)) return fail("notMember", { fieldErrors: { organizationId: "invalid" } });
+        organizationId = input.organizationId;
+      }
+    }
+    const result = await resetTwoFactor(
+      {
+        targetUserId: target.id,
+        actor: ctx.actor,
+        action: TWO_FACTOR_RESET_ACTIONS.platform,
+        reason: input.reason,
+        ticketRef: input.ticketRef,
+        organizationId,
+        requestId: ctx.requestId,
+        writeAudit: (entry) => auditPlatform(ctx, { ...entry, metadata: { ...entry.metadata, module: "users", targetRole: target.platformRole, support } }, tx),
+      },
+      tx,
+    );
+    if (!result.ok) return fail(result.reason === "self" ? "selfTwoFactor" : result.reason === "not_enabled" ? "notEnabled" : "not_found");
+    notify.recipient = { email: result.change.user.email, locale: result.change.user.locale };
+    return done("twoFactorReset", { sessionsRevoked: result.change.sessionsRevoked });
+  });
+  if (!outcome.ok) return outcome;
+  revalidate(input.userId);
+  const mailed = notify.recipient ? await sendTwoFactorResetMail(notify.recipient, "platformAdmin") : false;
+  return { ...outcome, mailed };
 }

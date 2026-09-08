@@ -2,13 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useId, useState } from "react";
 import type { OrgRole } from "@track-site/core";
-import { Alert, Badge, Button, Dialog, Input, Label, Select, Status, Td, Tr } from "@track-site/ui";
+import { Alert, Badge, Button, Dialog, FieldError, FieldHint, Input, Label, Select, Status, Td, Textarea, Tr } from "@track-site/ui";
 import { formatDate } from "@/lib/format";
-import { cancelInvitationAction, inviteMemberAction, removeMemberAction, resendInvitationAction, updateMemberRoleAction, type TeamActionState } from "@/server/actions/team";
+import { cancelInvitationAction, inviteMemberAction, removeMemberAction, resendInvitationAction, resetMemberTwoFactorAction, updateMemberRoleAction, type TeamActionState } from "@/server/actions/team";
 import type { PermissionGroup, SeatUsage } from "@/server/team";
-import { errorLabel, roleLabel } from "./labels";
+import { TWO_FACTOR_RESET_REASON_MAX, TWO_FACTOR_RESET_REASON_MIN, errorLabel, roleLabel } from "./labels";
 import { PermissionsSheet } from "./permissions-sheet";
 
 const initial: TeamActionState = { ok: false, error: null, notice: null };
@@ -28,7 +28,7 @@ export function useCloseOnSuccess(state: TeamActionState, setOpen: (open: boolea
 /** Result of a team action: the notice on success, the mapped error otherwise. */
 export function ActionFeedback({ state }: { state: TeamActionState }) {
   const t = useTranslations("team");
-  if (state.ok && state.notice) return <Alert tone={state.notice === "roleRequested" ? "info" : "ok"}>{t(`notices.${state.notice}`)}</Alert>;
+  if (state.ok && state.notice) return <Alert tone={state.notice === "roleRequested" ? "info" : state.notice === "twoFactorResetNoMail" ? "warn" : "ok"}>{t(`notices.${state.notice}`)}</Alert>;
   if (state.error) return <Alert tone="bad">{errorLabel(t, state.error)}</Alert>;
   return null;
 }
@@ -84,22 +84,35 @@ export interface MemberRowData {
 
 /**
  * One member: role change (OWNER changes behind a confirmation dialog; behind four eyes the server
- * stores a request instead), two-factor state, permissions sheet and removal behind a dialog.
+ * stores a request instead), two-factor state, permissions sheet, the two-factor reset (owners and
+ * admins, owners only by owners; reason mandatory, the member is e-mailed) and removal — each behind a
+ * dialog. `canResetTwoFactor` is derived from the viewer's assignable roles when the page does not pass
+ * it: `assignableRoles` names OWNER for an owner and every other role for an admin — the same two roles
+ * that hold `members.security` (packages/core `canResetTwoFactor`); the server re-checks the permission,
+ * the owner rule and the own-account rule in any case.
  */
-export function MemberRow({ member, roles, groups, canUpdate, canRemove, locale }: { member: MemberRowData; roles: OrgRole[]; groups: PermissionGroup[]; canUpdate: boolean; canRemove: boolean; locale: string }) {
+export function MemberRow({ member, roles, groups, canUpdate, canRemove, canResetTwoFactor, locale }: { member: MemberRowData; roles: OrgRole[]; groups: PermissionGroup[]; canUpdate: boolean; canRemove: boolean; canResetTwoFactor?: boolean; locale: string }) {
   const t = useTranslations("team");
   const [roleState, roleAction, rolePending] = useActionState(updateMemberRoleAction, initial);
   const [removeState, removeAction, removePending] = useActionState(removeMemberAction, initial);
+  const [resetState, resetAction, resetPending] = useActionState(resetMemberTwoFactorAction, initial);
   const [role, setRole] = useState<OrgRole>(member.role);
   const [ownerOpen, setOwnerOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const resetId = useId();
   useCloseOnSuccess(roleState, setOwnerOpen);
   useCloseOnSuccess(removeState, setRemoveOpen);
+  useCloseOnSuccess(resetState, setResetOpen);
   const ownerInvolved = member.role === "OWNER" || role === "OWNER";
   const changed = role !== member.role;
   const options = Array.from(new Set<OrgRole>([member.role, ...roles]));
   const selectId = `role-${member.id}`;
-  const feedback = roleState.error || roleState.notice ? roleState : removeState;
+  const viewerIsOwner = roles.includes("OWNER");
+  const viewerMayReset = canResetTwoFactor ?? (roles.length > 0 && (member.role !== "OWNER" || viewerIsOwner));
+  const showReset = !member.isSelf && member.twoFactor && viewerMayReset;
+  const resetReasonError = resetState.fieldErrors?.reason ? t("errors.reasonRequired") : null;
+  const feedback = roleState.error || roleState.notice ? roleState : resetState.error || resetState.notice ? resetState : removeState;
   return (
     <Tr>
       <Td label={t("members.member")}>
@@ -152,12 +165,40 @@ export function MemberRow({ member, roles, groups, canUpdate, canRemove, locale 
       <Td label={t("members.actions")}>
         <div className="flex flex-wrap items-center gap-2">
           <PermissionsSheet name={member.name} role={member.role} groups={groups} />
+          {showReset ? (
+            <Button size="sm" variant="ghost" onClick={() => setResetOpen(true)} aria-haspopup="dialog" aria-label={t("members.twoFactorDialog.title", { name: member.name })} data-testid="team-member-reset-two-factor">
+              {t("members.resetTwoFactor")}
+            </Button>
+          ) : null}
           {canRemove ? (
             <Button size="sm" variant="ghost" onClick={() => setRemoveOpen(true)} aria-haspopup="dialog">
               {t("members.remove")}
             </Button>
           ) : null}
         </div>
+
+        <Dialog open={resetOpen} onClose={() => setResetOpen(false)} title={t("members.twoFactorDialog.title", { name: member.name })} description={t("members.twoFactorDialog.description", { email: member.email })} closeLabel={t("common.close")} size="md">
+          <form action={resetAction} className="space-y-4 py-2">
+            <input type="hidden" name="memberId" value={member.id} />
+            <input type="hidden" name="confirm" value="twoFactorReset" />
+            {resetState.error ? <ActionFeedback state={resetState} /> : null}
+            <div>
+              <Label htmlFor={`${resetId}-reason`}>{t("members.twoFactorDialog.reason")}</Label>
+              <Textarea id={`${resetId}-reason`} name="reason" required minLength={TWO_FACTOR_RESET_REASON_MIN} maxLength={TWO_FACTOR_RESET_REASON_MAX} rows={3} className="mt-1.5" aria-describedby={`${resetId}-reason-hint${resetReasonError ? ` ${resetId}-reason-error` : ""}`} state={resetReasonError ? "error" : undefined} data-autofocus />
+              <FieldError id={`${resetId}-reason-error`}>{resetReasonError}</FieldError>
+              <FieldHint id={`${resetId}-reason-hint`}>{t("members.twoFactorDialog.reasonHint", { min: TWO_FACTOR_RESET_REASON_MIN })}</FieldHint>
+            </div>
+            <p className="text-xs text-ink-3">{t("members.twoFactorDialog.notice")}</p>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button type="button" variant="secondary" onClick={() => setResetOpen(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" variant="danger" loading={resetPending}>
+                {t("members.twoFactorDialog.confirm")}
+              </Button>
+            </div>
+          </form>
+        </Dialog>
 
         <Dialog open={ownerOpen} onClose={() => setOwnerOpen(false)} title={t("members.ownerDialog.title")} description={t("members.ownerDialog.description", { name: member.name, from: roleLabel(t, member.role), to: roleLabel(t, role) })} closeLabel={t("common.close")} size="sm">
           <form action={roleAction} className="flex flex-col-reverse gap-2 py-2 sm:flex-row sm:justify-end">

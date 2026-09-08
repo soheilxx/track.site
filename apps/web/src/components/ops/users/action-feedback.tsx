@@ -20,10 +20,10 @@ export function useCloseOnSuccess(state: UsersActionState, onSuccess: () => void
   }
 }
 
-/** Outcome of an action: the notice on success (with the session count where it matters), the mapped error otherwise. */
+/** Outcome of an action: the notice on success (with the session count and the mail state where they matter), the mapped error otherwise. */
 export function ActionFeedback({ state }: { state: UsersActionState }) {
   const t = useTranslations("opsUsers");
-  if (state.ok && state.notice) return <Alert tone="ok">{t(`notices.${state.notice}`, { count: state.sessionsRevoked ?? 0 })}</Alert>;
+  if (state.ok && state.notice) return <Alert tone={state.mailed === false ? "warn" : "ok"}>{t(`notices.${state.notice}`, { count: state.sessionsRevoked ?? 0, mailed: state.mailed ? "yes" : "no" })}</Alert>;
   if (state.error) return <Alert tone="bad">{errorLabel(t, state.error)}</Alert>;
   return null;
 }

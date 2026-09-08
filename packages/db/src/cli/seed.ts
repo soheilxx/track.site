@@ -1,10 +1,10 @@
 import { PLAN_IDS, planRecords } from "@track-site/catalog";
 import { config as loadDotenv } from "dotenv";
-import { eq, notInArray } from "drizzle-orm";
+import { and, eq, notInArray } from "drizzle-orm";
 import { hashPassword } from "better-auth/crypto";
 import path from "node:path";
 import { createDb, createPool } from "../client.ts";
-import { account, member, organization, user } from "../schema/auth.ts";
+import { account, member, organization, twoFactor, user } from "../schema/auth.ts";
 import { plans } from "../schema/billing.ts";
 import { consentPolicies } from "../schema/consent.ts";
 import { integrations } from "../schema/config.ts";
@@ -92,6 +92,31 @@ try {
       await db.insert(integrations).values({ organizationId: orgId, siteId, connectorType: "webhook", name: "Demo webhook (draft)", status: "draft", publicConfig: { url: "https://example.test/webhook" } });
       await db.insert(siteSetupStates).values({ organizationId: orgId, siteId, currentStep: "installation", steps: { site: { status: "completed" }, business_type: { status: "completed" }, platform: { status: "completed" } } });
       console.error("demo organization seeded: acme-demo (owner@acme.test / Demo-Password-123!)");
+    }
+
+    // Dedicated account of `apps/web/e2e/security.spec.ts`: the spec enrols, uses and disables two-factor,
+    // which rotates its session and, for a few seconds, makes every password sign-in of that account land
+    // on the two-factor page — with an account of its own, the owner's stored session and the owner's
+    // sign-ins in other specs stay untouched. ANALYST of the demo organisation (the dashboard renders,
+    // the audit row goes into the tenant's log). Seeded on its own so an existing database gets it too,
+    // and a run that crashed with two-factor enabled is reset here (secret and codes removed, flag off).
+    const securityEmail = "security@acme.test";
+    const [demoOrg] = await db.select({ id: organization.id }).from(organization).where(eq(organization.slug, "acme-demo")).limit(1);
+    const [securityUser] = await db.select({ id: user.id, twoFactorEnabled: user.twoFactorEnabled }).from(user).where(eq(user.email, securityEmail)).limit(1);
+    let securityId = securityUser?.id;
+    if (!securityUser) {
+      const [row] = await db.insert(user).values({ name: "Sam Security", email: securityEmail, emailVerified: true }).returning();
+      securityId = row!.id;
+      await db.insert(account).values({ issuer: "local:credential", accountId: row!.id, providerId: "credential", userId: row!.id, password });
+      console.error("e2e security account seeded: security@acme.test / Demo-Password-123! (two-factor flows of security.spec.ts)");
+    } else {
+      const secrets = await db.delete(twoFactor).where(eq(twoFactor.userId, securityUser.id)).returning({ id: twoFactor.id });
+      if (securityUser.twoFactorEnabled) await db.update(user).set({ twoFactorEnabled: false }).where(eq(user.id, securityUser.id));
+      if (secrets.length > 0 || securityUser.twoFactorEnabled) console.error("e2e security account reset: two-factor disabled for security@acme.test");
+    }
+    if (demoOrg && securityId) {
+      const [membership] = await db.select({ id: member.id }).from(member).where(and(eq(member.userId, securityId), eq(member.organizationId, demoOrg.id))).limit(1);
+      if (!membership) await db.insert(member).values({ organizationId: demoOrg.id, userId: securityId, role: "ANALYST" });
     }
   }
 } finally {

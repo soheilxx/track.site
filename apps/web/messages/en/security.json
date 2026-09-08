@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Security",
+    "menu": "Security",
+    "palette": "Security settings",
+    "title": "Security",
+    "intro": "Two-factor authentication for your account: a six-digit code from an authenticator app at every sign-in, backup codes for when the app is unavailable. Every change is recorded in the audit log.",
+    "status": {
+      "title": "Two-factor authentication",
+      "enabled": "Enabled",
+      "disabled": "Not enabled",
+      "since": "Enabled since {date}",
+      "backupCodes": "{count, plural, =0 {No backup codes left} one {# backup code left} other {# backup codes left}}",
+      "backupCodesUnknown": "Backup codes: unknown",
+      "textEnabled": "Sign-ins need your password and a code from your authenticator app. Generate new backup codes when you run low; disabling removes the second factor and invalidates the codes.",
+      "textDisabled": "Your account is protected by your password alone. Enabling takes a minute: confirm your password, scan a QR code with your authenticator app, enter one code and save your backup codes.",
+      "enable": "Enable two-factor authentication",
+      "disable": "Disable",
+      "regenerate": "New backup codes"
+    },
+    "ops": {
+      "title": "Track Operations requires two-factor authentication",
+      "textDisabled": "Your account holds a platform role. The operations console (/ops) stays closed until two-factor authentication is enabled for your account.",
+      "textEnabled": "Your account holds a platform role and two-factor authentication is enabled, so the operations console is open to you.",
+      "open": "Open Track Operations"
+    },
+    "opsGate": {
+      "enable": "Enable two-factor authentication"
+    },
+    "enable": {
+      "title": "Enable two-factor authentication",
+      "stepOf": "Step {step} of {total}: {name}",
+      "steps": {
+        "password": "Confirm your password",
+        "scan": "Connect the app",
+        "verify": "Enter a code",
+        "backup": "Save the backup codes"
+      },
+      "password": {
+        "label": "Password",
+        "hint": "Confirm your password to start the setup.",
+        "submit": "Continue"
+      },
+      "scan": {
+        "title": "Scan the QR code",
+        "text": "Open your authenticator app (for example Google Authenticator, 1Password, Microsoft Authenticator or Aegis) and scan the code, or enter the key by hand.",
+        "qrAlt": "QR code for the authenticator app, account {account}",
+        "qrUnavailable": "The QR code cannot be shown here; enter the key by hand.",
+        "manual": "Manual key",
+        "manualText": "Time-based code, six digits, every 30 seconds.",
+        "issuer": "Issuer",
+        "copyKey": "Copy key",
+        "copied": "Copied",
+        "next": "Continue"
+      },
+      "verify": {
+        "title": "Enter the code from the app",
+        "text": "Enter the six-digit code your authenticator app shows right now.",
+        "label": "Verification code",
+        "submit": "Verify and enable"
+      },
+      "backup": {
+        "title": "Save your backup codes",
+        "text": "Each code signs you in once when your authenticator app is unavailable. They are shown only now — copy or download them and keep them somewhere safe.",
+        "list": "Backup codes",
+        "copy": "Copy codes",
+        "download": "Download as .txt",
+        "copied": "Copied",
+        "downloaded": "Download started",
+        "confirm": "I have stored the backup codes somewhere safe.",
+        "closeGuard": "Tick the box to confirm you stored the codes, then finish. You can generate new codes from this page at any time.",
+        "done": "Done"
+      },
+      "success": "Two-factor authentication is enabled."
+    },
+    "disable": {
+      "title": "Disable two-factor authentication",
+      "text": "Afterwards your account is protected by your password alone, and your backup codes stop working. Trusted devices are forgotten.",
+      "password": "Password",
+      "confirm": "I understand that my account will be less protected.",
+      "submit": "Disable two-factor authentication",
+      "success": "Two-factor authentication is disabled."
+    },
+    "regenerate": {
+      "title": "Generate new backup codes",
+      "text": "Ten new codes replace the current ones; the previous codes stop working immediately.",
+      "password": "Password",
+      "submit": "Generate new codes",
+      "success": "New backup codes generated."
+    },
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "back": "Back",
+      "working": "Working…"
+    },
+    "file": {
+      "title": "Track — two-factor backup codes",
+      "account": "Account",
+      "generated": "Generated",
+      "note": "Each code works once. Keep this file somewhere safe and delete it when the codes are used."
+    },
+    "errors": {
+      "password": "The password is not correct.",
+      "passwordRequired": "Enter your password.",
+      "code": "The code is not valid. Check the time on your device and try again.",
+      "codeFormat": "Enter the six-digit code.",
+      "rateLimited": "Too many attempts. Wait a moment and try again.",
+      "notEnabled": "Two-factor authentication is not enabled for this account.",
+      "noPassword": "Your account has no password, so this step cannot be confirmed. Set a password first (“Forgot password?” on the sign-in page), then try again.",
+      "state": "This page is out of date: the two-factor status has changed in the meantime. Reload the page.",
+      "session": "Your session has ended. Sign in again and try once more.",
+      "audit": "The change was applied but could not be recorded in the audit log. Reload the page; if this keeps happening, contact support.",
+      "generic": "That did not work. Please try again."
+    }
+  }
+}

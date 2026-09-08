@@ -5,6 +5,10 @@
  */
 export type TranslateFn = ((key: string, values?: Record<string, string | number | Date>) => string) & { has: (key: string) => boolean };
 
+/** Limits of the two-factor reset reason, shared by the member row and the server action (no server import inside the client bundle). */
+export const TWO_FACTOR_RESET_REASON_MIN = 5;
+export const TWO_FACTOR_RESET_REASON_MAX = 500;
+
 /** Action error code → message (unknown codes read as the generic error). */
 export function errorLabel(t: TranslateFn, code: string | null | undefined, values?: Record<string, string | number>): string {
   const key = `errors.${code ?? "generic"}`;

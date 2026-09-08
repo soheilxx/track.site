@@ -30,4 +30,9 @@ export const MAIL_COPY_ES: MailCopy = {
     subject: "El acceso del soporte de Track a {organization} ha terminado",
     text: "El acceso de solo lectura del soporte a tu organización {organization} en Track ha terminado (acceso {grantId}).\n\nTodo lo que abrió el operador está registrado en tu registro de auditoría: {url}",
   },
+  twoFactorReset: {
+    subject: "Tu verificación en dos pasos para {product} se ha restablecido",
+    text: "Tu verificación en dos pasos para {product} ha sido restablecida por {actorRole}.\n\nSe han eliminado el secreto de la aplicación de autenticación y tus códigos de respaldo, y se ha cerrado tu sesión en todas partes. Inicia sesión con tu contraseña y vuelve a configurar la verificación en dos pasos en Ajustes → Seguridad.\n\nSi no has solicitado esto, contáctanos de inmediato: {supportLink}\n\n— Track",
+    roles: { platformAdmin: "un administrador de la plataforma Track", owner: "un propietario de tu organización", admin: "un administrador de tu organización" },
+  },
 };

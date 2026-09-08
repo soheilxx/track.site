@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Sécurité",
+    "menu": "Sécurité",
+    "palette": "Paramètres de sécurité",
+    "title": "Sécurité",
+    "intro": "Authentification à deux facteurs pour votre compte : un code à six chiffres généré par une application d’authentification à chaque connexion, et des codes de secours si l’application n’est pas disponible. Chaque modification est consignée dans le journal d’audit.",
+    "status": {
+      "title": "Authentification à deux facteurs",
+      "enabled": "Activée",
+      "disabled": "Non activée",
+      "since": "Activée depuis le {date}",
+      "backupCodes": "{count, plural, =0 {Aucun code de secours restant} one {# code de secours restant} other {# codes de secours restants}}",
+      "backupCodesUnknown": "Codes de secours : inconnu",
+      "textEnabled": "La connexion demande votre mot de passe et un code de votre application d’authentification. Générez de nouveaux codes de secours quand il en reste peu ; la désactivation supprime le second facteur et invalide les codes.",
+      "textDisabled": "Votre compte n’est protégé que par votre mot de passe. L’activation prend une minute : confirmez votre mot de passe, scannez un code QR avec votre application d’authentification, saisissez un code et enregistrez vos codes de secours.",
+      "enable": "Activer l’authentification à deux facteurs",
+      "disable": "Désactiver",
+      "regenerate": "Nouveaux codes de secours"
+    },
+    "ops": {
+      "title": "Track Operations exige l’authentification à deux facteurs",
+      "textDisabled": "Votre compte possède un rôle de plateforme. La console d’exploitation (/ops) reste fermée tant que l’authentification à deux facteurs n’est pas activée pour votre compte.",
+      "textEnabled": "Votre compte possède un rôle de plateforme et l’authentification à deux facteurs est activée : la console d’exploitation vous est ouverte.",
+      "open": "Ouvrir Track Operations"
+    },
+    "opsGate": {
+      "enable": "Activer l’authentification à deux facteurs"
+    },
+    "enable": {
+      "title": "Activer l’authentification à deux facteurs",
+      "stepOf": "Étape {step} sur {total} : {name}",
+      "steps": {
+        "password": "Confirmer le mot de passe",
+        "scan": "Connecter l’application",
+        "verify": "Saisir un code",
+        "backup": "Enregistrer les codes de secours"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "hint": "Confirmez votre mot de passe pour commencer la configuration.",
+        "submit": "Continuer"
+      },
+      "scan": {
+        "title": "Scanner le code QR",
+        "text": "Ouvrez votre application d’authentification (par exemple Google Authenticator, 1Password, Microsoft Authenticator ou Aegis) et scannez le code, ou saisissez la clé manuellement.",
+        "qrAlt": "Code QR pour l’application d’authentification, compte {account}",
+        "qrUnavailable": "Le code QR ne peut pas être affiché ici ; saisissez la clé manuellement.",
+        "manual": "Clé manuelle",
+        "manualText": "Code temporel, six chiffres, toutes les 30 secondes.",
+        "issuer": "Émetteur",
+        "copyKey": "Copier la clé",
+        "copied": "Copié",
+        "next": "Continuer"
+      },
+      "verify": {
+        "title": "Saisir le code de l’application",
+        "text": "Saisissez le code à six chiffres que votre application d’authentification affiche en ce moment.",
+        "label": "Code de vérification",
+        "submit": "Vérifier et activer"
+      },
+      "backup": {
+        "title": "Enregistrez vos codes de secours",
+        "text": "Chaque code vous connecte une seule fois lorsque votre application d’authentification n’est pas disponible. Ils ne sont affichés que maintenant : copiez-les ou téléchargez-les et conservez-les en lieu sûr.",
+        "list": "Codes de secours",
+        "copy": "Copier les codes",
+        "download": "Télécharger en .txt",
+        "copied": "Copié",
+        "downloaded": "Téléchargement lancé",
+        "confirm": "J’ai enregistré les codes de secours en lieu sûr.",
+        "closeGuard": "Cochez la case pour confirmer que vous avez enregistré les codes, puis terminez. Vous pouvez générer de nouveaux codes à tout moment depuis cette page.",
+        "done": "Terminer"
+      },
+      "success": "L’authentification à deux facteurs est activée."
+    },
+    "disable": {
+      "title": "Désactiver l’authentification à deux facteurs",
+      "text": "Ensuite, votre compte ne sera protégé que par votre mot de passe et vos codes de secours ne fonctionneront plus. Les appareils de confiance sont oubliés.",
+      "password": "Mot de passe",
+      "confirm": "Je comprends que mon compte sera moins protégé.",
+      "submit": "Désactiver l’authentification à deux facteurs",
+      "success": "L’authentification à deux facteurs est désactivée."
+    },
+    "regenerate": {
+      "title": "Générer de nouveaux codes de secours",
+      "text": "Dix nouveaux codes remplacent les codes actuels ; les anciens cessent de fonctionner immédiatement.",
+      "password": "Mot de passe",
+      "submit": "Générer de nouveaux codes",
+      "success": "Nouveaux codes de secours générés."
+    },
+    "common": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "back": "Retour",
+      "working": "En cours…"
+    },
+    "file": {
+      "title": "Track — codes de secours de l’authentification à deux facteurs",
+      "account": "Compte",
+      "generated": "Généré le",
+      "note": "Chaque code fonctionne une seule fois. Conservez ce fichier en lieu sûr et supprimez-le quand les codes sont utilisés."
+    },
+    "errors": {
+      "password": "Le mot de passe est incorrect.",
+      "passwordRequired": "Saisissez votre mot de passe.",
+      "code": "Le code n’est pas valide. Vérifiez l’heure de votre appareil et réessayez.",
+      "codeFormat": "Saisissez le code à six chiffres.",
+      "rateLimited": "Trop de tentatives. Patientez un instant et réessayez.",
+      "notEnabled": "L’authentification à deux facteurs n’est pas activée pour ce compte.",
+      "noPassword": "Votre compte n’a pas de mot de passe, cette étape ne peut donc pas être confirmée. Définissez d’abord un mot de passe (« Mot de passe oublié ? » sur la page de connexion), puis réessayez.",
+      "state": "Cette page n’est plus à jour : l’état de l’authentification à deux facteurs a changé entre-temps. Rechargez la page.",
+      "session": "Votre session a expiré. Reconnectez-vous et réessayez.",
+      "audit": "La modification a été appliquée mais n’a pas pu être consignée dans le journal d’audit. Rechargez la page ; si cela se reproduit, contactez le support.",
+      "generic": "Cela n’a pas fonctionné. Veuillez réessayer."
+    }
+  }
+}

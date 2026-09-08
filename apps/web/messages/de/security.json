@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Sicherheit",
+    "menu": "Sicherheit",
+    "palette": "Sicherheitseinstellungen",
+    "title": "Sicherheit",
+    "intro": "Zwei-Faktor-Authentifizierung für dein Konto: bei jeder Anmeldung ein sechsstelliger Code aus einer Authenticator-App, Backup-Codes für den Fall, dass die App nicht verfügbar ist. Jede Änderung wird im Audit-Log festgehalten.",
+    "status": {
+      "title": "Zwei-Faktor-Authentifizierung",
+      "enabled": "Aktiviert",
+      "disabled": "Nicht aktiviert",
+      "since": "Aktiviert seit {date}",
+      "backupCodes": "{count, plural, =0 {Keine Backup-Codes übrig} one {# Backup-Code übrig} other {# Backup-Codes übrig}}",
+      "backupCodesUnknown": "Backup-Codes: unbekannt",
+      "textEnabled": "Anmeldungen brauchen dein Passwort und einen Code aus deiner Authenticator-App. Erzeuge neue Backup-Codes, wenn sie knapp werden; das Deaktivieren entfernt den zweiten Faktor und macht die Codes ungültig.",
+      "textDisabled": "Dein Konto ist nur durch dein Passwort geschützt. Das Aktivieren dauert eine Minute: Passwort bestätigen, QR-Code mit der Authenticator-App scannen, einen Code eingeben und die Backup-Codes sichern.",
+      "enable": "Zwei-Faktor-Authentifizierung aktivieren",
+      "disable": "Deaktivieren",
+      "regenerate": "Neue Backup-Codes"
+    },
+    "ops": {
+      "title": "Track Operations verlangt Zwei-Faktor-Authentifizierung",
+      "textDisabled": "Dein Konto hat eine Plattformrolle. Die Operations-Konsole (/ops) bleibt geschlossen, bis die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist.",
+      "textEnabled": "Dein Konto hat eine Plattformrolle und die Zwei-Faktor-Authentifizierung ist aktiviert – die Operations-Konsole steht dir offen.",
+      "open": "Track Operations öffnen"
+    },
+    "opsGate": {
+      "enable": "Zwei-Faktor-Authentifizierung aktivieren"
+    },
+    "enable": {
+      "title": "Zwei-Faktor-Authentifizierung aktivieren",
+      "stepOf": "Schritt {step} von {total}: {name}",
+      "steps": {
+        "password": "Passwort bestätigen",
+        "scan": "App verbinden",
+        "verify": "Code eingeben",
+        "backup": "Backup-Codes sichern"
+      },
+      "password": {
+        "label": "Passwort",
+        "hint": "Bestätige dein Passwort, um die Einrichtung zu starten.",
+        "submit": "Weiter"
+      },
+      "scan": {
+        "title": "QR-Code scannen",
+        "text": "Öffne deine Authenticator-App (zum Beispiel Google Authenticator, 1Password, Microsoft Authenticator oder Aegis) und scanne den Code, oder gib den Schlüssel von Hand ein.",
+        "qrAlt": "QR-Code für die Authenticator-App, Konto {account}",
+        "qrUnavailable": "Der QR-Code kann hier nicht angezeigt werden; gib den Schlüssel von Hand ein.",
+        "manual": "Manueller Schlüssel",
+        "manualText": "Zeitbasierter Code, sechs Stellen, alle 30 Sekunden.",
+        "issuer": "Aussteller",
+        "copyKey": "Schlüssel kopieren",
+        "copied": "Kopiert",
+        "next": "Weiter"
+      },
+      "verify": {
+        "title": "Code aus der App eingeben",
+        "text": "Gib den sechsstelligen Code ein, den deine Authenticator-App jetzt anzeigt.",
+        "label": "Bestätigungscode",
+        "submit": "Bestätigen und aktivieren"
+      },
+      "backup": {
+        "title": "Backup-Codes sichern",
+        "text": "Jeder Code meldet dich einmal an, wenn deine Authenticator-App nicht verfügbar ist. Sie werden nur jetzt angezeigt – kopiere oder lade sie herunter und bewahre sie sicher auf.",
+        "list": "Backup-Codes",
+        "copy": "Codes kopieren",
+        "download": "Als .txt herunterladen",
+        "copied": "Kopiert",
+        "downloaded": "Download gestartet",
+        "confirm": "Ich habe die Backup-Codes sicher gespeichert.",
+        "closeGuard": "Bestätige mit dem Häkchen, dass du die Codes gespeichert hast, und schließe dann ab. Neue Codes kannst du jederzeit auf dieser Seite erzeugen.",
+        "done": "Fertig"
+      },
+      "success": "Die Zwei-Faktor-Authentifizierung ist aktiviert."
+    },
+    "disable": {
+      "title": "Zwei-Faktor-Authentifizierung deaktivieren",
+      "text": "Danach ist dein Konto nur noch durch dein Passwort geschützt, und deine Backup-Codes funktionieren nicht mehr. Vertrauenswürdige Geräte werden vergessen.",
+      "password": "Passwort",
+      "confirm": "Ich verstehe, dass mein Konto danach weniger geschützt ist.",
+      "submit": "Zwei-Faktor-Authentifizierung deaktivieren",
+      "success": "Die Zwei-Faktor-Authentifizierung ist deaktiviert."
+    },
+    "regenerate": {
+      "title": "Neue Backup-Codes erzeugen",
+      "text": "Zehn neue Codes ersetzen die aktuellen; die bisherigen Codes funktionieren sofort nicht mehr.",
+      "password": "Passwort",
+      "submit": "Neue Codes erzeugen",
+      "success": "Neue Backup-Codes erzeugt."
+    },
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "back": "Zurück",
+      "working": "Wird ausgeführt…"
+    },
+    "file": {
+      "title": "Track – Backup-Codes für die Zwei-Faktor-Authentifizierung",
+      "account": "Konto",
+      "generated": "Erzeugt",
+      "note": "Jeder Code funktioniert einmal. Bewahre diese Datei sicher auf und lösche sie, wenn die Codes verbraucht sind."
+    },
+    "errors": {
+      "password": "Das Passwort ist nicht korrekt.",
+      "passwordRequired": "Gib dein Passwort ein.",
+      "code": "Der Code ist nicht gültig. Prüfe die Uhrzeit deines Geräts und versuche es erneut.",
+      "codeFormat": "Gib den sechsstelligen Code ein.",
+      "rateLimited": "Zu viele Versuche. Warte einen Moment und versuche es erneut.",
+      "notEnabled": "Die Zwei-Faktor-Authentifizierung ist für dieses Konto nicht aktiviert.",
+      "noPassword": "Dein Konto hat kein Passwort, deshalb lässt sich dieser Schritt nicht bestätigen. Lege zuerst ein Passwort fest („Passwort vergessen?“ auf der Anmeldeseite) und versuche es dann erneut.",
+      "state": "Diese Seite ist nicht mehr aktuell: Der Zwei-Faktor-Status hat sich inzwischen geändert. Lade die Seite neu.",
+      "session": "Deine Sitzung ist abgelaufen. Melde dich erneut an und versuche es noch einmal.",
+      "audit": "Die Änderung wurde übernommen, konnte aber nicht im Audit-Log festgehalten werden. Lade die Seite neu; wenn das wiederholt passiert, wende dich an den Support.",
+      "generic": "Das hat nicht geklappt. Bitte versuche es erneut."
+    }
+  }
+}

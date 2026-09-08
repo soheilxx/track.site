@@ -51,6 +51,15 @@
         "title": "¿Quitar a {name}?",
         "description": "{email} pierde el acceso a esta organización de inmediato. Los sitios, destinos y datos se conservan. La retirada queda registrada en el registro de auditoría.",
         "confirm": "Quitar miembro"
+      },
+      "resetTwoFactor": "Restablecer dos pasos",
+      "twoFactorDialog": {
+        "title": "¿Restablecer la verificación en dos pasos de {name}?",
+        "description": "Se eliminan el secreto de la aplicación de autenticación y los códigos de respaldo de {email}, se desactiva la verificación en dos pasos y se cierran todas las sesiones. El miembro inicia sesión con la contraseña, vuelve a configurar la verificación en dos pasos y recibe un aviso por correo electrónico.",
+        "reason": "Motivo",
+        "reasonHint": "Al menos {min} caracteres; se guarda en el registro de auditoría.",
+        "notice": "El restablecimiento queda registrado en el registro de auditoría con tu nombre y tu motivo.",
+        "confirm": "Restablecer dos pasos"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "Ver facturación",
         "billing_manage": "Gestionar la suscripción",
         "audit_read": "Ver el registro de auditoría",
-        "kill_switch_manage": "Accionar kill switches"
+        "kill_switch_manage": "Accionar kill switches",
+        "members_security": "Restablecer la verificación en dos pasos de los miembros"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "No ha cambiado nada.",
       "requestApplied": "Cambio aplicado.",
       "requestRejected": "Solicitud rechazada.",
-      "requestWithdrawn": "Solicitud retirada."
+      "requestWithdrawn": "Solicitud retirada.",
+      "twoFactorReset": "Verificación en dos pasos restablecida. El miembro ha cerrado sesión en todas partes y ha sido avisado por correo electrónico.",
+      "twoFactorResetNoMail": "Verificación en dos pasos restablecida y sesión del miembro cerrada en todas partes, pero no se pudo enviar el correo de aviso; informa al miembro por otro medio."
     },
     "errors": {
       "generic": "Algo ha salido mal.",
@@ -354,7 +366,11 @@
       "confirmRelax": "Relajar los requisitos necesita confirmación.",
       "notPending": "Esta solicitud ya no está abierta.",
       "selfApproval": "No puedes aprobar tu propia solicitud.",
-      "notAppliedHere": "Este tipo de cambio se aplica desde su propio módulo."
+      "notAppliedHere": "Este tipo de cambio se aplica desde su propio módulo.",
+      "twoFactorNotEnabled": "Este miembro no ha activado la verificación en dos pasos; no hay nada que restablecer.",
+      "reasonRequired": "Indica un motivo de al menos 5 caracteres.",
+      "ownerOnly": "Solo un Owner puede restablecer la verificación en dos pasos de otro Owner.",
+      "platformAccount": "Este miembro tiene un rol de plataforma en Track; su verificación en dos pasos la restablece un administrador de plataforma en Track Operations."
     },
     "common": {
       "close": "Cerrar",

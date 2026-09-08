@@ -51,6 +51,15 @@
         "title": "{name} verwijderen?",
         "description": "{email} verliest direct de toegang tot deze organisatie. Sites, destinations en gegevens blijven behouden. De verwijdering wordt vastgelegd in het auditlog.",
         "confirm": "Lid verwijderen"
+      },
+      "resetTwoFactor": "Tweestapsverificatie resetten",
+      "twoFactorDialog": {
+        "title": "Tweestapsverificatie van {name} resetten?",
+        "description": "Het geheim van de authenticator-app en de back-upcodes van {email} worden verwijderd, tweestapsverificatie wordt uitgeschakeld en elke sessie wordt uitgelogd. Het lid logt in met het wachtwoord, stelt tweestapsverificatie opnieuw in en krijgt een e-mail.",
+        "reason": "Reden",
+        "reasonHint": "Minimaal {min} tekens; opgeslagen in het auditlog.",
+        "notice": "De reset wordt vastgelegd in het auditlog met je naam en je reden.",
+        "confirm": "Tweestapsverificatie resetten"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "Facturatie bekijken",
         "billing_manage": "Abonnement beheren",
         "audit_read": "Auditlog bekijken",
-        "kill_switch_manage": "Kill switches bedienen"
+        "kill_switch_manage": "Kill switches bedienen",
+        "members_security": "Tweestapsverificatie van leden resetten"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "Niets gewijzigd.",
       "requestApplied": "Wijziging toegepast.",
       "requestRejected": "Verzoek afgewezen.",
-      "requestWithdrawn": "Verzoek ingetrokken."
+      "requestWithdrawn": "Verzoek ingetrokken.",
+      "twoFactorReset": "Tweestapsverificatie gereset. Het lid is overal uitgelogd en per e-mail op de hoogte gebracht.",
+      "twoFactorResetNoMail": "Tweestapsverificatie gereset en het lid overal uitgelogd, maar de e-mailmelding kon niet worden verzonden — informeer het lid op een andere manier."
     },
     "errors": {
       "generic": "Er is iets misgegaan.",
@@ -354,7 +366,11 @@
       "confirmRelax": "Het versoepelen van de vereisten vereist een bevestiging.",
       "notPending": "Dit verzoek staat niet meer open.",
       "selfApproval": "Je kunt je eigen verzoek niet goedkeuren.",
-      "notAppliedHere": "Dit wijzigingstype wordt vanuit de eigen module toegepast."
+      "notAppliedHere": "Dit wijzigingstype wordt vanuit de eigen module toegepast.",
+      "twoFactorNotEnabled": "Dit lid heeft tweestapsverificatie niet ingeschakeld; er valt niets te resetten.",
+      "reasonRequired": "Geef een reden van minimaal 5 tekens op.",
+      "ownerOnly": "Alleen een Owner kan de tweestapsverificatie van een andere Owner resetten.",
+      "platformAccount": "Dit lid heeft een platformrol bij Track; de tweestapsverificatie wordt door een platformbeheerder in Track Operations gereset."
     },
     "common": {
       "close": "Sluiten",

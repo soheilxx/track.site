@@ -34,7 +34,11 @@
       "expired": "La demande a expiré ; déposez-en une nouvelle.",
       "notPending": "La demande a déjà été tranchée.",
       "notOperator": "Les sessions ne sont révoquées que pour les opérateurs plateforme ; l’annuaire clients est en lecture seule.",
-      "generic": "L’action a échoué. Réessayez ; l’échec a été enregistré."
+      "generic": "L’action a échoué. Réessayez ; l’échec a été enregistré.",
+      "selfTwoFactor": "Vous ne pouvez pas réinitialiser votre propre double authentification — un autre admin plateforme doit le faire.",
+      "notEnabled": "La double authentification n’est pas activée pour ce compte ; il n’y a rien à réinitialiser.",
+      "organizationRequired": "Choisissez l’organisation à laquelle le ticket de support se rapporte.",
+      "notMember": "Le compte n’est pas membre de cette organisation."
     },
     "notices": {
       "proposed": "Demande déposée. Un autre admin plateforme doit l’appliquer ; elle expire au bout de sept jours.",
@@ -42,7 +46,8 @@
       "approved": "Rôle modifié. {count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}}",
       "declined": "Demande refusée et enregistrée.",
       "withdrawn": "Demande retirée et enregistrée.",
-      "sessionsRevoked": "{count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}} Le compte doit se reconnecter."
+      "sessionsRevoked": "{count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}} Le compte doit se reconnecter.",
+      "twoFactorReset": "Double authentification réinitialisée : secret et codes de secours supprimés. {count, plural, =0 {Aucune session enregistrée à révoquer.} one {# session révoquée.} other {# sessions révoquées.}} {mailed, select, yes {La personne a été informée par e-mail.} other {L’e-mail de notification n’a pas pu être envoyé — informez la personne par un autre moyen.}}"
     },
     "overview": {
       "intro": "Comptes dotés d’un rôle plateforme, leur double authentification et leurs sessions, et la règle des quatre yeux pour l’attribution des rôles. Les comptes clients figurent en lecture seule dans l’annuaire.",
@@ -133,7 +138,9 @@
       "self": "Votre propre compte : un autre admin change votre rôle.",
       "lastAdmin": "Dernier admin plateforme : ne peut pas être rétrogradé.",
       "open": "Ouvrir {name}",
-      "openLabel": "Détails"
+      "openLabel": "Détails",
+      "resetTwoFactor": "Réinitialiser la double authentification",
+      "selfTwoFactor": "Votre propre compte : un autre admin réinitialise votre double authentification."
     },
     "roleDialog": {
       "title": "Changer le rôle plateforme de {name}",
@@ -229,7 +236,8 @@
         "memberships": "Organisations",
         "security": "Sécurité",
         "lastSignIn": "Dernière connexion",
-        "created": "Créé"
+        "created": "Créé",
+        "actions": "Actions"
       },
       "noMemberships": "Aucune organisation",
       "moreMemberships": "+{count} autres",
@@ -244,7 +252,8 @@
         "next": "Page suivante",
         "page": "Page {page}"
       },
-      "methods": "Dernière connexion : session enregistrée la plus récente (les lignes disparaissent à la déconnexion et au nettoyage ; « aucune session enregistrée » ne signifie donc pas que la personne ne s’est jamais connectée). Actives : sessions non expirées."
+      "methods": "Dernière connexion : session enregistrée la plus récente (les lignes disparaissent à la déconnexion et au nettoyage ; « aucune session enregistrée » ne signifie donc pas que la personne ne s’est jamais connectée). Actives : sessions non expirées.",
+      "noActions": "Aucune double authentification à réinitialiser"
     },
     "detail": {
       "back": "Tous les utilisateurs plateforme",
@@ -308,6 +317,21 @@
         "empty": "Aucune entrée d’audit pour ce compte.",
         "limit": "Les {count} entrées les plus récentes sont affichées ; le module Audit contient le journal complet."
       }
+    },
+    "twoFactorDialog": {
+      "title": "Réinitialiser la double authentification de {name} ?",
+      "text": "Le secret de l’application d’authentification et les codes de secours sont supprimés, la double authentification est désactivée et chaque session enregistrée est révoquée. La personne se connecte avec son seul mot de passe et reconfigure la double authentification ; elle est informée par e-mail dans sa langue.",
+      "operatorHint": "Track Operations exige la double authentification : l’opérateur n’a plus accès à la console tant qu’elle n’est pas reconfigurée.",
+      "customerHint": "Outil de support pour un compte client : le motif et la référence de ticket sont obligatoires ; l’entrée est enregistrée avec l’organisation du ticket et apparaît dans le journal d’audit de cette organisation.",
+      "reason": "Motif",
+      "reasonHint": "Au moins {min} caractères, au plus {max}. Enregistré dans le journal d’audit.",
+      "ticket": "Référence de ticket",
+      "ticketHint": "Par exemple SUP-1234. Obligatoire pour les comptes clients.",
+      "ticketOptionalHint": "Par exemple OPS-1234. Facultatif pour les opérateurs plateforme.",
+      "organisation": "Organisation",
+      "organisationHint": "L’organisation à laquelle le ticket se rapporte ; l’entrée d’audit y est enregistrée.",
+      "notice": "Enregistré dans le journal d’audit avec l’acteur, le compte, le motif et le ticket — jamais le secret ni les codes de secours.",
+      "confirm": "Réinitialiser la double authentification"
     }
   }
 }

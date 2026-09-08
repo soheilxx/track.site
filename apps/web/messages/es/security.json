@@ -1,0 +1,117 @@
+{
+  "security": {
+    "nav": "Seguridad",
+    "menu": "Seguridad",
+    "palette": "Ajustes de seguridad",
+    "title": "Seguridad",
+    "intro": "Autenticación en dos pasos para tu cuenta: un código de seis dígitos de una app de autenticación en cada inicio de sesión y códigos de respaldo por si la app no está disponible. Cada cambio queda registrado en el registro de auditoría.",
+    "status": {
+      "title": "Autenticación en dos pasos",
+      "enabled": "Activada",
+      "disabled": "No activada",
+      "since": "Activada desde el {date}",
+      "backupCodes": "{count, plural, =0 {No quedan códigos de respaldo} one {Queda # código de respaldo} other {Quedan # códigos de respaldo}}",
+      "backupCodesUnknown": "Códigos de respaldo: desconocido",
+      "textEnabled": "Para iniciar sesión necesitas tu contraseña y un código de tu app de autenticación. Genera códigos de respaldo nuevos cuando queden pocos; desactivarla elimina el segundo factor e invalida los códigos.",
+      "textDisabled": "Tu cuenta está protegida solo por tu contraseña. Activarla lleva un minuto: confirma tu contraseña, escanea un código QR con tu app de autenticación, introduce un código y guarda tus códigos de respaldo.",
+      "enable": "Activar la autenticación en dos pasos",
+      "disable": "Desactivar",
+      "regenerate": "Nuevos códigos de respaldo"
+    },
+    "ops": {
+      "title": "Track Operations exige autenticación en dos pasos",
+      "textDisabled": "Tu cuenta tiene un rol de plataforma. La consola de operaciones (/ops) permanece cerrada hasta que actives la autenticación en dos pasos en tu cuenta.",
+      "textEnabled": "Tu cuenta tiene un rol de plataforma y la autenticación en dos pasos está activada: la consola de operaciones está abierta para ti.",
+      "open": "Abrir Track Operations"
+    },
+    "opsGate": {
+      "enable": "Activar la autenticación en dos pasos"
+    },
+    "enable": {
+      "title": "Activar la autenticación en dos pasos",
+      "stepOf": "Paso {step} de {total}: {name}",
+      "steps": {
+        "password": "Confirmar la contraseña",
+        "scan": "Conectar la app",
+        "verify": "Introducir un código",
+        "backup": "Guardar los códigos de respaldo"
+      },
+      "password": {
+        "label": "Contraseña",
+        "hint": "Confirma tu contraseña para empezar la configuración.",
+        "submit": "Continuar"
+      },
+      "scan": {
+        "title": "Escanea el código QR",
+        "text": "Abre tu app de autenticación (por ejemplo Google Authenticator, 1Password, Microsoft Authenticator o Aegis) y escanea el código, o introduce la clave a mano.",
+        "qrAlt": "Código QR para la app de autenticación, cuenta {account}",
+        "qrUnavailable": "El código QR no se puede mostrar aquí; introduce la clave a mano.",
+        "manual": "Clave manual",
+        "manualText": "Código basado en tiempo, seis dígitos, cada 30 segundos.",
+        "issuer": "Emisor",
+        "copyKey": "Copiar clave",
+        "copied": "Copiado",
+        "next": "Continuar"
+      },
+      "verify": {
+        "title": "Introduce el código de la app",
+        "text": "Introduce el código de seis dígitos que muestra ahora tu app de autenticación.",
+        "label": "Código de verificación",
+        "submit": "Verificar y activar"
+      },
+      "backup": {
+        "title": "Guarda tus códigos de respaldo",
+        "text": "Cada código inicia sesión una sola vez cuando tu app de autenticación no está disponible. Solo se muestran ahora: cópialos o descárgalos y guárdalos en un lugar seguro.",
+        "list": "Códigos de respaldo",
+        "copy": "Copiar códigos",
+        "download": "Descargar como .txt",
+        "copied": "Copiado",
+        "downloaded": "Descarga iniciada",
+        "confirm": "He guardado los códigos de respaldo en un lugar seguro.",
+        "closeGuard": "Marca la casilla para confirmar que has guardado los códigos y termina. Puedes generar códigos nuevos desde esta página en cualquier momento.",
+        "done": "Listo"
+      },
+      "success": "La autenticación en dos pasos está activada."
+    },
+    "disable": {
+      "title": "Desactivar la autenticación en dos pasos",
+      "text": "Después, tu cuenta quedará protegida solo por tu contraseña y tus códigos de respaldo dejarán de funcionar. Los dispositivos de confianza se olvidan.",
+      "password": "Contraseña",
+      "confirm": "Entiendo que mi cuenta quedará menos protegida.",
+      "submit": "Desactivar la autenticación en dos pasos",
+      "success": "La autenticación en dos pasos está desactivada."
+    },
+    "regenerate": {
+      "title": "Generar nuevos códigos de respaldo",
+      "text": "Diez códigos nuevos sustituyen a los actuales; los anteriores dejan de funcionar de inmediato.",
+      "password": "Contraseña",
+      "submit": "Generar códigos nuevos",
+      "success": "Nuevos códigos de respaldo generados."
+    },
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "back": "Atrás",
+      "working": "En curso…"
+    },
+    "file": {
+      "title": "Track — códigos de respaldo de la autenticación en dos pasos",
+      "account": "Cuenta",
+      "generated": "Generados",
+      "note": "Cada código funciona una sola vez. Guarda este archivo en un lugar seguro y elimínalo cuando los códigos estén usados."
+    },
+    "errors": {
+      "password": "La contraseña no es correcta.",
+      "passwordRequired": "Introduce tu contraseña.",
+      "code": "El código no es válido. Comprueba la hora de tu dispositivo e inténtalo de nuevo.",
+      "codeFormat": "Introduce el código de seis dígitos.",
+      "rateLimited": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+      "notEnabled": "La autenticación en dos pasos no está activada en esta cuenta.",
+      "noPassword": "Tu cuenta no tiene contraseña, así que este paso no se puede confirmar. Establece primero una contraseña («¿Has olvidado la contraseña?» en la página de inicio de sesión) e inténtalo de nuevo.",
+      "state": "Esta página ya no está actualizada: el estado de la autenticación en dos pasos ha cambiado entre tanto. Recarga la página.",
+      "session": "Tu sesión ha finalizado. Inicia sesión de nuevo e inténtalo otra vez.",
+      "audit": "El cambio se aplicó, pero no se pudo registrar en el registro de auditoría. Recarga la página; si se repite, contacta con el soporte.",
+      "generic": "No ha funcionado. Inténtalo de nuevo."
+    }
+  }
+}

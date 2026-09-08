@@ -51,6 +51,15 @@
         "title": "Remove {name}?",
         "description": "{email} loses access to this organization immediately. Sites, destinations and data stay. The removal is recorded in the audit log.",
         "confirm": "Remove member"
+      },
+      "resetTwoFactor": "Reset two-factor",
+      "twoFactorDialog": {
+        "title": "Reset two-factor for {name}?",
+        "description": "The authenticator secret and the backup codes of {email} are deleted, two-factor is switched off and every session is signed out. The member signs in with the password, sets up two-factor again and is notified by e-mail.",
+        "reason": "Reason",
+        "reasonHint": "At least {min} characters; stored in the audit log.",
+        "notice": "The reset is recorded in the audit log with your name and reason.",
+        "confirm": "Reset two-factor"
       }
     },
     "permissionsSheet": {
@@ -152,7 +161,8 @@
         "billing_read": "View billing",
         "billing_manage": "Manage the subscription",
         "audit_read": "View the audit log",
-        "kill_switch_manage": "Operate kill switches"
+        "kill_switch_manage": "Operate kill switches",
+        "members_security": "Reset members’ two-factor authentication"
       }
     },
     "approvals": {
@@ -333,7 +343,9 @@
       "policyUnchanged": "Nothing changed.",
       "requestApplied": "Change applied.",
       "requestRejected": "Request rejected.",
-      "requestWithdrawn": "Request withdrawn."
+      "requestWithdrawn": "Request withdrawn.",
+      "twoFactorReset": "Two-factor reset. The member has been signed out everywhere and notified by e-mail.",
+      "twoFactorResetNoMail": "Two-factor reset and the member signed out everywhere, but the notification e-mail could not be sent — inform the member another way."
     },
     "errors": {
       "generic": "Something went wrong.",
@@ -354,7 +366,11 @@
       "confirmRelax": "Relaxing the requirements needs confirmation.",
       "notPending": "This request is no longer open.",
       "selfApproval": "You cannot approve your own request.",
-      "notAppliedHere": "This change type is applied from its own module."
+      "notAppliedHere": "This change type is applied from its own module.",
+      "twoFactorNotEnabled": "This member has not enabled two-factor; there is nothing to reset.",
+      "reasonRequired": "Give a reason of at least 5 characters.",
+      "ownerOnly": "Only an owner can reset another owner’s two-factor.",
+      "platformAccount": "This member holds a Track platform role; their two-factor is reset by a platform admin in Track Operations."
     },
     "common": {
       "close": "Close",

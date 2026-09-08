@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T15:06:20.932Z",
+  "generatedAt": "2026-09-08T17:07:35.269Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -43,10 +43,11 @@
       "ops-inbox": 218,
       "ops-organisations": 339,
       "ops-revenue": 179,
-      "ops-users": 249,
+      "ops-users": 271,
       "releases": 350,
+      "security": 85,
       "shell": 159,
-      "team": 284
+      "team": 298
     },
     "copyModules": [
       "AUTH_COPY",
@@ -218,6 +219,11 @@
               "extra": []
             },
             "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "security": {
               "file": true,
               "missing": [],
               "extra": []
@@ -421,6 +427,11 @@
               "missing": [],
               "extra": []
             },
+            "security": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "shell": {
               "file": true,
               "missing": [],
@@ -616,6 +627,11 @@
               "extra": []
             },
             "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "security": {
               "file": true,
               "missing": [],
               "extra": []
@@ -819,6 +835,11 @@
               "missing": [],
               "extra": []
             },
+            "security": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "shell": {
               "file": true,
               "missing": [],
@@ -1014,6 +1035,11 @@
               "extra": []
             },
             "releases": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "security": {
               "file": true,
               "missing": [],
               "extra": []

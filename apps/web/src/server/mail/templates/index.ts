@@ -37,7 +37,16 @@ export interface MailCopy {
   breakGlassApproved: MailTemplate;
   /** Break-glass: the grant was revoked or ended. Placeholders: `{organization}`, `{grantId}`, `{url}` (audit log). */
   breakGlassRevoked: MailTemplate;
+  /**
+   * Two-factor reset by an administrator (docs/17 §"Two-factor reset"): the affected person learns who reset
+   * it and where to turn if it was not requested. Placeholders: `{actorRole}` (one of `roles`, localized),
+   * `{product}`, `{supportLink}`.
+   */
+  twoFactorReset: MailTemplate & { roles: Record<TwoFactorResetRole, string> };
 }
+
+/** Who performed a two-factor reset, as the mail names it: a Track platform admin, an owner or an admin of the organisation. */
+export type TwoFactorResetRole = "platformAdmin" | "owner" | "admin";
 
 export const MAIL_COPY: LocalizedCopy<MailCopy> = { en: MAIL_COPY_EN, de: MAIL_COPY_DE, fr: MAIL_COPY_FR, es: MAIL_COPY_ES, it: MAIL_COPY_IT, nl: MAIL_COPY_NL };
 

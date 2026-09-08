@@ -30,4 +30,9 @@ export const MAIL_COPY_NL: MailCopy = {
     subject: "De supporttoegang van Track tot {organization} is beëindigd",
     text: "De alleen-lezen supporttoegang tot je organisatie {organization} op Track is beëindigd (toegang {grantId}).\n\nAlles wat de medewerker heeft geopend staat in je auditlog: {url}",
   },
+  twoFactorReset: {
+    subject: "Je tweestapsverificatie voor {product} is gereset",
+    text: "Je tweestapsverificatie voor {product} is gereset door {actorRole}.\n\nHet geheim van je authenticator-app en je back-upcodes zijn verwijderd en je bent overal uitgelogd. Log in met je wachtwoord en stel tweestapsverificatie opnieuw in onder Instellingen → Beveiliging.\n\nAls je dit niet hebt aangevraagd, neem dan direct contact met ons op: {supportLink}\n\n— Track",
+    roles: { platformAdmin: "een platformbeheerder van Track", owner: "een eigenaar van je organisatie", admin: "een beheerder van je organisatie" },
+  },
 };

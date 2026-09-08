@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, LogOut, ShieldCheck } from "lucide-react";
+import { ChevronDown, KeyRound, LogOut, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { OrgRole } from "@track-site/core";
 import { Menu, type MenuItem } from "./menu";
@@ -19,6 +19,7 @@ function initials(name: string, email: string): string {
  */
 export function UserMenu({ user, role, onLogout }: { user: ShellUser; role: OrgRole | null; onLogout: () => void }) {
   const t = useTranslations("shell");
+  const tSecurity = useTranslations("security");
   const operations: MenuItem[] =
     user.platformRole !== "NONE"
       ? [{ id: "operations", label: t("user.operations"), icon: <ShieldCheck className="size-4" aria-hidden="true" />, href: "/ops" }]
@@ -43,7 +44,14 @@ export function UserMenu({ user, role, onLogout }: { user: ShellUser; role: OrgR
       }
       sections={[
         ...(operations.length > 0 ? [{ id: "operations", items: operations }] : []),
-        { id: "account", items: [{ id: "logout", label: t("user.logout"), icon: <LogOut className="size-4" aria-hidden="true" />, onSelect: onLogout }] },
+        {
+          id: "account",
+          items: [
+            // security settings (two-factor enrolment, /app/settings/security) — the module owns its label
+            { id: "security", label: tSecurity("menu"), icon: <KeyRound className="size-4" aria-hidden="true" />, href: "/app/settings/security" },
+            { id: "logout", label: t("user.logout"), icon: <LogOut className="size-4" aria-hidden="true" />, onSelect: onLogout },
+          ],
+        },
       ]}
     >
       <span aria-hidden="true" className="inline-flex size-8 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
