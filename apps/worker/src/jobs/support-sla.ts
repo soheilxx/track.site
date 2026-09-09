@@ -2,6 +2,7 @@ import { and, eq, inArray, isNotNull, isNull, or, sql, type SQL } from "drizzle-
 import {
   createDb,
   supportEvents,
+  supportSettings,
   supportSlaPolicies,
   supportTickets,
   user,
@@ -20,9 +21,12 @@ import { sendAlertMail } from "./alerts-mail.ts";
  *
  *   - warnings: a running clock (first response / resolution) whose remaining business minutes have
  *     dropped to the policy's warning share (`escalation.warning_percent`, default 80 % elapsed) gets one
- *     `sla_warning` event and the assignee an e-mail — once per clock run (a reopen or a changed target
- *     starts a new run, a pause does not; `warnedClocks`), never for an unassigned ticket's mailbox (the
- *     queue shows the state), never while the ticket is paused (`pending`);
+ *     `sla_warning` event and the assignee an e-mail — once per clock run: the run is the persisted
+ *     `sla_clock_started_at` (creation or the last reopening, migration 0018) together with the target
+ *     measured against, so a reopen or a changed target warns again while a pause does not
+ *     (`warnedClocks`); never for an unassigned ticket's mailbox (the queue shows the state), never while
+ *     the ticket is paused (`pending`). The warning share is the same figure the ticket page's `slaClockState`
+ *     shows as "warning" (docs/18 §12) — both read the policy's target and business minutes;
  *   - breaches: past the due date the flag `breached_first_response` / `breached_resolution` flips, an
  *     `sla_breach` event is written and the assignee, the policy's named recipients and — when the policy
  *     escalates — every PLATFORM_ADMIN is e-mailed;
@@ -34,6 +38,8 @@ import { sendAlertMail } from "./alerts-mail.ts";
  * before an event is written, so two workers never double-flag or double-warn. Event payloads carry ids
  * and field values only — never message bodies. The business-minute arithmetic mirrors
  * `apps/web/src/server/support/sla.ts` (apps never import each other); both test files share fixtures.
+ * Business hours: a policy without windows runs on the desk's `support_settings.business_hours`
+ * (`effectiveBusinessHours`, the same fallback the web loaders apply — docs/18 §11).
  */
 export const SUPPORT_SLA_INTERVAL_MS = 60_000;
 /** Tickets examined per run (the oldest updates first); a desk beyond that is looked at in the next minute. */
@@ -153,6 +159,21 @@ export function normalizeBusinessHours(hours: SupportBusinessHours | null | unde
   return { timezone, days, alwaysOpen };
 }
 
+/** True when at least one valid window exists on any day. */
+export function hasBusinessWindows(hours: SupportBusinessHours | null | undefined): boolean {
+  return Boolean(hours) && !normalizeBusinessHours(hours).alwaysOpen;
+}
+
+/**
+ * The hours a clock runs on (mirror of the web engine's `effectiveBusinessHours`): the policy's own windows
+ * when it has any, else the desk's `support_settings.business_hours`, else around the clock.
+ */
+export function effectiveBusinessHours(policyHours: SupportBusinessHours | null | undefined, deskHours: SupportBusinessHours | null | undefined): SupportBusinessHours {
+  if (policyHours && hasBusinessWindows(policyHours)) return policyHours;
+  if (deskHours && hasBusinessWindows(deskHours)) return deskHours;
+  return policyHours ?? deskHours ?? { timezone: SLA_TIMEZONE_DEFAULT, days: {} };
+}
+
 /** Business minutes inside [from, to] (fractional; 0 when `to` is not after `from`). */
 export function businessMinutesBetween(from: Date, to: Date, hours: SupportBusinessHours | NormalizedHours): number {
   const h = "alwaysOpen" in hours ? hours : normalizeBusinessHours(hours);
@@ -215,8 +236,10 @@ export interface ClockTicket {
   breachedFirstResponse: boolean;
   breachedResolution: boolean;
   pausedAt: Date | null;
-  /** every reopen bumps it (ticket, portal and inbound slices alike) — the clock run's generation */
+  /** every reopen bumps it (ticket, portal and inbound slices alike) — the clock run's generation for rows without a persisted start */
   reopenCount: number;
+  /** the persisted clock run (creation or the last reopening, migration 0018); null on rows the migration could not backfill */
+  slaClockStartedAt: Date | null;
 }
 
 /** The payload fields of an `sla_warning` event the run scoping reads (null when absent or malformed). */
@@ -226,13 +249,18 @@ export interface WarningEventRef {
   targetMinutes: number | null;
   /** `reopen_count` at the time of the warning; null = written before the field existed (generation 0) */
   reopenCount: number | null;
+  /** `clock_started_at` (ISO) the warning belongs to; null = written before the run was persisted */
+  clockStartedAt: string | null;
+  /** when the event row was written (the run of a legacy warning is judged by it) */
+  createdAt: Date | null;
 }
 
 /** `WarningEventRef` from a stored payload — foreign values (the payload is jsonb) never throw. */
-export function warningRef(payload: Record<string, unknown> | null | undefined): WarningEventRef {
+export function warningRef(payload: Record<string, unknown> | null | undefined, createdAt: Date | null = null): WarningEventRef {
   const p = payload ?? {};
   const int = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
-  return { clock: typeof p.clock === "string" ? p.clock : null, targetMinutes: int(p.target_minutes), reopenCount: int(p.reopen_count) };
+  const started = typeof p.clock_started_at === "string" && Number.isFinite(Date.parse(p.clock_started_at)) ? new Date(p.clock_started_at).toISOString() : null;
+  return { clock: typeof p.clock === "string" ? p.clock : null, targetMinutes: int(p.target_minutes), reopenCount: int(p.reopen_count), clockStartedAt: started, createdAt };
 }
 
 export interface ClockFinding {
@@ -253,16 +281,24 @@ function targetMinutes(policy: Pick<ClockPolicy, "priorities">, priority: Suppor
 }
 
 /**
- * The clocks already warned in their current run. A warning belongs to the run when it was written in the
- * same reopen generation (`reopen_count`) against the same target: a reopen restarts the clock and a
- * priority change (or an edited target) measures it against a new deadline — both may warn again — while a
- * pause only moves the due date (same generation, same target), so a resumed ticket is never warned twice.
+ * The clocks already warned in their current run. A warning belongs to the run when it was written for the
+ * ticket's persisted clock start (`sla_clock_started_at` — the creation or the last reopening; a legacy
+ * warning without the field counts when it was written at or after that start) against the same target:
+ * a reopen restarts the clock and a priority change (or an edited target) measures it against a new
+ * deadline — both may warn again — while a pause only moves the due date (same start, same target), so a
+ * resumed ticket is never warned twice. A ticket the migration could not give a start to (null) falls back
+ * to the reopen generation (`reopen_count`).
  */
-export function warnedClocks(events: readonly WarningEventRef[], ticket: Pick<ClockTicket, "priority" | "reopenCount">, policy: Pick<ClockPolicy, "priorities">): Set<SlaClock> {
+export function warnedClocks(events: readonly WarningEventRef[], ticket: Pick<ClockTicket, "priority" | "reopenCount" | "slaClockStartedAt">, policy: Pick<ClockPolicy, "priorities">): Set<SlaClock> {
   const out = new Set<SlaClock>();
+  const started = ticket.slaClockStartedAt ?? null;
   for (const event of events) {
     if (event.clock !== "first_response" && event.clock !== "resolution") continue;
-    if ((event.reopenCount ?? 0) !== ticket.reopenCount) continue;
+    if (started) {
+      if (event.clockStartedAt !== null) {
+        if (event.clockStartedAt !== started.toISOString()) continue;
+      } else if (event.createdAt === null || event.createdAt.getTime() < started.getTime()) continue;
+    } else if ((event.reopenCount ?? 0) !== ticket.reopenCount) continue;
     if (event.targetMinutes !== targetMinutes(policy, ticket.priority, event.clock)) continue;
     out.add(event.clock);
   }
@@ -466,22 +502,33 @@ interface Recipient {
 
 const RUNNING_STATUSES = ["new", "open", "pending", "on_hold"] as const;
 
-/** Every `sla_warning` event of the tickets, by ticket (the run scoping happens in `warnedClocks`). */
+/**
+ * The `sla_warning` events of the tickets, by ticket — scoped to the current clock run in SQL where the
+ * ticket has a persisted start (`created_at >= sla_clock_started_at`; earlier runs' warnings are never
+ * loaded), the rest in `warnedClocks`.
+ */
 async function loadWarningEvents(db: Db, ticketIds: string[]): Promise<Map<string, WarningEventRef[]>> {
   const events = new Map<string, WarningEventRef[]>();
   if (!ticketIds.length) return events;
   const rows = await withWorker(db, (tx) =>
     tx
-      .select({ ticketId: supportEvents.ticketId, payload: supportEvents.payload })
+      .select({ ticketId: supportEvents.ticketId, payload: supportEvents.payload, createdAt: supportEvents.createdAt })
       .from(supportEvents)
-      .where(and(eq(supportEvents.kind, "sla_warning"), inArray(supportEvents.ticketId, ticketIds))),
+      .innerJoin(supportTickets, eq(supportTickets.id, supportEvents.ticketId))
+      .where(and(eq(supportEvents.kind, "sla_warning"), inArray(supportEvents.ticketId, ticketIds), or(isNull(supportTickets.slaClockStartedAt), sql`${supportEvents.createdAt} >= ${supportTickets.slaClockStartedAt}`))),
   );
   for (const row of rows) {
     const list = events.get(row.ticketId) ?? [];
-    list.push(warningRef(row.payload));
+    list.push(warningRef(row.payload, row.createdAt));
     events.set(row.ticketId, list);
   }
   return events;
+}
+
+/** The desk's `support_settings.business_hours` — the fallback of a policy without windows; null without a row. */
+async function loadDeskBusinessHours(db: Db): Promise<SupportBusinessHours | null> {
+  const [row] = await withWorker(db, (tx) => tx.select({ businessHours: supportSettings.businessHours }).from(supportSettings).where(eq(supportSettings.id, 1)).limit(1));
+  return row?.businessHours ?? null;
 }
 
 /**
@@ -490,7 +537,7 @@ async function loadWarningEvents(db: Db, ticketIds: string[]): Promise<Map<strin
  * breach flag or checks that the current run has no warning yet, then inserts the event. Returns the
  * event id, or null when nothing was written (state changed, or another worker was first).
  */
-async function recordFinding(db: Db, ticket: Pick<TicketRow, "id" | "organizationId" | "priority" | "reopenCount" | "assigneeUserId">, finding: ClockFinding, policy: PolicyRow, now: Date): Promise<string | null> {
+async function recordFinding(db: Db, ticket: Pick<TicketRow, "id" | "organizationId" | "priority" | "reopenCount" | "assigneeUserId" | "slaClockStartedAt">, finding: ClockFinding, policy: PolicyRow, now: Date): Promise<string | null> {
   return withWorker(db, async (tx) => {
     const [fresh] = await tx
       .select({
@@ -502,12 +549,15 @@ async function recordFinding(db: Db, ticket: Pick<TicketRow, "id" | "organizatio
         status: supportTickets.status,
         priority: supportTickets.priority,
         reopenCount: supportTickets.reopenCount,
+        slaClockStartedAt: supportTickets.slaClockStartedAt,
       })
       .from(supportTickets)
       .where(eq(supportTickets.id, ticket.id))
       .for("update");
     if (!fresh || fresh.pausedAt || !(RUNNING_STATUSES as readonly string[]).includes(fresh.status)) return null;
     if (fresh.priority !== ticket.priority || fresh.reopenCount !== ticket.reopenCount) return null;
+    // a reopening since the scan started a new run: the finding is stale, the next minute re-evaluates
+    if ((fresh.slaClockStartedAt?.getTime() ?? null) !== (ticket.slaClockStartedAt?.getTime() ?? null)) return null;
     const stopped = finding.clock === "first_response" ? fresh.firstRespondedAt : fresh.resolvedAt;
     const flagged = finding.clock === "first_response" ? fresh.breachedFirstResponse : fresh.breachedResolution;
     if (stopped || flagged) return null;
@@ -518,10 +568,10 @@ async function recordFinding(db: Db, ticket: Pick<TicketRow, "id" | "organizatio
         .where(eq(supportTickets.id, ticket.id));
     } else {
       const warnings = await tx
-        .select({ payload: supportEvents.payload })
+        .select({ payload: supportEvents.payload, createdAt: supportEvents.createdAt })
         .from(supportEvents)
         .where(and(eq(supportEvents.ticketId, ticket.id), eq(supportEvents.kind, "sla_warning")));
-      if (warnedClocks(warnings.map((w) => warningRef(w.payload)), fresh, policy).has(finding.clock)) return null;
+      if (warnedClocks(warnings.map((w) => warningRef(w.payload, w.createdAt)), fresh, policy).has(finding.clock)) return null;
     }
     const [event] = await tx
       .insert(supportEvents)
@@ -538,6 +588,7 @@ async function recordFinding(db: Db, ticket: Pick<TicketRow, "id" | "organizatio
           remaining_minutes: Math.round(finding.remainingMinutes),
           warning_percent: finding.warningPercent,
           reopen_count: fresh.reopenCount,
+          clock_started_at: fresh.slaClockStartedAt?.toISOString() ?? null,
           policy_id: policy.id,
           assignee_user_id: ticket.assigneeUserId,
         },
@@ -579,6 +630,7 @@ interface TicketRow {
   breachedResolution: boolean;
   pausedAt: Date | null;
   reopenCount: number;
+  slaClockStartedAt: Date | null;
 }
 
 async function notifyFinding(ctx: WorkerContext, db: Db, ticket: TicketRow, policy: PolicyRow, finding: ClockFinding, eventId: string, now: Date): Promise<{ sent: number; failed: number }> {
@@ -615,7 +667,9 @@ async function notifyFinding(ctx: WorkerContext, db: Db, ticket: TicketRow, poli
 export async function runSupportSla(ctx: WorkerContext, now: Date = ctx.now()): Promise<SupportSlaSummary> {
   const db = createDb(ctx.pool);
   const summary: SupportSlaSummary = { evaluated: 0, warnings: 0, breaches: 0, autoClosed: 0, mailsSent: 0, mailsFailed: 0 };
-  const policies = await withWorker(db, (tx) => tx.select().from(supportSlaPolicies));
+  // a policy without windows runs on the desk's hours (docs/18 §11) — the same policy the web loaders hand the engine
+  const deskHours = await loadDeskBusinessHours(db);
+  const policies = (await withWorker(db, (tx) => tx.select().from(supportSlaPolicies))).map((p) => ({ ...p, businessHours: effectiveBusinessHours(p.businessHours, deskHours) }));
   const policyById = new Map(policies.map((p) => [p.id, p]));
   const defaultPolicy = policies.find((p) => p.isDefault) ?? null;
 
@@ -637,6 +691,7 @@ export async function runSupportSla(ctx: WorkerContext, now: Date = ctx.now()): 
         breachedResolution: supportTickets.breachedResolution,
         pausedAt: supportTickets.pausedAt,
         reopenCount: supportTickets.reopenCount,
+        slaClockStartedAt: supportTickets.slaClockStartedAt,
       })
       .from(supportTickets)
       .where(

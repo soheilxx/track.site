@@ -3,6 +3,7 @@ import { eq, inArray, sql } from "drizzle-orm";
 import { recordAudit, supportEvents, supportSettings, supportTickets, type SupportAutoAssignStrategy, type Tx } from "@track-site/db";
 import { db, logger } from "@/server/db";
 import { AGENT_ONLINE_MS, listOnlineAgents, type OnlineAgent } from "@/server/support/notifications";
+import { teamMemberIds } from "@/server/support/teams";
 
 /**
  * Auto-assignment of new tickets (docs/18 §"Macros and desk settings" → "Round robin", wired by the
@@ -28,6 +29,11 @@ import { AGENT_ONLINE_MS, listOnlineAgents, type OnlineAgent } from "@/server/su
  * additionally carries the outcome in its creation audit (`autoAssigneeUserId`, `autoAssignCandidates`);
  * the inbound handler records no creation audit (system processing, docs/18 §4) and the portal assigns after
  * its commit, so for those two paths this row is the audit trail of the assignment.
+ *
+ * Teams (migration 0017, docs/18 §"Agent-created tickets and teams"): the candidates of a ticket that sits in
+ * a team are the online **members of that team** (`teamMemberIds`); nobody of the team online → the ticket
+ * stays unassigned (never handed to another team). A ticket without `team_id` draws from every agent online
+ * as before. The pick records the team in the event payload and the audit diff (`teamId`).
  */
 
 /** Audit action of a round-robin assignment (target type `support_ticket`, actor `AUTO_ASSIGN_ACTOR`). */
@@ -65,8 +71,10 @@ export interface RoundRobinPick {
  * assigned tickets moved least recently, then by name — so new tickets spread evenly while people are
  * around. Null when nobody is online (the ticket stays unassigned; nothing is guessed).
  */
-export async function chooseRoundRobinAssignee(tx: Tx, options: { exclude?: readonly string[]; now?: Date } = {}): Promise<RoundRobinPick | null> {
-  const online = (await listAgentsOnline(tx, options.now)).filter((a) => !options.exclude?.includes(a.userId));
+export async function chooseRoundRobinAssignee(tx: Tx, options: { exclude?: readonly string[]; now?: Date; teamId?: string | null } = {}): Promise<RoundRobinPick | null> {
+  // team-aware pool (0017): with a team only its members count; without one every agent online does
+  const members = options.teamId ? await teamMemberIds(tx, options.teamId) : null;
+  const online = (await listAgentsOnline(tx, options.now)).filter((a) => !options.exclude?.includes(a.userId) && (members === null || members.has(a.userId)));
   if (!online.length) return null;
   const ids = online.map((a) => a.userId);
   const load = await tx
@@ -89,13 +97,13 @@ export async function chooseRoundRobinAssignee(tx: Tx, options: { exclude?: read
 }
 
 /** The assignee the configured strategy yields for a new ticket (null for `none` or nobody online). */
-export async function resolveAutoAssignee(tx: Tx, settings: { autoAssignStrategy: SupportAutoAssignStrategy }, options: { exclude?: readonly string[]; now?: Date } = {}): Promise<RoundRobinPick | null> {
+export async function resolveAutoAssignee(tx: Tx, settings: { autoAssignStrategy: SupportAutoAssignStrategy }, options: { exclude?: readonly string[]; now?: Date; teamId?: string | null } = {}): Promise<RoundRobinPick | null> {
   if (settings.autoAssignStrategy !== "round_robin") return null;
   return chooseRoundRobinAssignee(tx, options);
 }
 
 /** The creation path that asks for the assignment — recorded in the audit row's metadata, never guessed. */
-export type AutoAssignSource = "inbound" | "form" | "portal";
+export type AutoAssignSource = "inbound" | "form" | "portal" | "agent";
 
 export interface AutoAssignInput {
   ticketId: string;
@@ -129,12 +137,12 @@ export async function autoAssignNewTicket(tx: Tx, input: AutoAssignInput): Promi
   const none = (candidates = 0): AutoAssignOutcome => ({ strategy, assigneeUserId: null, candidates, auditId: null });
   if (strategy === "none") return none();
   const [ticket] = await tx
-    .select({ id: supportTickets.id, number: supportTickets.number, status: supportTickets.status, assigneeUserId: supportTickets.assigneeUserId, mergedIntoId: supportTickets.mergedIntoId, organizationId: supportTickets.organizationId })
+    .select({ id: supportTickets.id, number: supportTickets.number, status: supportTickets.status, assigneeUserId: supportTickets.assigneeUserId, mergedIntoId: supportTickets.mergedIntoId, organizationId: supportTickets.organizationId, teamId: supportTickets.teamId })
     .from(supportTickets)
     .where(eq(supportTickets.id, input.ticketId))
     .limit(1);
   if (!ticket || ticket.status === "spam" || ticket.mergedIntoId || ticket.assigneeUserId) return none();
-  const pick = await resolveAutoAssignee(tx, { autoAssignStrategy: strategy }, { now });
+  const pick = await resolveAutoAssignee(tx, { autoAssignStrategy: strategy }, { now, teamId: ticket.teamId });
   if (!pick) return none();
   const organizationId = ticket.organizationId ?? input.organizationId;
   await tx.update(supportTickets).set({ assigneeUserId: pick.userId, updatedAt: now }).where(eq(supportTickets.id, ticket.id));
@@ -144,7 +152,8 @@ export async function autoAssignNewTicket(tx: Tx, input: AutoAssignInput): Promi
     actorKind: "system",
     actorUserId: null,
     kind: "assignee",
-    payload: { from: null, to: pick.userId, self: false, reason: "round_robin", candidates: pick.candidates, openTickets: pick.openTickets },
+    // the team is recorded only when the ticket sits in one (the event shape of a team-less pick is unchanged)
+    payload: { from: null, to: pick.userId, self: false, reason: "round_robin", candidates: pick.candidates, openTickets: pick.openTickets, ...(ticket.teamId ? { teamId: ticket.teamId } : {}) },
     createdAt: now,
   });
   // the audit trail of the assignment: ids and the pool only — no subject, no address, no body
@@ -154,7 +163,7 @@ export async function autoAssignNewTicket(tx: Tx, input: AutoAssignInput): Promi
     action: AUTO_ASSIGN_AUDIT_ACTION,
     targetType: "support_ticket",
     targetId: ticket.id,
-    diff: { assigneeFrom: null, assigneeTo: pick.userId, reason: "round_robin", strategy, candidates: pick.candidates, openTickets: pick.openTickets },
+    diff: { assigneeFrom: null, assigneeTo: pick.userId, reason: "round_robin", strategy, candidates: pick.candidates, openTickets: pick.openTickets, ...(ticket.teamId ? { teamId: ticket.teamId } : {}) },
     metadata: { module: "support", ticketNumber: Number(ticket.number), source: input.source },
     requestId: input.requestId ?? null,
   });

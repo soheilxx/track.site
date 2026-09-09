@@ -22,6 +22,7 @@ import {
   emptyInboundCounts,
   INBOUND_LEDGER_ERROR_MAX,
   INBOUND_LEDGER_STALE_MS,
+  isReprocessableInboundEvent,
   isStaleInboundEvent,
   isValidHostname,
   isValidTimeZone,
@@ -176,5 +177,18 @@ describe("inbound ledger helpers", () => {
   });
   it("starts every status at zero", () => {
     expect(emptyInboundCounts()).toEqual({ received: 0, processed: 0, ignored: 0, failed: 0 });
+  });
+  it("offers a reprocess for failed and interrupted rows that carry the parsed event only", () => {
+    const old = new Date(now.getTime() - INBOUND_LEDGER_STALE_MS - 1000).toISOString();
+    const fresh = new Date(now.getTime() - 60_000).toISOString();
+    expect(isReprocessableInboundEvent({ status: "failed", receivedAt: fresh, hasPayload: true }, now)).toBe(true);
+    expect(isReprocessableInboundEvent({ status: "received", receivedAt: old, hasPayload: true }, now)).toBe(true);
+    // in flight, done, or ignored: never
+    expect(isReprocessableInboundEvent({ status: "received", receivedAt: fresh, hasPayload: true }, now)).toBe(false);
+    expect(isReprocessableInboundEvent({ status: "processed", receivedAt: old, hasPayload: true }, now)).toBe(false);
+    expect(isReprocessableInboundEvent({ status: "ignored", receivedAt: old, hasPayload: true }, now)).toBe(false);
+    // a delivery event's row or a row from before the column has nothing to run again
+    expect(isReprocessableInboundEvent({ status: "failed", receivedAt: fresh, hasPayload: false }, now)).toBe(false);
+    expect(isReprocessableInboundEvent({ status: "received", receivedAt: old, hasPayload: false }, now)).toBe(false);
   });
 });

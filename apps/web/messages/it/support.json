@@ -19,7 +19,8 @@
       "email": "E-mail",
       "form": "Modulo di contatto",
       "dashboard": "Dashboard",
-      "api": "API"
+      "api": "API",
+      "agent": "Operatore"
     },
     "direction": {
       "inbound": "Ricevuto",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "In coda",
+      "sending": "Invio in corso…",
       "sent": "Inviato",
       "delivered": "Consegnato",
       "bounced": "Respinto",
@@ -105,6 +107,15 @@
         "title": "I ticket di supporto stanno arrivando",
         "text": "La vista dei ticket è in costruzione. Nel frattempo contattaci tramite il modulo di contatto; ogni richiesta riceve risposta via e-mail."
       }
+    },
+    "subnav": {
+      "label": "Sezioni del supporto",
+      "tickets": "Ticket",
+      "views": "Viste",
+      "macros": "Macro",
+      "reports": "Report",
+      "settings": "Impostazioni",
+      "badge": "{unassigned, plural, =0 {nessun ticket non assegnato} one {# ticket non assegnato} other {# ticket non assegnati}}, {breached, plural, =0 {nessuno SLA violato} one {# SLA violato} other {# SLA violati}}"
     }
   }
 }

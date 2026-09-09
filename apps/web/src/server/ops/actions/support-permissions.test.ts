@@ -71,9 +71,11 @@ vi.mock("@/server/ops/platform", () => {
 
 import { OPS_NAV, navAllows } from "@/components/ops/shell/nav-items";
 import { deleteMacroAction, saveMacroAction } from "./support-macros";
+import { createAgentTicketAction, searchRequestersAction } from "./support-new";
 import { markSupportNotificationsReadAction, pollSupportNotificationsAction, updateSupportNotificationPreferencesAction } from "./support-notifications";
-import { updateSupportSettingsAction } from "./support-settings";
+import { reprocessInboundEventAction, updateSupportSettingsAction } from "./support-settings";
 import { deleteSlaPolicyAction, saveSlaPolicyAction, setDefaultSlaPolicyAction } from "./support-sla";
+import { addTeamMemberAction, archiveTeamAction, removeTeamMemberAction, saveTeamAction, setDefaultTeamAction } from "./support-teams";
 import {
   assignTicketAction,
   composeTicketMessageAction,
@@ -96,6 +98,7 @@ import {
   deleteSupportViewAction,
   exportTicketsAction,
   saveSupportViewAction,
+  supportNavBadgeAction,
 } from "./support-tickets";
 
 type AnyResult = { ok: boolean; error: string | null } | unknown;
@@ -135,6 +138,7 @@ const ACTIONS: ActionCase[] = [
   { name: "exportTicketsAction", permission: "platform.tickets.read", adminOnly: false, invoke: () => exportTicketsAction("?view=open") },
   { name: "saveSupportViewAction", permission: "platform.tickets.read", adminOnly: false, invoke: () => saveSupportViewAction(cast({ ok: false, error: null }), empty()) },
   { name: "deleteSupportViewAction", permission: "platform.tickets.read", adminOnly: false, invoke: () => deleteSupportViewAction(cast({ ok: false, error: null }), empty()) },
+  { name: "supportNavBadgeAction", permission: "platform.tickets.read", adminOnly: false, invoke: () => supportNavBadgeAction() },
   // macros (support-macros.ts)
   { name: "saveMacroAction", permission: "platform.macros.manage", adminOnly: false, invoke: () => saveMacroAction(cast({ ok: false, error: null, notice: null }), empty()) },
   { name: "deleteMacroAction", permission: "platform.macros.manage", adminOnly: false, invoke: () => deleteMacroAction(cast({})) },
@@ -144,9 +148,19 @@ const ACTIONS: ActionCase[] = [
   { name: "updateSupportNotificationPreferencesAction", permission: "platform.tickets.read", adminOnly: false, invoke: () => updateSupportNotificationPreferencesAction(cast({})) },
   // desk settings and SLA policies (support-settings.ts, support-sla.ts) — admin only
   { name: "updateSupportSettingsAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => updateSupportSettingsAction(cast({ ok: false, error: null, notice: null }), empty()) },
+  { name: "reprocessInboundEventAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => reprocessInboundEventAction(cast({})) },
   { name: "saveSlaPolicyAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => saveSlaPolicyAction(cast({ ok: false, error: null, notice: null }), empty()) },
   { name: "setDefaultSlaPolicyAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => setDefaultSlaPolicyAction(cast({})) },
   { name: "deleteSlaPolicyAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => deleteSlaPolicyAction(cast({})) },
+  // agent-created tickets (support-new.ts) — every operator who may write tickets
+  { name: "searchRequestersAction", permission: "platform.tickets.write", adminOnly: false, invoke: () => searchRequestersAction("acme") },
+  { name: "createAgentTicketAction", permission: "platform.tickets.write", adminOnly: false, invoke: () => createAgentTicketAction(cast({ ok: false, error: null }), empty()) },
+  // teams (support-teams.ts) — admin only like every desk setting
+  { name: "saveTeamAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => saveTeamAction(cast({ ok: false, error: null, notice: null }), empty()) },
+  { name: "archiveTeamAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => archiveTeamAction(cast({})) },
+  { name: "setDefaultTeamAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => setDefaultTeamAction(cast({})) },
+  { name: "addTeamMemberAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => addTeamMemberAction(cast({})) },
+  { name: "removeTeamMemberAction", permission: "platform.sla.manage", adminOnly: true, invoke: () => removeTeamMemberAction(cast({})) },
 ];
 
 /** `forbidden` when the gate refused; `passed` when validation or the database sentinel stopped the call afterwards. */
@@ -194,7 +208,7 @@ describe("support desk permission matrix — server actions", () => {
   it("lists every exported support action exactly once", () => {
     const dir = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1"));
     const exported = new Set<string>();
-    for (const file of ["support-ticket.ts", "support-tickets.ts", "support-macros.ts", "support-notifications.ts", "support-settings.ts", "support-sla.ts"]) {
+    for (const file of ["support-ticket.ts", "support-tickets.ts", "support-macros.ts", "support-notifications.ts", "support-settings.ts", "support-sla.ts", "support-new.ts", "support-teams.ts"]) {
       const source = fs.readFileSync(path.join(dir, file), "utf8");
       for (const match of source.matchAll(/export async function (\w+Action)\(/g)) exported.add(match[1]!);
     }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buttonVariants } from "@track-site/ui";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { MacroList } from "@/components/ops/support/macros/macro-list";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformCan, platformLocale } from "@/server/ops/platform";
 import { listMacros, macroCategories } from "@/server/support/macros";
 
@@ -44,6 +45,7 @@ export default async function OpsSupportMacrosPage() {
           </>
         }
       />
+      <SupportSubnav current="macros" role={ctx.platformRole} />
       <MacroList macros={macros} categories={macroCategories(macros)} locale={locale} />
     </div>
   );

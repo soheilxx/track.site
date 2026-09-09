@@ -6,12 +6,15 @@ import {
   plans,
   subscriptions,
   supportPresence,
+  supportSettings,
   supportSlaPolicies,
+  supportTeams,
   supportTickets,
   user,
   type SupportEventKind,
   type SupportPresenceMode,
   type SupportTicketChannel,
+  type SupportTicketOpenedBy,
   type SupportTicketPriority,
   type SupportTicketStatus,
   type Tx,
@@ -26,7 +29,8 @@ import {
   type TicketSort,
 } from "@/components/ops/support/list/constants";
 import { withPlatform, type PlatformContext } from "@/server/ops/platform";
-import { applyPolicyOnPriorityChange, statusTransition, type SlaPolicyLike, type SlaPriorityChangeInput, type SlaTicketPatch, type SlaTransitionInput } from "./sla";
+import { applyPolicyOnPriorityChange, statusTransition, withDeskBusinessHours, type SlaPolicyLike, type SlaPriorityChangeInput, type SlaTicketPatch, type SlaTransitionInput } from "./sla";
+import { teamFilterWhere, type TeamFilter } from "./teams";
 import {
   DEFAULT_VIEWS,
   isUuid,
@@ -61,6 +65,14 @@ import {
  * SLA states are derived from the stored timestamps alone (`first_response_due_at`, `resolution_due_at`,
  * `first_responded_at`, `resolved_at`, `paused_at`, the worker's breach flags) — a ticket without due times
  * reads "no SLA policy", never a guessed figure.
+ *
+ * Teams (task N, docs/18 §"Agent-created tickets and teams") — an **additive hook** limited to the team filter
+ * and the team column: `ticketWhere` accepts an optional `team` next to the view filters (`TeamFilter` of
+ * `./teams`, `any` | `none` | id | slug — `teamFilterWhere` builds the predicate, no join needed) and the
+ * base query joins `support_teams` for the row's `team` chip; rows also carry `openedBy` and
+ * `slaPendingFirstCustomerReply` (an agent-created ticket whose clocks wait for the first customer reply).
+ * The stored view model (`views.ts`) does not carry `team` yet; the page passes the URL's `team` through
+ * once the integration stage adds the field there.
  */
 
 export { PRESENCE_TTL_MS, TICKET_BULK_MAX, TICKET_EXPORT_MAX_ROWS, TICKET_PAGE_SIZE, TICKET_TAG_MAX };
@@ -364,6 +376,12 @@ export interface TicketRow {
   planId: string | null;
   planName: string | null;
   assignee: { id: string; name: string } | null;
+  /** the team (queue) the ticket sits in; null = no team (task N; optional so the row shape stays additive for older fixtures) */
+  team?: { id: string; name: string; slug: string } | null;
+  /** who opened the ticket — `agent` marks a ticket an operator opened on the customer's behalf (task N) */
+  openedBy?: SupportTicketOpenedBy;
+  /** agent-created ticket whose SLA clocks wait for the first customer reply (both due times null so far, task N) */
+  slaPendingFirstCustomerReply?: boolean;
   sla: SlaView;
   firstResponseDueAt: string | null;
   resolutionDueAt: string | null;
@@ -428,10 +446,18 @@ function slaWhere(kind: Exclude<ViewFilters["sla"], "any">, now: Date): SQL {
   }
 }
 
+/** The additive team filter next to the view filters (task N); absent = no team filter. */
+export interface TeamFilterAware {
+  team?: TeamFilter | null;
+}
+
 /** WHERE clauses of a filter set; `q` and the page are applied by the loaders. */
-export function ticketWhere(ctx: Pick<PlatformContext, "user">, filters: ViewFilters & { q?: string | null }, now: Date): SQL[] {
+export function ticketWhere(ctx: Pick<PlatformContext, "user">, filters: ViewFilters & { q?: string | null } & TeamFilterAware, now: Date): SQL[] {
   const t = supportTickets;
   const where: SQL[] = [];
+  // team hook (task N): `any` adds nothing, `none` = no team, else the team by id or slug
+  const team = teamFilterWhere(filters.team);
+  if (team) where.push(team);
   if (filters.status.length) where.push(inArray(t.status, filters.status));
   if (filters.priority.length) where.push(inArray(t.priority, filters.priority));
   if (filters.channel.length) where.push(inArray(t.channel, filters.channel));
@@ -502,6 +528,12 @@ const ticketColumns = {
   planId: effectivePlan,
   assigneeUserId: supportTickets.assigneeUserId,
   assigneeName: user.name,
+  // team hook (task N)
+  teamId: supportTickets.teamId,
+  teamName: supportTeams.name,
+  teamSlug: supportTeams.slug,
+  openedBy: supportTickets.openedBy,
+  slaPendingFirstCustomerReply: supportTickets.slaPendingFirstCustomerReply,
   firstResponseDueAt: supportTickets.firstResponseDueAt,
   resolutionDueAt: supportTickets.resolutionDueAt,
   firstRespondedAt: supportTickets.firstRespondedAt,
@@ -524,7 +556,9 @@ const ticketQuery = (tx: Tx) =>
     .from(supportTickets)
     .leftJoin(organization, eq(organization.id, supportTickets.organizationId))
     .leftJoin(subscriptions, eq(subscriptions.organizationId, supportTickets.organizationId))
-    .leftJoin(user, eq(user.id, supportTickets.assigneeUserId));
+    .leftJoin(user, eq(user.id, supportTickets.assigneeUserId))
+    // team hook (task N): the team chip of the row
+    .leftJoin(supportTeams, eq(supportTeams.id, supportTickets.teamId));
 
 type TicketQueryRow = Awaited<ReturnType<typeof ticketQuery>>[number];
 
@@ -543,6 +577,9 @@ function ticketRow(row: TicketQueryRow, now: Date, planNames: Map<string, string
     planId,
     planName: planId ? (planNames.get(planId) ?? planId) : null,
     assignee: row.assigneeUserId ? { id: row.assigneeUserId, name: row.assigneeName ?? "" } : null,
+    team: row.teamId && row.teamName != null && row.teamSlug != null ? { id: row.teamId, name: row.teamName, slug: row.teamSlug } : null,
+    openedBy: row.openedBy,
+    slaPendingFirstCustomerReply: row.slaPendingFirstCustomerReply,
     sla: slaState(row, now.getTime()),
     firstResponseDueAt: iso(row.firstResponseDueAt),
     resolutionDueAt: iso(row.resolutionDueAt),
@@ -717,6 +754,10 @@ const lockedColumns = {
   reopenCount: supportTickets.reopenCount,
   mergedIntoId: supportTickets.mergedIntoId,
   createdAt: supportTickets.createdAt,
+  // the persisted clock start (0018): a priority change on a clock without a due date measures from here
+  slaClockStartedAt: supportTickets.slaClockStartedAt,
+  // an agent-created ticket still waiting for the first customer reply (0017): the engine books no clocks for it
+  slaPendingFirstCustomerReply: supportTickets.slaPendingFirstCustomerReply,
 };
 
 /** Locked ticket rows for a bulk action (`FOR UPDATE`, at most TICKET_BULK_MAX ids, missing ids are skipped). */
@@ -744,7 +785,9 @@ export async function loadTicketPolicies(tx: Tx, rows: ReadonlyArray<Pick<Locked
   const ids = Array.from(new Set(rows.map((r) => r.slaPolicyId).filter((id): id is string => typeof id === "string" && id.length > 0)));
   if (ids.length === 0) return out;
   const policies = await tx.select({ id: supportSlaPolicies.id, priorities: supportSlaPolicies.priorities, businessHours: supportSlaPolicies.businessHours }).from(supportSlaPolicies).where(inArray(supportSlaPolicies.id, ids));
-  for (const p of policies) out.set(p.id, p);
+  // a policy without windows runs on the desk's hours (docs/18 §11), like on the ticket page and in the worker
+  const [desk] = await tx.select({ businessHours: supportSettings.businessHours }).from(supportSettings).where(eq(supportSettings.id, 1)).limit(1);
+  for (const p of policies) out.set(p.id, withDeskBusinessHours(p, desk?.businessHours ?? null));
   return out;
 }
 

@@ -629,6 +629,7 @@ export function volumeView(
     form: 0,
     dashboard: 0,
     api: 0,
+    agent: 0,
   });
   const buckets = bucketsOf(snapshot.range, snapshot.now).map((slot) => {
     const bucket: VolumeBucket = { ...slot, total: 0, byChannel: emptyChannels(), solved: 0 };

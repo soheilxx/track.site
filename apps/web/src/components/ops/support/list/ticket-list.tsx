@@ -1,10 +1,10 @@
 "use client";
 
-import { Eye, PenLine } from "lucide-react";
+import { Eye, PenLine, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
-import { Badge, Checkbox, EmptyState, Status, TBody, THead, Table, Td, Th, Tr, VisuallyHidden, cn } from "@track-site/ui";
+import { Badge, Checkbox, EmptyState, Status, TBody, THead, Table, Td, Th, Tr, VisuallyHidden, buttonVariants, cn } from "@track-site/ui";
 import type { SupportOperator, TicketRow } from "@/server/support/tickets";
 import { OperatorAvatar } from "./avatar";
 import { BulkActions } from "./bulk-actions";
@@ -21,6 +21,7 @@ export function TicketList({ rows, total, filtered, locale, now, operators, self
   const t = useTranslations("supportTickets.queue");
   const te = useTranslations("supportTickets");
   const tv = useTranslations("support");
+  const tt = useTranslations("supportTeams");
   const nowMs = Date.parse(now);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const visibleSelected = rows.filter((r) => selected.has(r.id)).map((r) => r.id);
@@ -37,15 +38,31 @@ export function TicketList({ rows, total, filtered, locale, now, operators, self
     });
   const toggleAll = (checked: boolean) => setSelected(checked ? new Set(rows.map((r) => r.id)) : new Set());
 
+  // operators who may write open tickets on a customer's behalf (docs/18 §"Agent-created tickets and teams")
+  const newTicketLink = canWrite ? (
+    <Link href="/ops/support/new" className={buttonVariants({ variant: "primary", size: "sm" })} data-testid="support-new-ticket">
+      <Plus className="size-4" aria-hidden="true" />
+      {tt("queue.newTicket")}
+    </Link>
+  ) : null;
+
   if (total === 0) {
-    return <EmptyState title={filtered ? t("emptyFiltered") : t("empty")} description={filtered ? t("emptyFilteredText") : t("emptyText")} />;
+    return (
+      <div className="space-y-3">
+        {newTicketLink ? <div className="flex justify-end">{newTicketLink}</div> : null}
+        <EmptyState title={filtered ? t("emptyFiltered") : t("empty")} description={filtered ? t("emptyFilteredText") : t("emptyText")} />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-ink-2" aria-live="polite">
-        {filtered ? t("countFiltered", { count: total }) : t("count", { count: total })}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-ink-2" aria-live="polite">
+          {filtered ? t("countFiltered", { count: total }) : t("count", { count: total })}
+        </p>
+        {newTicketLink}
+      </div>
       {bulkAllowed && visibleSelected.length > 0 ? <BulkActions selectedIds={visibleSelected} operators={operators} selfId={selfId} canAssign={canAssign} canWrite={canWrite} onDone={() => setSelected(new Set())} /> : null}
       <div className="rounded-[var(--radius-card)] border border-line bg-surface px-2 py-2 sm:px-3">
         <Table caption={t("caption")}>
@@ -83,7 +100,18 @@ export function TicketList({ rows, total, filtered, locale, now, operators, self
                       <span className="ml-2 line-clamp-2">{row.subject || te("common.noSubject")}</span>
                     </Link>
                     <div className="mt-1 flex flex-wrap items-center gap-1">
-                      <Badge tone="neutral">{tv(`channel.${row.channel}`)}</Badge>
+                      {/* `agent` (migration 0017) has no label in the shared vocabulary yet — the slice's own label until it does */}
+                      <Badge tone="neutral">{tv.has(`channel.${row.channel}`) ? tv(`channel.${row.channel}`) : tt("queue.channelAgent")}</Badge>
+                      {row.openedBy === "agent" ? (
+                        <Badge tone="info" data-testid="support-opened-by-agent">
+                          {tt("queue.openedByAgent")}
+                        </Badge>
+                      ) : null}
+                      {row.team ? (
+                        <Badge tone="neutral" data-testid="support-team-chip">
+                          {tt("queue.team")}: {row.team.name}
+                        </Badge>
+                      ) : null}
                       {row.tags.map((tag) => (
                         <Badge key={tag} tone="neutral" className="font-mono">
                           {tag}
@@ -119,7 +147,7 @@ export function TicketList({ rows, total, filtered, locale, now, operators, self
                   <Td label={t("columns.assignee")}>
                     {row.assignee ? (
                       <span className="inline-flex items-center gap-2">
-                        <OperatorAvatar name={row.assignee.name} />
+                        <OperatorAvatar name={row.assignee.name} decorative />{" "}
                         <span className="text-ink">{row.assignee.id === selfId ? te("common.you") : row.assignee.name}</span>
                       </span>
                     ) : (
@@ -127,9 +155,16 @@ export function TicketList({ rows, total, filtered, locale, now, operators, self
                     )}
                   </Td>
                   <Td label={t("columns.sla")}>
-                    <Status tone={SLA_TONE[row.sla.state]} indicator="icon" chip>
-                      {row.sla.state === "met" ? t("sla.met") : tv(`sla.${SLA_KEY[row.sla.state]}`)}
-                    </Status>
+                    {row.slaPendingFirstCustomerReply && row.sla.state === "none" ? (
+                      // an agent-created ticket with a policy: the clocks start with the first customer reply — never "no SLA policy"
+                      <Status tone="info" indicator="icon" chip data-testid="support-sla-pending">
+                        {tt("queue.slaPending")}
+                      </Status>
+                    ) : (
+                      <Status tone={SLA_TONE[row.sla.state]} indicator="icon" chip>
+                        {row.sla.state === "met" ? t("sla.met") : tv(`sla.${SLA_KEY[row.sla.state]}`)}
+                      </Status>
+                    )}
                     {row.sla.phase && row.sla.dueAt ? (
                       <p className="mt-1 text-xs text-ink-3">
                         {tv(`sla.${row.sla.phase === "first_response" ? "firstResponse" : "resolution"}`)}

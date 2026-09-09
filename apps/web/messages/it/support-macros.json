@@ -174,7 +174,7 @@
         "csat": "Sondaggio di soddisfazione",
         "businessHours": "Orario di lavoro",
         "businessHoursNone": "Nessun giorno lavorativo configurato ({timezone})",
-        "businessHoursPending": "Non ancora letto dagli orologi SLA: ogni policy SLA ha il proprio orario.",
+        "businessHoursFallback": "Ripiego per ogni policy SLA senza orario proprio: gli orologi di tale policy seguono questo orario del supporto (una policy con finestre proprie le mantiene).",
         "extraWindows": "Alcuni giorni hanno più di una fascia; il modulo mostra la prima.",
         "envOverride": "Sovrascritto dalla variabile d'ambiente {name}; il valore salvato non è in vigore.",
         "notStored": "Non è stato ancora salvato nulla: i valori mostrati sono quelli predefiniti dello schema.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Evento",
             "processed": "Concluso",
-            "error": "Errore"
+            "error": "Errore",
+            "actions": "Azioni"
           },
           "status": {
             "received": "In corso",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "Ancora nessun evento in entrata",
-          "emptyText": "Finora nulla ha raggiunto il webhook. Non appena il dominio di risposta riceve e-mail, ogni consegna compare qui con il suo esito."
+          "emptyText": "Finora nulla ha raggiunto il webhook. Non appena il dominio di risposta riceve e-mail, ogni consegna compare qui con il suo esito.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Rielabora",
+            "confirm": "Rielabora ora",
+            "working": "Rielaborazione…",
+            "dialogTitle": "Rielaborare questa consegna?",
+            "dialogText": "La consegna {event} ripassa dal gestore in entrata con i dati dell’evento salvati (indirizzi, oggetto, intestazioni, nomi degli allegati). Corpi e allegati vengono recuperati dal provider.",
+            "dialogHint": "Ripetibile senza rischi: un’e-mail già salvata da un tentativo precedente viene risposta con il suo ticket e mai salvata due volte. L’esecuzione è registrata nel log di audit.",
+            "done": "Elaborata — ticket n. {number} ({route}).",
+            "doneNoTicket": "Elaborata.",
+            "ignored": "Ignorata: l’e-mail non richiede un ticket (indirizzo proprio o nessuna modifica).",
+            "duplicate": "Già elaborata — niente da fare.",
+            "inProgress": "Un’altra istanza sta elaborando questa consegna in questo momento; riprova tra qualche minuto.",
+            "failed": "Fallita di nuovo: {error}",
+            "unavailable": "Nessun dato dell’evento salvato — solo un nuovo tentativo del provider può aiutare.",
+            "errors": {
+              "forbidden": "Il tuo ruolo di piattaforma non lo consente.",
+              "invalid": "La richiesta non è stata compresa.",
+              "not_found": "Quella riga del registro non esiste più.",
+              "not_reprocessable": "Solo le consegne fallite o interrotte possono essere rielaborate.",
+              "no_payload": "Nessun dato dell’evento salvato per questa consegna.",
+              "confirmation_required": "Conferma prima l’azione.",
+              "generic": "Non ha funzionato. Riprova."
+            }
+          }
         },
         "sla": {
           "title": "Policy SLA",
@@ -270,7 +296,7 @@
         "agentsOnline": "In questo momento: {count, plural, one {# agente visto} other {# agenti visti}} negli ultimi {minutes} minuti.",
         "hoursTitle": "Orario di lavoro",
         "hoursText": "Una fascia per giorno della settimana nel fuso orario del supporto, salvata con le impostazioni.",
-        "hoursPending": "Non ancora letto dagli orologi SLA: ogni policy SLA ha il proprio orario di lavoro (sezione Policy SLA) e per ora nulla ricade su questo orario del supporto. Salvarlo non cambia alcuna scadenza.",
+        "hoursFallback": "Gli orologi SLA usano questo orario per ogni policy SLA senza orario di lavoro proprio (sezione Policy SLA). Una policy con finestre proprie le mantiene; senza orario del supporto tale policy corre 24 ore su 24. Il salvataggio cambia le scadenze dei prossimi avvii e delle prossime pause dell’orologio, non quelle già registrate.",
         "timezone": "Fuso orario",
         "timezoneHint": "Nome IANA, ad es. Europe/Rome.",
         "hoursCaption": "Orario di lavoro per giorno della settimana",

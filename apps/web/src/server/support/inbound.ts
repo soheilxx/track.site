@@ -1338,7 +1338,8 @@ export function deliveryStatusForEvent(type: ResendDeliveryEventType): SupportDe
   }
 }
 
-const DELIVERY_RANK: Record<SupportDeliveryStatus, number> = { na: 0, queued: 1, sent: 2, delivered: 3, failed: 4, bounced: 4, complained: 5 };
+// `sending` (the console's transient send claim, 0018) ranks with `queued`: a provider event only ever moves it forward
+const DELIVERY_RANK: Record<SupportDeliveryStatus, number> = { na: 0, queued: 1, sending: 1, sent: 2, delivered: 3, failed: 4, bounced: 4, complained: 5 };
 
 /**
  * Applies a delivery state monotonically: webhooks may arrive out of order, so `sent` after `delivered` is

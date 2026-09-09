@@ -19,7 +19,8 @@
       "email": "Correo electrónico",
       "form": "Formulario de contacto",
       "dashboard": "Panel",
-      "api": "API"
+      "api": "API",
+      "agent": "Agente"
     },
     "direction": {
       "inbound": "Recibido",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "En cola",
+      "sending": "Enviando…",
       "sent": "Enviado",
       "delivered": "Entregado",
       "bounced": "Rebotado",
@@ -105,6 +107,15 @@
         "title": "Los tickets de soporte están en camino",
         "text": "La vista de tickets está en construcción. Mientras tanto, contáctenos a través del formulario de contacto; cada solicitud se responde por correo electrónico."
       }
+    },
+    "subnav": {
+      "label": "Secciones de soporte",
+      "tickets": "Tickets",
+      "views": "Vistas",
+      "macros": "Macros",
+      "reports": "Informes",
+      "settings": "Ajustes",
+      "badge": "{unassigned, plural, =0 {ningún ticket sin asignar} one {# ticket sin asignar} other {# tickets sin asignar}}, {breached, plural, =0 {ningún SLA incumplido} one {# SLA incumplido} other {# SLA incumplidos}}"
     }
   }
 }

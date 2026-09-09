@@ -19,7 +19,8 @@
       "email": "E-mail",
       "form": "Formulaire de contact",
       "dashboard": "Tableau de bord",
-      "api": "API"
+      "api": "API",
+      "agent": "Agent"
     },
     "direction": {
       "inbound": "Reçu",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "En file d’attente",
+      "sending": "Envoi en cours…",
       "sent": "Envoyé",
       "delivered": "Remis",
       "bounced": "Rejeté",
@@ -105,6 +107,15 @@
         "title": "Les tickets de support arrivent",
         "text": "La vue des tickets est en cours de construction. D’ici là, contactez-nous via le formulaire de contact ; chaque demande reçoit une réponse par e-mail."
       }
+    },
+    "subnav": {
+      "label": "Sections du support",
+      "tickets": "Tickets",
+      "views": "Vues",
+      "macros": "Macros",
+      "reports": "Rapports",
+      "settings": "Paramètres",
+      "badge": "{unassigned, plural, =0 {aucun ticket non attribué} one {# ticket non attribué} other {# tickets non attribués}}, {breached, plural, =0 {aucun SLA dépassé} one {# SLA dépassé} other {# SLA dépassés}}"
     }
   }
 }

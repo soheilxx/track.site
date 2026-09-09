@@ -154,7 +154,8 @@ export function NotificationBell() {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={openPanel}
-        className="relative"
+        // never squeezed by a crowded header: the 40 px target is a WCAG 2.2 target-size floor at 375 px
+        className="relative shrink-0"
         data-testid="ops-notification-bell"
       >
         <Bell className="size-5" aria-hidden="true" />

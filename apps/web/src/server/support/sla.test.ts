@@ -5,9 +5,12 @@ import {
   applyPolicyOnCreate,
   applyPolicyOnPriorityChange,
   businessMinutesBetween,
+  computeClockStart,
   computeDueDates,
+  effectiveBusinessHours,
   escalationJson,
   escalationSettings,
+  hasBusinessWindows,
   isBusinessTime,
   isSlaReopen,
   isValidTimeZone,
@@ -23,8 +26,10 @@ import {
   statusTransition,
   subtractBusinessMinutes,
   targetMinutes,
+  targetMs,
   timeToMinutes,
   transitionStatus,
+  withDeskBusinessHours,
   type SlaClockStateInput,
   type SlaPolicyLike,
   type SlaPolicyRawInput,
@@ -188,16 +193,26 @@ describe("computeDueDates", () => {
 });
 
 describe("ticket lifecycle", () => {
-  it("applies the policy on creation", () => {
+  it("applies the policy on creation and persists the clock run (start + booked targets)", () => {
     expect(applyPolicyOnCreate(POLICY, "urgent", MON_10)).toEqual({
       slaPolicyId: POLICY.id,
       firstResponseDueAt: at("2026-09-07T09:00:00.000Z"),
       resolutionDueAt: at("2026-09-07T16:00:00.000Z"),
+      slaClockStartedAt: MON_10,
+      firstResponseTargetMs: 60 * 60_000,
+      resolutionTargetMs: 480 * 60_000,
       pausedAt: null,
       pauseTotalMs: 0,
       breachedFirstResponse: false,
       breachedResolution: false,
     });
+    // what the inbound handler, the portal and the contact form write on creation
+    expect(computeClockStart(POLICY, "normal", MON_10)).toEqual({ ...computeDueDates(POLICY, "normal", MON_10), slaClockStartedAt: MON_10, firstResponseTargetMs: 480 * 60_000, resolutionTargetMs: 4320 * 60_000 });
+    // without a policy the start is still recorded, the rest stays null — never a guess
+    expect(computeClockStart(null, "urgent", MON_10)).toEqual({ firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: MON_10, firstResponseTargetMs: null, resolutionTargetMs: null });
+    expect(targetMs(POLICY, "urgent", "first_response")).toBe(3_600_000);
+    expect(targetMs({ priorities: {} }, "urgent", "resolution")).toBeNull();
+    expect(targetMs(null, "urgent", "resolution")).toBeNull();
   });
 
   it("pauses while pending and resumes on the customer's reply with the same result as the pause model", () => {
@@ -243,9 +258,12 @@ describe("ticket lifecycle", () => {
     const solved = ticket({ status: "solved", resolvedAt: at("2026-09-07T12:00:00.000Z"), closedAt: at("2026-09-10T12:00:00.000Z"), breachedResolution: true, firstRespondedAt: at("2026-09-07T08:30:00.000Z") });
     const reopenAt = FRI_17;
     const patch = transitionStatus(POLICY, solved, "open", reopenAt);
-    expect(patch).toEqual({ status: "open", resolvedAt: null, closedAt: null, pausedAt: null, resolutionDueAt: addBusinessMinutes(reopenAt, 480, BH), breachedResolution: false });
+    // the persisted run moves to the reopening and the resolution target is booked again
+    expect(patch).toEqual({ status: "open", resolvedAt: null, closedAt: null, pausedAt: null, resolutionDueAt: addBusinessMinutes(reopenAt, 480, BH), resolutionTargetMs: 480 * 60_000, breachedResolution: false, slaClockStartedAt: reopenAt });
     const unanswered = transitionStatus(POLICY, { ...solved, firstRespondedAt: null, breachedFirstResponse: true }, "open", reopenAt);
-    expect(unanswered).toMatchObject({ firstResponseDueAt: addBusinessMinutes(reopenAt, 60, BH), breachedFirstResponse: false });
+    expect(unanswered).toMatchObject({ firstResponseDueAt: addBusinessMinutes(reopenAt, 60, BH), firstResponseTargetMs: 60 * 60_000, breachedFirstResponse: false, slaClockStartedAt: reopenAt });
+    // an answered ticket keeps its first-response clock (and its booked target) untouched
+    expect(patch).not.toHaveProperty("firstResponseTargetMs");
     // reopening straight into pending pauses the fresh clock
     expect(transitionStatus(POLICY, solved, "pending", reopenAt)).toMatchObject({ status: "pending", pausedAt: reopenAt, resolvedAt: null });
   });
@@ -260,7 +278,7 @@ describe("ticket lifecycle", () => {
   it("moves running clocks by the target difference on a priority change", () => {
     const normal = ticket({ priority: "normal", ...computeDueDates(POLICY, "normal", MON_10) });
     const urgent = applyPolicyOnPriorityChange(POLICY, normal, "urgent", at("2026-09-07T08:10:00.000Z"));
-    expect(urgent).toEqual({ ...computeDueDates(POLICY, "urgent", MON_10), breachedFirstResponse: false, breachedResolution: false });
+    expect(urgent).toEqual({ ...computeDueDates(POLICY, "urgent", MON_10), firstResponseTargetMs: 60 * 60_000, resolutionTargetMs: 480 * 60_000, breachedFirstResponse: false, breachedResolution: false });
     // the shorter target is already overdue at 12:00
     expect(applyPolicyOnPriorityChange(POLICY, normal, "urgent", at("2026-09-07T10:00:00.000Z"))).toMatchObject({ breachedFirstResponse: true, breachedResolution: false });
     // a longer target: absorbed pauses stay absorbed (the shift starts from the stored due date)
@@ -272,6 +290,31 @@ describe("ticket lifecycle", () => {
     // no due date so far → from the creation time
     const none = ticket({ firstResponseDueAt: null, resolutionDueAt: null });
     expect(applyPolicyOnPriorityChange(POLICY, none, "high", MON_10)).toMatchObject(computeDueDates(POLICY, "high", MON_10));
+  });
+
+  it("measures a clock without a due date from the persisted clock start, never from a creation days before the reopening", () => {
+    // reopened Friday 17:00 (the run's start) on a ticket created Monday; the policy had no urgent entry → no due dates so far
+    const reopened = ticket({ priority: "urgent", firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: FRI_17 });
+    const fromStart = applyPolicyOnPriorityChange(POLICY, reopened, "high", NEXT_MON_10);
+    expect(fromStart).toMatchObject(computeDueDates(POLICY, "high", FRI_17));
+    expect(fromStart).not.toMatchObject(computeDueDates(POLICY, "high", MON_10));
+    // a stopped clock is not re-booked; a running one carries the new target
+    expect(applyPolicyOnPriorityChange(POLICY, ticket({ firstRespondedAt: MON_10, slaClockStartedAt: MON_10 }), "low", MON_10)).toEqual({ resolutionDueAt: addBusinessMinutes(at("2026-09-07T16:00:00.000Z"), 10080 - 480, BH), resolutionTargetMs: 10080 * 60_000, breachedResolution: false });
+    // a missing target in the new priority clears the due date and the booked target
+    const sparse: SlaPolicyLike = { ...POLICY, priorities: { urgent: POLICY.priorities.urgent } };
+    expect(applyPolicyOnPriorityChange(sparse, ticket(), "low", MON_10)).toEqual({ firstResponseDueAt: null, firstResponseTargetMs: null, breachedFirstResponse: false, resolutionDueAt: null, resolutionTargetMs: null, breachedResolution: false });
+  });
+
+  it("books nothing for an agent-created ticket still waiting for the first customer reply (reopen, priority change)", () => {
+    // migration 0017: both due times null, the flag set — the run starts with `applyFirstCustomerReply`, never here
+    const waiting = ticket({ status: "solved", resolvedAt: MON_10, closedAt: null, firstResponseDueAt: null, resolutionDueAt: null, slaPendingFirstCustomerReply: true });
+    const reopened = statusTransition(POLICY, waiting, "open", FRI_17);
+    expect(reopened.reopened).toBe(true);
+    expect(reopened.patch).toEqual({ status: "open", resolvedAt: null, closedAt: null, resolutionDueAt: null, resolutionTargetMs: null, breachedResolution: false, pausedAt: null, slaClockStartedAt: FRI_17, firstResponseDueAt: null, firstResponseTargetMs: null, breachedFirstResponse: false });
+    const change = applyPolicyOnPriorityChange(POLICY, ticket({ firstResponseDueAt: null, resolutionDueAt: null, slaPendingFirstCustomerReply: true }), "urgent", MON_10);
+    expect(change).toEqual({ firstResponseDueAt: null, firstResponseTargetMs: null, breachedFirstResponse: false, resolutionDueAt: null, resolutionTargetMs: null, breachedResolution: false });
+    // without the flag the same rows book their clocks as before
+    expect(applyPolicyOnPriorityChange(POLICY, ticket({ firstResponseDueAt: null, resolutionDueAt: null }), "urgent", MON_10)).toMatchObject(computeDueDates(POLICY, "urgent", MON_10));
   });
 
   it("describes a clock from real timestamps only", () => {
@@ -317,11 +360,12 @@ describe("integration with the ticket slices", () => {
   it("reports a reopen from the row pick and restarts the clocks — or gives none without a policy", () => {
     const solved = row({ status: "solved", resolvedAt: at("2026-09-07T12:00:00.000Z"), firstRespondedAt: MON_10 });
     expect(statusTransition(POLICY, solved, "open", FRI_17)).toEqual({
-      patch: { status: "open", resolvedAt: null, closedAt: null, pausedAt: null, resolutionDueAt: addBusinessMinutes(FRI_17, 480, BH), breachedResolution: false },
+      patch: { status: "open", resolvedAt: null, closedAt: null, pausedAt: null, resolutionDueAt: addBusinessMinutes(FRI_17, 480, BH), resolutionTargetMs: 480 * 60_000, breachedResolution: false, slaClockStartedAt: FRI_17 },
       reopened: true,
       pauseEndedMs: 0,
     });
-    expect(statusTransition(null, solved, "open", FRI_17)).toMatchObject({ reopened: true, patch: { resolutionDueAt: null, resolvedAt: null } });
+    // without a policy the start is still persisted (a later policy assignment measures from here), the rest stays null
+    expect(statusTransition(null, solved, "open", FRI_17)).toMatchObject({ reopened: true, patch: { resolutionDueAt: null, resolutionTargetMs: null, resolvedAt: null, slaClockStartedAt: FRI_17 } });
     expect(statusTransition(POLICY, solved, "solved", FRI_17)).toEqual({ patch: {}, reopened: false, pauseEndedMs: 0 });
     expect(isSlaReopen("closed", "pending")).toBe(true);
     expect(isSlaReopen("solved", "spam")).toBe(false);
@@ -344,6 +388,37 @@ describe("integration with the ticket slices", () => {
     // the same share the worker warns on: 60-minute target, 10 business minutes left
     expect(slaClockState(pick, "first_response", at("2026-09-07T08:50:00.000Z"), POLICY).status).toBe("due_soon");
     expect(slaClockState(pick, "first_response", at("2026-09-07T08:40:00.000Z"), POLICY).status).toBe("running");
+  });
+});
+
+describe("desk business hours as the fallback of a policy without windows", () => {
+  const DESK: SupportBusinessHours = { timezone: "Europe/Dublin", days: { mon: [[480, 960]], tue: [[480, 960]] } };
+
+  it("uses the policy's own windows when it has any, else the desk's, else runs around the clock", () => {
+    expect(hasBusinessWindows(BH)).toBe(true);
+    expect(hasBusinessWindows(ALWAYS)).toBe(false);
+    expect(hasBusinessWindows(null)).toBe(false);
+    expect(hasBusinessWindows({ timezone: "UTC", days: { mon: [[600, 500]] } })).toBe(false); // an invalid window is no window
+    expect(effectiveBusinessHours(BH, DESK)).toBe(BH);
+    expect(effectiveBusinessHours(ALWAYS, DESK)).toBe(DESK);
+    expect(effectiveBusinessHours(ALWAYS, null)).toBe(ALWAYS);
+    expect(effectiveBusinessHours(ALWAYS, { timezone: "UTC", days: {} })).toBe(ALWAYS);
+    expect(effectiveBusinessHours(null, null)).toEqual({ timezone: "Europe/Berlin", days: {} });
+    // the loaders hand the engine a policy with the fallback applied; an untouched policy is returned as is
+    const open: SlaPolicyLike = { ...POLICY, businessHours: ALWAYS };
+    expect(withDeskBusinessHours(POLICY, DESK)).toBe(POLICY);
+    expect(withDeskBusinessHours(open, DESK)).toEqual({ ...open, businessHours: DESK });
+    expect(withDeskBusinessHours(open, null)).toBe(open);
+  });
+
+  it("changes what the clocks compute: the same ticket is due by the desk's windows once the policy has none", () => {
+    const withDesk = withDeskBusinessHours({ ...POLICY, businessHours: ALWAYS }, DESK);
+    // Monday 10:00 CEST = 09:00 Dublin; 60 minutes in the desk's 08:00–16:00 windows → 10:00 Dublin = 09:00 UTC
+    expect(computeDueDates(withDesk, "urgent", MON_10).firstResponseDueAt).toEqual(at("2026-09-07T09:00:00.000Z"));
+    // 480 minutes: 7 h left on Monday (until 15:00 UTC), 1 h on Tuesday → Tuesday 09:00 Dublin = 08:00 UTC
+    expect(computeDueDates(withDesk, "urgent", MON_10).resolutionDueAt).toEqual(at("2026-09-08T08:00:00.000Z"));
+    // around the clock without desk hours
+    expect(computeDueDates({ ...POLICY, businessHours: ALWAYS }, "urgent", MON_10).resolutionDueAt).toEqual(at("2026-09-07T16:00:00.000Z"));
   });
 });
 

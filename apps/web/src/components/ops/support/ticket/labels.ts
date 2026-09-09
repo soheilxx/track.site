@@ -54,6 +54,7 @@ export const PRIORITY_TONE: Record<SupportTicketPriority, Tone> = {
 
 export const DELIVERY_TONE: Record<SupportDeliveryStatus, Tone> = {
   queued: "neutral",
+  sending: "info",
   sent: "info",
   delivered: "ok",
   bounced: "bad",

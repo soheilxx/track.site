@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { ViewForm } from "@/components/ops/support/list/view-form";
-import { checkPlatform } from "@/server/ops/platform";
+import { SupportSubnav } from "@/components/ops/support/subnav";
+import { checkPlatform, withPlatform } from "@/server/ops/platform";
+import { listTeamOptions } from "@/server/support/teams";
 import { loadPlanOptions, loadSupportOperators } from "@/server/support/tickets";
 import { parseTicketFilters, viewFiltersOf } from "@/server/support/views";
 
@@ -21,11 +23,12 @@ export default async function OpsSupportViewNewPage({ searchParams }: { searchPa
   const { ctx } = access;
   const q = await searchParams;
   const filters = parseTicketFilters(q);
-  const [t, plans, operators] = await Promise.all([getTranslations("supportTickets.viewForm"), loadPlanOptions(ctx), loadSupportOperators(ctx)]);
+  const [t, plans, operators, teams] = await Promise.all([getTranslations("supportTickets.viewForm"), loadPlanOptions(ctx), loadSupportOperators(ctx), withPlatform(ctx, (tx) => listTeamOptions(tx, { includeArchived: true }))]);
   return (
     <div className="space-y-6">
       <OpsPageHeader title={t("titleNew")} intro={t("introNew")} />
-      <ViewForm view={null} initial={viewFiltersOf(filters)} sort={filters.sort} plans={plans} operators={operators} selfId={ctx.user.id} isAdmin={ctx.platformRole === "PLATFORM_ADMIN"} />
+      <SupportSubnav current="views" role={ctx.platformRole} />
+      <ViewForm view={null} initial={viewFiltersOf(filters)} sort={filters.sort} plans={plans} operators={operators} teams={teams} selfId={ctx.user.id} isAdmin={ctx.platformRole === "PLATFORM_ADMIN"} />
     </div>
   );
 }

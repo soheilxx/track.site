@@ -9,6 +9,7 @@ import { TicketPagination } from "@/components/ops/support/list/pagination";
 import { TicketFilters } from "@/components/ops/support/list/ticket-filters";
 import { TicketList } from "@/components/ops/support/list/ticket-list";
 import { ViewTabs } from "@/components/ops/support/list/view-tabs";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformCan, platformLocale } from "@/server/ops/platform";
 import { loadSupportOperators, loadTickets, loadViewCounts } from "@/server/support/tickets";
 import { loadSavedViews, parseTicketFilters, resolveViewBase, ticketQueryString, ticketsFiltered } from "@/server/support/views";
@@ -71,6 +72,7 @@ export default async function OpsSupportPage({ searchParams }: { searchParams: P
           </>
         }
       />
+      <SupportSubnav current="tickets" role={ctx.platformRole} />
       {base.missing ? <Alert tone="warn">{t("queue.viewMissing")}</Alert> : null}
       <ViewTabs current={filters.view} counts={counts} saved={saved} locale={locale} />
       <TicketFilters filters={filters} base={base} operators={operators} selfId={ctx.user.id} plans={page.plans} />

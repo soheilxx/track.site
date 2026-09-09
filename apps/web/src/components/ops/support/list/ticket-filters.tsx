@@ -2,9 +2,28 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { SUPPORT_TICKET_CHANNELS, SUPPORT_TICKET_PRIORITIES, SUPPORT_TICKET_STATUSES } from "@track-site/db";
 import { Button, Checkbox, Input, Label, Select, buttonVariants } from "@track-site/ui";
-import type { PlanOption, SupportOperator } from "@/server/support/tickets";
+import { checkPlatform, withPlatform } from "@/server/ops/platform";
+import { TEAM_QUERY_PARAM, listTeamOptions, type TeamFilter, type TeamOption } from "@/server/support/teams";
+import type { PlanOption, SupportOperator, TeamFilterAware } from "@/server/support/tickets";
 import { viewHref, type TicketFilters as Filters, type TicketSort, type ViewFilters } from "@/server/support/views";
 import { DATE_FIELDS, DATE_RANGE_MAX_DAYS, SLA_FILTERS, TICKET_SEARCH_MAX, TICKET_SORTS } from "./constants";
+
+/**
+ * Team filter (docs/18 §"Agent-created tickets and teams"): `views.ts` carries `team` in the filter model
+ * (`?team=<slug | id | none | any>`, the additive hook of `tickets.ts` applies it). Options come from the page
+ * (`teams`) or, failing that, from the gate cached for this request; a loader failure leaves the select with
+ * the neutral options instead of breaking the queue.
+ */
+async function teamFilterOptions(provided: TeamOption[] | undefined): Promise<TeamOption[]> {
+  if (provided) return provided;
+  try {
+    const access = await checkPlatform("PLATFORM_SUPPORT", "platform.tickets.read");
+    if (!access.ok) return [];
+    return await withPlatform(access.ctx, (tx) => listTeamOptions(tx, { includeArchived: true }));
+  } catch {
+    return [];
+  }
+}
 
 /**
  * GET form (works without JavaScript): every filter lives in the URL on top of the selected view (hidden
@@ -13,9 +32,14 @@ import { DATE_FIELDS, DATE_RANGE_MAX_DAYS, SLA_FILTERS, TICKET_SEARCH_MAX, TICKE
  * inputs mean "as in the view" too, so a view with a date range gets a checkbox (`dates=any`) that lifts the
  * range — the operator then sees every date or enters a range of their own.
  */
-export async function TicketFilters({ filters, base, operators, selfId, plans }: { filters: Filters; base: { filters: ViewFilters; sort: TicketSort }; operators: SupportOperator[]; selfId: string; plans: PlanOption[] }) {
+export async function TicketFilters({ filters, base, operators, selfId, plans, teams }: { filters: Filters & TeamFilterAware; base: { filters: ViewFilters; sort: TicketSort }; operators: SupportOperator[]; selfId: string; plans: PlanOption[]; teams?: TeamOption[] }) {
   const t = await getTranslations("supportTickets.queue");
   const tv = await getTranslations("support");
+  const tt = await getTranslations("supportTeams");
+  const teamOptions = await teamFilterOptions(teams);
+  // the select names teams by slug; a filter by id selects the same team
+  const teamRaw: TeamFilter = filters.team ?? "any";
+  const teamFilter: TeamFilter = teamOptions.find((team) => team.id === teamRaw)?.slug ?? teamRaw;
   const same = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((v) => b.includes(v));
   const viewRange = base.filters.lastDays != null || base.filters.from != null || base.filters.to != null;
   const rangeLifted = viewRange && filters.lastDays == null && filters.from == null && filters.to == null;
@@ -79,6 +103,19 @@ export async function TicketFilters({ filters, base, operators, selfId, plans }:
                   {o.name}
                 </option>
               ))}
+          </Select>
+        </div>
+        <div className="min-w-0">
+          <Label htmlFor="tq-team">{tt("queue.teamFilter")}</Label>
+          <Select id="tq-team" name={TEAM_QUERY_PARAM} defaultValue={teamFilter} className="mt-1.5" data-testid="support-team-filter">
+            <option value="any">{tt("queue.teamAny")}</option>
+            <option value="none">{tt("queue.teamNone")}</option>
+            {teamOptions.map((team) => (
+              <option key={team.id} value={team.slug}>
+                {team.name}
+              </option>
+            ))}
+            {teamFilter !== "any" && teamFilter !== "none" && !teamOptions.some((team) => team.slug === teamFilter) ? <option value={teamFilter}>{teamFilter}</option> : null}
           </Select>
         </div>
         <div className="min-w-0">

@@ -66,7 +66,8 @@ function MessageCard({ message, locale, now, t, tv, canSend }: { message: Messag
   const outbound = message.direction === "outbound";
   const who = message.authorKind === "agent" ? (message.author?.name ?? t("timeline.formerOperator")) : message.authorKind === "system" ? tv("authorKind.system") : message.fromEmail || tv("authorKind.customer");
   const showDelivery = outbound && message.deliveryStatus !== "na";
-  const retry = outbound && (message.deliveryStatus === "queued" || message.deliveryStatus === "failed");
+  // queued, failed, or a `sending` claim that went stale (the loader's `isMessageSendable`): "send now" / "send again"
+  const retry = outbound && message.sendable;
   return (
     <article
       aria-label={note ? t("timeline.noteLabel", { name: who }) : outbound ? t("timeline.outboundLabel", { name: who }) : t("timeline.inboundLabel", { name: who })}
@@ -123,7 +124,7 @@ function MessageCard({ message, locale, now, t, tv, canSend }: { message: Messag
       ) : null}
       {retry && canSend ? (
         <div className="mt-3">
-          <SendNowButton messageId={message.id} failed={message.deliveryStatus === "failed"} />
+          <SendNowButton messageId={message.id} failed={message.deliveryStatus !== "queued"} />
         </div>
       ) : null}
     </article>

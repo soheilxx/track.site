@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T22:36:19.176Z",
+  "generatedAt": "2026-09-09T00:56:34.251Z",
   "strict": true,
   "allLocales": [
     "en",
@@ -47,12 +47,13 @@
       "releases": 350,
       "security": 85,
       "shell": 159,
-      "support": 68,
-      "support-macros": 249,
+      "support": 77,
+      "support-macros": 271,
       "support-notifications": 37,
-      "support-portal": 138,
+      "support-portal": 139,
       "support-reports": 186,
       "support-sla": 126,
+      "support-teams": 168,
       "support-ticket": 199,
       "support-tickets": 185,
       "team": 301
@@ -267,6 +268,11 @@
               "extra": []
             },
             "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-teams": {
               "file": true,
               "missing": [],
               "extra": []
@@ -515,6 +521,11 @@
               "missing": [],
               "extra": []
             },
+            "support-teams": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "support-ticket": {
               "file": true,
               "missing": [],
@@ -755,6 +766,11 @@
               "extra": []
             },
             "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-teams": {
               "file": true,
               "missing": [],
               "extra": []
@@ -1003,6 +1019,11 @@
               "missing": [],
               "extra": []
             },
+            "support-teams": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
             "support-ticket": {
               "file": true,
               "missing": [],
@@ -1243,6 +1264,11 @@
               "extra": []
             },
             "support-sla": {
+              "file": true,
+              "missing": [],
+              "extra": []
+            },
+            "support-teams": {
               "file": true,
               "missing": [],
               "extra": []

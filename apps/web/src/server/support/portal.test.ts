@@ -124,7 +124,8 @@ describe("uploads", () => {
   const file = (name: string, type: string, size = 10) => new File([new Uint8Array(size)], name, { type });
 
   it("drops empty selections, sanitises names and applies the limits", () => {
-    const screening = screenUploads([file("", "application/octet-stream", 0), "text", file("../evil name.png", "image/png"), file("run.exe", "application/x-msdownload"), file("big.pdf", "application/pdf", ATTACHMENT_MAX_BYTES + 1)]);
+    // the empty file input of a portal form: a nameless zero-byte part, or a zero-byte `File` named "blob" once the server action runtime decoded it
+    const screening = screenUploads([file("", "application/octet-stream", 0), file("blob", "application/octet-stream", 0), "text", file("../evil name.png", "image/png"), file("run.exe", "application/x-msdownload"), file("big.pdf", "application/pdf", ATTACHMENT_MAX_BYTES + 1)]);
     expect(screening.accepted.map((a) => a.fileName)).toEqual(["evil name.png"]);
     expect(screening.accepted[0]?.contentType).toBe("image/png");
     expect(screening.rejected).toEqual([

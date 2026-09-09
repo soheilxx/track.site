@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buttonVariants } from "@track-site/ui";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { MacroEditor } from "@/components/ops/support/macros/macro-editor";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform } from "@/server/ops/platform";
 import { listMacros, macroCategories } from "@/server/support/macros";
 
@@ -30,6 +31,7 @@ export default async function OpsSupportMacroNewPage() {
           </Link>
         }
       />
+      <SupportSubnav current="macros" role={ctx.platformRole} />
       <MacroEditor macro={null} canManageGlobal={ctx.platformRole === "PLATFORM_ADMIN"} agentName={ctx.user.name} categories={macroCategories(macros)} />
     </div>
   );

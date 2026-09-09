@@ -56,6 +56,15 @@ import {
  * Pause model: a ticket set to pending Friday 17:00 and answered Monday 10:00 moves its due dates by two
  * business hours (Mon–Fri 09–18), never by the 65 wall-clock hours in between. Shifts are computed in
  * milliseconds end to end (a 24 × 7 policy resumes by exactly `pause_total_ms`).
+ *
+ * Persisted clock run (migration 0018, docs/18 §"Hardening"): every clock start — creation
+ * (`computeClockStart`) and reopening (`statusTransition`) — writes `sla_clock_started_at` and the targets the
+ * running clocks were booked against (`first_response_target_ms`, `resolution_target_ms`). A priority change
+ * on a clock without a due date measures from the persisted start, never from a creation days before the
+ * reopening; the worker scopes its warnings to the run (`sla_clock_started_at`) instead of guessing from
+ * `reopen_count`. Business hours: a policy without any window falls back to the desk's
+ * `support_settings.business_hours` (`effectiveBusinessHours`, applied by every policy loader and the
+ * worker); a desk without windows leaves the policy around the clock.
  */
 
 export type { SlaClock, SlaTargetUnit, SlaWeekday };
@@ -181,6 +190,28 @@ export function normalizeBusinessHours(hours: SupportBusinessHours | null | unde
 
 const isNormalized = (hours: SupportBusinessHours | NormalizedBusinessHours): hours is NormalizedBusinessHours => "alwaysOpen" in hours;
 const norm = (hours: SupportBusinessHours | NormalizedBusinessHours): NormalizedBusinessHours => (isNormalized(hours) ? hours : normalizeBusinessHours(hours));
+
+/** True when at least one valid window exists on any day (a policy or desk that is not around the clock). */
+export function hasBusinessWindows(hours: SupportBusinessHours | null | undefined): boolean {
+  return Boolean(hours) && !normalizeBusinessHours(hours).alwaysOpen;
+}
+
+/**
+ * The hours a clock runs on: the policy's own windows when it has any, otherwise the desk's
+ * `support_settings.business_hours` (docs/18 §11 — the desk hours are the default for a policy without
+ * hours), and only when the desk has none either does the policy run around the clock. The worker mirrors this.
+ */
+export function effectiveBusinessHours(policyHours: SupportBusinessHours | null | undefined, deskHours: SupportBusinessHours | null | undefined): SupportBusinessHours {
+  if (policyHours && hasBusinessWindows(policyHours)) return policyHours;
+  if (deskHours && hasBusinessWindows(deskHours)) return deskHours;
+  return policyHours ?? deskHours ?? { timezone: SLA_TIMEZONE_DEFAULT, days: {} };
+}
+
+/** A policy row with the desk's hours applied where its own are empty (what every loader hands to the engine). */
+export function withDeskBusinessHours<T extends { businessHours: SupportBusinessHours }>(policy: T, deskHours: SupportBusinessHours | null | undefined): T {
+  const businessHours = effectiveBusinessHours(policy.businessHours, deskHours);
+  return businessHours === policy.businessHours ? policy : { ...policy, businessHours };
+}
 
 function addBusinessMs(from: Date, ms: number, hours: NormalizedBusinessHours): Date {
   if (ms <= 0) return from;
@@ -336,6 +367,13 @@ export function targetMinutes(policy: Pick<SlaPolicyLike, "priorities">, priorit
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
 }
 
+/** The same target in milliseconds of business time — what `support_tickets.*_target_ms` stores; null without a policy or entry. */
+export function targetMs(policy: Pick<SlaPolicyLike, "priorities"> | null | undefined, priority: SupportTicketPriority, clock: SlaClock): number | null {
+  if (!policy) return null;
+  const minutes = targetMinutes(policy, priority, clock);
+  return minutes === null ? null : minutes * MINUTE_MS;
+}
+
 export interface SlaPause {
   from: Date;
   /** null = still paused */
@@ -375,6 +413,28 @@ export function computeDueDates(policy: SlaPolicyLike | null | undefined, priori
   return { firstResponseDueAt: due("first_response"), resolutionDueAt: due("resolution") };
 }
 
+/** A clock start as the row stores it: the due dates plus `sla_clock_started_at` and the targets booked. */
+export interface SlaClockStart extends SlaDueDates {
+  slaClockStartedAt: Date;
+  firstResponseTargetMs: number | null;
+  resolutionTargetMs: number | null;
+}
+
+/**
+ * Everything a fresh clock run writes (creation in the inbound handler, the portal and the contact form;
+ * `statusTransition` uses it for a reopening): the due dates of `computeDueDates`, the start instant and the
+ * targets in business milliseconds. Without a policy the due dates and targets are null — the start is still
+ * recorded, so a later priority change or a policy assignment knows where the run began.
+ */
+export function computeClockStart(policy: SlaPolicyLike | null | undefined, priority: SupportTicketPriority, from: Date): SlaClockStart {
+  return {
+    ...computeDueDates(policy, priority, from),
+    slaClockStartedAt: from,
+    firstResponseTargetMs: targetMs(policy, priority, "first_response"),
+    resolutionTargetMs: targetMs(policy, priority, "resolution"),
+  };
+}
+
 /** The policy for a plan: an explicit plan match first, then the default, else null (no SLA — shown as such). */
 export function selectSlaPolicy<T extends { planIds: string[] | null; isDefault: boolean }>(policies: readonly T[], planId: string | null | undefined): T | null {
   if (planId) {
@@ -402,6 +462,17 @@ export interface SlaTicketClock {
   pauseTotalMs: number;
   breachedFirstResponse: boolean;
   breachedResolution: boolean;
+  /** start of the current clock run (creation or the last reopening, migration 0018); a pick without it falls back to `createdAt` */
+  slaClockStartedAt?: Date | null;
+  /** the targets the running clocks were booked against (business milliseconds); informational for the display */
+  firstResponseTargetMs?: number | null;
+  resolutionTargetMs?: number | null;
+  /**
+   * An agent-created ticket whose clocks wait for the first customer reply (migration 0017, docs/18
+   * §"Agent-created tickets and teams"): while set, a reopening or a priority change books no due dates —
+   * `applyFirstCustomerReply` starts the run and clears the flag. Absent = not waiting.
+   */
+  slaPendingFirstCustomerReply?: boolean;
 }
 
 /** Column patch for `support_tickets` (spread into the slice's UPDATE). */
@@ -417,14 +488,17 @@ export interface SlaTicketPatch {
   pauseTotalMs?: number;
   breachedFirstResponse?: boolean;
   breachedResolution?: boolean;
+  slaClockStartedAt?: Date | null;
+  firstResponseTargetMs?: number | null;
+  resolutionTargetMs?: number | null;
 }
 
 /** What a resume reads — a `TicketRow` pick of the ticket slices satisfies it. */
 export type SlaResumeInput = Pick<SlaTicketClock, "pausedAt" | "pauseTotalMs" | "firstResponseDueAt" | "resolutionDueAt" | "firstRespondedAt" | "resolvedAt">;
 /** What a status transition reads: no `createdAt`; absent breach flags count as not flagged. */
-export type SlaTransitionInput = SlaResumeInput & Pick<SlaTicketClock, "status" | "priority" | "closedAt"> & Partial<Pick<SlaTicketClock, "breachedFirstResponse" | "breachedResolution">>;
-/** What a priority change reads (`createdAt` only for a clock without a due date so far). */
-export type SlaPriorityChangeInput = Pick<SlaTicketClock, "priority" | "createdAt" | "pausedAt" | "firstResponseDueAt" | "resolutionDueAt" | "firstRespondedAt" | "resolvedAt">;
+export type SlaTransitionInput = SlaResumeInput & Pick<SlaTicketClock, "status" | "priority" | "closedAt"> & Partial<Pick<SlaTicketClock, "breachedFirstResponse" | "breachedResolution" | "slaPendingFirstCustomerReply">>;
+/** What a priority change reads: a clock without a due date so far starts from `slaClockStartedAt`, else from `createdAt`. */
+export type SlaPriorityChangeInput = Pick<SlaTicketClock, "priority" | "createdAt" | "pausedAt" | "firstResponseDueAt" | "resolutionDueAt" | "firstRespondedAt" | "resolvedAt"> & Partial<Pick<SlaTicketClock, "slaClockStartedAt" | "slaPendingFirstCustomerReply">>;
 /** What the display state reads. */
 export type SlaClockStateInput = Pick<SlaTicketClock, "priority" | "pausedAt" | "firstResponseDueAt" | "resolutionDueAt" | "firstRespondedAt" | "resolvedAt" | "breachedFirstResponse" | "breachedResolution">;
 
@@ -437,13 +511,16 @@ export function isSlaReopen(from: SupportTicketStatus, to: SupportTicketStatus):
   return CLOSED_STATUSES.includes(from) && !CLOSED_STATUSES.includes(to) && to !== "spam";
 }
 
-/** Fresh clocks for a new ticket (creation time = clock start). */
+/** Fresh clocks for a new ticket (creation time = clock start, persisted with the targets). */
 export function applyPolicyOnCreate(policy: SlaPolicyLike, priority: SupportTicketPriority, createdAt: Date): SlaTicketPatch {
-  const due = computeDueDates(policy, priority, createdAt);
+  const start = computeClockStart(policy, priority, createdAt);
   return {
     ...(policy.id !== undefined ? { slaPolicyId: policy.id ?? null } : {}),
-    firstResponseDueAt: due.firstResponseDueAt,
-    resolutionDueAt: due.resolutionDueAt,
+    firstResponseDueAt: start.firstResponseDueAt,
+    resolutionDueAt: start.resolutionDueAt,
+    slaClockStartedAt: start.slaClockStartedAt,
+    firstResponseTargetMs: start.firstResponseTargetMs,
+    resolutionTargetMs: start.resolutionTargetMs,
     pausedAt: null,
     pauseTotalMs: 0,
     breachedFirstResponse: false,
@@ -457,26 +534,34 @@ function shiftDue(due: Date, deltaMinutes: number, hours: NormalizedBusinessHour
 
 /**
  * Priority change: every running clock moves by the difference between the old and the new target, so
- * absorbed pauses stay absorbed (a clock without a due date so far starts from the creation time). Breach
- * flags follow the new due dates — a shorter target can be overdue at once, a longer one is not.
+ * absorbed pauses stay absorbed (a clock without a due date so far starts from the persisted clock start —
+ * the last reopening — and only without one from the creation time). Breach flags follow the new due dates —
+ * a shorter target can be overdue at once, a longer one is not. The booked targets are rewritten for the
+ * running clocks, so the worker sees a new run.
  */
 export function applyPolicyOnPriorityChange(policy: SlaPolicyLike, ticket: SlaPriorityChangeInput, priority: SupportTicketPriority, now: Date): SlaTicketPatch {
   const hours = normalizeBusinessHours(policy.businessHours);
   const patch: SlaTicketPatch = {};
+  const start = ticket.slaClockStartedAt ?? ticket.createdAt;
+  // an agent-created ticket still waiting for the first customer reply books nothing: its run has not started
+  const waiting = ticket.slaPendingFirstCustomerReply === true;
   const recompute = (clock: SlaClock, current: Date | null): Date | null => {
     const target = targetMinutes(policy, priority, clock);
     if (target === null) return null;
+    if (current === null && waiting) return null;
     const previous = targetMinutes(policy, ticket.priority, clock);
-    if (current === null || previous === null) return addBusinessMs(ticket.createdAt, target * MINUTE_MS, hours);
+    if (current === null || previous === null) return addBusinessMs(start, target * MINUTE_MS, hours);
     return shiftDue(current, target - previous, hours);
   };
   const overdue = (due: Date | null): boolean => due !== null && ticket.pausedAt === null && now.getTime() > due.getTime();
   if (firstResponseRunning(ticket)) {
     patch.firstResponseDueAt = recompute("first_response", ticket.firstResponseDueAt);
+    patch.firstResponseTargetMs = patch.firstResponseDueAt === null && waiting ? null : targetMs(policy, priority, "first_response");
     patch.breachedFirstResponse = overdue(patch.firstResponseDueAt);
   }
   if (resolutionRunning(ticket)) {
     patch.resolutionDueAt = recompute("resolution", ticket.resolutionDueAt);
+    patch.resolutionTargetMs = patch.resolutionDueAt === null && waiting ? null : targetMs(policy, priority, "resolution");
     patch.breachedResolution = overdue(patch.resolutionDueAt);
   }
   return patch;
@@ -534,9 +619,12 @@ export function statusTransition(policy: SlaPolicyLike | null | undefined, ticke
   };
   if (ticket.status === "pending" && ticket.pausedAt) apply(resumeClock(policy, view, now));
   if (reopened) {
-    const due = computeDueDates(policy, ticket.priority, now);
-    apply({ resolvedAt: null, closedAt: null, resolutionDueAt: due.resolutionDueAt, breachedResolution: false, pausedAt: null });
-    if (firstResponseRunning(ticket)) apply({ firstResponseDueAt: due.firstResponseDueAt, breachedFirstResponse: false });
+    // a fresh run: the persisted clock start moves to the reopening and the targets are booked again — unless
+    // the ticket is an agent-created one still waiting for the first customer reply: it keeps waiting
+    // (due dates and targets stay null; `applyFirstCustomerReply` starts the run when that reply comes)
+    const start = ticket.slaPendingFirstCustomerReply === true ? computeClockStart(null, ticket.priority, now) : computeClockStart(policy, ticket.priority, now);
+    apply({ resolvedAt: null, closedAt: null, resolutionDueAt: start.resolutionDueAt, resolutionTargetMs: start.resolutionTargetMs, breachedResolution: false, pausedAt: null, slaClockStartedAt: start.slaClockStartedAt });
+    if (firstResponseRunning(ticket)) apply({ firstResponseDueAt: start.firstResponseDueAt, firstResponseTargetMs: start.firstResponseTargetMs, breachedFirstResponse: false });
   }
   if (to === "pending") apply(pauseClock(view, now));
   if (to === "solved" || to === "closed") {

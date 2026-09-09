@@ -4,18 +4,26 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@track-site/ui";
+import type { SupportNavBadge } from "@/server/ops/actions/support-tickets";
 import type { ActivePlatformRole } from "@/server/ops/platform";
 import { OPS_NAV, isOpsNavActive, roleAllows } from "./nav-items";
+import { SupportNavBadgeChip } from "./support-badge";
 
-/** Console navigation: entries above the operator's role are hidden (the pages enforce the role again). */
+/**
+ * Console navigation: entries above the operator's role are hidden (the pages enforce the role again). The
+ * "Support" entry carries the desk's live counts (`supportBadge`, docs/18 §13 `loadSupportNavBadge`) when the
+ * shell has them; null shows no badge — never a guessed figure.
+ */
 export function OpsNav({
   platformRole,
   onNavigate,
   className,
+  supportBadge = null,
 }: {
   platformRole: ActivePlatformRole;
   onNavigate?: () => void;
   className?: string;
+  supportBadge?: SupportNavBadge | null;
 }) {
   const t = useTranslations("ops.nav");
   const pathname = usePathname();
@@ -37,6 +45,7 @@ export function OpsNav({
           >
             <Icon className="size-4 shrink-0" aria-hidden="true" />
             <span className="truncate">{t(item.key)}</span>
+            {item.key === "support" ? <SupportNavBadgeChip badge={supportBadge} /> : null}
           </Link>
         );
       })}

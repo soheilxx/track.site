@@ -83,6 +83,7 @@
       "opened": "Geopend op {date} door {name}",
       "openedForm": "Geopend op {date} via het contactformulier",
       "openedEmail": "Geopend op {date} per e-mail",
+      "openedAgent": "Geopend op {date} door ons supportteam",
       "meta": {
         "status": "Status",
         "priority": "Prioriteit",

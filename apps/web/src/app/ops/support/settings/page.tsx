@@ -6,6 +6,7 @@ import { buttonVariants } from "@track-site/ui";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { SettingsOverview } from "@/components/ops/support/settings/overview";
 import { SettingsSubnav } from "@/components/ops/support/settings/subnav";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { countAgentsOnline, listSlaPolicySummaries, loadInboundLedger, loadSupportSettings } from "@/server/support/settings";
 
@@ -48,6 +49,7 @@ export default async function OpsSupportSettingsPage() {
           </>
         }
       />
+      <SupportSubnav current="settings" role={ctx.platformRole} />
       <SettingsSubnav current="overview" />
       <SettingsOverview settings={settings} policies={policies} agentsOnline={agentsOnline} ledger={ledger} locale={locale} />
     </div>

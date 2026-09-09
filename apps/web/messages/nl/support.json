@@ -19,7 +19,8 @@
       "email": "E-mail",
       "form": "Contactformulier",
       "dashboard": "Dashboard",
-      "api": "API"
+      "api": "API",
+      "agent": "Medewerker"
     },
     "direction": {
       "inbound": "Ontvangen",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "In wachtrij",
+      "sending": "Wordt verzonden…",
       "sent": "Verzonden",
       "delivered": "Afgeleverd",
       "bounced": "Gebounced",
@@ -105,6 +107,15 @@
         "title": "Supporttickets komen eraan",
         "text": "De ticketweergave wordt nog gebouwd. Tot die tijd bereikt u ons via het contactformulier; elke aanvraag wordt per e-mail beantwoord."
       }
+    },
+    "subnav": {
+      "label": "Supportsecties",
+      "tickets": "Tickets",
+      "views": "Weergaven",
+      "macros": "Macro's",
+      "reports": "Rapporten",
+      "settings": "Instellingen",
+      "badge": "{unassigned, plural, =0 {geen niet-toegewezen tickets} one {# niet-toegewezen ticket} other {# niet-toegewezen tickets}}, {breached, plural, =0 {geen SLA overschreden} one {# SLA overschreden} other {# SLA's overschreden}}"
     }
   }
 }

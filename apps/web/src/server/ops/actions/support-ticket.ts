@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, lt, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { PlatformPermission } from "@track-site/core";
@@ -24,13 +24,14 @@ import { markdownToHtml, markdownToText } from "@/components/ops/support/ticket/
 import { logger } from "@/server/db";
 import { PlatformAccessError, auditPlatform, requirePlatform, withPlatform, type PlatformContext } from "@/server/ops/platform";
 import { sanitizeHtml, screenAttachments } from "@/server/support/inbound";
-import { sendTicketMail, ticketMessageId, ticketSubject, type TicketMailResult } from "@/server/support/mail";
+import { sendTicketMail, ticketMessageId, ticketSubject } from "@/server/support/mail";
 import { fanOutAfterMutation } from "@/server/support/notifications";
 import { clearPresence, loadPresence, purgeStalePresence, touchPresence, type PresenceView } from "@/server/support/presence";
-import { applyPolicyOnPriorityChange, statusTransition, type SlaTicketPatch } from "@/server/support/sla";
+import { applyPolicyOnPriorityChange, markFirstResponse, statusTransition, type SlaTicketPatch } from "@/server/support/sla";
 import {
   COMPOSE_BLOCKED_STATUSES,
   CONFIRMED_TICKET_TRANSITIONS,
+  DELIVERY_CLAIM_STALE_MS,
   canTransitionTicket,
   isPlatformOperator,
   loadMacroForUse,
@@ -58,7 +59,8 @@ import {
  * and returns the message id; the page uploads attachments to `/api/support/attachments` and then calls
  * `finalizeTicketMessageAction`, which sends the mail through `support/mail.ts` and records the delivery
  * outcome. Without attachments the compose action sends immediately. Sending claims the message row
- * (`deliverMessage`), so two "send now" clicks or a retried compose never mail the customer twice.
+ * atomically with a transient `sending` state (`deliverMessage`), so two "send now" clicks or a retried
+ * compose never mail the customer twice.
  */
 
 const PATH = "/ops/support";
@@ -319,9 +321,9 @@ export async function composeTicketMessageAction(input: ComposeInput): Promise<C
     if (outbound) {
       extra.lastAgentMessageAt = now;
       if (!row.firstRespondedAt) {
+        // the engine stops the first-response clock (and flags a late answer) — the same call every reply path makes
         firstResponse = true;
-        extra.firstRespondedAt = now;
-        if (row.firstResponseDueAt && now.getTime() > row.firstResponseDueAt.getTime()) extra.breachedFirstResponse = true;
+        Object.assign(extra, markFirstResponse(row, now));
       }
     }
     const tags = macroActions.tags_add?.length || macroActions.tags_remove?.length ? [...(row.tags ?? []).filter((t) => !(macroActions.tags_remove ?? []).includes(t)), ...(macroActions.tags_add ?? [])] : null;
@@ -353,59 +355,90 @@ export async function composeTicketMessageAction(input: ComposeInput): Promise<C
   return { ok: delivery.ok, error: delivery.error, messageId: stored.messageId, pendingUpload: false, sent: delivery.sent, transport: delivery.transport };
 }
 
-type Delivered = { error: "not_found" | "invalid_state" | "unchanged" } | { ticketId: string; result: TicketMailResult };
+type MessageRow = typeof supportMessages.$inferSelect;
+type Claimed = { error: "not_found" | "invalid_state" | "unchanged" } | { message: MessageRow; ticket: TicketRow };
 
 /**
  * Sends a stored outbound message (queued, or failed for a retry) with its attachments through
- * `sendTicketMail` and records the delivery outcome on the row and in the audit log — all inside one
- * transaction that **claims the row first**: `SELECT … FOR NO KEY UPDATE SKIP LOCKED` on the message.
- * A second caller while the send is in flight (another operator's "send now", a retried compose) skips
- * the locked row and reports `unchanged`; after the commit it sees `sent` and reports the same — the
- * customer receives the mail once. The lock is held for the duration of the transport call (bounded by
- * its timeout); it blocks nothing but a concurrent update of this very message. Never throws for a
- * transport failure — the message stays `failed` with its error, visible in the timeline.
+ * `sendTicketMail` and records the delivery outcome on the row and in the audit log. The row is **claimed
+ * atomically first** (docs/18 §"Hardening"): one `UPDATE … SET delivery_status = 'sending',
+ * delivery_claimed_at = now WHERE delivery_status IN ('queued', 'failed') … RETURNING`, committed on its
+ * own, so of two clicks — another operator's "send now", a retried compose, a double click — exactly one
+ * UPDATE matches; the other finds `sending` (or `sent`) and answers `unchanged`. The transport call runs
+ * outside any transaction, then a second transaction records `sent` (+ `provider_message_id`) or `failed`
+ * + `delivery_error` and the audit entry. A claim the process never resolved (crash between the two) stays
+ * `sending` until `DELIVERY_CLAIM_STALE_MS` (`isMessageSendable`), after which "send again" may claim it;
+ * a send that reaches the transport is never repeated within that window. Never throws for a transport
+ * failure — the message stays `failed` with its error, visible in the timeline.
  */
 async function deliverMessage(ctx: PlatformContext, messageId: string): Promise<FinalizeResult> {
-  const outcome = await withPlatform(ctx, async (tx): Promise<Delivered> => {
-    const [message] = await tx.select().from(supportMessages).where(eq(supportMessages.id, messageId)).limit(1).for("no key update", { skipLocked: true });
+  const now = new Date();
+  const staleBefore = new Date(now.getTime() - DELIVERY_CLAIM_STALE_MS);
+  const claimed = await withPlatform(ctx, async (tx): Promise<Claimed> => {
+    const [message] = await tx
+      .update(supportMessages)
+      .set({ deliveryStatus: "sending", deliveryClaimedAt: now, deliveryError: null })
+      .where(
+        and(
+          eq(supportMessages.id, messageId),
+          eq(supportMessages.direction, "outbound"),
+          or(
+            inArray(supportMessages.deliveryStatus, ["queued", "failed"]),
+            // an abandoned claim (the process died between the claim and the outcome) may be taken over
+            and(eq(supportMessages.deliveryStatus, "sending"), or(isNull(supportMessages.deliveryClaimedAt), lt(supportMessages.deliveryClaimedAt, staleBefore))),
+          ),
+        ),
+      )
+      .returning();
     if (!message) {
-      // locked by a send in flight, or gone: a plain read tells which
-      const [exists] = await tx.select({ id: supportMessages.id }).from(supportMessages).where(eq(supportMessages.id, messageId)).limit(1);
-      return { error: exists ? "unchanged" : "not_found" };
+      // nothing claimable: gone, not an outbound message, or already sending / sent — a plain read tells which
+      const [existing] = await tx.select({ direction: supportMessages.direction, deliveryStatus: supportMessages.deliveryStatus }).from(supportMessages).where(eq(supportMessages.id, messageId)).limit(1);
+      if (!existing) return { error: "not_found" };
+      return { error: existing.direction !== "outbound" ? "invalid_state" : "unchanged" };
     }
-    if (message.direction !== "outbound") return { error: "invalid_state" };
-    if (message.deliveryStatus !== "queued" && message.deliveryStatus !== "failed") return { error: "unchanged" };
     const ticket = await loadTicketRow(tx, message.ticketId);
     if (!ticket) return { error: "not_found" };
+    return { message, ticket };
+  });
+  if ("error" in claimed) return { ok: false, error: claimed.error, sent: false, transport: null };
+  const { message, ticket } = claimed;
+
+  const sent = await withPlatform(ctx, async (tx) => {
     const files = await tx.select().from(supportAttachments).where(eq(supportAttachments.messageId, message.id)).orderBy(supportAttachments.createdAt);
     const settings = await loadMailSettings(tx);
     const [author] = message.authorUserId ? await tx.select({ name: user.name }).from(user).where(eq(user.id, message.authorUserId)).limit(1) : [];
-    const result = await sendTicketMail({
-      ticket: { id: ticket.id, number: ticket.number, subject: ticket.subject, requesterEmail: ticket.requesterEmail, requesterName: ticket.requesterName, locale: ticket.locale },
-      message: {
-        id: message.id,
-        textBody: message.textBody,
-        htmlBody: message.htmlBody,
-        messageId: message.messageId,
-        inReplyTo: message.inReplyTo,
-        references: message.references,
-        ccEmails: message.ccEmails,
-        attachments: files.map((f) => ({ filename: f.fileName, content: Buffer.isBuffer(f.content) ? f.content : Buffer.from(f.content as unknown as Uint8Array), contentType: f.contentType })),
-        kind: "agent",
-        agentName: author?.name ?? null,
-      },
-      locale: ticket.locale,
-      settings,
-    });
-    if (!result.ok) logger.warn({ ticketId: ticket.id, messageId: message.id, transport: result.transport, err: result.error }, "support ticket reply failed");
+    return { files, settings, agentName: author?.name ?? null };
+  });
+  const result = await sendTicketMail({
+    ticket: { id: ticket.id, number: ticket.number, subject: ticket.subject, requesterEmail: ticket.requesterEmail, requesterName: ticket.requesterName, locale: ticket.locale },
+    message: {
+      id: message.id,
+      textBody: message.textBody,
+      htmlBody: message.htmlBody,
+      messageId: message.messageId,
+      inReplyTo: message.inReplyTo,
+      references: message.references,
+      ccEmails: message.ccEmails,
+      attachments: sent.files.map((f) => ({ filename: f.fileName, content: Buffer.isBuffer(f.content) ? f.content : Buffer.from(f.content as unknown as Uint8Array), contentType: f.contentType })),
+      kind: "agent",
+      agentName: sent.agentName,
+    },
+    locale: ticket.locale,
+    settings: sent.settings,
+  });
+  if (!result.ok) logger.warn({ ticketId: ticket.id, messageId: message.id, transport: result.transport, err: result.error }, "support ticket reply failed");
+
+  await withPlatform(ctx, async (tx) => {
+    // only the claim this call holds is resolved: a provider event that arrived meanwhile (`sent` → `delivered`) is never downgraded
     await tx
       .update(supportMessages)
       .set({
         deliveryStatus: result.ok ? "sent" : "failed",
         deliveryError: result.ok ? null : (result.error ?? "send failed").slice(0, 500),
+        deliveryClaimedAt: null,
         providerMessageId: result.ok && result.transport === "resend" ? (result.id ?? null) : message.providerMessageId,
       })
-      .where(eq(supportMessages.id, message.id));
+      .where(and(eq(supportMessages.id, message.id), eq(supportMessages.deliveryStatus, "sending")));
     await auditPlatform(
       ctx,
       {
@@ -413,16 +446,13 @@ async function deliverMessage(ctx: PlatformContext, messageId: string): Promise<
         organizationId: ticket.organizationId,
         targetType: "support_ticket",
         targetId: ticket.id,
-        diff: { messageId: message.id, ok: result.ok, transport: result.transport, error: result.ok ? null : (result.error ?? "send failed").slice(0, 200), attachments: files.length, locale: ticket.locale },
+        diff: { messageId: message.id, ok: result.ok, transport: result.transport, error: result.ok ? null : (result.error ?? "send failed").slice(0, 200), attachments: sent.files.length, locale: ticket.locale, claimedAt: now.toISOString() },
         metadata: { module: "support", ticketNumber: ticket.number, mailId: result.ok ? (result.id ?? null) : null },
       },
       tx,
     );
-    return { ticketId: ticket.id, result };
   });
-  if ("error" in outcome) return { ok: false, error: outcome.error, sent: false, transport: null };
-  revalidate(outcome.ticketId);
-  const { result } = outcome;
+  revalidate(ticket.id);
   return result.ok ? { ok: true, error: null, sent: true, transport: result.transport } : { ok: false, error: "mail_failed", sent: false, transport: result.transport };
 }
 

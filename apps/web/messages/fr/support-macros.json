@@ -174,7 +174,7 @@
         "csat": "Enquête de satisfaction",
         "businessHours": "Heures ouvrées",
         "businessHoursNone": "Aucun jour ouvré configuré ({timezone})",
-        "businessHoursPending": "Pas encore lu par les horloges SLA — chaque politique SLA porte ses propres heures.",
+        "businessHoursFallback": "Repli pour toute politique SLA sans heures propres : les horloges d’une telle politique suivent ces heures du support (une politique avec ses propres plages les conserve).",
         "extraWindows": "Certains jours comportent plusieurs plages ; le formulaire affiche la première.",
         "envOverride": "Remplacé par la variable d’environnement {name} ; la valeur enregistrée n’est pas en vigueur.",
         "notStored": "Rien n’a encore été enregistré — les valeurs affichées sont celles par défaut du schéma.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Événement",
             "processed": "Terminé",
-            "error": "Erreur"
+            "error": "Erreur",
+            "actions": "Actions"
           },
           "status": {
             "received": "En cours",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "Aucun événement entrant pour l’instant",
-          "emptyText": "Rien n’a encore atteint le webhook. Dès que le domaine de réponse reçoit des e-mails, chaque livraison apparaît ici avec son résultat."
+          "emptyText": "Rien n’a encore atteint le webhook. Dès que le domaine de réponse reçoit des e-mails, chaque livraison apparaît ici avec son résultat.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Retraiter",
+            "confirm": "Retraiter maintenant",
+            "working": "Retraitement…",
+            "dialogTitle": "Retraiter cette livraison ?",
+            "dialogText": "La livraison {event} repasse par le traitement entrant avec les données d’événement enregistrées (adresses, objet, en-têtes, noms des pièces jointes). Les corps et les pièces jointes sont récupérés chez le fournisseur.",
+            "dialogHint": "Répétable sans risque : un e-mail déjà enregistré par une tentative précédente est renvoyé avec son ticket et jamais enregistré deux fois. L’exécution est consignée dans le journal d’audit.",
+            "done": "Traité — ticket n° {number} ({route}).",
+            "doneNoTicket": "Traité.",
+            "ignored": "Ignoré : l’e-mail n’a pas besoin de ticket (adresse propre ou aucun changement).",
+            "duplicate": "Déjà traité — rien à faire.",
+            "inProgress": "Une autre instance traite cette livraison en ce moment ; réessayez dans quelques minutes.",
+            "failed": "Nouvel échec : {error}",
+            "unavailable": "Aucune donnée d’événement enregistrée — seule une nouvelle tentative du fournisseur peut aider.",
+            "errors": {
+              "forbidden": "Votre rôle de plateforme ne le permet pas.",
+              "invalid": "La demande n’a pas été comprise.",
+              "not_found": "Cette ligne du registre n’existe plus.",
+              "not_reprocessable": "Seules les livraisons en échec ou interrompues peuvent être retraitées.",
+              "no_payload": "Aucune donnée d’événement enregistrée pour cette livraison.",
+              "confirmation_required": "Confirmez d’abord l’action.",
+              "generic": "Cela n’a pas fonctionné. Veuillez réessayer."
+            }
+          }
         },
         "sla": {
           "title": "Politiques SLA",
@@ -270,7 +296,7 @@
         "agentsOnline": "En ce moment : {count, plural, one {# agent vu} other {# agents vus}} au cours des {minutes} dernières minutes.",
         "hoursTitle": "Heures ouvrées",
         "hoursText": "Une plage par jour de la semaine dans le fuseau horaire du support, enregistrée avec les réglages.",
-        "hoursPending": "Pas encore lu par les horloges SLA : chaque politique SLA porte ses propres heures ouvrées (section Politiques SLA) et rien ne se rabat pour l’instant sur ces heures du support. Les enregistrer ne modifie aucune échéance.",
+        "hoursFallback": "Les horloges SLA utilisent ces heures pour toute politique SLA sans heures ouvrées propres (section Politiques SLA). Une politique avec ses propres plages les conserve ; sans heures du support, une telle politique tourne en continu. L’enregistrement modifie les échéances des prochains démarrages et pauses d’horloge, pas celles déjà enregistrées.",
         "timezone": "Fuseau horaire",
         "timezoneHint": "Nom IANA, p. ex. Europe/Paris.",
         "hoursCaption": "Heures ouvrées par jour de la semaine",

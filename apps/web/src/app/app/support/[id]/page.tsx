@@ -45,7 +45,10 @@ export default async function TicketPage({ params, searchParams }: { params: Pro
   const canReply = canWrite && customerCanReply(ticket);
   const canSolve = canWrite && customerCanMarkSolved(ticket);
   const canRate = canWrite && customerCanRate(ticket, settings.csatEnabled);
-  const openedBy = ticket.channel === "form" ? t("detail.openedForm", { date: formatDate(ticket.createdAt, locale, "short") }) : ticket.channel === "email" ? t("detail.openedEmail", { date: formatDate(ticket.createdAt, locale, "short") }) : t("detail.opened", { date: formatDate(ticket.createdAt, locale, "short"), name: ticket.requesterName ?? ticket.requesterEmail });
+  const openedDate = formatDate(ticket.createdAt, locale, "short");
+  // an agent-created ticket (task N) was opened by the desk, not by the requester — say so, name no operator
+  const openedBy =
+    ticket.channel === "form" ? t("detail.openedForm", { date: openedDate }) : ticket.channel === "email" ? t("detail.openedEmail", { date: openedDate }) : ticket.channel === "agent" ? t("detail.openedAgent", { date: openedDate }) : t("detail.opened", { date: openedDate, name: ticket.requesterName ?? ticket.requesterEmail });
 
   return (
     <div className="space-y-6">

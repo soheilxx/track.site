@@ -6,6 +6,7 @@ import { buttonVariants } from "@track-site/ui";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { SLA_PATHS } from "@/components/ops/support/sla/constants";
 import { PoliciesTable } from "@/components/ops/support/sla/policies-table";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { listSlaPolicies } from "./queries";
 
@@ -40,6 +41,7 @@ export default async function OpsSupportSlaPage() {
           </Link>
         }
       />
+      <SupportSubnav current="settings" role={access.ctx.platformRole} />
       <PoliciesTable policies={policies} locale={locale} />
       <section aria-labelledby="ops-sla-how-title" className="rounded-[var(--radius-card)] border border-dashed border-line-2 px-4 py-3 text-sm">
         <h2 id="ops-sla-how-title" className="font-semibold text-ink">

@@ -46,19 +46,22 @@ export interface VolumePoint {
   form: number;
   dashboard: number;
   api: number;
+  agent: number;
   solved: number;
 }
 
 /**
  * Fixed hue per channel (identity, never rank): e-mail in the primary hue, the contact form in cyan, the
- * dashboard in violet and the API — the channel operators do not act on — in the de-emphasis grey. The
- * legend and the table twin carry identity as well, so no reading depends on colour alone.
+ * dashboard in violet, the API — the channel operators do not act on — in the de-emphasis grey and the tickets
+ * operators opened themselves (`agent`) in amber. The legend and the table twin carry identity as well, so no
+ * reading depends on colour alone.
  */
 const CHANNEL_FILL: Record<Channel, string> = {
   email: "var(--color-primary)",
   form: "var(--color-cyan)",
   dashboard: "var(--color-violet)",
   api: "var(--color-ink-3)",
+  agent: "var(--color-warn)",
 };
 
 interface TooltipEntry {

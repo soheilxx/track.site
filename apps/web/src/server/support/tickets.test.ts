@@ -177,8 +177,12 @@ describe("ticketStatusChange", () => {
         closedAt: null,
         pausedAt: null,
         resolutionDueAt: due.resolutionDueAt,
+        resolutionTargetMs: 4320 * 60_000,
         breachedResolution: false,
+        // the persisted clock run (0018): the reopening is the new start, the targets are booked again
+        slaClockStartedAt: NEXT_MON_10,
         firstResponseDueAt: due.firstResponseDueAt,
+        firstResponseTargetMs: 480 * 60_000,
         breachedFirstResponse: false,
         reopenCount: 2,
       },
@@ -216,6 +220,16 @@ describe("ticketPriorityChange", () => {
     expect(relaxed.set).toMatchObject({ priority: "low", breachedResolution: false });
     // the current priority again: nothing to write, nothing to record
     expect(ticketPriorityChange(POLICY, row, "normal", FRI_16)).toEqual({ set: {}, changed: false });
+  });
+
+  it("measures a clock without a due time from the persisted clock start of a reopened ticket, not from its creation", () => {
+    // reopened Friday 17:00 with a policy that had no entry for its priority so far: the locked row carries the start
+    const reopened = { ...row, firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: FRI_17 };
+    const change = ticketPriorityChange(POLICY, reopened, "high", NEXT_MON_10);
+    expect(change.set).toMatchObject({ priority: "high", ...computeDueDates(POLICY, "high", FRI_17), firstResponseTargetMs: 240 * 60_000, resolutionTargetMs: 1440 * 60_000 });
+    expect(change.set.firstResponseDueAt).not.toEqual(computeDueDates(POLICY, "high", row.createdAt).firstResponseDueAt);
+    // a row without a persisted start (migration backfill impossible) still measures from the creation
+    expect(ticketPriorityChange(POLICY, { ...reopened, slaClockStartedAt: null }, "high", NEXT_MON_10).set).toMatchObject(computeDueDates(POLICY, "high", row.createdAt));
   });
 
   it("clears the running due times of a ticket without policy instead of guessing, and keeps finished clocks", () => {
@@ -373,6 +387,26 @@ describe("parseTicketFilters", () => {
     expect(parseTicketFilters({ view: "mine" }).view).toBe("mine");
     expect(parseTicketFilters({ view: ID }).view).toBe(ID);
     expect(parseTicketFilters({ view: "nope" }).view).toBeNull();
+  });
+
+  it("carries the team filter (task N): absent = the view's, `any` lifts it, `none` / slug / id name a team", () => {
+    const teamed = { filters: { ...EMPTY_VIEW_FILTERS, team: "sales" }, sort: "updated_desc" as const, view: null };
+    expect(parseTicketFilters({}).team).toBe("any");
+    expect(parseTicketFilters({}, teamed).team).toBe("sales");
+    expect(parseTicketFilters({ team: "any" }, teamed).team).toBe("any");
+    expect(parseTicketFilters({ team: "none" }).team).toBe("none");
+    expect(parseTicketFilters({ team: "Support" }).team).toBe("support");
+    expect(parseTicketFilters({ team: ID }).team).toBe(ID);
+    // an unusable value is no filter, never an error page
+    expect(parseTicketFilters({ team: "not a slug!" }).team).toBe("any");
+    expect(viewFiltersFrom({ team: "sales" }).team).toBe("sales");
+    expect(viewFiltersFrom({ team: "not a slug!" }).team).toBe("any");
+    expect(viewFiltersFrom({ team: 42 }).team).toBe("any");
+    expect(ticketQueryString({ ...parseTicketFilters({ team: "sales" }), view: null })).toBe("?team=sales");
+    expect(ticketQueryString(parseTicketFilters({ team: "any" }, teamed), 1, teamed)).toBe("?team=any");
+    expect(ticketQueryString(parseTicketFilters({}, teamed), 1, teamed)).toBe("");
+    expect(ticketsFiltered(parseTicketFilters({ team: "none" }, teamed), teamed)).toBe(true);
+    expect(ticketsFiltered(parseTicketFilters({}, teamed), teamed)).toBe(false);
   });
 });
 

@@ -174,7 +174,7 @@
         "csat": "Satisfaction survey",
         "businessHours": "Business hours",
         "businessHoursNone": "No business days configured ({timezone})",
-        "businessHoursPending": "Not read by the SLA clocks yet — every SLA policy carries its own hours.",
+        "businessHoursFallback": "Fallback for every SLA policy without hours of its own: the clocks of such a policy run on these desk hours (a policy with its own windows keeps them).",
         "extraWindows": "Some days carry more than one window; the form shows the first one.",
         "envOverride": "Overridden by the environment variable {name}; the stored value is not in effect.",
         "notStored": "Nothing has been saved yet — the values shown are the defaults of the schema.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Event",
             "processed": "Finished",
-            "error": "Error"
+            "error": "Error",
+            "actions": "Actions"
           },
           "status": {
             "received": "In progress",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "No inbound events yet",
-          "emptyText": "Nothing has reached the webhook so far. Once the reply domain receives mail, every delivery appears here with its outcome."
+          "emptyText": "Nothing has reached the webhook so far. Once the reply domain receives mail, every delivery appears here with its outcome.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Reprocess",
+            "confirm": "Reprocess now",
+            "working": "Reprocessing…",
+            "dialogTitle": "Reprocess this delivery?",
+            "dialogText": "Delivery {event} runs through the inbound handler again with the stored event data (addresses, subject, headers, attachment names). Bodies and attachments are fetched from the provider.",
+            "dialogHint": "Safe to repeat: a mail an earlier attempt already stored is answered with its ticket and never stored twice. The run is recorded in the audit log.",
+            "done": "Processed — ticket #{number} ({route}).",
+            "doneNoTicket": "Processed.",
+            "ignored": "Ignored: the mail needs no ticket (own address or no change).",
+            "duplicate": "Already processed — nothing to do.",
+            "inProgress": "Another instance is processing this delivery right now; try again in a few minutes.",
+            "failed": "Failed again: {error}",
+            "unavailable": "No stored event data — the provider's retry is the only way.",
+            "errors": {
+              "forbidden": "Your platform role is not allowed to do that.",
+              "invalid": "The request was not understood.",
+              "not_found": "That ledger row no longer exists.",
+              "not_reprocessable": "Only failed or interrupted deliveries can be reprocessed.",
+              "no_payload": "No stored event data for this delivery.",
+              "confirmation_required": "Confirm the action first.",
+              "generic": "That did not work. Please try again."
+            }
+          }
         },
         "sla": {
           "title": "SLA policies",
@@ -270,7 +296,7 @@
         "agentsOnline": "Right now: {count, plural, one {# agent} other {# agents}} seen in the last {minutes} minutes.",
         "hoursTitle": "Business hours",
         "hoursText": "One window per weekday in the desk's time zone, stored with the settings.",
-        "hoursPending": "Not read by the SLA clocks yet: every SLA policy carries its own business hours (section SLA policies) and nothing falls back to these desk hours so far. Saving them changes no due time.",
+        "hoursFallback": "The SLA clocks use these hours for every SLA policy that has no business hours of its own (section SLA policies). A policy with its own windows keeps them; without desk hours such a policy runs around the clock. Saving changes the due times of future clock starts and pauses, not those already booked.",
         "timezone": "Time zone",
         "timezoneHint": "IANA name, e.g. Europe/Berlin.",
         "hoursCaption": "Business hours per weekday",

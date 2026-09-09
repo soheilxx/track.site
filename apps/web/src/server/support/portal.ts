@@ -37,8 +37,8 @@ import { db, logger } from "@/server/db";
 import { withOrg, type OrgContext } from "@/server/session";
 import { noopAttachmentScanner, sanitizeFileName, sanitizeHtml, screenAttachments, type AttachmentRejection, type AttachmentScanner } from "./inbound";
 import { buildTicketMail, sendTicketMail, supportMailSettings, type SupportMailSettings, type TicketMailResult } from "./mail";
-import { computeDueDates, statusTransition, type SlaDueDates } from "./sla";
-import { loadSlaPolicy } from "./ticket";
+import { applyFirstCustomerReply } from "./first-customer-reply";
+import { computeClockStart, statusTransition, withDeskBusinessHours, type SlaDueDates } from "./sla";
 
 /**
  * Customer support portal (`/app/support`, docs/18-support-desk.md §"Customer view") — the read side and the
@@ -173,11 +173,41 @@ export async function loadSlaPolicyForPlan(tx: DbOrTx, planId: string | null | u
   try {
     const rows = await tx.select({ id: supportSlaPolicies.id, priorities: supportSlaPolicies.priorities, businessHours: supportSlaPolicies.businessHours, planIds: supportSlaPolicies.planIds, isDefault: supportSlaPolicies.isDefault }).from(supportSlaPolicies);
     const chosen = (planId ? rows.find((p) => Array.isArray(p.planIds) && p.planIds.includes(planId)) : undefined) ?? rows.find((p) => p.isDefault) ?? null;
-    return chosen ? { id: chosen.id, priorities: chosen.priorities, businessHours: chosen.businessHours } : null;
+    if (!chosen) return null;
+    // a policy without windows runs on the desk's hours (docs/18 §11) — the same policy the console and the worker apply
+    return withDeskBusinessHours({ id: chosen.id, priorities: chosen.priorities, businessHours: chosen.businessHours }, await loadDeskBusinessHoursForPortal());
   } catch (e) {
     if (pgErrorCode(e) !== "42P01") throw e;
     return null;
   }
+}
+
+/**
+ * `support_settings.business_hours` for the portal's clock start. Tenants have no privilege on the settings
+ * table, so the singleton is read through the application connection like `loadPortalSettings`; a missing
+ * table, a missing row or a refused read means "no desk hours" — the policy then keeps its own.
+ */
+async function loadDeskBusinessHoursForPortal(): Promise<SupportBusinessHours | null> {
+  try {
+    const [row] = await db().select({ businessHours: supportSettings.businessHours }).from(supportSettings).where(eq(supportSettings.id, 1)).limit(1);
+    return row?.businessHours ?? null;
+  } catch (e) {
+    const code = pgErrorCode(e);
+    if (code !== "42P01" && code !== "42501") throw e;
+    return null;
+  }
+}
+
+/**
+ * A ticket's own policy as the tenant role may read it: the policy row (tenants may SELECT policies) on the
+ * desk's hours from the application connection — `ticket.ts`'s `loadSlaPolicy` reads `support_settings`
+ * inside the caller's transaction, which `tracksite_app` has no privilege on (docs/18 §3).
+ */
+export async function loadSlaPolicyForCustomer(tx: DbOrTx, policyId: string | null): Promise<SlaPolicyLite | null> {
+  if (!policyId) return null;
+  const [row] = await tx.select({ id: supportSlaPolicies.id, priorities: supportSlaPolicies.priorities, businessHours: supportSlaPolicies.businessHours }).from(supportSlaPolicies).where(eq(supportSlaPolicies.id, policyId)).limit(1);
+  if (!row) return null;
+  return withDeskBusinessHours({ id: row.id, priorities: row.priorities ?? {}, businessHours: row.businessHours }, await loadDeskBusinessHoursForPortal());
 }
 
 /** The desk's default SLA policy; null until one is marked default. */
@@ -251,7 +281,9 @@ export function screenUploads(entries: FormDataEntryValue[]): UploadScreening {
   const candidates: ScreenedUpload[] = [];
   for (const entry of entries) {
     if (typeof entry === "string" || !(entry instanceof File)) continue;
-    if (entry.size === 0 && !entry.name) continue;
+    // an empty file input arrives as a zero-byte part without a name — or, decoded by the server action
+    // runtime, as a zero-byte `File` called "blob": neither is an upload, so neither is refused
+    if (entry.size === 0 && (!entry.name || entry.name === "blob")) continue;
     candidates.push({ file: entry, fileName: sanitizeFileName(entry.name), contentType: (entry.type || "application/octet-stream").split(";")[0]!.trim().toLowerCase(), sizeBytes: entry.size });
   }
   const screening = screenAttachments(candidates);
@@ -323,7 +355,8 @@ async function storeAttachments(tx: DbOrTx, args: { messageId: string; ticketId:
 export async function insertTicket(tx: DbOrTx, input: NewTicketInput): Promise<NewTicketResult> {
   const now = input.now ?? new Date();
   const policy = await loadSlaPolicyForPlan(tx, input.planId ?? null);
-  const due = computeDueDates(policy, input.priority, now);
+  // the engine's clock start: due dates, the persisted start and the booked targets (docs/18 §10, §"Hardening")
+  const due = computeClockStart(policy, input.priority, now);
   const [ticket] = await tx
     .insert(supportTickets)
     .values({
@@ -339,6 +372,9 @@ export async function insertTicket(tx: DbOrTx, input: NewTicketInput): Promise<N
       slaPolicyId: policy?.id ?? null,
       firstResponseDueAt: due.firstResponseDueAt,
       resolutionDueAt: due.resolutionDueAt,
+      slaClockStartedAt: due.slaClockStartedAt,
+      firstResponseTargetMs: due.firstResponseTargetMs,
+      resolutionTargetMs: due.resolutionTargetMs,
       lastCustomerMessageAt: now,
       locale: isLocale(input.requester.locale) ? input.requester.locale : "en",
       createdAt: now,
@@ -351,7 +387,7 @@ export async function insertTicket(tx: DbOrTx, input: NewTicketInput): Promise<N
     .returning({ id: supportMessages.id });
   const files = await storeAttachments(tx, { messageId: message!.id, ticketId: ticket!.id, organizationId: input.organizationId, uploads: input.attachments ?? [], scanner: input.scanner ?? noopAttachmentScanner });
   await tx.insert(supportEvents).values({ ticketId: ticket!.id, organizationId: input.organizationId, actorKind: "customer", actorUserId: input.requester.userId, kind: "created", payload: { channel: input.channel, priority: input.priority, category: input.category, attachments: files.stored.length }, createdAt: now });
-  return { ticketId: ticket!.id, number: Number(ticket!.number), messageId: message!.id, attachments: files.stored, refused: files.refused, sla: { ...due, policyId: policy?.id ?? null } };
+  return { ticketId: ticket!.id, number: Number(ticket!.number), messageId: message!.id, attachments: files.stored, refused: files.refused, sla: { firstResponseDueAt: due.firstResponseDueAt, resolutionDueAt: due.resolutionDueAt, policyId: policy?.id ?? null } };
 }
 
 /** SLA clock columns of the locked ticket row; consumed by the engine's `statusTransition` inside the transaction, never sent to the page. */
@@ -400,12 +436,16 @@ export async function insertCustomerReply(tx: Tx, input: CustomerReplyInput): Pr
     .values({ ticketId: input.ticket.id, organizationId: input.ticket.organizationId, direction: "inbound", authorKind: "customer", authorUserId: input.author.userId, fromEmail: input.author.email.toLowerCase(), textBody: input.body, htmlBody: null, deliveryStatus: "na", createdAt: now })
     .returning({ id: supportMessages.id });
   const files = await storeAttachments(tx, { messageId: message!.id, ticketId: input.ticket.id, organizationId: input.ticket.organizationId, uploads: input.attachments ?? [], scanner: input.scanner ?? noopAttachmentScanner });
-  const policy = next.status !== input.ticket.status && input.ticket.slaPolicyId ? await loadSlaPolicy(tx, input.ticket.slaPolicyId) : null;
+  const policy = next.status !== input.ticket.status && input.ticket.slaPolicyId ? await loadSlaPolicyForCustomer(tx, input.ticket.slaPolicyId) : null;
   const transition = next.status !== input.ticket.status ? statusTransition(policy, input.ticket, next.status, now).patch : {};
   await tx
     .update(supportTickets)
     .set({ ...transition, ...(next.reopened ? { reopenCount: input.ticket.reopenCount + 1 } : {}), lastCustomerMessageAt: now, updatedAt: now })
     .where(eq(supportTickets.id, input.ticket.id));
+  // an agent-created ticket waiting for the customer (docs/18 §"Agent-created tickets and teams"): this reply
+  // starts its SLA clocks — after the transition above, with the policy loader the tenant role may use;
+  // a no-op for every other ticket
+  await applyFirstCustomerReply(tx, input.ticket.id, now, { loadPolicy: loadSlaPolicyForCustomer });
   await tx.insert(supportEvents).values({ ticketId: input.ticket.id, organizationId: input.ticket.organizationId, actorKind: "customer", actorUserId: input.author.userId, kind: "reply", payload: { direction: "inbound", attachments: files.stored.length }, createdAt: now });
   if (next.reopened) {
     await tx.insert(supportEvents).values({ ticketId: input.ticket.id, organizationId: input.ticket.organizationId, actorKind: "customer", actorUserId: input.author.userId, kind: "reopened", payload: { from: input.ticket.status, to: next.status }, createdAt: now });

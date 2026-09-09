@@ -174,7 +174,7 @@
         "csat": "Zufriedenheitsumfrage",
         "businessHours": "Geschäftszeiten",
         "businessHoursNone": "Keine Geschäftstage konfiguriert ({timezone})",
-        "businessHoursPending": "Von den SLA-Uhren noch nicht gelesen — jede SLA-Richtlinie trägt ihre eigenen Zeiten.",
+        "businessHoursFallback": "Rückfall für jede SLA-Richtlinie ohne eigene Zeiten: Die Uhren einer solchen Richtlinie laufen nach diesen Desk-Zeiten (eine Richtlinie mit eigenen Fenstern behält sie).",
         "extraWindows": "Einige Tage haben mehr als ein Zeitfenster; das Formular zeigt das erste.",
         "envOverride": "Durch die Umgebungsvariable {name} überschrieben; der gespeicherte Wert ist nicht wirksam.",
         "notStored": "Es wurde noch nichts gespeichert — gezeigt werden die Standardwerte des Schemas.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Ereignis",
             "processed": "Abgeschlossen",
-            "error": "Fehler"
+            "error": "Fehler",
+            "actions": "Aktionen"
           },
           "status": {
             "received": "In Bearbeitung",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "Noch keine eingehenden Ereignisse",
-          "emptyText": "Bisher hat nichts den Webhook erreicht. Sobald die Antwortdomain E-Mails empfängt, erscheint hier jede Zustellung mit ihrem Ergebnis."
+          "emptyText": "Bisher hat nichts den Webhook erreicht. Sobald die Antwortdomain E-Mails empfängt, erscheint hier jede Zustellung mit ihrem Ergebnis.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Erneut verarbeiten",
+            "confirm": "Jetzt erneut verarbeiten",
+            "working": "Wird verarbeitet…",
+            "dialogTitle": "Diese Zustellung erneut verarbeiten?",
+            "dialogText": "Zustellung {event} durchläuft den Eingangs-Handler noch einmal mit den gespeicherten Ereignisdaten (Adressen, Betreff, Header, Anhangsnamen). Texte und Anhänge werden vom Anbieter geladen.",
+            "dialogHint": "Gefahrlos wiederholbar: Eine bereits gespeicherte E-Mail wird mit ihrem Ticket beantwortet und nie doppelt gespeichert. Der Lauf wird im Audit-Log festgehalten.",
+            "done": "Verarbeitet — Ticket #{number} ({route}).",
+            "doneNoTicket": "Verarbeitet.",
+            "ignored": "Ignoriert: Die E-Mail braucht kein Ticket (eigene Adresse oder keine Änderung).",
+            "duplicate": "Bereits verarbeitet — nichts zu tun.",
+            "inProgress": "Eine andere Instanz verarbeitet diese Zustellung gerade; in ein paar Minuten erneut versuchen.",
+            "failed": "Erneut fehlgeschlagen: {error}",
+            "unavailable": "Keine gespeicherten Ereignisdaten — nur der erneute Versuch des Anbieters hilft.",
+            "errors": {
+              "forbidden": "Ihre Plattformrolle darf das nicht.",
+              "invalid": "Die Anfrage wurde nicht verstanden.",
+              "not_found": "Diese Ledger-Zeile existiert nicht mehr.",
+              "not_reprocessable": "Nur fehlgeschlagene oder unterbrochene Zustellungen lassen sich erneut verarbeiten.",
+              "no_payload": "Keine gespeicherten Ereignisdaten für diese Zustellung.",
+              "confirmation_required": "Bitte zuerst bestätigen.",
+              "generic": "Das hat nicht geklappt. Bitte erneut versuchen."
+            }
+          }
         },
         "sla": {
           "title": "SLA-Richtlinien",
@@ -270,7 +296,7 @@
         "agentsOnline": "Gerade: {count, plural, one {# Agent} other {# Agents}} in den letzten {minutes} Minuten gesehen.",
         "hoursTitle": "Geschäftszeiten",
         "hoursText": "Ein Zeitfenster pro Wochentag in der Zeitzone des Desks, gespeichert mit den Einstellungen.",
-        "hoursPending": "Von den SLA-Uhren noch nicht gelesen: Jede SLA-Richtlinie trägt ihre eigenen Geschäftszeiten (Abschnitt SLA-Richtlinien), und nichts greift bisher auf diese Desk-Zeiten zurück. Das Speichern ändert keine Fälligkeit.",
+        "hoursFallback": "Die SLA-Uhren nutzen diese Zeiten für jede SLA-Richtlinie ohne eigene Geschäftszeiten (Abschnitt SLA-Richtlinien). Eine Richtlinie mit eigenen Fenstern behält sie; ohne Desk-Zeiten läuft eine solche Richtlinie rund um die Uhr. Das Speichern ändert die Fälligkeiten künftiger Uhrstarts und Pausen, nicht die bereits gebuchten.",
         "timezone": "Zeitzone",
         "timezoneHint": "IANA-Name, z. B. Europe/Berlin.",
         "hoursCaption": "Geschäftszeiten je Wochentag",

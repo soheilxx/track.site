@@ -19,7 +19,8 @@
       "email": "E-Mail",
       "form": "Kontaktformular",
       "dashboard": "Dashboard",
-      "api": "API"
+      "api": "API",
+      "agent": "Agent"
     },
     "direction": {
       "inbound": "Empfangen",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "In Warteschlange",
+      "sending": "Wird gesendet…",
       "sent": "Gesendet",
       "delivered": "Zugestellt",
       "bounced": "Unzustellbar",
@@ -105,6 +107,15 @@
         "title": "Support-Tickets kommen bald",
         "text": "Die Ticketansicht wird gerade gebaut. Bis dahin erreichen Sie uns über das Kontaktformular; jede Anfrage wird per E-Mail beantwortet."
       }
+    },
+    "subnav": {
+      "label": "Support-Bereiche",
+      "tickets": "Tickets",
+      "views": "Ansichten",
+      "macros": "Makros",
+      "reports": "Berichte",
+      "settings": "Einstellungen",
+      "badge": "{unassigned, plural, =0 {keine unzugewiesenen Tickets} one {# unzugewiesenes Ticket} other {# unzugewiesene Tickets}}, {breached, plural, =0 {keine SLA-Verletzung} one {# SLA-Verletzung} other {# SLA-Verletzungen}}"
     }
   }
 }

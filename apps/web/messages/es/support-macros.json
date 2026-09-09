@@ -174,7 +174,7 @@
         "csat": "Encuesta de satisfacción",
         "businessHours": "Horario laboral",
         "businessHoursNone": "Sin días laborables configurados ({timezone})",
-        "businessHoursPending": "Los relojes SLA aún no lo leen: cada política SLA lleva su propio horario.",
+        "businessHoursFallback": "Respaldo para toda política SLA sin horario propio: los relojes de esa política siguen este horario del soporte (una política con sus propias franjas las conserva).",
         "extraWindows": "Algunos días tienen más de una franja; el formulario muestra la primera.",
         "envOverride": "Sobrescrito por la variable de entorno {name}; el valor guardado no está en vigor.",
         "notStored": "Todavía no se ha guardado nada: se muestran los valores predeterminados del esquema.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Evento",
             "processed": "Finalizado",
-            "error": "Error"
+            "error": "Error",
+            "actions": "Acciones"
           },
           "status": {
             "received": "En curso",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "Todavía no hay eventos entrantes",
-          "emptyText": "Nada ha llegado al webhook por ahora. En cuanto el dominio de respuesta reciba correo, cada entrega aparecerá aquí con su resultado."
+          "emptyText": "Nada ha llegado al webhook por ahora. En cuanto el dominio de respuesta reciba correo, cada entrega aparecerá aquí con su resultado.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Reprocesar",
+            "confirm": "Reprocesar ahora",
+            "working": "Reprocesando…",
+            "dialogTitle": "¿Reprocesar esta entrega?",
+            "dialogText": "La entrega {event} vuelve a pasar por el procesamiento de entrada con los datos del evento guardados (direcciones, asunto, cabeceras, nombres de adjuntos). Los cuerpos y adjuntos se obtienen del proveedor.",
+            "dialogHint": "Se puede repetir sin riesgo: un correo ya guardado por un intento anterior se responde con su ticket y nunca se guarda dos veces. La ejecución queda en el registro de auditoría.",
+            "done": "Procesado: ticket n.º {number} ({route}).",
+            "doneNoTicket": "Procesado.",
+            "ignored": "Ignorado: el correo no necesita ticket (dirección propia o sin cambios).",
+            "duplicate": "Ya procesado; nada que hacer.",
+            "inProgress": "Otra instancia está procesando esta entrega ahora mismo; inténtelo de nuevo en unos minutos.",
+            "failed": "Falló de nuevo: {error}",
+            "unavailable": "Sin datos del evento guardados; solo un reintento del proveedor puede ayudar.",
+            "errors": {
+              "forbidden": "Su rol de plataforma no lo permite.",
+              "invalid": "No se entendió la solicitud.",
+              "not_found": "Esa fila del registro ya no existe.",
+              "not_reprocessable": "Solo se pueden reprocesar entregas fallidas o interrumpidas.",
+              "no_payload": "No hay datos del evento guardados para esta entrega.",
+              "confirmation_required": "Confirme primero la acción.",
+              "generic": "No ha funcionado. Inténtelo de nuevo."
+            }
+          }
         },
         "sla": {
           "title": "Políticas SLA",
@@ -270,7 +296,7 @@
         "agentsOnline": "Ahora mismo: {count, plural, one {# agente visto} other {# agentes vistos}} en los últimos {minutes} minutos.",
         "hoursTitle": "Horario laboral",
         "hoursText": "Una franja por día de la semana en la zona horaria del soporte, guardada con la configuración.",
-        "hoursPending": "Los relojes SLA aún no lo leen: cada política SLA lleva su propio horario laboral (sección Políticas SLA) y, por ahora, nada recurre a este horario del soporte. Guardarlo no cambia ningún vencimiento.",
+        "hoursFallback": "Los relojes SLA usan este horario para toda política SLA sin horario laboral propio (sección Políticas SLA). Una política con sus propias franjas las conserva; sin horario del soporte, esa política corre las 24 horas. Guardar cambia los vencimientos de los próximos inicios y pausas de reloj, no los ya registrados.",
         "timezone": "Zona horaria",
         "timezoneHint": "Nombre IANA, p. ej. Europe/Madrid.",
         "hoursCaption": "Horario laboral por día de la semana",

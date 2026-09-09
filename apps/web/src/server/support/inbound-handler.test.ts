@@ -13,11 +13,16 @@ import {
   ACK_MAX_PER_SENDER,
   ACK_WINDOW_MS,
   INBOUND_EVENT_STALE_MS,
+  INBOUND_LEDGER_HEADERS_MAX_CHARS,
+  INBOUND_PROVIDER_UNIQUE_INDEX,
   InboundAlreadyStoredError,
   acknowledgementText,
   attachmentsNote,
   handleInboundEvent,
+  inboundEmailFromLedgerPayload,
   inboundOutcomeResponse,
+  isInboundReplayViolation,
+  ledgerPayloadOf,
   limitHtml,
   processInboundEmail,
   replyGuard,
@@ -27,6 +32,7 @@ import {
   type CreateTicketInput,
   type DeliveryPatch,
   type InboundDeps,
+  type InboundLedgerPayload,
   type InboundSettings,
   type InboundStore,
   type InboundTicket,
@@ -56,6 +62,8 @@ interface LedgerRow {
   receivedAt: Date;
   ticketId: string | null;
   error: string | null;
+  /** the parsed event without bodies, as `support_inbound_events.payload` would hold it */
+  payload: InboundLedgerPayload | null;
 }
 
 /** In-memory `InboundStore`: records every write so the tests assert exactly what would reach the database. */
@@ -121,10 +129,10 @@ class FakeStore implements InboundStore {
     return ticket;
   }
 
-  async beginEvent(providerEventId: string, provider: string, now: Date): Promise<LedgerBegin> {
+  async beginEvent(providerEventId: string, provider: string, now: Date, payload: InboundLedgerPayload | null = null): Promise<LedgerBegin> {
     const row = this.ledger.get(providerEventId);
     if (!row) {
-      this.ledger.set(providerEventId, { provider, status: "received", receivedAt: now, ticketId: null, error: null });
+      this.ledger.set(providerEventId, { provider, status: "received", receivedAt: now, ticketId: null, error: null, payload });
       return "new";
     }
     if (row.status === "processed" || row.status === "ignored") return "duplicate";
@@ -132,6 +140,7 @@ class FakeStore implements InboundStore {
     row.status = "received";
     row.receivedAt = now;
     row.error = null;
+    if (payload) row.payload = payload;
     return "retry";
   }
   async finishEvent(providerEventId: string, patch: LedgerFinish): Promise<void> {
@@ -287,6 +296,8 @@ describe("new tickets", () => {
     // Tuesday 12:00 Berlin + 8 business hours = Wednesday 11:00 Berlin; + 72 business hours = Friday of the following week 12:00 Berlin
     expect(created.firstResponseDueAt?.toISOString()).toBe("2026-09-09T09:00:00.000Z");
     expect(created.resolutionDueAt?.toISOString()).toBe("2026-09-18T10:00:00.000Z");
+    // the persisted clock run: started when the mail arrived, the targets booked in business milliseconds
+    expect(created).toMatchObject({ slaClockStartedAt: NOW, firstResponseTargetMs: 480 * 60_000, resolutionTargetMs: 4320 * 60_000 });
     expect(created.events).toEqual([{ kind: "created", actorKind: "customer", payload: expect.objectContaining({ channel: "email", locale: "fr", localeSource: "user", organizationMatched: true, requesterLinkWithheld: false, membershipCount: 1, spam: false, autoReply: false, attachmentsStored: 0, ackSkipped: null, senderAuthenticated: true, senderAuthenticatedVia: "dmarc", authservId: "mx.resend.com", authservTrusted: true }) }]);
     for (const event of created.events) expect(JSON.stringify(event.payload)).not.toContain("pixel and the events");
     // the acknowledgement row exists before the send, threads on the customer's message and is marked sent afterwards
@@ -444,8 +455,9 @@ describe("replies", () => {
     expect(store.created).toHaveLength(0);
     const appended = store.appended[0]!;
     expect(appended.ticketId).toBe("ticket-1042");
-    // the engine's reopen: stamps cleared, the resolution clock restarted from now (Tuesday 12:00 Berlin + 4320 business minutes)
-    expect(appended.patch).toEqual({ lastCustomerMessageAt: NOW, status: "open", reopenCount: 2, resolvedAt: null, closedAt: null, pausedAt: null, breachedResolution: false, resolutionDueAt: new Date("2026-09-18T10:00:00.000Z") });
+    // the engine's reopen: stamps cleared, the resolution clock restarted from now (Tuesday 12:00 Berlin + 4320 business
+    // minutes) — and the persisted run moves to the reopening with the resolution target booked again
+    expect(appended.patch).toEqual({ lastCustomerMessageAt: NOW, status: "open", reopenCount: 2, resolvedAt: null, closedAt: null, pausedAt: null, breachedResolution: false, resolutionDueAt: new Date("2026-09-18T10:00:00.000Z"), resolutionTargetMs: 4320 * 60_000, slaClockStartedAt: NOW });
     expect(appended.events.map((e) => e.kind)).toEqual(["reply", "reopened"]);
     expect(appended.events[1]!.payload).toEqual({ from: "solved", to: "open", reopenCount: 2 });
     expect(sendMail).not.toHaveBeenCalled();
@@ -459,6 +471,8 @@ describe("replies", () => {
     await processInboundEmail(mail({ to: [{ email: "support+t1@support.track.site", name: null }] }), deps(store));
     expect(store.appended[0]!.patch).toEqual({ lastCustomerMessageAt: NOW, status: "open", pauseTotalMs: 3_600_500, pausedAt: null, firstResponseDueAt: new Date(NOW.getTime() + 2 * 3_600_000), resolutionDueAt: new Date(NOW.getTime() + 6 * 3_600_000) });
     expect(store.appended[0]!.events.map((e) => e.kind)).toEqual(["reply", "status"]);
+    // a genuine customer reply may start the clocks of an agent-created ticket (the store applies the hook after the patch)
+    expect(store.appended[0]!.firstCustomerReply).toBe(true);
     for (const [number, status] of [[2, "open"], [3, "new"], [4, "on_hold"], [5, "spam"]] as const) {
       store.seedTicket({ number, status });
       const outcome = await processInboundEmail(mail({ to: [{ email: `support+t${number}@support.track.site`, name: null }] }), deps(store));
@@ -480,6 +494,8 @@ describe("replies", () => {
     expect(store.appended[0]!.patch).toEqual({ lastCustomerMessageAt: NOW });
     expect(store.appended[0]!.events.map((e) => e.kind)).toEqual(["reply"]);
     expect(store.appended[0]!.events[0]!.payload).toMatchObject({ spam: true, spamReasons: ["dmarc fail"], senderAuthenticated: false, senderAuthenticatedVia: null });
+    // a spam-verdict reply never starts the clocks of an agent-created ticket either
+    expect(store.appended[0]!.firstCustomerReply).toBe(false);
     const pending = await processInboundEmail(mail({ headers: forged, references: ["t12.abc@support.track.site"] }), deps(store));
     expect(pending).toMatchObject({ created: false, reopened: false, ticketId: "ticket-12" });
     expect(store.appended[1]!.patch).toEqual({ lastCustomerMessageAt: NOW });
@@ -501,7 +517,7 @@ describe("replies", () => {
     expect(bySubject).toMatchObject({ route: "reply", via: "subject", ticketId: "ticket-7" });
   });
 
-  it("guards a thread match on a customer-supplied Message-ID like a plus address; the desk's own ids need nothing", async () => {
+  it("matches a customer-supplied Message-ID for the same requester only (authenticated); the desk's own ids need nothing", async () => {
     const store = new FakeStore();
     store.seedTicket({ number: 1042, participants: ["ada@example.com", "ops@example.com"] });
     // Ada's original Message-ID sits on an inbound row — and in every mailbox and archive that mail reached
@@ -509,23 +525,33 @@ describe("replies", () => {
     const stranger = await processInboundEmail(mail({ from: { email: "mallory@evil.example", name: null }, headers: { "authentication-results": "mx; dmarc=pass header.from=evil.example" }, references: ["CAB+ada-1@mail.example.com"] }), deps(store));
     expect(stranger).toMatchObject({ created: true, route: "new", ticketNumber: 1000 });
     expect(store.created[0]!.events[0]!.payload).toMatchObject({ intendedTicketNumber: 1042, replyGuard: "stranger", senderAuthenticated: true });
-    const unauthenticated = await processInboundEmail(mail({ from: { email: "ops@example.com", name: null }, headers: {}, inReplyTo: "CAB+ada-1@mail.example.com" }), deps(store));
+    const unauthenticated = await processInboundEmail(mail({ headers: {}, inReplyTo: "CAB+ada-1@mail.example.com" }), deps(store));
     expect(unauthenticated).toMatchObject({ created: true, route: "new" });
     expect(store.created[1]!.events[0]!.payload).toMatchObject({ intendedTicketNumber: 1042, replyGuard: "unauthenticated" });
     expect(store.appended).toHaveLength(0);
-    // the cc'd colleague, authenticated: accepted through the customer's id
+    // the cc'd colleague, authenticated: a participant, but not the requester — the customer's id alone is not enough
+    // (docs/18 §"Hardening": thread ids match the desk's own ids or inbound ids of the same requester); the plus address still works for them
     const colleague = await processInboundEmail(mail({ from: { email: "ops@example.com", name: "Ops" }, inReplyTo: "CAB+ada-1@mail.example.com" }), deps(store));
-    expect(colleague).toMatchObject({ created: false, route: "reply", via: "thread", ticketId: "ticket-1042" });
+    expect(colleague).toMatchObject({ created: true, route: "new" });
+    expect(store.created[2]!.events[0]!.payload).toMatchObject({ intendedTicketNumber: 1042, replyGuard: "stranger", senderAuthenticated: true });
+    const colleagueByPlus = await processInboundEmail(mail({ from: { email: "ops@example.com", name: "Ops" }, to: [{ email: "support+t1042@support.track.site", name: null }] }), deps(store));
+    expect(colleagueByPlus).toMatchObject({ created: false, route: "reply", via: "plus_address", ticketId: "ticket-1042" });
+    // the requester herself, authenticated: accepted through her own id
+    const requester = await processInboundEmail(mail({ inReplyTo: "CAB+ada-1@mail.example.com" }), deps(store));
+    expect(requester).toMatchObject({ created: false, route: "reply", via: "thread", ticketId: "ticket-1042" });
     // the desk's own id proves possession: the same stranger, unauthenticated, is accepted
     store.seedOutboundId("t1042.abc@support.track.site", "ticket-1042");
     const byDeskId = await processInboundEmail(mail({ from: { email: "mallory@evil.example", name: null }, headers: {}, references: ["CAB+ada-1@mail.example.com", "t1042.abc@support.track.site"] }), deps(store));
     expect(byDeskId).toMatchObject({ created: false, route: "reply", via: "thread", ticketId: "ticket-1042" });
-    expect(store.appended).toHaveLength(2);
+    expect(store.appended).toHaveLength(3);
     expect(replyGuard({ requesterEmail: "ada@example.com", participants: [] }, "x@y.z", "thread", false, "outbound")).toBeNull();
     // a thread match of unknown direction is not proven to be the desk's own id: guarded (fail closed)
     expect(replyGuard({ requesterEmail: "ada@example.com", participants: [] }, "x@y.z", "thread", false)).toBe("stranger");
     expect(replyGuard({ requesterEmail: "ada@example.com", participants: [] }, "x@y.z", "thread", true, "inbound")).toBe("stranger");
+    expect(replyGuard({ requesterEmail: "ada@example.com", participants: ["ops@example.com"] }, "ops@example.com", "thread", true, "inbound")).toBe("stranger");
+    expect(replyGuard({ requesterEmail: "ada@example.com", participants: ["ops@example.com"] }, "ops@example.com", "plus_address", true)).toBeNull();
     expect(replyGuard({ requesterEmail: "ada@example.com", participants: [] }, "ada@example.com", "thread", false, "inbound")).toBe("unauthenticated");
+    expect(replyGuard({ requesterEmail: "Ada@Example.com", participants: [] }, "ada@example.com", "thread", true, "inbound")).toBeNull();
     expect(senderMayReply({ requesterEmail: "ada@example.com", participants: [] }, "ada@example.com", "thread", true, "inbound")).toBe(true);
   });
 
@@ -803,6 +829,72 @@ describe("ledger", () => {
     expect(inboundOutcomeResponse({ status: "failed", error: "secret detail" })).toEqual({ status: 500, body: { ok: false, code: "PROCESSING_FAILED" } });
     const processed = inboundOutcomeResponse({ status: "processed", ticketId: "t", ticketNumber: 1, messageRowId: "m", created: true, reopened: false, spam: false, acknowledged: false, ackError: null, ackSkipped: "rate_limited", route: "new", via: null, locale: "en", localeSource: "default", organizationId: null, attachments: { stored: 1, rejected: [{ fileName: "x", reason: "too_large" }] } });
     expect(processed).toEqual({ status: 200, body: { ok: true, ticketId: "t", number: 1, created: true, reopened: false, spam: false, acknowledged: false, ackSkipped: "rate_limited", route: "new", via: null, attachments: { stored: 1, rejected: 1 } } });
+  });
+});
+
+describe("ledger payload and the structural replay guard (hardening)", () => {
+  it("keeps the parsed event on the ledger row without bodies, bytes or signed links, and rebuilds the mail for a reprocess", async () => {
+    const store = new FakeStore();
+    const email = mail({
+      cc: [{ email: "ops@example.com", name: "Ops" }],
+      references: ["older@x"],
+      html: "<p>secret body</p>",
+      attachments: [{ providerId: "att-1", fileName: "a.png", contentType: "image/png", sizeBytes: 3, contentId: null, inline: false, downloadUrl: "https://signed.example/a.png?token=1", content: Buffer.from("PNG") }],
+    });
+    await handleInboundEvent(email, deps(store));
+    const payload = store.ledger.get(email.providerEventId)!.payload!;
+    expect(payload).toMatchObject({ v: 1, provider: "resend", providerMessageId: email.providerMessageId, from: { email: "ada@example.com", name: "Ada" }, cc: [{ email: "ops@example.com", name: "Ops" }], subject: "Pixel fires twice", messageId: email.messageId, references: ["older@x"], headersDropped: false, receivedAt: NOW.toISOString() });
+    expect(payload.attachments).toEqual([{ providerId: "att-1", fileName: "a.png", contentType: "image/png", sizeBytes: 3, contentId: null, inline: false }]);
+    const json = JSON.stringify(payload);
+    for (const never of ["secret body", "pixel and the events", "PNG", "signed.example", "token=1", "text", "html", "content"]) expect(json).not.toContain(`"${never}"`);
+    expect(json).not.toContain("secret body");
+    expect(json).not.toContain("signed.example");
+    // a reprocess rebuilds the mail under the ledger row's own event id: bodies null (the receiving API fills them), no bytes, no link
+    const rebuilt = inboundEmailFromLedgerPayload(payload, email.providerEventId)!;
+    expect(rebuilt).toMatchObject({ providerEventId: email.providerEventId, providerMessageId: email.providerMessageId, from: email.from, to: email.to, cc: [{ email: "ops@example.com", name: "Ops" }], subject: email.subject, messageId: email.messageId, inReplyTo: null, references: ["older@x"], headers: email.headers, text: null, html: null, receivedAt: NOW });
+    expect(rebuilt.attachments).toEqual([{ providerId: "att-1", fileName: "a.png", contentType: "image/png", sizeBytes: 3, contentId: null, inline: false, downloadUrl: null }]);
+    expect(ledgerPayloadOf(rebuilt)).toEqual(payload);
+    // the rebuilt mail runs through the pipeline like a first delivery: already stored → the stored route, never a second ticket
+    expect(await handleInboundEvent(rebuilt, deps(store))).toMatchObject({ status: "duplicate" });
+    store.ledger.get(email.providerEventId)!.status = "failed";
+    expect(await handleInboundEvent(rebuilt, deps(store))).toMatchObject({ status: "processed", route: "stored", ticketId: "ticket-1000" });
+    expect(store.created).toHaveLength(1);
+    // foreign JSON, a delivery event's row (no payload) or a broken date is not a payload
+    expect(inboundEmailFromLedgerPayload(null, "evt")).toBeNull();
+    expect(inboundEmailFromLedgerPayload({ v: 2 }, "evt")).toBeNull();
+    expect(inboundEmailFromLedgerPayload({ ...payload, receivedAt: "yesterday" }, "evt")).toBeNull();
+    expect(inboundEmailFromLedgerPayload({ ...payload, from: { email: "x" } }, "evt")).toBeNull();
+  });
+
+  it("drops oversized headers from the ledger row and says so", () => {
+    const huge = mail({ headers: { "x-big": "y".repeat(INBOUND_LEDGER_HEADERS_MAX_CHARS + 1) } });
+    const payload = ledgerPayloadOf(huge);
+    expect(payload.headers).toEqual({});
+    expect(payload.headersDropped).toBe(true);
+    expect(inboundEmailFromLedgerPayload(payload, "evt")?.headers).toEqual({});
+  });
+
+  it("refreshes the stored payload on a retry and keeps it for a delivery without one", async () => {
+    const store = new FakeStore();
+    const email = mail();
+    store.failCreate = true;
+    await handleInboundEvent(email, deps(store));
+    expect(store.ledger.get(email.providerEventId)).toMatchObject({ status: "failed", payload: expect.objectContaining({ providerMessageId: email.providerMessageId }) });
+    // the ledger interface takes no payload for delivery events (the delivery handler) — the row keeps what it has
+    expect(await store.beginEvent(email.providerEventId, "resend", NOW)).toBe("retry");
+    expect(store.ledger.get(email.providerEventId)!.payload).toMatchObject({ providerMessageId: email.providerMessageId });
+  });
+
+  it("recognises the unique violation of the partial index on inbound provider ids, wrapped or not", () => {
+    const violation = Object.assign(new Error("duplicate key value violates unique constraint"), { code: "23505", constraint: INBOUND_PROVIDER_UNIQUE_INDEX });
+    expect(isInboundReplayViolation(violation)).toBe(true);
+    // drizzle wraps the driver error in `cause`
+    expect(isInboundReplayViolation(Object.assign(new Error("Failed query"), { cause: violation }))).toBe(true);
+    expect(isInboundReplayViolation(Object.assign(new Error("other unique"), { code: "23505", constraint: "support_tickets_number_uq" }))).toBe(false);
+    expect(isInboundReplayViolation(Object.assign(new Error("deadlock"), { code: "40P01", constraint: INBOUND_PROVIDER_UNIQUE_INDEX }))).toBe(false);
+    expect(isInboundReplayViolation(new Error("plain"))).toBe(false);
+    expect(isInboundReplayViolation(null)).toBe(false);
+    expect(INBOUND_PROVIDER_UNIQUE_INDEX).toBe("support_messages_inbound_provider_uq");
   });
 });
 

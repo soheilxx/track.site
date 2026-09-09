@@ -7,6 +7,7 @@ import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { AutoReplyPreview } from "@/components/ops/support/settings/auto-reply-preview";
 import { GeneralSettingsForm } from "@/components/ops/support/settings/general-form";
 import { SettingsSubnav } from "@/components/ops/support/settings/subnav";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { FROM_NAME_MAX, ONLINE_WINDOW_MINUTES, SIGNATURE_MAX, businessHoursToForm, countAgentsOnline, loadSupportSettings, previewAutoReply, timeZoneOptions } from "@/server/support/settings";
 
@@ -37,6 +38,7 @@ export default async function OpsSupportSettingsGeneralPage() {
           </Link>
         }
       />
+      <SupportSubnav current="settings" role={ctx.platformRole} />
       <SettingsSubnav current="general" />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <GeneralSettingsForm

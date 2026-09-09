@@ -21,6 +21,7 @@ import {
   dateTime,
   day,
 } from "@/components/ops/support/reports";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale, withPlatform } from "@/server/ops/platform";
 import {
   REPORT_DEFAULT_DAYS,
@@ -94,6 +95,7 @@ export default async function OpsSupportReportsPage({
           </>
         }
       />
+      <SupportSubnav current="reports" role={ctx.platformRole} />
 
       <RangeFilter range={range} today={dayKey(now)} />
 

@@ -10,8 +10,10 @@ import { markdownToHtml, markdownToText } from "@/components/ops/support/ticket/
 import { applyPlaceholders, firstNameOf, unresolvedPlaceholders } from "@/components/ops/support/ticket/placeholders";
 import { presenceStale } from "./presence";
 import {
+  DELIVERY_CLAIM_STALE_MS,
   TICKET_TRANSITIONS,
   canTransitionTicket,
+  isMessageSendable,
   isReopen,
   normalizeCategory,
   normalizeTags,
@@ -169,6 +171,27 @@ describe("markdown subset", () => {
 
   it("produces a plain-text variant for the text part of a mail", () => {
     expect(markdownToText("**bold** *it* `c` [docs](https://t.example)")).toBe("bold it c docs (https://t.example)");
+  });
+});
+
+describe("send claim (isMessageSendable)", () => {
+  const now = at("2026-09-08T12:00:00Z");
+  it("offers send now / send again for queued and failed outbound messages, never for notes, sent or delivered ones", () => {
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "queued", deliveryClaimedAt: null }, now)).toBe(true);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "failed", deliveryClaimedAt: null }, now)).toBe(true);
+    for (const status of ["sent", "delivered", "bounced", "complained", "na"] as const) expect(isMessageSendable({ direction: "outbound", deliveryStatus: status, deliveryClaimedAt: null }, now), status).toBe(false);
+    expect(isMessageSendable({ direction: "note", deliveryStatus: "na", deliveryClaimedAt: null }, now)).toBe(false);
+    expect(isMessageSendable({ direction: "inbound", deliveryStatus: "queued", deliveryClaimedAt: null }, now)).toBe(false);
+  });
+  it("treats a fresh `sending` claim as taken and an abandoned one (older than the stale window, or without a stamp) as claimable again", () => {
+    const fresh = new Date(now.getTime() - 60_000);
+    const stale = new Date(now.getTime() - DELIVERY_CLAIM_STALE_MS);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "sending", deliveryClaimedAt: fresh }, now)).toBe(false);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "sending", deliveryClaimedAt: fresh.toISOString() }, now)).toBe(false);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "sending", deliveryClaimedAt: stale }, now)).toBe(true);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "sending", deliveryClaimedAt: null }, now)).toBe(true);
+    expect(isMessageSendable({ direction: "outbound", deliveryStatus: "sending", deliveryClaimedAt: "not a date" }, now)).toBe(true);
+    expect(DELIVERY_CLAIM_STALE_MS).toBe(5 * 60_000);
   });
 });
 

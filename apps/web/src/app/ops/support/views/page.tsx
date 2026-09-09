@@ -6,6 +6,7 @@ import { Badge, EmptyState, TBody, THead, Table, Td, Th, Tr, buttonVariants } fr
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { formatDateTime } from "@/components/ops/support/list/format";
 import { ViewDelete } from "@/components/ops/support/list/view-delete";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { canManageView, loadSavedViews, viewHref } from "@/server/support/views";
 
@@ -44,6 +45,7 @@ export default async function OpsSupportViewsPage() {
           </>
         }
       />
+      <SupportSubnav current="views" role={ctx.platformRole} />
       {views.length === 0 ? (
         <EmptyState title={t("empty")} description={t("emptyText")} action={newLink} />
       ) : (

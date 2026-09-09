@@ -9,7 +9,7 @@ import { plans } from "../schema/billing.ts";
 import { consentPolicies } from "../schema/consent.ts";
 import { integrations } from "../schema/config.ts";
 import { siteSetupStates } from "../schema/ai.ts";
-import { supportEvents, supportMacros, supportMessages, supportSettings, supportSlaPolicies, supportTickets, type SupportBusinessHours } from "../schema/support.ts";
+import { SUPPORT_SEEDED_TEAM_IDS, supportEvents, supportMacros, supportMessages, supportSettings, supportSlaPolicies, supportTeamMembers, supportTeams, supportTickets, type SupportBusinessHours } from "../schema/support.ts";
 import { domains, environments, orgSettings, sites } from "../schema/tenancy.ts";
 
 /**
@@ -112,7 +112,15 @@ try {
     .insert(supportSettings)
     .values({ id: 1, inboundDomain: "support.track.site", fromName: "Track Support", fromAddress: "support@track.site", signatureText: "", autoReplyEnabled: false, autoAssignStrategy: "none", businessHours: SUPPORT_BUSINESS_HOURS, csatEnabled: true })
     .onConflictDoNothing();
-  console.error("support desk defaults present (default SLA policy, 3 global macros, settings row)");
+  // the two teams of migration 0017 (docs/18 §"Agent-created tickets and teams"); fixed ids, renames survive re-runs
+  await db
+    .insert(supportTeams)
+    .values([
+      { id: SUPPORT_SEEDED_TEAM_IDS.support, slug: "support", name: "Support", description: "Customer support — the default queue of every ticket without a team of its own.", isDefault: true },
+      { id: SUPPORT_SEEDED_TEAM_IDS.sales, slug: "sales", name: "Sales", description: "Prospects, demos and plan questions.", isDefault: false },
+    ])
+    .onConflictDoNothing();
+  console.error("support desk defaults present (default SLA policy, 3 global macros, settings row, teams support + sales)");
 
   if (seedDemo) {
     const password = await hashPassword("Demo-Password-123!");
@@ -121,8 +129,10 @@ try {
     // operators and tenants stay separate. No two-factor — fine locally with OPS_REQUIRE_2FA=false.
     const opsEmail = "ops@acme.test";
     const [ops] = await db.select({ id: user.id, platformRole: user.platformRole }).from(user).where(eq(user.email, opsEmail)).limit(1);
+    let opsId = ops?.id;
     if (!ops) {
       const [row] = await db.insert(user).values({ name: "Otto Operator", email: opsEmail, emailVerified: true, platformRole: "PLATFORM_ADMIN", twoFactorEnabled: false }).returning();
+      opsId = row!.id;
       await db.insert(account).values({ issuer: "local:credential", accountId: row!.id, providerId: "credential", userId: row!.id, password });
       console.error("dev platform admin seeded: ops@acme.test / Demo-Password-123! (PLATFORM_ADMIN, no two-factor)");
     } else if (ops.platformRole !== "PLATFORM_ADMIN") {
@@ -135,14 +145,30 @@ try {
     // (no Settings, no Controls). Not a member of any organisation either; no two-factor.
     const supportEmail = "support@acme.test";
     const [supportAgent] = await db.select({ id: user.id, platformRole: user.platformRole }).from(user).where(eq(user.email, supportEmail)).limit(1);
+    let supportId = supportAgent?.id;
     if (!supportAgent) {
       const [row] = await db.insert(user).values({ name: "Sam Support", email: supportEmail, emailVerified: true, platformRole: "PLATFORM_SUPPORT", twoFactorEnabled: false }).returning();
+      supportId = row!.id;
       await db.insert(account).values({ issuer: "local:credential", accountId: row!.id, providerId: "credential", userId: row!.id, password });
       console.error("dev platform support agent seeded: support@acme.test / Demo-Password-123! (PLATFORM_SUPPORT, no two-factor)");
     } else if (supportAgent.platformRole !== "PLATFORM_SUPPORT") {
       await db.update(user).set({ platformRole: "PLATFORM_SUPPORT" }).where(eq(user.id, supportAgent.id));
       console.error("dev platform support agent restored to PLATFORM_SUPPORT: support@acme.test");
     }
+
+    // Both operators belong to the default team "Support" (docs/18 §"Agent-created tickets and teams"): the
+    // admin as lead, the support agent as member — the pool of the team-aware round robin and the team an
+    // agent-created ticket defaults to. `ON CONFLICT DO NOTHING`: a role changed in the console survives.
+    const memberships = await db
+      .insert(supportTeamMembers)
+      .values([
+        { teamId: SUPPORT_SEEDED_TEAM_IDS.support, userId: opsId!, role: "lead" },
+        { teamId: SUPPORT_SEEDED_TEAM_IDS.support, userId: supportId!, role: "member" },
+      ])
+      .onConflictDoNothing()
+      .returning({ userId: supportTeamMembers.userId });
+    if (memberships.length > 0) console.error(`team "support" memberships seeded: ${memberships.length} operator(s)`);
+    else console.error('team "support" memberships already present, skipping');
 
     const existing = await db.select({ id: organization.id }).from(organization).where(eq(organization.slug, "acme-demo")).limit(1);
     if (existing.length) {

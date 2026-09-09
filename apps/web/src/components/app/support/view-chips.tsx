@@ -23,7 +23,8 @@ export async function ViewChips({ view, counts }: { view: PortalView; counts: { 
                 )}
               >
                 {t(v)}
-                {count !== null ? <span className="tabular-nums text-xs opacity-80">{count}</span> : null}
+                {/* the count inherits the chip's colour at full opacity: at `text-xs` a faded figure fails the 4.5:1 contrast floor */}
+                {count !== null ? <span className="tabular-nums text-xs">{count}</span> : null}
               </Link>
             </li>
           );

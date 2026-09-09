@@ -3,8 +3,25 @@ import Link from "next/link";
 import { Badge, EmptyState, Status, TBody, THead, Table, Td, Th, Tr } from "@track-site/ui";
 import { formatDateTime, formatRelative } from "@/components/app/alerts/format";
 import { formatDate } from "@/lib/format";
+import { checkPlatform, withPlatform } from "@/server/ops/platform";
 import type { OperatorView } from "@/server/ops/users";
+import { loadUserTeams, type TeamBadge } from "@/server/support/teams";
 import { roleLabel, roleTone } from "./labels";
+
+/**
+ * Support teams of the operators (docs/18 §"Agent-created tickets and teams"): a read-only badge per team
+ * with a link to the team's settings page. The page's gate is cached per request, so re-resolving it here
+ * costs nothing; a loader failure leaves the badges out and never breaks the users page.
+ */
+async function loadTeamBadges(userIds: string[]): Promise<Map<string, TeamBadge[]>> {
+  try {
+    const access = await checkPlatform("PLATFORM_ADMIN", "platform.users.manage");
+    if (!access.ok) return new Map();
+    return await withPlatform(access.ctx, (tx) => loadUserTeams(tx, userIds));
+  } catch {
+    return new Map();
+  }
+}
 import { RevokeSessionsControl } from "./revoke-sessions-control";
 import { RoleChangeControl } from "./role-change-control";
 import { TwoFactorResetControl } from "./two-factor-reset-control";
@@ -15,9 +32,10 @@ import { TwoFactorResetControl } from "./two-factor-reset-control";
  * out everywhere, reset two-factor). Never tokens, IP addresses or user agents.
  */
 export async function OperatorsTable({ operators, now, cacheMinutes, locale }: { operators: OperatorView[]; now: string; cacheMinutes: number; locale: string }) {
-  const t = await getTranslations("opsUsers");
+  const [t, tTeams] = await Promise.all([getTranslations("opsUsers"), getTranslations("supportTeams")]);
   if (operators.length === 0) return <EmptyState title={t("operators.empty")} description={t("operators.emptyText")} />;
   const nowMs = Date.parse(now);
+  const teamBadges = await loadTeamBadges(operators.map((op) => op.id));
   return (
     <div className="space-y-3">
       <p className="text-sm text-ink-2">{t("operators.count", { count: operators.length })}</p>
@@ -56,6 +74,18 @@ export async function OperatorsTable({ operators, now, cacheMinutes, locale }: {
                       {t("operators.pending")}
                     </Status>
                   ) : null}
+                  {/* support teams (read-only; managed under Support → Settings → Teams) */}
+                  <ul className="mt-1 flex flex-wrap gap-1" aria-label={tTeams("users.teams")} data-testid="ops-operator-teams">
+                    {(teamBadges.get(op.id) ?? []).map((team) => (
+                      <li key={team.id}>
+                        <Link href={`/ops/support/settings/teams/${team.id}`} className="inline-flex min-h-6 items-center rounded-[var(--radius-chip)] border border-line bg-surface-2 px-2 text-xs text-ink-2 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-11">
+                          {tTeams("users.teamLabel", { name: team.name, role: tTeams(`roles.${team.role}`) })}
+                          {team.archived ? ` ${tTeams("queue.teamArchivedSuffix")}` : ""}
+                        </Link>
+                      </li>
+                    ))}
+                    {(teamBadges.get(op.id) ?? []).length === 0 ? <li className="text-xs text-ink-3">{tTeams("users.noTeams")}</li> : null}
+                  </ul>
                 </Td>
                 <Td label={t("operators.columns.security")}>
                   <div className="space-y-0.5 text-sm">

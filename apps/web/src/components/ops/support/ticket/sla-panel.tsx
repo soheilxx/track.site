@@ -40,9 +40,13 @@ function Clock({ label, clock, locale, t, paused }: { label: string; clock: SlaC
   );
 }
 
-/** First response and resolution clocks from real timestamps; "no policy" and "not measured" instead of guesses. */
-export async function SlaPanel({ sla, locale }: { sla: SlaView; locale: string }) {
-  const [t, tv] = await Promise.all([getTranslations("supportTicket"), getTranslations("support")]);
+/**
+ * First response and resolution clocks from real timestamps; "no policy" and "not measured" instead of
+ * guesses. An agent-created ticket whose clocks wait for the first customer reply (task N) says so — its
+ * policy is recorded, but nothing is due until the customer answers.
+ */
+export async function SlaPanel({ sla, locale, pendingFirstCustomerReply = false }: { sla: SlaView; locale: string; pendingFirstCustomerReply?: boolean }) {
+  const [t, tv, tt] = await Promise.all([getTranslations("supportTicket"), getTranslations("support"), getTranslations("supportTeams.queue")]);
   return (
     <section aria-labelledby="ticket-sla-title" className="rounded-[var(--radius-card)] border border-line bg-surface p-4 sm:p-5" data-testid="ticket-sla">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -51,6 +55,11 @@ export async function SlaPanel({ sla, locale }: { sla: SlaView; locale: string }
         </h2>
         <span className="text-xs text-ink-3">{sla.policy ? sla.policy.name : tv("sla.noPolicy")}</span>
       </div>
+      {pendingFirstCustomerReply ? (
+        <Status tone="info" indicator="icon" className="mt-2 text-sm" data-testid="ticket-sla-pending">
+          {tt("slaPending")}
+        </Status>
+      ) : null}
       {sla.paused ? (
         <p className="mt-2 text-xs text-ink-2" data-testid="ticket-sla-paused">
           {tv("sla.paused")}

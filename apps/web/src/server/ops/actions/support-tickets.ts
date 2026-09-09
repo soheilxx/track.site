@@ -8,7 +8,7 @@ import { SUPPORT_TICKET_PRIORITIES, SUPPORT_TICKET_STATUSES, supportEvents, supp
 import { SAVED_VIEWS_MAX, TICKET_BULK_MAX, TICKET_TAG_MAX, VIEW_SCOPES } from "@/components/ops/support/list/constants";
 import { PlatformAccessError, auditPlatform, requirePlatform, withPlatform, type PlatformContext } from "@/server/ops/platform";
 import { fanOutAfterMutation } from "@/server/support/notifications";
-import { applyTags, canTicketTransition, getTicketByNumber, loadTicketExport, loadTicketPolicies, lockTickets, ticketPolicyOf, ticketPriorityChange, ticketStatusChange, ticketsCsv, type LockedTicket } from "@/server/support/tickets";
+import { applyTags, canTicketTransition, getTicketByNumber, loadSupportNavBadge, loadTicketExport, loadTicketPolicies, lockTickets, ticketPolicyOf, ticketPriorityChange, ticketStatusChange, ticketsCsv, type LockedTicket } from "@/server/support/tickets";
 import { canManageView, getSavedView, isUuid, loadSavedViews, parseTicketFilters, resolveViewBase, viewFiltersSchema, viewHref, viewNameSchema, viewSortSchema } from "@/server/support/views";
 
 /**
@@ -366,6 +366,7 @@ function readViewForm(formData: FormData) {
       from: optional(str(formData, "from")),
       to: optional(str(formData, "to")),
       lastDays: Number.isFinite(lastDays) ? lastDays : null,
+      team: str(formData, "team") || "any",
     },
   });
 }
@@ -444,4 +445,31 @@ export async function deleteSupportViewAction(_prev: ViewActionState, formData: 
   if (!outcome.ok) return outcome;
   revalidate();
   redirect(VIEWS_PATH);
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Shell badge (docs/18 §13 `loadSupportNavBadge`, §"Entry points")
+// ---------------------------------------------------------------------------------------------------
+
+export interface SupportNavBadge {
+  unassigned: number;
+  mine: number;
+  breached: number;
+}
+
+export type SupportNavBadgeResult = { ok: true; error: null; badge: SupportNavBadge } | { ok: false; error: "forbidden" | "generic" };
+
+/**
+ * The live counts behind the console's "Support" entry (open tickets nobody holds, the operator's own, SLA
+ * breached), polled by the shell (`useSupportNavBadge`). Read-only (`platform.tickets.read`), counted live,
+ * never audited — the queue page shows the same figures.
+ */
+export async function supportNavBadgeAction(): Promise<SupportNavBadgeResult> {
+  const ctx = await contextOr("platform.tickets.read");
+  if (!ctx) return { ok: false, error: "forbidden" };
+  try {
+    return { ok: true, error: null, badge: await loadSupportNavBadge(ctx) };
+  } catch {
+    return { ok: false, error: "generic" };
+  }
 }

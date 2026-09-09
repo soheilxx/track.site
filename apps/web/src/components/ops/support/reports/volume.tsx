@@ -28,6 +28,7 @@ export async function VolumeSection({
     form: tv("channel.form"),
     dashboard: tv("channel.dashboard"),
     api: tv("channel.api"),
+    agent: tv("channel.agent"),
     solved: t("series.solved"),
   };
   const points: VolumePoint[] = volume.buckets.map((b) => ({

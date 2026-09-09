@@ -17,6 +17,7 @@ import { PropertiesPanel } from "@/components/ops/support/ticket/properties-pane
 import { RequesterSidebar } from "@/components/ops/support/ticket/requester-sidebar";
 import { TicketShortcuts } from "@/components/ops/support/ticket/shortcuts";
 import { SlaPanel } from "@/components/ops/support/ticket/sla-panel";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformCan, platformLocale } from "@/server/ops/platform";
 import { ATTACHMENT_ALLOWED_TYPES } from "@/server/support/inbound";
 import { CONFIRMED_TICKET_TRANSITIONS, TICKET_TRANSITIONS, canTransitionTicket, isUuid, loadTicketDetail } from "@/server/support/ticket";
@@ -41,7 +42,7 @@ export default async function OpsSupportTicketPage({ params }: { params: Promise
   if (!access.ok) return <OpsForbidden reason={access.reason} />;
   const { ctx } = access;
   const now = new Date();
-  const [detail, t, tv, locale] = await Promise.all([loadTicketDetail(ctx, id, now), getTranslations("supportTicket"), getTranslations("support"), platformLocale(ctx.user)]);
+  const [detail, t, tv, tt, locale] = await Promise.all([loadTicketDetail(ctx, id, now), getTranslations("supportTicket"), getTranslations("support"), getTranslations("supportTeams.queue"), platformLocale(ctx.user)]);
   if (!detail) notFound();
   const { ticket, sla } = detail;
   const canWrite = platformCan(ctx, "platform.tickets.write");
@@ -72,6 +73,18 @@ export default async function OpsSupportTicketPage({ params }: { params: Promise
               {tv(`priority.${ticket.priority}`)}
             </Status>
             <Badge tone="neutral">{tv(`channel.${ticket.channel}`)}</Badge>
+            {ticket.openedBy === "agent" ? (
+              <Badge tone="info" data-testid="ticket-opened-by-agent">
+                {tt("openedByAgent")}
+              </Badge>
+            ) : null}
+            {ticket.team ? (
+              <Link href={`/ops/support?team=${encodeURIComponent(ticket.team.slug)}`} className="inline-flex" data-testid="ticket-team">
+                <Badge tone="neutral">
+                  {tt("team")}: {ticket.team.name}
+                </Badge>
+              </Link>
+            ) : null}
             {ticket.category ? <Badge tone="neutral">{ticket.category}</Badge> : null}
             {breached ? (
               <Status tone="bad" indicator="icon" chip data-testid="ticket-breached">
@@ -86,6 +99,7 @@ export default async function OpsSupportTicketPage({ params }: { params: Promise
         }
         actions={<HeaderActions ticketId={ticket.id} number={ticket.number} canReopen={canWrite && ended && !ticket.mergedInto} canMerge={canWrite && !ticket.mergedInto && ticket.status !== "spam"} />}
       />
+      <SupportSubnav current="tickets" role={ctx.platformRole} />
 
       {ticket.mergedInto ? (
         <Banner
@@ -157,7 +171,7 @@ export default async function OpsSupportTicketPage({ params }: { params: Promise
             canWrite={canWrite && !ticket.mergedInto}
             canAssign={canAssign && !ticket.mergedInto}
           />
-          <SlaPanel sla={sla} locale={locale} />
+          <SlaPanel sla={sla} locale={locale} pendingFirstCustomerReply={ticket.slaPendingFirstCustomerReply} />
           <RequesterSidebar ticket={ticket} requester={detail.requester} locale={locale} now={detail.generatedAt} />
           <TicketShortcuts />
         </div>

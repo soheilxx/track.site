@@ -174,7 +174,7 @@
         "csat": "Tevredenheidsenquête",
         "businessHours": "Kantooruren",
         "businessHoursNone": "Geen werkdagen ingesteld ({timezone})",
-        "businessHoursPending": "Nog niet gelezen door de SLA-klokken — elk SLA-beleid heeft zijn eigen uren.",
+        "businessHoursFallback": "Terugval voor elk SLA-beleid zonder eigen uren: de klokken van zo’n beleid lopen op deze desk-uren (een beleid met eigen vensters behoudt ze).",
         "extraWindows": "Sommige dagen hebben meer dan één tijdvak; het formulier toont het eerste.",
         "envOverride": "Overschreven door de omgevingsvariabele {name}; de opgeslagen waarde is niet van kracht.",
         "notStored": "Er is nog niets opgeslagen — de getoonde waarden zijn de standaardwaarden van het schema.",
@@ -198,7 +198,8 @@
             "ticket": "Ticket",
             "event": "Gebeurtenis",
             "processed": "Afgerond",
-            "error": "Fout"
+            "error": "Fout",
+            "actions": "Acties"
           },
           "status": {
             "received": "In behandeling",
@@ -212,7 +213,32 @@
           "noOutcome": "—",
           "noError": "—",
           "empty": "Nog geen inkomende gebeurtenissen",
-          "emptyText": "Tot nu toe heeft niets de webhook bereikt. Zodra het antwoorddomein e-mail ontvangt, verschijnt elke levering hier met haar uitkomst."
+          "emptyText": "Tot nu toe heeft niets de webhook bereikt. Zodra het antwoorddomein e-mail ontvangt, verschijnt elke levering hier met haar uitkomst.",
+          "noAction": "—",
+          "reprocess": {
+            "button": "Opnieuw verwerken",
+            "confirm": "Nu opnieuw verwerken",
+            "working": "Bezig met verwerken…",
+            "dialogTitle": "Deze bezorging opnieuw verwerken?",
+            "dialogText": "Bezorging {event} gaat opnieuw door de inkomende verwerking met de opgeslagen gebeurtenisgegevens (adressen, onderwerp, headers, bijlagenamen). Teksten en bijlagen worden bij de provider opgehaald.",
+            "dialogHint": "Veilig te herhalen: een e-mail die een eerdere poging al opsloeg, wordt met zijn ticket beantwoord en nooit twee keer opgeslagen. De run wordt in het auditlog vastgelegd.",
+            "done": "Verwerkt — ticket #{number} ({route}).",
+            "doneNoTicket": "Verwerkt.",
+            "ignored": "Genegeerd: de e-mail heeft geen ticket nodig (eigen adres of geen wijziging).",
+            "duplicate": "Al verwerkt — niets te doen.",
+            "inProgress": "Een andere instantie verwerkt deze bezorging op dit moment; probeer het over een paar minuten opnieuw.",
+            "failed": "Opnieuw mislukt: {error}",
+            "unavailable": "Geen opgeslagen gebeurtenisgegevens — alleen een nieuwe poging van de provider helpt.",
+            "errors": {
+              "forbidden": "Uw platformrol mag dat niet.",
+              "invalid": "Het verzoek werd niet begrepen.",
+              "not_found": "Die logboekrij bestaat niet meer.",
+              "not_reprocessable": "Alleen mislukte of onderbroken bezorgingen kunnen opnieuw worden verwerkt.",
+              "no_payload": "Geen opgeslagen gebeurtenisgegevens voor deze bezorging.",
+              "confirmation_required": "Bevestig de actie eerst.",
+              "generic": "Dat is niet gelukt. Probeer het opnieuw."
+            }
+          }
         },
         "sla": {
           "title": "SLA-beleid",
@@ -270,7 +296,7 @@
         "agentsOnline": "Nu: {count, plural, one {# agent gezien} other {# agents gezien}} in de laatste {minutes} minuten.",
         "hoursTitle": "Kantooruren",
         "hoursText": "Eén tijdvak per weekdag in de tijdzone van de desk, opgeslagen bij de instellingen.",
-        "hoursPending": "Nog niet gelezen door de SLA-klokken: elk SLA-beleid heeft zijn eigen werkuren (sectie SLA-beleid) en niets valt tot nu toe terug op deze desk-uren. Opslaan verandert geen enkele deadline.",
+        "hoursFallback": "De SLA-klokken gebruiken deze uren voor elk SLA-beleid zonder eigen werkuren (sectie SLA-beleid). Een beleid met eigen vensters behoudt ze; zonder desk-uren loopt zo’n beleid de klok rond. Opslaan verandert de deadlines van toekomstige klokstarts en pauzes, niet de al geboekte.",
         "timezone": "Tijdzone",
         "timezoneHint": "IANA-naam, bijv. Europe/Amsterdam.",
         "hoursCaption": "Kantooruren per weekdag",

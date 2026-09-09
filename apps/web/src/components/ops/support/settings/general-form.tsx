@@ -128,7 +128,7 @@ export function GeneralSettingsForm({ settings, hours, timeZones, agentsOnline, 
           <CardDescription>{tg("hoursText")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Alert tone="warn">{tg("hoursPending")}</Alert>
+          <Alert tone="info">{tg("hoursFallback")}</Alert>
           <Field label={tg("timezone")} hint={tg("timezoneHint")} required error={err("timezone")} className="max-w-md">
             {(control) => (
               <>

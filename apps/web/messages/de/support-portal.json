@@ -83,6 +83,7 @@
       "opened": "Eröffnet am {date} von {name}",
       "openedForm": "Eröffnet am {date} über das Kontaktformular",
       "openedEmail": "Eröffnet am {date} per E-Mail",
+      "openedAgent": "Eröffnet am {date} durch unser Support-Team",
       "meta": {
         "status": "Status",
         "priority": "Priorität",

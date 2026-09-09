@@ -26,11 +26,11 @@ export function formatBusinessMinutes(minutes: number, t: Translate): string {
  * here — policy editing is its own section).
  */
 export async function SettingsOverview({ settings, policies, agentsOnline, ledger, locale }: { settings: SupportSettingsView; policies: SlaPolicySummary[]; agentsOnline: number; ledger: InboundLedgerView; locale: string }) {
-  const [t, ts] = await Promise.all([getTranslations("supportMacros"), getTranslations("support")]);
+  const [t, ts, tt] = await Promise.all([getTranslations("supportMacros"), getTranslations("support"), getTranslations("supportTeams")]);
   const { form, extraWindows } = businessHoursToForm(settings.businessHours);
   const days = DAY_KEYS.filter((key) => form.days[key].enabled);
-  // Round robin is applied by every ticket-creation path (docs/18 §"Integration"); the desk's business hours
-  // are stored and audited but the SLA clocks still read each policy's own hours (docs/18 §11) — the facts say so.
+  // Round robin is applied by every ticket-creation path (docs/18 §"Integration"); the desk's business hours are
+  // the fallback of every SLA policy without windows of its own (docs/18 §11, §"Hardening") — the facts say so.
   const facts: Array<{ label: string; value: string; notes?: string[] }> = [
     { label: t("settings.overview.sender"), value: `${settings.effective.fromName} <${settings.effective.fromAddress}>`, ...(settings.envOverrides.fromAddress ? { notes: [t("settings.overview.envOverride", { name: "SUPPORT_FROM_ADDRESS" })] } : {}) },
     { label: t("settings.overview.replyDomain"), value: settings.effective.inboundDomain, ...(settings.envOverrides.inboundDomain ? { notes: [t("settings.overview.envOverride", { name: "SUPPORT_INBOUND_DOMAIN" })] } : {}) },
@@ -43,7 +43,7 @@ export async function SettingsOverview({ settings, policies, agentsOnline, ledge
       value: days.length
         ? `${form.timezone} · ${days.map((key) => `${t(`settings.general.days.${key}`)} ${form.days[key].start}–${form.days[key].end}`).join(", ")}`
         : t("settings.overview.businessHoursNone", { timezone: form.timezone }),
-      notes: [t("settings.overview.businessHoursPending"), ...(Object.keys(extraWindows).length ? [t("settings.overview.extraWindows")] : [])],
+      notes: [t("settings.overview.businessHoursFallback"), ...(Object.keys(extraWindows).length ? [t("settings.overview.extraWindows")] : [])],
     },
   ];
 
@@ -156,6 +156,18 @@ export async function SettingsOverview({ settings, policies, agentsOnline, ledge
             </Table>
           )}
         </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex-row items-start justify-between gap-4">
+          <div className="min-w-0">
+            <CardTitle>{tt("settings.title")}</CardTitle>
+            <CardDescription>{tt("settings.intro")}</CardDescription>
+          </div>
+          <Link href="/ops/support/settings/teams" className={buttonVariants({ variant: "secondary", size: "sm" })} data-testid="support-settings-teams">
+            {tt("users.manage")}
+          </Link>
+        </CardHeader>
       </Card>
     </div>
   );

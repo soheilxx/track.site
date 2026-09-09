@@ -113,6 +113,20 @@
       "when": 1788509452957,
       "tag": "0016_support_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1788509453957,
+      "tag": "0017_support_teams",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1788509454957,
+      "tag": "0018_support_hardening",
+      "breakpoints": true
     }
   ]
 }

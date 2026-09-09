@@ -5,6 +5,7 @@ import { PLAN_IDS } from "@track-site/catalog";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { SLA_PATHS } from "@/components/ops/support/sla/constants";
 import { PolicyForm } from "@/components/ops/support/sla/policy-form";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { defaultSlaPolicyFormValues } from "@/server/support/sla";
 import { listPlatformUsers } from "../queries";
@@ -30,6 +31,7 @@ export default async function OpsSupportSlaNewPage() {
           </Link>
         }
       />
+      <SupportSubnav current="settings" role={access.ctx.platformRole} />
       <PolicyForm mode="create" initial={defaultSlaPolicyFormValues()} plans={PLAN_IDS} operators={operators} locale={locale} />
     </div>
   );

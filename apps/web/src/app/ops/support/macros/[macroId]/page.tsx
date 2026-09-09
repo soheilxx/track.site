@@ -7,6 +7,7 @@ import { Badge, buttonVariants } from "@track-site/ui";
 import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { MacroEditor } from "@/components/ops/support/macros/macro-editor";
 import { MacroReadOnly } from "@/components/ops/support/macros/macro-view";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { listMacros, macroCategories } from "@/server/support/macros";
 
@@ -45,6 +46,7 @@ export default async function OpsSupportMacroPage({ params }: { params: Promise<
           </Link>
         }
       />
+      <SupportSubnav current="macros" role={ctx.platformRole} />
       {macro.editable ? (
         <MacroEditor macro={macro} canManageGlobal={ctx.platformRole === "PLATFORM_ADMIN"} agentName={ctx.user.name} categories={macroCategories(macros)} />
       ) : (

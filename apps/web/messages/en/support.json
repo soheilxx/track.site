@@ -19,7 +19,8 @@
       "email": "E-mail",
       "form": "Contact form",
       "dashboard": "Dashboard",
-      "api": "API"
+      "api": "API",
+      "agent": "Agent"
     },
     "direction": {
       "inbound": "Received",
@@ -33,6 +34,7 @@
     },
     "delivery": {
       "queued": "Queued",
+      "sending": "Sending…",
       "sent": "Sent",
       "delivered": "Delivered",
       "bounced": "Bounced",
@@ -105,6 +107,15 @@
         "title": "Support tickets are coming",
         "text": "The ticket view is being built. Until then, reach us through the contact form; every request is answered by e-mail."
       }
+    },
+    "subnav": {
+      "label": "Support sections",
+      "tickets": "Tickets",
+      "views": "Views",
+      "macros": "Macros",
+      "reports": "Reports",
+      "settings": "Settings",
+      "badge": "{unassigned, plural, =0 {no unassigned tickets} one {# unassigned ticket} other {# unassigned tickets}}, {breached, plural, =0 {none breached} one {# SLA breached} other {# SLA breached}}"
     }
   }
 }

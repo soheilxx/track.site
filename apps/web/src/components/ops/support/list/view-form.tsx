@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useActionState, useId } from "react";
 import { Alert, Button, Checkbox, FieldError, Input, Label, Radio, Select, buttonVariants } from "@track-site/ui";
 import { saveSupportViewAction, type ViewActionState } from "@/server/ops/actions/support-tickets";
+import type { TeamOption } from "@/server/support/teams";
 import type { PlanOption, SupportOperator } from "@/server/support/tickets";
 import type { SavedView, TicketSort, ViewFilters } from "@/server/support/views";
 import { DATE_FIELDS, DATE_RANGE_MAX_DAYS, SLA_FILTERS, TICKET_CHANNELS, TICKET_PRIORITIES, TICKET_SORTS, TICKET_STATUSES, VIEW_NAME_MAX } from "./constants";
@@ -17,11 +18,15 @@ const INITIAL: ViewActionState = { ok: false, error: null };
  * set with checkbox groups for the lists, and the sort. Submitting saves through the server action and
  * redirects to the queue of the view; validation errors are shown per field.
  */
-export function ViewForm({ view, initial, sort, plans, operators, selfId, isAdmin }: { view: SavedView | null; initial: ViewFilters; sort: TicketSort; plans: PlanOption[]; operators: SupportOperator[]; selfId: string; isAdmin: boolean }) {
+export function ViewForm({ view, initial, sort, plans, operators, teams = [], selfId, isAdmin }: { view: SavedView | null; initial: ViewFilters; sort: TicketSort; plans: PlanOption[]; operators: SupportOperator[]; teams?: TeamOption[]; selfId: string; isAdmin: boolean }) {
   const t = useTranslations("supportTickets.viewForm");
   const tq = useTranslations("supportTickets.queue");
   const te = useTranslations("supportTickets");
   const tv = useTranslations("support");
+  const tt = useTranslations("supportTeams.queue");
+  // a stored team the options do not carry (an id, or a team the loader could not list) keeps its value
+  const teamValue = initial.team ?? "any";
+  const teamKnown = teamValue === "any" || teamValue === "none" || teams.some((team) => team.slug === teamValue || team.id === teamValue);
   const id = useId();
   const [state, action, pending] = useActionState(saveSupportViewAction, INITIAL);
   const fieldError = (name: string) => (state.fieldErrors?.[name] ? te("errors.invalid") : null);
@@ -98,6 +103,19 @@ export function ViewForm({ view, initial, sort, plans, operators, selfId, isAdmi
           <div className="min-w-0">
             <Label htmlFor={`${id}-tags`}>{tq("filters.tags")}</Label>
             <Input id={`${id}-tags`} name="tags" defaultValue={initial.tags.join(", ")} maxLength={400} placeholder={tq("filters.tagsPlaceholder")} className="mt-1.5" />
+          </div>
+          <div className="min-w-0">
+            <Label htmlFor={`${id}-team`}>{tt("teamFilter")}</Label>
+            <Select id={`${id}-team`} name="team" defaultValue={teamValue} className="mt-1.5" data-testid="support-view-team">
+              <option value="any">{tt("teamAny")}</option>
+              <option value="none">{tt("teamNone")}</option>
+              {teams.map((team) => (
+                <option key={team.id} value={team.id === teamValue ? team.id : team.slug}>
+                  {team.name}
+                </option>
+              ))}
+              {teamKnown ? null : <option value={teamValue}>{teamValue}</option>}
+            </Select>
           </div>
           <div className="min-w-0">
             <Label htmlFor={`${id}-sla`}>{tq("filters.sla")}</Label>

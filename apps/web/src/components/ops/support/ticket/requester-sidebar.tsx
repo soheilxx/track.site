@@ -103,7 +103,10 @@ export async function RequesterSidebar({ ticket, requester, locale, now }: { tic
                       <time dateTime={a.createdAt} className="shrink-0 text-ink-3">
                         {formatRelative(a.createdAt, locale, nowMs)}
                       </time>
-                      <span className="min-w-0 break-all font-mono text-ink-2">{a.action}</span>
+                      {/* the audit action id as recorded (`support.ticket.reply`, `platform.support_ticket.assign`), deliberately not translated */}
+                      <span className="min-w-0 break-all font-mono text-ink-2" data-testid="ticket-audit-action">
+                        {a.action}
+                      </span>
                       <span className="text-ink-3">{a.actorKind}</span>
                     </li>
                   ))}

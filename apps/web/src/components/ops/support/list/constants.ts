@@ -25,7 +25,7 @@ export const DATE_RANGE_MAX_DAYS = 365;
 /** Mirrors of the `@track-site/db` enumerations for client bundles (a unit test guards against drift). */
 export const TICKET_STATUSES = ["new", "open", "pending", "on_hold", "solved", "closed", "spam"] as const;
 export const TICKET_PRIORITIES = ["low", "normal", "high", "urgent"] as const;
-export const TICKET_CHANNELS = ["email", "form", "dashboard", "api"] as const;
+export const TICKET_CHANNELS = ["email", "form", "dashboard", "api", "agent"] as const;
 
 export const TICKET_SORTS = ["updated_desc", "updated_asc", "created_desc", "created_asc", "priority_desc", "sla_due_asc", "number_desc", "number_asc"] as const;
 export type TicketSort = (typeof TICKET_SORTS)[number];

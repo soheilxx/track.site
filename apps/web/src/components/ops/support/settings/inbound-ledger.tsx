@@ -5,6 +5,7 @@ import { Alert, Card, CardContent, CardDescription, CardHeader, CardTitle, Empty
 import { formatDateTime } from "@/components/ops/controls/format";
 import { formatNumber } from "@/lib/format";
 import { INBOUND_LEDGER_STALE_MS, type InboundLedgerEntry, type InboundLedgerView } from "@/server/support/settings";
+import { ReprocessInboundButton } from "./reprocess-button";
 
 /** Order of the count chips: outcomes first, the open state last. */
 const STATUSES: readonly SupportInboundEventStatus[] = ["processed", "ignored", "failed", "received"];
@@ -19,8 +20,9 @@ export function inboundEventTone(entry: Pick<InboundLedgerEntry, "status" | "sta
 /**
  * The inbound webhook ledger (`support_inbound_events`, docs/18 §4 "Timeline and ledger" / §11): counts per
  * outcome over the window and the latest deliveries with ticket, event id and — for failures — the stored
- * error, so a failing webhook is visible to admins without the provider's dashboard. Read-only; the
- * provider retries failed deliveries itself.
+ * error, so a failing webhook is visible to admins without the provider's dashboard. A failed or
+ * interrupted row whose parsed event the ledger kept offers "Reprocess" (docs/18 §"Hardening"); the
+ * provider retries on its own as well.
  */
 export async function InboundLedger({ ledger, locale }: { ledger: InboundLedgerView; locale: string }) {
   const t = await getTranslations("supportMacros.settings.overview.inbound");
@@ -65,6 +67,7 @@ export async function InboundLedger({ ledger, locale }: { ledger: InboundLedgerV
                   <Th>{t("columns.event")}</Th>
                   <Th>{t("columns.processed")}</Th>
                   <Th>{t("columns.error")}</Th>
+                  <Th>{t("columns.actions")}</Th>
                 </Tr>
               </THead>
               <TBody>
@@ -97,6 +100,9 @@ export async function InboundLedger({ ledger, locale }: { ledger: InboundLedgerV
                     </Td>
                     <Td label={t("columns.processed")}>{entry.processedAt ? <time dateTime={entry.processedAt}>{formatDateTime(entry.processedAt, locale)}</time> : <span className="text-ink-3">{t("noOutcome")}</span>}</Td>
                     <Td label={t("columns.error")}>{entry.error ? <span className="block max-w-md break-words font-mono text-xs text-bad">{entry.error}</span> : <span className="text-ink-3">{t("noError")}</span>}</Td>
+                    <Td label={t("columns.actions")}>
+                      {entry.reprocessable ? <ReprocessInboundButton eventId={entry.id} providerEventId={entry.providerEventId} /> : entry.status === "failed" || entry.stale ? <span className="text-xs text-ink-3">{t("reprocess.unavailable")}</span> : <span className="text-ink-3">{t("noAction")}</span>}
+                    </Td>
                   </Tr>
                 ))}
               </TBody>

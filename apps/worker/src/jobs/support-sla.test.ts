@@ -3,6 +3,7 @@ import type { SupportBusinessHours } from "@track-site/db";
 import {
   autoCloseDue,
   businessMinutesBetween,
+  effectiveBusinessHours,
   escalationSettings,
   evaluateClocks,
   normalizeBusinessHours,
@@ -42,6 +43,7 @@ function ticket(overrides: Partial<ClockTicket> = {}): ClockTicket {
     breachedResolution: false,
     pausedAt: null,
     reopenCount: 0,
+    slaClockStartedAt: null,
     ...overrides,
   };
 }
@@ -49,10 +51,31 @@ function ticket(overrides: Partial<ClockTicket> = {}): ClockTicket {
 const none = new Set<never>();
 
 describe("warnedClocks", () => {
-  const run0 = { priority: "urgent" as const, reopenCount: 0 };
-  const ref = (over: Partial<WarningEventRef> = {}): WarningEventRef => ({ clock: "first_response", targetMinutes: 60, reopenCount: 0, ...over });
+  /** a ticket the migration could not give a clock start to: scoped by the reopen generation */
+  const run0 = { priority: "urgent" as const, reopenCount: 0, slaClockStartedAt: null };
+  const ref = (over: Partial<WarningEventRef> = {}): WarningEventRef => ({ clock: "first_response", targetMinutes: 60, reopenCount: 0, clockStartedAt: null, createdAt: null, ...over });
 
-  it("counts a warning for its own run only: same reopen generation, same target", () => {
+  it("scopes a warning to the persisted clock start: a reopening starts a new run, a pause does not", () => {
+    const started = { priority: "urgent" as const, reopenCount: 0, slaClockStartedAt: MON_10 };
+    const thisRun = ref({ clockStartedAt: MON_10.toISOString(), createdAt: at("2026-09-07T08:50:00.000Z") });
+    expect(warnedClocks([thisRun], started, POLICY)).toEqual(new Set(["first_response"]));
+    // reopened Friday 17:00: the Monday warning belongs to the old run → warn again; one written for the new run counts
+    const reopened = { ...started, slaClockStartedAt: FRI_17 };
+    expect(warnedClocks([thisRun], reopened, POLICY).size).toBe(0);
+    expect(warnedClocks([thisRun, ref({ clockStartedAt: FRI_17.toISOString(), createdAt: NEXT_MON_10 })], reopened, POLICY)).toEqual(new Set(["first_response"]));
+    // the reopen generation no longer matters once a start is persisted (both stamp the same run)
+    expect(warnedClocks([ref({ clockStartedAt: FRI_17.toISOString(), reopenCount: 7 })], { ...reopened, reopenCount: 1 }, POLICY).has("first_response")).toBe(true);
+    // a legacy warning without the field: judged by when it was written — at or after the start counts, before it does not
+    expect(warnedClocks([ref({ createdAt: at("2026-09-07T08:50:00.000Z") })], started, POLICY).has("first_response")).toBe(true);
+    expect(warnedClocks([ref({ createdAt: at("2026-09-07T08:50:00.000Z") })], reopened, POLICY).size).toBe(0);
+    expect(warnedClocks([ref({ createdAt: MON_10 })], started, POLICY).has("first_response")).toBe(true);
+    expect(warnedClocks([ref()], started, POLICY).size).toBe(0); // no time at all → not this run (fail closed: warn again)
+    // a changed target (priority change) starts a new run within the same start
+    expect(warnedClocks([thisRun], { ...started, priority: "normal" }, POLICY).size).toBe(0);
+    expect(warnedClocks([ref({ clockStartedAt: MON_10.toISOString(), targetMinutes: 480 })], { ...started, priority: "normal" }, POLICY).has("first_response")).toBe(true);
+  });
+
+  it("counts a warning for its own run only: same reopen generation, same target (rows without a persisted start)", () => {
     expect(warnedClocks([ref()], run0, POLICY)).toEqual(new Set(["first_response"]));
     // a pause moves the due date but keeps the run → still warned (no second mail after a resume)
     expect(warnedClocks([ref()], { ...run0 }, POLICY).has("first_response")).toBe(true);
@@ -71,9 +94,9 @@ describe("warnedClocks", () => {
   });
 
   it("reads a stored payload without trusting its shape", () => {
-    expect(warningRef({ clock: "resolution", target_minutes: 480, reopen_count: 2 })).toEqual({ clock: "resolution", targetMinutes: 480, reopenCount: 2 });
-    expect(warningRef({ clock: 5, target_minutes: "480", reopen_count: Number.NaN })).toEqual({ clock: null, targetMinutes: null, reopenCount: null });
-    expect(warningRef(null)).toEqual({ clock: null, targetMinutes: null, reopenCount: null });
+    expect(warningRef({ clock: "resolution", target_minutes: 480, reopen_count: 2, clock_started_at: "2026-09-07T08:00:00.000Z" }, MON_10)).toEqual({ clock: "resolution", targetMinutes: 480, reopenCount: 2, clockStartedAt: "2026-09-07T08:00:00.000Z", createdAt: MON_10 });
+    expect(warningRef({ clock: 5, target_minutes: "480", reopen_count: Number.NaN, clock_started_at: "yesterday" })).toEqual({ clock: null, targetMinutes: null, reopenCount: null, clockStartedAt: null, createdAt: null });
+    expect(warningRef(null)).toEqual({ clock: null, targetMinutes: null, reopenCount: null, clockStartedAt: null, createdAt: null });
   });
 
   it("feeds evaluateClocks: a reopened ticket is warned again, a resumed one is not", () => {
@@ -82,6 +105,27 @@ describe("warnedClocks", () => {
     expect(evaluateClocks(ticket(), POLICY, warnedClocks(earlier, ticket(), POLICY), inside)).toEqual([]);
     const reopened = ticket({ reopenCount: 1 });
     expect(evaluateClocks(reopened, POLICY, warnedClocks(earlier, reopened, POLICY), inside)).toHaveLength(1);
+    // with a persisted start: the warning of the run before the reopening never silences the new run
+    const started = ticket({ slaClockStartedAt: MON_10 });
+    const warnedThisRun = [ref({ clockStartedAt: MON_10.toISOString(), createdAt: at("2026-09-07T08:40:00.000Z") })];
+    expect(evaluateClocks(started, POLICY, warnedClocks(warnedThisRun, started, POLICY), inside)).toEqual([]);
+    const restarted = ticket({ slaClockStartedAt: FRI_17, firstResponseDueAt: at("2026-09-14T09:00:00.000Z"), resolutionDueAt: at("2026-09-14T16:00:00.000Z") });
+    expect(evaluateClocks(restarted, POLICY, warnedClocks(warnedThisRun, restarted, POLICY), at("2026-09-14T08:50:00.000Z"))).toHaveLength(1);
+  });
+});
+
+describe("effectiveBusinessHours (mirror of the web engine)", () => {
+  it("falls back to the desk's hours for a policy without windows, else runs around the clock", () => {
+    const desk: SupportBusinessHours = { timezone: "Europe/Dublin", days: { mon: [[480, 960]] } };
+    const open: SupportBusinessHours = { timezone: "Europe/Berlin", days: {} };
+    expect(effectiveBusinessHours(BH, desk)).toBe(BH);
+    expect(effectiveBusinessHours(open, desk)).toBe(desk);
+    expect(effectiveBusinessHours(open, null)).toBe(open);
+    expect(effectiveBusinessHours(open, { timezone: "UTC", days: {} })).toBe(open);
+    expect(effectiveBusinessHours(null, null)).toEqual({ timezone: "Europe/Berlin", days: {} });
+    // the clocks then count the desk's minutes: Monday 10:00 CEST = 09:00 Dublin (IST), seven hours left of the 08:00–16:00 window
+    expect(businessMinutesBetween(MON_10, at("2026-09-07T20:00:00.000Z"), effectiveBusinessHours(open, desk))).toBe(420);
+    expect(businessMinutesBetween(MON_10, at("2026-09-07T20:00:00.000Z"), effectiveBusinessHours(open, null))).toBe(720);
   });
 });
 

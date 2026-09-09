@@ -386,13 +386,13 @@ describe("volumeView", () => {
     expect(view.buckets.map((b) => b.total)).toEqual([0, 4, 0, 0, 0, 0, 3]);
     expect(view.buckets[1]).toMatchObject({
       key: "2026-09-03",
-      byChannel: { email: 0, form: 0, dashboard: 4, api: 0 },
+      byChannel: { email: 0, form: 0, dashboard: 4, api: 0, agent: 0 },
       solved: 0,
     });
     expect(view.buckets[3]).toMatchObject({ key: "2026-09-05", solved: 3 });
     expect(view.buckets[6]).toMatchObject({
       key: "2026-09-08",
-      byChannel: { email: 2, form: 1, dashboard: 0, api: 0 },
+      byChannel: { email: 2, form: 1, dashboard: 0, api: 0, agent: 0 },
       partial: true,
     });
     expect(view.total).toBe(7);
@@ -403,6 +403,7 @@ describe("volumeView", () => {
       ["form", 1, 1 / 7],
       ["dashboard", 4, 4 / 7],
       ["api", 0, 0],
+      ["agent", 0, 0],
     ]);
     expect(view.any).toBe(true);
     expect(volumeView(snapshot()).any).toBe(false);
@@ -740,10 +741,10 @@ describe("CSV export", () => {
 
     const volume = supportReportCsv(view, "volume");
     expect(volume.body.split("\r\n")[0]).toBe(
-      "bucket,partial,email,form,dashboard,api,total,solved",
+      "bucket,partial,email,form,dashboard,api,agent,total,solved",
     );
     expect(volume.rows).toBe(7);
-    expect(volume.body).toContain("2026-09-08,true,2,0,0,0,2,1\r\n");
+    expect(volume.body).toContain("2026-09-08,true,2,0,0,0,0,2,1\r\n");
 
     expect(supportReportCsv(view, "backlog").body).toContain("open,2,1\r\n");
     expect(supportReportCsv(view, "times").body).toContain("first_response,2,0,105,,true\r\n");

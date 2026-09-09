@@ -83,6 +83,7 @@
       "opened": "Ouvert le {date} par {name}",
       "openedForm": "Ouvert le {date} via le formulaire de contact",
       "openedEmail": "Ouvert le {date} par e-mail",
+      "openedAgent": "Ouvert le {date} par notre équipe d’assistance",
       "meta": {
         "status": "Statut",
         "priority": "Priorité",

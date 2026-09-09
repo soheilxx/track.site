@@ -1,8 +1,11 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { and, asc, eq, gte, inArray, ne, or, sql } from "drizzle-orm";
+import { z } from "zod";
 import {
   member,
+  pgErrorCode,
+  pgErrorConstraint,
   subscriptions,
   supportAttachments,
   supportEvents,
@@ -45,6 +48,7 @@ import {
   spamVerdict,
   type AttachmentRejection,
   type AttachmentScanner,
+  type InboundAddress,
   type InboundAttachmentMeta,
   type InboundEmail,
   type InboundLocaleSource,
@@ -52,7 +56,8 @@ import {
   type ResendReceivingClient,
 } from "./inbound";
 import { sendTicketMail, supportMailSettings, ticketMessageId, ticketSubject, type SupportMailSettings, type TicketMailInput, type TicketMailResult } from "./mail";
-import { computeDueDates, statusTransition } from "./sla";
+import { applyFirstCustomerReply } from "./first-customer-reply";
+import { computeClockStart, statusTransition, withDeskBusinessHours } from "./sla";
 
 /**
  * Inbound e-mail processing of the support desk (docs/18-support-desk.md §4 "Inbound", task T3).
@@ -111,9 +116,13 @@ export interface LedgerFinish {
   error?: string | null;
 }
 
-/** The idempotency ledger (`support_inbound_events`); shared by the inbound and the delivery handlers. */
+/**
+ * The idempotency ledger (`support_inbound_events`); shared by the inbound and the delivery handlers. The
+ * inbound handler hands `payload` (`ledgerPayloadOf`: ids, addresses, subject, headers, attachment names —
+ * never bodies) to `beginEvent`, so a failed row can be reprocessed from the console (docs/18 §"Hardening").
+ */
 export interface InboundLedger {
-  beginEvent(providerEventId: string, provider: string, now: Date): Promise<LedgerBegin>;
+  beginEvent(providerEventId: string, provider: string, now: Date, payload?: InboundLedgerPayload | null): Promise<LedgerBegin>;
   finishEvent(providerEventId: string, patch: LedgerFinish, now: Date): Promise<void>;
 }
 
@@ -221,6 +230,10 @@ export interface CreateTicketInput {
   slaPolicyId: string | null;
   firstResponseDueAt: Date | null;
   resolutionDueAt: Date | null;
+  /** the persisted clock run (0018): the start (= `receivedAt`) and the booked targets in business milliseconds */
+  slaClockStartedAt: Date;
+  firstResponseTargetMs: number | null;
+  resolutionTargetMs: number | null;
   message: StoredMessageInput;
   attachments: StoredAttachmentInput[];
   events: EventInput[];
@@ -240,6 +253,9 @@ export interface TicketPatch {
   breachedResolution?: boolean;
   resolvedAt?: Date | null;
   closedAt?: Date | null;
+  slaClockStartedAt?: Date | null;
+  firstResponseTargetMs?: number | null;
+  resolutionTargetMs?: number | null;
   lastCustomerMessageAt: Date;
 }
 
@@ -250,6 +266,12 @@ export interface AppendMessageInput {
   patch: TicketPatch;
   events: EventInput[];
   systemNote: string | null;
+  /**
+   * A customer reply that may start the clocks of an agent-created ticket (docs/18 §"Agent-created tickets
+   * and teams"): the store calls `applyFirstCustomerReply` after the patch — a no-op for every other ticket.
+   * False for a spam-verdict reply, which never moves a ticket.
+   */
+  firstCustomerReply?: boolean;
 }
 
 export interface OutboundSystemMessageInput {
@@ -330,6 +352,106 @@ export interface InboundDeps {
   trustedAuthservIds?: readonly string[];
   now?: () => Date;
   log?: InboundLog;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Ledger payload (reprocessing from the console; docs/18 §"Hardening")
+// ---------------------------------------------------------------------------------------------------
+
+export const INBOUND_LEDGER_PAYLOAD_VERSION = 1;
+/** headers above this JSON size are dropped from the ledger row (the receiving API restores them on reprocess) */
+export const INBOUND_LEDGER_HEADERS_MAX_CHARS = 64_000;
+
+const addressSchema = z.object({ email: z.string().min(3).max(320), name: z.string().max(998).nullable() });
+
+const ledgerPayloadSchema = z.object({
+  v: z.literal(INBOUND_LEDGER_PAYLOAD_VERSION),
+  provider: z.literal("resend"),
+  providerMessageId: z.string().min(1).max(200),
+  from: addressSchema,
+  to: z.array(addressSchema).max(100),
+  cc: z.array(addressSchema).max(100),
+  subject: z.string().max(998),
+  messageId: z.string().max(998).nullable(),
+  inReplyTo: z.string().max(998).nullable(),
+  references: z.array(z.string().max(998)).max(200),
+  headers: z.record(z.string().max(200), z.string().max(64_000)),
+  headersDropped: z.boolean(),
+  attachments: z
+    .array(
+      z.object({
+        providerId: z.string().max(200).nullable(),
+        fileName: z.string().max(255),
+        contentType: z.string().max(120),
+        sizeBytes: z.number().int().nonnegative().nullable(),
+        contentId: z.string().max(998).nullable(),
+        inline: z.boolean(),
+      }),
+    )
+    .max(100),
+  receivedAt: z.string().max(40),
+});
+
+/**
+ * What the ledger row keeps of an `email.received` event: everything the handler needs to run the mail again
+ * — ids, addresses, subject, threading ids, headers, attachment names and sizes — and nothing a body could be
+ * reconstructed from. `text`, `html` and attachment bytes are never stored; a reprocess fetches them from the
+ * receiving API like a first delivery does (`processInboundEmail`).
+ */
+export type InboundLedgerPayload = z.infer<typeof ledgerPayloadSchema>;
+
+/** The ledger payload of a parsed mail (no bodies, no bytes, no signed download links). */
+export function ledgerPayloadOf(email: InboundEmail): InboundLedgerPayload {
+  const headersJson = JSON.stringify(email.headers ?? {});
+  const headersDropped = headersJson.length > INBOUND_LEDGER_HEADERS_MAX_CHARS;
+  const address = (a: InboundAddress): InboundAddress => ({ email: a.email, name: a.name ?? null });
+  return {
+    v: INBOUND_LEDGER_PAYLOAD_VERSION,
+    provider: email.provider,
+    providerMessageId: email.providerMessageId,
+    from: address(email.from),
+    to: email.to.map(address),
+    cc: email.cc.map(address),
+    subject: email.subject,
+    messageId: email.messageId,
+    inReplyTo: email.inReplyTo,
+    references: [...email.references],
+    headers: headersDropped ? {} : { ...email.headers },
+    headersDropped,
+    attachments: email.attachments.map((a) => ({ providerId: a.providerId, fileName: a.fileName, contentType: a.contentType, sizeBytes: a.sizeBytes, contentId: a.contentId, inline: a.inline })),
+    receivedAt: email.receivedAt.toISOString(),
+  };
+}
+
+/**
+ * The mail of a stored ledger payload for a reprocess (`providerEventId` = the ledger row's own event id, so
+ * the ledger treats the run as the retry of that delivery); null when the stored value is not a payload this
+ * code wrote (a delivery event's row, a row from before the column, foreign JSON). Bodies come back as null —
+ * the handler asks the receiving API — and attachments carry no bytes and no download link.
+ */
+export function inboundEmailFromLedgerPayload(raw: unknown, providerEventId: string): InboundEmail | null {
+  const parsed = ledgerPayloadSchema.safeParse(raw);
+  if (!parsed.success) return null;
+  const p = parsed.data;
+  const receivedAt = new Date(p.receivedAt);
+  if (Number.isNaN(receivedAt.getTime())) return null;
+  return {
+    provider: p.provider,
+    providerEventId,
+    providerMessageId: p.providerMessageId,
+    from: p.from,
+    to: p.to,
+    cc: p.cc,
+    subject: p.subject,
+    messageId: p.messageId,
+    inReplyTo: p.inReplyTo,
+    references: p.references,
+    headers: p.headers,
+    text: null,
+    html: null,
+    attachments: p.attachments.map((a) => ({ ...a, downloadUrl: null })),
+    receivedAt,
+  };
 }
 
 // ---------------------------------------------------------------------------------------------------
@@ -466,9 +588,11 @@ export type ReplyGuard = "stranger" | "unauthenticated";
  * Message-IDs (`matched: "outbound"`, ULIDs nobody can guess) proves possession of the conversation and is
  * accepted from anyone (a cc'd colleague replying, a forwarded mail). A thread match on a **customer-supplied**
  * id (`matched: "inbound"` — a Message-ID that may sit in a mailing-list archive or a forwarded mail) proves
- * nothing and is guarded like a plus-address match. Because a reply to a desk mail carries the plus address
- * (Reply-To) *and* the thread ids, `processInboundEmail` falls back to the thread ids when the plus-address /
- * subject match is refused; only then does a refused reply open a new ticket whose `created` event carries
+ * nothing: it is accepted from the ticket's **requester** only (docs/18 §"Hardening" — thread ids match the
+ * desk's own outbound ids, or inbound ids of the same requester; a participant needs the plus address or the
+ * subject tag), and only authenticated. Because a reply to a desk mail carries the plus address (Reply-To)
+ * *and* the thread ids, `processInboundEmail` falls back to the thread ids when the plus-address / subject
+ * match is refused; only then does a refused reply open a new ticket whose `created` event carries
  * `intendedTicketNumber` and `replyGuard`.
  */
 export function replyGuard(ticket: Pick<InboundTicket, "requesterEmail" | "participants">, sender: string, via: Extract<InboundRoute, { kind: "reply" }>["via"], authenticated: boolean, matched?: ThreadMatch["direction"]): ReplyGuard | null {
@@ -476,7 +600,10 @@ export function replyGuard(ticket: Pick<InboundTicket, "requesterEmail" | "parti
   // match of unknown direction is guarded like a customer-supplied id (fail closed)
   if (via === "thread" && matched === "outbound") return null;
   const address = sender.toLowerCase();
-  if (ticket.requesterEmail.toLowerCase() !== address && !ticket.participants.includes(address)) return "stranger";
+  const requester = ticket.requesterEmail.toLowerCase() === address;
+  // a customer-supplied thread id: the same requester only — never a participant, never a stranger
+  if (via === "thread" && !requester) return "stranger";
+  if (!requester && !ticket.participants.includes(address)) return "stranger";
   return authenticated ? null : "unauthenticated";
 }
 
@@ -696,7 +823,7 @@ export async function processInboundEmail(input: InboundEmail, deps: InboundDeps
     }
     let messageRowId: string;
     try {
-      ({ messageRowId } = await store.appendMessage({ ticketId: existing.id, message, attachments: attachments.stored, patch, events, systemNote }));
+      ({ messageRowId } = await store.appendMessage({ ticketId: existing.id, message, attachments: attachments.stored, patch, events, systemNote, firstCustomerReply: mayChangeStatus }));
     } catch (err) {
       if (err instanceof InboundAlreadyStoredError) return alreadyStored(err.match, email, log);
       throw err;
@@ -732,7 +859,8 @@ export async function processInboundEmail(input: InboundEmail, deps: InboundDeps
   const status = spam.spam ? "spam" : "new";
   const priority: SupportTicketPriority = "normal";
   const policy = spam.spam ? null : await store.selectSlaPolicy(organizationId);
-  const due = computeDueDates(policy, priority, email.receivedAt);
+  // the engine's clock start (docs/18 §10): due dates, the persisted start and the booked targets
+  const due = computeClockStart(policy, priority, email.receivedAt);
   const requesterName = email.from.name ?? requester.name;
   const ackSkipped = await acknowledgementSkipReason({ status, settings, verdict, flags, knownUser: requester.userId != null, authenticated: auth.aligned, sender: email.from.email, now, store });
   let created: { ticketId: string; number: number; messageRowId: string };
@@ -749,6 +877,9 @@ export async function processInboundEmail(input: InboundEmail, deps: InboundDeps
       slaPolicyId: policy?.id ?? null,
       firstResponseDueAt: due.firstResponseDueAt,
       resolutionDueAt: due.resolutionDueAt,
+      slaClockStartedAt: due.slaClockStartedAt,
+      firstResponseTargetMs: due.firstResponseTargetMs,
+      resolutionTargetMs: due.resolutionTargetMs,
       message,
       attachments: attachments.stored,
       events: [
@@ -848,7 +979,8 @@ export async function handleInboundEvent(email: InboundEmail, deps: InboundDeps,
   const { store } = deps;
   const log = deps.log ?? logger;
   const provider = options.provider ?? email.provider;
-  const begin = await store.beginEvent(email.providerEventId, provider, deps.now?.() ?? new Date());
+  // the ledger keeps the parsed event without bodies, so a failed delivery can be reprocessed from the console
+  const begin = await store.beginEvent(email.providerEventId, provider, deps.now?.() ?? new Date(), ledgerPayloadOf(email));
   if (begin === "duplicate") return { status: "duplicate" };
   if (begin === "in_progress") return { status: "in_progress" };
   try {
@@ -908,11 +1040,11 @@ const lower = (value: string) => value.trim().toLowerCase();
 /** The `support_inbound_events` ledger as `tracksite_worker`; shared by the inbound and delivery stores. */
 export function createDrizzleInboundLedger(database: Db): InboundLedger {
   return {
-    async beginEvent(providerEventId, provider, now) {
+    async beginEvent(providerEventId, provider, now, payload = null) {
       return withWorker(database, async (tx) => {
         const inserted = await tx
           .insert(supportInboundEvents)
-          .values({ provider, providerEventId, receivedAt: now, status: "received" })
+          .values({ provider, providerEventId, receivedAt: now, status: "received", payload })
           .onConflictDoNothing({ target: supportInboundEvents.providerEventId })
           .returning({ id: supportInboundEvents.id });
         if (inserted.length) return "new";
@@ -920,7 +1052,11 @@ export function createDrizzleInboundLedger(database: Db): InboundLedger {
         if (!existing) return "new";
         if (existing.status === "processed" || existing.status === "ignored") return "duplicate";
         if (existing.status === "received" && now.getTime() - existing.receivedAt.getTime() < INBOUND_EVENT_STALE_MS) return "in_progress";
-        await tx.update(supportInboundEvents).set({ status: "received", receivedAt: now, processedAt: null, error: null }).where(eq(supportInboundEvents.providerEventId, providerEventId));
+        // a retry refreshes the stored payload when it carries one (a row from before the column keeps null)
+        await tx
+          .update(supportInboundEvents)
+          .set({ status: "received", receivedAt: now, processedAt: null, error: null, ...(payload ? { payload } : {}) })
+          .where(eq(supportInboundEvents.providerEventId, providerEventId));
         return "retry";
       });
     },
@@ -933,6 +1069,12 @@ export function createDrizzleInboundLedger(database: Db): InboundLedger {
       );
     },
   };
+}
+
+/** The desk's `support_settings.business_hours` (the fallback of a policy without windows); null without a row. */
+async function deskBusinessHours(tx: Tx): Promise<SupportBusinessHours | null> {
+  const [row] = await tx.select({ businessHours: supportSettings.businessHours }).from(supportSettings).where(eq(supportSettings.id, 1)).limit(1);
+  return row?.businessHours ?? null;
 }
 
 /** The inbound row (direction `inbound`) that already holds the mail's own provider id, with its ticket. */
@@ -956,9 +1098,9 @@ async function findInboundMessageIn(tx: Tx, providerMessageId: string): Promise<
 /**
  * Serialises concurrent deliveries of one mail (two webhook ids for the same `email_id`) on the mail's own
  * provider id: a transaction-scoped advisory lock, then a re-check for the row the winner committed. The loser
- * throws `InboundAlreadyStoredError` (rolled back) and the handler answers with the stored ticket. This
- * closes the race without a unique index on `(direction, provider_message_id)` — the index stays a follow-up
- * of the db slice (docs/18 §9), after which the same re-check maps its violation.
+ * throws `InboundAlreadyStoredError` (rolled back) and the handler answers with the stored ticket. Behind it
+ * stands the partial unique index `support_messages_inbound_provider_uq` (migration 0018) — a write that
+ * slips past the re-check violates it, and `mapInboundReplayViolation` turns that into the same answer.
  */
 async function lockInboundMail(tx: Tx, providerMessageId: string | null): Promise<void> {
   const id = providerMessageId?.trim();
@@ -966,6 +1108,28 @@ async function lockInboundMail(tx: Tx, providerMessageId: string | null): Promis
   await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${`support_inbound:${id}`}::text, 0))`);
   const stored = await findInboundMessageIn(tx, id);
   if (stored) throw new InboundAlreadyStoredError(stored);
+}
+
+/** The partial unique index of migration 0018: one inbound row per `provider_message_id`. */
+export const INBOUND_PROVIDER_UNIQUE_INDEX = "support_messages_inbound_provider_uq";
+
+/** True for the unique violation of that index — the structural replay guard fired (docs/18 §4 step 2). */
+export function isInboundReplayViolation(error: unknown): boolean {
+  return pgErrorCode(error) === "23505" && pgErrorConstraint(error) === INBOUND_PROVIDER_UNIQUE_INDEX;
+}
+
+/**
+ * Maps the index violation to the stored route: the failed transaction is rolled back already, so the stored
+ * row is looked up in a fresh one and thrown as `InboundAlreadyStoredError` (the handler answers with it).
+ * Anything else — or a violation whose row cannot be found — is rethrown unchanged.
+ */
+async function mapInboundReplayViolation(error: unknown, providerMessageId: string | null, lookup: (id: string) => Promise<StoredInboundMatch | null>): Promise<never> {
+  const id = providerMessageId?.trim();
+  if (id && isInboundReplayViolation(error)) {
+    const stored = await lookup(id);
+    if (stored) throw new InboundAlreadyStoredError(stored);
+  }
+  throw error;
 }
 
 async function insertMessageWithTrail(tx: Tx, ticketId: string, organizationId: string | null, message: StoredMessageInput, attachments: StoredAttachmentInput[], events: EventInput[], systemNote: string | null): Promise<string> {
@@ -1174,7 +1338,8 @@ export function createDrizzleInboundStore(database?: Db): InboundStore {
           .from(supportSlaPolicies);
         const specific = planId ? policies.find((p) => p.planIds?.includes(planId)) : undefined;
         const chosen = specific ?? policies.find((p) => p.isDefault) ?? null;
-        return chosen ? { id: chosen.id, priorities: chosen.priorities, businessHours: chosen.businessHours } : null;
+        // a policy without windows runs on the desk's hours (docs/18 §11) — the same policy the console applies
+        return chosen ? withDeskBusinessHours({ id: chosen.id, priorities: chosen.priorities, businessHours: chosen.businessHours }, await deskBusinessHours(tx)) : null;
       });
     },
 
@@ -1185,7 +1350,7 @@ export function createDrizzleInboundStore(database?: Db): InboundStore {
           .from(supportSlaPolicies)
           .where(eq(supportSlaPolicies.id, policyId))
           .limit(1);
-        return row ?? null;
+        return row ? withDeskBusinessHours(row, await deskBusinessHours(tx)) : null;
       });
     },
 
@@ -1207,6 +1372,9 @@ export function createDrizzleInboundStore(database?: Db): InboundStore {
             slaPolicyId: input.slaPolicyId,
             firstResponseDueAt: input.firstResponseDueAt,
             resolutionDueAt: input.resolutionDueAt,
+            slaClockStartedAt: input.slaClockStartedAt,
+            firstResponseTargetMs: input.firstResponseTargetMs,
+            resolutionTargetMs: input.resolutionTargetMs,
             lastCustomerMessageAt: input.message.createdAt,
           })
           .returning({ id: supportTickets.id, number: supportTickets.number });
@@ -1220,7 +1388,7 @@ export function createDrizzleInboundStore(database?: Db): InboundStore {
             logger.warn({ ticketId: ticket!.id, err: e instanceof Error ? e.message : String(e) }, "support.auto_assign_failed");
           });
         return { ticketId: ticket!.id, number: Number(ticket!.number), messageRowId };
-      });
+      }).catch((error: unknown) => mapInboundReplayViolation(error, input.message.providerMessageId, (id) => run((tx) => findInboundMessageIn(tx, id))));
     },
 
     async appendMessage(input) {
@@ -1234,8 +1402,11 @@ export function createDrizzleInboundStore(database?: Db): InboundStore {
           .update(supportTickets)
           .set({ ...rest, lastCustomerMessageAt })
           .where(eq(supportTickets.id, input.ticketId));
+        // an agent-created ticket waiting for the customer: this reply starts its SLA clocks — after the
+        // transition above (leaving `pending` ended the pause), a no-op for every other ticket
+        if (input.firstCustomerReply) await applyFirstCustomerReply(tx, input.ticketId, lastCustomerMessageAt);
         return { messageRowId };
-      });
+      }).catch((error: unknown) => mapInboundReplayViolation(error, input.message.providerMessageId, (id) => run((tx) => findInboundMessageIn(tx, id))));
     },
 
     async insertOutboundSystemMessage(input) {

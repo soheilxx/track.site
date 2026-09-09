@@ -67,3 +67,5 @@ registerNamespace("support-sla");
 registerNamespace("support-notifications");
 
 registerNamespace("support-reports");
+
+registerNamespace("support-teams");

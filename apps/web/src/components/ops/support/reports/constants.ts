@@ -43,7 +43,7 @@ export const CSAT_SCORES = [1, 2, 3, 4, 5] as const;
 export type CsatScore = (typeof CSAT_SCORES)[number];
 
 /** Mirrors of the `@track-site/db` enumerations for client bundles (the unit test guards against drift). */
-export const REPORT_CHANNELS = ["email", "form", "dashboard", "api"] as const;
+export const REPORT_CHANNELS = ["email", "form", "dashboard", "api", "agent"] as const;
 export const REPORT_STATUSES = [
   "new",
   "open",

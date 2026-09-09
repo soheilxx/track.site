@@ -9,6 +9,7 @@ export { OpsForbidden } from "./gate";
 export { OpsPageHeader } from "./page-header";
 export { OpsPlaceholder, opsPageMetadata } from "./placeholder";
 export { EnvironmentBadge, OPS_ENVIRONMENT_TONE } from "./environment-badge";
+export { SUPPORT_BADGE_POLL_MS, SupportNavBadgeChip, supportBadgeFigure, useSupportNavBadge } from "./support-badge";
 export {
   OPS_MODULE_KEYS,
   OPS_NAV,

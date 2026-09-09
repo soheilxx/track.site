@@ -30,6 +30,7 @@ import {
   type ViewScope,
 } from "@/components/ops/support/list/constants";
 import { withPlatform, type PlatformContext } from "@/server/ops/platform";
+import { parseTeamFilter, teamQueryValue, type TeamFilter } from "./teams";
 
 /**
  * Ticket views of the support desk (docs/18 §"Ticket list"): the filter model of the queue, the seven default
@@ -81,6 +82,8 @@ export interface ViewFilters {
   to: string | null;
   /** relative window in days on `dateField` (wins over `from` / `to` when set) */
   lastDays: number | null;
+  /** `any` = no filter, `none` = tickets without a team, otherwise a team id or slug (`./teams`) */
+  team: TeamFilter;
 }
 
 export interface TicketFilters extends ViewFilters {
@@ -105,6 +108,7 @@ export const EMPTY_VIEW_FILTERS: ViewFilters = {
   from: null,
   to: null,
   lastDays: null,
+  team: "any",
 };
 
 export const DEFAULT_TICKET_SORT: TicketSort = "updated_desc";
@@ -123,6 +127,8 @@ export const viewFiltersSchema = z.object({
   from: z.string().regex(ISO_DATE).nullable().default(null),
   to: z.string().regex(ISO_DATE).nullable().default(null),
   lastDays: z.number().int().min(1).max(DATE_RANGE_MAX_DAYS).nullable().default(null),
+  // `any` | `none` | team id | team slug; anything else falls back to `any` (never a refused view)
+  team: z.string().max(80).default("any").transform((value): TeamFilter => parseTeamFilter(value)),
 });
 
 export const viewSortSchema = z.enum(TICKET_SORTS);
@@ -277,6 +283,8 @@ export function parseTicketFilters(q: Query, base?: { filters: ViewFilters; sort
     from: single(q.from, parseIsoDate, dates.from),
     to: single(q.to, parseIsoDate, dates.to),
     lastDays: lastDaysRaw === "any" ? null : Number.isFinite(lastDays) && lastDays >= 1 && lastDays <= DATE_RANGE_MAX_DAYS ? lastDays : dates.lastDays,
+    // absent → the view's team; `any` lifts it; a slug or id names a team (unknown values count as `any`)
+    team: one(q.team) ? parseTeamFilter(q.team) : b.team,
     q: search.length ? search : null,
     sort: isTicketSort(sort) ? sort : (base?.sort ?? DEFAULT_TICKET_SORT),
     page: Number.isFinite(page) && page >= 1 ? Math.min(page, 10_000) : 1,
@@ -285,8 +293,8 @@ export function parseTicketFilters(q: Query, base?: { filters: ViewFilters; sort
 
 /** The stored part of the queue's current filters (what "save as view" persists). */
 export function viewFiltersOf(filters: TicketFilters): ViewFilters {
-  const { status, priority, channel, assignee, organization, plan, tags, sla, dateField, from, to, lastDays } = filters;
-  return { status, priority, channel, assignee, organization, plan, tags, sla, dateField, from, to, lastDays };
+  const { status, priority, channel, assignee, organization, plan, tags, sla, dateField, from, to, lastDays, team } = filters;
+  return { status, priority, channel, assignee, organization, plan, tags, sla, dateField, from, to, lastDays, team };
 }
 
 /**
@@ -318,6 +326,7 @@ export function ticketQueryString(filters: TicketFilters, page: number = filters
   setOne("from", filters.from, b.from);
   setOne("to", filters.to, b.to);
   setOne("lastDays", filters.lastDays, b.lastDays);
+  setOne("team", teamQueryValue(filters.team), teamQueryValue(b.team));
   if (filters.q) params.set("q", filters.q);
   if (filters.sort !== (base?.sort ?? DEFAULT_TICKET_SORT)) params.set("sort", filters.sort);
   if (page > 1) params.set("page", String(page));
@@ -343,7 +352,8 @@ export function ticketsFiltered(filters: TicketFilters, base?: { filters: ViewFi
     filters.dateField !== b.dateField ||
     filters.from !== b.from ||
     filters.to !== b.to ||
-    filters.lastDays !== b.lastDays
+    filters.lastDays !== b.lastDays ||
+    filters.team !== b.team
   );
 }
 

@@ -17,6 +17,7 @@ import {
   usagePeriods,
   user,
   type SupportAuthorKind,
+  type SupportBusinessHours,
   type SupportDeliveryStatus,
   type SupportEventKind,
   type SupportMacroActions,
@@ -24,6 +25,7 @@ import {
   type SupportMessageDirection,
   type SupportSatisfaction,
   type SupportTicketChannel,
+  type SupportTicketOpenedBy,
   type SupportTicketPriority,
   type SupportTicketStatus,
   type SlaEscalation,
@@ -33,7 +35,8 @@ import { withPlatform, type PlatformContext } from "@/server/ops/platform";
 import { sanitizeHtml } from "@/server/support/inbound";
 import { supportMailSettings, type SupportMailSettings } from "@/server/support/mail";
 import { loadPresence, onlineOperatorIds, type PresenceView } from "@/server/support/presence";
-import { slaClockState, type SlaClock, type SlaClockStateInput, type SlaClockStatus, type SlaPolicyLike } from "@/server/support/sla";
+import { slaClockState, withDeskBusinessHours, type SlaClock, type SlaClockStateInput, type SlaClockStatus, type SlaPolicyLike } from "@/server/support/sla";
+import { getTeamRow } from "@/server/support/teams";
 
 /**
  * Ticket detail of the support desk (docs/18 §"Ticket detail"): pure workflow helpers (status transitions,
@@ -59,6 +62,20 @@ export const TAG_MAX_LENGTH = 40;
 export const CATEGORY_MAX_LENGTH = 60;
 /** Attachments may be added to a note this long after it was written (the composer's upload phase). */
 export const NOTE_ATTACH_WINDOW_MS = 15 * 60_000;
+/**
+ * A `sending` claim older than this is abandoned (the process died between the claim and the outcome — the
+ * transport itself times out after 15 s) and may be claimed again by "send again" (docs/18 §"Hardening").
+ */
+export const DELIVERY_CLAIM_STALE_MS = 5 * 60_000;
+
+/** Whether an outbound message may be (re)sent now: queued or failed, or a `sending` claim that went stale. */
+export function isMessageSendable(message: { direction: SupportMessageDirection; deliveryStatus: SupportDeliveryStatus; deliveryClaimedAt: Date | string | null }, now: Date): boolean {
+  if (message.direction !== "outbound") return false;
+  if (message.deliveryStatus === "queued" || message.deliveryStatus === "failed") return true;
+  if (message.deliveryStatus !== "sending") return false;
+  const claimed = message.deliveryClaimedAt == null ? Number.NaN : new Date(message.deliveryClaimedAt).getTime();
+  return !Number.isFinite(claimed) || now.getTime() - claimed >= DELIVERY_CLAIM_STALE_MS;
+}
 
 // ---------------------------------------------------------------------------------------------------
 // Workflow
@@ -261,6 +278,12 @@ export interface TicketView {
   satisfaction: SupportSatisfaction | null;
   /** the public-form request this ticket was converted from (Inbox module) */
   contactRequestId: string | null;
+  /** who opened the ticket (task N): the requester, an operator from `/ops/support/new`, or the desk */
+  openedBy: SupportTicketOpenedBy;
+  /** the team the ticket sits in; null without a team */
+  team: { id: string; name: string; slug: string } | null;
+  /** agent-created ticket with a policy whose clocks start with the first customer reply (both due times null) */
+  slaPendingFirstCustomerReply: boolean;
 }
 
 export interface AttachmentView {
@@ -289,6 +312,8 @@ export interface MessageView {
   htmlBody: string | null;
   deliveryStatus: SupportDeliveryStatus;
   deliveryError: string | null;
+  /** an outbound message that may be sent (again) now: queued, failed, or a `sending` claim that went stale (`isMessageSendable`) */
+  sendable: boolean;
   macroId: string | null;
   createdAt: string;
   attachments: AttachmentView[];
@@ -373,11 +398,19 @@ export async function loadTicketByNumber(tx: Tx, number: number): Promise<Ticket
   return row ?? null;
 }
 
+/** The desk's `support_settings.business_hours` — the fallback of a policy without windows (docs/18 §11); null without a row. */
+export async function loadDeskBusinessHours(tx: Tx): Promise<SupportBusinessHours | null> {
+  const [row] = await tx.select({ businessHours: supportSettings.businessHours }).from(supportSettings).where(eq(supportSettings.id, 1)).limit(1);
+  return row?.businessHours ?? null;
+}
+
+/** The ticket's policy as the engine reads it: its own hours, or the desk's when it has none (`withDeskBusinessHours`). */
 export async function loadSlaPolicy(tx: Tx, policyId: string | null): Promise<SlaPolicyView | null> {
   if (!policyId) return null;
   const [row] = await tx.select().from(supportSlaPolicies).where(eq(supportSlaPolicies.id, policyId)).limit(1);
   if (!row) return null;
-  return { id: row.id, name: row.name, priorities: row.priorities ?? {}, businessHours: row.businessHours, escalation: row.escalation ?? null };
+  const desk = await loadDeskBusinessHours(tx);
+  return withDeskBusinessHours({ id: row.id, name: row.name, priorities: row.priorities ?? {}, businessHours: row.businessHours, escalation: row.escalation ?? null }, desk);
 }
 
 /** The stored settings row merged with the environment overrides and defaults. */
@@ -537,6 +570,7 @@ export async function loadTicketDetail(ctx: PlatformContext, ticketId: string, n
     const mergedInto = row.mergedIntoId ? ((await tx.select({ id: supportTickets.id, number: supportTickets.number, subject: supportTickets.subject }).from(supportTickets).where(eq(supportTickets.id, row.mergedIntoId)).limit(1))[0] ?? null) : null;
     const mergedFrom = await tx.select({ id: supportTickets.id, number: supportTickets.number, subject: supportTickets.subject }).from(supportTickets).where(eq(supportTickets.mergedIntoId, row.id)).orderBy(asc(supportTickets.number));
     const [contact] = await tx.select({ id: contactRequests.id }).from(contactRequests).where(eq(contactRequests.ticketId, row.id)).limit(1);
+    const teamRow = row.teamId ? await getTeamRow(tx, row.teamId) : null;
     const operatorRows = await tx.select({ id: user.id, name: user.name }).from(user).where(inArray(user.platformRole, [...PLATFORM_ROLES])).orderBy(asc(user.name), asc(user.email));
     const online = await onlineOperatorIds(tx, now);
     const presence = await loadPresence(tx, row.id, ctx.user.id, now);
@@ -604,6 +638,7 @@ export async function loadTicketDetail(ctx: PlatformContext, ticketId: string, n
           htmlBody: m.htmlBody ? sanitizeHtml(m.htmlBody) : null,
           deliveryStatus: m.deliveryStatus,
           deliveryError: m.deliveryError,
+          sendable: isMessageSendable(m, now),
           macroId: m.macroId,
           createdAt: m.createdAt.toISOString(),
           attachments: attachmentsBy.get(m.id) ?? [],
@@ -640,6 +675,9 @@ export async function loadTicketDetail(ctx: PlatformContext, ticketId: string, n
         mergedFrom,
         satisfaction: row.satisfaction ?? null,
         contactRequestId: contact?.id ?? null,
+        openedBy: row.openedBy,
+        team: teamRow ? { id: teamRow.id, name: teamRow.name, slug: teamRow.slug } : null,
+        slaPendingFirstCustomerReply: row.slaPendingFirstCustomerReply,
       },
       timeline,
       sla: slaView(row, policy, now, resolutionRestartedAt(events)),

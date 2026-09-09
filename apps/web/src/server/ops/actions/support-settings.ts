@@ -3,8 +3,12 @@
 import { sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { supportSettings } from "@track-site/db";
+import { supportSettings, withWorker } from "@track-site/db";
+import { db } from "@/server/db";
 import { PlatformAccessError, auditPlatform, requirePlatform, withPlatform, type PlatformContext } from "@/server/ops/platform";
+import type { InboundEmail } from "@/server/support/inbound";
+import { defaultInboundDeps, handleInboundEvent, inboundEmailFromLedgerPayload } from "@/server/support/inbound-handler";
+import { fanOutAfterMutation } from "@/server/support/notifications";
 import {
   FROM_NAME_MAX,
   SETTINGS_ROW_ID,
@@ -14,9 +18,12 @@ import {
   defaultSupportSettings,
   getSupportSettingsRow,
   isAutoAssignStrategy,
+  isReprocessableInboundEvent,
   isValidHostname,
+  loadInboundEventForReprocess,
   settingsDiff,
   settingsFromRow,
+  type InboundEventForReprocess,
   type SupportDeskSettings,
 } from "@/server/support/settings";
 
@@ -115,4 +122,77 @@ export async function updateSupportSettingsAction(_prev: SupportSettingsActionSt
   });
   if (result.ok) for (const path of PATHS) revalidatePath(path);
   return result;
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Inbound ledger: reprocess a failed delivery (docs/18 §"Hardening")
+// ---------------------------------------------------------------------------------------------------
+
+export type ReprocessInboundError = "forbidden" | "invalid" | "not_found" | "not_reprocessable" | "no_payload" | "confirmation_required" | "generic";
+
+export type ReprocessInboundOutcome =
+  | { status: "processed"; ticketId: string; ticketNumber: number; route: string; created: boolean }
+  | { status: "ignored"; reason: string }
+  | { status: "duplicate" }
+  | { status: "in_progress" }
+  | { status: "failed"; error: string };
+
+export type ReprocessInboundResult = { ok: true; error: null; outcome: ReprocessInboundOutcome } | { ok: false; error: ReprocessInboundError };
+
+const reprocessSchema = z.object({ eventId: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i), confirmed: z.boolean().optional() });
+
+/**
+ * Runs a `failed` (or interrupted) inbound delivery through the real handler again from the parsed event
+ * the ledger kept (`payload`, migration 0018 — ids, addresses, subject, headers, attachment names; bodies
+ * and bytes come from the receiving API like on a first delivery). Admin-only, confirmed in a dialog.
+ * Retry-safe: the ledger treats the run as the retry of that delivery (`beginEvent` → `retry`), the handler
+ * answers a mail an earlier attempt already stored with its ticket (`route: "stored"`), never a second
+ * ticket or message. The outcome — ids and counts only — is audited as `platform.support_inbound.reprocess`
+ * on the ledger row; a processed mail also fans the assignee's notification out at once.
+ */
+export async function reprocessInboundEventAction(input: { eventId: string; confirmed?: boolean }): Promise<ReprocessInboundResult> {
+  const ctx = await admin();
+  if (!ctx) return { ok: false, error: "forbidden" };
+  const parsed = reprocessSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "invalid" };
+  if (parsed.data.confirmed !== true) return { ok: false, error: "confirmation_required" };
+  const now = new Date();
+  const loaded = await withPlatform(ctx, async (tx): Promise<{ error: ReprocessInboundError } | { row: InboundEventForReprocess; email: InboundEmail }> => {
+    const row = await loadInboundEventForReprocess(tx, parsed.data.eventId);
+    if (!row) return { error: "not_found" };
+    if (!isReprocessableInboundEvent({ status: row.status, receivedAt: row.receivedAt, hasPayload: row.payload !== null }, now)) return { error: row.payload === null ? "no_payload" : "not_reprocessable" };
+    const email = inboundEmailFromLedgerPayload(row.payload, row.providerEventId);
+    if (!email) return { error: "no_payload" };
+    return { row, email };
+  });
+  if ("error" in loaded) return { ok: false, error: loaded.error };
+  const { row, email } = loaded;
+
+  const outcome = await handleInboundEvent(email, defaultInboundDeps(), { provider: row.provider });
+  const summary: ReprocessInboundOutcome =
+    outcome.status === "processed"
+      ? { status: "processed", ticketId: outcome.ticketId, ticketNumber: outcome.ticketNumber, route: outcome.route, created: outcome.created }
+      : outcome.status === "ignored"
+        ? { status: "ignored", reason: outcome.reason }
+        : outcome.status === "failed"
+          ? { status: "failed", error: outcome.error.slice(0, 240) }
+          : { status: outcome.status };
+  await withPlatform(ctx, (tx) =>
+    auditPlatform(
+      ctx,
+      {
+        action: "platform.support_inbound.reprocess",
+        organizationId: outcome.status === "processed" ? outcome.organizationId : null,
+        targetType: "support_inbound_event",
+        targetId: row.id,
+        // ids, the ledger state and the outcome only — never the mail
+        diff: { providerEventId: row.providerEventId, provider: row.provider, statusBefore: row.status, ticketBefore: row.ticketId, outcome: summary },
+        metadata: { module: "support", confirmed: true },
+      },
+      tx,
+    ),
+  );
+  if (outcome.status === "processed") await fanOutAfterMutation((fn) => withWorker(db(), fn));
+  revalidatePath(PATHS[0]!);
+  return { ok: true, error: null, outcome: summary };
 }

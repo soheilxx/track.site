@@ -68,13 +68,16 @@ const PNG_1PX = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUl
 const CUSTOMER_REPLY = `Thanks — here is the site id you asked for: A7K2Q9 (${stamp}).`;
 const WEBHOOK_TEXT = `Replying from my mail client instead of the portal (${stamp}).`;
 const BREACH_SUBJECT = `E2E SLA breach fixture ${stamp}`;
+const AGENT_SUBJECT = `E2E agent-created ticket ${stamp}`;
+const AGENT_BODY = `Following up on our call: the staging container was still paused, I resumed it for you (${stamp}).`;
+const AGENT_CUSTOMER_REPLY = `Thanks, the events are flowing again on staging (${stamp}).`;
 
 /**
  * A message that next-intl could not resolve is rendered as its full path (`supportTicket.composer.title`).
  * Audit action names (`support.ticket.auto_assign`) contain underscores and never match.
  */
 const RAW_KEY =
-  /\b(ops|opsAudit|opsInbox|opsOrganisations|shell|support|supportTickets|supportTicket|supportMacros|supportSla|supportPortal|supportReports|supportNotifications)(\.[a-zA-Z][a-zA-Z0-9]*)+\b/;
+  /\b(ops|opsAudit|opsInbox|opsOrganisations|shell|support|supportTickets|supportTicket|supportMacros|supportSla|supportPortal|supportReports|supportNotifications|supportTeams)(\.[a-zA-Z][a-zA-Z0-9]*)+\b/;
 
 const test = base.extend<{ ops: Page; agent: Page }>({
   /** agent one: the platform admin with its own stored session */
@@ -118,6 +121,20 @@ async function axeSeriousOrCritical(page: Page): Promise<string[]> {
     .map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(" | ")}`);
 }
 
+/**
+ * The page's text for the raw-key scan. The requester sidebar prints audit action ids as recorded
+ * (`support.ticket.reply` — the tenant audit of a portal reply), which look like translation keys but are
+ * machine ids by design (`ticket-audit-action`); they are left out of the scan.
+ */
+async function pageTextWithoutAuditIds(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const clone = document.body.cloneNode(true) as HTMLElement;
+    // a detached clone has no layout, so `textContent` replaces `innerText`: drop what innerText never shows
+    for (const el of clone.querySelectorAll('script, style, noscript, template, [data-testid="ticket-audit-action"]')) el.remove();
+    return clone.textContent?.replace(/\s+/g, " ") ?? "";
+  });
+}
+
 /** A console page: 200, the operator shell, one h1, no raw keys, viewport-fixed shell, no horizontal overflow, axe. */
 async function expectConsolePage(page: Page, pathname: string, width: number) {
   await page.setViewportSize({ width, height: width < 768 ? 812 : 900 });
@@ -127,7 +144,7 @@ async function expectConsolePage(page: Page, pathname: string, width: number) {
   await expect(page.locator("main [aria-busy='true']"), `${pathname} @ ${width}`).toHaveCount(0);
   await expect(page.locator("h1"), `${pathname} @ ${width}`).toHaveCount(1);
   await expect(page.getByRole("alert").filter({ hasText: "403" }), `${pathname} @ ${width}`).toHaveCount(0);
-  const text = await page.locator("body").innerText();
+  const text = await pageTextWithoutAuditIds(page);
   expect(text.match(RAW_KEY)?.[0], `${pathname} @ ${width}: raw translation key`).toBeUndefined();
   const metrics = await page.evaluate(() => {
     const shell = document.querySelector<HTMLElement>('[data-testid="ops-shell"]')!;
@@ -152,7 +169,7 @@ async function expectDashboardPage(page: Page, pathname: string, width: number) 
   await expect(page.getByTestId("app-shell"), `${pathname} @ ${width}`).toBeVisible();
   await expect(page.locator("main [aria-busy='true']"), `${pathname} @ ${width}`).toHaveCount(0);
   await expect(page.locator("h1"), `${pathname} @ ${width}`).toHaveCount(1);
-  const text = await page.locator("body").innerText();
+  const text = await pageTextWithoutAuditIds(page);
   expect(text.match(RAW_KEY)?.[0], `${pathname} @ ${width}: raw translation key`).toBeUndefined();
   const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(documentWidth, `${pathname} @ ${width}: horizontal overflow`).toBeLessThanOrEqual(width);
@@ -311,7 +328,8 @@ test.describe("ticket round trip", () => {
     await expect(ops.getByTestId("ticket-event-assignee")).toHaveCount(1);
     await ops.goto("/ops/support?view=mine");
     await expect(ops.locator("main [aria-busy='true']")).toHaveCount(0);
-    await expect(ops.getByTestId("support-ticket-row").filter({ hasText: SUBJECT })).toContainText(/\byou\b/);
+    // the assignee cell reads "you" for the caller (the avatar is decorative next to the visible label)
+    await expect(ops.getByTestId("support-ticket-row").filter({ hasText: SUBJECT }).getByRole("cell", { name: "you", exact: true })).toBeVisible();
   });
 
   test("both agents on the ticket see each other in the presence banner", async ({ ops, agent }) => {
@@ -361,11 +379,13 @@ test.describe("ticket round trip", () => {
     await expect(outbound).toContainText(`received it as ticket #${ticketNumber}`);
     await expect(outbound).toContainText(`To: ${OWNER_EMAIL}`);
     await expect(ops.getByTestId("ticket-status")).toHaveText("Open");
-    await expect(ops.getByTestId("ticket-event-reply")).toHaveCount(1);
+    // the reply event is folded into the message card (the conversation hides `reply` / `note` events); the implicit new → open transition is an event
+    await expect(ops.getByTestId("ticket-event-reply")).toHaveCount(0);
+    await expect(ops.getByTestId("ticket-event-status")).toHaveCount(1);
     // first response met
     await expect(ops.getByTestId("ticket-sla").getByTestId("ticket-sla-met")).toHaveCount(1);
 
-    const mail = outboxSince(before).find((m) => m.to === OWNER_EMAIL && m.subject.includes(`[Track #${ticketNumber}]`));
+    const mail = outboxSince(before).find((m) => m.to.includes(OWNER_EMAIL) && m.subject.includes(`[Track #${ticketNumber}]`));
     expect(mail, `outbox mail for ticket #${ticketNumber} in ${OUTBOX_DIR}`).toBeDefined();
     expect(mail!.subject).toBe(`Re: [Track #${ticketNumber}] ${SUBJECT}`);
     expect(mail!.replyTo).toMatch(new RegExp(`^support\\+t${ticketNumber}@[^@\\s]+$`));
@@ -493,6 +513,127 @@ test.describe("ticket round trip", () => {
     await ops.goto("/ops/support?view=breached");
     await expect(ops.locator("main [aria-busy='true']")).toHaveCount(0);
     await expect(ops.getByTestId("support-ticket-row").filter({ hasText: BREACH_SUBJECT })).toContainText("Breached");
+  });
+});
+
+/**
+ * Agent-created tickets and teams (docs/18 §19): agent one opens a ticket for the owner from the console and
+ * sends the opening message; the ticket sits in the seeded default team "Support" (the operators' team from
+ * `db:seed`), is pending and shows no SLA countdown — its clocks wait for the first customer reply; the owner
+ * sees it in the portal (without SLA or agent-only fields) and replies, which reopens it and starts both
+ * clocks; the queue's team filter lists it under Support and not under "without a team".
+ */
+test.describe("agent-created ticket", () => {
+  test.describe.configure({ mode: "serial" });
+  let agentTicketId = "";
+  let agentTicketNumber = 0;
+
+  test("agent one opens a ticket for the owner from /ops/support/new and sends the opening message", async ({ ops }) => {
+    const before = Date.now();
+    await ops.goto("/ops/support");
+    await expect(ops.getByTestId("ops-shell")).toBeVisible();
+    await ops.getByTestId("support-new-ticket").click();
+    await ops.waitForURL(/\/ops\/support\/new$/);
+    await expect(ops.locator("h1")).toHaveText("New ticket");
+    // requester: a member found through the search (display data only)
+    await ops.getByTestId("support-new-requester-search").fill("acme");
+    const option = ops.getByTestId("support-new-requester-option").filter({ hasText: OWNER_EMAIL });
+    await expect(option).toBeVisible();
+    await option.click();
+    const selected = ops.getByTestId("support-new-requester-selected");
+    await expect(selected).toContainText(OWNER_EMAIL);
+    await expect(selected).toContainText("Acme Demo");
+    // the operator's own team (seeded: lead of "Support") is preselected
+    await expect(ops.getByTestId("support-new-team").locator("option:checked")).toHaveText("Support");
+    await ops.getByTestId("support-new-subject").fill(AGENT_SUBJECT);
+    await ops.getByTestId("support-new-body").fill(AGENT_BODY);
+    await expect(ops.getByTestId("support-new-send")).toBeChecked();
+    await expect(ops.getByTestId("support-new-assign")).toBeChecked();
+    await ops.getByTestId("support-new-submit").click();
+    await ops.waitForURL(/\/ops\/support\/[0-9a-f-]{36}$/);
+    agentTicketId = new URL(ops.url()).pathname.split("/").pop()!;
+    expect(agentTicketId).toMatch(/^[0-9a-f-]{36}$/);
+    agentTicketNumber = await ticketNumberOf(ops);
+    expect(agentTicketNumber).toBeGreaterThan(0);
+    await expect(ops.locator("h1")).toContainText(AGENT_SUBJECT);
+    // pending (the desk waits for the customer), opened by an agent, in the team, assigned to agent one
+    await expect(ops.getByTestId("ticket-status")).toHaveText("Pending");
+    await expect(ops.getByTestId("ticket-opened-by-agent")).toBeVisible();
+    await expect(ops.getByTestId("ticket-team")).toContainText("Support");
+    await expect(ops.getByTestId("ticket-assignee-select").locator("option:checked")).toContainText(OPS_NAME);
+    // no SLA countdown: the clocks start with the first customer reply
+    const sla = ops.getByTestId("ticket-sla");
+    await expect(sla.getByTestId("ticket-sla-pending")).toBeVisible();
+    await expect(sla.getByTestId("ticket-sla-remaining")).toHaveCount(0);
+    await expect(sla.getByTestId("ticket-sla-none")).toHaveCount(2);
+    // the opening message went out (local outbox) with the ticket's plus address as Reply-To
+    const outbound = ops.getByTestId("ticket-message-outbound");
+    await expect(outbound).toHaveCount(1);
+    await expect(outbound).toContainText("Sent");
+    await expect(outbound).toContainText(AGENT_BODY);
+    await expect(ops.getByTestId("ticket-message-inbound")).toHaveCount(0);
+    // the opening mail addresses the requester by name (`"Olivia Owner" <owner@acme.test>`)
+    const mail = outboxSince(before).find((m) => m.to.includes(OWNER_EMAIL) && m.subject.includes(`[Track #${agentTicketNumber}]`));
+    expect(mail, `outbox mail for ticket #${agentTicketNumber} in ${OUTBOX_DIR}`).toBeDefined();
+    expect(mail!.subject).toBe(`Re: [Track #${agentTicketNumber}] ${AGENT_SUBJECT}`);
+    expect(mail!.replyTo).toMatch(new RegExp(`^support\\+t${agentTicketNumber}@[^@\\s]+$`));
+    expect(mail!.text).toContain(AGENT_BODY);
+  });
+
+  test("the owner sees the ticket in the portal without an SLA and replies, which starts the clocks", async ({ page, ops }) => {
+    expect(agentTicketId, "the agent-created ticket").toMatch(/^[0-9a-f-]{36}$/);
+    await page.goto("/app/support");
+    await expect(page.getByTestId("app-shell")).toBeVisible();
+    const link = page.getByTestId("support-ticket-link").filter({ hasText: AGENT_SUBJECT });
+    await expect(link).toBeVisible();
+    await link.click();
+    await page.waitForURL(new RegExp(`/app/support/${agentTicketId}$`));
+    await expect(page.locator("h1")).toContainText(`#${agentTicketNumber}`);
+    await expect(page.getByText("Pending", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("by our support team")).toBeVisible();
+    await expect(page.getByText(AGENT_BODY)).toBeVisible();
+    // agent-only fields stay hidden; the agent's display name on their message is the one detail a customer may see (docs/18 §1)
+    const text = await page.locator("main").innerText();
+    expect(text).not.toMatch(/Assignee|SLA|Team|Opened by agent|virus-scanned/);
+    await page.getByTestId("support-reply-body").fill(AGENT_CUSTOMER_REPLY);
+    await page.getByTestId("support-reply-send").click();
+    await expect(page.getByText("Your reply was added to the ticket.")).toBeVisible();
+    await expect(page.getByText(AGENT_CUSTOMER_REPLY)).toBeVisible();
+    await expect(page.getByText("Open", { exact: true }).first()).toBeVisible();
+
+    // the console: open, un-paused, both clocks running from the reply — the first response is still due
+    await ops.goto(`/ops/support/${agentTicketId}`);
+    await expect(ops.getByTestId("ticket-status")).toHaveText("Open");
+    await expect(ops.getByTestId("ticket-message-inbound")).toHaveCount(1);
+    await expect(ops.getByTestId("ticket-message-inbound")).toContainText(AGENT_CUSTOMER_REPLY);
+    const sla = ops.getByTestId("ticket-sla");
+    await expect(sla.getByTestId("ticket-sla-pending")).toHaveCount(0);
+    await expect(sla.getByTestId("ticket-sla-none")).toHaveCount(0);
+    await expect(sla.getByTestId("ticket-sla-remaining")).toHaveCount(2);
+    await expect(sla).toContainText("Due");
+    await expect(ops.getByTestId("ticket-sla-met")).toHaveCount(0);
+  });
+
+  test("the queue's team filter lists the ticket under Support with its chips, and not under 'without a team'", async ({ ops }) => {
+    await ops.goto("/ops/support?team=support");
+    await expect(ops.locator("main [aria-busy='true']")).toHaveCount(0);
+    await expect(ops.getByTestId("support-team-filter")).toHaveValue("support");
+    const row = ops.getByTestId("support-ticket-row").filter({ hasText: AGENT_SUBJECT });
+    await expect(row).toBeVisible();
+    await expect(row.getByTestId("support-team-chip")).toContainText("Support");
+    await expect(row.getByTestId("support-opened-by-agent")).toBeVisible();
+    await expect(row).toContainText("Agent");
+    await expect(row).toContainText("Open");
+    // the filter is part of the URL model: a page link keeps it, "without a team" drops the ticket
+    await ops.goto("/ops/support?team=none");
+    await expect(ops.locator("main [aria-busy='true']")).toHaveCount(0);
+    await expect(ops.getByTestId("support-team-filter")).toHaveValue("none");
+    await expect(ops.getByTestId("support-ticket-row").filter({ hasText: AGENT_SUBJECT })).toHaveCount(0);
+    // the ticket page links its team to the same filtered queue
+    await ops.goto(`/ops/support/${agentTicketId}`);
+    await ops.getByTestId("ticket-team").click();
+    await ops.waitForURL(/\/ops\/support\?team=support$/);
+    await expect(ops.getByTestId("support-ticket-row").filter({ hasText: AGENT_SUBJECT })).toBeVisible();
   });
 });
 

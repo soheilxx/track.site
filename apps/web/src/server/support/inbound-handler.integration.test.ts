@@ -124,6 +124,9 @@ describe("inbound store (tracksite_worker)", () => {
       slaPolicyId: policyId,
       firstResponseDueAt: new Date(NOW.getTime() + 3_600_000),
       resolutionDueAt: null,
+      slaClockStartedAt: NOW,
+      firstResponseTargetMs: 3_600_000,
+      resolutionTargetMs: null,
       message: message(),
       attachments: [{ fileName: "a.png", contentType: "image/png", sizeBytes: 3, sha256: "abc", content }],
       events: [{ kind: "created", actorKind: "customer", payload: { channel: "email" } }],
@@ -173,7 +176,7 @@ describe("inbound store (tracksite_worker)", () => {
 
   it("derives the sender flags from operator decisions: a spam ticket blocks, the do-not-email tag silences", async () => {
     const spammer = `spam-${stamp}@example.test`;
-    const created = await inbound.createTicket({ requesterEmail: spammer, requesterName: null, requesterUserId: null, organizationId: null, subject: "buy now", status: "spam", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, message: message({ fromEmail: spammer, messageId: null, providerMessageId: `spam-${stamp}` }), attachments: [], events: [], systemNote: null });
+    const created = await inbound.createTicket({ requesterEmail: spammer, requesterName: null, requesterUserId: null, organizationId: null, subject: "buy now", status: "spam", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: NOW, firstResponseTargetMs: null, resolutionTargetMs: null, message: message({ fromEmail: spammer, messageId: null, providerMessageId: `spam-${stamp}` }), attachments: [], events: [], systemNote: null });
     ticketIds.push(created.ticketId);
     // the handler's own spam verdict (a spam ticket without an agent decision) never blocks the address
     expect(await inbound.senderFlags(spammer.toUpperCase())).toEqual({ blocked: false, doNotEmail: false });
@@ -220,7 +223,7 @@ describe("inbound store (tracksite_worker)", () => {
   it("finds an already stored inbound mail by its provider id and follows a merge one hop, keeping the merged-away requester entitled", async () => {
     const targetId = ticketIds[0]!;
     const bob = `bob-${stamp}@example.test`;
-    const source = await inbound.createTicket({ requesterEmail: bob, requesterName: "Bob", requesterUserId: null, organizationId: null, subject: "Same pixel", status: "new", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, message: message({ fromEmail: bob, ccEmails: [], messageId: `m-bob-${stamp}@mail.example.test`, providerMessageId: `em-bob-${stamp}` }), attachments: [], events: [], systemNote: null });
+    const source = await inbound.createTicket({ requesterEmail: bob, requesterName: "Bob", requesterUserId: null, organizationId: null, subject: "Same pixel", status: "new", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: NOW, firstResponseTargetMs: null, resolutionTargetMs: null, message: message({ fromEmail: bob, ccEmails: [], messageId: `m-bob-${stamp}@mail.example.test`, providerMessageId: `em-bob-${stamp}` }), attachments: [], events: [], systemNote: null });
     ticketIds.push(source.ticketId);
     // the retry guard: the mail's own provider id on an inbound row, never an outbound one, never an unknown id
     expect(await inbound.findInboundMessage(`em-bob-${stamp}`)).toEqual({ ticketId: source.ticketId, ticketNumber: source.number, messageRowId: source.messageRowId, status: "new", locale: "en", organizationId: null });
@@ -238,7 +241,7 @@ describe("inbound store (tracksite_worker)", () => {
 
   it("serialises concurrent deliveries of one mail: the loser of the advisory lock finds the winner's row and throws InboundAlreadyStoredError", async () => {
     const carol = `carol-${stamp}@example.test`;
-    const input = (providerMessageId: string, messageId: string): CreateTicketInput => ({ requesterEmail: carol, requesterName: "Carol", requesterUserId: null, organizationId: null, subject: "Race", status: "new", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, message: message({ fromEmail: carol, ccEmails: [], messageId, providerMessageId }), attachments: [], events: [], systemNote: null });
+    const input = (providerMessageId: string, messageId: string): CreateTicketInput => ({ requesterEmail: carol, requesterName: "Carol", requesterUserId: null, organizationId: null, subject: "Race", status: "new", priority: "normal", locale: "en", slaPolicyId: null, firstResponseDueAt: null, resolutionDueAt: null, slaClockStartedAt: NOW, firstResponseTargetMs: null, resolutionTargetMs: null, message: message({ fromEmail: carol, ccEmails: [], messageId, providerMessageId }), attachments: [], events: [], systemNote: null });
     // two transactions for the same email_id at once (two webhook ids): exactly one ticket
     const results = await Promise.allSettled([inbound.createTicket(input(`em-race-${stamp}`, `m-race-1-${stamp}@mail.example.test`)), inbound.createTicket(input(`em-race-${stamp}`, `m-race-2-${stamp}@mail.example.test`))]);
     const fulfilled = results.filter((r): r is PromiseFulfilledResult<{ ticketId: string; number: number; messageRowId: string }> => r.status === "fulfilled");

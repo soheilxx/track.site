@@ -330,8 +330,11 @@ describe("bulk actions", () => {
       expect(resumed?.pausedAt).toBeNull();
       expect(Number(resumed?.pauseTotalMs)).toBeGreaterThanOrEqual(0);
       expect(resumed!.resolutionDueAt!.getTime()).toBeGreaterThanOrEqual(reopened!.resolutionDueAt!.getTime());
-      const audits = await auditsOf("platform.support_ticket.status");
-      expect(audits.find((a) => a.targetId === created!.id)?.diff).toMatchObject({ from: "solved", to: "open", reopened: true, slaPolicyId: policy!.id, number: n("t8") });
+      // three status audits for this ticket (reopen, pending, open) — the query carries no order, so the
+      // reopening is matched by its content rather than by its position
+      const audits = (await auditsOf("platform.support_ticket.status")).filter((a) => a.targetId === created!.id);
+      expect(audits).toHaveLength(3);
+      expect(audits.map((a) => a.diff)).toEqual(expect.arrayContaining([expect.objectContaining({ from: "solved", to: "open", reopened: true, slaPolicyId: policy!.id, number: n("t8") })]));
     } finally {
       // the ticket's sla_policy_id is ON DELETE SET NULL; the ticket itself is removed in afterAll
       await t.db.delete(supportSlaPolicies).where(eq(supportSlaPolicies.id, policy!.id));

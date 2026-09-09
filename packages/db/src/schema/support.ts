@@ -38,8 +38,33 @@ export type SupportTicketStatus = (typeof SUPPORT_TICKET_STATUSES)[number];
 export const SUPPORT_TICKET_PRIORITIES = ["low", "normal", "high", "urgent"] as const;
 export type SupportTicketPriority = (typeof SUPPORT_TICKET_PRIORITIES)[number];
 
-export const SUPPORT_TICKET_CHANNELS = ["email", "form", "dashboard", "api"] as const;
+/**
+ * Channels a ticket can arrive on: the customer channels (`email`, `form`, `dashboard`, `api`) and `agent` — a
+ * ticket an operator opened on the customer's behalf from the console (migration 0017, docs/18 §"Agent-created
+ * tickets and teams"). The list is the CHECK of `support_tickets.channel`; the reports (`REPORT_CHANNELS`) and
+ * the queue constants (`TICKET_CHANNELS`) mirror it under drift-guarding tests.
+ */
+export const SUPPORT_TICKET_CHANNELS = ["email", "form", "dashboard", "api", "agent"] as const;
 export type SupportTicketChannel = (typeof SUPPORT_TICKET_CHANNELS)[number];
+
+/** The channel of an agent-created ticket; `SUPPORT_TICKET_ALL_CHANNELS` stays as an alias of the full list. */
+export const SUPPORT_TICKET_AGENT_CHANNEL = "agent" as const satisfies SupportTicketChannel;
+export const SUPPORT_TICKET_ALL_CHANNELS = SUPPORT_TICKET_CHANNELS;
+export type SupportTicketAnyChannel = SupportTicketChannel;
+
+/** Who opened the ticket (`support_tickets.opened_by`, 0017): the requester, an operator, or the desk itself. */
+export const SUPPORT_TICKET_OPENED_BY = ["customer", "agent", "system"] as const;
+export type SupportTicketOpenedBy = (typeof SUPPORT_TICKET_OPENED_BY)[number];
+
+/** Membership roles inside a support team (`support_team_members.role`, 0017). */
+export const SUPPORT_TEAM_ROLES = ["member", "lead"] as const;
+export type SupportTeamRole = (typeof SUPPORT_TEAM_ROLES)[number];
+
+/** Fixed ids of the teams migration 0017 seeds (`ON CONFLICT DO NOTHING`; renames survive re-runs). */
+export const SUPPORT_SEEDED_TEAM_IDS = {
+  support: "00000000-0000-4000-8000-000000000171",
+  sales: "00000000-0000-4000-8000-000000000172",
+} as const;
 
 export const SUPPORT_MESSAGE_DIRECTIONS = ["inbound", "outbound", "note"] as const;
 export type SupportMessageDirection = (typeof SUPPORT_MESSAGE_DIRECTIONS)[number];
@@ -47,7 +72,8 @@ export type SupportMessageDirection = (typeof SUPPORT_MESSAGE_DIRECTIONS)[number
 export const SUPPORT_AUTHOR_KINDS = ["customer", "agent", "system"] as const;
 export type SupportAuthorKind = (typeof SUPPORT_AUTHOR_KINDS)[number];
 
-export const SUPPORT_DELIVERY_STATUSES = ["queued", "sent", "delivered", "bounced", "complained", "failed", "na"] as const;
+/** `sending` is the transient claim of the console's send path (migration 0018): a row is mailed at most once. */
+export const SUPPORT_DELIVERY_STATUSES = ["queued", "sending", "sent", "delivered", "bounced", "complained", "failed", "na"] as const;
 export type SupportDeliveryStatus = (typeof SUPPORT_DELIVERY_STATUSES)[number];
 
 export const SUPPORT_MACRO_SCOPES = ["global", "personal"] as const;
@@ -144,10 +170,53 @@ export const supportSlaPolicies = pgTable(
 );
 
 /**
+ * Support team (migration 0017, docs/18 §"Agent-created tickets and teams"): a named queue operators belong
+ * to. Exactly one team carries `is_default` (partial unique index); an archived team (`archived_at`) keeps
+ * its tickets and members but is offered nowhere. Operator-only table (every privilege revoked from
+ * `tracksite_app`); `tracksite_worker` reads it for the team-aware round robin of the inbound store.
+ */
+export const supportTeams = pgTable(
+  "support_teams",
+  {
+    id: id(),
+    /** lower-case, `[a-z0-9-]`, unique — the URL and filter key of the team */
+    slug: text("slug").notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    isDefault: boolean("is_default").notNull().default(false),
+    archivedAt: tz("archived_at"),
+    ...timestamps(),
+  },
+  (t) => [uniqueIndex("support_teams_slug_uq").on(t.slug), uniqueIndex("support_teams_default_uq").on(t.isDefault).where(sql`${t.isDefault}`), index("support_teams_archived_idx").on(t.archivedAt)],
+);
+
+/** Membership of a platform operator in a team (`member` or `lead`); an operator may belong to several teams. */
+export const supportTeamMembers = pgTable(
+  "support_team_members",
+  {
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => supportTeams.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    role: text("role").$type<SupportTeamRole>().notNull().default("member"),
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.teamId, t.userId] }), index("support_team_members_user_idx").on(t.userId)],
+);
+
+/**
  * One support ticket. `number` is the human-facing id (`support_ticket_number_seq`, used in subjects and
  * reply-to addresses); `organization_id` is null for senders that are no customer (or not yet matched).
  * SLA timestamps are computed from real message times only — never invented; `paused_at` / `pause_total_ms`
  * stop the clock while the ticket waits for the customer (`pending`).
+ *
+ * Migration 0017 adds `team_id` (the queue the ticket sits in, null = no team), `opened_by` (`customer` for
+ * every inbound path, `agent` for a ticket an operator opened on the customer's behalf, `system`) and
+ * `sla_pending_first_customer_reply`: an agent-created ticket has no first-response target and a paused
+ * resolution clock — both due times stay null — until the first customer reply starts the clocks through
+ * the engine (`applyFirstCustomerReply`, apps/web/src/server/support/agent-tickets.ts).
  */
 export const supportTickets = pgTable(
   "support_tickets",
@@ -181,14 +250,29 @@ export const supportTickets = pgTable(
     /** set while the SLA clock is paused (status `pending`) */
     pausedAt: tz("paused_at"),
     pauseTotalMs: bigint("pause_total_ms", { mode: "number" }).notNull().default(0),
+    /**
+     * When the current SLA clock run started (migration 0018): the creation, or the last reopening. Priority
+     * changes measure a clock without a due date from here, and the worker scopes its warnings to this run.
+     */
+    slaClockStartedAt: tz("sla_clock_started_at"),
+    /** the targets the running clocks were booked against, in milliseconds of business time (null = no target) */
+    firstResponseTargetMs: bigint("first_response_target_ms", { mode: "number" }),
+    resolutionTargetMs: bigint("resolution_target_ms", { mode: "number" }),
     mergedIntoId: uuid("merged_into_id").references((): AnyPgColumn => supportTickets.id, { onDelete: "set null" }),
     locale: text("locale").notNull().default("en"),
     satisfaction: jsonb("satisfaction").$type<SupportSatisfaction | null>(),
     reopenCount: integer("reopen_count").notNull().default(0),
+    /** the team (queue) the ticket sits in; null = no team (migration 0017) */
+    teamId: uuid("team_id").references(() => supportTeams.id, { onDelete: "set null" }),
+    /** who opened the ticket: `customer` (every inbound path), `agent` (console "New ticket"), `system` (0017) */
+    openedBy: text("opened_by").$type<SupportTicketOpenedBy>().notNull().default("customer"),
+    /** agent-created ticket whose SLA clocks wait for the first customer reply (both due times null until then, 0017) */
+    slaPendingFirstCustomerReply: boolean("sla_pending_first_customer_reply").notNull().default(false),
     ...timestamps(),
   },
   (t) => [
     uniqueIndex("support_tickets_number_uq").on(t.number),
+    index("support_tickets_team_idx").on(t.teamId, t.status),
     index("support_tickets_status_updated_idx").on(t.status, t.updatedAt),
     index("support_tickets_assignee_idx").on(t.assigneeUserId, t.status),
     index("support_tickets_org_idx").on(t.organizationId, t.updatedAt),
@@ -277,6 +361,8 @@ export const supportMessages = pgTable(
     providerMessageId: text("provider_message_id"),
     deliveryStatus: text("delivery_status").$type<SupportDeliveryStatus>().notNull().default("na"),
     deliveryError: text("delivery_error"),
+    /** when the console's send path claimed the row (`delivery_status = 'sending'`, migration 0018); a stale claim is re-claimable */
+    deliveryClaimedAt: tz("delivery_claimed_at"),
     macroId: uuid("macro_id").references(() => supportMacros.id, { onDelete: "set null" }),
     createdAt: createdAt(),
   },
@@ -285,6 +371,10 @@ export const supportMessages = pgTable(
     index("support_messages_org_idx").on(t.organizationId),
     index("support_messages_message_id_idx").on(t.messageId),
     index("support_messages_provider_id_idx").on(t.providerMessageId),
+    // one stored inbound row per received mail (migration 0018): the structural replay guard of docs/18 §4 step 2
+    uniqueIndex("support_messages_inbound_provider_uq")
+      .on(t.providerMessageId)
+      .where(sql`${t.direction} = 'inbound' AND ${t.providerMessageId} IS NOT NULL`),
   ],
 );
 
@@ -373,6 +463,12 @@ export const supportInboundEvents = pgTable(
     status: text("status").$type<SupportInboundEventStatus>().notNull().default("received"),
     ticketId: uuid("ticket_id").references(() => supportTickets.id, { onDelete: "set null" }),
     error: text("error"),
+    /**
+     * The parsed `email.received` event without bodies or attachment bytes (ids, addresses, subject, headers,
+     * attachment names — migration 0018), so an admin can reprocess a failed delivery from the console; null
+     * for delivery events and rows written before the column existed.
+     */
+    payload: jsonb("payload").$type<Record<string, unknown> | null>(),
   },
   (t) => [uniqueIndex("support_inbound_events_provider_event_uq").on(t.providerEventId), index("support_inbound_events_status_idx").on(t.status, t.receivedAt)],
 );

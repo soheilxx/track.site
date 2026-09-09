@@ -420,6 +420,47 @@ export interface InboundLedgerEntry {
   error: string | null;
   /** `received` without an outcome for longer than `INBOUND_LEDGER_STALE_MS` */
   stale: boolean;
+  /** an admin may run the delivery again from the console (`isReprocessableInboundEvent`) */
+  reprocessable: boolean;
+}
+
+/**
+ * A ledger row an admin may reprocess (docs/18 §"Hardening"): a `failed` delivery, or a `received` one whose
+ * processing was interrupted (stale), provided the row carries the parsed event (`payload`, migration 0018 —
+ * delivery events and rows from before the column have none). Never a processed, ignored or in-flight row.
+ */
+export function isReprocessableInboundEvent(entry: { status: SupportInboundEventStatus; receivedAt: string | Date; hasPayload: boolean }, now: Date): boolean {
+  if (!entry.hasPayload) return false;
+  return entry.status === "failed" || isStaleInboundEvent(entry, now);
+}
+
+/** The ledger row a reprocess needs: the ledger identity, its state and the stored payload (never bodies). */
+export interface InboundEventForReprocess {
+  id: string;
+  provider: string;
+  providerEventId: string;
+  status: SupportInboundEventStatus;
+  receivedAt: Date;
+  ticketId: string | null;
+  payload: Record<string, unknown> | null;
+}
+
+/** One ledger row by id for the reprocess action; null for an unknown id. */
+export async function loadInboundEventForReprocess(tx: Tx, eventId: string): Promise<InboundEventForReprocess | null> {
+  const [row] = await tx
+    .select({
+      id: supportInboundEvents.id,
+      provider: supportInboundEvents.provider,
+      providerEventId: supportInboundEvents.providerEventId,
+      status: supportInboundEvents.status,
+      receivedAt: supportInboundEvents.receivedAt,
+      ticketId: supportInboundEvents.ticketId,
+      payload: supportInboundEvents.payload,
+    })
+    .from(supportInboundEvents)
+    .where(eq(supportInboundEvents.id, eventId))
+    .limit(1);
+  return row ? { ...row, payload: row.payload ?? null } : null;
 }
 
 export interface InboundLedgerView {
@@ -475,6 +516,7 @@ export async function loadInboundLedger(ctx: PlatformContext, options: { limit?:
           ticketId: supportInboundEvents.ticketId,
           ticketNumber: supportTickets.number,
           error: supportInboundEvents.error,
+          hasPayload: sql<boolean>`${supportInboundEvents.payload} IS NOT NULL`,
         })
         .from(supportInboundEvents)
         .leftJoin(supportTickets, eq(supportTickets.id, supportInboundEvents.ticketId))
@@ -500,6 +542,7 @@ export async function loadInboundLedger(ctx: PlatformContext, options: { limit?:
         ticketNumber: r.ticketNumber == null ? null : Number(r.ticketNumber),
         error: r.status === "failed" ? shortenLedgerError(r.error) : null,
         stale: isStaleInboundEvent({ status: r.status, receivedAt: r.receivedAt }, now),
+        reprocessable: isReprocessableInboundEvent({ status: r.status, receivedAt: r.receivedAt, hasPayload: Boolean(r.hasPayload) }, now),
       })),
       counts,
       windowTotal: Object.values(counts).reduce((sum, n) => sum + n, 0),

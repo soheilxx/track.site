@@ -8,6 +8,7 @@ import { OpsForbidden, OpsPageHeader } from "@/components/ops/shell";
 import { SLA_PATHS } from "@/components/ops/support/sla/constants";
 import { formatDateTime } from "@/components/ops/support/sla/format";
 import { PolicyForm } from "@/components/ops/support/sla/policy-form";
+import { SupportSubnav } from "@/components/ops/support/subnav";
 import { checkPlatform, platformLocale } from "@/server/ops/platform";
 import { policyToFormValues } from "@/server/support/sla";
 import { listPlatformUsers, loadSlaPolicy } from "../queries";
@@ -43,6 +44,7 @@ export default async function OpsSupportSlaEditPage({ params }: { params: Params
           </>
         }
       />
+      <SupportSubnav current="settings" role={access.ctx.platformRole} />
       <PolicyForm mode="edit" initial={policyToFormValues(policy)} plans={PLAN_IDS} operators={operators} locale={locale} />
     </div>
   );

@@ -11,6 +11,7 @@ import { authClient } from "@/lib/auth-client";
 import { EnvironmentBadge } from "./environment-badge";
 import { NotificationBell } from "./notifications";
 import { OpsNav } from "./ops-nav";
+import { useSupportNavBadge } from "./support-badge";
 import type { OpsShellProps } from "./types";
 
 function initials(name: string, email: string): string {
@@ -39,6 +40,8 @@ export function OpsShell({
   const t = useTranslations("ops");
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
+  // the desk's live counts for the "Support" entry (one poller for both navigation instances)
+  const supportBadge = useSupportNavBadge();
 
   const logout = useCallback(async () => {
     await authClient.signOut();
@@ -69,10 +72,12 @@ export function OpsShell({
         <Link
           href="/ops"
           aria-label={t("brandHome")}
-          className="flex min-w-0 shrink-0 items-center gap-2 rounded-[var(--radius-control-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          // the brand is the header's flexible item: its text truncates (and hides below `sm`) before any
+          // control shrinks — the bell and the account menu keep their 40 px targets at 375 px
+          className="flex min-w-0 items-center gap-2 rounded-[var(--radius-control-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
-          <BrandMark size={26} />
-          <span className="truncate text-sm font-semibold tracking-tight text-ink">
+          <BrandMark size={26} className="shrink-0" />
+          <span className="hidden truncate text-sm font-semibold tracking-tight text-ink sm:inline">
             {t("title")}
           </span>
         </Link>
@@ -85,7 +90,9 @@ export function OpsShell({
           {t(`roles.${platformRole}`)}
         </Badge>
         <div className="min-w-0 flex-1" />
-        <EnvironmentBadge environment={environment} />
+        <div className="min-w-0 shrink-0">
+          <EnvironmentBadge environment={environment} />
+        </div>
         <NotificationBell />
         <Link
           href="/app"
@@ -94,49 +101,51 @@ export function OpsShell({
           <LayoutDashboard className="size-4" aria-hidden="true" />
           {t("backToDashboard")}
         </Link>
-        <Menu
-          label={t("user.menu")}
-          triggerLabel={t("user.menu")}
-          align="end"
-          triggerClassName="px-1.5"
-          header={
-            <div className="min-w-0">
-              <p className="text-xs text-ink-3">{t("user.signedInAs")}</p>
-              <p className="truncate text-sm font-medium text-ink">{user.name}</p>
-              <p className="truncate text-xs text-ink-3">{user.email}</p>
-              <p className="mt-1 text-xs text-ink-3">
-                {t("roleLabel")}:{" "}
-                <span className="font-medium text-ink-2">{t(`roles.${platformRole}`)}</span>
-              </p>
-            </div>
-          }
-          sections={[
-            {
-              id: "account",
-              items: [
-                {
-                  id: "dashboard",
-                  label: t("user.dashboard"),
-                  icon: <LayoutDashboard className="size-4" aria-hidden="true" />,
-                  href: "/app",
-                },
-                {
-                  id: "logout",
-                  label: t("user.logout"),
-                  icon: <LogOut className="size-4" aria-hidden="true" />,
-                  onSelect: () => void logout(),
-                },
-              ],
-            },
-          ]}
-        >
-          <span
-            aria-hidden="true"
-            className="inline-flex size-8 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold text-ink-2"
+        <div className="shrink-0">
+          <Menu
+            label={t("user.menu")}
+            triggerLabel={t("user.menu")}
+            align="end"
+            triggerClassName="px-1.5"
+            header={
+              <div className="min-w-0">
+                <p className="text-xs text-ink-3">{t("user.signedInAs")}</p>
+                <p className="truncate text-sm font-medium text-ink">{user.name}</p>
+                <p className="truncate text-xs text-ink-3">{user.email}</p>
+                <p className="mt-1 text-xs text-ink-3">
+                  {t("roleLabel")}:{" "}
+                  <span className="font-medium text-ink-2">{t(`roles.${platformRole}`)}</span>
+                </p>
+              </div>
+            }
+            sections={[
+              {
+                id: "account",
+                items: [
+                  {
+                    id: "dashboard",
+                    label: t("user.dashboard"),
+                    icon: <LayoutDashboard className="size-4" aria-hidden="true" />,
+                    href: "/app",
+                  },
+                  {
+                    id: "logout",
+                    label: t("user.logout"),
+                    icon: <LogOut className="size-4" aria-hidden="true" />,
+                    onSelect: () => void logout(),
+                  },
+                ],
+              },
+            ]}
           >
-            {initials(user.name, user.email)}
-          </span>
-        </Menu>
+            <span
+              aria-hidden="true"
+              className="inline-flex size-8 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold text-ink-2"
+            >
+              {initials(user.name, user.email)}
+            </span>
+          </Menu>
+        </div>
       </header>
 
       <div className="grid min-h-0 grid-cols-[auto_minmax(0,1fr)]">
@@ -145,7 +154,7 @@ export function OpsShell({
           aria-label={t("nav.label")}
         >
           <div className="relative min-h-0 flex-1 overflow-y-auto px-3 py-4">
-            <OpsNav platformRole={platformRole} />
+            <OpsNav platformRole={platformRole} supportBadge={supportBadge} />
           </div>
           <div className="shrink-0 border-t border-line px-4 py-3 text-xs text-ink-3">
             <p className="truncate font-medium text-ink-2">{user.name}</p>
@@ -173,7 +182,11 @@ export function OpsShell({
         className="max-w-xs"
       >
         <div id="ops-nav-drawer" className="-mx-2">
-          <OpsNav platformRole={platformRole} onNavigate={() => setNavOpen(false)} />
+          <OpsNav
+            platformRole={platformRole}
+            onNavigate={() => setNavOpen(false)}
+            supportBadge={supportBadge}
+          />
           <div className="mt-3 border-t border-line px-2 pt-3 md:hidden">
             <Link
               href="/app"
